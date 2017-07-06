@@ -1,0 +1,333 @@
+/**
+ * user-registration.scss
+ * Governs the general look and feel of User Registration sections of stores using themes that do not
+ * integrate with User Registration specifically.
+ */
+
+/**
+ * Imports
+ */
+@import "colors";
+@import "button";
+@import "mixins";
+@import "variables";
+
+/**
+ * Utility classes
+ */
+.clear {
+	clear: both;
+}
+
+/**
+ * Main User Registration styles
+ */
+.user-registration-message,
+.user-registration-error,
+.user-registration-info {
+	padding: 1em 2em 1em 3.5em;
+	margin: 0 0 2em;
+	position: relative;
+	background-color: lighten($secondary, 5%);
+	color: $secondarytext;
+	border-top: 3px solid $primary;
+	list-style: none outside;
+	@include clearfix();
+	width: auto;
+	word-wrap: break-word;
+
+	&::before {
+		font-family: 'Dashicons';
+		content: '\f348';
+		display: inline-block;
+		position: absolute;
+		top: 1em;
+		left: 0.9em;
+		font-size: 18px;
+	}
+
+	.button {
+		float: right;
+	}
+
+	li {
+		list-style: none outside !important; // Required for default theme compatibility
+		padding-left: 0 !important; // Required for default theme compatibility
+		margin-left: 0 !important; // Required for default theme compatibility
+	}
+}
+
+.user-registration-message {
+	border-top-color: #8fae1b;
+	background: rgba( #8fae1b, 0.1 );
+	color: darken( #8fae1b, 15%);
+
+	&::before {
+		color: #8fae1b;
+	}
+}
+
+.user-registration-info {
+	border-top-color: #1e85be;
+
+	&::before {
+		color: #1e85be;
+	}
+}
+
+.user-registration-error {
+	border-top-color: $color_danger;
+	background: rgba( $color_danger, 0.1 );
+	color: darken( $color_danger, 15%);
+
+	&::before {
+		content: '\f534';
+		color: $color_danger;
+	}
+}
+
+.ur-frontend-form {
+	margin-bottom: 30px;
+	border: 1px solid $color_gray_six;
+	padding: 20px;
+	box-sizing: border-box;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	&.login {
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
+		background: none;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	form {
+		.ur-form-row {
+			display: flex;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+			.ur-form-grid {
+				flex: 1;
+				padding: 0 10px;
+
+				&:nth-child(1n+2) {
+					border-left: 0 none;
+				}
+				.ur-field-item {
+					margin-bottom: 20px;
+					font-size: 13px;
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
+				input[type="text"],
+				input[type="email"],
+				input[type="url"],
+				input[type="password"],
+				textarea,
+				select {
+					display: block;
+					width: 100%;
+				}
+				input[type="checkbox"],
+				input[type="radio"]{
+					font-size: 12px;
+					vertical-align: top;
+				}
+				input[type="radio"]:focus,
+				input[type="text"]:focus,
+				input[type="email"]:focus,
+				input[type="url"]:focus,
+				input[type="password"]:focus,
+				textarea:focus,
+				select:focus,
+				button:focus {
+					outline: 0;
+				}
+				legend,
+				label {
+					display: block;
+					width: 100%;
+					margin-bottom: 10px;
+
+					.required {
+
+						text-decoration: none;
+						border: none;
+						color: #ff0000;
+					}
+				}
+				textarea {
+					padding: 10px;
+					height: 100px;
+					resize: none;
+					padding: 5px 20px;
+				}
+			}
+		}
+		input[type="submit"],
+		button[type="submit"] {
+			float: right;
+			padding: 10px 20px;
+			line-height: 20px;
+			background: $primary_color;
+			color: $white;
+			text-align: center;
+			word-break: break-word;
+			white-space: normal;
+			border: none;
+			cursor: pointer;
+			-webkit-transition: 0.9s all ease-out;
+			-o-transition: 0.9s all ease-out;
+			transition: 0.9s all ease-out;
+			&:hover {
+				background: $primary_color;
+			}
+		}
+
+		.ur-submit-button {
+			margin-right: 10px;
+		}
+	}
+	label {
+		abbr.required {
+
+			text-decoration: none;
+			border: none;
+			color: #ff0000;
+		}
+	}
+	#ur-submit-message-node{
+
+		margin : 10px 0 0 0;
+		padding-bottom: 0;
+		&.error{
+
+			background: rgba(206, 0, 0, 0.1);
+		}
+		&.message{
+			background: rgba(143, 174, 27,0.2);
+		}
+	}
+}
+
+#user-registration {
+	.user-registration-MyAccount-navigation {
+		overflow: visible;
+		ul {
+			margin: 0;
+			padding: 0;
+			display: -webkit-flex;
+			display:flex;
+			.user-registration-MyAccount-navigation-link {
+				list-style: none;
+				padding: 0;
+				margin:0;
+				display: inline-block;
+				border-left: 1px solid $white;
+				border-top: 1px solid $white;
+				border-right: 1px solid $white;
+				position:relative;
+
+				a {
+					color: $color_gray_two;
+					padding: 10px 15px;
+					display: block;
+					font-weight: 600;
+					font-size: 15px;
+					font-family: 'sans-serif';
+					text-decoration: none;
+				}
+				
+				&.is-active {
+					background-color: $color_gray_eleven;
+					border-left: 1px solid $color_gray_six;
+					border-top: 1px solid $color_gray_six;
+					border-right: 1px solid $color_gray_six;
+					a {
+						color: $primary_color;
+					}
+					&:before {
+						position: absolute;
+						bottom: -1px;
+						left: 0;
+						content: " ";
+						width: 100%;
+						height: 1px;
+						background-color: $color_gray_eleven;
+					}
+				}
+			}
+		}
+	}
+	.user-registration-MyAccount-content {
+		background: $color_gray_eleven;
+		padding: 15px 20px;
+		border: 1px solid $color_gray_six;
+
+		.ur-form-grid{
+			padding: 0;
+			border: 0 none;
+			background: transparent;
+		}
+
+		.ur-frontend-form {
+			border: none;
+		}
+	}
+}
+
+/**
+ * Password strength meter
+ */
+.user-registration-password-strength {
+	text-align: center;
+	font-weight: 600;
+	padding: 3px 0.5em;
+	font-size: 1em;
+
+	&.strong {
+		background-color: #c1e1b9;
+		border-color: #83c373;
+	}
+
+	&.short {
+		background-color: #f1adad;
+		border-color: #e35b5b;
+	}
+
+	&.bad {
+		background-color: #fbc5a9;
+		border-color: #f78b53;
+	}
+
+	&.good {
+		background-color: #ffe399;
+		border-color: #ffc733;
+	}
+}
+
+.user-registration-password-hint {
+	margin: 0.5em 0 0;
+	display: block;
+}
+
+.ur-front-spinner {
+	background: url('../images/wpspin_light-2x.gif') no-repeat;
+	background-size: 16px 16px;
+	display: block;
+	opacity: .7;
+	filter: alpha(opacity=70);
+	width: 16px;
+	height: 16px;
+	margin-left: -40px;
+	float: left;
+}

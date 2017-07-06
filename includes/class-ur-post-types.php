@@ -1,0 +1,80 @@
+<?php
+/**
+ * Post Types Admin
+ *
+ * @class    UR_Post_Types
+ * @version  1.0.0
+ * @package  UserRegistration/Admin
+ * @category Admin
+ * @author   WPEverest
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * UR_Post_Types Class
+ *
+ * Handles the edit posts views and some functionality on the edit post screen for post types.
+ */
+class UR_Post_Types {
+
+	/**
+	 * Hook in methods.
+	 */
+	public static function init() {
+		add_action( 'init', array( __CLASS__, 'register_post_types' ), 5 );
+		add_action( 'user_registration_flush_rewrite_rules', array( __CLASS__, 'flush_rewrite_rules' ) );
+	}
+
+	/**
+	 * Register core post types.
+	 */
+	public static function register_post_types() {
+		register_post_type( 'user_registration',
+			apply_filters( 'user_registration_post_type',
+				array(
+					'labels'              => array(
+						'name'               => __( 'Registrations', 'user-registration' ),
+						'singular_name'      => __( 'Registration', 'user-registration' ),
+						'menu_name'          => _x( 'Registrations', 'Admin menu name', 'user-registration' ),
+						'add_new'            => __( 'Add registration', 'user-registration' ),
+						'add_new_item'       => __( 'Add new registration', 'user-registration' ),
+						'edit'               => __( 'Edit', 'user-registration' ),
+						'edit_item'          => __( 'Edit registration', 'user-registration' ),
+						'new_item'           => __( 'New registration', 'user-registration' ),
+						'view'               => __( 'View registrations', 'user-registration' ),
+						'view_item'          => __( 'View registration', 'user-registration' ),
+						'search_items'       => __( 'Search registrations', 'user-registration' ),
+						'not_found'          => __( 'No registrations found', 'user-registration' ),
+						'not_found_in_trash' => __( 'No registrations found in trash', 'user-registration' ),
+						'parent'             => __( 'Parent registration', 'user-registration' ),
+					),
+					'public'              => false,
+					'show_ui'             => true,
+					'capability_type'     => 'user_registration',
+					'map_meta_cap'        => true,
+					'publicly_queryable'  => false,
+					'exclude_from_search' => true,
+					'show_in_menu'        => false,
+					'hierarchical'        => false,
+					'rewrite'             => false,
+					'query_var'           => false,
+					'supports'            => false,
+					'show_in_nav_menus'   => false,
+					'show_in_admin_bar'   => false,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Flush rewrite rules.
+	 */
+	public static function flush_rewrite_rules() {
+		flush_rewrite_rules();
+	}
+}
+
+UR_Post_Types::init();

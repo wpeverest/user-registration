@@ -1,0 +1,7 @@
+/.* export-ignore
+CHANGELOG.txt export-ignore
+composer.* export-ignore
+Gruntfile.js export-ignore
+package.json export-ignore
+phpcs.ruleset.xml export-ignore
+README.md export-ignore

@@ -1,0 +1,19 @@
+.ur-registered-item.ui-draggable-dragging {
+	padding: 10px 10px;
+	line-height: 20px;
+	background: $primary_color;
+	color: $white;
+	text-align: center;
+	margin-bottom: 7px;
+	word-break: break-word;
+	white-space: normal;
+	width: 200px !important;
+	span {
+		font-size: 14px;
+		line-height: 20px;
+		width: auto;
+		height: auto;
+		margin-right: 3px;
+
+	}
+}

@@ -1,0 +1,23 @@
+{
+  "name": "wpeverest/user-registration",
+  "description": "Easily allows to create registration and login page.",
+  "homepage": "https://wpeverest.com/plugins/user-registration/",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0+",
+  "require": {
+    "composer/installers": "~1.2"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "wp-coding-standards/wpcs": "*",
+    "phpunit/phpunit": "5.7.19"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+    ],
+    "post-update-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+    ]
+  }
+}
