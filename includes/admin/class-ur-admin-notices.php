@@ -128,6 +128,10 @@ class UR_Admin_Notices {
 
 		if ( $notices ) {
 			wp_enqueue_style( 'user-registration-activation', UR()->plugin_url() . '/assets/css/activation.css', array(), UR_VERSION );
+
+			// Add RTL support
+			wp_style_add_data( 'user-registration-activation', 'rtl', 'replace' );
+
 			foreach ( $notices as $notice ) {
 				if ( ! empty( self::$core_notices[ $notice ] ) && apply_filters( 'user_registration_show_admin_notice', true, $notice ) ) {
 					add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
