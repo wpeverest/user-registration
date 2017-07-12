@@ -58,6 +58,7 @@ function ur_body_class( $classes ) {
 	return array_unique( $classes );
 }
 
+
 /** Forms */
 
 if ( ! function_exists( 'user_registration_form_field' ) ) {

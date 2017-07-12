@@ -88,6 +88,7 @@ class UR_AJAX {
 
 		}
 
+
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
 
 	}
@@ -211,7 +212,16 @@ class UR_AJAX {
 
 			}
 
+
 			$post_id = wp_insert_post( $post_data );
+
+			if ( $post_id > 0 ) {
+
+				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
+
+				ur_update_form_settings($post_data_setting,$post_id);
+
+			}
 
 			wp_send_json_success( array(
 				'data'    => $post_data,

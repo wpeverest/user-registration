@@ -384,13 +384,15 @@ jQuery(function ( $ ) {
 			if ( ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0) ) {
 				ur_form_id = 0;
 			}
+			var form_setting_data = $('#ur-field-settings').serializeArray();
 			var data = {
 				action: 'user_registration_form_save_action',
 				security: user_registration_admin_data.ur_form_save,
 				data: {
 					form_data: JSON.stringify(form_data),
 					form_name: $('#ur-form-name').val(),
-					form_id: ur_form_id
+					form_id: ur_form_id,
+					form_setting_data: form_setting_data
 				}
 			};
 			$.ajax({

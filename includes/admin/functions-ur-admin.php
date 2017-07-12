@@ -34,20 +34,27 @@ function ur_get_screen_ids() {
 /**
  * Create a page and store the ID in an option.
  *
- * @param  mixed  $slug Slug for the new page
- * @param  string $option Option name to store the page's ID
- * @param  string $page_title (default: '') Title for the new page
+ * @param  mixed  $slug         Slug for the new page
+ * @param  string $option       Option name to store the page's ID
+ * @param  string $page_title   (default: '') Title for the new page
  * @param  string $page_content (default: '') Content for the new page
- * @param  int    $post_parent (default: 0) Parent for the new page
+ * @param  int    $post_parent  (default: 0) Parent for the new page
+ *
  * @return int page ID
  */
 function ur_create_page( $slug, $option = '', $page_title = '', $page_content = '', $post_parent = 0 ) {
 	global $wpdb;
 
-	$option_value     = get_option( $option );
+	$option_value = get_option( $option );
 
 	if ( $option_value > 0 && ( $page_object = get_post( $option_value ) ) ) {
-		if ( 'page' === $page_object->post_type && ! in_array( $page_object->post_status, array( 'pending', 'trash', 'future', 'auto-draft' ) ) ) {
+		if ( 'page' === $page_object->post_type && ! in_array( $page_object->post_status, array(
+				'pending',
+				'trash',
+				'future',
+				'auto-draft'
+			) )
+		) {
 			// Valid page is already in place
 			return $page_object->ID;
 		}
@@ -67,6 +74,7 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 		if ( $option ) {
 			update_option( $option, $valid_page_found );
 		}
+
 		return $valid_page_found;
 	}
 
@@ -82,10 +90,10 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 	if ( $trashed_page_found ) {
 		$page_id   = $trashed_page_found;
 		$page_data = array(
-			'ID'             => $page_id,
-			'post_status'    => 'publish',
+			'ID'          => $page_id,
+			'post_status' => 'publish',
 		);
-	 	wp_update_post( $page_data );
+		wp_update_post( $page_data );
 	} else {
 		$page_data = array(
 			'post_status'    => 'publish',
@@ -97,7 +105,7 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 			'post_parent'    => $post_parent,
 			'comment_status' => 'closed',
 		);
-		$page_id = wp_insert_post( $page_data );
+		$page_id   = wp_insert_post( $page_data );
 	}
 
 	if ( $option ) {
@@ -143,6 +151,7 @@ function user_registration_update_options( $options, $data = null ) {
  *
  * @param mixed $option_name
  * @param mixed $default
+ *
  * @return string
  */
 function user_registration_settings_get_option( $option_name, $default = '' ) {
@@ -152,4 +161,108 @@ function user_registration_settings_get_option( $option_name, $default = '' ) {
 	}
 
 	return UR_Admin_Settings::get_option( $option_name, $default );
+}
+
+/**
+ * @param $form_id
+ */
+function ur_admin_form_settings_fields( $form_id ) {
+
+	$all_roles = ur_get_default_admin_roles();
+
+	$arguments =
+		array(
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Default user role', 'user-registration' ),
+				'description'       => '',
+				'placeholder'       => '',
+				'maxlength'         => false,
+				'required'          => false,
+				'autocomplete'      => false,
+				'id'                => 'ur_setting_default_user_role',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'return'            => false,
+				'options'           => $all_roles,
+				'custom_attributes' => array(),
+				'validate'          => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'ur_setting_default_user_role', 'subscriber' ),
+				'autofocus'         => '',
+				'priority'          => '',
+
+			)
+		);
+
+	return $arguments;
+
+}
+
+/**
+ * @param int $form_id
+ */
+function ur_admin_form_settings( $form_id = 0 ) {
+
+	$arguments = ur_admin_form_settings_fields( $form_id );
+
+	foreach ( $arguments as $args ) {
+		user_registration_form_field( $args['id'], $args );
+	}
+
+}
+
+/**
+ * @param      $post_id
+ * @param      $meta_key
+ * @param null $default
+ *
+ * @return null
+ */
+function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
+
+	$post_meta = get_post_meta( $post_id, $meta_key );
+
+	
+	if ( isset( $post_meta[0] ) ) {
+
+		return $post_meta[0];
+	}
+
+	return $default;
+
+}
+
+/**
+ * @param $setting_data
+ * @param $form_id
+ */
+function ur_update_form_settings( $setting_data, $form_id ) {
+
+	$remap_setting_data = array();
+
+	foreach ( $setting_data as $setting ) {
+
+		if ( isset( $setting['name'] ) ) {
+
+			$remap_setting_data[ $setting['name'] ] = $setting;
+		}
+
+	}
+
+
+	$setting_fields = ur_admin_form_settings_fields( $form_id );
+
+	foreach ( $setting_fields as $field_data ) {
+
+		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
+
+			if ( isset( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
+				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
+			}
+
+		}
+
+	}
+
+
 }

@@ -272,6 +272,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			include_once( dirname( __FILE__ ) . '/views/html-admin-page-forms.php' );
 		}
 
+
 		/**
 		 * Init the settings page.
 		 */
@@ -387,11 +388,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 				echo '<div class="ur-grids">';
 
-		        $grid_string = ceil(UR_Config::$ur_form_grid / count( $rows )) . '/' . UR_Config::$ur_form_grid ;
+				$grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
 
 				echo '<div class="ur-grid-navigation ur-nav-right dashicons dashicons-arrow-left-alt2"></div>';
 
-				echo '<div class="ur-grid-size" data-active-grid="'.count($rows).'">'.$grid_string.'</div>';
+				echo '<div class="ur-grid-size" data-active-grid="' . count( $rows ) . '">' . $grid_string . '</div>';
 
 				echo '<div class="ur-grid-navigation ur-nav-left dashicons dashicons-arrow-right-alt2"></div>';
 
@@ -481,7 +482,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		private function ur_get_list( $field ) {
 
-			$class_name=ur_load_form_field_class($field);
+			$class_name = ur_load_form_field_class( $field );
 
 			if ( $class_name !== null ) {
 				echo $class_name::get_instance()->get_registered_admin_fields();
