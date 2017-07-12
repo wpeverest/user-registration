@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Include core functions (available in both admin and frontend).
-include( 'functions-ur-page.php' );
-include( 'functions-ur-account.php' );
+include( UR_ABSPATH . 'includes/functions-ur-page.php' );
+include( UR_ABSPATH . 'includes/functions-ur-account.php' );
 
 if ( ! function_exists( 'is_ur_endpoint_url' ) ) {
 
