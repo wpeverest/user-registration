@@ -78,7 +78,7 @@ $frontend = UR_Frontend::instance();
 				?>
 				<button type="submit"
 				        class="ur-submit-button">
-					<span></span><?php echo __( get_option( 'user_registration_general_setting_form_submit_label' ), 'user-registration' ); ?>
+					<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
 				</button>
 
 			<?php }
