@@ -559,31 +559,15 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Prevent dashboard access', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_disabled_user_roles',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => $all_roles,
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_disabled_user_roles', 'subscriber' ),
-
-
-			),
-			array(
-				'type'              => 'select',
 				'label'             => __( 'Enable strong password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_strong_password',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array( 'yes', 'no' ),
+				'options'           => array( 'yes' =>__('Yes', 'user-registration'), 'no' => __('No', 'user-registration') ),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
-
-
 			),
 			array(
 				'type'              => 'text',
@@ -655,10 +639,8 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 			$value = isset( $field['default'] ) ? $field['default'] : $default;
 
 			break;
-
 		}
 
 	}
-
 	return $value;
 }

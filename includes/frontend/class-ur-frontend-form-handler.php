@@ -46,7 +46,7 @@ class UR_Frontend_Form_Handler {
 		self::validate_form_data( $form_field_data, $form_data );
 
 		if ( count( self::$response_array ) == 0 ) {
-			
+
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 
 			$userdata = array(

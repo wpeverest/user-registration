@@ -219,7 +219,9 @@ class UR_AJAX {
 
 				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
 
-				ur_update_form_settings($post_data_setting,$post_id);
+				$post_data_setting = sanitize_text_field( $post_data_setting );
+
+				ur_update_form_settings( $post_data_setting, $post_id );
 
 			}
 
