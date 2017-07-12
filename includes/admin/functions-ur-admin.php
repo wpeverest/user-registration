@@ -176,20 +176,55 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'select',
 				'label'             => __( 'Default user role', 'user-registration' ),
 				'description'       => '',
-				'placeholder'       => '',
-				'maxlength'         => false,
 				'required'          => false,
-				'autocomplete'      => false,
-				'id'                => 'ur_setting_default_user_role',
+				'id'                => 'user_registration_form_setting_default_user_role',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'return'            => false,
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
-				'validate'          => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'ur_setting_default_user_role', 'subscriber' ),
-				'autofocus'         => '',
-				'priority'          => '',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
+
+
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Prevent dashboard access', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_disabled_user_roles',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => $all_roles,
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_disabled_user_roles', 'subscriber' ),
+
+
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Enable strong password', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_enable_strong_password',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array( 'yes', 'no' ),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
+
+
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Form submit button label', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_submit_label',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Register' ),
+
 
 			)
 		);
@@ -222,15 +257,29 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
 	$post_meta = get_post_meta( $post_id, $meta_key );
 
-	
 	if ( isset( $post_meta[0] ) ) {
 
 		return $post_meta[0];
 	}
 
+	$form_setting_meta_key = str_replace( 'form_setting', 'general_setting', $meta_key );
+
+	$options = get_option( $form_setting_meta_key, $default );
+
+	if ( isset( $options[0] ) && is_array( $options ) ) {
+
+		return $options[0];
+	}
+	if ( '' != $options && 'string' == gettype( $options ) ) {
+
+		return $options;
+	}
+
 	return $default;
 
+
 }
+
 
 /**
  * @param $setting_data

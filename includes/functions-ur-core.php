@@ -523,6 +523,9 @@ function ur_get_default_admin_roles() {
 
 }
 
+/**
+ * @return int
+ */
 function get_random_number() {
 
 	$time = time();
