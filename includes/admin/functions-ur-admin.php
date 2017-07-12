@@ -178,8 +178,6 @@ function ur_admin_form_settings( $form_id = 0 ) {
 }
 
 
-
-
 /**
  * @param $setting_data
  * @param $form_id
@@ -205,6 +203,9 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
 
 			if ( isset( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
+
+				$remap_setting_data[ $field_data['id'] ]['value'] = sanitize_text_field( $remap_setting_data[ $field_data['id'] ]['value'] );
+
 				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
 			}
 
