@@ -19,13 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class UR_Frontend_Form_Handler {
 
 
+	public static $form_id = 0;
+
 	public static $response_array = array();
 
 	private static $valid_form_data = array();
 
 	public static function handle_form( $form_data, $form_id ) {
 
-		$post_content = self::get_post_content( $form_id );
+		self::$form_id = $form_id;
+
+		$post_content  = self::get_post_content( $form_id );
 
 		$post_content_array = array();
 
@@ -165,7 +169,7 @@ class UR_Frontend_Form_Handler {
 
 				$filter_hook = $hook . '_message';
 
-				do_action( $hook, $single_form_field, $data, $filter_hook );
+				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 
 				$response = apply_filters( $filter_hook, '' );
 
@@ -200,7 +204,7 @@ class UR_Frontend_Form_Handler {
 					$class_name::get_instance(),
 
 					'validation',
-				), 10, 3 );
+				), 10, 4 );
 			}
 		}
 

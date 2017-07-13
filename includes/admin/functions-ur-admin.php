@@ -194,8 +194,6 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		}
 
 	}
-
-
 	$setting_fields = ur_admin_form_settings_fields( $form_id );
 
 	foreach ( $setting_fields as $field_data ) {

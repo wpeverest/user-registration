@@ -62,7 +62,7 @@ class UR_User_Last_Name extends UR_Form_Field {
 	}
 
 
-	public function validation( $single_form_field, $form_data, $filter_hook ) {
+	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// TODO: Implement validation() method.
 	}
 }

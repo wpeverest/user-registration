@@ -63,7 +63,7 @@ class UR_User_Username extends UR_Form_Field {
 	}
 
 
-	public function validation( $single_form_field, $form_data, $filter_hook ) {
+	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$username = isset( $form_data->value ) ? $form_data->value : '';
 

@@ -62,11 +62,11 @@ class UR_User_Password extends UR_Form_Field {
 	}
 
 
-	public function validation( $single_form_field, $form_data, $filter_hook ) {
+	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$password = isset( $form_data->value ) ? $form_data->value : '';
 
-		if (  empty( $password ) ) {
+		if ( empty( $password ) ) {
 
 			add_filter( $filter_hook, function ( $msg ) {
 
@@ -74,8 +74,7 @@ class UR_User_Password extends UR_Form_Field {
 
 			} );
 		}
-
-		if ( get_option( 'user_registration_general_setting_enable_strong_password' ) == 'yes' ) {
+		if ( 'yes' == ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_strong_password' ) ) {
 
 			if ( self::check_password_length( $password ) < 2 ) {
 
