@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.0.0\n"
+"Project-Id-Version: User Registration 1.0.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-07-13 10:12:27+00:00\n"
+"POT-Creation-Date: 2017-07-13 10:21:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -229,7 +229,7 @@ msgid "General Options"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:58
-#: includes/functions-ur-core.php:550
+#: includes/functions-ur-core.php:548
 msgid "Default user role"
 msgstr ""
 
@@ -256,7 +256,7 @@ msgid "Page contents: [%s]"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:94
-#: includes/functions-ur-core.php:564
+#: includes/functions-ur-core.php:562
 msgid "Enable strong password"
 msgstr ""
 
@@ -265,7 +265,7 @@ msgid "Tick here if you want to use strong password on user registration form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:102
-#: includes/functions-ur-core.php:579
+#: includes/functions-ur-core.php:577
 msgid "Form submit button label"
 msgstr ""
 
@@ -1832,17 +1832,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: includes/functions-ur-core.php:471 includes/functions-ur-core.php:572
-#: includes/functions-ur-core.php:600
+#: includes/functions-ur-core.php:471 includes/functions-ur-core.php:570
+#: includes/functions-ur-core.php:598
 msgid "No"
 msgstr ""
 
-#: includes/functions-ur-core.php:472 includes/functions-ur-core.php:571
-#: includes/functions-ur-core.php:599
+#: includes/functions-ur-core.php:472 includes/functions-ur-core.php:569
+#: includes/functions-ur-core.php:597
 msgid "Yes"
 msgstr ""
 
-#: includes/functions-ur-core.php:592
+#: includes/functions-ur-core.php:590
 msgid "Enable %1$s reCaptcha %2$s support"
 msgstr ""
 

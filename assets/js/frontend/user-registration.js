@@ -167,7 +167,7 @@ var onloadURCallback = function () {
 
 	google_recaptcha_user_registration = grecaptcha.render('node_recaptcha', {
 		'sitekey': ur_google_recaptcha_code.site_key,
-		'theme': 'dark',
+		'theme': 'light',
 		'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
 
 	});
