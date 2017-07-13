@@ -69,7 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 								<div id="ur-tab-field-settings" class="ur-tab-content">
 
-									<form method="post" id="ur-field-settings">
+									<form method="post" id="ur-field-settings" onsubmit="return false;">
 
 										<?php
 

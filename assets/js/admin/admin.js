@@ -10,7 +10,7 @@ jQuery(function ( $ ) {
 			'fadeIn': 50,
 			'fadeOut': 50,
 			'delay': 200,
-			'keepAlive' :true
+			'keepAlive': true
 		};
 		$('.tips, .help_tip, .user-registration-help-tip').tipTip(tiptip_args);
 		// Add tiptip to parent element for widefat tables
@@ -753,5 +753,6 @@ jQuery(function ( $ ) {
 
 		return parseInt(value, 0);
 	}
+
 
 }(jQuery, window.user_registration_admin_data));
