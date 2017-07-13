@@ -535,6 +535,7 @@ function get_random_number() {
 
 /**
  * @param $form_id
+ *
  * @since 1.0.1
  */
 function ur_admin_form_settings_fields( $form_id ) {
@@ -587,7 +588,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'     => sprintf( __('Enable %1$s reCaptcha %2$s support', 'user-registration' ), '<a href="'.admin_url().'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),						'id'       => 'user_registration_integration_setting_recaptcha_site_key',
+				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'id'                => 'user_registration_integration_setting_recaptcha_site_key',
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -610,6 +612,7 @@ function ur_admin_form_settings_fields( $form_id ) {
  * @param      $post_id
  * @param      $meta_key
  * @param null $default
+ *
  * @since 1.0.1
  *
  * @return null
@@ -644,6 +647,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 /**
  * @param $form_id
  * @param $meta_key
+ *
  * @since 1.0.1
  */
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
