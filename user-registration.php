@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Easily allows to create registration and login page.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Requires at least: 4.0
