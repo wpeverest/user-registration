@@ -107,7 +107,6 @@ class UR_Shortcodes {
 		if ( isset( $post_data[0] ) ) {
 			$form_data = $post_data[0]->post_content;
 		}
-
 		$form_data_array = json_decode( $form_data );
 
 		if ( gettype( $form_data_array ) != 'array' ) {
@@ -115,7 +114,6 @@ class UR_Shortcodes {
 		}
 
 		$is_field_exists = false;
-
 
 		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 
@@ -142,8 +140,7 @@ class UR_Shortcodes {
 			) );
 		}
 
-
-		$recaptcha_node = '<div class="ur-recaptcha-error">' . __( 'Empty site settings or recaptcha configuration error.' ) . '</div>';
+		$recaptcha_node = '<div class="ur-recaptcha-error">' . __( 'Empty site settings or recaptcha configuration error.', 'user-registration' ) . '</div>';
 
 		if ( 'no' === $recaptcha_enable ) {
 
@@ -155,8 +152,6 @@ class UR_Shortcodes {
 			$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 
 		}
-
-
 		ur_get_template( 'form-registration.php', array(
 			'form_data_array'        => $form_data_array,
 			'is_field_exists'        => $is_field_exists,

@@ -61,6 +61,8 @@ Check the docs at http://docs.wpeverest.com/docs/user-registration/
 
 = 1.0.1 - XX/07/2017 -
 * Tweak - Add RTL support for activation notice.
+* Formwise setting functionality
+* Google recaptcha on every form
 
 = 1.0.0 - 16/07/2017 =
 * Initial Public Release
