@@ -518,8 +518,6 @@ function ur_get_default_admin_roles() {
 
 	}
 
-//	echo '<pre>';
-//	print_r($all_roles);exit;
 	return apply_filters( 'user_registration_user_default_roles', $all_roles );
 
 }
@@ -535,9 +533,9 @@ function get_random_number() {
 
 }
 
-
 /**
  * @param $form_id
+ * @since 1.0.1
  */
 function ur_admin_form_settings_fields( $form_id ) {
 
@@ -612,6 +610,7 @@ function ur_admin_form_settings_fields( $form_id ) {
  * @param      $post_id
  * @param      $meta_key
  * @param null $default
+ * @since 1.0.1
  *
  * @return null
  */
@@ -645,6 +644,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 /**
  * @param $form_id
  * @param $meta_key
+ * @since 1.0.1
  */
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 

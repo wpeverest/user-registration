@@ -93,6 +93,7 @@ class UR_Shortcodes {
 
 	/**
 	 * Output for registration form .
+	 * @since 1.0.1 Recaptcha only
 	 */
 	private static function render_form( $form_id ) {
 		$args = array(
@@ -134,8 +135,6 @@ class UR_Shortcodes {
 
 			$recaptcha_site_secret = - 1;
 		}
-
-
 		if ( 'yes' == $recaptcha_enable ) {
 
 			wp_enqueue_script( 'ur-google-recaptcha' );
@@ -150,7 +149,6 @@ class UR_Shortcodes {
 
 			) );
 		}
-
 		$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 
 		if ( 'no' === $recaptcha_enable ) {
