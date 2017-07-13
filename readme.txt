@@ -59,7 +59,7 @@ Check the docs at http://docs.wpeverest.com/docs/user-registration/
 
 == Changelog ==
 
-= 1.0.1 - XX/07/2017 -
+= 1.0.1 - 13/07/2017 -
 * Tweak - Add RTL support for activation notice.
 * Formwise setting functionality
 * Google recaptcha on every form
