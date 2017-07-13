@@ -32,6 +32,8 @@ $frontend = UR_Frontend::instance();
 	<div class='ur-frontend-form' id='ur-frontend-form'>
 
 		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>">
+
+
 			<?php
 
 
@@ -75,7 +77,17 @@ $frontend = UR_Frontend::instance();
 			<?php } // End foreach().
 
 			if ( $is_field_exists ) {
+
 				?>
+				<div id="ur-recaptcha-node" style="width:100px;max-width: 100px; float:left">
+
+					<?php
+
+					echo $recaptcha_node;
+
+					?>
+
+				</div>
 				<button type="submit"
 				        class="ur-submit-button">
 					<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>

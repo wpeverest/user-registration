@@ -62,7 +62,7 @@ class UR_Frontend_Scripts {
 				'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
 				'has_rtl' => true,
 			),
-			'user-registration-general' => array(
+			'user-registration-general'     => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
 				'deps'    => '',
 				'version' => UR_VERSION,
@@ -167,12 +167,12 @@ class UR_Frontend_Scripts {
 	private static function register_scripts() {
 		$suffix           = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$register_scripts = array(
-			'user-registration' => array(
+			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
-			'ur-lost-password' => array(
+			'ur-lost-password'           => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/lost-password' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),
 				'version' => UR_VERSION,
@@ -180,6 +180,11 @@ class UR_Frontend_Scripts {
 			'ur-password-strength-meter' => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/password-strength-meter' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
+				'version' => UR_VERSION,
+			),
+			'ur-google-recaptcha'        => array(
+				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
+				'deps'    => array(),
 				'version' => UR_VERSION,
 			),
 		);
@@ -248,6 +253,7 @@ class UR_Frontend_Scripts {
 	 * Localize a UR script once.
 	 *
 	 * @access private
+	 *
 	 * @param  string $handle
 	 */
 	private static function localize_script( $handle ) {
@@ -276,9 +282,10 @@ class UR_Frontend_Scripts {
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
-					'home_url'             => home_url(),
-					'ursL10n'               => array(
-						'user_successfully_saved'    => __( 'User successfully saved.', 'user-registration' ),
+					'home_url'                         => home_url(),
+					'ursL10n'                          => array(
+						'user_successfully_saved' => __( 'User successfully saved.', 'user-registration' ),
+						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),
 				);
@@ -289,7 +296,7 @@ class UR_Frontend_Scripts {
 					'min_password_strength' => 3,
 					'i18n_password_error'   => __( 'Confirm password', 'user-registration' ),
 					'pwsL10n'               => array(
-						'shortpw'    => __( 'Too short password', 'user-registration' ),
+						'shortpw'  => __( 'Too short password', 'user-registration' ),
 						'bad'      => __( 'Bad password', 'user-registration' ),
 						'good'     => __( 'Good password', 'user-registration' ),
 						'strong'   => __( 'Strong password', 'user-registration' ),

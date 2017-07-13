@@ -1,4 +1,5 @@
 /* global  user_registration_params */
+/* global  ur_google_recaptcha_code */
 (function ( $ ) {
 	var ursL10n = user_registration_params.ursL10n;
 	$.fn.ur_form_submission = function () {
@@ -93,6 +94,22 @@
 							form_id: form_id,
 							ur_frontend_form_nonce: form_nonce
 						};
+
+						if ( 'undefined' != typeof (ur_google_recaptcha_code) ) {
+
+							if ( true == ur_google_recaptcha_code.is_captcha_enable ) {
+								var captchResponse = $this.find('#g-recaptcha-response').val();
+
+								if ( 0 === captchResponse.length ) {
+
+									form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
+
+									return;
+								}
+								grecaptcha.reset();
+							}
+						}
+
 						$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
 						$.ajax({
 							url: user_registration_params.ajax_url,
@@ -141,4 +158,19 @@
 	$(function () {
 		$('.ur-frontend-form form.register').ur_form_submission();
 	});
+
 }(jQuery));
+
+var google_recaptcha_user_registration;
+var onloadURCallback = function () {
+	// Renders the HTML element with id 'example1' as a reCAPTCHA widget.
+	// The id of the reCAPTCHA widget is assigned to 'widgetId1'.
+	google_recaptcha_user_registration = grecaptcha.render('node_recaptcha', {
+		'sitekey': ur_google_recaptcha_code.site_key,
+		'theme': 'light',
+		'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
+
+	});
+
+
+};

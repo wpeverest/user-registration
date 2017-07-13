@@ -518,6 +518,8 @@ function ur_get_default_admin_roles() {
 
 	}
 
+//	echo '<pre>';
+//	print_r($all_roles);exit;
 	return apply_filters( 'user_registration_user_default_roles', $all_roles );
 
 }
@@ -565,7 +567,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'id'                => 'user_registration_form_setting_enable_strong_password',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array( 'yes' =>__('Yes', 'user-registration'), 'no' => __('No', 'user-registration') ),
+				'options'           => array(
+					'yes' => __( 'Yes', 'user-registration' ),
+					'no'  => __( 'No', 'user-registration' )
+				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
 			),
@@ -581,7 +586,22 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Register' ),
 
 
-			)
+			),
+			array(
+				'type'              => 'select',
+				'label'     => sprintf( __('Enable %1$s reCaptcha %2$s support', 'user-registration' ), '<a href="'.admin_url().'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),						'id'       => 'user_registration_integration_setting_recaptcha_site_key',
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array(
+					'yes' => __( 'Yes', 'user-registration' ),
+					'no'  => __( 'No', 'user-registration' )
+				),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
+			),
 		);
 
 	return $arguments;
@@ -642,5 +662,7 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 		}
 
 	}
+
 	return $value;
 }
+

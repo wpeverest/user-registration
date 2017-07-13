@@ -9,7 +9,8 @@ jQuery(function ( $ ) {
 			'attribute': 'data-tip',
 			'fadeIn': 50,
 			'fadeOut': 50,
-			'delay': 200
+			'delay': 200,
+			'keepAlive' :true
 		};
 		$('.tips, .help_tip, .user-registration-help-tip').tipTip(tiptip_args);
 		// Add tiptip to parent element for widefat tables
