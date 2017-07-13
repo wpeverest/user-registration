@@ -229,7 +229,7 @@ class UR_Install {
 		$pages = apply_filters( 'user_registration_create_pages', array(
 			'myaccount' => array(
 				'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'My account', 'Page title', 'user-registration' ),
+				'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
 				'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
 			),
 		) );
