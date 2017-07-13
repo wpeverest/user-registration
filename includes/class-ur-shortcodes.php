@@ -116,10 +116,16 @@ class UR_Shortcodes {
 
 		$is_field_exists = false;
 
+
+		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+
+		wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
+
 		ur_get_template( 'form-registration.php', array(
-			'form_data_array' => $form_data_array,
-			'is_field_exists' => $is_field_exists,
-			'form_id'         => $form_id,
+			'form_data_array'        => $form_data_array,
+			'is_field_exists'        => $is_field_exists,
+			'form_id'                => $form_id,
+			'enable_strong_password' => $enable_strong_password
 		) );
 
 	}

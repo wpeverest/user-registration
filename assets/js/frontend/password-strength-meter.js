@@ -1,6 +1,6 @@
 /* global wp, ur_password_strength_meter_params */
 jQuery(function ( $ ) {
-	var pwsL10n=ur_password_strength_meter_params.pwsL10n;
+	var pwsL10n = ur_password_strength_meter_params.pwsL10n;
 	/**
 	 * Password Strength Meter class.
 	 */
@@ -12,7 +12,13 @@ jQuery(function ( $ ) {
 			var $this = this;
 			$(document.body).on('keyup change', 'input[name="user_confirm_password"], input[name="password_2"]', function () {
 
+				var enable_strength_password = $(this).closest('form').attr('data-enable-strength-password');
+				if ( 'no' === enable_strength_password ) {
+
+					return;
+				}
 				$this.strengthMeter($(this));
+
 			});
 		},
 		/**
@@ -25,7 +31,7 @@ jQuery(function ( $ ) {
 			// strength   = 1;
 			// fieldValue = field.val();
 			ur_password_strength_meter.includeMeter(wrapper, field);
-			ur_password_strength_meter.checkPasswordStrength( wrapper, field );
+			ur_password_strength_meter.checkPasswordStrength(wrapper, field);
 			// if ( fieldValue.length > 0 && strength < ur_password_strength_meter.min_password_strength ) {
 			// 	submit.attr( 'disabled', 'disabled' ).addClass( 'disabled' );
 			// } else {
