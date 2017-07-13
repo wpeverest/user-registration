@@ -123,7 +123,18 @@ class UR_Shortcodes {
 
 		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key', - 1 );
 
+
 		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret', - 1 );
+
+		if ( empty( $recaptcha_site_key ) ) {
+
+			$recaptcha_site_key = - 1;
+		}
+		if ( empty( $recaptcha_site_secret ) ) {
+
+			$recaptcha_site_secret = - 1;
+		}
+
 
 		if ( 'yes' == $recaptcha_enable ) {
 
@@ -140,7 +151,7 @@ class UR_Shortcodes {
 			) );
 		}
 
-		$recaptcha_node = '<div class="ur-recaptcha-error">' . __( 'Empty site settings or recaptcha configuration error.', 'user-registration' ) . '</div>';
+		$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 
 		if ( 'no' === $recaptcha_enable ) {
 

@@ -98,7 +98,7 @@
 
 						if ( 'undefined' !== typeof (ur_google_recaptcha_code) ) {
 
-							if ( true === ur_google_recaptcha_code.is_captcha_enable ) {
+							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
 								var captchResponse = $this.find('#g-recaptcha-response').val();
 
 								if ( 0 === captchResponse.length ) {
