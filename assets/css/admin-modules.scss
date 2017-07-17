@@ -1,0 +1,49 @@
+.ur-admin-module-block {
+	background: #fff;
+	box-shadow: 0 0 1px rgba(0, 0, 0, .2);
+	margin: 2% 1% 0;
+	max-width: 1140px;
+	padding: 20px;
+	li.ur-module-list {
+		float: left;
+		margin: 0 1em 1em 0 !important;
+		vertical-align: top;
+		width: 300px;
+		cursor: pointer;
+
+		.ur-single-module {
+			border: 1px solid #e1e1e1;
+
+			.ur-module-content {
+
+				padding: 10px 20px 20px 20px;
+				background: #f9f9f9;
+				border-top: 1px solid #e1e1e1;
+			}
+			.ur-single-module-title {
+				max-width: 100%;
+				max-height: 24px;
+				padding: 10px 20px;
+				display: block;
+				margin: 0;
+				background: #fff;
+				span.ur-module-icon {
+
+					float: right;
+				}
+			}
+			button {
+				float: right;
+			}
+			.notice {
+				margin: -4px 0 0 0;
+			}
+		}
+		&:hover {
+			.ur-single-module-title {
+				color: #0085ba;
+
+			}
+		}
+	}
+}

@@ -42,6 +42,8 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-main', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
 
+		wp_register_style( 'user-registration-modules', UR()->plugin_url() . '/assets/css/admin-modules.css', array(), UR_VERSION );
+
 		// Add RTL support for admin styles
 		wp_style_add_data( 'user-registration-main', 'rtl', 'replace' );
 
@@ -89,6 +91,12 @@ class UR_Admin_Assets {
 			'jquery',
 			'select2',
 		), UR_VERSION );
+		wp_register_script( 'user-registration-modules-script', UR()->plugin_url() . '/assets/js/admin/admin-modules' . $suffix . '.js', array(
+			'jquery',
+			'select2',
+		), UR_VERSION );
+
+
 		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(
 			'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'user-registration' ),
 			'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'user-registration' ),
@@ -101,6 +109,20 @@ class UR_Admin_Assets {
 			'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'user-registration' ),
 			'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'user-registration' ),
 		) );
+		if ( 'user-registration_page_user-registration-modules' === $screen_id ) {
+
+			wp_enqueue_style( 'user-registration-modules' );
+
+			wp_enqueue_script( 'user-registration-modules-script' );
+
+
+			wp_localize_script( 'user-registration-modules-script', 'user_registration_module_params', array(
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
+				'error_could_not_install' => __( 'Could not install.', 'user-registration' )
+
+			) );
+
+		}
 		// UserRegistration admin pages
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
 			wp_enqueue_script( 'user-registration-admin' );

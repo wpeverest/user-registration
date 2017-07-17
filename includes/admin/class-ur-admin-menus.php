@@ -29,6 +29,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
+			add_action( 'admin_menu', array( $this, 'user_registration_modules_menu' ), 65 );
 
 			// Set screens
 			add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
@@ -214,6 +215,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
+		 * Add menu items.
+		 */
+		public function user_registration_modules_menu() {
+
+			add_submenu_page( 'user-registration', __( 'User Registration Modules ', 'user-registration' ), __( 'Modules', 'user-registration' ), 'manage_user_registration', 'user-registration-modules', array(
+				$this,
+				'add_registration_modules_page',
+			) );
+		}
+
+		/**
 		 * Validate screen options on update.
 		 */
 		public function set_screen_option( $status, $option, $value ) {
@@ -248,6 +260,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</form>
 			</div>
 			<?php
+		}
+
+		/**
+		 * Init the add registration page.
+		 */
+		public function add_registration_modules_page() {
+
+
+			echo ur_get_modules_admin_view();
+
+
 		}
 
 		/**
