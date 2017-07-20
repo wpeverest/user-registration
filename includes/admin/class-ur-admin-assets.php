@@ -121,7 +121,7 @@ class UR_Admin_Assets {
 				'error_could_not_install'   => __( 'Could not install.', 'user-registration' ),
 				'error_could_not_uninstall' => __( 'Could not uninstall.', 'user-registration' ),
 				'install'                   => __( 'Install', 'user-registration' ),
-				'uninstall'                 => __( 'Uninstall.', 'user-registration' )
+				'uninstall'                 => __( 'Uninstall', 'user-registration' )
 
 			) );
 
