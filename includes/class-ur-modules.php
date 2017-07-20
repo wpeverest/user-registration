@@ -26,7 +26,8 @@ class UR_Modules {
 
 		$ajax_events = array(
 
-			'ajax_module_install' => true,
+			'ajax_module_install'   => true,
+			'ajax_module_uninstall' => true,
 
 
 		);
@@ -143,6 +144,55 @@ VALUES
 		wp_send_json_error( array(
 
 			'message' => __( 'Could not installed.', 'user-registration' )
+		) );
+
+		exit;
+
+	}
+
+	public static function ajax_module_uninstall() {
+
+		$module_name = isset( $_POST['module_name'] ) ? $_POST['module_name'] : '';
+
+		check_ajax_referer( 'module-nonce-' . $module_name, 'security' );
+
+		if ( true !== ur_get_is_register_module( $module_name ) ) {
+
+			wp_send_json_error( array(
+
+				'message' => __( 'Not registered.', 'user-registration' )
+			) );
+
+
+			exit;
+
+		}
+		if ( ! ur_is_module_already_install( $module_name ) ) {
+
+
+			wp_send_json_error( array(
+
+				'message' => __( 'Module not installed.', 'user-registration' )
+			) );
+
+			exit;
+		}
+
+
+		$status = ur_uninstall_module( $module_name );
+
+
+		if ( $status ) {
+			wp_send_json_success( array(
+
+				'message' => __( 'Successfully uninstalled.', 'user-registration' )
+			) );
+			exit;
+		}
+
+		wp_send_json_error( array(
+
+			'message' => __( 'Could not uninstall.', 'user-registration' )
 		) );
 
 		exit;

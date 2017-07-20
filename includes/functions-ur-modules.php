@@ -255,9 +255,9 @@ function ur_get_modules_admin_view() {
 
 		if ( $is_module_already_installed ) {
 
-			$button_class = 'button-disabled ur-module-already-install';
+			$button_class = 'ur-module-uninstall';
 
-			$button_label = __( 'Installed', 'user-registration' );
+			$button_label = __( 'Uninstall', 'user-registration' );
 
 		}
 
@@ -271,7 +271,7 @@ function ur_get_modules_admin_view() {
 
 		$list .= '<p class="ur-module-description">' . $module_data['description'] . '</p>';
 
-		$list .= '<button data-installed="' . __( 'Install', 'user-registration' ) . '" data-already-installed="' . __( 'Installed', 'user-registration' ) . '" type="button" class="button button-large ' . $button_class . '">' . $button_label . '</button>';
+		$list .= '<button type="button" class="button button-large ' . $button_class . '">' . $button_label . '</button>';
 
 		$list .= '<div style="clear:both"></div>';
 

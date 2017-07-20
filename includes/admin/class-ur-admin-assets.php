@@ -117,8 +117,11 @@ class UR_Admin_Assets {
 
 
 			wp_localize_script( 'user-registration-modules-script', 'user_registration_module_params', array(
-				'ajax_url'                => admin_url( 'admin-ajax.php' ),
-				'error_could_not_install' => __( 'Could not install.', 'user-registration' )
+				'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+				'error_could_not_install'   => __( 'Could not install.', 'user-registration' ),
+				'error_could_not_uninstall' => __( 'Could not uninstall.', 'user-registration' ),
+				'install'                   => __( 'Install', 'user-registration' ),
+				'uninstall'                 => __( 'Uninstall.', 'user-registration' )
 
 			) );
 
