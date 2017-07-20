@@ -50,7 +50,7 @@ class UR_Admin_Settings {
 
 			$settings[] = include( 'settings/class-ur-settings-general.php' );
 
-//			$settings[] = include( 'settings/class-ur-settings-integration.php' );
+ 	        $settings[] = include( 'settings/class-ur-settings-integration.php' );
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
@@ -165,6 +165,7 @@ class UR_Admin_Settings {
 	 * Get a setting from the settings API.
 	 *
 	 * @param mixed $option_name
+	 *
 	 * @return string
 	 */
 	public static function get_option( $option_name, $default = '' ) {
@@ -542,6 +543,7 @@ class UR_Admin_Settings {
 	 * settings types.
 	 *
 	 * @param  array $value The form field value array
+	 *
 	 * @return array The description and tip as a 2 element array
 	 */
 	public static function get_field_description( $value ) {
@@ -583,6 +585,7 @@ class UR_Admin_Settings {
 	 * Loops though the user registration options array and outputs each field.
 	 *
 	 * @param  array $options Options array to output
+	 *
 	 * @return bool
 	 */
 	public static function save_fields( $options ) {

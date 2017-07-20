@@ -121,7 +121,6 @@ final class UserRegistration {
 		$this->define( 'UR_VERSION', $this->version );
 		$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 		$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
-		$this->define( 'UR_MODULE_PATH', UR_ABSPATH . 'includes' . UR_DS . 'modules' . UR_DS );
 		$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
 	}
 
@@ -178,7 +177,6 @@ final class UserRegistration {
 		 * Core classes.
 		 */
 		include_once( UR_ABSPATH . 'includes/functions-ur-core.php' );
-		include_once( UR_ABSPATH . 'includes/functions-ur-modules.php' );
 
 
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
@@ -186,7 +184,6 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-ajax.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
-		include_once( UR_ABSPATH . 'includes/class-ur-modules.php' );
 
 		/**
 		 * Config classes.
