@@ -19,6 +19,10 @@ View features https://wpeverest.com/wordpress-plugins/user-registration/
 
 Check the docs at http://docs.wpeverest.com/docs/user-registration/
 
+= User Registration Plugin in action: =
+
+[youtube https://www.youtube.com/watch?v=H34GC40Ly88]
+
 ### Features And Options:
 * Simple, Clean and Beautiful Registration Form
 * Drag and Drop UI
