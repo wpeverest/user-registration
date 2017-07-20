@@ -312,7 +312,8 @@ class UR_Install {
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		$sql = "
+		$sql =
+			<<<SQL
 CREATE TABLE {$wpdb->prefix}user_registration_sessions (
   session_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   session_key char(32) NOT NULL,
@@ -321,7 +322,17 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
   PRIMARY KEY  (session_key),
   UNIQUE KEY session_id (session_id)
 ) $collate;
-		";
+
+CREATE TABLE {$wpdb->prefix}user_registration_modules (
+  module_id BIGINT  NOT NULL AUTO_INCREMENT,
+  module_name varchar(100) NOT NULL,
+  installation_date datetime DEFAULT NULL,
+  is_installed int(1) DEFAULT NULL,
+  user_id BIGINT NOT NULL,
+  PRIMARY KEY  (module_id),
+  UNIQUE KEY module_name (module_name)
+) $collate;
+SQL;
 
 		dbDelta( $sql );
 	}
