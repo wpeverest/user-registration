@@ -79,7 +79,7 @@ class UR_Emailer {
 
 		$subject = __( sprintf( 'New user register on %s', $blog_info ), 'user-registration' );
 
-		$message = apply_filters('user_registration_admin_email_message', __( sprintf( 'New user registered on <a href="%s">%s</a>\nEmail:%s', get_home_url(), $blog_info, $admin_email ), 'user-registration' ) );
+		$message = apply_filters('user_registration_admin_email_message', __( sprintf( 'New user registered on <a href="%s">%s</a>\nEmail:%s', get_home_url(), $blog_info, $user_email ), 'user-registration' ) );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
 
