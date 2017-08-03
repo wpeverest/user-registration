@@ -182,6 +182,7 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-post-types.php' ); // Registers post types
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
+		include_once( UR_ABSPATH . 'includes/class-ur-emailer.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-ajax.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
 

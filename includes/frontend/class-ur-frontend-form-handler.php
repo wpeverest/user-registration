@@ -68,9 +68,16 @@ class UR_Frontend_Form_Handler {
 				'role'     => $user_role,
 			);
 
+			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter' , self::$valid_form_data, $form_id );
+
+			do_action( 'user_registration_before_register_user_action' , self::$valid_form_data, $form_id );
+
 			$user_id = wp_insert_user( $userdata );
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
+
+			do_action( 'user_registration_after_register_user_action' , self::$valid_form_data, $form_id, $user_id );
+
 
 			if ( $user_id > 0 ) {
 
