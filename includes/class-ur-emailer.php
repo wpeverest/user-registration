@@ -56,11 +56,13 @@ class UR_Emailer {
 
 		$blog_info = get_bloginfo();
 
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+
 		$subject = __( sprintf( 'You have successfully registered on %s', $blog_info ), 'user-registration' );
 
 		$message = apply_filters( 'user_registration_user_email_message', __( sprintf( 'Thank you for registration on <a href="%s">%s</a>', get_home_url(), $blog_info ), 'user-registration' ) );
 
-		wp_mail( $email, $subject, $message );
+		wp_mail( $email, $subject, $message, $headers );
 
 	}
 
@@ -68,6 +70,8 @@ class UR_Emailer {
 	 * @param $user_email
 	 */
 	private static function send_mail_to_admin( $user_email ) {
+
+		$headers = array('Content-Type: text/html; charset=UTF-8');
 
 		$admin_email = get_option( 'admin_email' );
 
@@ -77,7 +81,7 @@ class UR_Emailer {
 
 		$message = apply_filters('user_registration_admin_email_message', __( sprintf( 'New user registered on <a href="%s">%s</a>\nEmail:%s', get_home_url(), $blog_info, $admin_email ), 'user-registration' ) );
 
-		wp_mail( $admin_email, $subject, $message );
+		wp_mail( $admin_email, $subject, $message, $headers );
 
 	}
 
