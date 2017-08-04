@@ -156,6 +156,7 @@
 			events.init();
 		});
 	};
+
 	$(function () {
 		$('.ur-frontend-form form.register').ur_form_submission();
 	});

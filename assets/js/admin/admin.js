@@ -18,6 +18,11 @@ jQuery(function ( $ ) {
 			$(this).closest('a, th').attr('data-tip', $(this).data('tip')).tipTip(tiptip_args).css('cursor', 'help');
 		});
 	}).trigger('init_tooltips');
+	$('body').on('keypress','#ur-form-name', function (e) {
+		if ( 13 === e.which ) {
+			$('#save_form_footer').eq(0).trigger('click');
+		}
+	});
 });
 (function ( $, user_registration_admin_data ) {
 	var i18n_admin = user_registration_admin_data.i18n_admin;
@@ -756,3 +761,4 @@ jQuery(function ( $ ) {
 
 
 }(jQuery, window.user_registration_admin_data));
+
