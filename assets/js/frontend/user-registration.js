@@ -61,7 +61,7 @@
 				show_message: function ( message, type, $submit_node ) {
 					$submit_node.find('.ur-message').remove();
 					var wrapper = $('<div class="ur-message user-registration-' + type + '" id="ur-submit-message-node"/>');
-					wrapper.addClass(type);
+					//wrapper.addClass(type);
 					wrapper.append(message);
 					$submit_node.append(wrapper);
 
@@ -142,10 +142,10 @@
 
 									}
 								} catch ( e ) {
-									message.addClass(type);
+									//message.addClass(type);
 									message.append('<li>' + e.message + '</li>');
 								}
-								message.addClass(type);
+								//message.addClass(type);
 								form.show_message(message, type, $this);
 							}
 						});

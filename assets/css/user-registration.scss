@@ -63,7 +63,7 @@
 	li {
 		list-style: none outside !important; // Required for default theme compatibility
 		padding-left: 0 !important; // Required for default theme compatibility
-		margin-left: 0 !important; // Required for default theme compatibility		
+		margin-left: 0 !important; // Required for default theme compatibility
 	}
 	.message{
 		margin:0;padding:0;
@@ -96,7 +96,7 @@
 	&::before {
 		content: '\f534';
 		color: $color_danger;
-	}	
+	}
 }
 
 .ur-frontend-form {
@@ -190,7 +190,7 @@
 		button[type="submit"] {
 			float: right;
 			padding: 10px 20px;
-			line-height: 20px;
+			line-height: 1em;
  			text-align: center;
 			word-break: break-word;
 			white-space: normal;
@@ -225,7 +225,7 @@
 		}
 		&.ur-message.message{
 			background: rgba(143, 174, 27,0.2);
-		}		
+		}
 	}
 }
 
