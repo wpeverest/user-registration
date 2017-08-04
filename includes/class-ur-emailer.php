@@ -97,9 +97,9 @@ class UR_Emailer {
 
 			'Hi Admin,
 					<br/>
-					A new user (%s - %s) has successfully registered to your site<a href="%s">%s</a>.
+					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
 					<br/>
-					Please review the user role and details at \'Users\' menu in your WP dashboard.<br/>
+					Please review the user role and details at <b>Users</b> menu in your WP dashboard.<br/>
 					Thank you!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
