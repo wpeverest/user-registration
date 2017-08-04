@@ -73,7 +73,7 @@ class UR_Emailer {
  					<br/>
  					You have successfully completed user registration on <a href="%s">%s</a>.
  					<br/>
- 					Please visit my account page to edit your account details and create your user profile on <a href="%s">%s</a>.',
+ 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
 			$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		wp_mail( $email, $subject, $message, $headers );
@@ -99,7 +99,7 @@ class UR_Emailer {
 					<br/>
 					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
 					<br/>
-					Please review the user role and details at <b>Users</b> menu in your WP dashboard.<br/>
+					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.<br/>
 					Thank you!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
