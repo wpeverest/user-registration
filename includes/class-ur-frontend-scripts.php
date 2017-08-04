@@ -284,7 +284,7 @@ class UR_Frontend_Scripts {
 					'form_required_fields'             => ur_get_required_fields(),
 					'home_url'                         => home_url(),
 					'ursL10n'                          => array(
-						'user_successfully_saved' => __( 'User successfully saved.', 'user-registration' ),
+						'user_successfully_saved' => __( 'User successfully registered.', 'user-registration' ),
 						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),

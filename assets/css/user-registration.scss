@@ -25,7 +25,7 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	padding: 1em 2em 1em 3.5em;
+	padding: 1.5em 2em 1.5em 3.5em;
 	margin: 0 0 2em;
 	position: relative;
 	background-color: lighten($secondary, 5%);
@@ -54,6 +54,9 @@
 		list-style: none outside !important; // Required for default theme compatibility
 		padding-left: 0 !important; // Required for default theme compatibility
 		margin-left: 0 !important; // Required for default theme compatibility
+	}
+	.message{
+		margin:0;padding:0;
 	}
 }
 
@@ -178,9 +181,7 @@
 			float: right;
 			padding: 10px 20px;
 			line-height: 20px;
-			background: $primary_color;
-			color: $white;
-			text-align: center;
+ 			text-align: center;
 			word-break: break-word;
 			white-space: normal;
 			border: none;
@@ -208,8 +209,7 @@
 	#ur-submit-message-node{
 
 		margin : 10px 0 0 0;
-		padding-bottom: 0;
-		&.error{
+ 			&.error{
 
 			background: rgba(206, 0, 0, 0.1);
 		}
@@ -246,7 +246,7 @@
 					font-family: 'sans-serif';
 					text-decoration: none;
 				}
-				
+
 				&.is-active {
 					background-color: $color_gray_eleven;
 					border-left: 1px solid $color_gray_six;
