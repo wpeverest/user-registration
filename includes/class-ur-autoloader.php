@@ -86,7 +86,7 @@ class UR_Autoloader {
 			$path = $this->include_path . 'form/';
 		}
 
-		if ( empty( $path ) || ( ! $this->load_file( $path . $file ) && strpos( $class, 'ess_' ) === 0 ) ) {
+		if ( empty( $path ) || ( ! $this->load_file( $path . $file ) && strpos( $class, 'ur_' ) === 0 ) ) {
 			$this->load_file( $this->include_path . $file );
 		}
 	}

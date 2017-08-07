@@ -72,13 +72,13 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.0.2 - 04/08/2017 -
+= 1.0.2 - 04/08/2017 =
 * Email notification to user and admin
 * Some frontend form design fixes
 * On enter save form setting added on backend
 
 
-= 1.0.1 - 13/07/2017 -
+= 1.0.1 - 13/07/2017 =
 * Tweak - Add RTL support for activation notice.
 * Formwise setting functionality
 * Google Recaptcha on every form
