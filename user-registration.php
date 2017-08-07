@@ -177,8 +177,6 @@ final class UserRegistration {
 		 * Core classes.
 		 */
 		include_once( UR_ABSPATH . 'includes/functions-ur-core.php' );
-
-
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-post-types.php' ); // Registers post types
 		include_once( UR_ABSPATH . 'includes/class-ur-emailer.php' );
