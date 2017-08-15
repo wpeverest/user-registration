@@ -215,6 +215,9 @@ class UR_Admin_Settings {
 			if ( ! isset( $value['id'] ) ) {
 				$value['id'] = '';
 			}
+			if ( ! isset( $value['row_class'] ) ) {
+				$value['row_class'] = '';
+			}
 			if ( ! isset( $value['title'] ) ) {
 				$value['title'] = isset( $value['name'] ) ? $value['name'] : '';
 			}
@@ -285,7 +288,7 @@ class UR_Admin_Settings {
 				case 'password' :
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top">
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
@@ -309,7 +312,7 @@ class UR_Admin_Settings {
 				case 'color' :
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top">
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
@@ -337,7 +340,7 @@ class UR_Admin_Settings {
 
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top">
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
@@ -363,7 +366,7 @@ class UR_Admin_Settings {
 
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top">
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
@@ -402,7 +405,7 @@ class UR_Admin_Settings {
 
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top">
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
@@ -458,7 +461,7 @@ class UR_Admin_Settings {
 
 					if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
 						?>
-							<tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
+							<tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) );   echo ' ' .esc_attr( $value['row_class'] ); ?>">
 								<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?></th>
 								<td class="forminp forminp-checkbox">
 									<fieldset>
@@ -521,7 +524,7 @@ class UR_Admin_Settings {
 					}
 
 
-					?><tr valign="top" class="single_select_page" <?php echo isset($value['display']) && $value['display']==='none' ? 'style="display:none"':''  ?>>
+					?><tr valign="top" class="single_select_page <?php echo esc_attr( $value['row_class'] ); ?>" <?php echo isset($value['display']) && $value['display']==='none' ? 'style="display:none"':''  ?>>
 						<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tooltip_html; ?></th>
 						<td class="forminp">
 							<?php echo str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
