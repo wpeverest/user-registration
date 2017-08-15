@@ -29,7 +29,7 @@ class UR_Frontend_Form_Handler {
 
 		self::$form_id = $form_id;
 
-		$post_content  = self::get_post_content( $form_id );
+		$post_content = self::get_post_content( $form_id );
 
 		$post_content_array = array();
 
@@ -68,22 +68,31 @@ class UR_Frontend_Form_Handler {
 				'role'     => $user_role,
 			);
 
-			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter' , self::$valid_form_data, $form_id );
+			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
 
-			do_action( 'user_registration_before_register_user_action' , self::$valid_form_data, $form_id );
+			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
 			$user_id = wp_insert_user( $userdata );
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
 
-			do_action( 'user_registration_after_register_user_action' , self::$valid_form_data, $form_id, $user_id );
+			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
 
 			if ( $user_id > 0 ) {
 
-				wp_send_json_success( array(
+
+				$enable_auto_login = $recaptcha_enable = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_auto_login' );
+
+				$success_params = array(
 					'username' => self::$valid_form_data['user_username']->value,
-				) );
+				);
+				if ( 'yes' === $enable_auto_login ) {
+					wp_clear_auth_cookie();
+					wp_set_auth_cookie( $user_id );
+					$success_params['auto_login'] = true;
+				}
+				wp_send_json_success( $success_params );
 
 			}
 

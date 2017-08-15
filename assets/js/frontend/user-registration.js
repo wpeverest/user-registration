@@ -139,6 +139,9 @@
 										$this[ 0 ].reset();
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
+										if(typeof response.data.auto_login !== 'undefined' && response.data.auto_login) {
+											location.reload();
+										}
 
 									}
 								} catch ( e ) {
