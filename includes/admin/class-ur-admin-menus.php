@@ -51,6 +51,29 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				if ( isset( $_GET['empty_trash'] ) ) {
 					$this->empty_trash();
 				}
+
+				$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+
+				$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
+
+				$form_id = isset( $_GET['form'] ) && is_numeric( $_GET['form'] ) ? $_GET['form'] : '';
+
+				if ( ! empty( $action ) && ! empty( $nonce ) && ! empty( $form_id ) ) {
+
+					$flag = wp_verify_nonce( $nonce, 'user_registration_form_duplicate' . $form_id );
+
+					if ( $flag == true && ! is_wp_error( $flag ) ) {
+
+						if ( 'duplicate' === $action ) {
+
+							$this->duplicate( $form_id );
+
+						}
+
+					}
+
+
+				}
 			}
 		}
 
@@ -93,6 +116,51 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Redirect to registrations page
 			wp_redirect( admin_url( 'admin.php?page=user-registration&status=trash&untrashed=' . $qty ) );
 			exit();
+		}
+
+		/**
+		 * Bulk actions.
+		 */
+		private function duplicate( $form_id ) {
+			$post            = get_post( $form_id );
+			$current_user    = wp_get_current_user();
+			$new_post_author = $current_user->ID;
+
+			/*
+			 * if post data exists, create the post duplicate
+			 */
+			if ( isset( $post ) && $post != null ) {
+
+				/*
+				 * new post data array
+				 */
+				$args = array(
+					'comment_status' => $post->comment_status,
+					'ping_status'    => $post->ping_status,
+					'post_author'    => $new_post_author,
+					'post_content'   => $post->post_content,
+					'post_excerpt'   => $post->post_excerpt,
+					'post_name'      => $post->post_name,
+					'post_parent'    => $post->post_parent,
+					'post_password'  => $post->post_password,
+					'post_status'    => $post->post_status,
+					'post_title'     => __( 'Copy of ', 'user-registration' ) . $post->post_title,
+					'post_type'      => $post->post_type,
+					'to_ping'        => $post->to_ping,
+					'menu_order'     => $post->menu_order
+				);
+
+				/*
+				 * insert the post by wp_insert_post() function
+				 */
+				$new_post_id = wp_insert_post( $args );
+
+				/*
+				 * finally, redirect to the edit post screen for the new draft
+				 */
+				wp_redirect( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $new_post_id ) );
+				exit;
+			}
 		}
 
 		/**

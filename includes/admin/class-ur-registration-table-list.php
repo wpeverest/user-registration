@@ -121,6 +121,12 @@ class UR_Licenses_Table_List extends WP_List_Table {
 				$actions['delete'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete this item permanently', 'user-registration' ) . '" href="' . get_delete_post_link( $registration->ID, '', true ) . '">' . esc_html__( 'Delete permanently', 'user-registration' ) . '</a>';
 			}
 		}
+		$duplicate_nonce = wp_create_nonce( 'user_registration_form_duplicate' . $registration->ID );
+		$duplicate_link  = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&form=' . $registration->ID );
+
+		if ( current_user_can( $post_type_object->cap->edit_post, $registration->ID ) && 'publish' === $post_status ) {
+			$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . __( 'Duplicate', 'user-registration' ) . '</a>';
+		}
 
 		$row_actions = array();
 
@@ -156,8 +162,8 @@ class UR_Licenses_Table_List extends WP_List_Table {
 
 		if ( current_user_can( 'edit_user' ) ) {
 			return '<a href="' . esc_url( add_query_arg( array(
-				'user_id' => $user->ID,
-			), admin_url( 'user-edit.php' ) ) ) . '">' . esc_html( $user_name ) . '</a>';
+					'user_id' => $user->ID,
+				), admin_url( 'user-edit.php' ) ) ) . '">' . esc_html( $user_name ) . '</a>';
 		}
 
 		return esc_html( $user_name );
@@ -179,16 +185,16 @@ class UR_Licenses_Table_List extends WP_List_Table {
 		}
 
 		$t_time = mysql2date( __( 'Y/m/d g:i:s A', 'user-registration' ),
-		$post->post_date, true );
+			$post->post_date, true );
 		$m_time = $post->post_date;
 		$time   = mysql2date( 'G', $post->post_date )
-				  - get_option( 'gmt_offset' ) * 3600;
+		          - get_option( 'gmt_offset' ) * 3600;
 
 		$time_diff = time() - $time;
 
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
 			$h_time = sprintf(
-			__( '%s ago', 'user-registration' ), human_time_diff( $time ) );
+				__( '%s ago', 'user-registration' ), human_time_diff( $time ) );
 		} else {
 			$h_time = mysql2date( __( 'Y/m/d', 'user-registration' ), $m_time );
 		}
@@ -254,9 +260,11 @@ class UR_Licenses_Table_List extends WP_List_Table {
 		$total_posts  = array_sum( (array) $num_posts );
 
 		// Subtract post types that are not included in the admin all list.
-		foreach ( get_post_stati( array(
-			'show_in_admin_all_list' => false,
-		) ) as $state ) {
+		foreach (
+			get_post_stati( array(
+				'show_in_admin_all_list' => false,
+			) ) as $state
+		) {
 			$total_posts -= $num_posts->$state;
 		}
 
@@ -264,13 +272,24 @@ class UR_Licenses_Table_List extends WP_List_Table {
 		/* translators: %s: count */
 		$status_links['all'] = "<a href='admin.php?page=user-registration'$class>" . sprintf( _nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_posts, 'posts', 'user-registration' ), number_format_i18n( $total_posts ) ) . '</a>';
 
-		foreach ( get_post_stati( array(
-			'show_in_admin_status_list' => true,
-		), 'objects' ) as $status ) {
+		foreach (
+			get_post_stati( array(
+				'show_in_admin_status_list' => true,
+			), 'objects' ) as $status
+		) {
 			$class       = '';
 			$status_name = $status->name;
 
-			if ( ! in_array( $status_name, array( 'publish', 'draft', 'pending', 'trash', 'future', 'private', 'auto-draft' ) ) ) {
+			if ( ! in_array( $status_name, array(
+				'publish',
+				'draft',
+				'pending',
+				'trash',
+				'future',
+				'private',
+				'auto-draft'
+			) )
+			) {
 				continue;
 			}
 
