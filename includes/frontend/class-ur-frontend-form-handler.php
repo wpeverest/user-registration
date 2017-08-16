@@ -82,12 +82,12 @@ class UR_Frontend_Form_Handler {
 			if ( $user_id > 0 ) {
 
 
-				$enable_auto_login = $recaptcha_enable = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_auto_login' );
+				$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 
 				$success_params = array(
 					'username' => self::$valid_form_data['user_username']->value,
 				);
-				if ( 'yes' === $enable_auto_login ) {
+				if ( 'auto_login' === $login_option ) {
 					wp_clear_auth_cookie();
 					wp_set_auth_cookie( $user_id );
 					$success_params['auto_login'] = true;

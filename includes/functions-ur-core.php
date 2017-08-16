@@ -602,21 +602,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
-			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Enable auto login after registration', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_enable_auto_login',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => array(
-					'yes' => __( 'Yes', 'user-registration' ),
-					'no'  => __( 'No', 'user-registration' )
-				),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_auto_login', 'no' ),
 			)
 
 		)
@@ -625,6 +610,20 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 
 	return $arguments['setting_data'];
+
+}
+
+/**
+ * @return mixed
+ */
+function ur_login_option() {
+
+	return apply_filters( 'user_registration_login_options', array(
+
+			'default'    => __( 'Default', 'user-registration' ),
+			'auto_login' => __( 'Enable auto login after registration', 'user-registration' )
+		)
+	);
 
 }
 

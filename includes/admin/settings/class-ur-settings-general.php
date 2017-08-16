@@ -65,6 +65,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'options'  => $all_roles,
 					),
+					array(
+						'title'    => __( 'User Login option', 'user-registration' ),
+						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+						'id'       => 'user_registration_general_setting_login_options',
+						'default'  => 'default',
+						'type'     => 'select',
+						'class'    => 'ur-enhanced-select',
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+						'options'  => ur_login_option(),
+					),
 
 					array(
 						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
