@@ -119,7 +119,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Bulk actions.
+		 * Duplicate form
 		 */
 		private function duplicate( $form_id ) {
 			$post            = get_post( $form_id );
