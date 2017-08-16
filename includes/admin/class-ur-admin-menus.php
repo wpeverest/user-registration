@@ -131,6 +131,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 			if ( isset( $post ) && $post != null ) {
 
+				if('publish' !== $post->ping_status){
+
+					return false;
+				}
+
 				/*
 				 * new post data array
 				 */
