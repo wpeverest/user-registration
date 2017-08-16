@@ -131,7 +131,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 			if ( isset( $post ) && $post != null ) {
 
-				if('publish' !== $post->ping_status){
+				if('publish' !== $post->post_status){
 
 					return false;
 				}
