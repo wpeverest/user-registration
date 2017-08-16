@@ -338,6 +338,9 @@ function ur_get_field_type( $field_key ) {
 			case 'country':
 				$field_type = 'select';
 				break;
+			case 'file':
+				$field_type = 'file';
+				break;
 		}
 	}
 
@@ -486,7 +489,8 @@ function ur_load_form_field_class( $class_key ) {
 	$exploded_class = explode( '_', $class_key );
 	$class_path     = UR_FORM_PATH . 'class-ur-' . join( '-', array_map( 'strtolower', $exploded_class ) ) . '.php';
 	$class_name     = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
-	$class_path = apply_filters( 'user_registration_form_field_' . $class_key, $class_path );
+	$class_path     = apply_filters( 'user_registration_form_field_' . $class_key, $class_path );
+
 	if ( ! class_exists( $class_name ) ) {
 		if ( file_exists( $class_path ) ) {
 

@@ -93,6 +93,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'priority'          => '',
 		);
 
+		echo $args['type'] .'<br/>';
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
@@ -153,6 +154,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				         . $args['label'] . $required . '</label>';
 
 				break;
+			case 'file' :
+
+			$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
+					<input data-value="'.$value.'" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+			         . $args['label'] . $required . '</label>';
+
+			break;
 			case 'password' :
 			case 'text' :
 			case 'email' :

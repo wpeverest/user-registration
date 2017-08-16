@@ -45,6 +45,9 @@ class UR_Frontend {
 	 */
 	public function user_registration_frontend_form( $field_object, $form_id ) {
 
+		$class_name = ur_load_form_field_class($field_object->field_key);
+		$instance = $class_name::get_instance();
+/*
 		$class_path = UR_FORM_PATH . 'class-ur-' . trim( str_replace( '_', '-', $field_object->field_key ) ) . '.php';
 
 		$class_name = 'UR_' . join( '_', array_map( 'ucfirst', explode( '_', $field_object->field_key ) ) );
@@ -57,9 +60,9 @@ class UR_Frontend {
 
 			$instance = $class_name::get_instance();
 
-		}
+		}*/
 
-		$setting['general_setting'] = $field_object->general_setting;
+ 		$setting['general_setting'] = $field_object->general_setting;
 
 		$setting['advance_setting'] = $field_object->advance_setting;
 
