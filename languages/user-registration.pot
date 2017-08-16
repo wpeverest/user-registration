@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.0.2\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-08-04 11:47:48+00:00\n"
+"POT-Creation-Date: 2017-08-16 05:42:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,17 +34,21 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:103
+#: includes/admin/class-ur-admin-menus.php:152
+msgid "Copy of "
+msgstr ""
+
+#: includes/admin/class-ur-admin-menus.php:176
 msgid "You do not have permissions to edit forms!"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:128
+#: includes/admin/class-ur-admin-menus.php:201
 #: includes/admin/class-ur-admin-notices.php:110
 #: includes/admin/class-ur-admin-settings.php:68
 msgid "Action failed. Please refresh the page and retry."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:132
+#: includes/admin/class-ur-admin-menus.php:205
 msgid "You do not have permissions to delete forms!"
 msgstr ""
 
@@ -52,75 +56,75 @@ msgstr ""
 msgid "User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:181
+#: includes/admin/class-ur-admin-menus.php:254
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:181
+#: includes/admin/class-ur-admin-menus.php:254
 #: includes/class-ur-install.php:438
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:196
+#: includes/admin/class-ur-admin-menus.php:269
 #: includes/admin/class-ur-registration-table-list.php:51
 msgid "Title"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:197
+#: includes/admin/class-ur-admin-menus.php:270
 #: includes/admin/class-ur-registration-table-list.php:52
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:198
+#: includes/admin/class-ur-admin-menus.php:271
 msgid "Entry Link"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:199
+#: includes/admin/class-ur-admin-menus.php:272
 #: includes/admin/class-ur-registration-table-list.php:54
 msgid "Author"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:200
+#: includes/admin/class-ur-admin-menus.php:273
 #: includes/admin/class-ur-registration-table-list.php:55
 msgid "Date"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:209
-#: includes/admin/class-ur-admin-menus.php:237
+#: includes/admin/class-ur-admin-menus.php:282
+#: includes/admin/class-ur-admin-menus.php:310
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:242
+#: includes/admin/class-ur-admin-menus.php:315
 msgid "Search Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:264
+#: includes/admin/class-ur-admin-menus.php:337
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:267
+#: includes/admin/class-ur-admin-menus.php:340
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:288
+#: includes/admin/class-ur-admin-menus.php:361
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:307
-#: includes/admin/settings/class-ur-settings-general.php:145
+#: includes/admin/class-ur-admin-menus.php:380
+#: includes/admin/settings/class-ur-settings-general.php:156
 #: includes/class-ur-query.php:77
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:345
+#: includes/admin/class-ur-admin-menus.php:418
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:349
+#: includes/admin/class-ur-admin-menus.php:422
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:446
+#: includes/admin/class-ur-admin-menus.php:519
 msgid "Empty form data"
 msgstr ""
 
@@ -147,7 +151,7 @@ msgstr ""
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:527
+#: includes/admin/class-ur-admin-settings.php:530
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -169,7 +173,7 @@ msgid "Restore this item from the Trash"
 msgstr ""
 
 #: includes/admin/class-ur-registration-table-list.php:116
-#: includes/admin/class-ur-registration-table-list.php:301
+#: includes/admin/class-ur-registration-table-list.php:320
 msgid "Restore"
 msgstr ""
 
@@ -182,45 +186,49 @@ msgid "Delete this item permanently"
 msgstr ""
 
 #: includes/admin/class-ur-registration-table-list.php:121
-#: includes/admin/class-ur-registration-table-list.php:302
+#: includes/admin/class-ur-registration-table-list.php:321
 msgid "Delete permanently"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:181
+#: includes/admin/class-ur-registration-table-list.php:128
+msgid "Duplicate"
+msgstr ""
+
+#: includes/admin/class-ur-registration-table-list.php:187
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:191
+#: includes/admin/class-ur-registration-table-list.php:197
 msgid "%s ago"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:193
+#: includes/admin/class-ur-registration-table-list.php:199
 msgid "Y/m/d"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:212
-#: includes/admin/class-ur-registration-table-list.php:213
+#: includes/admin/class-ur-registration-table-list.php:218
+#: includes/admin/class-ur-registration-table-list.php:219
 #. translators: %s: count
 msgid "Published <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:221
-#: includes/admin/class-ur-registration-table-list.php:222
+#: includes/admin/class-ur-registration-table-list.php:227
+#: includes/admin/class-ur-registration-table-list.php:228
 #. translators: %s: count
 msgid "Draft <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:230
-#: includes/admin/class-ur-registration-table-list.php:231
+#: includes/admin/class-ur-registration-table-list.php:236
+#: includes/admin/class-ur-registration-table-list.php:237
 #. translators: %s: count
 msgid "Pending <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:307
+#: includes/admin/class-ur-registration-table-list.php:326
 msgid "Move to trash"
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:318
+#: includes/admin/class-ur-registration-table-list.php:337
 msgid "Empty trash"
 msgstr ""
 
@@ -241,78 +249,86 @@ msgstr ""
 msgid "This option lets you choose user role for frontend registration."
 msgstr ""
 
+#: includes/admin/settings/class-ur-settings-general.php:69
+msgid "User Login option"
+msgstr ""
+
 #: includes/admin/settings/class-ur-settings-general.php:70
+msgid "This option lets you choose login option after user registration."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:81
 msgid "Prevent dashboard access"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:71
+#: includes/admin/settings/class-ur-settings-general.php:82
 msgid ""
 "This option lets you limit which roles you are willing to prevent dashboard "
 "access."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:82
+#: includes/admin/settings/class-ur-settings-general.php:93
 msgid "My account page"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:83
+#: includes/admin/settings/class-ur-settings-general.php:94
 msgid "Page contents: [%s]"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:94
+#: includes/admin/settings/class-ur-settings-general.php:105
 #: includes/functions-ur-core.php:565
 msgid "Enable strong password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:95
+#: includes/admin/settings/class-ur-settings-general.php:106
 msgid "Tick here if you want to use strong password on user registration form."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:102
+#: includes/admin/settings/class-ur-settings-general.php:113
 #: includes/functions-ur-core.php:580
 msgid "Form submit button label"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:103
+#: includes/admin/settings/class-ur-settings-general.php:114
 msgid "This option let you change the submit button label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:120
+#: includes/admin/settings/class-ur-settings-general.php:131
 msgid "My account endpoints"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:122
+#: includes/admin/settings/class-ur-settings-general.php:133
 msgid ""
 "Endpoints are appended to your page URLs to handle specific actions on the "
 "accounts pages. They should be unique and can be left blank to disable the "
 "endpoint."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:127
+#: includes/admin/settings/class-ur-settings-general.php:138
 msgid "Edit account"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:128
+#: includes/admin/settings/class-ur-settings-general.php:139
 msgid "Endpoint for the \"My account &rarr; Edit account\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:136
+#: includes/admin/settings/class-ur-settings-general.php:147
 msgid "Edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:137
+#: includes/admin/settings/class-ur-settings-general.php:148
 msgid "Endpoint for the \"My account &rarr; Edit profile\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:146
+#: includes/admin/settings/class-ur-settings-general.php:157
 msgid "Endpoint for the \"My account &rarr; Lost password\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:154
+#: includes/admin/settings/class-ur-settings-general.php:165
 msgid "User logout"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:155
+#: includes/admin/settings/class-ur-settings-general.php:166
 msgid ""
 "Endpoint for the triggering logout. You can add this to your menus via a "
 "custom link: yoursite.com/?user-logout=true"
@@ -1796,23 +1812,23 @@ msgstr ""
 msgid "Default Value"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:91
+#: includes/frontend/class-ur-frontend-form-handler.php:100
 msgid "Someting error! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:154
+#: includes/frontend/class-ur-frontend-form-handler.php:163
 msgid "Duplicate field key in form, please contact site administrator."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:161
+#: includes/frontend/class-ur-frontend-form-handler.php:170
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:291
+#: includes/frontend/class-ur-frontend-form-handler.php:300
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:295
+#: includes/frontend/class-ur-frontend-form-handler.php:304
 msgid "Password and confirm password not matched"
 msgstr ""
 
@@ -1841,17 +1857,25 @@ msgid "Required"
 msgstr ""
 
 #: includes/functions-ur-core.php:471 includes/functions-ur-core.php:573
-#: includes/functions-ur-core.php:602
+#: includes/functions-ur-core.php:601
 msgid "No"
 msgstr ""
 
 #: includes/functions-ur-core.php:472 includes/functions-ur-core.php:572
-#: includes/functions-ur-core.php:601
+#: includes/functions-ur-core.php:600
 msgid "Yes"
 msgstr ""
 
 #: includes/functions-ur-core.php:593
 msgid "Enable %1$s %2$s reCaptcha %3$s support"
+msgstr ""
+
+#: includes/functions-ur-core.php:623
+msgid "Manual login after registration"
+msgstr ""
+
+#: includes/functions-ur-core.php:624
+msgid "Auto login after registration"
 msgstr ""
 
 #: includes/functions-ur-notice.php:29 includes/functions-ur-notice.php:64
@@ -2136,7 +2160,7 @@ msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-registration-table-list.php:265
+#: includes/admin/class-ur-registration-table-list.php:273
 #. translators: %s: count
 msgctxt "posts"
 msgid "All <span class=\"count\">(%s)</span>"
