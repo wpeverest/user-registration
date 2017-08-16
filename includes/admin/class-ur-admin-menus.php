@@ -119,7 +119,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Bulk actions.
+		 * Duplicate form
 		 */
 		private function duplicate( $form_id ) {
 			$post            = get_post( $form_id );
@@ -131,7 +131,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 			if ( isset( $post ) && $post != null ) {
 
-				if('publish' !== $post->ping_status){
+				if('publish' !== $post->post_status){
 
 					return false;
 				}
@@ -159,6 +159,24 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				 * insert the post by wp_insert_post() function
 				 */
 				$new_post_id = wp_insert_post( $args );
+
+				/*
+				 * duplicate all post meta just in two SQL queries
+				 */
+				global  $wpdb;
+				$post_meta_infos = $wpdb->get_results($wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d",$form_id));
+
+				if (count($post_meta_infos)!=0) {
+					$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
+					foreach ($post_meta_infos as $meta_info) {
+						$meta_key = $meta_info->meta_key;
+						if( $meta_key == '_wp_old_slug' ) continue;
+						$meta_value = addslashes($meta_info->meta_value);
+						$sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
+					}
+					$sql_query.= implode(" UNION ALL ", $sql_query_sel);
+					$wpdb->query($sql_query);
+				}
 
 				/*
 				 * finally, redirect to the edit post screen for the new draft
