@@ -620,8 +620,8 @@ function ur_login_option() {
 
 	return apply_filters( 'user_registration_login_options', array(
 
-			'default'    => __( 'Default', 'user-registration' ),
-			'auto_login' => __( 'Enable auto login after registration', 'user-registration' )
+			'default'    => __( 'Manual login after registration', 'user-registration' ),
+			'auto_login' => __( 'Auto login after registration', 'user-registration' )
 		)
 	);
 
