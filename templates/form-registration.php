@@ -31,7 +31,7 @@ $frontend = UR_Frontend::instance();
 ?>
 	<div class='ur-frontend-form' id='ur-frontend-form'>
 
-		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>">
+		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters('user_registration_form_params', '') ?>>
 
 			<?php
 
