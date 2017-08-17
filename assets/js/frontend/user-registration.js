@@ -30,6 +30,7 @@
 					formwise_data.value = '';
 					switch ( node_type ) {
 						case 'input':
+
 							formwise_data.value = field.val();
 							break;
 						case 'select':
@@ -40,6 +41,8 @@
 							break;
 						default:
 					}
+
+					$( document ).trigger( "user_registration_frontend_form_data_render", [ field, formwise_data ] );
 					formwise_data.field_type = field.attr('id').replace('ur-input-type-', '');
 					if ( field.attr('data-label') !== undefined ) {
 						formwise_data.label = field.attr('data-label');
@@ -139,7 +142,7 @@
 										$this[ 0 ].reset();
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
-										if(typeof response.data.auto_login !== 'undefined' && response.data.auto_login) {
+										if ( typeof response.data.auto_login !== 'undefined' && response.data.auto_login ) {
 											location.reload();
 										}
 
