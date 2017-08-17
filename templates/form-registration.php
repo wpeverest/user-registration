@@ -33,7 +33,6 @@ $frontend = UR_Frontend::instance();
 
 		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>">
 
-
 			<?php
 
 
