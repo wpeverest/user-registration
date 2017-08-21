@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -30,6 +30,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Simple, Clean and Beautiful Registration Form
 * Drag and Drop UI
 * Easy Registration and Login
+* Form Duplicate Option
 * Unlimited Registration Forms
 * Multiple Column Design
 * Clean User Dashboard
@@ -71,6 +72,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.0.3 - 21/08/2017 =
+* Form duplicate option 
+* Auto login after registration feature 
+* Added some filter for addon
 
 = 1.0.2 - 04/08/2017 =
 * Email notification to user and admin
