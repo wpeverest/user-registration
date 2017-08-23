@@ -132,14 +132,26 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php echo esc_attr( $attribute_string ); ?>
 										      rows="5"
 										      cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
-								<?php else : ?>
-									<input type="text" name="<?php echo esc_attr( $key ); ?>"
-									       id="<?php echo esc_attr( $key ); ?>"
-									       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-									       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-										<?php echo esc_attr( $attribute_string ); ?>
-									/>
-								<?php endif; ?>
+								<?php else  :
+									if ( ! empty( $field['type'] ) ) {
+										$data = array(
+											'key'              => $key,
+											'value'            => $this->get_user_meta( $user->ID, $key ),
+											'attribute_string' => $attribute_string,
+											'field'            => $field
+
+										);
+										do_action( 'user_registration_profile_field_'.$field['type'], $data );
+									} else {
+										?>
+										<input type="text" name="<?php echo esc_attr( $key ); ?>"
+										       id="<?php echo esc_attr( $key ); ?>"
+										       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+										       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+											<?php echo esc_attr( $attribute_string ); ?>
+										/>
+
+									<?php } endif; ?>
 								<br/>
 								<span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span>
 							</td>
@@ -338,7 +350,16 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									break;
 							}
-						}// End if().
+						}// End switch().
+						$filter_data         = array(
+							'fields'     => $fields,
+							'field'      => $field,
+							'field_name' => $field_name
+						);
+						$filtered_data_array = apply_filters( 'user_registration_profile_field_filter_' . $field_key, $filter_data );
+						if ( isset( $filtered_data_array['fields'] ) ) {
+							$fields = $filtered_data_array['fields'];
+						}
 					}// End foreach().
 				}// End foreach().
 			}// End foreach().
