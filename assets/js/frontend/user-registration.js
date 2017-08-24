@@ -22,6 +22,8 @@
 						var single_data = this_instance.get_fieldwise_data($(this));
 						form_data.push(single_data);
 					});
+					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
+
 					return form_data;
 				},
 				get_fieldwise_data: function ( field ) {
@@ -42,7 +44,7 @@
 						default:
 					}
 
-					$( document ).trigger( "user_registration_frontend_form_data_render", [ field, formwise_data ] );
+					$(document).trigger("user_registration_frontend_form_data_render", [ field, formwise_data ]);
 					formwise_data.field_type = field.attr('id').replace('ur-input-type-', '');
 					if ( field.attr('data-label') !== undefined ) {
 						formwise_data.label = field.attr('data-label');
@@ -99,6 +101,8 @@
 							ur_frontend_form_nonce: form_nonce
 						};
 
+						$(document).trigger("user_registration_frontend_before_form_submit", [ data, $this ]);
+
 						if ( 'undefined' !== typeof (ur_google_recaptcha_code) ) {
 
 							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
@@ -115,10 +119,13 @@
 						}
 
 						$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
+
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: data,
 							type: 'POST',
+							async: false,
+
 							beforeSend: function () {
 							},
 							complete: function ( ajax_response ) {
@@ -153,6 +160,9 @@
 								}
 								//message.addClass(type);
 								form.show_message(message, type, $this);
+
+								$(document).trigger("user_registration_frontend_after_ajax_complete", [ ajax_response.responseText, type, $this ]);
+
 							}
 						});
 					});
