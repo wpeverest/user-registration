@@ -62,6 +62,9 @@ class UR_Admin {
 	 */
 	public function prevent_admin_access() {
 
+		if ( 'DOING_AJAX' ) {
+			return;
+		}
 		$user_id = get_current_user_id();
 
 		if ( $user_id > 0 ) {
