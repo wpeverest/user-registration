@@ -124,7 +124,7 @@
 							url: user_registration_params.ajax_url,
 							data: data,
 							type: 'POST',
-							async: false,
+							async: true,
 
 							beforeSend: function () {
 							},
