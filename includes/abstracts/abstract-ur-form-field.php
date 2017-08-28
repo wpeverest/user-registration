@@ -65,7 +65,9 @@ abstract class UR_Form_Field {
 
 		$template_path = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
 
-		include( UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
+		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
+
+		include( $admin_template_path );
 
 		$this->admin_data = array();
 
