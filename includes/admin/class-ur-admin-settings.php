@@ -73,12 +73,15 @@ class UR_Admin_Settings {
 		do_action( 'user_registration_update_options_' . $current_tab );
 		do_action( 'user_registration_update_options' );
 
-		self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
-
+		$flag = apply_filters( 'show_user_registration_setting_message', true );
+		if($flag){
+				self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
+			}
 		// Flush rules
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
 		do_action( 'user_registration_settings_saved' );
+
 	}
 
 	/**
