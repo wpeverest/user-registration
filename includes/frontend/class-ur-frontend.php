@@ -38,7 +38,9 @@ class UR_Frontend {
 
 	public function includes() {
 		include_once( UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php' );
-	}
+
+		new UR_User_Approval();
+ 	}
 
 	/**
 	 * Includes any classes we need within admin.
@@ -48,7 +50,7 @@ class UR_Frontend {
 		$class_name = ur_load_form_field_class($field_object->field_key);
 
 		if(class_exists($class_name)) {
-			
+
 			$instance = $class_name::get_instance();
 
 			$setting['general_setting'] = $field_object->general_setting;
