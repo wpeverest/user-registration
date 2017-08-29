@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.0.3\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-08-29 11:29:55+00:00\n"
+"POT-Creation-Date: 2017-08-29 13:39:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -61,7 +61,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:290
-#: includes/class-ur-install.php:438
+#: includes/class-ur-install.php:456
 msgid "Settings"
 msgstr ""
 
@@ -500,11 +500,28 @@ msgstr ""
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:147 includes/class-ur-ajax.php:151
+#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:89
+msgid "Only an administrator can add new users."
+msgstr ""
+
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+msgid "You are currently logged in as %1s. You don't need another account. %2s"
+msgstr ""
+
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+msgid "Log out of this account."
+msgstr ""
+
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+#: includes/functions-ur-account.php:58
+msgid "Logout"
+msgstr ""
+
+#: includes/class-ur-ajax.php:181 includes/class-ur-ajax.php:185
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:169
+#: includes/class-ur-ajax.php:203
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
@@ -632,27 +649,31 @@ msgid ""
 "$ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:212
+#: includes/class-ur-install.php:71
+msgid "Please enable %s Anyone can register %s option on %s general setting %s."
+msgstr ""
+
+#: includes/class-ur-install.php:230
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:438
+#: includes/class-ur-install.php:456
 msgid "View User Registration Settings"
 msgstr ""
 
-#: includes/class-ur-install.php:455
+#: includes/class-ur-install.php:473
 msgid "View User Registration Documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:455
+#: includes/class-ur-install.php:473
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:456
+#: includes/class-ur-install.php:474
 msgid "Visit Free Customer Support Forum"
 msgstr ""
 
-#: includes/class-ur-install.php:456
+#: includes/class-ur-install.php:474
 msgid "Free Support"
 msgstr ""
 
@@ -1903,10 +1924,6 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: includes/functions-ur-account.php:58
-msgid "Logout"
-msgstr ""
-
 #: includes/functions-ur-core.php:443 includes/functions-ur-core.php:446
 msgid "Label"
 msgstr ""
@@ -2249,22 +2266,22 @@ msgid_plural "All <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-ur-install.php:231
+#: includes/class-ur-install.php:249
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:239
+#: includes/class-ur-install.php:257
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:232
+#: includes/class-ur-install.php:250
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:240
+#: includes/class-ur-install.php:258
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
