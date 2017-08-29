@@ -120,10 +120,8 @@ class UR_User_Approval {
 	 */
 	public function send_request_notification_to_admin( $user_id ) {
 
-		$email_to_admin = (bool) eonet_get_option( 'mua_email_to_admin_enabled', true );
-
 		//If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin
-		if ( $this->is_admin_cration_process() || ! $email_to_admin ) {
+		if ( $this->is_admin_cration_process() ) {
 			return;
 		}
 
