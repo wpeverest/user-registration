@@ -232,7 +232,7 @@ function ur_help_tip( $tip, $allow_html = false ) {
 function ur_post_content_has_shortcode( $tag = '' ) {
 	global $post;
 
-	return is_singular() && is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, $tag );
+	return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, $tag );
 }
 
 /**
@@ -716,6 +716,7 @@ function ur_get_user_approval_status( $user_id ) {
 
 
 	}
+
 	return true;
 
 }
