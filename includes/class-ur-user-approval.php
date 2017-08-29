@@ -69,7 +69,7 @@ class UR_User_Approval {
 		}
 
 
-		return 'Error on login check.';
+		return '';
 	}
 
 	/**
@@ -110,7 +110,7 @@ class UR_User_Approval {
 			return;
 		}
 
-		return 'hi';
+		return;
 	}
 
 	/**
@@ -171,14 +171,11 @@ class UR_User_Approval {
 				return $user;
 				break;
 			case UR_Admin_User_Manager::PENDING:
-
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
-
 				return new WP_Error( 'pending_approval', $message );
 				break;
 			case UR_Admin_User_Manager::DENIED:
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
-
 				return new WP_Error( 'denied_access', $message );
 				break;
 		}
