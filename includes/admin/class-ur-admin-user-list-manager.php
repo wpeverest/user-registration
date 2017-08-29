@@ -327,7 +327,7 @@ class UR_Admin_User_List_Manager {
 
 		//Check if the current user has permissions to change approvation statuses
 		if( !UR_Admin_User_Manager::is_user_allowed_to_change_status())
-			{throw new \Exception('You have not enough permissions to perform a bulk action on users approval status');}
+			{throw new Exception('You have not enough permissions to perform a bulk action on users approval status');}
 
 
 		if ( empty($_REQUEST['users']) ) {
@@ -418,8 +418,9 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( empty( $_POST['ur_user_user_status'] ) && !UR_Admin_User_Manager::validate_status($_POST['ur_user_user_status']) )
-			{return false;}
+		if ( empty( $_POST['ur_user_user_status'] ) && !UR_Admin_User_Manager::validate_status($_POST['ur_user_user_status']) )	{
+				return false;
+		}
 
 		$new_status = $_POST['ur_user_user_status'];
 
