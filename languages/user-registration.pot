@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.0.3\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-08-29 10:08:46+00:00\n"
+"POT-Creation-Date: 2017-08-29 11:29:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -508,7 +508,7 @@ msgstr ""
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-emailer.php:94
+#: includes/class-ur-emailer.php:136
 msgid "A New User Registered"
 msgstr ""
 
@@ -712,16 +712,16 @@ msgstr ""
 msgid "Profile Details"
 msgstr ""
 
-#: includes/class-ur-user-approval.php:174
-#: includes/class-ur-user-approval.php:178
+#: includes/class-ur-user-approval.php:179
+#: includes/class-ur-user-approval.php:184
 msgid "ERROR:"
 msgstr ""
 
-#: includes/class-ur-user-approval.php:174
+#: includes/class-ur-user-approval.php:179
 msgid "Your account is still pending approval."
 msgstr ""
 
-#: includes/class-ur-user-approval.php:178
+#: includes/class-ur-user-approval.php:184
 msgid "Your account has been denied."
 msgstr ""
 

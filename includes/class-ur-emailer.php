@@ -207,7 +207,6 @@ class UR_Emailer {
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		}
-		
 		wp_mail( $email, $subject, $message, $headers );
 
 
