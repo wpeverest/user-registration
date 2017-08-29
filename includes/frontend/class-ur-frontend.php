@@ -38,8 +38,6 @@ class UR_Frontend {
 
 	public function includes() {
 		include_once( UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php' );
-
-		new UR_User_Approval();
  	}
 
 	/**

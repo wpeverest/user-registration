@@ -693,3 +693,29 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 
 	return $value;
 }
+
+/**
+ * @param $user_id
+ *
+ *
+ */
+function ur_get_user_approval_status( $user_id ) {
+
+	$login_option = get_option( 'user_registration_general_setting_login_options', '' );
+
+	if ( 'admin_approval' === $login_option ) {
+
+		$user_status = get_user_meta( $user_id, 'ur_user_status', true );
+
+		if ( $user_status == 0 || $user_status == - 1 ) {
+
+			return $user_status;
+		}
+
+		return true;
+
+
+	}
+	return true;
+
+}

@@ -48,34 +48,76 @@ class UR_Emailer {
 
 		$username = isset( $user_username_object->value ) && ! empty( $user_username_object->value ) ? $user_username_object->value : '';
 
-		if ( ! empty( $email ) && ! empty ( $username ) ) {
+		if ( ! empty( $email ) && ! empty ( $username ) && ! empty( $user_id ) ) {
 
-			self::send_mail_to_user( $email, $username );
+			self::send_mail_to_user( $email, $username, $user_id );
 
-			self::send_mail_to_admin( $email, $username );
+			self::send_mail_to_admin( $email, $username, $user_id );
 		}
 	}
+
 
 	/**
 	 * @param $email
 	 */
-	private static function send_mail_to_user( $email, $username ) {
+	private static function send_mail_to_user( $email, $username, $user_id ) {
+
+		$status = ur_get_user_approval_status( $user_id );
 
 		$blog_info = get_bloginfo();
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
+		if ( $status == 0 ) {
 
-		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 
-			'Hi %s,
+			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+ 					You have registered on <a href="%s">%s</a>.
+ 					<br/>
+ 					Please wait untill the site admin approves your registration.
+ 					<br/>
+ 					You will be notified after it is approved.
+ 					<br/>
+ 					<br/>
+ 					Thank you :) ',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+
+
+		} else if ( $status == - 1 ) {
+
+			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+ 					You have registered on <a href="%s">%s</a>.
+ 					<br/>
+ 					Unfortunately your registration is denied.
+ 					<br/>
+ 					Sorry for the inconvenience.
+ 					<br/>
+ 					<br/>
+ 					Thank you :) ',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+
+		} else {
+			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+
+				'Hi %s,
  					<br/>
  					You have successfully completed user registration on <a href="%s">%s</a>.
  					<br/>
  					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
-			$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
+		}
 		wp_mail( $email, $subject, $message, $headers );
 
 	}
@@ -83,7 +125,7 @@ class UR_Emailer {
 	/**
 	 * @param $user_email
 	 */
-	private static function send_mail_to_admin( $user_email, $username ) {
+	private static function send_mail_to_admin( $user_email, $username, $user_id ) {
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
@@ -103,6 +145,71 @@ class UR_Emailer {
 					Thank you!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
+
+	}
+
+	/**
+	 * @param $email
+	 * @param $username
+	 * @param $status
+	 */
+	public static function status_change_email( $email, $username, $status ) {
+
+		$blog_info = get_bloginfo();
+
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
+		if ( $status == 0 ) {
+
+			$subject = __( sprintf( 'Sorry! Registration changed to pending on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+ 					Your registration on <a href="%s">%s</a> has been changed to pending.
+ 					<br/>
+ 					Sorry for the inconvenience.
+ 					<br/>
+ 					You will be notified after it is approved.
+ 					<br/>
+ 					<br/>
+ 					Thank you :)',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+
+
+		} else if ( $status == - 1 ) {
+
+			$subject = __( sprintf( 'Sorry! Registration denied on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+ 					Your registration on <a href="%s">%s</a> has been denied.
+ 					<br/>
+ 					Sorry for the inconvenience.
+ 					<br/>
+ 					<br/>
+ 					Thank you :) ',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+
+		} else {
+			$subject = __( sprintf( 'Congratulations! Registration approved on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+ 					Your registration on <a href="%s">%s</a>  has been approved.
+ 					<br/>
+ 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+
+		}
+		
+		wp_mail( $email, $subject, $message, $headers );
+
 
 	}
 

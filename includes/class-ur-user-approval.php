@@ -43,7 +43,7 @@ class UR_User_Approval {
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 
 		//When the approval status of an user change
-		add_action( 'ur_user_user_status_updated', array(
+		add_action( 'ur_user_status_updated', array(
 			$this,
 			'send_notification_to_user_about_status_changing'
 		), 10, 3 );
@@ -101,14 +101,19 @@ class UR_User_Approval {
 			return;
 		}
 
-		$user = get_userdata( $user_id );
-
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
 		//Avoid to send multiple times the same email
 		if ( $status == $user_manager->get_user_status() ) {
 			return;
 		}
+
+		$user      = get_userdata( $user_id );
+		$user_data = isset( $user->data ) ? $user->data : array();
+		$username  = isset( $user_data->user_login ) ? $user_data->user_login : '';
+		$email     = isset( $user_data->user_email ) ? $user_data->user_email : '';
+
+		UR_Emailer::status_change_email( $email, $username, $status );
 
 		return;
 	}
@@ -172,10 +177,12 @@ class UR_User_Approval {
 				break;
 			case UR_Admin_User_Manager::PENDING:
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
+
 				return new WP_Error( 'pending_approval', $message );
 				break;
 			case UR_Admin_User_Manager::DENIED:
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+
 				return new WP_Error( 'denied_access', $message );
 				break;
 		}
@@ -290,3 +297,4 @@ class UR_User_Approval {
 	}
 
 }
+new UR_User_Approval();
