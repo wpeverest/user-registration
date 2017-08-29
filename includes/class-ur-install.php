@@ -56,9 +56,27 @@ class UR_Install {
 	 * This check is done on all requests and runs if the versions do not match.
 	 */
 	public static function check_version() {
+
+		self::check_anyone_can_register();
 		if ( ! defined( 'IFRAME_REQUEST' ) && get_option( 'user_registration_version' ) !== UR()->version ) {
 			self::install();
 			do_action( 'user_registration_updated' );
+		}
+	}
+
+	public static function check_anyone_can_register() {
+
+		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+		if ( ! $users_can_register ) {
+			UR_Admin_Notices::add_custom_notice( 'ur_any_one_can_register_notice', sprintf( __( 'Please enable %s Anyone can register %s option on %s general setting %s.', 'user-registration' ), '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>', '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>' ) );
+
+			return;
+		}
+
+		if ( UR_Admin_Notices::has_notice( 'ur_any_one_can_register_notice' ) ) {
+
+			UR_Admin_Notices::remove_notice( 'ur_any_one_can_register_notice' );
+
 		}
 	}
 

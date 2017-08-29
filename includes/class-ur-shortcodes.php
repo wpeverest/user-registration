@@ -80,6 +80,37 @@ class UR_Shortcodes {
 			return '';
 		}
 
+		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+
+		if ( ! is_user_logged_in() ) {
+
+			if ( ! $users_can_register ) {
+				
+				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only an administrator can add new users.', 'user-registration' ) . '</p>' );
+			}
+		} else {
+
+			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
+
+			if ( ! current_user_can( $current_user_capability ) ) {
+
+				$user_ID = get_current_user_id();
+
+				$user = get_user_by( 'ID', $user_ID );
+
+				global $wp;
+
+				$current_url = home_url( add_query_arg( array(), $wp->request ) );
+
+				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+
+				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( "You are currently logged in as %1s. You don't need another account. %2s", 'user-registration' ), '<a href="' . get_author_posts_url( $user_ID ) . '" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
+
+			}
+
+		}
+
+
 		if ( ! isset( $atts['id'] ) ) {
 			return '';
 		}
