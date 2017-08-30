@@ -183,6 +183,7 @@ class UR_Admin_User_List_Manager {
 		if ( $column_name == 'ur_user_user_status') {
 
 				$user_manager = new UR_Admin_User_Manager($user_id);
+
 				$status = $user_manager->get_user_status();
 
 				return UR_Admin_User_Manager::get_status_label($status);

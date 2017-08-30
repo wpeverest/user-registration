@@ -126,7 +126,7 @@ class UR_User_Approval {
 	public function send_request_notification_to_admin( $user_id ) {
 
 		//If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin
-		if ( $this->is_admin_cration_process() ) {
+		if ( $this->is_admin_creation_process() ) {
 			return;
 		}
 
@@ -142,7 +142,7 @@ class UR_User_Approval {
 		$status = UR_Admin_User_Manager::PENDING;
 
 		// If the user is created by admin in the backend, than automatically approve him
-		if ( $this->is_admin_cration_process() ) {
+		if ( $this->is_admin_creation_process() ) {
 			$status = UR_Admin_User_Manager::APPROVED;
 		}
 
@@ -167,11 +167,11 @@ class UR_User_Approval {
 	public function check_status_on_login( WP_User $user ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
-		$status       = $user_manager->get_user_status();
+
+		$status = $user_manager->get_user_status();
 
 		do_action( 'ur_user_before_check_status_on_login', $status, $user );
 
-		return $user;
 		switch ( $status ) {
 			case UR_Admin_User_Manager::APPROVED:
 				return $user;
@@ -199,7 +199,7 @@ class UR_User_Approval {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
-		
+
 		$status = ur_get_user_approval_status( get_current_user_id() );
 
 		$user_manager = new UR_Admin_User_Manager();
@@ -224,7 +224,7 @@ class UR_User_Approval {
 	 *
 	 * @return bool
 	 */
-	protected function is_admin_cration_process() {
+	protected function is_admin_creation_process() {
 		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] );
 	}
 

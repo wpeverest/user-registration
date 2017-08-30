@@ -58,8 +58,8 @@ class UR_Admin_User_Manager {
 			$user = get_userdata( $user );
 		}
 
-		if ( ! ( $user instanceof \WP_User ) ) {
-			throw new Exception( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.' );
+		if ( ! ( $user instanceof WP_User ) ) {
+			throw new Exception( __( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
 		}
 
 		$this->user = $user;
@@ -118,6 +118,8 @@ class UR_Admin_User_Manager {
 	 * @return int|mixed
 	 */
 	public function get_user_status( $exact_value = false ) {
+
+
 
 		//If the status is already get from the db and the requested status is not the exact value then provide the old one
 		if ( ! is_null( $this->user_status ) && ! $exact_value ) {

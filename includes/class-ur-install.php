@@ -104,8 +104,8 @@ class UR_Install {
 	 * Install UR.
 	 */
 	public static function install() {
-		global $wpdb;
 
+		global $wpdb;
 		if ( ! is_blog_installed() ) {
 			return;
 		}
