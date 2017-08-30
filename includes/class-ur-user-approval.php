@@ -25,6 +25,9 @@ class UR_User_Approval {
 	 */
 	public function __construct() {
 
+		if ( 'admin_approval' !== get_option( 'user_registration_general_setting_login_options' ) ) {
+			return;
+		}
 		// -------------------- ACTIONS & FILTERS --------------------
 
 		// Additional checks
