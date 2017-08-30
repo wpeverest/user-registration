@@ -59,7 +59,7 @@ class UR_Admin_User_Manager {
 		}
 
 		if ( ! ( $user instanceof \WP_User ) ) {
-			throw new \Exception( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.' );
+			throw new Exception( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.' );
 		}
 
 		$this->user = $user;

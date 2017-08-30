@@ -171,6 +171,7 @@ class UR_User_Approval {
 
 		do_action( 'ur_user_before_check_status_on_login', $status, $user );
 
+		return $user;
 		switch ( $status ) {
 			case UR_Admin_User_Manager::APPROVED:
 				return $user;
@@ -198,9 +199,15 @@ class UR_User_Approval {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
+		
+		$status = ur_get_user_approval_status( get_current_user_id() );
 
 		$user_manager = new UR_Admin_User_Manager();
-		$status       = $user_manager->get_user_status();
+
+		if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
+
+			return;
+		}
 
 		do_action( 'ur_user_before_check_status_on_page', $status, $user_manager );
 
@@ -297,4 +304,5 @@ class UR_User_Approval {
 	}
 
 }
+
 new UR_User_Approval();
