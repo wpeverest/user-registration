@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.0.3\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-08-29 13:39:32+00:00\n"
+"POT-Creation-Date: 2017-08-30 09:45:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -171,45 +171,49 @@ msgstr[1] ""
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:208
+#: includes/admin/class-ur-admin-user-list-manager.php:209
 msgid "All statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:210
+#: includes/admin/class-ur-admin-user-list-manager.php:211
 msgid "All approval statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:219
+#: includes/admin/class-ur-admin-user-list-manager.php:220
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:303
 #: includes/admin/class-ur-admin-user-list-manager.php:304
+#: includes/admin/class-ur-admin-user-list-manager.php:305
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:306
 #: includes/admin/class-ur-admin-user-list-manager.php:307
+#: includes/admin/class-ur-admin-user-list-manager.php:308
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:386
+#: includes/admin/class-ur-admin-user-list-manager.php:387
 msgid "Approval Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:398
+#: includes/admin/class-ur-admin-user-list-manager.php:399
 msgid "If user has access to sign in or not."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:306
+#: includes/admin/class-ur-admin-user-manager.php:62
+msgid "Impossible to create an UR_Admin_User_Manager object. Unkwon data type."
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-manager.php:308
 msgid "approved"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:309
+#: includes/admin/class-ur-admin-user-manager.php:311
 msgid "pending"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:312
+#: includes/admin/class-ur-admin-user-manager.php:314
 msgid "denied"
 msgstr ""
 
@@ -733,16 +737,16 @@ msgstr ""
 msgid "Profile Details"
 msgstr ""
 
-#: includes/class-ur-user-approval.php:179
-#: includes/class-ur-user-approval.php:184
+#: includes/class-ur-user-approval.php:183
+#: includes/class-ur-user-approval.php:188
 msgid "ERROR:"
 msgstr ""
 
-#: includes/class-ur-user-approval.php:179
+#: includes/class-ur-user-approval.php:183
 msgid "Your account is still pending approval."
 msgstr ""
 
-#: includes/class-ur-user-approval.php:184
+#: includes/class-ur-user-approval.php:188
 msgid "Your account has been denied."
 msgstr ""
 
