@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Profile account page
 * Shortcode Support
 * Recaptcha Support
+* Admin approval for users
 * Incredible Support
 * Well Documented
 * Translation ready
