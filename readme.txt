@@ -73,10 +73,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.0.4 -  =
+= 1.0.4 - 31/08/2017 =
 * Admin approval after registration feature  
 * Added new filter and action hooks for addon 
 * Fixed frontpage registration form issue
+* Anyone can register issue fixed
 
 = 1.0.3 - 21/08/2017 =
 * Form duplicate option 
