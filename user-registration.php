@@ -185,14 +185,16 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
 
 		/**
-		 * Plugin/Addon Updater.
-		 */
-		include_once( UR_ABSPATH . 'includes/class-ur-plugin-updater.php' );
-
-		/**
 		 * Config classes.
 		 */
 		include_once( UR_ABSPATH . 'includes/admin/class-ur-config.php' );
+
+		/**
+		 * Plugin/Addon Updater.
+		 */
+		if ( class_exists( 'UR_SL_Plugin_Updater' ) ) {
+			include_once( UR_ABSPATH . 'includes/class-ur-plugin-updater.php' );
+		}
 
 		if ( $this->is_request( 'admin' ) ) {
 			include_once( UR_ABSPATH . 'includes/admin/class-ur-admin.php' );
