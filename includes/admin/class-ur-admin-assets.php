@@ -39,15 +39,20 @@ class UR_Admin_Assets {
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
 
 		// Register admin styles
-		wp_register_style( 'user-registration-main', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
+		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
 
 		// Add RTL support for admin styles
-		wp_style_add_data( 'user-registration-main', 'rtl', 'replace' );
+		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
+		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
+
+		// Sitewide menu CSS
+		wp_enqueue_style( 'user-registration-menu' );
 
 		// Admin styles for UR pages only
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
-			wp_enqueue_style( 'user-registration-main' );
+			wp_enqueue_style( 'user-registration-admin' );
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
 		}
