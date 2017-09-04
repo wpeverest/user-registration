@@ -273,6 +273,24 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 }
 
 /**
+ * Read in UserRegistration headers when reading plugin headers.
+ *
+ * @since  1.1.0
+ * @param  array $headers
+ * @return array $headers
+ */
+function ur_enable_ur_plugin_headers( $headers ) {
+	if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
+		include_once( dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updates.php' );
+	}
+
+	$headers['URRequires'] = UR_Plugin_Updates::VERSION_REQUIRED_HEADER;
+	$headers['URTested']   = UR_Plugin_Updates::VERSION_TESTED_HEADER;
+	return $headers;
+}
+add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
+
+/**
  * Get user table fields.
  *
  * @return array

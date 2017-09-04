@@ -16,10 +16,14 @@ if ( ! class_exists( 'UR_AddOn_Updater', false ) ) {
 	include_once( dirname( __FILE__ ) . '/admin/updater/class-ur-addon-updater.php' );
 }
 
+if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
+	include_once( dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updates.php' );
+}
+
 /**
  * UR_Plugin_Updater Class.
  */
-class UR_Plugin_Updater {
+class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 	/**
 	 * Plugin Name.
@@ -86,8 +90,9 @@ class UR_Plugin_Updater {
 		$this->api_key     = get_option( $this->plugin_slug . '_license_key' );
 		$this->plugin_data = get_plugin_data( $this->plugin_file );
 
-		// Check for plugins update capability.
-		if ( current_user_can( 'update_plugins' ) ) {
+		// Check to make sure we've RP extensions and plugin update capability.
+		$extensions = $this->get_plugins_with_header( self::VERSION_TESTED_HEADER );
+		if ( ! empty( $extensions ) && current_user_can( 'update_plugins' ) ) {
 			$this->plugin_requests();
 			$this->plugin_license_view();
 		}
