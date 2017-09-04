@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Profile account page
 * Shortcode Support
 * Recaptcha Support
+* Admin approval for users
 * Incredible Support
 * Well Documented
 * Translation ready
@@ -72,6 +73,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.0.4 - 31/08/2017 =
+* Admin approval after registration feature  
+* Added new filter and action hooks for addon 
+* Fixed frontpage registration form issue
+* Anyone can register issue fixed
 
 = 1.0.3 - 21/08/2017 =
 * Form duplicate option 

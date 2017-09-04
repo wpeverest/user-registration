@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Drag and Drop user registration and login form builder.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Requires at least: 4.0
@@ -35,7 +35,7 @@ final class UserRegistration {
 	 * Plugin version.
 	 * @var string
 	 */
-	public $version = '1.0.3';
+	public $version = '1.0.4';
 
 	/**
 	 * Session instance.
@@ -179,6 +179,7 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/functions-ur-core.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-install.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-post-types.php' ); // Registers post types
+		include_once( UR_ABSPATH . 'includes/class-ur-user-approval.php' ); // User Approval class
 		include_once( UR_ABSPATH . 'includes/class-ur-emailer.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-ajax.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
@@ -187,6 +188,11 @@ final class UserRegistration {
 		 * Config classes.
 		 */
 		include_once( UR_ABSPATH . 'includes/admin/class-ur-config.php' );
+
+		/**
+		 * Plugin/Addon Updater.
+		 */
+		include_once( UR_ABSPATH . 'includes/class-ur-plugin-updater.php' );
 
 		if ( $this->is_request( 'admin' ) ) {
 			include_once( UR_ABSPATH . 'includes/admin/class-ur-admin.php' );
