@@ -23,7 +23,7 @@ $license_key = sanitize_title( $this->plugin_slug . '_license_key' );
 	</td>
 	<script>
 		jQuery( function() {
-			jQuery( 'tr#<?php echo esc_attr( $license_row ); ?>' ).prev().addClass( 'user-registration-license-updater' );
+			jQuery( 'tr#<?php echo esc_attr( $license_row ); ?>' ).prev().attr( 'id', '<?php echo sanitize_title( $this->plugin_slug ); ?>' ).addClass( 'user-registration-license-updater' );
 		});
 	</script>
 </tr>
