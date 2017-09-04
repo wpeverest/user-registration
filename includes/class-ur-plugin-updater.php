@@ -58,10 +58,10 @@ class UR_Plugin_Updater {
 	private $errors = array();
 
 	/**
-	 * Constructor, used if called directly.
+	 * Constructor.
 	 */
-	public function __construct( $file ) {
-		$this->init_updates( $file );
+	public function __construct() {
+		$this->init_updates( UR_PLUGIN_FILE );
 	}
 
 	/**
@@ -338,4 +338,4 @@ class UR_Plugin_Updater {
 	}
 }
 
-new UR_Plugin_Updater( UR_PLUGIN_FILE );
+new UR_Plugin_Updater();
