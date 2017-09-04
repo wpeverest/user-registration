@@ -50,7 +50,6 @@ class UR_Admin_Settings {
 
 			$settings[] = include( 'settings/class-ur-settings-general.php' );
  	        $settings[] = include( 'settings/class-ur-settings-integration.php' );
- 	        $settings[] = include( 'settings/class-ur-settings-license.php' );
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
