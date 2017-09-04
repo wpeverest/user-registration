@@ -22,12 +22,6 @@ if ( ! class_exists( 'UR_AddOn_Updater', false ) ) {
 class UR_Plugin_Updater {
 
 	/**
-	 * Plugin ID.
-	 * @var int
-	 */
-	private $plugin_id = 24; // Don't know how to fetch personal or developer plan over here. This ID is of personal plan :)
-
-	/**
 	 * Plugin Name.
 	 * @var string
 	 */
@@ -256,7 +250,6 @@ class UR_Plugin_Updater {
 
 			$activate_results = json_decode( UR_Plugin_Updater_Key_API::activate( array(
 				'license' => $license_key,
-				'item_id' => $this->plugin_id,
 			) ), true );
 
 			if ( false === $activate_results ) {
@@ -292,7 +285,6 @@ class UR_Plugin_Updater {
 	public function deactivate_license() {
 		$deactivate_results = json_decode( UR_Plugin_Updater_Key_API::deactivate( array(
 			'license' => $this->api_key,
-			'item_id' => $this->plugin_id,
 		) ), true );
 
 		if ( isset( $deactivate_results['license'] ) && 'deactivated' === $deactivate_results['license'] ) {
