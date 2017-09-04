@@ -192,9 +192,7 @@ final class UserRegistration {
 		/**
 		 * Plugin/Addon Updater.
 		 */
-		if ( class_exists( 'UR_SL_Plugin_Updater' ) ) {
-			include_once( UR_ABSPATH . 'includes/class-ur-plugin-updater.php' );
-		}
+		include_once( UR_ABSPATH . 'includes/class-ur-plugin-updater.php' );
 
 		if ( $this->is_request( 'admin' ) ) {
 			include_once( UR_ABSPATH . 'includes/admin/class-ur-admin.php' );

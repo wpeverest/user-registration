@@ -12,6 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'UR_AddOn_Updater', false ) ) {
+	include_once( dirname( __FILE__ ) . '/admin/updater/class-ur-addon-updater.php' );
+}
+
 /**
  * UR_Plugin_Updater Class.
  */
