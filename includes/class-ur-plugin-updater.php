@@ -288,19 +288,17 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Deactivate a license.
 	 */
 	public function deactivate_license() {
-		$deactivate_results = json_decode( UR_Plugin_Updater_Key_API::deactivate( array(
+		$reset = UR_Plugin_Updater_Key_API::deactivate( array(
 			'license' => $this->api_key,
-		) ), true );
+		) );
 
-		if ( isset( $deactivate_results['license'] ) && 'deactivated' === $deactivate_results['license'] ) {
-			delete_option( $this->plugin_slug . '_license_key' );
-			delete_option( $this->plugin_slug . '_errors' );
-			delete_site_transient( 'update_plugins' );
+		delete_option( $this->plugin_slug . '_license_key' );
+		delete_option( $this->plugin_slug . '_errors' );
+		delete_site_transient( 'update_plugins' );
 
-			// Reset huh?
-			$this->errors  = array();
-			$this->api_key = '';
-		}
+		// Reset huh?
+		$this->errors  = array();
+		$this->api_key = '';
 	}
 
 	/**
@@ -316,22 +314,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Activation success notice.
 	 */
 	public function activated_key_notice() {
-		if ( $this->api_key ) {
-			include( dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php' );
-		} else {
-			$this->add_error( 'Connection failed to the License Key API server - possible server issue.', 'restaurantpress' );
-		}
+		include( dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php' );
 	}
 
 	/**
 	 * Dectivation success notice.
 	 */
 	public function deactivated_key_notice() {
-		if ( ! $this->api_key ) {
-			include( dirname( __FILE__ ) . '/admin/views/html-notice-key-deactivated.php' );
-		} else {
-			$this->add_error( 'Connection failed to the License Key API server - possible server issue.', 'restaurantpress' );
-		}
+		include( dirname( __FILE__ ) . '/admin/views/html-notice-key-deactivated.php' );
 	}
 }
 
