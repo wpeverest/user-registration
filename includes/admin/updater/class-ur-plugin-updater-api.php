@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Plugin_Updater_Key_API {
 
-	private static $endpoint = 'http://www.themetest.tk/?';
+	private static $endpoint = 'http://themetest.tk/?';
 
 	/**
 	 * Attempt to activate a plugin license.
