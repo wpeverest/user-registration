@@ -4,14 +4,20 @@
  */
 
 /**
+ * Imports
+ */
+@import "variables";
+
+/**
  * Styling begins
  */
 .user-registration-message {
 	overflow: hidden;
 	position: relative;
+	border-left-color: #2ea2cc !important;
 
-	&.updated {
-		border-left-color: #2ea2cc !important;
+	&.error {
+		border-left-color: $red !important;
 	}
 
 	a.button-primary,
