@@ -68,15 +68,9 @@ class UR_Install {
 
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 		if ( ! $users_can_register ) {
-			UR_Admin_Notices::add_custom_notice( 'ur_any_one_can_register_notice', sprintf( __( 'Please enable %s Anyone can register %s option on %s general setting %s.', 'user-registration' ), '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>', '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>' ) );
+			UR_Admin_Notices::any_one_can_register_notice();
 
 			return;
-		}
-
-		if ( UR_Admin_Notices::has_notice( 'ur_any_one_can_register_notice' ) ) {
-
-			UR_Admin_Notices::remove_notice( 'ur_any_one_can_register_notice' );
-
 		}
 	}
 
