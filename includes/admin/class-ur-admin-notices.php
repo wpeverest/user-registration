@@ -33,6 +33,7 @@ class UR_Admin_Notices {
 	private static $core_notices = array(
 		'update'  => 'update_notice',
 		'install' => 'install_notice',
+		'registration' => 'any_one_can_register_notice',
 	);
 
 	/**
@@ -193,6 +194,13 @@ class UR_Admin_Notices {
 	 */
 	public static function install_notice() {
 		include( 'views/html-notice-install.php' );
+	}
+
+	/**
+	 * If we have just installed, and allow registration option not enable
+	 */
+	public  static function any_one_can_register_notice(){
+		include( 'views/html-notice-allow-registration.php' );
 	}
 }
 
