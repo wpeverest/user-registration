@@ -24,7 +24,7 @@ class UR_Admin_Addons {
 	 */
 	public static function get_sections() {
 		if ( false === ( $sections = get_transient( 'ur_addons_sections' ) ) ) {
-			$raw_sections = wp_safe_remote_get( 'https://gist.githubusercontent.com/shivapoudel/c56a5176412b131283dbdc1c35929fcf/raw/4a053559e4599dc84a30ed2e392c482165a39348/addon-sections.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
+			$raw_sections = wp_safe_remote_get( 'https://raw.githubusercontent.com/wpeverest/extensions-json/master/user-registration/addon-section.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
 			if ( ! is_wp_error( $raw_sections ) ) {
 				$sections = json_decode( wp_remote_retrieve_body( $raw_sections ) );
 
