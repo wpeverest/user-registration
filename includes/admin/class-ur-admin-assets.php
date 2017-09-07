@@ -69,7 +69,7 @@ class UR_Admin_Assets {
 		// Register Scripts
 		wp_register_script( 'user-registration-admin', UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js', array(
 			'jquery',
-			'select2',
+			'selectWoo',
 			'jquery-blockui',
 			'jquery-tiptip',
 			'jquery-ui-sortable',
@@ -90,9 +90,10 @@ class UR_Admin_Assets {
 			'wp-util',
 		), UR_VERSION );
 		wp_register_script( 'select2', UR()->plugin_url() . '/assets/js/select2/select2.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
+		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
 		wp_register_script( 'ur-enhanced-select', UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js', array(
 			'jquery',
-			'select2',
+			'selectWoo',
 		), UR_VERSION );
 
 		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(
