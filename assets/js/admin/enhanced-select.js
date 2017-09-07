@@ -59,7 +59,7 @@ jQuery(function ( $ ) {
 						placeholder: $(this).data('placeholder')
 					}, getEnhancedSelectFormatString());
 
-					$(this).select2(select2_args).addClass('enhanced');
+					$( this ).selectWoo( select2_args ).addClass('enhanced');
 				});
 
 				$(':input.ur-enhanced-select-nostd').filter(':not(.enhanced)').each(function () {
@@ -69,7 +69,7 @@ jQuery(function ( $ ) {
 						placeholder: $(this).data('placeholder')
 					}, getEnhancedSelectFormatString());
 
-					$(this).select2(select2_args).addClass('enhanced');
+					$(this).selectWoo(select2_args).addClass('enhanced');
 				});
 			})
 

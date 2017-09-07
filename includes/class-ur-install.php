@@ -34,10 +34,7 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array(
-			__CLASS__,
-			'in_plugin_update_message'
-		) );
+		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array( __CLASS__, 'in_plugin_update_message' ) );
 		add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -56,23 +53,9 @@ class UR_Install {
 	 * This check is done on all requests and runs if the versions do not match.
 	 */
 	public static function check_version() {
-
-		if ( is_admin() ) {
-			self::check_anyone_can_register();
-		}
 		if ( ! defined( 'IFRAME_REQUEST' ) && get_option( 'user_registration_version' ) !== UR()->version ) {
 			self::install();
 			do_action( 'user_registration_updated' );
-		}
-	}
-
-	public static function check_anyone_can_register() {
-
-		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {
-			UR_Admin_Notices::any_one_can_register_notice();
-
-			return;
 		}
 	}
 
@@ -93,6 +76,20 @@ class UR_Install {
 		if ( ! empty( $_GET['install_user_registration_pages'] ) ) {
 			self::create_pages();
 			UR_Admin_Notices::remove_notice( 'install' );
+		}
+
+		self::check_anyone_can_register();
+	}
+
+	/**
+	 * If we have just installed, and allow registration option not enable
+	 */
+	public static function check_anyone_can_register() {
+		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+
+		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {
+			include( dirname( __FILE__ ) . '/admin/views/html-notice-registration.php' );
+			return;
 		}
 	}
 
