@@ -69,7 +69,7 @@ class UR_Install {
 	public static function check_anyone_can_register() {
 
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-		if ( ! $users_can_register ) {
+		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {
 			UR_Admin_Notices::any_one_can_register_notice();
 
 			return;
