@@ -57,7 +57,9 @@ class UR_Install {
 	 */
 	public static function check_version() {
 
-		self::check_anyone_can_register();
+		if ( is_admin() ) {
+			self::check_anyone_can_register();
+		}
 		if ( ! defined( 'IFRAME_REQUEST' ) && get_option( 'user_registration_version' ) !== UR()->version ) {
 			self::install();
 			do_action( 'user_registration_updated' );
