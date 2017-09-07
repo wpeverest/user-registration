@@ -29,6 +29,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
+
+			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
+				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
+			}
+
 			// Set screens
 			add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
 
@@ -287,10 +292,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu item.
 		 */
 		public function settings_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array(
-				$this,
-				'settings_page',
-			) );
+			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array( $this, 'settings_page' ) );
+		}
+
+		/**
+		 * Add menu items.
+		 */
+		public function add_registration_menu() {
+			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array( $this, 'add_registration_page' ) );
+		}
+
+		/**
+		 * Addons menu item.
+		 */
+		public function addons_menu() {
+			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ),  __( 'Extensions', 'restaurantpress' ) , 'manage_user_registration', 'user-registration-addons', array( $this, 'addons_page' ) );
 		}
 
 		/**
@@ -309,16 +325,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$columns['date']      = __( 'Date', 'user-registration' );
 
 			return $columns;
-		}
-
-		/**
-		 * Add menu items.
-		 */
-		public function add_registration_menu() {
-			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array(
-				$this,
-				'add_registration_page',
-			) );
 		}
 
 		/**
@@ -386,6 +392,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function settings_page() {
 			UR_Admin_Settings::output();
+		}
+
+		/**
+		 * Init the addons page.
+		 */
+		public function addons_page() {
+			UR_Admin_Addons::output();
 		}
 
 		/**
