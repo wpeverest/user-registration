@@ -9,7 +9,10 @@
 .user-registration-message {
 	overflow: hidden;
 	position: relative;
-	border-left-color: #2ea2cc !important;
+
+	&.updated {
+		border-left-color: #2ea2cc !important;
+	}
 
 	a.button-primary,
 	a.button-secondary {
