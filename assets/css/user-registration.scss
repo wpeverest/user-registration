@@ -1,27 +1,27 @@
 /**
- * user-registration.scss
- * Governs the general look and feel of User Registration sections of stores using themes that do not
- * integrate with User Registration specifically.
- */
+* user-registration.scss
+* Governs the general look and feel of User Registration sections of stores using themes that do not
+* integrate with User Registration specifically.
+*/
 
 /**
- * Imports
- */
+* Imports
+*/
 @import "colors";
 @import "button";
 @import "mixins";
 @import "variables";
 
 /**
- * Utility classes
- */
+* Utility classes
+*/
 .clear {
 	clear: both;
 }
 
 /**
- * Main User Registration styles
- */
+* Main User Registration styles
+*/
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
@@ -38,7 +38,7 @@
 	line-height: 1.5;
 	text-transform: none;
 	font-size: 14px;
-
+	
 	&::before {
 		font-family: 'Dashicons';
 		content: '\f348';
@@ -49,17 +49,17 @@
 		font-size: 18px;
 		line-height: 1.5;
 	}
-
+	
 	ul {
 		margin: 0 !important;
 		padding: 0 !important;
 		background-color: transparent !important;
 	}
-
+	
 	.button {
 		float: right;
 	}
-
+	
 	li {
 		list-style: none outside !important; // Required for default theme compatibility
 		padding-left: 0 !important; // Required for default theme compatibility
@@ -74,7 +74,7 @@
 	border-top-color: #8fae1b;
 	background: rgba( #8fae1b, 0.1 );
 	color: darken( #8fae1b, 15%);
-
+	
 	&::before {
 		color: #8fae1b;
 	}
@@ -82,7 +82,7 @@
 
 .user-registration-info {
 	border-top-color: #1e85be;
-
+	
 	&::before {
 		color: #1e85be;
 	}
@@ -92,7 +92,7 @@
 	border-top-color: $color_danger;
 	background: rgba( $color_danger, 0.1 );
 	color: darken( $color_danger, 15%);
-
+	
 	&::before {
 		content: '\f534';
 		color: $color_danger;
@@ -104,33 +104,33 @@
 	border: 1px solid $color_gray_six;
 	padding: 20px;
 	box-sizing: border-box;
-
+	
 	&:last-child {
 		margin-bottom: 0;
 	}
-
+	
 	&.login {
 		margin: 0;
 		padding: 0;
 		box-shadow: none;
 		background: none;
 	}
-
+	
 	* {
 		box-sizing: border-box;
 	}
-
+	
 	form {
 		.ur-form-row {
 			display: flex;
-
+			
 			&:last-child {
 				margin-bottom: 0;
 			}
 			.ur-form-grid {
 				flex: 1;
 				padding: 0 10px;
-
+				
 				&:nth-child(1n+2) {
 					border-left: 0 none;
 				}
@@ -170,9 +170,9 @@
 					display: block;
 					width: 100%;
 					margin-bottom: 10px;
-
+					
 					.required {
-
+						
 						text-decoration: none;
 						border: none;
 						color: #ff0000;
@@ -191,7 +191,7 @@
 			float: right;
 			padding: 10px 20px;
 			line-height: 1em;
- 			text-align: center;
+			text-align: center;
 			word-break: break-word;
 			white-space: normal;
 			border: none;
@@ -203,24 +203,67 @@
 				background: $primary_color;
 			}
 		}
-
+		
 		.ur-submit-button {
 			margin-right: 10px;
 			margin-bottom: 0;
 		}
 	}
+	
 	label {
 		abbr.required {
-
+			
 			text-decoration: none;
 			border: none;
 			color: #ff0000;
 		}
 	}
-	#ur-submit-message-node{
+	&.ur-frontend-form--bordered {
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					.form-row {
+					}
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					textarea,
+					select {
+						border: none;
+						border-bottom: 2px solid $label_color;
+						outline: none;
+						transition: all 0.35s;
+						padding: 15px;
+						background: $input_background_color;
+						height: 40px;
+						color: $label_color;
+					}
 
+					input[type="checkbox"],
+					input[type="radio"]{
+						font-size: 12px;
+						vertical-align: top;
+					}
+					
+					legend,
+					label {
+						font-weight: 600;
+						line-height: 2.5;
+						margin-left: 5px;
+						color: $label_color;
+					}
+					textarea {
+						height: 100px;
+					}
+				}
+			}
+		}
+	}
+	#ur-submit-message-node{
+		
 		margin : 20px 0 0 0!important;
- 		&.ur-error{
+		&.ur-error{
 			background: rgba(206, 0, 0, 0.1);
 		}
 		&.ur-message.message{
@@ -246,7 +289,7 @@
 				border-top: 1px solid $white;
 				border-right: 1px solid $white;
 				position:relative;
-
+				
 				a {
 					color: $color_gray_two;
 					padding: 10px 15px;
@@ -256,7 +299,7 @@
 					font-family: 'sans-serif';
 					text-decoration: none;
 				}
-
+				
 				&.is-active {
 					background-color: $color_gray_eleven;
 					border-left: 1px solid $color_gray_six;
@@ -282,13 +325,13 @@
 		background: $color_gray_eleven;
 		padding: 15px 20px;
 		border: 1px solid $color_gray_six;
-
+		
 		.ur-form-grid{
 			padding: 0;
 			border: 0 none;
 			background: transparent;
 		}
-
+		
 		.ur-frontend-form {
 			border: none;
 		}
@@ -296,29 +339,29 @@
 }
 
 /**
- * Password strength meter
- */
+* Password strength meter
+*/
 .user-registration-password-strength {
 	text-align: center;
 	font-weight: 600;
 	padding: 3px 0.5em;
 	font-size: 1em;
-
+	
 	&.strong {
 		background-color: #c1e1b9;
 		border-color: #83c373;
 	}
-
+	
 	&.short {
 		background-color: #f1adad;
 		border-color: #e35b5b;
 	}
-
+	
 	&.bad {
 		background-color: #fbc5a9;
 		border-color: #f78b53;
 	}
-
+	
 	&.good {
 		background-color: #ffe399;
 		border-color: #ffc733;
