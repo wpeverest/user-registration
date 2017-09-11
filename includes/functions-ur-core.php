@@ -537,8 +537,6 @@ function ur_get_default_admin_roles() {
 	foreach ( $roles as $role_key => $role ) {
 
 		$all_roles[ $role_key ] = $role['name'];
-	
-
 	}
 
 	return apply_filters( 'user_registration_user_default_roles', $all_roles );

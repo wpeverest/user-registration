@@ -29,7 +29,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 $frontend = UR_Frontend::instance();
 
 ?>
-	<div class='ur-frontend-form ur-frontend-form--bordered <?php echo get_post_meta($form_id, 'user_registration_form_template', true );?> ' id='ur-frontend-form'>
+
+	<?php 
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'default')
+		{
+			?><div class='ur-frontend-form' id='ur-frontend-form'><?php
+		}
+
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'template1')
+		{
+			?><div class='ur-frontend-form ur-frontend-form--bordered' id='ur-frontend-form'><?php
+		}
+		 
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'template2')
+		{
+			?><div class='ur-frontend-form ur-frontend-form--flat' id='ur-frontend-form'><?php
+		}
+	?>
 
 		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters('user_registration_form_params', '') ?>>
 
