@@ -537,13 +537,40 @@ function ur_get_default_admin_roles() {
 	foreach ( $roles as $role_key => $role ) {
 
 		$all_roles[ $role_key ] = $role['name'];
-		unset($all_roles['administrator']);
+	
 
 	}
 
 	return apply_filters( 'user_registration_user_default_roles', $all_roles );
 
 }
+
+function ur_get_default_admin_roles_except_admin() {
+	global $wp_roles;
+
+	if ( ! class_exists( 'WP_Roles' ) ) {
+		return;
+	}
+
+	$roles = array();
+	if ( ! isset( $wp_roles ) ) {
+		$wp_roles = new WP_Roles();
+	}
+	$roles = $wp_roles->roles;
+
+	$all_roles_except_admin = array();
+
+	foreach ( $roles as $role_key => $role ) {
+
+		$all_roles_except_admin[ $role_key ] = $role['name'];
+		unset($all_roles_except_admin['administrator']);
+
+	}
+
+	return apply_filters( 'user_registration_user_default_roles_except_admin', $all_roles_except_admin );
+
+}
+
 
 /**
  * @return int
@@ -564,6 +591,7 @@ function get_random_number() {
 function ur_admin_form_settings_fields( $form_id ) {
 
 	$all_roles = ur_get_default_admin_roles();
+
 
 	$arguments = array(
 		'form_id' => $form_id,
