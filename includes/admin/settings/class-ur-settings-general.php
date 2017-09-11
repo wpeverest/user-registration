@@ -120,6 +120,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
+					
 					array(
 						'title'    => __( 'Form submit button label', 'user-registration' ),
 						'desc'     => __( 'This option let you change the submit button label.', 'user-registration' ),

@@ -624,7 +624,24 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
-			)
+			),
+
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Template', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_template',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array(
+					'default' => __( 'default', 'user-registration' ),
+					'template1'  => __( 'template1', 'user-registration' ),
+					'template2'  => __( 'template2', 'user-registration' )
+				),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_form_template', 'default' ),
+			),
 
 		)
 	);
