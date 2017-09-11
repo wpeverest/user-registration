@@ -278,18 +278,24 @@ class UR_Frontend_Scripts {
 
 		switch ( $handle ) {
 			case 'user-registration' :
+				
+
 				return array(
+
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
-					'home_url'                         => home_url(),
+					'home_url'                         => get_option('user_registration_general_setting_redirect_options'),
+
 					'ursL10n'                          => array(
 						'user_successfully_saved' => __( 'User successfully registered.', 'user-registration' ),
 						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),
 				);
-				break;
+				
+			break;
+			
 			case 'ur-password-strength-meter' :
 				return array(
 					'home_url'              => home_url(),

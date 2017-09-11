@@ -145,12 +145,26 @@
 										});
 									}
 									if ( type === 'message' ) {
+
 										message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										$this[ 0 ].reset();
+											
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
+										
 										if ( typeof response.data.auto_login !== 'undefined' && response.data.auto_login ) {
 											location.reload();
+									
+										}
+
+										if(user_registration_params.home_url!=='')
+										{
+											debugger;
+											window.setTimeout(function(){
+
+        										window.location= user_registration_params.home_url;
+
+ 											}, 5000);
 										}
 
 									}
