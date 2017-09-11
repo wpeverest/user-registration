@@ -131,7 +131,7 @@ class UR_Admin_Assets {
 
 			$params = array(
 				'required_form_html'             => self::get_form_required_html(),
-				'ajax_url'                       => admin_url( 'admin-ajax.php?asf' ),
+				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'             => wp_create_nonce( 'user_input_dropped_nonce' ),
 				'ur_form_save'                   => wp_create_nonce( 'ur_form_save_nonce' ),
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
