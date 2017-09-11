@@ -29,12 +29,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 $frontend = UR_Frontend::instance();
 
 ?>
-	<div class='ur-frontend-form <?php echo get_post_meta($form_id, 'user_registration_form_template', true );?> bordered' id='ur-frontend-form'>
+	<div class='ur-frontend-form ur-frontend-form--bordered <?php echo get_post_meta($form_id, 'user_registration_form_template', true );?> ' id='ur-frontend-form'>
 
 		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters('user_registration_form_params', '') ?>>
 
 			<?php
-
 
 			foreach ( $form_data_array as $data ) {
 				?>
