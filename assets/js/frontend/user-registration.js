@@ -159,7 +159,6 @@
 
 										if(user_registration_params.home_url!=='')
 										{
-											debugger;
 											window.setTimeout(function(){
 
         										window.location= user_registration_params.home_url;
