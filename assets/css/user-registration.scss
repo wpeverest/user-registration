@@ -127,6 +127,7 @@
 			&:last-child {
 				margin-bottom: 0;
 			}
+
 			.ur-form-grid {
 				flex: 1;
 				padding: 0 10px;
@@ -134,6 +135,7 @@
 				&:nth-child(1n+2) {
 					border-left: 0 none;
 				}
+
 				.ur-field-item {
 					margin-bottom: 20px;
 					font-size: 13px;
@@ -141,6 +143,7 @@
 						margin-bottom: 0;
 					}
 				}
+
 				input[type="text"],
 				input[type="email"],
 				input[type="url"],
@@ -150,11 +153,13 @@
 					display: block;
 					width: 100%;
 				}
+
 				input[type="checkbox"],
 				input[type="radio"]{
 					font-size: 12px;
 					vertical-align: top;
 				}
+
 				input[type="radio"]:focus,
 				input[type="text"]:focus,
 				input[type="email"]:focus,
@@ -165,6 +170,7 @@
 				button:focus {
 					outline: 0;
 				}
+
 				legend,
 				label {
 					display: block;
@@ -178,6 +184,7 @@
 						color: #ff0000;
 					}
 				}
+
 				textarea {
 					padding: 10px;
 					height: 100px;
@@ -186,6 +193,7 @@
 				}
 			}
 		}
+
 		input[type="submit"],
 		button[type="submit"] {
 			float: right;
@@ -222,8 +230,6 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-					.form-row {
-					}
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -234,16 +240,10 @@
 						border-bottom: 2px solid $label_color;
 						outline: none;
 						transition: all 0.35s;
-						padding: 15px;
+						padding: 10px  15px;
 						background: $input_background_color;
-						height: 40px;
 						color: $label_color;
-					}
-
-					input[type="checkbox"],
-					input[type="radio"]{
-						font-size: 12px;
-						vertical-align: top;
+						height: 45px;
 					}
 					
 					legend,
@@ -253,6 +253,7 @@
 						margin-left: 5px;
 						color: $label_color;
 					}
+					
 					textarea {
 						height: 100px;
 					}
@@ -260,12 +261,61 @@
 			}
 		}
 	}
+	&.ur-frontend-form--flat {
+		background: $flat_background;
+		border: none transparent;
+
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					.form-row {
+						display: flex;
+						flex-direction: column;
+					}
+					
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					textarea,
+					select {
+						border: none;
+						outline: none;
+						padding: 10px 15px;
+						background: $white;
+						color: $label_color;
+						order: 1;
+						margin-bottom: 10px;
+						height: 45px;
+					}
+
+					select {
+						margin-bottom: 10px;
+					}
+
+					legend,
+					label {
+						font-weight: 600;
+						line-height: 2.5;
+						color: $label_color;
+						order: 2;
+					}
+					
+					textarea {
+						height: 100px;
+					}
+				}
+			}
+		}
+	}
+
 	#ur-submit-message-node{
 		
 		margin : 20px 0 0 0!important;
 		&.ur-error{
 			background: rgba(206, 0, 0, 0.1);
 		}
+
 		&.ur-message.message{
 			background: rgba(143, 174, 27,0.2);
 		}
@@ -280,6 +330,7 @@
 			padding: 0;
 			display: -webkit-flex;
 			display:flex;
+
 			.user-registration-MyAccount-navigation-link {
 				list-style: none;
 				padding: 0;
@@ -308,6 +359,7 @@
 					a {
 						color: $primary_color;
 					}
+					
 					&:before {
 						position: absolute;
 						bottom: -1px;
