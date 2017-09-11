@@ -662,12 +662,12 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'options'           => array(
-					'default' => __( 'default', 'user-registration' ),
-					'template1'  => __( 'template1', 'user-registration' ),
-					'template2'  => __( 'template2', 'user-registration' )
+					'Default' => __( 'Default', 'user-registration' ),
+					'Bordered'  => __( 'Bordered', 'user-registration' ),
+					'Flat'  => __( 'Flat', 'user-registration' )
 				),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_form_template', 'default' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
 			),
 
 		)

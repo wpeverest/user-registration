@@ -31,17 +31,17 @@ $frontend = UR_Frontend::instance();
 ?>
 
 	<?php 
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'default')
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Default')
 		{
 			?><div class='ur-frontend-form' id='ur-frontend-form'><?php
 		}
 
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'template1')
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Bordered')
 		{
 			?><div class='ur-frontend-form ur-frontend-form--bordered' id='ur-frontend-form'><?php
 		}
 		 
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'template2')
+		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Flat')
 		{
 			?><div class='ur-frontend-form ur-frontend-form--flat' id='ur-frontend-form'><?php
 		}
