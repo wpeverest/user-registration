@@ -261,6 +261,19 @@
 					}
 				}
 			}
+			input[type="submit"],
+			button[type="submit"] {
+				background: $input_background_color;
+				border: 1px solid $label_color;
+				color: $label_color;
+				border-radius: 0;
+				
+				&:hover {
+					background: $primary_color;
+					color: $white;
+					border-color: $primary_color;
+				}
+			}
 		}
 	}
 
