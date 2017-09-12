@@ -276,7 +276,9 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
  * Read in UserRegistration headers when reading plugin headers.
  *
  * @since  1.1.0
+ *
  * @param  array $headers
+ *
  * @return array $headers
  */
 function ur_enable_ur_plugin_headers( $headers ) {
@@ -286,8 +288,10 @@ function ur_enable_ur_plugin_headers( $headers ) {
 
 	$headers['URRequires'] = UR_Plugin_Updates::VERSION_REQUIRED_HEADER;
 	$headers['URTested']   = UR_Plugin_Updates::VERSION_TESTED_HEADER;
+
 	return $headers;
 }
+
 add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
 
 /**
@@ -358,6 +362,10 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'file':
 				$field_type = 'file';
+				break;
+			case 'mailchimp':
+			case 'checkbox':
+				$field_type = 'checkbox';
 				break;
 		}
 	}
@@ -636,9 +644,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'options'           => array(
-					'Default' => __( 'Default', 'user-registration' ),
-					'Bordered'  => __( 'Bordered', 'user-registration' ),
-					'Flat'  => __( 'Flat', 'user-registration' )
+					'Default'  => __( 'Default', 'user-registration' ),
+					'Bordered' => __( 'Bordered', 'user-registration' ),
+					'Flat'     => __( 'Flat', 'user-registration' )
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),

@@ -79,6 +79,31 @@ abstract class UR_Field_Settings {
 
 					break;
 
+				case 'select':
+
+					$this->fields_html .= '<select data-advance-field="' . $field_key . '" class="' . $field['class'] . '" id="' . $field['id'] . '"  placeholder="' . $field['placeholder'] . '" ';
+
+					if ( true == $field['required'] ) {
+
+						$this->fields_html .= ' required ';
+
+					}
+					$field_options = isset( $field['options'] ) ? $field['options'] : array();
+
+					$this->fields_html .= '>';
+
+					foreach ( $field_options as $option_key => $option_value ) {
+
+						$required = $value === $option_key ? 'selected="selected"' : '';
+
+						$this->fields_html .= '<option value="' . $option_key . '" ' . $required . '>' . $option_value . '</option>';
+
+					}
+
+					$this->fields_html .= '</select>';
+
+					break;
+
 				case 'textarea':
 
 					$this->fields_html .= '<textarea data-advance-field="' . $field_key . '" class="' . $field['class'] . '" type="text" name="' . $field['name'] . '" id="' . $field['id'] . '"  placeholder="' . $field['placeholder'] . '"';

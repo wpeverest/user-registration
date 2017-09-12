@@ -152,6 +152,13 @@ abstract class UR_Form_Field {
 
 		if ( ! class_exists( $class_name ) ) {
 
+			$file_path_array = apply_filters( 'user_registration_' . strtolower( $file_name ) . '_advance_class', array(
+
+				'file_name' => strtolower( $file_name ),
+				'file_path' => $file_path
+			) );
+			$file_path       = isset( $file_path_array['file_path'] ) ? $file_path_array['file_path'] : $file_path;
+
 			if ( file_exists( $file_path ) ) {
 
 				$advance_setting_instance = include_once( $file_path );
