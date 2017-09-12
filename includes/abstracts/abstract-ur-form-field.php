@@ -138,7 +138,7 @@ abstract class UR_Form_Field {
 		}
 
 		$filter_data = array(
-			'from_data' => $form_data,
+			'form_data' => $form_data,
 			'data'      => $data
 		);
 
