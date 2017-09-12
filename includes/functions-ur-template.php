@@ -150,7 +150,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'checkbox' :
 
 				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
-						<input data-value="'.$value.'" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+						<input ' . implode( ' ', $custom_attributes ) . ' data-value="'.$value.'" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 				         . $args['label'] . $required . '</label>';
 
 				break;
