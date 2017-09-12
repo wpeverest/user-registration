@@ -23,17 +23,24 @@
 						form_data.push(single_data);
 					});
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
-
 					return form_data;
 				},
 				get_fieldwise_data: function ( field ) {
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
+					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
 					formwise_data.value = '';
 					switch ( node_type ) {
 						case 'input':
+							switch ( field_type ) {
+								case 'checkbox':
+								case 'radio':
+									formwise_data.value = field.prop('checked') ? field.val() : 0;
+									break;
+								default:
+									formwise_data.value = field.val();
 
-							formwise_data.value = field.val();
+							}
 							break;
 						case 'select':
 							formwise_data.value = field.val();
@@ -148,21 +155,20 @@
 
 										message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										$this[ 0 ].reset();
-											
+
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
-										
+
 										if ( typeof response.data.auto_login !== 'undefined' && response.data.auto_login ) {
-											location.reload();				
+											location.reload();
 										}
 
-										if(user_registration_params.redirect_url!=='')
-										{
-											window.setTimeout(function(){
+										if ( user_registration_params.redirect_url !== '' ) {
+											window.setTimeout(function () {
 
-        										window.location= user_registration_params.redirect_url;
+												window.location = user_registration_params.redirect_url;
 
- 											}, 5000);
+											}, 5000);
 										}
 
 									}
