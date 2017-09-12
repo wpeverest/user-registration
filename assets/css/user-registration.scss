@@ -152,6 +152,7 @@
 				select {
 					display: block;
 					width: 100%;
+					border-radius: 0;
 				}
 
 				input[type="checkbox"],
@@ -226,6 +227,7 @@
 			color: #ff0000;
 		}
 	}
+
 	&.ur-frontend-form--bordered {
 		form {
 			.ur-form-row {
@@ -237,7 +239,7 @@
 					textarea,
 					select {
 						border: none;
-						border-bottom: 2px solid $label_color;
+						border-bottom: 1px solid $label_color;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px  15px;
@@ -261,18 +263,19 @@
 			}
 		}
 	}
+
 	&.ur-frontend-form--flat {
-		background: $flat_background;
+		background: $color_sortable_background;
 		border: none transparent;
 
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+					.ur-field-item,
 					.form-row {
-						display: flex;
-						flex-direction: column;
+						margin-bottom: 0;
 					}
-					
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -284,9 +287,11 @@
 						padding: 10px 15px;
 						background: $white;
 						color: $label_color;
-						order: 1;
 						margin-bottom: 10px;
 						height: 45px;
+						&:focus {
+							box-shadow: 0 0 10px 5px rgba(0,0,0,.05);
+						}
 					}
 
 					select {
@@ -298,7 +303,6 @@
 						font-weight: 600;
 						line-height: 2.5;
 						color: $label_color;
-						order: 2;
 					}
 					
 					textarea {
