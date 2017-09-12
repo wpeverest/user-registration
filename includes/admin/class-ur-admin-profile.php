@@ -97,13 +97,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
-										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+										$selected       = esc_attr( get_user_meta( $user->ID, $key, true ) );
 										foreach ( $field['options'] as $option_key => $option_value ) :
-											$option_key_array=explode('__',$option_key);
-											$option_key=isset($option_key_array[0]) ? $option_key_array[0]: $option_key;
+											$option_key_array = explode( '__', $option_key );
+											$option_key = isset( $option_key_array[0] ) ? $option_key_array[0] : $option_key;
 											?>
 											<option data-val="<?php echo $selected; ?>"
-												value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
+											        value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
 								<?php elseif ( ! empty( $field['type'] ) && 'country' === $field['type'] ) : ?>
@@ -141,7 +141,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											'field'            => $field
 
 										);
-										do_action( 'user_registration_profile_field_'.$field['type'], $data );
+										do_action( 'user_registration_profile_field_' . $field['type'], $data );
 									} else {
 										?>
 										<input type="text" name="<?php echo esc_attr( $key ); ?>"
@@ -314,7 +314,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								);
 							}
-
 							switch ( $field_key ) {
 
 								case 'select':
@@ -345,6 +344,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'textarea':
 
 									$fields[ $field_index ]['type'] = 'textarea';
+
+									$fields[ $field_index ]['class'] = '';
+
+									break;
+								case 'mailchimp':
+								case 'checkbox':
+
+									$fields[ $field_index ]['type'] = 'checkbox';
 
 									$fields[ $field_index ]['class'] = '';
 
