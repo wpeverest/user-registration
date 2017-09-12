@@ -764,3 +764,65 @@ function ur_get_user_approval_status( $user_id ) {
 	return true;
 
 }
+
+/**
+ * @param $form_data
+ */
+function ur_get_form_data_by_key( $form_data, $key = null ) {
+
+	$form_data_array = array();
+	
+	foreach ( $form_data as $data ) {
+
+		foreach ( $data as $single_data ) {
+
+			foreach ( $single_data as $field_data ) {
+
+				$field_key = isset( $field_data->field_key ) && $field_data->field_key !== null ? $field_data->field_key : '';
+
+				if ( ! empty( $field_key ) ) {
+
+
+					$field_name = isset( $field_data->general_setting->field_name ) && $field_data->general_setting->field_name !== null ? $field_data->general_setting->field_name : '';
+
+					if ( $key === null ) {
+
+						if ( ! empty( $field_name ) ) {
+
+							$form_data_array[ $field_name ] = $field_data;
+
+						} else {
+
+							$form_data_array[] = $field_data;
+
+						}
+					} else {
+
+						if ( $field_key === $key ) {
+
+							if ( ! empty( $field_name ) ) {
+
+								$form_data_array[ $field_name ] = $field_data;
+
+							} else {
+
+								$form_data_array[] = $field_data;
+
+							}
+
+						}
+
+					}
+
+				}
+
+
+			}
+
+		}
+
+		return $form_data_array;
+	}
+
+
+}
