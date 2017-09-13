@@ -114,6 +114,8 @@ final class UserRegistration {
 	 * Define FT Constants.
 	 */
 	private function define_constants() {
+		$upload_dir = wp_upload_dir();
+		$this->define( 'UR_LOG_DIR', $upload_dir['basedir'] . '/ur-logs/' );
 		$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 		$this->define( 'UR_PLUGIN_FILE', __FILE__ );
 		$this->define( 'UR_ABSPATH', dirname( __FILE__ ) . UR_DS );
@@ -167,10 +169,18 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-autoloader.php' );
 
 		/**
+		 * Interfaces.
+		 */
+
+		include_once( UR_ABSPATH . 'includes/interfaces/class-ur-logger-interface.php' );
+		include_once( UR_ABSPATH . 'includes/interfaces/class-ur-log-handler-interface.php' );
+
+		/**
 		 * Abstract classes
 		 */
 		include_once( UR_ABSPATH . 'includes/abstracts/abstract-ur-form-field.php' );
 		include_once( UR_ABSPATH . 'includes/abstracts/abstract-ur-field-settings.php' );
+		include_once( UR_ABSPATH . 'includes/abstracts/abstract-ur-log-handler.php' );
 		include_once( UR_ABSPATH . 'includes/abstracts/abstract-ur-session.php' );
 
 		/**

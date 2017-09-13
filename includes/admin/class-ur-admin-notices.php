@@ -43,7 +43,7 @@ class UR_Admin_Notices {
 		self::$notices = get_option( 'user_registration_admin_notices', array() );
 
 		add_action( 'switch_theme', array( __CLASS__, 'reset_admin_notices' ) );
-		add_action( 'woocommerce_installed', array( __CLASS__, 'reset_admin_notices' ) );
+		add_action( 'user_registration_installed', array( __CLASS__, 'reset_admin_notices' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'hide_notices' ) );
 		add_action( 'shutdown', array( __CLASS__, 'store_notices' ) );
 

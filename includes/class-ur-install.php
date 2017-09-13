@@ -34,7 +34,10 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array( __CLASS__, 'in_plugin_update_message' ) );
+		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array(
+			__CLASS__,
+			'in_plugin_update_message'
+		) );
 		add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -114,6 +117,8 @@ class UR_Install {
 		$current_ur_version = get_option( 'user_registration_version', null );
 		$current_db_version = get_option( 'user_registration_db_version', null );
 
+		self::create_files();
+
 		UR_Admin_Notices::remove_all_notices();
 
 		// No versions? This is a new install :)
@@ -153,6 +158,35 @@ class UR_Install {
 
 		// Trigger action
 		do_action( 'user_registration_installed' );
+	}
+
+	/**
+	 * Create files/directories.
+	 */
+	private static function create_files() {
+		// Install files and folders for uploading files and prevent hotlinking
+		$upload_dir = wp_upload_dir();
+
+		$files = array(
+			array(
+				'base'    => UR_LOG_DIR,
+				'file'    => '.htaccess',
+				'content' => 'deny from all',
+			),
+			array(
+				'base'    => UR_LOG_DIR,
+				'file'    => 'index.html',
+				'content' => '',
+			),
+		);
+		foreach ( $files as $file ) {
+			if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+				if ( $file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'w' ) ) {
+					fwrite( $file_handle, $file['content'] );
+					fclose( $file_handle );
+				}
+			}
+		}
 	}
 
 	/**

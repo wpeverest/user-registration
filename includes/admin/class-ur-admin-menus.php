@@ -28,6 +28,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_init', array( $this, 'actions' ) );
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
+			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
@@ -136,7 +137,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 			if ( isset( $post ) && $post != null ) {
 
-				if('publish' !== $post->post_status){
+				if ( 'publish' !== $post->post_status ) {
 
 					return false;
 				}
@@ -163,42 +164,46 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				/*
 				 * insert the post by wp_insert_post() function
 				 */
-			    $new_post_id = wp_insert_post( $args );
+				$new_post_id = wp_insert_post( $args );
 
 				/*
 				 * duplicate all post meta just in two SQL queries
 				 */
-				global  $wpdb;
-				$post_meta_infos = $wpdb->get_results($wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d",$form_id));
+				global $wpdb;
+				$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $form_id ) );
 
-				if (count($post_meta_infos)!=0) {
+				if ( count( $post_meta_infos ) != 0 ) {
 					$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-					foreach ($post_meta_infos as $meta_info) {
+					foreach ( $post_meta_infos as $meta_info ) {
 						$meta_key = $meta_info->meta_key;
-						if( $meta_key == '_wp_old_slug' ) continue;
-						$meta_value = addslashes($meta_info->meta_value);
-						$sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
+						if ( $meta_key == '_wp_old_slug' ) {
+							continue;
+						}
+						$meta_value      = addslashes( $meta_info->meta_value );
+						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
 					}
-					$sql_query.= implode(" UNION ALL ", $sql_query_sel);
-					$wpdb->query($sql_query);
+					$sql_query .= implode( " UNION ALL ", $sql_query_sel );
+					$wpdb->query( $sql_query );
 				}
 
 				/*
 				 * duplicate all post meta just in two SQL queries
 				 */
-				global  $wpdb;
-				$post_meta_infos = $wpdb->get_results($wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d",$form_id));
+				global $wpdb;
+				$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $form_id ) );
 
-				if (count($post_meta_infos)!=0) {
+				if ( count( $post_meta_infos ) != 0 ) {
 					$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-					foreach ($post_meta_infos as $meta_info) {
+					foreach ( $post_meta_infos as $meta_info ) {
 						$meta_key = $meta_info->meta_key;
-						if( $meta_key == '_wp_old_slug' ) continue;
-						$meta_value = addslashes($meta_info->meta_value);
-						$sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
+						if ( $meta_key == '_wp_old_slug' ) {
+							continue;
+						}
+						$meta_value      = addslashes( $meta_info->meta_value );
+						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
 					}
-					$sql_query.= implode(" UNION ALL ", $sql_query_sel);
-					$wpdb->query($sql_query);
+					$sql_query .= implode( " UNION ALL ", $sql_query_sel );
+					$wpdb->query( $sql_query );
 				}
 
 				/*
@@ -292,21 +297,40 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu item.
 		 */
 		public function settings_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array( $this, 'settings_page' ) );
+			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array(
+				$this,
+				'settings_page'
+			) );
+		}
+
+		/**
+		 * Add menu item.
+		 */
+		public function status_menu() {
+			add_submenu_page( 'user-registration', __( 'User Registration Status', 'user-registration' ), __( 'Status', 'user-registration' ), 'manage_user_registration', 'user-registration-status', array(
+				$this,
+				'status_page'
+			) );
 		}
 
 		/**
 		 * Add menu items.
 		 */
 		public function add_registration_menu() {
-			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array( $this, 'add_registration_page' ) );
+			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array(
+				$this,
+				'add_registration_page'
+			) );
 		}
 
 		/**
 		 * Addons menu item.
 		 */
 		public function addons_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ),  __( 'Extensions', 'restaurantpress' ) , 'manage_user_registration', 'user-registration-addons', array( $this, 'addons_page' ) );
+			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ), __( 'Extensions', 'restaurantpress' ), 'manage_user_registration', 'user-registration-addons', array(
+				$this,
+				'addons_page'
+			) );
 		}
 
 		/**
@@ -392,6 +416,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function settings_page() {
 			UR_Admin_Settings::output();
+		}
+
+		/**
+		 * Init the settings page.
+		 */
+		public function status_page() {
+			UR_Admin_Status::output();
 		}
 
 		/**

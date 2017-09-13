@@ -837,3 +837,81 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 
 
 }
+
+/**
+ * Get a log file path.
+ *
+ * @since 1.0.5
+ *
+ * @param string $handle name.
+ *
+ * @return string the log file path.
+ */
+function ur_get_log_file_path( $handle ) {
+	return UR_Log_Handler_File::get_log_file_path( $handle );
+}
+
+/**
+ * Registers the default log handler.
+ *
+ * @since 1.0.5
+ *
+ * @param array $handlers
+ *
+ * @return array
+ */
+function ur_register_default_log_handler( $handlers ) {
+
+	if ( defined( 'UR_LOG_HANDLER' ) && class_exists( UR_LOG_HANDLER ) ) {
+		$handler_class   = UR_LOG_HANDLER;
+		$default_handler = new $handler_class();
+	} else {
+		$default_handler = new UR_Log_Handler_File();
+	}
+
+	array_push( $handlers, $default_handler );
+
+	return $handlers;
+}
+
+add_filter( 'user_registration_register_log_handlers', 'ur_register_default_log_handler' );
+
+
+/**
+ * Get a shared logger instance.
+ *
+ * Use the user_registration_logging_class filter to change the logging class. You may provide one of the following:
+ *     - a class name which will be instantiated as `new $class` with no arguments
+ *     - an instance which will be used directly as the logger
+ * In either case, the class or instance *must* implement UR_Logger_Interface.
+ *
+ * @see UR_Logger_Interface
+ *
+ * @return UR_Logger
+ */
+function ur_get_logger() {
+	static $logger = null;
+	if ( null === $logger ) {
+		$class      = apply_filters( 'user_registration_logging_class', 'UR_Logger' );
+		$implements = class_implements( $class );
+		if ( is_array( $implements ) && in_array( 'UR_Logger_Interface', $implements ) ) {
+			if ( is_object( $class ) ) {
+				$logger = $class;
+			} else {
+				$logger = new $class;
+			}
+		} else {
+			ur_doing_it_wrong(
+				__FUNCTION__,
+				sprintf(
+					__( 'The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>.', 'user-registration' ),
+					esc_html( is_object( $class ) ? get_class( $class ) : $class )
+				),
+				'1.0.5l'
+			);
+			$logger = new UR_Logger();
+		}
+	}
+
+	return $logger;
+}

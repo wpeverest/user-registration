@@ -84,6 +84,8 @@ class UR_Autoloader {
 			$path = $this->include_path . 'admin/';
 		} elseif ( strpos( $class, 'ur_form' ) === 0 ) {
 			$path = $this->include_path . 'form/';
+		} elseif ( strpos( $class, 'ur_log_handler_' ) === 0 ) {
+			$path = $this->include_path . 'log-handlers/';
 		}
 
 		if ( empty( $path ) || ( ! $this->load_file( $path . $file ) && strpos( $class, 'ur_' ) === 0 ) ) {
