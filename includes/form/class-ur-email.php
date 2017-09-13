@@ -49,7 +49,7 @@ class UR_Email extends UR_Form_Field {
 
 			'default_label' => __( 'Secondary Email','user-registration' ),
 
-			'default_field_name' => 'email_' . get_random_number(),
+			'default_field_name' => 'email_' . ur_get_random_number(),
 		);
 	}
 

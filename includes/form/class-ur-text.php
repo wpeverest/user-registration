@@ -50,7 +50,7 @@ class UR_Text extends UR_Form_Field {
 
 			'default_label' => __( 'Input Field', 'user-registration' ),
 
-			'default_field_name' => 'input_box_' . get_random_number(),
+			'default_field_name' => 'input_box_' . ur_get_random_number(),
 		);
 	}
 

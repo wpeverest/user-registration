@@ -456,6 +456,8 @@ function ur_get_registered_form_fields() {
 		'select',
 		'country',
 		'textarea',
+		'number',
+		'date',
 	) );
 }
 
@@ -527,6 +529,9 @@ function ur_load_form_field_class( $class_key ) {
 	return $class_name;
 }
 
+/**
+ * @return mixed
+ */
 function ur_get_default_admin_roles() {
 	global $wp_roles;
 
@@ -555,7 +560,7 @@ function ur_get_default_admin_roles() {
 /**
  * @return int
  */
-function get_random_number() {
+function ur_get_random_number() {
 
 	$time = time();
 
@@ -771,7 +776,7 @@ function ur_get_user_approval_status( $user_id ) {
 function ur_get_form_data_by_key( $form_data, $key = null ) {
 
 	$form_data_array = array();
-	
+
 	foreach ( $form_data as $data ) {
 
 		foreach ( $data as $single_data ) {

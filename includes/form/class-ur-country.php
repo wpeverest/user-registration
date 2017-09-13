@@ -307,7 +307,7 @@ class UR_Country extends UR_Form_Field {
 
 			'default_label' => __( 'Country','user-registration' ),
 
-			'default_field_name' => 'country_' . get_random_number(),
+			'default_field_name' => 'country_' . ur_get_random_number(),
 		);
 	}
 

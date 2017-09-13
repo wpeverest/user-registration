@@ -49,7 +49,7 @@ class UR_Textarea extends UR_Form_Field {
 
 			'default_label' => __( 'Textarea','user-registration' ),
 
-			'default_field_name' => 'textarea_' . get_random_number(),
+			'default_field_name' => 'textarea_' . ur_get_random_number(),
 		);
 	}
 

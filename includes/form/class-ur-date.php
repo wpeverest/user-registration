@@ -2,8 +2,8 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Select
- * @version  1.0.0
+ * @class    UR_Admin
+ * @since    1.0.5
  * @package  UserRegistration/Form
  * @category Admin
  * @author   WPEverest
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Select Class
+ * UR_Admin Class
  */
-class UR_Select extends UR_Form_Field {
+class UR_Date extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,23 +35,22 @@ class UR_Select extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_select';
+		$this->id = 'user_registration_date';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Select','user-registration' ),
+			'label' => __( 'Date', 'user-registration' ),
 
-			'icon' => 'dashicons dashicons-image-flip-vertical',
+			'icon' => 'dashicons dashicons-calendar',
 		);
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Select','user-registration' ),
+			'default_label' => __( 'Date', 'user-registration' ),
 
-			'default_field_name' => 'select_' . ur_get_random_number(),
-
+			'default_field_name' => 'input_box_' . ur_get_random_number(),
 		);
 	}
 
@@ -68,7 +67,23 @@ class UR_Select extends UR_Form_Field {
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// TODO: Implement validation() method.
+		$required = isset( $single_form_field->label ) ? $single_form_field->general_setting->required : 'no';
+
+		$field_label = isset( $form_data->label ) ? $form_data->label : '';
+
+		$value = isset( $form_data->value ) ? $form_data->value : '';
+
+		if ( 'yes' == $required && ! empty( $value ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
+
+				return __( $field_label . ' is required.', 'user-registration' );
+
+			} );
+
+		}
+
 	}
 }
 
-return UR_Select::get_instance();
+return UR_Date::get_instance();
