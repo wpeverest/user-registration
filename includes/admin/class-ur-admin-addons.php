@@ -98,9 +98,6 @@ class UR_Admin_Addons {
 	 * Handles output of the addons page in admin.
 	 */
 	public static function output() {
-
-		$logger = ur_get_logger();
-		$logger->error( 'Hello world', array( 'source' => 'ur' ) );
 		$sections        = self::get_sections();
 		$theme           = wp_get_theme();
 		$section_keys    = array_keys( $sections );
