@@ -33,60 +33,40 @@
 }
 
 /**
- * License.
+ * Plugin Updater.
  */
-.user-registration-license-updater td,
-.user-registration-license-updater th {
-	box-shadow: none !important;
-}
-
-#user-registration_license_row {
-
-	.ur-license-key-row {
-		border: 0;
-		font-size: 13px;
-		font-weight: 400;
-		margin: 6px 12px 12px;
-		padding: 6px 12px;
-		background-color: rgba(0, 0, 0, .03);
-		line-height: 27px;
-
-		input {
-			margin: 0 4px;
-			vertical-align: middle;
-		}
-
-		&::before {
-			content: "\f160";
-			display: inline-block;
-			font: 400 20px/27px dashicons;
-			speak: none;
-			margin: 0 8px 0 -2px;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			vertical-align: middle;
-		}
-	}
-
-	&.ur-license-key-row-tr {
-
-		td {
-			padding: 0 !important;
-			border-left: 4px solid #2ea2cc !important;
-		}
-
-		.ur-updater-license-key-error {
-			margin: 6px 12px 12px !important;
-			padding: 6px 12px !important;
-			line-height: 27px !important;
-
-			p {
-				margin: 0 !important;
-			}
-		}
-	}
-}
-
 .plugins a.deactivate-license {
 	color: $red;
+}
+
+.user-registration-updater-licensed {
+	th, td {
+		box-shadow: none !important;
+	}
+}
+
+.user-registration-updater-license-key {
+	border: 0;
+	font-size: 13px;
+	font-weight: 400;
+	padding: 6px 12px;
+	margin: 5px 20px 15px 40px;
+	background-color: rgba(0, 0, 0, .03);
+	line-height: 27px;
+
+	input {
+		margin: 0 4px;
+		vertical-align: middle;
+	}
+
+	&::before {
+		color: #32373c;
+		content: '\f160';
+		margin: 0 8px 0 -2px;
+		display: inline-block;
+		font: 400 20px/27px dashicons;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		vertical-align: middle;
+	}
 }
