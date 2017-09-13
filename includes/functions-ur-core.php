@@ -367,6 +367,12 @@ function ur_get_field_type( $field_key ) {
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
+			case 'number':
+				$field_type = 'number';
+				break;
+			case 'date':
+				$field_type = 'date';
+				break;
 		}
 	}
 

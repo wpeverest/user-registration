@@ -160,6 +160,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'tel' :
 			case 'number' :
 			case 'url' :
+			case 'date':
 			case 'file':
 
 				$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';

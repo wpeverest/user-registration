@@ -48,9 +48,9 @@ class UR_Number extends UR_Form_Field {
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Input Field', 'user-registration' ),
+			'default_label' => __( 'Number', 'user-registration' ),
 
-			'default_field_name' => 'input_box_' . ur_get_random_number(),
+			'default_field_name' => 'number_box_' . ur_get_random_number(),
 		);
 	}
 
@@ -78,6 +78,15 @@ class UR_Number extends UR_Form_Field {
 			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
 
 				return __( $field_label . ' is required.', 'user-registration' );
+
+			} );
+
+		}
+		if ( ! is_numeric( $value ) && ! empty( $value ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
+
+				return __( $field_label . ' must be numeric value.', 'user-registration' );
 
 			} );
 

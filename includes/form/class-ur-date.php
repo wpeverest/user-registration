@@ -50,7 +50,7 @@ class UR_Date extends UR_Form_Field {
 
 			'default_label' => __( 'Date', 'user-registration' ),
 
-			'default_field_name' => 'input_box_' . ur_get_random_number(),
+			'default_field_name' => 'date_box_' . ur_get_random_number(),
 		);
 	}
 
@@ -82,6 +82,31 @@ class UR_Date extends UR_Form_Field {
 			} );
 
 		}
+
+
+		if ( ! $this->is_valid_date( $value ) && ! empty( $value ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
+
+				return __( $field_label . ' must be valid date.', 'user-registration' );
+
+			} );
+
+		}
+	}
+
+	/**
+	 * @param $date_string
+	 */
+	private function is_valid_date( $date_string ) {
+
+		$date = date_parse( $date_string );
+
+		if ( $date["error_count"] == 0 && checkdate( $date["month"], $date["day"], $date["year"] ) ) {
+			return true;
+		}
+
+		return false;
 
 	}
 }
