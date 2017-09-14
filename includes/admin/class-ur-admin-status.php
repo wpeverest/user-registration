@@ -38,7 +38,9 @@ class UR_Admin_Status {
 	 * Show the log page contents for file log handler.
 	 */
 	public static function status_logs_file() {
-
+		if ( ! empty( $_REQUEST['handle'] ) ) {
+			self::remove_log();
+		}
 		$logs = self::scan_log_files();
 
 		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( $_REQUEST['log_file'] ) ] ) ) {
@@ -49,9 +51,6 @@ class UR_Admin_Status {
 
 		$handle = ! empty( $viewed_log ) ? self::get_log_file_handle( $viewed_log ) : '';
 
-		if ( ! empty( $_REQUEST['handle'] ) ) {
-			self::remove_log();
-		}
 
 		include_once( 'views/html-admin-page-status-logs.php' );
 	}
@@ -172,9 +171,6 @@ class UR_Admin_Status {
 			$log_handler = new UR_Log_Handler_File();
 			$log_handler->remove( $_REQUEST['handle'] );
 		}
-
-		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status' ) ) );
-		exit();
 	}
 
 }
