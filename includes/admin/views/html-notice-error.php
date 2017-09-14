@@ -8,6 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<div class="error ur-updater-license-key-error <?php if ( did_action( 'all_admin_notices' ) ) echo 'inline'; ?>">
+<div class="<?php echo did_action( 'all_admin_notices' ) ? 'update-message notice inline notice-alt notice-error' : 'error'; ?>">
 	<p><?php echo wp_kses_post( $error ); ?></p>
 </div>
