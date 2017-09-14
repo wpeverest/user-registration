@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div class="alignright">
 			<form action="<?php echo admin_url( 'admin.php?page=user-registration-status' ); ?>" method="post">
-				<select name="log_file">
+				<select name="log_file" style="max-width: 450px;vertical-align:inherit">
 					<?php foreach ( $logs as $log_key => $log_file ) : ?>
 						<option
 							value="<?php echo esc_attr( $log_key ); ?>" <?php selected( sanitize_title( $viewed_log ), $log_key ); ?>><?php echo esc_html( $log_file ); ?>
