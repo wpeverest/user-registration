@@ -264,7 +264,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				throw new Exception( $activate_results['error'] );
 
 			} elseif ( isset( $activate_results['error'] ) && 'invalid' === $activate_results['license'] ) {
-				switch ( $activate_results ) {
+				switch ( $activate_results['error'] ) {
 					case 'expired' :
 						$error_msg = __( 'The provided license is expired.', 'user-registration' );
 						break;
