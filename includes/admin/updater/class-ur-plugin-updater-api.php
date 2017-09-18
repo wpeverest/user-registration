@@ -2,11 +2,10 @@
 /**
  * Handles the Activation API responses.
  *
- * @class    UR_Plugin_Updater_Key_API
- * @version  1.1.0
- * @package  UserRegistration/Updates
- * @category Admin
  * @author   WPEverest
+ * @category Admin
+ * @package  UserRegistration/Admin/Updates
+ * @version  1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,50 +13,74 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Plugin_Updater_Key_API Class.
+ * RP_Updater_Key_API Class.
  */
-class UR_Plugin_Updater_Key_API {
+class RP_Updater_Key_API {
 
-	private static $endpoint = 'http://themetest.tk/?';
+	private static $endpoint = 'http://themetest.tk/edd-sl-api/?';
 
 	/**
 	 * Attempt to activate a plugin license.
 	 * @return string JSON response
 	 */
-	public static function activate( $args ) {
+	public static function activate( $api_params ) {
 		$defaults = array(
+			'url'        => home_url(),
 			'edd_action' => 'activate_license'
 		);
 
-		$args    = wp_parse_args( $defaults, $args );
-		$request = wp_remote_get( self::$endpoint . '&' . http_build_query( $args, '', '&' ) );
+		$api_params = wp_parse_args( $defaults, $api_params );
 
-		if ( is_wp_error( $request ) ) {
-			return json_encode( array( 'error_code' => $request->get_error_code(), 'error' => $request->get_error_message() ) );
+		// Call the API.
+		$response = wp_remote_post(
+			self::$endpoint,
+			array(
+				'timeout'   => 15,
+				'body'      => $api_params,
+				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+			)
+		);
+
+		// Make sure there are no errors.
+		if ( is_wp_error( $response ) ) {
+			return json_encode( array( 'error_code' => $response->get_error_code(), 'error' => $response->get_error_message() ) );
 		}
 
-		if ( wp_remote_retrieve_response_code( $request ) != 200 ) {
-			return json_encode( array( 'error_code' => wp_remote_retrieve_response_code( $request ), 'error' => 'Error code: ' . wp_remote_retrieve_response_code( $request ) ) );
+		if ( wp_remote_retrieve_response_code( $response ) != 200 ) {
+			return json_encode( array( 'error_code' => wp_remote_retrieve_response_code( $response ), 'error' => 'Error code: ' . wp_remote_retrieve_response_code( $response ) ) );
 		}
 
-		return wp_remote_retrieve_body( $request );
+		// Tell WordPress to look for updates.
+		set_site_transient( 'update_plugins', null );
+
+		return wp_remote_retrieve_body( $response );
 	}
 
 	/**
 	 * Attempt to deactivate a plugin license.
 	 */
-	public static function deactivate( $args ) {
+	public static function deactivate( $api_params ) {
 		$defaults = array(
+			'url'        => home_url(),
 			'edd_action' => 'deactivate_license',
 		);
 
-		$args    = wp_parse_args( $defaults, $args );
-		$request = wp_remote_get( self::$endpoint . '&' . http_build_query( $args, '', '&' ) );
+		$api_params = wp_parse_args( $defaults, $api_params );
 
-		if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
+		// Call the API.
+		$response = wp_remote_post(
+			self::$endpoint,
+			array(
+				'timeout'   => 15,
+				'body'      => $api_params,
+				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+			)
+		);
+
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
 			return false;
 		} else {
-			return wp_remote_retrieve_body( $request );
+			return wp_remote_retrieve_body( $response );
 		}
 	}
 }

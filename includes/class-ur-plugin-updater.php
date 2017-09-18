@@ -26,16 +26,16 @@ if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
 class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 	/**
-	 * Plugin Name.
-	 * @var string
-	 */
-	private $plugin_name = '';
-
-	/**
 	 * Plugin File.
 	 * @var string
 	 */
 	private $plugin_file = '';
+
+	/**
+	 * Plugin Name.
+	 * @var string
+	 */
+	private $plugin_name = '';
 
 	/**
 	 * Plugin Slug.
@@ -76,6 +76,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		add_filter( 'block_local_requests', '__return_false' );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
+		// Include required files.
 		include_once( dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updater-api.php' );
 	}
 
@@ -237,7 +238,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function plugin_action_links( $actions ) {
 		$new_actions = array(
-			'deactivate_license' => '<a href="' . remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ) . '" class="deactivate-license" title="' . esc_attr( __( 'Deactivate License Key', 'restaurantpress' ) ) . '">' . __( 'Deactivate License', 'restaurantpress' ) . '</a>',
+			'deactivate_license' => '<a href="' . remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ) . '" class="deactivate-license" style="color: #a00;" title="' . esc_attr( __( 'Deactivate License Key', 'user-registration' ) ) . '">' . __( 'Deactivate License', 'user-registration' ) . '</a>',
 		);
 
 		return array_merge( $actions, $new_actions );
@@ -257,39 +258,67 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				'license' => $license_key,
 			) ), true );
 
-			if ( false === $activate_results ) {
-				throw new Exception( 'Connection failed to the License Key API server - possible server issue.' );
+			// Update activate results.
+			update_option( $this->plugin_slug . '_license_active', $activate_results );
 
-			} elseif ( isset( $activate_results['error_code'] ) ) {
-				throw new Exception( $activate_results['error'] );
+			if ( ! empty( $activate_results ) && is_object( $activate_results ) ) {
 
-			} elseif ( isset( $activate_results['error'] ) && 'invalid' === $activate_results['license'] ) {
-				switch ( $activate_results['error'] ) {
-					case 'expired' :
-						$error_msg = __( 'The provided license is expired.', 'user-registration' );
-						break;
+				if ( isset( $activate_results->error_code ) ) {
+					throw new Exception( $activate_results->error );
 
-					case 'no_activations_left' :
-						$error_msg = __( 'No activation left for this license.', 'user-registration' );
-						break;
-					default:
-						$error_msg = __( 'The provided license could not be found.', 'user-registration' );
-						break;
+				} elseif ( false === $activate_results->success ) {
+					switch ( $activate_results->error ) {
+						case 'expired' :
+							$error_msg = sprintf( __( 'The provided license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'user-registration' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), 'https://wpeverest.com/checkout/?edd_license_key=' . $license_key . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' );
+							break;
+
+						case 'revoked' :
+							$error_msg = sprintf( __( 'The provided license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'user-registration' ), 'https://wpeverest.com/contact?utm_campaign=admin&utm_source=licenses&utm_medium=revoked' );
+							break;
+
+						case 'missing' :
+							$error_msg = sprintf( __( 'The provided license is invalid. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'user-registration' ), 'https://wpeverest.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing' );
+							break;
+
+						case 'invalid' :
+						case 'site_inactive' :
+							$error_msg = sprintf( __( 'The provided license is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'user-registration' ), 'https://wpeverest.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing' );
+							break;
+
+						case 'invalid_item_id' :
+						case 'item_name_mismatch' :
+							$error_msg = sprintf( __( 'This appears to be an invalid license key for <strong>%1$s</strong>.', 'user-registration' ), $this->plugin_data['Name'] );
+							break;
+
+						case 'no_activations_left' :
+							$error_msg = sprintf( __( 'The provided license key has reached its activation limit. Please <a href="%1$s" target="_blank">View possible upgrades</a> now.', 'user-registration' ), 'https://wpeverest.com/my-account/' );
+							break;
+
+						case 'license_not_activable' :
+							$error_msg = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'user-registration' );
+							break;
+
+						default :
+							$error_msg = sprintf( __( 'The provided license key could not be found. Please <a href="%s" target="_blank">contact support</a> for more information.', 'user-registration' ), 'https://wpeverest.com/contact/' );
+							break;
+					}
+
+					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s' ), $error_msg ) );
+
+				} elseif ( 'valid' === $activate_results->license ) {
+					$this->api_key = $license_key;
+					$this->errors  = array();
+
+					update_option( $this->plugin_slug . '_license_key', $this->api_key );
+					delete_option( $this->plugin_slug . '_errors' );
+
+					return true;
 				}
 
-				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s' ), $error_msg ) );
-
-			} elseif ( ! empty( $activate_results['license'] ) && 'valid' === $activate_results['license'] ) {
-				$this->api_key = $license_key;
-				$this->errors  = array();
-
-				update_option( $this->plugin_slug . '_license_key', $this->api_key );
-				delete_option( $this->plugin_slug . '_errors' );
-
-				return true;
+				throw new Exception( 'License could not activate. Please contact support.' );
+			} else {
+				throw new Exception( 'Connection failed to the License Key API server - possible server issue.' );
 			}
-
-			throw new Exception( 'License could not activate. Please contact support.' );
 
 		} catch ( Exception $e ) {
 			$this->add_error( $e->getMessage() );
@@ -305,9 +334,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			'license' => $this->api_key,
 		) );
 
-		delete_option( $this->plugin_slug . '_license_key' );
 		delete_option( $this->plugin_slug . '_errors' );
-		delete_site_transient( 'update_plugins' );
+		delete_option( $this->plugin_slug . '_license_key' );
+		delete_option( $this->plugin_slug . '_license_active' );
 
 		// Reset huh?
 		$this->errors  = array();
