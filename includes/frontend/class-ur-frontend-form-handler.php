@@ -181,6 +181,17 @@ class UR_Frontend_Form_Handler {
 
 				$single_form_field = $form_field_data[ $form_data_index ];
 
+				$general_setting = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+
+				$single_field_key = $single_form_field->field_key;
+
+				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+
+				self::$valid_form_data[ $data->field_name ]->extra_params = array(
+					'field_key' => $single_field_key,
+					'label'     => $single_field_label
+				);
+
 				$hook = "user_registration_validate_{$single_form_field->field_key}";
 
 				$filter_hook = $hook . '_message';
@@ -253,7 +264,8 @@ class UR_Frontend_Form_Handler {
 
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
 
-				$field_key = $data->field_name;
+				$field_key           = $data->field_name;
+				$field_key_for_param = $data->field_name;
 
 				if ( substr( $data->field_name, 0, 5 ) == 'user_' ) {
 
@@ -266,6 +278,10 @@ class UR_Frontend_Form_Handler {
 				}
 
 				update_user_meta( $user_id, $field_key, $data->value );
+				if ( isset( $data->extra_params ) ) {
+					update_user_meta( $user_id, 'ur_' . $field_key_for_param . '_params', json_encode( $data->extra_params ) );
+
+				}
 			}
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );

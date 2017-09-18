@@ -40,6 +40,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$form_id     = $this->get_user_meta( $user_id, 'ur_form_id' );
 
 			$all_meta_for_user = $this->get_user_meta_by_prefix( $user_id, 'user_registration_' );
+
 			$extra_meta_fields = $this->get_user_meta_fields( $all_meta_for_user, $form_id );
 
 			if ( ! empty( $extra_meta_fields ) ) {
@@ -66,13 +67,23 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$show_fields = $this->get_customer_meta_fields( $user->ID );
 
+
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
 					<?php
+					$profile_field_type       = array(
+						'select',
+						'country',
+						'checkbox',
+						'button',
+						'textarea',
+					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
-						$attributes = isset( $field['attributes'] ) ? $field['attributes'] : array();
+						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
+						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
+						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
 
 						$attribute_string = '';
 						foreach ( $attributes as $name => $value ) {
@@ -85,11 +96,20 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							}
 						}
 
+						$field_label = $field['label'];
+
+						$field_type = isset( $field['type'] ) ? $field['type'] : '';
+
+						if ( ! in_array( $field_type, $profile_field_type ) ) {
+							$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+							$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
+							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
+						}
 						?>
 						<tr>
 							<th>
 								<label
-									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
 							</th>
 							<td>
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
@@ -143,15 +163,22 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										);
 										do_action( 'user_registration_profile_field_' . $field['type'], $data );
 									} else {
-										?>
-										<input type="text" name="<?php echo esc_attr( $key ); ?>"
-										       id="<?php echo esc_attr( $key ); ?>"
-										       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-										       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-											<?php echo esc_attr( $attribute_string ); ?>
-										/>
+										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
+										if ( empty( $extra_params ) ) {
+											?>
+											<input type="text" name="<?php echo esc_attr( $key ); ?>"
+											       id="<?php echo esc_attr( $key ); ?>"
+											       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+											       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												<?php echo esc_attr( $attribute_string ); ?>
+											/>
 
-									<?php } endif; ?>
+										<?php } else {
+
+											$this->show_undefined_fields( $key, $user->ID, $field, $extra_params );
+										}
+									} endif; ?>
 								<br/>
 								<span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span>
 							</td>
@@ -162,6 +189,41 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				</table>
 				<?php
 			endforeach;
+		}
+
+		/**
+		 * @param $key
+		 * @param $user_id
+		 * @param $field
+		 */
+		public function show_undefined_fields( $key, $user_id, $field, $extra_params ) {
+
+			$value     = $this->get_user_meta( $user_id, $key );
+			$field_key = $extra_params->field_key;
+			$type      = 'hidden';
+			switch ( $field_key ) {
+				case "file":
+					$attachment_url = wp_get_attachment_thumb_url( $value );
+					if ( ! empty( $attachment_url ) ) {
+						echo '<img src="' . $attachment_url . '" width="80"/>';
+					} else {
+						echo __( 'Attachment not found.', 'user-registration' );
+					}
+					break;
+
+				default:
+					$type = 'text';
+			}
+
+			?>
+
+			<input type="<?php echo $type; ?>" name="<?php echo esc_attr( $key ); ?>"
+			       id="<?php echo esc_attr( $key ); ?>"
+			       value="<?php echo esc_attr( $value ); ?>"
+			       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+			/>
+			<?php
+
 		}
 
 		/**
@@ -282,7 +344,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 						$field_key = isset( $field->field_key ) ? $field->field_key : '';
 
-						if ( $field_label == '' && isset($field->general_setting->field_name)) {
+						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
 
 							$field_label_array = explode( '_', $field->general_setting->field_name );
 
