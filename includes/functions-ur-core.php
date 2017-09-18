@@ -907,7 +907,7 @@ function ur_get_logger() {
 					__( 'The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>.', 'user-registration' ),
 					esc_html( is_object( $class ) ? get_class( $class ) : $class )
 				),
-				'1.0.5l'
+				'1.0.5'
 			);
 			$logger = new UR_Logger();
 		}
