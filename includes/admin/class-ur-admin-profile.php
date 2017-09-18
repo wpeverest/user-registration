@@ -282,7 +282,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 						$field_key = isset( $field->field_key ) ? $field->field_key : '';
 
-						if ( $field_label == '' ) {
+						if ( $field_label == '' && isset($field->general_setting->field_name)) {
 
 							$field_label_array = explode( '_', $field->general_setting->field_name );
 
