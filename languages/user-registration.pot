@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.0-beta.2\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-09-14 08:06:51+00:00\n"
+"POT-Creation-Date: 2017-09-18 09:51:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -152,14 +152,18 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:48
+#: includes/admin/class-ur-admin-profile.php:49
 msgid "User Extra Information %s"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:98
-#: includes/admin/class-ur-admin-profile.php:112
+#: includes/admin/class-ur-admin-profile.php:118
+#: includes/admin/class-ur-admin-profile.php:132
 #: includes/form/class-ur-select.php:44 includes/form/class-ur-select.php:51
 msgid "Select"
+msgstr ""
+
+#: includes/admin/class-ur-admin-profile.php:210
+msgid "Attachment not found."
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:77
@@ -521,11 +525,11 @@ msgstr ""
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/views/html-license-form.php:19
+#: includes/admin/views/html-license-form.php:18
 msgid "License:"
 msgstr ""
 
-#: includes/admin/views/html-license-form.php:21
+#: includes/admin/views/html-license-form.php:20
 msgid "Enter your license key and hit return. A valid key is required for updates."
 msgstr ""
 
@@ -800,6 +804,22 @@ msgstr ""
 
 #: includes/class-ur-plugin-updater.php:240
 msgid "Deactivate License"
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:269
+msgid "The provided license is expired."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:273
+msgid "No activation left for this license."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:276
+msgid "The provided license could not be found."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:280
+msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
 #: includes/class-ur-post-types.php:39
@@ -2041,11 +2061,11 @@ msgstr ""
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:300
+#: includes/frontend/class-ur-frontend-form-handler.php:316
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:304
+#: includes/frontend/class-ur-frontend-form-handler.php:320
 msgid "Password and confirm password not matched"
 msgstr ""
 
