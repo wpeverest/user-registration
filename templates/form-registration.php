@@ -28,26 +28,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 $frontend = UR_Frontend::instance();
 
+$form_template = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
+
+$template_class = '';
+
+if ( $form_template == 'Bordered' ) {
+
+	$template_class = 'ur-frontend-form--bordered';
+
+} else if ( $form_template == 'Flat' ) {
+
+	$template_class = 'ur-frontend-form--flat';
+
+}
 ?>
-
-	<?php 
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Default')
-		{
-			?><div class='ur-frontend-form' id='ur-frontend-form'><?php
-		}
-
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Bordered')
-		{
-			?><div class='ur-frontend-form ur-frontend-form--bordered' id='ur-frontend-form'><?php
-		}
-		 
-		if (get_post_meta($form_id, 'user_registration_form_template', true ) == 'Flat')
-		{
-			?><div class='ur-frontend-form ur-frontend-form--flat' id='ur-frontend-form'><?php
-		}
-	?>
-
-		<form method='post' class='register' data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters('user_registration_form_params', '') ?>>
+	<div class='ur-frontend-form <?php echo $template_class; ?>' id='ur-frontend-form'>
+		<form method='post' class='register'
+		      data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
 
 			<?php
 
