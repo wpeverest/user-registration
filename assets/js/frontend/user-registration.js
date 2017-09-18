@@ -159,16 +159,15 @@
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
 
-										if ( typeof response.data.auto_login !== 'undefined' && response.data.auto_login ) {
-											location.reload();
-										}
-
 										if ( user_registration_params.redirect_url !== '' ) {
 											window.setTimeout(function () {
-
 												window.location = user_registration_params.redirect_url;
+											}, 1000);
+										} else {
 
-											}, 5000);
+											if ( typeof response.data.auto_login !== 'undefined' && response.data.auto_login ) {
+												location.reload();
+											}
 										}
 
 									}
