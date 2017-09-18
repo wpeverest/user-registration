@@ -263,10 +263,23 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			} elseif ( isset( $activate_results['error_code'] ) ) {
 				throw new Exception( $activate_results['error'] );
 
-			} elseif ( isset( $activate_results['license'] ) && 'invalid' === $activate_results['license'] ) {
-				throw new Exception( 'Activation error: The provided license is invalid.' );
+			} elseif ( isset( $activate_results['error'] ) && 'invalid' === $activate_results['license'] ) {
+				switch ( $activate_results['error'] ) {
+					case 'expired' :
+						$error_msg = __( 'The provided license is expired.', 'user-registration' );
+						break;
 
-			} elseif ( isset( $activate_results['license'] ) && 'valid' === $activate_results['license'] ) {
+					case 'no_activations_left' :
+						$error_msg = __( 'No activation left for this license.', 'user-registration' );
+						break;
+					default:
+						$error_msg = __( 'The provided license could not be found.', 'user-registration' );
+						break;
+				}
+
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s' ), $error_msg ) );
+
+			} elseif ( ! empty( $activate_results['license'] ) && 'valid' === $activate_results['license'] ) {
 				$this->api_key = $license_key;
 				$this->errors  = array();
 
