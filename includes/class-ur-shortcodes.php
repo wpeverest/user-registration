@@ -69,7 +69,11 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
-		return self::shortcode_wrapper( array( 'UR_Shortcode_My_Account', 'output' ), $atts );
+		return self::shortcode_wrapper( array( 'UR_Shortcode_My_Account', 'output' ), $atts,apply_filters('user_registration_my_account_shortcode',array(
+			'class'  => 'user-registration',
+			'before' => null,
+			'after'  => null,
+		) ));
 	}
 
 	/**
