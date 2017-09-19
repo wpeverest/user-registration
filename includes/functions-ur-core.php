@@ -886,7 +886,7 @@ add_filter( 'user_registration_register_log_handlers', 'ur_register_default_log_
  * In either case, the class or instance *must* implement UR_Logger_Interface.
  *
  * @see UR_Logger_Interface
- *
+ * @since 1.1.0
  * @return UR_Logger
  */
 function ur_get_logger() {

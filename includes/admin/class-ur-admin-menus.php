@@ -31,7 +31,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
-			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
+			if ( apply_filters( 'user_registration_show_addons_page', false ) ) {
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
 			}
 
