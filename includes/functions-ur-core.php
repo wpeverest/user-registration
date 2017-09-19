@@ -915,3 +915,27 @@ function ur_get_logger() {
 
 	return $logger;
 }
+
+/**
+ * Handles addon plugin updater.
+ * @param      $file
+ * @param      $item_id
+ * @param      $addon_version
+ * @param bool $beta
+ *
+ * @since 1.1.0
+ */
+function ur_addon_updater( $file, $item_id, $addon_version, $beta= false ) {
+	$api_endpoint = 'http://www.themetest.tk';
+	$license_key = trim( get_option( 'user-registration_license_key' ) );
+	if ( class_exists( 'UR_AddOn_Updater' ) ) {
+		$edd_updater = new UR_AddOn_Updater( $api_endpoint, $file, array(
+			'version' => $addon_version,
+			'license' => $license_key,
+			'item_id' => $item_id,
+			'author'  => 'WPEverest',
+			'url'     => home_url(),
+			'beta'    => $beta ,
+		) );
+	}
+}
