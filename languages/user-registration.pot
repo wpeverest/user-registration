@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.1.0-beta.2\n"
+"Project-Id-Version: User Registration 1.0.5-beta.4\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-09-18 09:51:11+00:00\n"
+"POT-Creation-Date: 2017-09-19 08:34:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -615,19 +615,19 @@ msgstr ""
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:89
+#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:93
 msgid "Only an administrator can add new users."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
 msgid "You are currently logged in as %1s. You don't need another account. %2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
 msgid "Log out of this account."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:107
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
 #: includes/functions-ur-account.php:58
 msgid "Logout"
 msgstr ""
@@ -798,27 +798,62 @@ msgstr ""
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:240
+#: includes/class-ur-plugin-updater.php:241
 msgid "Deactivate License Key"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:240
+#: includes/class-ur-plugin-updater.php:241
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:269
-msgid "The provided license is expired."
-msgstr ""
-
-#: includes/class-ur-plugin-updater.php:273
-msgid "No activation left for this license."
+#: includes/class-ur-plugin-updater.php:272
+msgid ""
+"The provided license key expired on %1$s. Please <a href=\"%2$s\" "
+"target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:276
-msgid "The provided license could not be found."
+msgid ""
+"The provided license key has been disabled. Please <a href=\"%s\" "
+"target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:280
+msgid ""
+"The provided license is invalid. Please <a href=\"%s\" "
+"target=\"_blank\">visit your account page</a> and verify it."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:285
+msgid ""
+"The provided license is not active for this URL. Please <a href=\"%s\" "
+"target=\"_blank\">visit your account page</a> to manage your license key "
+"URLs."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:290
+msgid "This appears to be an invalid license key for <strong>%1$s</strong>."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:294
+msgid ""
+"The provided license key has reached its activation limit. Please <a "
+"href=\"%1$s\" target=\"_blank\">View possible upgrades</a> now."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:298
+msgid ""
+"The key you entered belongs to a bundle, please use the product specific "
+"license key."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:302
+msgid ""
+"The provided license key could not be found. Please <a href=\"%s\" "
+"target=\"_blank\">contact support</a> for more information."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:306
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 

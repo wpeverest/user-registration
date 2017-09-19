@@ -303,7 +303,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							break;
 					}
 
-					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s' ), $error_msg ) );
+					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $error_msg ) );
 
 				} elseif ( 'valid' === $activate_results->license ) {
 					$this->api_key = $license_key;

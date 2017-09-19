@@ -327,7 +327,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Addons menu item.
 		 */
 		public function addons_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ), __( 'Extensions', 'restaurantpress' ), 'manage_user_registration', 'user-registration-addons', array(
+			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ), __( 'Extensions', 'user-registration' ), 'manage_user_registration', 'user-registration-addons', array(
 				$this,
 				'addons_page'
 			) );
