@@ -85,6 +85,14 @@
 				},
 				form_submit_event: function () {
 					$this.on('submit', function ( event ) {
+						if ( $this.find('.user-registration-password-strength').length > 0 ) {
+
+							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
+							var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
+							if ( parseInt(current_strength, 0) < parseInt(min_strength, 0) ) {
+								return false;
+							}
+						}
 						event.preventDefault();
 						var form_data;
 						try {

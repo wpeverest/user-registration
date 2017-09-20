@@ -74,7 +74,7 @@ class UR_User_Password extends UR_Form_Field {
 
 			} );
 		}
-		if ( 'yes' == ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_strong_password' ) ) {
+		/*if ( 'yes' == ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_strong_password' ) ) {
 
 			if ( self::check_password_length( $password ) < 2 ) {
 
@@ -85,7 +85,7 @@ class UR_User_Password extends UR_Form_Field {
 				} );
 
 			}
-		}
+		}*/
 
 	}
 
