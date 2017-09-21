@@ -355,6 +355,7 @@
 			padding: 0;
 			display: -webkit-flex;
 			display:flex;
+			flex-wrap: wrap;
 			
 			.user-registration-MyAccount-navigation-link {
 				list-style: none;
@@ -365,6 +366,7 @@
 				border-top: 1px solid $white;
 				border-right: 1px solid $white;
 				position:relative;
+				box-shadow: 0 0 0 rgba(0,0,0,0);
 				
 				a {
 					color: $color_gray_two;
@@ -374,6 +376,7 @@
 					font-size: 15px;
 					font-family: 'sans-serif';
 					text-decoration: none;
+					box-shadow: 0 0 0 rgba(0,0,0,0);
 				}
 				
 				&.is-active {
