@@ -65,6 +65,8 @@ class UR_Shortcode_My_Account {
 				ur_add_notice( sprintf( __( 'Are you sure you want to log out? <a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
 			}
 
+			do_action( 'before-user-registration-my-account-shortcode' );
+
 			// Collect notices before output
 			$notices = ur_get_notices();
 
