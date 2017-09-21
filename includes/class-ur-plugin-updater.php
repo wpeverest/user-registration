@@ -254,9 +254,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				throw new Exception( 'Please enter your license key' );
 			}
 
-			$activate_results = json_decode( UR_Plugin_Updater_Key_API::activate( array(
+			$activate_results = json_decode( UR_Updater_Key_API::activate( array(
 				'license' => $license_key,
-			) ), true );
+			) ) );
 
 			// Update activate results.
 			update_option( $this->plugin_slug . '_license_active', $activate_results );
@@ -303,7 +303,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							break;
 					}
 
-					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s' ), $error_msg ) );
+					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $error_msg ) );
 
 				} elseif ( 'valid' === $activate_results->license ) {
 					$this->api_key = $license_key;
@@ -330,7 +330,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Deactivate a license.
 	 */
 	public function deactivate_license() {
-		$reset = UR_Plugin_Updater_Key_API::deactivate( array(
+		$reset = UR_Updater_Key_API::deactivate( array(
 			'license' => $this->api_key,
 		) );
 

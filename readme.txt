@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,28 +73,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
-
-= 1.0.4 - 31/08/2017 =
-* Admin approval after registration feature  
-* Added new filter and action hooks for addon 
-* Fixed frontpage registration form issue
-* Anyone can register issue fixed
-
-= 1.0.3 - 21/08/2017 =
-* Form duplicate option 
-* Auto login after registration feature 
-* Added some filter for addon
-
-= 1.0.2 - 04/08/2017 =
-* Email notification to user and admin
-* Some frontend form design fixes
-* On enter save form setting added on backend
-
-
-= 1.0.1 - 13/07/2017 =
-* Tweak - Add RTL support for activation notice.
-* Formwise setting functionality
-* Google Recaptcha on every form
-
-= 1.0.0 - 06/07/2017 =
-* Initial Public Release
+= 1.1.0 - 19/09/2017 =
+* Feature - Redirect URL
+* Feature - Number and date field added
+* Feature -  logger added
+* Feature - Formwise template 
+* Fix - Frontend form javascript validation issue fixed
+* Deprecated -  Administrator from prevent dashboard access
+* Added some filter and action hooks
+[See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).

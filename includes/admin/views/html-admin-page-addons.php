@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap restaurantpress ur_addons_wrap">
 	<nav class="nav-tab-wrapper ur-nav-tab-wrapper">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=rp-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'restaurantpress' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=rp-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'user-registration' ); ?></a>
 	</nav>
 
 	<h1 class="screen-reader-text"><?php _e( 'User Registration Extensions', 'user-registration' ); ?></h1>

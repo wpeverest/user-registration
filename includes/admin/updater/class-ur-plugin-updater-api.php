@@ -5,7 +5,7 @@
  * @author   WPEverest
  * @category Admin
  * @package  UserRegistration/Admin/Updates
- * @version  1.0.0
+ * @version  1.1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * RP_Updater_Key_API Class.
+ * UR_Updater_Key_API Class.
  */
-class RP_Updater_Key_API {
+class UR_Updater_Key_API {
 
 	private static $endpoint = 'http://themetest.tk/edd-sl-api/?';
 

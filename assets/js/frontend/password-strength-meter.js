@@ -50,7 +50,7 @@ jQuery(function ( $ ) {
 				meter.remove();
 				$(document.body).trigger('ur-password-strength-removed');
 			} else if ( 0 === meter.length ) {
-				field.after('<div class="user-registration-password-strength" aria-live="polite"></div>');
+				field.after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + ur_password_strength_meter_params.min_password_strength + '"></div>');
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
@@ -74,6 +74,7 @@ jQuery(function ( $ ) {
 			if ( strength < ur_password_strength_meter_params.min_password_strength ) {
 				error = ' - ' + ur_password_strength_meter_params.i18n_password_error;
 			}
+			wrapper.find('.user-registration-password-strength').attr('data-current-strength', strength);
 
 			switch ( strength ) {
 				case 0:

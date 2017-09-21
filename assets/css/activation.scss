@@ -18,6 +18,10 @@
 
 	&.error {
 		border-left-color: $red !important;
+
+		p {
+			max-width: 1000px;
+		}
 	}
 
 	a.button-primary,
