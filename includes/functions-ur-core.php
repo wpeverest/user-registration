@@ -926,7 +926,7 @@ function ur_get_logger() {
  * @since 1.1.0
  */
 function ur_addon_updater( $file, $item_id, $addon_version, $beta= false ) {
-	$api_endpoint = 'http://www.themetest.tk';
+	$api_endpoint = 'https://wpeverest.com/edd-sl-api/';
 	$license_key = trim( get_option( 'user-registration_license_key' ) );
 	if ( class_exists( 'UR_AddOn_Updater' ) ) {
 		$edd_updater = new UR_AddOn_Updater( $api_endpoint, $file, array(
