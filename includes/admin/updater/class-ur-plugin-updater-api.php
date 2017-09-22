@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Updater_Key_API {
 
-	private static $endpoint = 'http://themetest.tk/edd-sl-api/?';
+	private static $endpoint = 'https://wpeverest.com/edd-sl-api/?';
 
 	/**
 	 * Attempt to activate a plugin license.
