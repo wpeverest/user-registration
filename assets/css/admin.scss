@@ -50,9 +50,7 @@
 					background: #ffffff;
 
 					img {
-						max-width: 258px;
-						max-height: 24px;
-						padding: 17px 20px;
+						max-width: 100%;
 						display: block;
 						margin: 0;
 					}
@@ -905,7 +903,7 @@
 	input[type="email"],
 	input[type="url"],
 	input[type="text"],
-	input[type="password"],	
+	input[type="password"],
 	input[type="number"],
 	input[type="date"],
 	textarea,
