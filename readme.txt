@@ -79,6 +79,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature -  logger added
 * Feature - Formwise template 
 * Fix - Frontend form javascript validation issue fixed
+* Fix - My account tab issue fixed
 * Deprecated -  Administrator from prevent dashboard access
 * Added some filter and action hooks
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).

@@ -4,6 +4,7 @@
 * Feature -  logger added
 * Feature - Formwise template 
 * Fix - Frontend form javascript validation issue fixed
+* Fix - My account tab issue fixed
 * Deprecated -  Administrator from prevent dashboard access
 * Added some filter and action hooks
 
