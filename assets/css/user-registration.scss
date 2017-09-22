@@ -346,6 +346,10 @@
 }
 
 #user-registration {
+	&.user-registration,
+	*{
+		box-sizing: border-box;
+	}
 	.user-registration-MyAccount-navigation {
 		overflow: visible;
 		margin: 0;
@@ -401,7 +405,7 @@
 			}
 		}
 	}
-
+	
 	.user-registration-MyAccount-content {
 		background: $color_gray_eleven;
 		padding: 15px 20px;
