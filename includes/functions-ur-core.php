@@ -756,6 +756,8 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
  */
 function ur_get_user_approval_status( $user_id ) {
 
+   $user_status = 1;
+
 	$login_option = get_option( 'user_registration_general_setting_login_options', '' );
 
 	if ( 'admin_approval' === $login_option ) {
@@ -767,12 +769,12 @@ function ur_get_user_approval_status( $user_id ) {
 			return $user_status;
 		}
 
-		return true;
+		return $user_status;
 
 
 	}
 
-	return true;
+	return $user_status;
 
 }
 
