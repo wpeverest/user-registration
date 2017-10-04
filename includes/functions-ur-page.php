@@ -117,8 +117,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 /**
  * Hide menu items conditionally.
  *
- * @param array $items
- *
+ * @param  array $items Navigation items.
  * @return array
  */
 function ur_nav_menu_items( $items ) {
@@ -127,8 +126,12 @@ function ur_nav_menu_items( $items ) {
 
 		if ( ! empty( $customer_logout ) ) {
 			foreach ( $items as $key => $item ) {
+				if ( empty( $item->url ) ) {
+					continue;
+				}
 				$path  = parse_url( $item->url, PHP_URL_PATH );
 				$query = parse_url( $item->url, PHP_URL_QUERY );
+
 				if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
 					unset( $items[ $key ] );
 				}
@@ -138,5 +141,4 @@ function ur_nav_menu_items( $items ) {
 
 	return $items;
 }
-
 add_filter( 'wp_nav_menu_objects', 'ur_nav_menu_items', 10 );
