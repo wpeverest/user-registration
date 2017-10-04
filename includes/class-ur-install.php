@@ -92,9 +92,18 @@ class UR_Install {
 			return;
 		}
 
+		// Check if we are not already running this routine.
+		if ( 'yes' === get_transient( 'UR_INSTALLING' ) ) {
+			return;
+		}
+
+		// If we made it till here nothing is running yet, lets set the transient now.
+		set_transient( 'UR_INSTALLING', 'yes', MINUTE_IN_SECONDS * 10 );
+
 		if ( ! defined( 'UR_INSTALLING' ) ) {
 			define( 'UR_INSTALLING', true );
 		}
+
 
 		// Ensure needed classes are loaded
 		include_once( dirname( __FILE__ ) . '/admin/class-ur-admin-notices.php' );
@@ -139,6 +148,8 @@ class UR_Install {
 
 		self::update_ur_version();
 
+		delete_transient( 'UR_INSTALLING' );
+		
 		// Flush rules after install
 		do_action( 'user_registration_flush_rewrite_rules' );
 
