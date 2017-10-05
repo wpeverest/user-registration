@@ -30,6 +30,8 @@ class UR_Query {
 			add_action( 'wp_loaded', array( $this, 'get_errors' ), 20 );
 			add_filter( 'query_vars', array( $this, 'add_query_vars' ), 0 );
 			add_action( 'parse_request', array( $this, 'parse_request' ), 0 );
+			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+			add_action( 'wp', array( $this, 'remove_post_query' ) );
 		}
 		$this->init_query_vars();
 	}
@@ -167,5 +169,61 @@ class UR_Query {
 				$wp->query_vars[ $key ] = $wp->query_vars[ $var ];
 			}
 		}
+	}
+
+	/**
+	 * Are we currently on the front page?
+	 *
+	 * @param object $q
+	 *
+	 * @return bool
+	 */
+	private function is_showing_page_on_front( $q ) {
+		return $q->is_home() && 'page' === get_option( 'show_on_front' );
+	}
+
+	/**
+	 * Is the front page a page we define?
+	 *
+	 * @param int $page_id
+	 *
+	 * @return bool
+	 */
+	private function page_on_front_is( $page_id ) {
+		return absint( get_option( 'page_on_front' ) ) === absint( $page_id );
+	}
+
+	/**
+	 * Hook into pre_get_posts to do the main query.
+	 *
+	 * @param object $q query object
+	 */
+	public function pre_get_posts( $q ) {
+		// We only want to affect the main query.
+		if ( ! $q->is_main_query() ) {
+			return;
+		}
+
+		// Fix for endpoints on the homepage.
+		if ( $this->is_showing_page_on_front( $q ) && ! $this->page_on_front_is( $q->get( 'page_id' ) ) ) {
+			$_query = wp_parse_args( $q->query );
+			if ( ! empty( $_query ) && array_intersect( array_keys( $_query ), array_keys( $this->query_vars ) ) ) {
+				$q->is_page     = true;
+				$q->is_home     = false;
+				$q->is_singular = true;
+				$q->set( 'page_id', (int) get_option( 'page_on_front' ) );
+				add_filter( 'redirect_canonical', '__return_false' );
+			}
+		}
+
+		// And remove the pre_get_posts hook.
+		$this->remove_post_query();
+	}
+
+	/**
+	 * Remove the query.
+	 */
+	public function remove_post_query() {
+		remove_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 	}
 }
