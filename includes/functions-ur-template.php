@@ -352,16 +352,17 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 	function user_registration_account_content() {
 		global $wp;
 
-		foreach ( $wp->query_vars as $key => $value ) {
-			// Ignore pagename param.
-			if ( 'pagename' === $key ) {
-				continue;
-			}
+		if ( ! empty( $wp->query_vars ) ) {
+			foreach ( $wp->query_vars as $key => $value ) {
+				// Ignore pagename param.
+				if ( 'pagename' === $key ) {
+					continue;
+				}
 
-			if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
-				do_action( 'user_registration_account_' . $key . '_endpoint', $value );
-
-				return;
+				if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
+					do_action( 'user_registration_account_' . $key . '_endpoint', $value );
+					return;
+				}
 			}
 		}
 
