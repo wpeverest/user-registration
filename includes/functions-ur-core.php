@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserRegistration Functions.
  *
