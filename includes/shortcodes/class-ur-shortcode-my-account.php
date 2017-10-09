@@ -261,7 +261,7 @@ class UR_Shortcode_My_Account {
 		$key = get_password_reset_key( $user_data );
 
 		// Send email notification
-		do_action( 'user_registration_reset_password_notification', $user_login, $key );
+		UR_Emailer::lost_password_email($user_login,$user_data,$key);
 
 		return true;
 	}
