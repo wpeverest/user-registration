@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Returns the url to the lost password endpoint url.
  *
  * @param  string $default_url
+ *
  * @return string
  */
 function ur_lostpassword_url( $default_url = '' ) {
@@ -53,24 +54,25 @@ function ur_get_account_menu_items() {
 
 	$items = array(
 		'dashboard'    => __( 'Dashboard', 'user-registration' ),
+		'edit-profile' => __( 'Profile Details', 'user-registration' ),
 		'edit-account' => __( 'Account details', 'user-registration' ),
 		'user-logout'  => __( 'Logout', 'user-registration' ),
 	);
 
-	$user_id=get_current_user_id();
+	$user_id = get_current_user_id();
 
-	$form_id_array=get_user_meta($user_id,'ur_form_id');
+	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
 
-	$form_id=0;
+	$form_id = 0;
 
-	if( isset($form_id_array[0]) ){
+	if ( isset( $form_id_array[0] ) ) {
 
 		$form_id = $form_id_array[0];
 	}
 	$profile = user_registration_form_data( $user_id, $form_id );
+	if ( count( $profile ) < 1 ) {
 
-	if(count($profile)>0){
-		$items['edit-profile']=__( 'Profile Details', 'user-registration' );
+		unset($items['edit-profile']);
 	}
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
@@ -80,7 +82,6 @@ function ur_get_account_menu_items() {
 	}
 
 
-
 	return apply_filters( 'user_registration_account_menu_items', $items );
 }
 
@@ -88,6 +89,7 @@ function ur_get_account_menu_items() {
  * Get account menu item classes.
  *
  * @param  string $endpoint
+ *
  * @return string
  */
 function ur_get_account_menu_item_classes( $endpoint ) {
@@ -117,7 +119,9 @@ function ur_get_account_menu_item_classes( $endpoint ) {
  * Get account endpoint URL.
  *
  * @since 2.6.0
+ *
  * @param string $endpoint
+ *
  * @return string
  */
 function ur_get_account_endpoint_url( $endpoint ) {
