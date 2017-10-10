@@ -212,26 +212,27 @@ class UR_Emailer {
 
 	}
 
+	/**
+	 * @param $user_login
+	 * @param $user_data
+	 * @param $key
+	 */
 	public static function lost_password_email($user_login,$user_data,$key)
 	{
-		$subject = __( sprintf( 'Password Reset Email %s', $blog_info ), 'user-registration' );
-		
-		$message = __('Someone has requested a password reset for the following account:') . "\r\n\r\n";
-    	$message .= network_home_url( '/' ) . "\r\n\r\n";
-    	$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-    	$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
-    	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
-    	$message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . ">\r\n";
-    	
-    	$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-    	$title = sprintf( __('[%s] Password Reset'), $blogname );
-    	$title = apply_filters( 'retrieve_password_title', $title, $user_login, $user_data );
- 		
- 		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+		$blog_info = get_bloginfo();
+		$subject = apply_filters( 'retrieve_password_title', __( sprintf( 'Password Reset Email %s', $blog_info ), 'user-registration' ), $user_login, $user_data );
+		$message = __('Someone has requested a password reset for the following account:') . "<br/>";
+		$message .= network_home_url( '/' ) . "<br/>";
+		$message .= sprintf(__('Username: %s'), $user_login) . "<br/>";
+		$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "<br/>";
+		$message .= __('To reset your password, visit the following address:') . "<br/>";
+		$redirectUrl=network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login');
+		$message .= __( sprintf( '<a href="%s">%s</a>', $redirectUrl ,$redirectUrl ), 'user-registration' );
+		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
+		wp_mail( $user_data->user_email, $subject, $message, $headers);
 
-		wp_mail( $user_data->user_email, $subject, $message);
-
- 	}
+	}
 
 }
 
