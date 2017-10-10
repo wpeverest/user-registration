@@ -112,6 +112,10 @@ class UR_Shortcode_My_Account {
 
 		$user_data = $user_data_obj->data;
 
+		if(count($profile)<1){
+			return;
+		}
+
 		// Prepare values
 		foreach ( $profile as $key => $field ) {
 
