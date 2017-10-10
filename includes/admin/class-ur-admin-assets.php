@@ -62,6 +62,7 @@ class UR_Admin_Assets {
 	 * Enqueue scripts.
 	 */
 	public function admin_scripts() {
+
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -80,7 +81,9 @@ class UR_Admin_Assets {
 			'jquery-ui-droppable',
 			'jquery-tiptip',
 			'ur-backbone-modal',
-			'ur-enhanced-select',
+			'ur-enhanced-select'
+			
+		
 		), UR_VERSION );
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', UR()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
@@ -89,6 +92,7 @@ class UR_Admin_Assets {
 			'backbone',
 			'wp-util',
 		), UR_VERSION );
+
 		wp_register_script( 'select2', UR()->plugin_url() . '/assets/js/select2/select2.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
 		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
 		wp_register_script( 'ur-enhanced-select', UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js', array(

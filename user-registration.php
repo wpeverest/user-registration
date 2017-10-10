@@ -324,3 +324,4 @@ function UR() {
 // Global for backwards compatibility.
 $GLOBALS['user-registration'] = UR();
 
+

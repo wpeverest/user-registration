@@ -941,4 +941,22 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta= false ) {
 			'beta'    => $beta ,
 		) );
 	}
+
+}
+
+function ur_get_all_user_registration_form() {
+
+	$args        = array(
+		'post_type' => 'user_registration',
+		'status'    => 'publish',
+	);
+
+	$posts_array = get_posts( $args );
+
+	foreach ( $posts_array as $post ) {
+
+		$all_forms[ $post->ID ] = $post->post_title;
+	}
+
+	return $all_forms;
 }
