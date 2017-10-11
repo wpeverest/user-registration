@@ -46,7 +46,7 @@ class UR_Frontend_Scripts {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
-	
+
 	}
 
 	/**
@@ -170,7 +170,7 @@ class UR_Frontend_Scripts {
 		$register_scripts = array(
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery' ),
+				'deps'    => array( 'jquery' , 'jquery-ui-datepicker'),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(
@@ -249,7 +249,7 @@ class UR_Frontend_Scripts {
 			}
 		}
 		wp_enqueue_style( 'dashicons' );
-	
+
 	}
 
 	/**
@@ -281,7 +281,7 @@ class UR_Frontend_Scripts {
 
 		switch ( $handle ) {
 			case 'user-registration' :
-				
+
 
 				return array(
 
@@ -296,9 +296,9 @@ class UR_Frontend_Scripts {
 
 					),
 				);
-				
+
 			break;
-			
+
 			case 'ur-password-strength-meter' :
 				return array(
 					'home_url'              => home_url(),

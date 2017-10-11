@@ -200,6 +200,10 @@
 
 	$(function () {
 		$('.ur-frontend-form form.register').ur_form_submission();
+		var date_selector = $('.ur-frontend-form  input[type="date"]');
+		if(date_selector.length>0) {
+			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'mm/dd/yy').datepicker({ dateFormat: 'mm/dd/yy' });
+		}
 	});
 
 }(jQuery));
