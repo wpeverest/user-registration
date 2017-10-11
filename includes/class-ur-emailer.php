@@ -76,14 +76,15 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
- 					Please wait untill the site admin approves your registration.
+ 					Please wait until the site admin approves your registration.
  					<br/>
  					You will be notified after it is approved.
  					<br/>
  					<br/>
- 					Thank you :) ',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 
@@ -95,14 +96,16 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
  					Unfortunately your registration is denied.
  					<br/>
+               <br/>
  					Sorry for the inconvenience.
  					<br/>
  					<br/>
- 					Thank you :) ',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		} else {
@@ -112,9 +115,13 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have successfully completed user registration on <a href="%s">%s</a>.
  					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
+ 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
+               <br/>
+               <br/>
+               Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		}
@@ -138,9 +145,11 @@ class UR_Emailer {
 		$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
 
 			'Hi Admin,
-					<br/><br/>
+					<br/>
+               <br/>
 					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
-					<br/><br/>
+					<br/>
+               <br/>
 					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
                <br/>
                <br/>
