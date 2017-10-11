@@ -222,11 +222,11 @@ class UR_Emailer {
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 		$blog_info = get_bloginfo();
 		$subject = apply_filters( 'retrieve_password_title', __( sprintf( 'Password Reset Email %s', $blog_info ), 'user-registration' ), $user_login, $user_data );
-		$message = __('Someone has requested a password reset for the following account:') . "<br/>";
+		$message = __('Someone has requested a password reset for the following account:','user-registration') . "<br/>";
 		$message .= network_home_url( '/' ) . "<br/>";
-		$message .= sprintf(__('Username: %s'), $user_login) . "<br/>";
-		$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "<br/>";
-		$message .= __('To reset your password, visit the following address:') . "<br/>";
+		$message .= __(sprintf('Username: %s', $user_login),'user-registration') . "<br/>";
+		$message .= __('If this was a mistake, just ignore this email and nothing will happen.','user-registration') . "<br/>";
+		$message .= __('To reset your password, visit the following address:','user-registration') . "<br/>";
 		$redirectUrl=network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login');
 		$message .= __( sprintf( '<a href="%s">%s</a>', $redirectUrl ,$redirectUrl ), 'user-registration' );
 		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
