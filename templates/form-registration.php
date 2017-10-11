@@ -30,6 +30,8 @@ $frontend = UR_Frontend::instance();
 
 $form_template = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 
+echo $form_template; 
+
 $template_class = '';
 
 if ( $form_template == 'Bordered' ) {
@@ -40,7 +42,15 @@ if ( $form_template == 'Bordered' ) {
 
 	$template_class = 'ur-frontend-form--flat';
 
-}
+} else if($form_template == 'Rounded'){	
+
+	$template_class = 'ur-frontend-form--rounded';	
+
+} else if($form_template == 'Rounded Edge'){	
+
+	$template_class = 'ur-frontend-form--rounded-edge';
+} 
+
 ?>
 	<div class='ur-frontend-form <?php echo $template_class; ?>' id='ur-frontend-form'>
 		<form method='post' class='register'

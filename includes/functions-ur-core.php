@@ -658,7 +658,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => array(
 					'Default'  => __( 'Default', 'user-registration' ),
 					'Bordered' => __( 'Bordered', 'user-registration' ),
-					'Flat'     => __( 'Flat', 'user-registration' )
+					'Flat'     => __( 'Flat', 'user-registration' ),
+					'Rounded'  => __( 'Rounded', 'user-registration' ),
+					'Rounded Edge'=> __( 'Rounded Edge', 'user-registration' ),						
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
