@@ -46,7 +46,7 @@ if ( $form_template == 'Bordered' ) {
 
 } else if($form_template == 'Rounded Edge'){	
 
-	$template_class = 'ur-frontend-form--rounded-edge';
+	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 } 
 
 ?>
