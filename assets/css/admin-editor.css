@@ -95,11 +95,7 @@
 #ur-modal #ur-modal-options {
 	padding: 8px 0 12px;
 }
-#ur-modal #ur-modal-options .ur-modal-inline {
-	display:inline-block;
-	margin: 0;
-	padding: 0 20px 0 0;
-}
+
 #ur-modal-select-form {
 	margin-bottom: 1em;
 	max-width: 100%;

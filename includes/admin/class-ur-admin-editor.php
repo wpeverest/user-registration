@@ -81,7 +81,7 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 											foreach ( $forms as $form => $form_value) {
 												printf( '<option value="%d">%s</option>', $form, esc_html( $form_value ) );
 											}
-											echo '</select><br>';
+											echo '</select>';
 											
 										} else {
 											echo '<p>';
