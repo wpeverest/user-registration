@@ -64,48 +64,45 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 
            	?>
            		<div id="ur-modal-backdrop" style="display: none"></div>
-		<div id="ur-modal-wrap" style="display: none">
-			<form id="ur-modal" tabindex="-1">
-				<div id="ur-modal-title">
-					<?php _e( 'Insert Form', 'user-registration' ); ?>
-					<button type="button" id="ur-modal-close"><span class="screen-reader-text"><?php _e( 'Close', 'user-registration' ); ?></span></button>
-				</div>
-				<div id="ur-modal-inner">
-					<div id="ur-modal-options">
-							<?php
-							
-							$forms = ur_get_all_user_registration_form();
-							var_dump( $forms);
-
-							if ( ! empty( $forms ) ) {
-								printf( '<p><label for="ur-modal-select-form">%s</label></p>', __( 'Select a form below to insert', 'user-registration' ) );
-								echo '<select id="ur-modal-select-form">';
-								foreach ( $forms as $form ) {
-									printf( '<option value="%d">%s</option>', $form->ID, esc_html( $form->post_title ) );
-								}
-								echo '</select><br>';
-								printf( '<p class="ur-modal-inline"><input type="checkbox" id="ur-modal-checkbox-title"><label for="ur-modal-checkbox-title">%s</label></p>', __( 'Show form name', 'ur' ) );
-								printf( '<p class="ur-modal-inline"><input type="checkbox" id="ur-modal-checkbox-description"><label for="ur-modal-checkbox-description">%s</label></p>', __( 'Show form description', 'ur' ) );
-							} else {
-								echo '<p>';
-									printf( __( 'Whoops, you haven\'t created a form yet.'));
-								echo '</p>';
-							}
-							?>
+					<div id="ur-modal-wrap" style="display: none">
+						<form id="ur-modal" tabindex="-1">
+							<div id="ur-modal-title">
+								<?php _e( 'Insert Form', 'user-registration' ); ?>
+								<button type="button" id="ur-modal-close"><span class="screen-reader-text"><?php _e( 'Close', 'user-registration' ); ?></span></button>
+							</div>
+							<div id="ur-modal-inner">
+								<div id="ur-modal-options">
+										<?php							
+										$forms = ur_get_all_user_registration_form();
+										
+										if ( !empty( $forms ) ) {
+											printf( '<p><label for="ur-modal-select-form">%s</label></p>', __( 'Select a form below to insert', 'user-registration' ) );
+											echo '<select id="ur-modal-select-form">';
+											foreach ( $forms as $form => $form_value) {
+												printf( '<option value="%d">%s</option>', $form, esc_html( $form_value ) );
+											}
+											echo '</select>';
+											
+										} else {
+											echo '<p>';
+												__(printf( 'Whoops, you haven\'t created a form yet.'),'user-registration');
+											echo '</p>';
+										}
+										?>
+								</div>
+							</div>
+							<div class="submitbox">
+								<div id="ur-modal-cancel">
+									<a class="submitdelete deletion" href="#"><?php _e( 'Cancel', 'user-registration' ); ?></a>
+								</div>
+								<?php if ( ! empty( $forms ) ) : ?>
+								<div id="ur-modal-update">
+									<button class="button button-primary" id="ur-modal-submit"><?php _e( 'Add Form', 'user-registration' ); ?></button>
+								</div>
+								<?php endif; ?>
+							</div>
+						</form>
 					</div>
-				</div>
-				<div class="submitbox">
-					<div id="ur-modal-cancel">
-						<a class="submitdelete deletion" href="#"><?php _e( 'Cancel', 'ur' ); ?></a>
-					</div>
-					<?php if ( ! empty( $forms ) ) : ?>
-					<div id="ur-modal-update">
-						<button class="button button-primary" id="ur-modal-submit"><?php _e( 'Add Form', 'user-registration' ); ?></button>
-					</div>
-					<?php endif; ?>
-				</div>
-			</form>
-		</div>
 		
            	<?php
 		}

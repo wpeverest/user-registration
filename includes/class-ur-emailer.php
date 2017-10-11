@@ -76,14 +76,15 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
- 					Please wait untill the site admin approves your registration.
+ 					Please wait until the site admin approves your registration.
  					<br/>
  					You will be notified after it is approved.
  					<br/>
  					<br/>
- 					Thank you :) ',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 
@@ -95,14 +96,16 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
  					Unfortunately your registration is denied.
  					<br/>
+               <br/>
  					Sorry for the inconvenience.
  					<br/>
  					<br/>
- 					Thank you :) ',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		} else {
@@ -112,9 +115,13 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					You have successfully completed user registration on <a href="%s">%s</a>.
  					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
+ 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
+               <br/>
+               <br/>
+               Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		}
@@ -139,10 +146,14 @@ class UR_Emailer {
 
 			'Hi Admin,
 					<br/>
+               <br/>
 					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
 					<br/>
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.<br/>
-					Thank you!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
+               <br/>
+					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
+               <br/>
+               <br/>
+					Thank You!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
 
@@ -167,14 +178,16 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					Your registration on <a href="%s">%s</a> has been changed to pending.
  					<br/>
  					Sorry for the inconvenience.
  					<br/>
+               <br/>
  					You will be notified after it is approved.
  					<br/>
  					<br/>
- 					Thank you :)',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 
@@ -186,12 +199,13 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					Your registration on <a href="%s">%s</a> has been denied.
  					<br/>
  					Sorry for the inconvenience.
  					<br/>
  					<br/>
- 					Thank you :) ',
+ 					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		} else {
@@ -201,9 +215,13 @@ class UR_Emailer {
 
 				'Hi %s,
  					<br/>
+               <br/>
  					Your registration on <a href="%s">%s</a>  has been approved.
  					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.',
+ 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
+               <br/>
+               <br/>
+               Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 
 		}
@@ -222,11 +240,11 @@ class UR_Emailer {
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 		$blog_info = get_bloginfo();
 		$subject = apply_filters( 'retrieve_password_title', __( sprintf( 'Password Reset Email %s', $blog_info ), 'user-registration' ), $user_login, $user_data );
-		$message = __('Someone has requested a password reset for the following account:') . "<br/>";
+		$message = __('Someone has requested a password reset for the following account:','user-registration') . "<br/>";
 		$message .= network_home_url( '/' ) . "<br/>";
-		$message .= sprintf(__('Username: %s'), $user_login) . "<br/>";
-		$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "<br/>";
-		$message .= __('To reset your password, visit the following address:') . "<br/>";
+		$message .= __(sprintf('Username: %s', $user_login),'user-registration') . "<br/>";
+		$message .= __('If this was a mistake, just ignore this email and nothing will happen.','user-registration') . "<br/>";
+		$message .= __('To reset your password, visit the following address:','user-registration') . "<br/>";
 		$redirectUrl=network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login');
 		$message .= __( sprintf( '<a href="%s">%s</a>', $redirectUrl ,$redirectUrl ), 'user-registration' );
 		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
