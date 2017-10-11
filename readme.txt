@@ -11,7 +11,7 @@ Drag and Drop user registration and login form builder
 
 == Description ==
 
-User Registration plugin provides you with an easy way to create frontend user registration and login forms. Drag and Drop user fields makes it extremely easy and ordering the fields are just a click and drag away.
+User Registration plugin provides you with an easy way to create frontend user registration and login forms. Drag and Drop fields make ordering and creating forms extremely easy. The plugin is lightweight, exendible and can be used to create any type of registration form.
 
 Supports frontend profile account page for profile edit, password change, Log out and more.
 
@@ -27,18 +27,20 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 [youtube https://www.youtube.com/watch?v=H34GC40Ly88]
 
 ### Features And Options:
-* Simple, Clean and Beautiful Registration Form
-* Drag and Drop UI
-* Easy Registration and Login
-* Form Duplicate Option
+* Simple, Clean and Beautiful Registration Forms
+* Drag and Drop Fields
 * Unlimited Registration Forms
 * Multiple Column Design
-* Clean User Dashboard
-* Profile account page
+* Multiple Form template designs
 * Shortcode Support
-* Recaptcha Support
-* Admin approval for users
-* Incredible Support
+* Google Recaptcha Support
+* Email notifications
+* Form Duplicate Option
+* Profile account page
+* Admin approval option
+* Auto login option
+* Enable/Disable Strong Password
+* Default User Role Selection Option
 * Well Documented
 * Translation ready
 
