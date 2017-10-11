@@ -30,8 +30,6 @@ $frontend = UR_Frontend::instance();
 
 $form_template = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 
-echo $form_template; 
-
 $template_class = '';
 
 if ( $form_template == 'Bordered' ) {

@@ -75,6 +75,7 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 							<?php
 							
 							$forms = ur_get_all_user_registration_form();
+							var_dump( $forms);
 
 							if ( ! empty( $forms ) ) {
 								printf( '<p><label for="ur-modal-select-form">%s</label></p>', __( 'Select a form below to insert', 'user-registration' ) );
