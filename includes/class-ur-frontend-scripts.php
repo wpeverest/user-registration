@@ -59,16 +59,15 @@ class UR_Frontend_Scripts {
 			'user-registration-general'     => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
 				'deps'    => '',
-				'version' => '1.12.1',
+				'version' => UR_VERSION,
 				'media'   => 'all',
 				'has_rtl' => true,
 			),
 			'jquery-ui-css'     => array(
 				'src'     => self::get_asset_url( 'assets/css/jquery-ui/jquery-ui.css' ),
 				'deps'    => '',
-				'version' => UR_VERSION,
+				'version' => '1.12.1',
 				'media'   => 'all',
-
 			),
 			'user-registration-smallscreen' => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
