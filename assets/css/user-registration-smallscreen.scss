@@ -1,35 +1,39 @@
 /**
- * user-registration-smallscreen.css
- * Optimises the default User Registration frontend layout when viewed on smaller screens.
- */
+* user-registration-smallscreen.css
+* Optimises the default User Registration frontend layout when viewed on smaller screens.
+*/
 
 /**
- * Imports
- */
+* Imports
+*/
 @import 'mixins';
 @import 'variables';
 @import 'colors';
 /**
- * Style begins
- */
+* Style begins
+*/
 
 @media screen and (max-width: 768px) {
-	.ur-frontend-form form .ur-form-row {
-		display: -webkit-flex;
-		display: flex;
-		-webkit-flex-direction: column;
-		flex-direction: column;
-		.ur-form-grid{
-			width: 100% !important;
-			margin-bottom: 20px;
-			&:nth-child(1n+2) {
-				border-left: 1px solid $color_gray_six;
-			}
-			&:last-child {
-				margin-bottom: 0;
+	.ur-frontend-form {
+		form .ur-form-row {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-direction: column;
+			flex-direction: column;
+			.ur-form-grid{
+				width: 100% !important;
+				margin-bottom: 20px;
+				&:nth-child(1n+2) {
+					border-left: 1px solid $color_gray_six;
+				}
+				&:last-child {
+					margin-bottom: 0;
+					border-left: 0 none;
+				}
 			}
 		}
 	}
+	
 }
 
 @media screen and (max-width: 600px) {

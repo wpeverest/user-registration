@@ -56,18 +56,18 @@ class UR_Frontend_Scripts {
 	 */
 	public static function get_styles() {
 		return apply_filters( 'user_registration_enqueue_styles', array(
-			'user-registration-smallscreen' => array(
-				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
-				'deps'    => '',
-				'version' => UR_VERSION,
-				'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
-				'has_rtl' => true,
-			),
 			'user-registration-general'     => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
 				'deps'    => '',
 				'version' => UR_VERSION,
 				'media'   => 'all',
+				'has_rtl' => true,
+			),
+			'user-registration-smallscreen' => array(
+				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
+				'deps'    => '',
+				'version' => UR_VERSION,
+				'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
 				'has_rtl' => true,
 			),
 		) );
