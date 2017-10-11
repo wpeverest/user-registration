@@ -42,11 +42,11 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 
 			// Setup the icon - currently using a dashicon
 			
-			$icon = '<span class="dashicons dashicons-list-view"></span>';
+			$icon = '<span class="dashicons dashicons-list-view" style="line-height:25px; font-size:16px"></span>';
 
 			printf( '<a href="#" class="button ur-insert-form-button" data-editor="%s" title="%s">%s %s</a>',
 				esc_attr( $editor_id ),
-				esc_attr__( 'Add Registration Form', 'user-registration' ),
+				esc_attr__( 'Add User Registration Form', 'user-registration' ),
 				$icon,
 				__( 'Add Form', 'user-registration' )
 			);
