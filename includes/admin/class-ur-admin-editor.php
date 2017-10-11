@@ -24,13 +24,7 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 
 		public function __construct() {
 
-			add_action( 'media_buttons', array( $this, 'media_button' ), 15 );
-			wp_register_script ( 'admin-editor-js', UR()->plugin_url() . '/assets/js/admin/admin-editor.js' );
-			wp_register_style ( 'admin-editor-css', UR()->plugin_url() . '/assets/css/admin-editor.css' );
-
-			wp_enqueue_script('admin-editor-js');
-			wp_enqueue_style('admin-editor-css');
-				
+			add_action( 'media_buttons', array( $this, 'media_button' ), 15 );			
 		}
 
 		/**
@@ -48,11 +42,11 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 
 			// Setup the icon - currently using a dashicon
 			
-			$icon = '<span class="dashicons dashicons-format-aside"></span>';
+			$icon = '<span class="dashicons dashicons-list-view"></span>';
 
 			printf( '<a href="#" class="button ur-insert-form-button" data-editor="%s" title="%s">%s %s</a>',
 				esc_attr( $editor_id ),
-				esc_attr__( 'Add Form', 'user-registration' ),
+				esc_attr__( 'Add Registration Form', 'user-registration' ),
 				$icon,
 				__( 'Add Form', 'user-registration' )
 			);
