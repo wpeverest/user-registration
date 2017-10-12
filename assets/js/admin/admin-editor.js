@@ -30,11 +30,8 @@
 		});
 
 		$(document).on('click', '.ur-insert-myaccount-shortcode-button', function(event) {			
-			
 			event.preventDefault();
-			var shortcode;
-			shortcode = '[user_registration_my_account]';
-			wp.media.editor.insert(shortcode);
+			wp.media.editor.insert('[user_registration_my_account]');
 		});
 	});
 }(jQuery));
