@@ -53,9 +53,9 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 			);
 
 			printf( '<a href="#" class="button ur-insert-myaccount-shortcode-button" title="%s">%s %s</a>',
-				esc_attr__( 'Add Login Form', 'user-registration' ),
+				esc_attr__( 'Add My Account', 'user-registration' ),
 				$login_icon,
-				__( 'Add Login Form', 'user-registration' )
+				__( 'Add My Account', 'user-registration' )
 			);
 
 			add_action( 'admin_footer', array( $this, 'shortcode_modal' ) );
