@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="ur-input-type-number ur-admin-template">
 
 	<div class="ur-label">
-		<label><?php echo $this->get_general_setting_data( 'label' ); ?></label>
+		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
 
 	</div>
 	<div class="ur-field" data-field-key="number">
 
 		<input type="number" id="ur-input-type-number"
-			   placeholder="<?php echo $this->get_general_setting_data( 'placeholder' ); ?>"/>
+			   placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
 
 	</div>
 	<?php

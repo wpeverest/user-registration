@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="ur-label">
 
-		<label><?php echo $this->get_general_setting_data( 'label' ); ?></label>
+		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
 
 	</div>
 	<div class="ur-field" data-field-key="user_description">

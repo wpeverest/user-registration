@@ -14,7 +14,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 <div class="ur-input-type-select ur-admin-template">
 
 	<div class="ur-label">
-		<label><?php echo $this->get_general_setting_data( 'label' ); ?></label>
+		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
 
 	</div>
 	<div class="ur-field" data-field-key="select">
@@ -25,7 +25,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 			<?php
 			foreach ( $options as $option ) {
 
-				echo "<option value='" . $option . "'>" . $option . '</option>';
+				echo "<option value='" . esc_attr($option) . "'>" . esc_html($option) . '</option>';
 
 			}
 			?>
