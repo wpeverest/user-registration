@@ -194,7 +194,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . $option_text . '</label>';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . esc_html($option_text) . '</label>';
 					}
 				}
 
@@ -205,7 +205,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
-				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . $args['label'] . $required . '</label>';
+				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . esc_html($args['label']) . $required . '</label>';
 			}
 
 			$field_html .= $field;
