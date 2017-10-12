@@ -231,7 +231,7 @@ class UR_AJAX {
 
 				'post_title' => ur_clean( $form_name ),
 
-				'post_content' => wp_json_encode( $post_data , JSON_UNESCAPED_UNICODE),
+				'post_content' => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE),
 
 				'post_status' => 'publish',
 
