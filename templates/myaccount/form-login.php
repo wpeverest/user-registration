@@ -89,5 +89,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 </div>
 
-
 <?php do_action( 'user_registration_after_login_form' ); ?>
