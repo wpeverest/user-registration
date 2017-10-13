@@ -70,7 +70,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'options'  => $all_roles,
 					),
 					array(
-						'title'    => __( 'User Login option', 'user-registration' ),
+						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
 						'default'  => 'default',
@@ -93,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'title'    => __( 'Registration URL', 'user-registration' ),
-						'desc'     => __( 'This option lets you enter the registration page url.', 'user-registration' ),
+						'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_url_options',
 						'type'     => 'text',
 						'desc_tip' => true,
@@ -101,8 +101,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Registration URL Label', 'user-registration' ),
-						'desc'     => __( 'This option lets you enter the label to register.', 'user-registration' ),
+						'title'    => __( 'Registration URL label', 'user-registration' ),
+						'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_label',
 						'type'     => 'text',
 						'desc_tip' => true,
