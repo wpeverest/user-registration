@@ -25,6 +25,8 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+		add_action( 'admin_footer', 'ur_print_js', 25 );
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			new UR_Admin_User_List_Manager();
 		}
@@ -86,6 +88,52 @@ class UR_Admin {
 			}
 		}
 	}
+
+	/**
+	 * Change the admin footer text on User Registration admin pages.
+	 *
+	 * @since  1.1.2
+	 *
+	 * @param  string $footer_text
+	 *
+	 * @return string
+	 */
+	public function admin_footer_text( $footer_text ) {
+		if ( ! current_user_can( 'manage_user_registration' ) || ! function_exists( 'ur_get_screen_ids' ) ) {
+			return $footer_text;
+		}
+		$current_screen = get_current_screen();
+		$ur_pages       = ur_get_screen_ids();
+
+		// Set only UR pages.
+		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
+
+		// Check to make sure we're on a WooCommerce admin page.
+		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
+			// Change the footer text
+			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
+				$footer_text = sprintf(
+				/* translators: 1: WooCommerce 2:: five stars */
+					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
+					sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
+					'<a target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thanks :)', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+				);
+				//https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post
+				ur_enqueue_js( "
+				jQuery( 'a.ur-rating-link' ).click( function() {
+						alert('hi');
+						jQuery.post( '" . UR()->ajax_url() . "', { action: 'user_registration_rated' } );
+						jQuery( this ).parent().text( jQuery( this ).data( 'rated' ) );
+					});
+				" );
+			} else {
+				$footer_text = __( 'Thank you for using User Registration.', 'user-registration' );
+			}
+		}
+
+		return $footer_text;
+	}
+
 }
 
 return new UR_Admin();

@@ -660,7 +660,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 					'Bordered' => __( 'Bordered', 'user-registration' ),
 					'Flat'     => __( 'Flat', 'user-registration' ),
 					'Rounded'  => __( 'Rounded', 'user-registration' ),
-					'Rounded Edge'=> __( 'Rounded Edge', 'user-registration' ),						
+					'Rounded Edge'=> __( 'Rounded Edge', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
@@ -961,4 +961,45 @@ function ur_get_all_user_registration_form() {
 	}
 
 	return $all_forms;
+}
+
+/**
+ * @since 1.1.2
+ * Output any queued javascript code in the footer.
+ */
+function ur_print_js() {
+	global $ur_queued_js;
+
+	if ( ! empty( $ur_queued_js ) ) {
+		// Sanitize.
+		$ur_queued_js = wp_check_invalid_utf8( $ur_queued_js );
+		$ur_queued_js = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", $ur_queued_js );
+		$ur_queued_js = str_replace( "\r", '', $ur_queued_js );
+
+		$js = "<!-- User Registration JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $ur_queued_js });\n</script>\n";
+
+		/**
+		 * user_registration_js filter.
+		 *
+		 * @param string $js JavaScript code.
+		 */
+		echo apply_filters( 'user_registration_queued_js', $js );
+
+		unset( $ur_queued_js );
+	}
+}
+/**
+ * @since 1.1.2
+ * Queue some JavaScript code to be output in the footer.
+ *
+ * @param string $code
+ */
+function ur_enqueue_js( $code ) {
+	global $ur_queued_js;
+
+	if ( empty( $ur_queued_js ) ) {
+		$ur_queued_js = '';
+	}
+
+	$ur_queued_js .= "\n" . $code . "\n";
 }
