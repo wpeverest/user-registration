@@ -42,7 +42,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_settings() {
 
 			$all_roles = ur_get_default_admin_roles();
-	
+
 			$all_roles_except_admin = $all_roles;
 
 			unset($all_roles_except_admin['administrator']);
@@ -82,7 +82,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Redirect Url', 'user-registration' ),
+						'title'    => __( 'Redirect URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_redirect_options',
 						'type'     => 'text',
@@ -109,7 +109,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.','user-registration' )
 					),
-				
+
 
 					array(
 						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
@@ -143,7 +143,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
-					
+
 					array(
 						'title'    => __( 'Form submit button label', 'user-registration' ),
 						'desc'     => __( 'This option let you change the submit button label.', 'user-registration' ),
