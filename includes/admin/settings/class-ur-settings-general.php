@@ -92,7 +92,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Registration Url', 'user-registration' ),
+						'title'    => __( 'Registration URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the registration page url.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_url_options',
 						'type'     => 'text',
@@ -101,7 +101,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Registration Url label', 'user-registration' ),
+						'title'    => __( 'Registration URL Label', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the label to register.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_label',
 						'type'     => 'text',

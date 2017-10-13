@@ -43,7 +43,6 @@ class UR_Shortcode_Login {
 		if ( ! is_user_logged_in() ) {
 			
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
-				include_once('class-ur-shortcode-my-accout.php');
 				UR_Shortcode_My_Account::lost_password();
 			} else {
 				ur_get_template( 'myaccount/form-login.php' );
