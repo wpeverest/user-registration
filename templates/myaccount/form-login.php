@@ -62,11 +62,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					
 					<?php if(!empty(get_option('user_registration_general_setting_registration_url_options')))
 						{
-							'<p class="user-registration-register register">';
+							echo '<p class="user-registration-register register">';
 							if(!empty(get_option('user_registration_general_setting_registration_label')))
 							{
 
-								?><a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option('user_registration_general_setting_registration_label',__('Not a member yet? Register now.','user-registration'));?>			
+								?><a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option('user_registration_general_setting_registration_label');?>			
 									</a>
 								<?php
 							}
@@ -78,7 +78,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</a>
 								<?php	
 							}
-							'</p>';
+							echo '</p>';
 						}
 					?>
 					</p>
