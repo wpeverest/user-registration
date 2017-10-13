@@ -28,10 +28,6 @@
 			wp.media.editor.insert(shortcode);
 			urModalClose();
 		});
-
-		$(document).on('click', '.ur-insert-myaccount-shortcode-button', function(event) {			
-			event.preventDefault();
-			wp.media.editor.insert('[user_registration_my_account]');
-		});
+		
 	});
 }(jQuery));

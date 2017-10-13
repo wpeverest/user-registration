@@ -27,6 +27,7 @@ class UR_Shortcodes {
 		$shortcodes = array(
 			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
 			'user_registration_my_account' => __CLASS__ . '::my_account',
+			'user_registration_login'	=>__class__ . '::login',
 		);
 
 		foreach ( $shortcodes as $shortcode => $function ) {
@@ -70,6 +71,15 @@ class UR_Shortcodes {
 	 */
 	public static function my_account( $atts ) {
 		return self::shortcode_wrapper( array( 'UR_Shortcode_My_Account', 'output' ), $atts,apply_filters('user_registration_my_account_shortcode',array(
+			'class'  => 'user-registration',
+			'before' => null,
+			'after'  => null,
+		) ));
+	}
+
+	public static function login( $atts ) {
+
+		return self::shortcode_wrapper( array( 'UR_Shortcode_Login', 'output' ), $atts,apply_filters('user_registration_login_shortcode',array(
 			'class'  => 'user-registration',
 			'before' => null,
 			'after'  => null,
