@@ -58,6 +58,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<p class="user-registration-LostPassword lost_password">
 						<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?', 'user-registration' ); ?></a>
 					</p>
+					
+					<p class="user-registration-register register">
+						<a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option('user_registration_general_setting_registration_label');?>			
+						</a>
+					</p>
 
 					<?php do_action( 'user_registration_login_form_end' ); ?>
 			</div>
@@ -65,5 +70,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</form>
 
 </div>
+
 
 <?php do_action( 'user_registration_after_login_form' ); ?>
