@@ -160,6 +160,26 @@
 					width: 100%;
 					border-radius: 0;
 					height: 40px;
+
+					&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+						color: #ddd;
+						font-size:13px;
+					}
+					&::-moz-placeholder { /* Firefox 19+ */
+						color: #ddd;
+						font-size:13px;
+						
+					}
+					&:-ms-input-placeholder { /* IE 10+ */
+						color: #ddd;
+						font-size:13px;
+						
+					}
+					&:-moz-placeholder { /* Firefox 18- */
+						color: #ddd;
+						font-size:13px;
+						
+					}
 				}
 				
 				input[type="checkbox"],
@@ -357,7 +377,7 @@
 					textarea,
 					select {
 						border: 1px solid $rounded-color;
-						border-radius: 2px;
+						border-radius: 25px;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px  15px;
@@ -367,7 +387,7 @@
 					}
 					
 					button[type="button"]{
-						border-radius: 2px;
+						border-radius: 25px;
 					}
 					legend,
 					label {
@@ -387,7 +407,7 @@
 				background: $round-button;
 				border: 0 none;
 				color: $white;
-				border-radius:2px;
+				border-radius:25px;
 				float: none;
 				width: calc(100% - 20px);
 				display: block;
@@ -408,17 +428,17 @@
 						input[type="number"],
 						textarea,
 						select {
-							border-radius: 25px;
+							border-radius: 2px;
 						}
-
+						
 						button[type="button"]{
-							border-radius: 25px;
+							border-radius: 2px;
 						}
 					}
 				}
 				input[type="submit"],
 				button[type="submit"] {
-					border-radius:25px;
+					border-radius:2px;
 				}
 			}
 		}
