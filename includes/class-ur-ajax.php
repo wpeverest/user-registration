@@ -49,6 +49,9 @@ class UR_AJAX {
 
 			'user_form_submit' => true,
 
+			'rated' => false,
+
+
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -231,7 +234,7 @@ class UR_AJAX {
 
 				'post_title' => ur_clean( $form_name ),
 
-				'post_content' => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE),
+				'post_content' => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE ),
 
 				'post_status' => 'publish',
 
@@ -321,6 +324,18 @@ class UR_AJAX {
 
 			}
 		}
+	}
+
+	/**
+	 * @since 1.1.2
+	 * Triggered when clicking the rating footer.
+	 */
+	public static function rated() {
+		if ( ! current_user_can( 'manage_user_registration' ) ) {
+			wp_die( - 1 );
+		}
+		update_option( 'user_registration_admin_footer_text_rated', 1 );
+		wp_die();
 	}
 
 }

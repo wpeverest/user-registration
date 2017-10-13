@@ -24,6 +24,8 @@ function ur_get_screen_ids() {
 		'toplevel_page_' . $ur_screen_id,
 		$ur_screen_id . '_page_add-new-registration',
 		$ur_screen_id . '_page_user-registration-settings',
+		$ur_screen_id . '_page_user-registration-mailchimp',
+		$ur_screen_id . '_page_user-registration-status',
 		$ur_screen_id . '_page_user-registration-addons',
 		'profile',
 		'user-edit',
