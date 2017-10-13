@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-10-12 06:33:56+00:00\n"
+"POT-Creation-Date: 2017-10-13 08:17:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,28 +42,23 @@ msgstr ""
 msgid "Add Registration Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-editor.php:56
-#: includes/admin/class-ur-admin-editor.php:58
-msgid "Add My Account"
-msgstr ""
-
-#: includes/admin/class-ur-admin-editor.php:71
+#: includes/admin/class-ur-admin-editor.php:65
 msgid "Insert Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-editor.php:72
+#: includes/admin/class-ur-admin-editor.php:66
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-ur-admin-editor.php:80
+#: includes/admin/class-ur-admin-editor.php:74
 msgid "Select a form below to insert"
 msgstr ""
 
-#: includes/admin/class-ur-admin-editor.php:97
+#: includes/admin/class-ur-admin-editor.php:91
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-editor.php:101
+#: includes/admin/class-ur-admin-editor.php:95
 msgid "Add Form"
 msgstr ""
 
@@ -163,7 +158,7 @@ msgid "User Registration endpoints"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:460
-#: includes/admin/settings/class-ur-settings-general.php:172
+#: includes/admin/settings/class-ur-settings-general.php:191
 #: includes/class-ur-query.php:79
 msgid "Lost password"
 msgstr ""
@@ -376,83 +371,101 @@ msgid "Redirect Url"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:86
-msgid ""
-"This option lets you choose redirect path after successful user "
-"registration."
+msgid "This option lets you enter redirect path after successful user registration."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:95
+msgid "Registration Url"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:96
+msgid "This option lets you enter the registration page url."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:104
+msgid "Registration Url label"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:105
+msgid "This option lets you enter the label to register."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:110
+msgid "Not a member yet? Register now."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:115
 msgid "Prevent dashboard access"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:97
+#: includes/admin/settings/class-ur-settings-general.php:116
 msgid ""
 "This option lets you limit which roles you are willing to prevent dashboard "
 "access."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:108
+#: includes/admin/settings/class-ur-settings-general.php:127
 msgid "My account page"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:109
+#: includes/admin/settings/class-ur-settings-general.php:128
 msgid "Page contents: [%s]"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:120
+#: includes/admin/settings/class-ur-settings-general.php:139
 #: includes/functions-ur-core.php:608
 msgid "Enable strong password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:121
+#: includes/admin/settings/class-ur-settings-general.php:140
 msgid "Tick here if you want to use strong password on user registration form."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:129
+#: includes/admin/settings/class-ur-settings-general.php:148
 #: includes/functions-ur-core.php:623
 msgid "Form submit button label"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:130
+#: includes/admin/settings/class-ur-settings-general.php:149
 msgid "This option let you change the submit button label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:147
+#: includes/admin/settings/class-ur-settings-general.php:166
 msgid "My account endpoints"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:149
+#: includes/admin/settings/class-ur-settings-general.php:168
 msgid ""
 "Endpoints are appended to your page URLs to handle specific actions on the "
 "accounts pages. They should be unique and can be left blank to disable the "
 "endpoint."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:154
+#: includes/admin/settings/class-ur-settings-general.php:173
 msgid "Edit account"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:155
+#: includes/admin/settings/class-ur-settings-general.php:174
 msgid "Endpoint for the \"My account &rarr; Edit account\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:163
+#: includes/admin/settings/class-ur-settings-general.php:182
 msgid "Edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:164
+#: includes/admin/settings/class-ur-settings-general.php:183
 msgid "Endpoint for the \"My account &rarr; Edit profile\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:173
+#: includes/admin/settings/class-ur-settings-general.php:192
 msgid "Endpoint for the \"My account &rarr; Lost password\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:181
+#: includes/admin/settings/class-ur-settings-general.php:200
 msgid "User logout"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:182
+#: includes/admin/settings/class-ur-settings-general.php:201
 msgid ""
 "Endpoint for the triggering logout. You can add this to your menus via a "
 "custom link: yoursite.com/?user-logout=true"
@@ -648,19 +661,19 @@ msgstr ""
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:93
+#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:103
 msgid "Only an administrator can add new users."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
 msgid "You are currently logged in as %1s. You don't need another account. %2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
 msgid "Log out of this account."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:111
+#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
 #: includes/functions-ur-account.php:59
 msgid "Logout"
 msgstr ""
