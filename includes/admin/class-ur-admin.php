@@ -120,7 +120,6 @@ class UR_Admin {
 				);
 				ur_enqueue_js( "
 				jQuery( 'a.ur-rating-link' ).click( function() {
-						alert('hi');
 						jQuery.post( '" . UR()->ajax_url() . "', { action: 'user_registration_rated' } );
 						jQuery( this ).parent().text( jQuery( this ).data( 'rated' ) );
 					});
