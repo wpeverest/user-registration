@@ -39,6 +39,7 @@ class UR_Shortcode_Login {
 
 	public static function output( $atts ) {
 		global $wp, $post;
+		$redirect_url=isset($atts['redirect_url'])?$atts['redirect_url']:'';
 
 		if ( ! is_user_logged_in() ) {
 
@@ -47,7 +48,8 @@ class UR_Shortcode_Login {
 			} else {
 				ur_get_template( 'myaccount/form-login.php' );
 			}
-		}else if(is_user_logged_in() && !empty(trim($atts['redirect_url']))){
+
+		}else if(is_user_logged_in() && !empty(trim($atts['redirect_url'])) ){
 			?>	<script>
 				window.location = "<?php echo trim($atts['redirect_url']);?>";
 			</script>
