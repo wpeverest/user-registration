@@ -36,8 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><?php
 	/* translators: %1$s is replaced with the number of href */
 	printf(
-		__( 'From your account dashboard you can manage your <a href="%1$s">profile details</a> and <a href="%2$s">edit your password and account details</a>.', 'user-registration' ),
-		esc_url( ur_get_endpoint_url( 'edit-profile' ) ),
+		__( 'From your account dashboard you can manage your profile details and <a href="%1$s">edit your password and account details</a>.', 'user-registration' ),
 		esc_url( ur_get_endpoint_url( 'edit-account' ) )
 	);
 ?></p>
