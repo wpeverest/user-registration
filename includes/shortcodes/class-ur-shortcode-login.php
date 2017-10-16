@@ -49,8 +49,7 @@ class UR_Shortcode_Login {
 			}
 		}else if(is_user_logged_in() && !empty(trim($atts['redirect_url']))){
 			?>	<script>
-				var redirect_url="<?php echo $atts['redirect_url'];?>";
-				window.location = redirect_url;
+				window.location = "<?php echo trim($atts['redirect_url']);?>";
 			</script>
 			<?php
 		}
