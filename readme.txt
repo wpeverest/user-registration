@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,9 +16,11 @@ User Registration plugin provides you with an easy way to create frontend user r
 Supports frontend profile account page for profile edit, password change, Log out and more.
 
 
-Get [free support](https://wpeverest.com/support-forum/)
-
 View [All features](https://wpeverest.com/wordpress-plugins/user-registration/)
+
+View [Demo](http://demo.wpeverest.com/user-registration/)
+
+Get [free support](https://wpeverest.com/support-forum/)
 
 Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 
@@ -75,16 +77,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
-= 1.1.1 - 03/10/2017 =
-* Fix - Denied email trigger fixed
 
-= 1.1.0 - 19/09/2017 =
-* Feature - Redirect URL
-* Feature - Number and date field added
-* Feature -  logger added
-* Feature - Formwise template
-* Fix - Frontend form javascript validation issue fixed
-* Fix - My account tab issue fixed
-* Deprecated -  Administrator from prevent dashboard access
-* Added some filter and action hooks
+= 1.1.2 - 16/10/2017 =
+* Feature - New shortcode for login [user_registration_login]
+* Feature - 2 More template added for user registration form
+* Feature - WordPress rating link on user registration admin section
+* Fix - Disable profile detail tab (if there is no data) on user dashboard
+* Fix - form design improvement
+* Fix - Escaping issue of form builder
+* Fix - Datepicker issue on safari ( added new jquery datepicker)
+* Fix - Email message formatting
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).

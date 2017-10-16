@@ -1,3 +1,16 @@
+= 1.1.1 - 03/10/2017 =
+* Fix - Denied email trigger fixed
+
+= 1.1.0 - 19/09/2017 =
+* Feature - Redirect URL
+* Feature - Number and date field added
+* Feature -  logger added
+* Feature - Formwise template
+* Fix - Frontend form javascript validation issue fixed
+* Fix - My account tab issue fixed
+* Deprecated -  Administrator from prevent dashboard access
+* Added some filter and action hooks
+
 = 1.1.0 - 19/09/2017 =
 * Feature - Redirect URL
 * Feature - Number and date field added
