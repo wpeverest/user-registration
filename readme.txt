@@ -16,9 +16,11 @@ User Registration plugin provides you with an easy way to create frontend user r
 Supports frontend profile account page for profile edit, password change, Log out and more.
 
 
-Get [free support](https://wpeverest.com/support-forum/)
-
 View [All features](https://wpeverest.com/wordpress-plugins/user-registration/)
+
+View [Demo](http://demo.wpeverest.com/user-registration/)
+
+Get [free support](https://wpeverest.com/support-forum/)
 
 Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 
@@ -75,12 +77,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.1.2 - 16/10/2017 =
 * Feature - New shortcode for login [user_registration_login]
 * Feature - 2 More template added for user registration form
-* Feature - Wordpress rating link on user registration admin section
+* Feature - WordPress rating link on user registration admin section
 * Fix - Disable profile detail tab (if there is no data) on user dashboard
 * Fix - form design improvement
-* Fix - Escaping issue of form builder 
-* Fix - Datepicker issue on safari ( add new jquery datepicker)
-* Fix - Email message formatting 
+* Fix - Escaping issue of form builder
+* Fix - Datepicker issue on safari ( added new jquery datepicker)
+* Fix - Email message formatting
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
