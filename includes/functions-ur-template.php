@@ -34,6 +34,27 @@ function ur_template_redirect() {
 add_action( 'template_redirect', 'ur_template_redirect' );
 
 /**
+ * Handle redirects before content is output - hooked into template_redirect so is_page works.
+ */
+function ur_login_template_redirect() {
+	global $post;
+	if ( has_shortcode( $post->post_content, 'user_registration_login' ) ) {
+		$attributes   = shortcode_parse_atts( $post->post_content );
+		$redirect_url = isset( $attributes[1] ) ? $attributes[1] : '';
+		$redirect_url = str_replace( 'redirect_url', '', $redirect_url );
+		$redirect_url = trim( str_replace( '=', '', $redirect_url ) );
+		$redirect_url = trim( $redirect_url, ']' );
+		$redirect_url = trim( $redirect_url, '"' );
+		$redirect_url = trim( $redirect_url, "'" );
+		if ( ! empty( $redirect_url ) ) {
+			wp_safe_redirect( $redirect_url );
+		}
+	}
+
+}
+
+add_action( 'template_redirect', 'ur_login_template_redirect' );
+/**
  * Add body classes for UR pages.
  *
  * @param  array $classes
@@ -150,7 +171,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'checkbox' :
 
 				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
-						<input ' . implode( ' ', $custom_attributes ) . ' data-value="'.$value.'" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+						<input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 				         . $args['label'] . $required . '</label>';
 
 				break;
@@ -194,10 +215,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . wp_kses($option_text, array('a' => array(
-								'href' => array(),
-								'title' => array()
-							), 'span' => array())) . '</label>';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . wp_kses( $option_text, array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array()
+								),
+								'span' => array()
+							) ) . '</label>';
 					}
 				}
 
@@ -208,10 +232,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
-				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses($args['label'], array('a' => array(
-						'href' => array(),
-						'title' => array()
-					), 'span' => array())) . $required . '</label>';
+				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array()
+						),
+						'span' => array()
+					) ) . $required . '</label>';
 			}
 
 			$field_html .= $field;
@@ -278,7 +305,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_type  = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required    = 'yes' == $field->general_setting->required ? true : false;
 
-					if (  empty( $field_label ) ) {
+					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field->general_setting->field_name );
 						$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
 					}
@@ -367,6 +394,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 				if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
 					do_action( 'user_registration_account_' . $key . '_endpoint', $value );
+
 					return;
 				}
 			}
