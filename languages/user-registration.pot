@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-10-13 08:17:28+00:00\n"
+"POT-Creation-Date: 2017-10-16 05:47:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,15 +21,15 @@ msgstr ""
 msgid "Advance Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:131
+#: includes/admin/class-ur-admin-assets.php:130
 msgid "Could not install."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:185
+#: includes/admin/class-ur-admin-assets.php:184
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:185
+#: includes/admin/class-ur-admin-assets.php:184
 #: includes/admin/class-ur-registration-table-list.php:118
 msgid "Trash"
 msgstr ""
@@ -264,6 +264,19 @@ msgstr ""
 msgid "denied"
 msgstr ""
 
+#: includes/admin/class-ur-admin.php:117
+#. translators: 1: WooCommerce 2:: five stars
+msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
+msgstr ""
+
+#: includes/admin/class-ur-admin.php:119
+msgid "Thanks :)"
+msgstr ""
+
+#: includes/admin/class-ur-admin.php:128
+msgid "Thank you for using User Registration."
+msgstr ""
+
 #: includes/admin/class-ur-registration-table-list.php:40
 msgid "No user registration found."
 msgstr ""
@@ -359,7 +372,7 @@ msgid "This option lets you choose user role for frontend registration."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:73
-msgid "User Login option"
+msgid "User login option"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:74
@@ -367,7 +380,7 @@ msgid "This option lets you choose login option after user registration."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:85
-msgid "Redirect Url"
+msgid "Redirect URL"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:86
@@ -375,22 +388,23 @@ msgid "This option lets you enter redirect path after successful user registrati
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:95
-msgid "Registration Url"
+msgid "Registration URL"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:96
-msgid "This option lets you enter the registration page url."
+msgid "This option lets you enter the registration page url in login form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:104
-msgid "Registration Url label"
+msgid "Registration URL label"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:105
-msgid "This option lets you enter the label to register."
+msgid "This option lets you enter the label to registration url in login form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:110
+#: templates/myaccount/form-login.php:75
 msgid "Not a member yet? Register now."
 msgstr ""
 
@@ -657,32 +671,32 @@ msgstr ""
 msgid "Taking a while? Click here to run it now."
 msgstr ""
 
-#: includes/class-ur-ajax.php:78
+#: includes/class-ur-ajax.php:81
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:89 includes/class-ur-shortcodes.php:103
+#: includes/class-ur-ajax.php:92 includes/class-ur-shortcodes.php:103
 msgid "Only an administrator can add new users."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:114 includes/class-ur-shortcodes.php:121
 msgid "You are currently logged in as %1s. You don't need another account. %2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:114 includes/class-ur-shortcodes.php:121
 msgid "Log out of this account."
 msgstr ""
 
-#: includes/class-ur-ajax.php:111 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:114 includes/class-ur-shortcodes.php:121
 #: includes/functions-ur-account.php:59
 msgid "Logout"
 msgstr ""
 
-#: includes/class-ur-ajax.php:181 includes/class-ur-ajax.php:185
+#: includes/class-ur-ajax.php:184 includes/class-ur-ajax.php:188
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:203
+#: includes/class-ur-ajax.php:206
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
@@ -2241,11 +2255,11 @@ msgstr ""
 msgid "This function should not be called before user_registration_init."
 msgstr ""
 
-#: includes/functions-ur-template.php:102
+#: includes/functions-ur-template.php:123
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:177
+#: includes/functions-ur-template.php:198
 msgid "Choose an option"
 msgstr ""
 
@@ -2385,134 +2399,134 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:111
+#: includes/admin/class-ur-admin-assets.php:110
 msgctxt "enhanced select"
 msgid "No matches found"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:112
+#: includes/admin/class-ur-admin-assets.php:111
 msgctxt "enhanced select"
 msgid "Loading failed"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:113
+#: includes/admin/class-ur-admin-assets.php:112
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:114
+#: includes/admin/class-ur-admin-assets.php:113
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:115
+#: includes/admin/class-ur-admin-assets.php:114
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:116
+#: includes/admin/class-ur-admin-assets.php:115
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:117
+#: includes/admin/class-ur-admin-assets.php:116
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:118
+#: includes/admin/class-ur-admin-assets.php:117
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:119
+#: includes/admin/class-ur-admin-assets.php:118
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:120
+#: includes/admin/class-ur-admin-assets.php:119
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:206
+#: includes/admin/class-ur-admin-assets.php:205
 msgctxt "user registration admin"
 msgid "Are you sure want to delete ?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:207
+#: includes/admin/class-ur-admin-assets.php:206
 msgctxt "user registration admin"
 msgid "At least one row need to choose."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:208
+#: includes/admin/class-ur-admin-assets.php:207
 msgctxt "user registration admin"
 msgid "User required field is already there, could not dragged."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:209
+#: includes/admin/class-ur-admin-assets.php:208
 msgctxt "user registration admin"
 msgid "User required field is already there, could not clone."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:210
+#: includes/admin/class-ur-admin-assets.php:209
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:211
+#: includes/admin/class-ur-admin-assets.php:210
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:212
+#: includes/admin/class-ur-admin-assets.php:211
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:213
+#: includes/admin/class-ur-admin-assets.php:212
 msgctxt "user registration admin"
 msgid "At least one field  need to select."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:214
+#: includes/admin/class-ur-admin-assets.php:213
 msgctxt "user registration admin"
 msgid "Empty form name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:215
+#: includes/admin/class-ur-admin-assets.php:214
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:216
+#: includes/admin/class-ur-admin-assets.php:215
 msgctxt "user registration admin"
 msgid "Duplicate field name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:217
+#: includes/admin/class-ur-admin-assets.php:216
 msgctxt "user registration admin"
 msgid "Empty field label."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:218
+#: includes/admin/class-ur-admin-assets.php:217
 msgctxt "user registration admin"
 msgid ""
 "Invalid field name. Please do not use space, empty or special character, "
 "you can use underscore."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:219
+#: includes/admin/class-ur-admin-assets.php:218
 msgctxt "user registration admin"
 msgid "Multiple field key "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:220
+#: includes/admin/class-ur-admin-assets.php:219
 msgctxt "user registration admin"
 msgid "At least one field is required, field "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:221
+#: includes/admin/class-ur-admin-assets.php:220
 msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
