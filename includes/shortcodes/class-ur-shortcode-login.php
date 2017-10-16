@@ -48,15 +48,14 @@ class UR_Shortcode_Login {
 				ur_get_template( 'myaccount/form-login.php' );
 			}
 		}
-		else if(is_user_logged_in() && isset($atts['redirect_url'])){
+		else if(is_user_logged_in() && !empty($atts['redirect_url'])){
 			?>	<script>
 					var redirect_url="<?php echo $atts['redirect_url'];?>";
 					window.location = redirect_url;
 				</script>
 			<?php
 		}
-
-		else if(is_user_logged_in() && !isset($atts['redirect_url']))
+		else
 		{		
 			echo __( sprintf( 'You are already logged in. <a href="%s">%s</a>', ur_logout_url() ,'Logout' ), 'user-registration' );	
 		}		
