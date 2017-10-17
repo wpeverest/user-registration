@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.2\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-10-17 07:02:30+00:00\n"
+"POT-Creation-Date: 2017-10-17 07:09:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2269,6 +2269,10 @@ msgstr ""
 
 #: includes/log-handlers/class-ur-log-handler-file.php:353
 msgid "This method should not be called before plugins_loaded."
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-login.php:60
+msgid "You are already logged in. %1$s %2$s?"
 msgstr ""
 
 #: includes/shortcodes/class-ur-shortcode-my-account.php:52
