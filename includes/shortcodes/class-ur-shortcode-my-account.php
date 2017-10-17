@@ -167,10 +167,11 @@ class UR_Shortcode_My_Account {
 		/**
 		 * After sending the reset link, don't show the form again.
 		 */
+	
 		if ( ! empty( $_GET['reset-link-sent'] ) ) {
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
-			/**
+		/**
 		 * Process reset key / login from email confirmation link
 		 */
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
@@ -265,7 +266,11 @@ class UR_Shortcode_My_Account {
 		$key = get_password_reset_key( $user_data );
 
 		// Send email notification
-		UR_Emailer::lost_password_email($user_login,$user_data,$key);
+		if(UR_Emailer::lost_password_email($user_login,$user_data,$key) == false)
+		{	
+			ur_add_notice( __( 'The email could not be sent. Possible reason: your host may have disabled the mail() function. ', 'user-registration' ), 'error' );
+			return false;
+		}
 
 		return true;
 	}
@@ -300,6 +305,7 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
+
 
 		wp_set_password( $new_pass, $user->ID );
 		self::set_reset_password_cookie();
