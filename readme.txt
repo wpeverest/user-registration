@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,7 +77,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
-
+= 1.1.3 - 17/10/2017 =
+* Fix - Login shortcode required parameter issue resolved.
 = 1.1.2 - 16/10/2017 =
 * Feature - New shortcode for login [user_registration_login]
 * Feature - 2 More template added for user registration form
