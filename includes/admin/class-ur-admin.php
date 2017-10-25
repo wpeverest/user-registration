@@ -116,7 +116,7 @@ class UR_Admin {
 				/* translators: 1: WooCommerce 2:: five stars */
 					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
-					'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thanks :)', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+					'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thanks You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 				);
 				ur_enqueue_js( "
 				jQuery( 'a.ur-rating-link' ).click( function() {
