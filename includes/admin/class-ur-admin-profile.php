@@ -118,10 +118,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected       = esc_attr( get_user_meta( $user->ID, $key, true ) );
-										foreach ( $field['options'] as $option_key => $option_value ) :
-											$option_key_array = explode( '__', $option_key );
-											$option_key = isset( $option_key_array[0] ) ? $option_key_array[0] : $option_key;
-											?>
+										foreach ( $field['options'] as $option_key => $option_value ) : ?>
 											<option data-val="<?php echo $selected; ?>"
 											        value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
