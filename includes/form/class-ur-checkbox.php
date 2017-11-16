@@ -4,7 +4,7 @@
  *
  * @class    UR_Admin
  * @version  1.0.0
- * @package  UserRegistrationFileUpload/Form
+ * @package  UserRegistration/Form
  * @category Admin
  * @author   WPEverest
  */
