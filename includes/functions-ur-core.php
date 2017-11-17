@@ -684,6 +684,7 @@ function ur_login_option() {
 	return apply_filters( 'user_registration_login_options', array(
 
 			'default'        => __( 'Manual login after registration', 'user-registration' ),
+			'email_confirmation' => __('Email confirmation to login', 'user-registration'),
 			'auto_login'     => __( 'Auto login after registration', 'user-registration' ),
 			'admin_approval' => __( 'Admin approval after registration', 'user-registration' )
 		)
