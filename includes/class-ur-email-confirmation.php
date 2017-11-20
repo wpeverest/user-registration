@@ -23,6 +23,12 @@ class UR_Email_Confirmation {
 
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
+		add_action( 'user_register', array( $this, 'set_email_status' ) );
+	
+	}
+
+	public function set_email_status( $user_id ) {
+	
 	}
 
 	public function check_email_status( WP_User $user )

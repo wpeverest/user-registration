@@ -53,6 +53,8 @@ class UR_Emailer {
 			self::send_mail_to_user( $email, $username, $user_id );
 
 			self::send_mail_to_admin( $email, $username, $user_id );
+
+			self::send_verification_email( $email, $username, $user_id);
 		}
 	}
 
@@ -60,15 +62,35 @@ class UR_Emailer {
 	/**
 	 * @param $email
 	 */
+
 	private static function send_mail_to_user( $email, $username, $user_id ) {
 
 		$status = ur_get_user_approval_status( $user_id );
+
+		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
 
 		$blog_info = get_bloginfo();
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		if ( $status == 0 ) {
+		if($email_status === '0') {
+
+			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+
+			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+
+				'Hi %s,
+ 					<br/>
+               <br/>
+ 					You have registered on <a href="%s">%s</a>.
+ 					<br/>
+ 					Please click on this verification link to confirm registration.
+ 					<br/>
+ 					Thank You!',
+				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+		}
+
+		else if ( $status == 0 ) {
 
 			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 
