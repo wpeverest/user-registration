@@ -21,7 +21,7 @@ class UR_Email_Confirmation {
 	
 	public function __construct() {
 
-		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ) );
+		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 	}
 
@@ -35,8 +35,10 @@ class UR_Email_Confirmation {
 		{
 			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email.', 'user-registration' );
 
-			return new WP_Error( 'pending_approval', $message );
+			return new WP_Error( 'user_email_not_verified', $message );
 		}
+
+		return $user;
 	}
 
 	/**
