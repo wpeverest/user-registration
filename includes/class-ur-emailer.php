@@ -53,8 +53,6 @@ class UR_Emailer {
 			self::send_mail_to_user( $email, $username, $user_id );
 
 			self::send_mail_to_admin( $email, $username, $user_id );
-
-			self::send_verification_email( $email, $username, $user_id);
 		}
 	}
 

@@ -28,7 +28,11 @@ class UR_Email_Confirmation {
 	}
 
 	public function set_email_status( $user_id ) {
-	
+		
+		if('email_confirmation' === get_option('user_registration_general_setting_login_options'))
+		{
+			update_user_meta( $user_id, 'ur_confirm_email', 0);
+		}
 	}
 
 	public function check_email_status( WP_User $user )
