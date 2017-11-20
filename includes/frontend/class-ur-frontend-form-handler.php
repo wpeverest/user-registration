@@ -81,17 +81,22 @@ class UR_Frontend_Form_Handler {
 
 			if ( $user_id > 0 ) {
 
-
 				$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 
 				$success_params = array(
 					'username' => self::$valid_form_data['user_username']->value,
 				);
+
 				if ( 'auto_login' === $login_option ) {
 					wp_clear_auth_cookie();
 					wp_set_auth_cookie( $user_id );
 					$success_params['auto_login'] = true;
 				}
+				elseif( 'email_confirmation' === $login_option)
+				{
+					update_user_meta( $user_id, 'ur_confirm_email', 0);
+				}
+
 				wp_send_json_success( $success_params );
 
 			}
@@ -320,11 +325,8 @@ class UR_Frontend_Form_Handler {
 				array_push( self::$response_array, __( 'Password and confirm password not matched', 'user-registration' ) );
 			}
 		}
-
 		return $form_data;
 	}
-
-
 }
 
 
