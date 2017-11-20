@@ -193,6 +193,7 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-emailer.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-ajax.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
+		include_once( UR_ABSPATH . 'includes/class-ur-email-confirmation.php' );
 
 		/**
 		 * Config classes.

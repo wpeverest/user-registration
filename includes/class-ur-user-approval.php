@@ -190,7 +190,6 @@ class UR_User_Approval {
 				return new WP_Error( 'denied_access', $message );
 				break;
 		}
-
 	}
 
 	/**

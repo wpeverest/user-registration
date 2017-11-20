@@ -274,6 +274,7 @@ class UR_Form_Handler {
 	 * Process the login form.
 	 */
 	public static function process_login() {
+
 		$nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 		$nonce_value = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
 
