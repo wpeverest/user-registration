@@ -67,6 +67,8 @@ class UR_Emailer {
 
 		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
 
+		$email_token = get_user_meta($user_id, 'ur_confirm_email_token', true);
+
 		$blog_info = get_bloginfo();
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
@@ -82,7 +84,7 @@ class UR_Emailer {
                <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
- 					Please click on this verification link to confirm registration.
+ 					Please click on this verification link '.get_home_url().'/wp-login/?token='.$email_token. ' to confirm registration.
  					<br/>
  					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );

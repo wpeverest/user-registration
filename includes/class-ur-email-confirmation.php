@@ -27,11 +27,29 @@ class UR_Email_Confirmation {
 	
 	}
 
+	public function getToken()
+	{
+		 $length = 30;
+	     $token = "";
+	     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+	     $codeAlphabet.= "0123456789";
+	     $max = strlen($codeAlphabet); // edited
+
+	    for ($i=0; $i < $length; $i++) {
+	        $token .= $codeAlphabet[random_int(0, $max-1)];
+	    }
+
+	    return $token;
+	}
+
 	public function set_email_status( $user_id ) {
 		
 		if('email_confirmation' === get_option('user_registration_general_setting_login_options'))
 		{
+			$token = $this->getToken();
 			update_user_meta( $user_id, 'ur_confirm_email', 0);
+			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
 		}
 	}
 
