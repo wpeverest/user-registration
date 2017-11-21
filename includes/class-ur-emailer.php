@@ -26,22 +26,10 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
-
-		add_action( 'user_register', 'send_email_option' ) ;
-
-	}
-
-	public function send_email_option()
-	{
-		if(get_option('send_email_disable') == 'yes')
-		{
-			remove_action('user_registration_after_register_user_action', 'ur_after_register_mail', 10, 3);
-		}
 	}
 
 	/**
@@ -95,7 +83,7 @@ class UR_Emailer {
                <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
- 					Please click on this verification link '.get_home_url().'/wp-login/?token='. $email_token . '&user_id='. $user_id .' to confirm registration.
+ 					Please click on this verification link '.get_home_url().'/wp-login.php/?token='. $email_token . '&user_id='. $user_id .' to confirm registration.
  					<br/>
  					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
