@@ -71,7 +71,7 @@ class UR_Emailer {
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		if($email_status === '0') {
+		if( $email_status === '0' ) {
 
 			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 

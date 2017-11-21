@@ -39,13 +39,15 @@ class UR_Shortcode_Login {
 
 	public static function output( $atts ) {
 		global $wp, $post;
-		$redirect_url=isset($atts['redirect_url'])?$atts['redirect_url']:'';
+
+		$redirect_url = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
 
 		if ( ! is_user_logged_in() ) {
 
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
+
 				ur_get_template( 'myaccount/form-login.php' );
 			}
 
@@ -57,7 +59,7 @@ class UR_Shortcode_Login {
 		}
 		else
 		{
-			echo sprintf( __('You are already logged in. %1$s %2$s?', 'user-registration' ), '<a href="'.ur_logout_url().'">', 'Logout' );
+			sprintf( __('You are already logged in. %1$s %2$s?', 'user-registration' ), '<a href="'.ur_logout_url().'">', 'Logout' );
 		}
 	}
 

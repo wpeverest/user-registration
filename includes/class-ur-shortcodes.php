@@ -133,7 +133,11 @@ class UR_Shortcodes {
 			'id' => '',
 		), $atts, 'user_registration_form' );
 
+		ob_start();
+
 		self::render_form( $atts['id'] );
+		
+		return ob_get_clean();
 	}
 
 	/**
@@ -206,6 +210,7 @@ class UR_Shortcodes {
 			$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 
 		}
+
 		ur_get_template( 'form-registration.php', array(
 			'form_data_array'        => $form_data_array,
 			'is_field_exists'        => $is_field_exists,
