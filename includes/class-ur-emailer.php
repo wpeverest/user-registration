@@ -26,11 +26,22 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
+
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
 
+		add_action( 'user_register', 'send_email_option' ) ;
+
+	}
+
+	public function send_email_option()
+	{
+		if(get_option('send_email_disable') == 'yes')
+		{
+			remove_action('user_registration_after_register_user_action', 'ur_after_register_mail', 10, 3);
+		}
 	}
 
 	/**

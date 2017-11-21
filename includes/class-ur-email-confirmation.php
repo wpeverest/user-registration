@@ -30,13 +30,13 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-		if(!isset($_GET['token']) && !isset($_GET['user_id'])
+		if(!isset($_GET['token']) && !isset($_GET['user_id']))
 		{
 			return;
 		}
 		else
 		{
-			$user_token = get_user_meta($_GET['user_id'],'ur_confirm_email_token');
+			$user_token = get_user_meta($_GET['user_id'],'ur_confirm_email_token',true);
 
 			if($user_token == $_GET['token'])
 			{
@@ -50,6 +50,8 @@ class UR_Email_Confirmation {
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
 		}
+
+		do_action('user_registration_check_token_complete');
 
 	}
 
@@ -67,6 +69,8 @@ class UR_Email_Confirmation {
 	    }
 
 	    return $token;
+
+	    do_action('user_registration_get_token');
 	}
 
 	public function set_email_status( $user_id ) {
