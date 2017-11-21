@@ -84,7 +84,7 @@ class UR_Emailer {
                <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
- 					Please click on this verification link '.get_home_url().'/wp-login/?token='.$email_token. ' to confirm registration.
+ 					Please click on this verification link '.get_home_url().'/wp-login/?token='. $email_token . '&user_id='. $user_id .' to confirm registration.
  					<br/>
  					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );

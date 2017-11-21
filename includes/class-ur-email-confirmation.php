@@ -24,12 +24,38 @@ class UR_Email_Confirmation {
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_register', array( $this, 'set_email_status' ) );
+		add_action('wp_authenticate', array($this, 'check_token_before_authenticate'), 30, 2);
 	
+	}
+
+	public function check_token_before_authenticate()
+	{
+		if(!isset($_GET['token']) && !isset($_GET['user_id'])
+		{
+			return;
+		}
+		else
+		{
+			$user_token = get_user_meta($_GET['user_id'],'ur_confirm_email_token');
+
+			if($user_token == $_GET['token'])
+			{
+				update_user_meta('ur_confirm_email',1);
+				apply_filters( 'login_message', __('User successfully registered!','user-registration') );
+			}
+			else
+			{
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Token Mismatch!', 'user-registration' );
+
+				return new WP_Error( 'user_email_not_verified', $message );
+			}
+		}
+
 	}
 
 	public function getToken()
 	{
-		 $length = 30;
+		 $length = 50;
 	     $token = "";
 	     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
