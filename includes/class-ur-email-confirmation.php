@@ -40,7 +40,7 @@ class UR_Email_Confirmation {
 
 			if($user_token == $_GET['token'])
 			{
-				update_user_meta('ur_confirm_email',1);
+				update_user_meta($_GET['user_id'],'ur_confirm_email',1);
 				apply_filters( 'login_message', __('User successfully registered!','user-registration') );
 			}
 			else
