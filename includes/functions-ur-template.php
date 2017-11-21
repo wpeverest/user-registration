@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
  */
+
 function ur_template_redirect() {
 	global $wp;
 
@@ -40,7 +41,11 @@ function ur_login_template_redirect() {
 	global $post;
 	$post_content = isset($post->post_content) ? $post->post_content:'';
 	if ( has_shortcode( $post_content, 'user_registration_login' ) && is_user_logged_in() ) {
-		$attributes   = shortcode_parse_atts( $post_content );
+
+	 preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+    $attributes = shortcode_parse_atts( $matches[3] );
+
+		
 		$redirect_url = isset( $attributes[1] ) ? $attributes[1] : '';
 		$redirect_url = str_replace( 'redirect_url', '', $redirect_url );
 		$redirect_url = trim( str_replace( '=', '', $redirect_url ) );
@@ -52,7 +57,6 @@ function ur_login_template_redirect() {
 			wp_redirect( $redirect_url );
 		}
 	}
-
 }
 
 add_action( 'template_redirect', 'ur_login_template_redirect' );
