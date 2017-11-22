@@ -25,7 +25,6 @@ class UR_Email_Confirmation {
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_register', array( $this, 'set_email_status' ) );
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 30, 2);
-
 	}
 
 	public function ur_enqueue_script()
@@ -55,13 +54,9 @@ class UR_Email_Confirmation {
 			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
 			
 			if($user_token == $_GET['ur_token'])
-			{
-				add_action( 'login_enqueue_scripts', array($this, 'ur_enqueue_script'), 1 );
-
-				//wp_enqueue_style('user-registration-css');
-				
+			{				
 				update_user_meta($user_id,'ur_confirm_email',1);
-
+				add_action( 'login_enqueue_scripts', array($this, 'ur_enqueue_script'), 1 );
 				add_filter('login_message', array($this,'custom_registration_message'));
 
 			}
