@@ -30,19 +30,22 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-		if(!isset($_GET['token']) && !isset($_GET['user_id']))
-		{
+		if(!isset($_GET['token']) && !isset($_GET['user_id'])){
 			return;
 		}
 		else
-		{
-			$user_token = get_user_meta($_GET['user_id'],'ur_confirm_email_token',true);
+		{		
+			$output = str_split($GET['token'], 50);
+
+			$user_id = md5($output);
+			
+			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
 
 			if($user_token == $_GET['token'])
 			{
-				update_user_meta($_GET['user_id'],'ur_confirm_email',1);
+				update_user_meta($user_id,'ur_confirm_email',1);
 
-				apply_filters( 'login_message', __('User successfully registered!','user-registration'));
+				echo apply_filters( 'login_message', __('User successfully registered!','user-registration'));
 			}
 			else
 			{
@@ -56,18 +59,20 @@ class UR_Email_Confirmation {
 
 	}
 
-	public function getToken()
+	public function getToken($user_id)
 	{
 		 $length = 50;
 	     $token = "";
 	     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
 	     $codeAlphabet.= "0123456789";
-	     $max = strlen($codeAlphabet); // edited
+	     $max = strlen($codeAlphabet); 
 
 	    for ($i=0; $i < $length; $i++) {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
 	    }
+
+	    $token .=md5($user_id);
 
 	    return $token;
 
@@ -78,7 +83,7 @@ class UR_Email_Confirmation {
 		
 		if('email_confirmation' === get_option('user_registration_general_setting_login_options'))
 		{
-			$token = $this->getToken();
+			$token = $this->getToken($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0);
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
 		}
