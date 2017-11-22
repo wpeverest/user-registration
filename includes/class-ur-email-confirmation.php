@@ -30,14 +30,14 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-		if(!isset($_GET['token']) && !isset($_GET['user_id'])){
+		if(!isset($_GET['token'])){
 			return;
 		}
 		else
 		{		
 			$output = str_split($GET['token'], 50);
 
-			$user_id = md5($output);
+			$user_id = md5($output[1]);
 			
 			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
 
