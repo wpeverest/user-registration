@@ -35,7 +35,7 @@ class UR_Email_Confirmation {
 		}
 		else
 		{		
-			$output = str_split($GET['token'], 50);
+			$output = str_split($_GET['token'], 50);
 
 			$user_id = md5($output[1]);
 			
