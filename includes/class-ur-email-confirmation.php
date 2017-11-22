@@ -21,6 +21,10 @@ class UR_Email_Confirmation {
 	
 	public function __construct() {
 
+		if('email_confirmation' !== get_option('user_registration_general_setting_login_options')){
+			return;
+		}
+
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_register', array( $this, 'set_email_status' ) );

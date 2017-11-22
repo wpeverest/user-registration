@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_User_Approval {
 
-
 	/**
 	 * UR_User_Approval constructor.
 	 */
