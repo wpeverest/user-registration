@@ -37,10 +37,10 @@ class UR_Email_Confirmation {
 		{		
 			$output = str_split($_GET['ur_token'], 50);
 
-			$user_id = my_simple_crypt($output[1],'d');
+			$user_id = $this->my_simple_crypt($output[1],'d');
 			
 			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
-
+			
 			if($user_token == $_GET['ur_token'])
 			{
 				update_user_meta($user_id,'ur_confirm_email',1);
