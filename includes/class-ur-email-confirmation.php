@@ -30,18 +30,18 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-		if(!isset($_GET['token'])){
+		if(!isset($_GET['ur_token'])){
 			return;
 		}
 		else
 		{		
-			$output = str_split($_GET['token'], 50);
+			$output = str_split($_GET['ur_token'], 50);
 
-			$user_id = md5($output[1]);
+			$user_id = my_simple_crypt($output[1],'d');
 			
 			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
 
-			if($user_token == $_GET['token'])
+			if($user_token == $_GET['ur_token'])
 			{
 				update_user_meta($user_id,'ur_confirm_email',1);
 
@@ -59,6 +59,26 @@ class UR_Email_Confirmation {
 
 	}
 
+	public function my_simple_crypt( $string, $action = 'e' ) {
+	    
+	    $secret_key = 'my_simple_secret_key';
+	    $secret_iv = 'my_simple_secret_iv';
+	 
+	    $output = false;
+	    $encrypt_method = "AES-256-CBC";
+	    $key = hash( 'sha256', $secret_key );
+	    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+	 
+	    if( $action == 'e' ) {
+	        $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+	    }
+	    else if( $action == 'd' ){
+	        $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+	    }
+	 
+	    return $output;
+	}
+
 	public function getToken($user_id)
 	{
 		 $length = 50;
@@ -72,7 +92,7 @@ class UR_Email_Confirmation {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
 	    }
 
-	    $token .=md5($user_id);
+	    $token .=$this->my_simple_crypt($user_id,'e');
 
 	    return $token;
 
