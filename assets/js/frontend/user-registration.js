@@ -3,6 +3,7 @@
 /* global  grecaptcha */
 (function ( $ ) {
 	var ursL10n = user_registration_params.ursL10n;
+
 	$.fn.ur_form_submission = function () {
 		// traverse all nodes
 		return this.each(function () {
@@ -161,11 +162,21 @@
 									}
 									if ( type === 'message' ) {
 
-										message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
-										$this[ 0 ].reset();
-
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
+
+										debugger;
+
+										if( user_registration_params.login_option == 'admin_approval' ){
+											message.append('<li>' + ursL10n.user_under_approval + '</li>');
+										}
+										else if( user_registration_params.login_option == 'email_confirmation' ){
+											message.append('<li>' + ursL10n.user_email_pending + '</li>');
+										}
+										else{
+											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
+										}
+										$this[ 0 ].reset();
 
 										if ( user_registration_params.redirect_url !== '' ) {
 											window.setTimeout(function () {

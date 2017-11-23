@@ -288,16 +288,18 @@ class UR_Frontend_Scripts {
 		switch ( $handle ) {
 			case 'user-registration' :
 
-
 				return array(
 
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
 					'redirect_url'                     => get_option('user_registration_general_setting_redirect_options'),
+					'login_option'					   => get_option('user_registration_general_setting_login_options'),
 
 					'ursL10n'                          => array(
 						'user_successfully_saved' => __( 'User successfully registered.', 'user-registration' ),
+						'user_under_approval' => __( 'User registered. Wait until admin approves your registration.', 'user-registration' ),
+						'user_email_pending' => __( 'User registered. Verify on the link sent to your email to confirm.', 'user-registration' ),
 						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),
