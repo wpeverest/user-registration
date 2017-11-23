@@ -26,10 +26,15 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
+		if('yes' == get_option('user_registration_general_setting_disable_email')){
+			return;
+		}
+
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
+
 	}
 
 	/**

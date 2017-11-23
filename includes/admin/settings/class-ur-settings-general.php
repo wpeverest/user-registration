@@ -137,9 +137,18 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'title'    => __( 'Enable strong password', 'user-registration' ),
-						'desc'     => __( 'Tick here if you want to use strong password on user registration form.', 'user-registration' ),
+						'desc'     => __( 'Check to use strong password on user registration form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_enable_strong_password',
 						'default'  => 'yes',
+						'type'     => 'checkbox',
+						'autoload' => false,
+					),
+
+					array(
+						'title'    => __( 'Disable emails', 'user-registration' ),
+						'desc'     => __( 'Check to disable emails sending option to user after registration.', 'user-registration' ),
+						'id'       => 'user_registration_general_setting_disable_email',
+						'default'  => 'no',
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
