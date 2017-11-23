@@ -165,8 +165,6 @@
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
 
-										debugger;
-
 										if( user_registration_params.login_option == 'admin_approval' ){
 											message.append('<li>' + ursL10n.user_under_approval + '</li>');
 										}

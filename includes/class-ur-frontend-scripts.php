@@ -299,7 +299,7 @@ class UR_Frontend_Scripts {
 					'ursL10n'                          => array(
 						'user_successfully_saved' => __( 'User successfully registered.', 'user-registration' ),
 						'user_under_approval' => __( 'User registered. Wait until admin approves your registration.', 'user-registration' ),
-						'user_email_pending' => __( 'User registered. Verify on the link sent to your email to confirm.', 'user-registration' ),
+						'user_email_pending' => __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ),
 						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),

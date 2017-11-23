@@ -39,7 +39,7 @@ class UR_Email_Confirmation {
 
 	public function custom_registration_message()
 	{
-		$message = ur_print_notice(__('User successfully registered.','user-registration'));
+		$message = ur_print_notice(__('User successfully registered. Login to continue.','user-registration'));
 
 		return $message;
 	}
