@@ -141,6 +141,7 @@ class UR_User_Approval {
 	 * @param $user_id
 	 */
 	public function set_user_status( $user_id ) {
+
 		$status = UR_Admin_User_Manager::PENDING;
 
 		// If the user is created by admin in the backend, than automatically approve him

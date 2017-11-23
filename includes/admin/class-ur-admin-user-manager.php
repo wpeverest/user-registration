@@ -87,6 +87,11 @@ class UR_Admin_User_Manager {
 
 		$this->user_status = $status;
 
+		if(current_user_can('administrator'))
+		{
+			return;
+		}
+
 		return update_user_meta( $this->user->ID, 'ur_user_status', $status );
 	}
 
