@@ -87,7 +87,7 @@ class UR_Admin_User_Manager {
 
 		$this->user_status = $status;
 
-		if(current_user_can('administrator')){
+		if( is_super_admin( $this->user->ID ) ){
 			return;
 		}
 
