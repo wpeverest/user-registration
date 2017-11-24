@@ -146,7 +146,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'title'    => __( 'Disable emails', 'user-registration' ),
-						'desc'     => __( 'Check to disable emails sending option to user after registration.', 'user-registration' ),
+						'desc'     => __( 'Disable emails sent after registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_disable_email',
 						'default'  => 'no',
 						'type'     => 'checkbox',

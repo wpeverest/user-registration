@@ -79,7 +79,7 @@ class UR_Emailer {
 
 		if( $email_status === '0' ) {
 
-			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+			$subject = __( sprintf( 'Please confirm your registration on %s', $blog_info ), 'user-registration' );
 
 			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
 
@@ -88,8 +88,10 @@ class UR_Emailer {
                <br/>
  					You have registered on <a href="%s">%s</a>.
  					<br/>
+               <br/>
  					Please click on this verification link '.get_home_url().'/wp-login.php/?ur_token='. $email_token .' to confirm registration.
  					<br/>
+               <br/>
  					Thank You!',
 				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
 		}
