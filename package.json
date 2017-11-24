@@ -1,8 +1,8 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "1.1.2",
-  "homepage": "https://wpeverest.com/plugins/user-registration/",
+  "version": "1.1.5",
+  "homepage": "https://wpeverest.com/wordpress-plugins/user-registration/",
   "repository": {
     "type": "git",
     "url": "https://github.com/wpeverest/user-registration.git"

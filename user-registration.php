@@ -3,11 +3,11 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Drag and Drop user registration and login form builder.
- * Version: 1.1.3
+ * Version: 1.1.5
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Requires at least: 4.0
- * Tested up to: 4.8
+ * Tested up to: 4.9
  *
  * Text Domain: user-registration
  * Domain Path: /languages/
@@ -35,7 +35,7 @@ final class UserRegistration {
 	 * Plugin version.
 	 * @var string
 	 */
-	public $version = '1.1.3';
+	public $version = '1.1.5';
 
 	/**
 	 * Session instance.
