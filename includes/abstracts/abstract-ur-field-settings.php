@@ -118,6 +118,10 @@ abstract class UR_Field_Settings {
 
 					break;
 
+				case 'checkbox':
+
+				
+
 				default:
 
 			}
