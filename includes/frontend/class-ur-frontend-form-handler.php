@@ -18,7 +18,10 @@ class UR_Frontend_Form_Handler {
 	public static $form_id = 0;
 	public static $response_array = array();
 	private static $valid_form_data = array();
+
+
 	public static function handle_form( $form_data, $form_id ) {
+
 		self::$form_id = $form_id;
 		$post_content = self::get_post_content( $form_id );
 		$post_content_array = array();
@@ -103,7 +106,9 @@ class UR_Frontend_Form_Handler {
 		if ( count( $duplicate_field_key ) > 0 ) {
 			array_push( self::$response_array, __( 'Duplicate field key in form, please contact site administrator.', 'user-registration' ) );
 		}
+
 		$containsSearch = count( array_intersect( ur_get_required_fields(), $form_data_field ) ) == count( ur_get_required_fields() );
+
 		if ( false === $containsSearch ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
@@ -160,12 +165,13 @@ class UR_Frontend_Form_Handler {
 		}
 		return $form_data;
 	}
-	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
+	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 		foreach ( $valid_form_data as $data ) {
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
 				$field_key           = $data->field_name;
 				$field_key_for_param = $data->field_name;
+
 				if ( substr( $data->field_name, 0, 5 ) == 'user_' ) {
 					$field_key = trim( str_replace( 'user_', '', $field_key ) );
 				} else {
@@ -173,6 +179,7 @@ class UR_Frontend_Form_Handler {
 				}
 				update_user_meta( $user_id, $field_key, $data->value );
 				if ( isset( $data->extra_params ) ) {
+
 					update_user_meta( $user_id, 'ur_' . $field_key_for_param . '_params', json_encode( $data->extra_params ) );
 				}
 			}

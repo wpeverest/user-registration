@@ -20,7 +20,6 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 
 		<?php
 			foreach ( $options as $option ) {
-
 				echo "<input type = 'checkbox'  value='" . esc_attr($option) . "'>" . esc_html($option) . '</option><br>';
 
 			}

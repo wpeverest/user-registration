@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @category Abstract Class
  * @author   WPEverest
  */
-class UR_Setting_Checbox extends UR_Field_Settings {
+class UR_Setting_Checkbox extends UR_Field_Settings {
 
 
 	public function __construct() {
@@ -82,4 +82,4 @@ class UR_Setting_Checbox extends UR_Field_Settings {
 	}
 }
 
-return new UR_Setting_Checbox();
+return new UR_Setting_Checkbox();

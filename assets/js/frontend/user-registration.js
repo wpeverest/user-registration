@@ -109,6 +109,7 @@
 						if ( $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1 ) {
 							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
 						}
+
 						var data = {
 							action: 'user_registration_user_form_submit',
 							security: user_registration_params.user_registration_form_data_save,
