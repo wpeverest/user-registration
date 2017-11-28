@@ -53,8 +53,6 @@ class UR_Checkbox extends UR_Form_Field {
 		);
 	}
 
-
-
 	/**
 	 * @return string
 	 */

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : array();
 
-
 ?>
 <div class="ur-input-type-select ur-admin-template">
 
@@ -19,14 +18,12 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 	</div>
 	<div class="ur-field" data-field-key="select">
 
-
 		<select id="ur-input-type-select">
 
 			<?php
 			foreach ( $options as $option ) {
 
 				echo "<option value='" . esc_attr($option) . "'>" . esc_html($option) . '</option>';
-
 			}
 			?>
 		</select>

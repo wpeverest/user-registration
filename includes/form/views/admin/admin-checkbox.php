@@ -7,7 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : array();
 ?>
+
 <div class="ur-input-type-checkbox ur-admin-template">
 
 	<div class="ur-label">
@@ -16,8 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="ur-field" data-field-key="checkbox">
 
-		<input type="checkbox" id="ur-input-type-checkbox"
-		       placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
+		<?php
+			foreach ( $options as $option ) {
+
+				echo "<input type = 'checkbox'  value='" . esc_attr($option) . "'>" . esc_html($option) . '</option><br>';
+
+			}
+		?>
 
 	</div>
 	<?php

@@ -118,6 +118,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'autofocus'         => '',
 			'priority'          => '',
 		);
+		
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
@@ -173,10 +174,28 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				break;
 			case 'checkbox' :
+				$options = $field = '';
+			
+				if ( ! empty( $args['options'] ) ) {
+					$field = '<label>' .$args['label']. '</label>';
 
-				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
+					foreach ( $args['options'] as $option_key => $option_text ) {
+						if ( '' === $option_key ) {
+
+							if ( empty( $args['placeholder'] ) ) {
+								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
+							}
+							$custom_attributes[] = 'data-allow_clear="true"';
+						}
+						$field .= '<input type="checkbox" value="' . esc_attr( $option_key ) . '" ' . checked( $value, $option_key, false ) . '>' . esc_attr( $option_text ) . '<br/>';
+					}
+				}
+				else
+				{
+					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
 						<input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 				         . $args['label'] . $required . '</label>';
+				}
 
 				break;
 			case 'password' :
@@ -193,7 +212,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 			case 'select' :
 				$options = $field = '';
-
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						if ( '' === $option_key ) {

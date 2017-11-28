@@ -161,6 +161,7 @@ class UR_Frontend_Form_Handler {
 		return $form_data;
 	}
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
+
 		foreach ( $valid_form_data as $data ) {
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
 				$field_key           = $data->field_name;
