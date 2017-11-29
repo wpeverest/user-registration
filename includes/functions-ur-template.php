@@ -177,25 +177,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field = '';
 
 				if (  count( $args['options'] ) > 1 ) {
-					
-
-					$i=1;
-
 					$field = '<label>' .$args['label']. '</label>';
-
+					
 					foreach ( $args['options'] as $option_key => $option_text ) {
-						if ( '' === $option_key ) {
-							
 
+						if ( '' === $option_key ) {
 							if ( empty( $args['placeholder'] ) ) {
 								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$field .= '<input ' . implode( ' ', $custom_attributes ) . ' type="checkbox" id="' . esc_attr( $args['id'] ) . '" data-value="' . $value . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '"  name="' . esc_attr( $key.'_'.$i++ ) . '" value="' . esc_attr( $option_key ) . '" ' . checked( $value, $option_key, false ) . '/>' . esc_attr( $option_text ) . '<br/>';
+						$field .= '<input ' . implode( ' ', $custom_attributes ) . ' type="checkbox" id="' . esc_attr( $args['id'] ) . '" data-value="' . $value . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '"  name="' . esc_attr( $key ) . '" value="' . esc_attr( $option_key ) . '" ' . checked( $value, $option_key, false ) . '/>' . esc_attr( $option_text ) . '<br/>';
 					}
 				}
-
 				else
 				{
 					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">

@@ -19,9 +19,10 @@ class UR_Frontend_Form_Handler {
 	public static $response_array = array();
 	private static $valid_form_data = array();
 
-
 	public static function handle_form( $form_data, $form_id ) {
-
+		
+		// echo "<pre>"; print_r($form_data); echo "</pre>";
+		
 		self::$form_id = $form_id;
 		$post_content = self::get_post_content( $form_id );
 		$post_content_array = array();
@@ -33,6 +34,9 @@ class UR_Frontend_Form_Handler {
 		}
 		self::match_password( $form_data );
 		$form_field_data = self::get_form_field_data( $post_content_array );
+
+		// echo "<pre>"; print_r($form_field_data); echo "</pre>";
+		
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
 		if ( count( self::$response_array ) == 0 ) {
@@ -46,9 +50,13 @@ class UR_Frontend_Form_Handler {
 				// When creating an user, `user_pass` is expected.
 				'role'     => $user_role,
 			);
+
+			// echo "<pre>"; print_r(self::$valid_form_data); echo "</pre>";
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 			$user_id = wp_insert_user( $userdata );
+		
+			
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
 			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 			if ( $user_id > 0 ) {
@@ -101,6 +109,7 @@ class UR_Frontend_Form_Handler {
 	}
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
+
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
 		if ( count( $duplicate_field_key ) > 0 ) {
@@ -112,7 +121,9 @@ class UR_Frontend_Form_Handler {
 		if ( false === $containsSearch ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
+
 		foreach ( $form_data as $data ) {
+			
 			if ( in_array( $data->field_name, $form_key_list ) ) {
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$form_data_index = array_search( $data->field_name, $form_key_list );
@@ -167,6 +178,7 @@ class UR_Frontend_Form_Handler {
 	}
 
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
+
 		foreach ( $valid_form_data as $data ) {
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
 				$field_key           = $data->field_name;
@@ -177,6 +189,7 @@ class UR_Frontend_Form_Handler {
 				} else {
 					$field_key = 'user_registration_' . $field_key;
 				}
+
 				update_user_meta( $user_id, $field_key, $data->value );
 				if ( isset( $data->extra_params ) ) {
 
