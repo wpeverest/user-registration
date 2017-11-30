@@ -21,14 +21,23 @@
 					var frontend_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field');
 					$.each(frontend_field, function () {
 						var single_data = this_instance.get_fieldwise_data($(this));
-
 						form_data.push(single_data);
 					});
+					form_data = this_instance.validate_form_data(form_data);
+
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
 				},
+				validate_form_data: function ( form_data ) {
+					debugger;
+					var merged_data = [];
+					for ( var data_start = 0; data_start < form_data.length; data_start++ ) {
+						debugger;
+						// do something with `substr[i]`
+					}
+				},
 				get_fieldwise_data: function ( field ) {
-				
+
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
@@ -38,13 +47,6 @@
 						case 'input':
 							switch ( field_type ) {
 								case 'checkbox':
-								debugger;
-									formwise_data.value = field.val();
-
-									var arr = [formwise_data.value] ;
-
-									arr.push(formwise_data.value);
-
 								case 'radio':
 									formwise_data.value = field.prop('checked') ? field.val() : 0;
 									break;
@@ -176,13 +178,13 @@
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
 
-										if( user_registration_params.login_option == 'admin_approval' ){
+										if ( user_registration_params.login_option == 'admin_approval' ) {
 											message.append('<li>' + ursL10n.user_under_approval + '</li>');
 										}
-										else if( user_registration_params.login_option == 'email_confirmation' ){
+										else if ( user_registration_params.login_option == 'email_confirmation' ) {
 											message.append('<li>' + ursL10n.user_email_pending + '</li>');
 										}
-										else{
+										else {
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										}
 										$this[ 0 ].reset();

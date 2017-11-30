@@ -39,16 +39,16 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_login_template_redirect() {
 	global $post;
-	$post_content = isset($post->post_content) ? $post->post_content:'';
+	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 	if ( has_shortcode( $post_content, 'user_registration_login' ) && is_user_logged_in() ) {
-	preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
-    $attributes = shortcode_parse_atts( $matches[3] );
+		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		$attributes = shortcode_parse_atts( $matches[3] );
 
-	$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
+		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
 
-	$redirect_url = trim( $redirect_url, ']' );
-	$redirect_url = trim( $redirect_url, '"' );
-	$redirect_url = trim( $redirect_url, "'" );
+		$redirect_url = trim( $redirect_url, ']' );
+		$redirect_url = trim( $redirect_url, '"' );
+		$redirect_url = trim( $redirect_url, "'" );
 
 
 		if ( ! empty( $redirect_url ) ) {
@@ -118,7 +118,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'autofocus'         => '',
 			'priority'          => '',
 		);
-		
+
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
@@ -173,28 +173,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= '<textarea name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 
 				break;
+
 			case 'checkbox' :
-				$options = $field = '';
 
-				if (  count( $args['options'] ) > 1 ) {
-					$field = '<label>' .$args['label']. '</label>';
-					
-					foreach ( $args['options'] as $option_key => $option_text ) {
+				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
+				$field   .= $args['label'] . $required . '</label>';
+				$checkbox_start =0;
+				foreach ( $choices as $choice_index => $choice ) {
 
-						if ( '' === $option_key ) {
-							if ( empty( $args['placeholder'] ) ) {
-								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
-							}
-							$custom_attributes[] = 'data-allow_clear="true"';
-						}
-						$field .= '<input ' . implode( ' ', $custom_attributes ) . ' type="checkbox" id="' . esc_attr( $args['id'] ) . '" data-value="' . $value . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '"  name="' . esc_attr( $key ) . '" value="' . esc_attr( $option_key ) . '" ' . checked( $value, $option_key, false ) . '/>' . esc_attr( $option_text ) . '<br/>';
-					}
-				}
-				else
-				{
-					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
-						<input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-				         . $args['label'] . $required . '</label>';
+					$field .= '<label>';
+					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> ';
+					$field .= $choice . ' </label>';
+
+					$checkbox_start++;
 				}
 
 				break;

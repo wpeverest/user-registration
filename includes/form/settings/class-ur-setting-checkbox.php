@@ -38,7 +38,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 
 			'custom_class' => array(
 
-				'label' => __( 'Custom Class' ,'user-registration' ),
+				'label' => __( 'Custom Class', 'user-registration' ),
 
 				'id' => $this->field_id . '_custom_class',
 
@@ -52,19 +52,19 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 
 				'default' => '',
 
-				'placeholder' => __( 'Custom Class','user-registration' ),
+				'placeholder' => __( 'Custom Class', 'user-registration' ),
 
 			),
 
-			'options'      => array(
+			'choices' => array(
 
-				'label' => __( 'Options ', 'user-registration' ),
+				'label' => __( 'Choices', 'user-registration' ),
 
-				'id' => $this->field_id . '_options',
+				'id' => $this->field_id . '_choices',
 
-				'name' => $this->field_id . '[options]',
+				'name' => $this->field_id . '[choices]',
 
-				'class' => $this->default_class . ' ur-settings-options',
+				'class' => $this->default_class . ' ur-settings-choices',
 
 				'type' => 'textarea',
 
@@ -72,7 +72,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 
 				'default' => '',
 
-				'placeholder' => __( "Please input your text here to create the checkbox list like:\nCheckbox 1,\nCheckbox 2,\nCheckbox 3",'user-registration' ),
+				'placeholder' => __( "Please input your text here to create the checkbox list like:\nCheckbox 1,\nCheckbox 2,\nCheckbox 3", 'user-registration' ),
 
 			),
 

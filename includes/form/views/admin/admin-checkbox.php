@@ -7,22 +7,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : array();
+$choices = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : array();
 ?>
 
 <div class="ur-input-type-checkbox ur-admin-template">
 
 	<div class="ur-label">
-		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
+		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 
 	</div>
 	<div class="ur-field" data-field-key="checkbox">
 
 		<?php
-			foreach ( $options as $option ) {
-				echo "<input type = 'checkbox'  value='" . esc_attr($option) . "'>" . esc_html($option) . '</option><br>';
+		foreach ( $choices as $choice ) {
+			echo "<input type = 'checkbox'  value='" . esc_attr( $choice ) . "'>" . esc_html( $choice ) . '</option><br>';
 
-			}
+		}
 		?>
 
 	</div>

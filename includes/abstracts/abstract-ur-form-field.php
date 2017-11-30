@@ -138,13 +138,13 @@ abstract class UR_Form_Field {
 		}
 
 		if( 'checkbox' == $field_key) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
 
-			if ( is_array( $option_data ) ) {
+			if ( is_array( $choices ) ) {
 
-				foreach ( $option_data as $index_data => $option ) {
+				foreach ( $choices as $index_data => $choice ) {
 
-					$form_data['options'][ $index_data . '__' . $option ] = $option;
+					$form_data['choices'][ $index_data . '__' . $choice ] = $choice;
 
 				}
 			}
