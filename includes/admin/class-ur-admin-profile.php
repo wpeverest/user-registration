@@ -67,7 +67,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$show_fields = $this->get_customer_meta_fields( $user->ID );
 
-
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
@@ -145,7 +144,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										{
 											foreach($field['choices'] as $choice)
 											{
-												?><?php echo $choice; ?> <input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
+												?><?php echo $choice; ?> <input type="checkbox" name="<?php echo esc_attr( $key ); ?>[]"
 										      	 	id="<?php echo esc_attr( $key ); ?>" value="<?php echo $choice;?>"
 										       		class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array($choice,$array) ) echo 'checked="checked"'; ?> ><br>
 										       	<?php
@@ -256,18 +255,24 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		public function save_customer_meta_fields( $user_id ) {
 			$save_fields = $this->get_customer_meta_fields( $user_id );
 
+
 			foreach ( $save_fields as $fieldset ) {
 
 				foreach ( $fieldset['fields'] as $key => $field ) {
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
-						update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
+							if(isset($_POST[$key]) && is_array($_POST[$key])){
+								$values = json_encode($_POST[$key]);
+								update_user_meta( $user_id, $key, $values );
+							}
+							else
+							{
+								update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
+							}
 					} elseif ( isset( $_POST[ $key ] ) ) {
-						echo "<pre>"; print_r($_POST[$key]); echo "</pre>";
 						update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 					}
 				}
 			}
-			die;
 		}
 
 		/**
