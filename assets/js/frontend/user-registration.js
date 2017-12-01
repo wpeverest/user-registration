@@ -83,9 +83,8 @@
 						};
 
 						form_data.push(field_data);
-
  					}
-					debugger;
+		
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
 				},

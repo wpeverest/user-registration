@@ -440,8 +440,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'mailchimp':
 								case 'checkbox':
 
-									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : array();
-
+									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
+									
 									$choices_data = explode( ",", $choices_data );
 
 									$fields[ $field_index ]['choices'] = $choices_data;
