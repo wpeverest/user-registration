@@ -135,9 +135,34 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php endforeach; ?>
 									</select>
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
-									<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
-									       id="<?php echo esc_attr( $key ); ?>" value="1"
-									       class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( (int) get_user_meta( $user->ID, $key, true ), 1, true ); ?> />
+									<?php
+
+										$json = get_user_meta($user->ID,$key,true);
+
+										$array = (array)json_decode($json, true);
+										
+										if(count($field['choices'])>1 &&  is_array($field['choices']))
+										{
+											foreach($field['choices'] as $choice)
+											{
+												?><?php echo $choice; ?> <input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
+										      	 	id="<?php echo esc_attr( $key ); ?>" value="<?php echo $choice;?>"
+										       		class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array($choice,$array) ) echo 'checked="checked"'; ?> ><br>
+										       	<?php
+										    }
+										}
+										else
+										{
+											?>
+												<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
+										      	 	id="<?php echo esc_attr( $key ); ?>" value="1" class="<?php echo esc_attr( $field['class'] ); ?>" <?php if($json == '1') echo 'checked="checked"';?> >
+											<?php
+										}
+
+
+									?>
+
+
 								<?php elseif ( ! empty( $field['type'] ) && 'button' === $field['type'] ) : ?>
 									<button id="<?php echo esc_attr( $key ); ?>"
 									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
@@ -234,14 +259,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			foreach ( $save_fields as $fieldset ) {
 
 				foreach ( $fieldset['fields'] as $key => $field ) {
-
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
 					} elseif ( isset( $_POST[ $key ] ) ) {
+						echo "<pre>"; print_r($_POST[$key]); echo "</pre>";
 						update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 					}
 				}
 			}
+			die;
 		}
 
 		/**
@@ -410,10 +436,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'mailchimp':
 								case 'checkbox':
 
-									$fields[ $field_index ]['type'] = 'checkbox';
+									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : array();
 
-									$fields[ $field_index ]['class'] = '';
+									$choices_data = explode(",",$choices_data);						
+					
+									$fields[$field_index]['choices'] = $choices_data;
 
+									$fields[ $field_index ]['type']  = 'checkbox';
+									$fields[ $field_index ]['class'] = '';										
+									
 									break;
 							}
 						}// End switch().
