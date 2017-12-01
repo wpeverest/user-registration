@@ -73,16 +73,18 @@
 							}
 						});
  						var field_value_json = JSON.stringify(field_value);
+ 						var single_form_field_name = multi_value_field[ multi_start ];
+						single_form_field_name = single_form_field_name.replace('[]', '');
 						var field_data = {
 							value: field_value_json,
 							field_type: field.eq(0).attr('id').replace('ur-input-type-', ''),
 							label: field.eq(0).attr('data-label'),
-							field_name: multi_value_field[ multi_start ],
+							field_name: single_form_field_name,
 						};
 
 						form_data.push(field_data);
 
-					}
+ 					}
 					debugger;
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
