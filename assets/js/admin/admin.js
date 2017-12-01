@@ -3,27 +3,25 @@
  * global i18n_admin
  */
 
-jQuery(function(){
+jQuery(function () {
 
 	var mySelect = jQuery('#user_registration_general_setting_login_options option:selected').val();
-	if(mySelect == 'email_confirmation'){
+	if ( mySelect == 'email_confirmation' ) {
 		jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
 		jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
 	}
 
-	jQuery("body").on('select2:select', "#user_registration_general_setting_login_options", function(){
+	jQuery("body").on('select2:select', "#user_registration_general_setting_login_options", function () {
 
-        if(jQuery(this).find('option:selected').val() == "email_confirmation"){
-          jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
-	      jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
-        }
-        else
-          {
-             jQuery("#user_registration_general_setting_disable_email").attr("disabled", false);
-          }	
+		if ( jQuery(this).find('option:selected').val() == "email_confirmation" ) {
+			jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
+			jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
+		}
+		else {
+			jQuery("#user_registration_general_setting_disable_email").attr("disabled", false);
+		}
 	});
 });
-
 
 
 jQuery(function ( $ ) {
@@ -42,7 +40,7 @@ jQuery(function ( $ ) {
 			$(this).closest('a, th').attr('data-tip', $(this).data('tip')).tipTip(tiptip_args).css('cursor', 'help');
 		});
 	}).trigger('init_tooltips');
-	$('body').on('keypress','#ur-form-name', function (e) {
+	$('body').on('keypress', '#ur-form-name', function ( e ) {
 		if ( 13 === e.which ) {
 			$('#save_form_footer').eq(0).trigger('click');
 		}
@@ -664,7 +662,7 @@ jQuery(function ( $ ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var this_node_id = $this_node.attr('id');
 		var hidden_node = wrapper.find('.ur-advance-setting-block').find('#' + this_node_id);
-		switch ( node_type ) {
+ 		switch ( node_type ) {
 			case 'input':
 				hidden_node.val($this_node.val());
 				break;
@@ -673,11 +671,35 @@ jQuery(function ( $ ) {
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());
-				render_select_box($this_node.val());
+				render_text_area($this_node.val());
 				break;
 		}
 	}
 
+	function  render_text_area (value) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		var field_type  = wrapper.find('.ur-field');
+		switch ( field_type.attr('data-field-key') ) {
+			case 'select':
+				render_select_box(value);
+				break;
+			case 'checkbox':
+				render_check_box(value);
+				break;
+		}
+	}
+	function render_check_box ( value ) {
+		value = $.trim(value);
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		var checkbox = wrapper.find('.ur-field');
+		checkbox.html('');
+		var array_value = value.split(',');
+		for ( var i = 0; i < array_value.length; i++ ) {
+			if ( array_value[ i ] !== '' ) {
+				checkbox.append('<label><input value="' + array_value[ i ] + '" type="checkbox">' + array_value[ i ] +'</label>' );
+			}
+		}
+	}
 	function render_select_box ( value ) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
