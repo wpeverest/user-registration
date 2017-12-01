@@ -21,8 +21,6 @@ class UR_Frontend_Form_Handler {
 
 	public static function handle_form( $form_data, $form_id ) {
 
-		// echo "<pre>"; print_r($form_data); echo "</pre>";
-
 		self::$form_id = $form_id;
 		$post_content = self::get_post_content( $form_id );
 		$post_content_array = array();
@@ -34,8 +32,6 @@ class UR_Frontend_Form_Handler {
 		}
 		self::match_password( $form_data );
 		$form_field_data = self::get_form_field_data( $post_content_array );
-
-		// echo "<pre>"; print_r($form_field_data); echo "</pre>";
 
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
@@ -51,8 +47,7 @@ class UR_Frontend_Form_Handler {
 				'role'     => $user_role,
 			);
 
-			// echo "<pre>"; print_r(self::$valid_form_data); echo "</pre>";
-			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
+				self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 			$user_id = wp_insert_user( $userdata );
 

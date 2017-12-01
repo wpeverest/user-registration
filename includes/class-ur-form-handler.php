@@ -79,6 +79,8 @@ class UR_Form_Handler {
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox' :
+				echo "<pre>"; print_r($_POST);die;
+
 					$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					break;
 				default :

@@ -98,7 +98,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
-
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -176,15 +175,25 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'checkbox' :
 			
-			if(count($args['choices'])>1){
+			if(isset($args['choices']) && count($args['choices'])>1 ){
+
+				$default = !empty($args['default']) ? json_decode( $args['default']  ) : array();
+
+				echo "<pre>"; print_r($default); echo "</pre>";
 
 				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+
 				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 				$field   .= $args['label'] . $required . '</label>';
 				$checkbox_start =0;
 				foreach ( $choices as $choice_index => $choice ) {
+					$value = '';
+					if ( in_array($choice,$default) ) {
+						$value = 'checked="checked"';
+					}
+
 					$field .= '<label>';
-					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="'.trim($choice).'" ' . checked( $value, 1, false ) . ' /> ';
+					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" value="'.trim($choice).' "' . $value . ' /> ';
 					$field .= $choice . ' </label>';
 
 					$checkbox_start++;
@@ -338,6 +347,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						switch ( $field_key ) {
 							case 'select':
 								$extra_params['options'] = explode( ',', $field->advance_setting->options );
+								break;
+							case 'checkbox':
+								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
 								break;
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
