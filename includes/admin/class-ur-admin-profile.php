@@ -67,7 +67,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$show_fields = $this->get_customer_meta_fields( $user->ID );
 
-
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
@@ -117,7 +116,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
-										$selected       = esc_attr( get_user_meta( $user->ID, $key, true ) );
+										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
 										foreach ( $field['options'] as $option_key => $option_value ) : ?>
 											<option data-val="<?php echo $selected; ?>"
 											        value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
@@ -135,9 +134,36 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php endforeach; ?>
 									</select>
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
-									<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
-									       id="<?php echo esc_attr( $key ); ?>" value="1"
-									       class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( (int) get_user_meta( $user->ID, $key, true ), 1, true ); ?> />
+									<?php
+
+									$json = get_user_meta( $user->ID, $key, true );
+
+									$array = (array) json_decode( $json, true );
+									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
+										foreach ( $field['choices'] as $choice ) {
+											?><?php echo $choice; ?> <input type="checkbox"
+											                                name="<?php echo esc_attr( $key ); ?>[]"
+											                                id="<?php echo esc_attr( $key ); ?>"
+											                                value="<?php echo $choice; ?>"
+											                                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array( trim( $choice ), $array ) ) {
+												echo 'checked="checked"';
+											} ?> ><br>
+											<?php
+										}
+									} else {
+										?>
+										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
+										       id="<?php echo esc_attr( $key ); ?>" value="1"
+										       class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( $json == '1' ) {
+											echo 'checked="checked"';
+										} ?> >
+										<?php
+									}
+
+
+									?>
+
+
 								<?php elseif ( ! empty( $field['type'] ) && 'button' === $field['type'] ) : ?>
 									<button id="<?php echo esc_attr( $key ); ?>"
 									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
@@ -234,9 +260,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			foreach ( $save_fields as $fieldset ) {
 
 				foreach ( $fieldset['fields'] as $key => $field ) {
-
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
-						update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
+						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+							$values = json_encode( $_POST[ $key ] );
+							update_user_meta( $user_id, $key, $values );
+						} else {
+							update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
+						}
 					} elseif ( isset( $_POST[ $key ] ) ) {
 						update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 					}
@@ -410,8 +440,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'mailchimp':
 								case 'checkbox':
 
-									$fields[ $field_index ]['type'] = 'checkbox';
+									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
+									
+									$choices_data = explode( ",", $choices_data );
 
+									$fields[ $field_index ]['choices'] = $choices_data;
+
+									$fields[ $field_index ]['type']  = 'checkbox';
 									$fields[ $field_index ]['class'] = '';
 
 									break;

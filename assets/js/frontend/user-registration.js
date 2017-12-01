@@ -19,24 +19,88 @@
 					var this_instance = this;
 					var form_data = [];
 					var frontend_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field');
+					var multi_value_field = new Array();
 					$.each(frontend_field, function () {
-						var single_data = this_instance.get_fieldwise_data($(this));
-						form_data.push(single_data);
+						var field_name = $(this).attr('name');
+						var single_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+						if ( single_field.length < 2 ) {
+							var single_data = this_instance.get_fieldwise_data($(this));
+							form_data.push(single_data);
+						} else {
+							if ( $.inArray(field_name, multi_value_field) < 0 ) {
+								multi_value_field.push(field_name);
+
+							}
+						}
 					});
+
+
+					for ( var multi_start = 0; multi_start < multi_value_field.length; multi_start++ ) {
+
+						var field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[ multi_start ] + '"]');
+
+						var node_type = field.get(0).tagName.toLowerCase();
+						var field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
+						var field_value = new Array();
+						$.each(field, function () {
+							var this_field = $(this);
+
+							var this_field_value = '';
+
+							switch ( this_field.get(0).tagName.toLowerCase() ) {
+
+								case 'input':
+									switch ( field_type ) {
+										case 'checkbox':
+										case 'radio':
+											this_field_value = this_field.prop('checked') ? this_field.val() : '';
+											break;
+										default:
+											this_field_value = this_field.val();
+
+									}
+									break;
+								case 'select':
+									this_field_value = this_field.val();
+									break;
+								case 'textarea':
+									this_field_value = this_field.val();
+									break;
+								default:
+							}
+							if ( this_field_value !== '' ) {
+								field_value.push(this_field_value);
+							}
+						});
+ 						var field_value_json = JSON.stringify(field_value);
+ 						var single_form_field_name = multi_value_field[ multi_start ];
+						single_form_field_name = single_form_field_name.replace('[]', '');
+						var field_data = {
+							value: field_value_json,
+							field_type: field.eq(0).attr('id').replace('ur-input-type-', ''),
+							label: field.eq(0).attr('data-label'),
+							field_name: single_form_field_name,
+						};
+
+						form_data.push(field_data);
+ 					}
+		
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
 				},
 				get_fieldwise_data: function ( field ) {
+
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
 					formwise_data.value = '';
+
 					switch ( node_type ) {
 						case 'input':
 							switch ( field_type ) {
 								case 'checkbox':
 								case 'radio':
-									formwise_data.value = field.prop('checked') ? field.val() : 0;
+									formwise_data.value = field.prop('checked') ? field.val() : '';
 									break;
 								default:
 									formwise_data.value = field.val();
@@ -109,6 +173,7 @@
 						if ( $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1 ) {
 							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
 						}
+
 						var data = {
 							action: 'user_registration_user_form_submit',
 							security: user_registration_params.user_registration_form_data_save,
@@ -165,13 +230,13 @@
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
 
-										if( user_registration_params.login_option == 'admin_approval' ){
+										if ( user_registration_params.login_option == 'admin_approval' ) {
 											message.append('<li>' + ursL10n.user_under_approval + '</li>');
 										}
-										else if( user_registration_params.login_option == 'email_confirmation' ){
+										else if ( user_registration_params.login_option == 'email_confirmation' ) {
 											message.append('<li>' + ursL10n.user_email_pending + '</li>');
 										}
-										else{
+										else {
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										}
 										$this[ 0 ].reset();

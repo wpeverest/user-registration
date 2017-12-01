@@ -137,6 +137,19 @@ abstract class UR_Form_Field {
 			}
 		}
 
+		if( 'checkbox' == $field_key) {
+			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
+
+			if ( is_array( $choices ) ) {
+
+				foreach ( $choices as $index_data => $choice ) {
+
+					$form_data['choices'][ $index_data . '__' . $choice ] = $choice;
+
+				}
+			}
+		}
+
 		$filter_data = array(
 			'form_data' => $form_data,
 			'data'      => $data

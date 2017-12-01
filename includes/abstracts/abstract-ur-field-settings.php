@@ -88,6 +88,7 @@ abstract class UR_Field_Settings {
 						$this->fields_html .= ' required ';
 
 					}
+
 					$field_options = isset( $field['options'] ) ? $field['options'] : array();
 
 					$this->fields_html .= '>';

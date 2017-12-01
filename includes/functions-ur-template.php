@@ -39,16 +39,16 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_login_template_redirect() {
 	global $post;
-	$post_content = isset($post->post_content) ? $post->post_content:'';
+	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 	if ( has_shortcode( $post_content, 'user_registration_login' ) && is_user_logged_in() ) {
-	preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
-    $attributes = shortcode_parse_atts( $matches[3] );
+		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		$attributes = shortcode_parse_atts( $matches[3] );
 
-	$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
+		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
 
-	$redirect_url = trim( $redirect_url, ']' );
-	$redirect_url = trim( $redirect_url, '"' );
-	$redirect_url = trim( $redirect_url, "'" );
+		$redirect_url = trim( $redirect_url, ']' );
+		$redirect_url = trim( $redirect_url, '"' );
+		$redirect_url = trim( $redirect_url, "'" );
 
 
 		if ( ! empty( $redirect_url ) ) {
@@ -98,7 +98,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
-
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -118,6 +117,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'autofocus'         => '',
 			'priority'          => '',
 		);
+
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
@@ -172,13 +172,40 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= '<textarea name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 
 				break;
+
 			case 'checkbox' :
 
+			if(isset($args['choices']) && count($args['choices'])>1 ){
+
+				$default = !empty($args['default']) ? json_decode( $args['default']  ) : array();
+
+				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+
+				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
+				$field   .= $args['label'] . $required . '</label>';
+				$checkbox_start =0;
+				foreach ( $choices as $choice_index => $choice ) {
+
+					$value = '';
+					if ( in_array($choice, $default) ) {
+						$value = 'checked="checked"';
+					}
+
+					$field .= '<label>';
+					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" value="'.trim($choice).'"' . $value . ' /> ';
+					$field .= $choice . ' </label>';
+
+					$checkbox_start++;
+				}
+			}
+			else
+			{
 				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
 						<input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 				         . $args['label'] . $required . '</label>';
+			}
 
-				break;
+			break;
 			case 'password' :
 			case 'text' :
 			case 'email' :
@@ -193,7 +220,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 			case 'select' :
 				$options = $field = '';
-
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						if ( '' === $option_key ) {
@@ -320,6 +346,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						switch ( $field_key ) {
 							case 'select':
 								$extra_params['options'] = explode( ',', $field->advance_setting->options );
+								break;
+							case 'checkbox':
+								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
 								break;
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
