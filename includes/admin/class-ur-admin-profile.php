@@ -255,7 +255,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		public function save_customer_meta_fields( $user_id ) {
 			$save_fields = $this->get_customer_meta_fields( $user_id );
 
-
 			foreach ( $save_fields as $fieldset ) {
 
 				foreach ( $fieldset['fields'] as $key => $field ) {

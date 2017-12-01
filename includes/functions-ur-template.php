@@ -179,14 +179,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$default = !empty($args['default']) ? json_decode( $args['default']  ) : array();
 
-				echo "<pre>"; print_r($default); echo "</pre>";
-
 				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 
 				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 				$field   .= $args['label'] . $required . '</label>';
 				$checkbox_start =0;
 				foreach ( $choices as $choice_index => $choice ) {
+
 					$value = '';
 					if ( in_array($choice, $default) ) {
 						$value = 'checked="checked"';
