@@ -240,10 +240,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 						foreach ( $checkbox_array as $check ) {
 
-							echo '<label><input checked type="checkbox" disabled="disabled"/>' . $check . '</label><br/>';
+							echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label><br/>';
 						}
 					} else {
-						echo '<label><input checked type="checkbox" disabled="disabled"/>' . $value . '</label>';
+						echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($value) . '</label>';
 
 					}
 
