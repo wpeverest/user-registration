@@ -1,6 +1,6 @@
 === User Registration ===
 Contributors: WPEverest
-Tags: user registration, registration, profile-builder, user profile, form, registration form, login form
+Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login
 Requires at least: 4.0
 Tested up to: 4.9
 Stable tag: 1.1.5
@@ -75,6 +75,21 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 9. Login Form
 10. Settings
 11. Shortcode
+
+
+### Premium Addons
+
+User Registration can be easily extended with some premium addons.
+
+* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
+
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
+
+* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allow you to add upload field in registration form so that users can upload documents, images and more.
+
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+
+* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Let you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
 == Changelog ==
 = 1.1.5 - 24/11/2017 =
