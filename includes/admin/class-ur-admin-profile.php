@@ -142,10 +142,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
-											                                name="<?php echo esc_attr( $key ); ?>[]"
-											                                id="<?php echo esc_attr( $key ); ?>"
-											                                value="<?php echo esc_attr(trim($choice)); ?>"
-											                                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array( trim( $choice ), $array ) ) {
+											                name="<?php echo esc_attr( $key ); ?>[]"
+											                id="<?php echo esc_attr( $key ); ?>"
+											                value="<?php echo esc_attr( trim( $choice ) ); ?>"
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array( trim( $choice ), $array ) ) {
 												echo 'checked="checked"';
 											} ?> ><?php echo $choice; ?></label><br/>
 											<?php
@@ -232,6 +232,21 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					} else {
 						echo __( 'Attachment not found.', 'user-registration' );
 					}
+					break;
+				case "checkbox":
+
+					$checkbox_array = json_decode( $value, true );
+					if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
+
+						foreach ( $checkbox_array as $check ) {
+
+							echo '<label><input checked type="checkbox" disabled="disabled"/>' . $check . '</label><br/>';
+						}
+					} else {
+						echo '<label><input checked type="checkbox" disabled="disabled"/>' . $value . '</label>';
+
+					}
+
 					break;
 
 				default:
