@@ -175,21 +175,29 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox' :
+			
+			if(count($args['choices'])>1){
 
 				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 				$field   .= $args['label'] . $required . '</label>';
 				$checkbox_start =0;
 				foreach ( $choices as $choice_index => $choice ) {
-
 					$field .= '<label>';
 					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="'.trim($choice).'" ' . checked( $value, 1, false ) . ' /> ';
 					$field .= $choice . ' </label>';
 
 					$checkbox_start++;
 				}
+			}
+			else
+			{
+				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
+						<input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+				         . $args['label'] . $required . '</label>';
+			}
 
-				break;
+			break;
 			case 'password' :
 			case 'text' :
 			case 'email' :
