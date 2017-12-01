@@ -144,7 +144,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											?><label><input type="checkbox"
 											                                name="<?php echo esc_attr( $key ); ?>[]"
 											                                id="<?php echo esc_attr( $key ); ?>"
-											                                value="<?php echo $choice; ?>"
+											                                value="<?php echo esc_attr(trim($choice)); ?>"
 											                                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array( trim( $choice ), $array ) ) {
 												echo 'checked="checked"';
 											} ?> ><?php echo $choice; ?></label><br/>
