@@ -696,7 +696,7 @@ jQuery(function ( $ ) {
 		var array_value = value.split(',');
 		for ( var i = 0; i < array_value.length; i++ ) {
 			if ( array_value[ i ] !== '' ) {
-				checkbox.append('<label><input value="' + array_value[ i ] + '" type="checkbox">' + array_value[ i ] +'</label>' );
+				checkbox.append('<label><input value="' + array_value[ i ].trim() + '" type="checkbox">' + array_value[ i ] +'</label>' );
 			}
 		}
 	}
