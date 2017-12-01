@@ -187,7 +187,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				foreach ( $choices as $choice_index => $choice ) {
 
 					$value = '';
-					if ( in_array($choice, $default) ) {
+					if ( in_array(trim($choice), $default) ) {
 						$value = 'checked="checked"';
 					}
 
