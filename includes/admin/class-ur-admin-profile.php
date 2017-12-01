@@ -141,13 +141,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$array = (array) json_decode( $json, true );
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
-											?><?php echo $choice; ?> <input type="checkbox"
+											?><label><input type="checkbox"
 											                                name="<?php echo esc_attr( $key ); ?>[]"
 											                                id="<?php echo esc_attr( $key ); ?>"
 											                                value="<?php echo $choice; ?>"
 											                                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( in_array( trim( $choice ), $array ) ) {
 												echo 'checked="checked"';
-											} ?> ><br>
+											} ?> ><?php echo $choice; ?></label><br/>
 											<?php
 										}
 									} else {
@@ -441,7 +441,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'checkbox':
 
 									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
-									
+
 									$choices_data = explode( ",", $choices_data );
 
 									$fields[ $field_index ]['choices'] = $choices_data;
