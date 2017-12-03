@@ -41,6 +41,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Profile account page
 * Admin approval option
 * Auto login option
+* Email confirmation to register
 * Enable/Disable Strong Password
 * Default User Role Selection Option
 * Well Documented
@@ -92,7 +93,7 @@ User Registration can be easily extended with some premium addons.
 * [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Let you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
 == Changelog ==
-= 1.1.5 - 24/11/2017 =
+= 1.1.5 - 03/12/2017 =
 * Feature - Introduced Checkbox form field
 * Feature - Email confirmation option for login
 * Feature - Disable Email option
