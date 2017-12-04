@@ -47,6 +47,20 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Well Documented
 * Translation ready
 
+### Premium Addons
+
+User Registration can be easily extended with some premium addons.
+
+* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
+
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
+
+* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allow you to add upload field in registration form so that users can upload documents, images and more.
+
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+
+* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Let you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -77,20 +91,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 10. Settings
 11. Shortcode
 
-
-### Premium Addons
-
-User Registration can be easily extended with some premium addons.
-
-* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
-
-* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
-
-* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allow you to add upload field in registration form so that users can upload documents, images and more.
-
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
-
-* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Let you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
 == Changelog ==
 = 1.1.5 - 03/12/2017 =
