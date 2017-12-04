@@ -91,7 +91,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 10. Settings
 11. Shortcode
 
-
 == Changelog ==
 = 1.1.5 - 03/12/2017 =
 * Feature - Introduced Checkbox form field
