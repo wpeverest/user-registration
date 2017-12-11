@@ -333,10 +333,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type  = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
-					$required    = 'yes' == $field->general_setting->required ? true : false;
+					$required    = isset( $general_setting->required ) ? $general_setting->required :'';
+
+					$required    = 'yes' == $required ? true : false;
 
 					if ( empty( $field_label ) ) {
-						$field_label_array = explode( '_', $field->general_setting->field_name );
+						$field_label_array = explode( '_', $field_name );
 						$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
 					}
 
