@@ -110,7 +110,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<label
 									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
 							</th>
-							<td>
+							<td>	
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
@@ -122,6 +122,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											        value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
+								
 								<?php elseif ( ! empty( $field['type'] ) && 'country' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
@@ -133,6 +134,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
+								
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
 
@@ -159,11 +161,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										} ?> >
 										<?php
 									}
-
-
-									?>
-
-
+								?>
 								<?php elseif ( ! empty( $field['type'] ) && 'button' === $field['type'] ) : ?>
 									<button id="<?php echo esc_attr( $key ); ?>"
 									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
@@ -175,7 +173,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php echo esc_attr( $attribute_string ); ?>
 										      rows="5"
 										      cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
-								<?php else  :
+
+								<?php else  :							
+
 									if ( ! empty( $field['type'] ) ) {
 										$data = array(
 											'key'              => $key,
@@ -197,8 +197,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-										<?php } else {
-
+										<?php } else {										
 											$this->show_undefined_fields( $key, $user->ID, $field, $extra_params );
 										}
 									} endif; ?>
@@ -223,6 +222,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$value     = $this->get_user_meta( $user_id, $key );
 			$field_key = $extra_params->field_key;
+
 			$type      = 'hidden';
 			switch ( $field_key ) {
 				case "file":
@@ -249,6 +249,41 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 					break;
 
+				case "select":
+				
+					$result = explode('__',$value);
+					if( is_array( $result ) && isset( $result[1] )){
+						$value = $result[1];
+					}
+
+					?>
+						<select name="<?php echo esc_attr( $key ); ?>"
+							    id="<?php echo esc_attr( $key );?>"
+							    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+						disabled/>
+						<option><?php echo esc_attr( $value );?></option>
+					<?php
+					break;
+
+				case "country":
+					
+					include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
+
+					$country = new UR_Country;
+					$countries = $country->get_country();
+
+					if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
+						?>
+							<select name="<?php echo esc_attr( $key ); ?>"
+								    id="<?php echo esc_attr( $key );?>"
+								    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+							disabled/>
+							<option><?php echo esc_attr( $countries[$value] );?></option>
+						<?php
+					}
+					
+					break;
+				
 				default:
 					$type = 'text';
 			}
