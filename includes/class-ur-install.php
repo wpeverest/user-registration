@@ -213,6 +213,7 @@ class UR_Install {
 	private static function update() {
 		$current_db_version = get_option( 'user_registration_db_version' );
 		$update_queued      = false;
+		$get_admin_notices  = get_option( 'user_registration_admin_notices' );
 
 		foreach ( self::$db_updates as $version => $update_callbacks ) {
 			if ( version_compare( $current_db_version, $version, '<' ) ) {
@@ -225,6 +226,7 @@ class UR_Install {
 
 		if ( $update_queued ) {
 			self::$background_updater->save()->dispatch();
+			update_option('user_registration_admin_notices', $get_admin_notices);
 		}
 	}
 
