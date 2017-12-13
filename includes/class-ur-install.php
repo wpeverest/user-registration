@@ -392,6 +392,26 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 	}
 
+	public static function remove_roles() {
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+
+		$capabilities = self::get_core_capabilities();
+
+		foreach ( $capabilities as $cap_group ) {
+			foreach ( $cap_group as $cap ) {
+				$wp_roles->remove_cap( 'administrator', $cap );
+			}
+		}
+	}
+
 	/**
 	 * Get capabilities for User Registration.
 	 *
