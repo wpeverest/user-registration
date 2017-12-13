@@ -20,10 +20,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  * and to ensure only the site owner can perform this action.
  */
 if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA ) {
+	
 	// Roles + caps.
-	include_once( dirname( __FILE__ ) . '/includes/class-ur-install.php' );
-	UR_Install::remove_roles();
-
+	
 	// Pages.
 	wp_trash_post( get_option( 'user_registration_myaccount_page_id' ) );
 	wp_trash_post( get_option( 'user_registration_default_form_page_id' ) );
