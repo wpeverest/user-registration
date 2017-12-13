@@ -21,8 +21,14 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  */
 if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA ) {
 	
+	global $wpdb;
+
 	// Roles + caps.
+	define('UR_PLUGIN_BASENAME',true);
 	
+	include_once( dirname( __FILE__ ) . '/includes/class-ur-install.php' );
+	UR_Install::remove_roles();
+
 	// Pages.
 	wp_trash_post( get_option( 'user_registration_myaccount_page_id' ) );
 	wp_trash_post( get_option( 'user_registration_default_form_page_id' ) );
