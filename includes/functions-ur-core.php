@@ -373,6 +373,8 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'date':
 				$field_type = 'date';
+			case 'radio':
+				$field_type = 'radio';
 				break;
 		}
 	}
@@ -465,7 +467,8 @@ function ur_get_registered_form_fields() {
 		'textarea',
 		'number',
 		'date',
-		'checkbox'
+		'checkbox',
+		'radio'
 	) );
 }
 
