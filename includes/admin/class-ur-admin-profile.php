@@ -78,6 +78,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'checkbox',
 						'button',
 						'textarea',
+						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
@@ -105,6 +106,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
+
 						<tr>
 							<th>
 								<label
@@ -134,7 +136,27 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
-								
+
+								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
+									<?php 
+									$db_value = get_user_meta( $user->ID, $key, true );
+									$db_value = explode("_", $db_value);
+									$db_value = isset( $db_value[1] ) ? $db_value[1] : '';
+
+									if( is_array( $field['options'] ) ) {
+										foreach( $field['options'] as $option ) {
+											?>
+											<label><input type="radio"
+											                name="<?php echo esc_attr( $key ); ?>[]"
+											                id="<?php echo esc_attr( $key ); ?>"
+											                value="<?php echo esc_attr( trim( $option ) ); ?>"
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, $option, true ); ?>  ><?php echo $option; ?>
+											</label><br/>
+											<?php
+										}
+									}
+									?>
+
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
 
@@ -469,6 +491,21 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$fields[ $field_index ]['class'] = '';
 									}
 									break;
+								case 'radio':
+
+									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+
+									if ( is_array( $option_data ) && $field_index != '' ) {
+
+										foreach ( $option_data as $index_data => $option ) {
+
+											$fields[ $field_index ]['options'][ $index_data . '__' . $option ] = $option;
+										}
+										$fields[ $field_index ]['type']  = 'radio';
+										$fields[ $field_index ]['class'] = '';
+									}
+									break;
+
 								case 'country':
 
 									$country = ur_load_form_field_class( $field_key );
