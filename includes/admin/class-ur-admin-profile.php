@@ -51,7 +51,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					),
 				) );
 			}
-
 			return $show_fields;
 		}
 
@@ -140,17 +139,17 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
 									<?php 
 									$db_value = get_user_meta( $user->ID, $key, true );
-									$db_value = explode("_", $db_value);
+									$db_value = explode("__", $db_value);
 									$db_value = isset( $db_value[1] ) ? $db_value[1] : '';
 
 									if( is_array( $field['options'] ) ) {
-										foreach( $field['options'] as $option ) {
+										foreach( $field['options'] as $option_key => $option_value ) {
 											?>
 											<label><input type="radio"
-											                name="<?php echo esc_attr( $key ); ?>[]"
+											                name="<?php echo esc_attr( $key ); ?>"
 											                id="<?php echo esc_attr( $key ); ?>"
-											                value="<?php echo esc_attr( trim( $option ) ); ?>"
-											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, $option, true ); ?>  ><?php echo $option; ?>
+											                value="<?php echo esc_attr( trim( $option_key ) ); ?>"
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, $option_value, true ); ?>  ><?php echo $option_value; ?>
 											</label><br/>
 											<?php
 										}
@@ -273,7 +272,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 				case "select":
 				
-					$result = explode('__',$value);
+					$result = explode('__', $value);
 					if( is_array( $result ) && isset( $result[1] )){
 						$value = $result[1];
 					}
@@ -284,6 +283,19 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 						disabled/>
 						<option><?php echo esc_attr( $value );?></option>
+					<?php
+					break;
+
+				case "radio":
+
+					$result = explode('__', $value);
+					if( is_array( $result ) && isset( $result[1] )){
+						$value = $result[1];
+					}
+					?>
+						<input type="radio" name="<?php echo esc_attr( $key ); ?>"
+			       id="<?php echo esc_attr( $key ); ?>"
+			       value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?>
 					<?php
 					break;
 
@@ -327,16 +339,21 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int $user_id User ID of the user being saved
 		 */
 		public function save_customer_meta_fields( $user_id ) {
+
 			$save_fields = $this->get_customer_meta_fields( $user_id );
 
 			foreach ( $save_fields as $fieldset ) {
-
 				foreach ( $fieldset['fields'] as $key => $field ) {
+
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
 							$values = json_encode( $_POST[ $key ] );
 							update_user_meta( $user_id, $key, $values );
-						} else {
+						} 
+						elseif( isset( $field['type'] ) && 'radio' === $field['type'] ) {
+
+						}
+						else {
 							update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
 						}
 					} elseif ( isset( $_POST[ $key ] ) ) {
@@ -502,6 +519,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											$fields[ $field_index ]['options'][ $index_data . '__' . $option ] = $option;
 										}
 										$fields[ $field_index ]['type']  = 'radio';
+
 										$fields[ $field_index ]['class'] = '';
 									}
 									break;
