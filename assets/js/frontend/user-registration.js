@@ -72,8 +72,14 @@
 								field_value.push(this_field_value);
 							}
 						});
- 						var field_value_json = JSON.stringify(field_value);
- 						var single_form_field_name = multi_value_field[ multi_start ];
+
+						if(field_type == 'checkbox'){
+							var field_value_json = JSON.stringify(field_value);
+						}else
+						{
+							var field_value_json = field.val();			
+						}
+						var single_form_field_name = multi_value_field[ multi_start ];
 						single_form_field_name = single_form_field_name.replace('[]', '');
 						var field_data = {
 							value: field_value_json,
@@ -94,7 +100,6 @@
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
 					formwise_data.value = '';
-
 					switch ( node_type ) {
 						case 'input':
 							switch ( field_type ) {

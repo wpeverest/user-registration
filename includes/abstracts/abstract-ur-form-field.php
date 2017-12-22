@@ -136,6 +136,19 @@ abstract class UR_Form_Field {
 				}
 			}
 		}
+		if ( 'radio' == $field_key ) {
+
+			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+
+			if ( is_array( $option_data ) ) {
+
+				foreach ( $option_data as $index_data => $option ) {
+
+					$form_data['options'][ $index_data . '__' . $option ] = $option;
+
+				}
+			}
+		}
 
 		if( 'checkbox' == $field_key) {
 			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
