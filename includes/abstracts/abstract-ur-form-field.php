@@ -171,13 +171,10 @@ abstract class UR_Form_Field {
 		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
-
+		
 		user_registration_form_field( $data['general_setting']->field_name, $form_data );
 
-		echo "<pre>"; print_r($form_data); echo "</pre>"; 
-
 	}
-
 
 	public function get_field_advance_settings() {
 

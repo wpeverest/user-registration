@@ -70,12 +70,12 @@ class UR_Form_Handler {
 		}
 		$profile = user_registration_form_data( $user_id, $form_id );
 
+
 		foreach ( $profile as $key => $field ) {
 
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
-
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox' :
@@ -121,6 +121,7 @@ class UR_Form_Handler {
 			}
 		}// End foreach().
 
+
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 
@@ -140,10 +141,7 @@ class UR_Form_Handler {
 						$user_data['display_name'] = $_POST[ $key ];
 					} else {
 						$user_data[ $new_key ] = $_POST[ $key ];
-
-
 					}
-
 
 				} else {
 

@@ -220,8 +220,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 			case 'select' :
 				$options = $field = '';
+				$value = explode('__', $value);
+				$value = isset( $value[1] ) ? $value[1] : '';
+
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
+
 						if ( '' === $option_key ) {
 							// If we have a blank option, select2 needs a placeholder
 							if ( empty( $args['placeholder'] ) ) {
@@ -229,7 +233,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$options .= '<option value="' . esc_attr( $option_key ) . '" ' . selected( $value, $option_key, false ) . '>' . esc_attr( $option_text ) . '</option>';
+						$options .= '<option value="' . esc_attr( $option_key.'__'.$option_text ) . '" ' . selected( $value, $option_text, false ) . '>' . esc_attr( $option_text ) . '</option>';
 					}
 
 					$field .= '<select name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
@@ -239,10 +243,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				break;
 			case 'radio' :
+				$value = explode('__', $value);
+				$value = isset( $value[1] ) ? $value[1] : '';
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
-						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
+						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key.'__'.$option_text ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_text, false ) . ' />';
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . wp_kses( $option_text, array(
 								'a'    => array(
 									'href'  => array(),
@@ -344,6 +350,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						$extra_params = array();
 
 						switch ( $field_key ) {
+							case 'radio':
 							case 'select':
 								$extra_params['options'] = explode( ',', $field->advance_setting->options );
 								break;
