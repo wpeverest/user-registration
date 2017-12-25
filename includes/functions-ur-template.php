@@ -98,6 +98,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
+
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -166,7 +167,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<p class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</p>';
 
-		switch ( $args['field_key'] ) {
+		switch ( $args['type'] ) {
 			case 'textarea' :
 
 				$field .= '<textarea name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
@@ -174,6 +175,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox' :
+
+			$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';			
+			if( 'privacy_policy' == $field_key ){
+				break;
+			}
 
 			if(isset($args['choices']) && count($args['choices'])>1 ){
 
