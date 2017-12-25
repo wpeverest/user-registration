@@ -98,6 +98,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
+
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -174,7 +175,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox' :
-
 			if(isset($args['choices']) && count($args['choices'])>1 ){
 
 				$default = !empty($args['default']) ? json_decode( $args['default']  ) : array();
@@ -239,9 +239,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				break;
 			case 'radio' :
-
 				$label_id = current( array_keys( $args['options'] ) );
-
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
@@ -255,7 +253,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 				}
 
-				break;
+			break;
 		}// End switch().
 
 		if ( ! empty( $field ) ) {

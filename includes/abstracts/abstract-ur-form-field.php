@@ -174,6 +174,8 @@ abstract class UR_Form_Field {
 
 		user_registration_form_field( $data['general_setting']->field_name, $form_data );
 
+		echo "<pre>"; print_r($form_data); echo "</pre>"; 
+
 	}
 
 
