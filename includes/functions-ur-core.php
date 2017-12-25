@@ -465,7 +465,8 @@ function ur_get_registered_form_fields() {
 		'textarea',
 		'number',
 		'date',
-		'checkbox'
+		'checkbox',
+		'privacy_policy',
 	) );
 }
 
