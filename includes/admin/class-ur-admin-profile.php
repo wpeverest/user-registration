@@ -168,11 +168,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									}
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
-										if(in_array($choice,$array))
-										{
-											echo "hello";
-										}
-											
 											?><label><input type="checkbox"
 											                name="<?php echo esc_attr( $key ); ?>[]"
 											                id="<?php echo esc_attr( $key ); ?>"
