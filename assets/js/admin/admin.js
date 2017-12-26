@@ -685,6 +685,7 @@ jQuery(function ( $ ) {
 				break;
 			case 'checkbox':
 				render_check_box(value);
+				break;
 			case 'radio':
 				render_radio(value);
 				break;
