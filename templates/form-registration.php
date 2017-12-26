@@ -79,7 +79,6 @@ if ( $form_template == 'Bordered' ) {
 										<?php
 
 										$frontend->user_registration_frontend_form( $single_item, $form_id );
-
 										$is_field_exists = true;
 
 										?>
