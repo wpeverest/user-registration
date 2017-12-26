@@ -98,6 +98,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
+
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -174,6 +175,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox' :
+
+			$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';			
+			if( 'privacy_policy' == $field_key ){
+				break;
+			}
 
 			if(isset($args['choices']) && count($args['choices'])>1 ){
 

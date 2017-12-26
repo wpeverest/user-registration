@@ -222,7 +222,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$value     = $this->get_user_meta( $user_id, $key );
 			$field_key = $extra_params->field_key;
-
+		
 			$type      = 'hidden';
 			switch ( $field_key ) {
 				case "file":
@@ -233,6 +233,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						echo __( 'Attachment not found.', 'user-registration' );
 					}
 					break;
+
+				case "privacy_policy":
+					echo '<input checked type="checkbox" disabled="disabled"/>';
+				break;
+
 				case "checkbox":
 
 					$checkbox_array = json_decode( $value, true );

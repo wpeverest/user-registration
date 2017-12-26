@@ -152,7 +152,7 @@ abstract class UR_Form_Field {
 
 		$filter_data = array(
 			'form_data' => $form_data,
-			'data'      => $data
+			'data'      => $data,
 		);
 
 		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
