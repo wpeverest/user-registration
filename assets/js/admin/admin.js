@@ -686,6 +686,9 @@ jQuery(function ( $ ) {
 			case 'checkbox':
 				render_check_box(value);
 				break;
+			case 'radio':
+				render_radio(value);
+				break;
 		}
 	}
 	function render_check_box ( value ) {
@@ -700,6 +703,18 @@ jQuery(function ( $ ) {
 			}
 		}
 	}
+	function render_radio ( value ) {
+		value = $.trim(value);
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		var radio = wrapper.find('.ur-field');
+		radio.html('');
+		var array_value = value.split(',');
+		for ( var i = 0; i < array_value.length; i++ ) {
+			if ( array_value[ i ] !== '' ) {
+				radio.append('<label><input value="' + array_value[ i ].trim() + '" type="radio">' + array_value[ i ] +'</label>' );
+			}
+		}
+	}	
 	function render_select_box ( value ) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');

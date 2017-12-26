@@ -98,7 +98,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
-
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -191,7 +190,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field   .= $args['label'] . $required . '</label>';
 				$checkbox_start =0;
 				foreach ( $choices as $choice_index => $choice ) {
-
+					
 					$value = '';
 					if ( in_array(trim($choice), $default) ) {
 						$value = 'checked="checked"';
@@ -228,6 +227,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field = '';
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
+
 						if ( '' === $option_key ) {
 							// If we have a blank option, select2 needs a placeholder
 							if ( empty( $args['placeholder'] ) ) {
@@ -245,13 +245,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				break;
 			case 'radio' :
-
 				$label_id = current( array_keys( $args['options'] ) );
-
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
-						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">' . wp_kses( $option_text, array(
+									
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">';
+
+						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />' . wp_kses( $option_text, array(
 								'a'    => array(
 									'href'  => array(),
 									'title' => array()
@@ -261,7 +261,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 				}
 
-				break;
+			break;
 		}// End switch().
 
 		if ( ! empty( $field ) ) {
@@ -335,6 +335,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
+
 					$field_name  = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
@@ -352,11 +353,21 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						$extra_params = array();
 
 						switch ( $field_key ) {
+
+							case 'radio':
 							case 'select':
 								$extra_params['options'] = explode( ',', $field->advance_setting->options );
+								foreach ($extra_params['options'] as $key => $value) {
+									$extra_params['options'][$key.'__'.$value] = $value;
+									unset($extra_params['options'][$key]);
+								}							
 								break;
 							case 'checkbox':
 								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
+								foreach ($extra_params['choices'] as $key => $value) {
+									$extra_params['choices'][$key.'__'.$value] = $value;
+									unset($extra_params['choices'][$key]);
+								}
 								break;
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );

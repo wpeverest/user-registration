@@ -51,7 +51,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					),
 				) );
 			}
-
 			return $show_fields;
 		}
 
@@ -78,6 +77,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'checkbox',
 						'button',
 						'textarea',
+						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
@@ -105,6 +105,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
+
 						<tr>
 							<th>
 								<label
@@ -134,13 +135,37 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
-								
+
+								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
+									<?php 
+									$db_value = get_user_meta( $user->ID, $key, true );
+									$db_value = explode("__", $db_value);
+									$db_value = isset( $db_value[1] ) ? $db_value[1] : '';
+
+									if( is_array( $field['options'] ) ) {
+										foreach( $field['options'] as $option_key => $option_value ) {
+											?>
+											<label><input type="radio"
+											                name="<?php echo esc_attr( $key ); ?>"
+											                id="<?php echo esc_attr( $key ); ?>"
+											                value="<?php echo esc_attr( trim( $option_key ) ); ?>"
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, $option_value, true ); ?>  ><?php echo $option_value; ?>
+											</label><br/>
+											<?php
+										}
+									}
+									?>
+
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
 
 									$json = get_user_meta( $user->ID, $key, true );
+									$old_json = $json;
 
 									$array = (array) json_decode( $json, true );
+									if($old_json == '0'){
+										$array = array();
+									}
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
@@ -256,7 +281,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 				case "select":
 				
-					$result = explode('__',$value);
+					$result = explode('__', $value);
 					if( is_array( $result ) && isset( $result[1] )){
 						$value = $result[1];
 					}
@@ -267,6 +292,19 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 						disabled/>
 						<option><?php echo esc_attr( $value );?></option>
+					<?php
+					break;
+
+				case "radio":
+
+					$result = explode('__', $value);
+					if( is_array( $result ) && isset( $result[1] )){
+						$value = $result[1];
+					}
+					?>
+						<input type="radio" name="<?php echo esc_attr( $key ); ?>"
+			       id="<?php echo esc_attr( $key ); ?>"
+			       value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?>
 					<?php
 					break;
 
@@ -310,16 +348,21 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int $user_id User ID of the user being saved
 		 */
 		public function save_customer_meta_fields( $user_id ) {
+
 			$save_fields = $this->get_customer_meta_fields( $user_id );
 
 			foreach ( $save_fields as $fieldset ) {
-
 				foreach ( $fieldset['fields'] as $key => $field ) {
+
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
 							$values = json_encode( $_POST[ $key ] );
 							update_user_meta( $user_id, $key, $values );
-						} else {
+						} 
+						elseif( isset( $field['type'] ) && 'radio' === $field['type'] ) {
+
+						}
+						else {
 							update_user_meta( $user_id, $key, isset( $_POST[ $key ] ) );
 						}
 					} elseif ( isset( $_POST[ $key ] ) ) {
@@ -474,6 +517,22 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$fields[ $field_index ]['class'] = '';
 									}
 									break;
+								case 'radio':
+
+									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+
+									if ( is_array( $option_data ) && $field_index != '' ) {
+
+										foreach ( $option_data as $index_data => $option ) {
+
+											$fields[ $field_index ]['options'][ $index_data . '__' . $option ] = $option;
+										}
+										$fields[ $field_index ]['type']  = 'radio';
+
+										$fields[ $field_index ]['class'] = '';
+									}
+									break;
+
 								case 'country':
 
 									$country = ur_load_form_field_class( $field_key );
