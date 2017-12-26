@@ -160,10 +160,19 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									<?php
 
 									$json = get_user_meta( $user->ID, $key, true );
+									$old_json = $json;
 
 									$array = (array) json_decode( $json, true );
+									if($old_json == '0'){
+										$array = array();
+									}
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
+										if(in_array($choice,$array))
+										{
+											echo "hello";
+										}
+											
 											?><label><input type="checkbox"
 											                name="<?php echo esc_attr( $key ); ?>[]"
 											                id="<?php echo esc_attr( $key ); ?>"
