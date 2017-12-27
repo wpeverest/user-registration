@@ -249,7 +249,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						break;
 
 						case "select":
-					
+						$old_value = $value;
 						$result = explode('__', $value);
 						if( is_array( $result ) && isset( $result[1] )){
 							$value = $result[1];
@@ -258,16 +258,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						?>	
 							<select name="<?php echo esc_attr( $key ); ?>"
 								    id="<?php echo esc_attr( $key );?>"
+
 								    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 							disabled/>
-								<option><?php echo esc_attr( $value );?></option>
+								<option value="<?php echo esc_attr( $old_value );?>"><?php echo esc_attr( $value );?></option>
 							</select>
 						<?php
 
 						break;
 
 						case "radio":
-
+						$old_value = $value;
 						$result = explode('__', $value);
 						if( is_array( $result ) && isset( $result[1] )){
 							$value = $result[1];
@@ -276,7 +277,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						?>
 							<label><input type="radio" name="<?php echo esc_attr( $key ); ?>"
 				       			id="<?php echo esc_attr( $key ); ?>"
-				       			value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
+				       			value="<?php echo esc_attr( $old_value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
 						<?php
 						break;
 
