@@ -272,9 +272,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 							echo '<label>'. $label . '</label>';
 						?>
-							<input type="radio" name="<?php echo esc_attr( $key ); ?>"
+							<label><input type="radio" name="<?php echo esc_attr( $key ); ?>"
 				       			id="<?php echo esc_attr( $key ); ?>"
-				       			value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?>
+				       			value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
 						<?php
 						break;
 
