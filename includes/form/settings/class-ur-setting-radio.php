@@ -16,7 +16,7 @@ class UR_Setting_Radio extends UR_Field_Settings {
 
 	public function __construct() {
 
-		$this->field_id = 'select_advance_setting';
+		$this->field_id = 'radio_advance_setting';
 
 	}
 

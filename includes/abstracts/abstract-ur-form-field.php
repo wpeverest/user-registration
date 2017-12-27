@@ -91,7 +91,6 @@ abstract class UR_Form_Field {
 			'type' => $field_type,
 
 		);
-
 		if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
 
 			$form_data['required'] = true;

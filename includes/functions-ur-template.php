@@ -222,6 +222,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+
 				if ( empty( $extra_params ) ) {
 					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
@@ -234,15 +235,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					switch ( $field_key ) {
 						case "checkbox":
 							$checkbox_array = json_decode( $value, true );
-							echo '<label>'. $label . '</label>';
+							
 							if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
-
+								echo '<label>'. $label . '</label>';
 								foreach ( $checkbox_array as $check ) {
 
 									echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label>';
 								}
 							} else {
-								echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($value) . '</label>';
+
+								echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($label) .'</label>';
 							}
 						break;
 
@@ -299,7 +301,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						break;
 
 						default:
-						$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+						echo '<label>'. $label . '</label>';
+						?><input type="text" name="<?php echo esc_attr( $key ); ?>"
+				       			id="<?php echo esc_attr( $key ); ?>"
+				       			value="<?php echo esc_attr( $value ); ?>" disabled/>
+				       	<?php
+						
 					}
 				}
 
