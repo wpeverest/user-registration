@@ -129,9 +129,10 @@ class UR_Form_Handler {
 			$user_data = array();
 
 			foreach ( $profile as $key => $field ) {
-
+				if( $_POST[ $key ] == '' || $_POST[ $key ] == '0'){
+					return;
+				}
 				$new_key = str_replace( 'user_registration_', '', $key );
-
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
