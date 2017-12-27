@@ -57,7 +57,6 @@ function ur_login_template_redirect() {
 	}
 }
 
-add_action( 'template_redirect', 'ur_login_template_redirect' );
 /**
  * Add body classes for UR pages.
  *
@@ -98,6 +97,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
+
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -220,7 +220,88 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'date':
 			case 'file':
 
-				$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				if ( empty( $extra_params ) ) {
+					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				}
+				else {
+					$user_id = get_current_user_id();
+					$value     = get_user_meta( $user_id, $key, true );
+					$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
+					$label = isset( $extra_params->label ) ? $extra_params->label : '';
+
+					switch ( $field_key ) {
+						case "checkbox":
+							$checkbox_array = json_decode( $value, true );
+							echo '<label>'. $label . '</label>';
+							if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
+
+								foreach ( $checkbox_array as $check ) {
+
+									echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label>';
+								}
+							} else {
+								echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($value) . '</label>';
+							}
+						break;
+
+						case "select":
+					
+						$result = explode('__', $value);
+						if( is_array( $result ) && isset( $result[1] )){
+							$value = $result[1];
+						}
+							echo '<label>'. $label . '</label>';
+						?>	
+							<select name="<?php echo esc_attr( $key ); ?>"
+								    id="<?php echo esc_attr( $key );?>"
+								    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+							disabled/>
+								<option><?php echo esc_attr( $value );?></option>
+							</select>
+						<?php
+
+						break;
+
+						case "radio":
+
+						$result = explode('__', $value);
+						if( is_array( $result ) && isset( $result[1] )){
+							$value = $result[1];
+						}
+							echo '<label>'. $label . '</label>';
+						?>
+							<input type="radio" name="<?php echo esc_attr( $key ); ?>"
+				       			id="<?php echo esc_attr( $key ); ?>"
+				       			value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?>
+						<?php
+						break;
+
+						case "country":
+					
+						include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
+
+						$country = new UR_Country;
+						$countries = $country->get_country();
+
+						if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
+								echo '<label>'. $label . '</label>';
+							?>
+								<select name="<?php echo esc_attr( $key ); ?>"
+									    id="<?php echo esc_attr( $key );?>"
+									    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+								disabled/>
+								<option><?php echo esc_attr( $countries[$value] );?></option>
+							<?php
+						}
+						
+						break;
+
+						default:
+						$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					}
+				}
 
 				break;
 			case 'select' :
@@ -310,19 +391,16 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	 */
 	function user_registration_form_data( $user_id = 0, $form_id = 0 ) {
 		$all_meta_value = get_user_meta( $user_id );
-
+	
 		$fields    = array();
 		$args      = array(
 			'post_type'   => 'user_registration',
 			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-
+			'post__in'    => array( $form_id),
 		);
 		$post_data = get_posts( $args );
-
 		$post_content       = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
 		$post_content_array = json_decode( $post_content );
-
 		if ( gettype( $post_content_array ) != 'array' ) {
 			return $fields;
 		}
@@ -335,13 +413,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-
 					$field_name  = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type  = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required    = isset( $general_setting->required ) ? $general_setting->required :'';
-
 					$required    = 'yes' == $required ? true : false;
 
 					if ( empty( $field_label ) ) {
@@ -378,7 +454,6 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
-
 						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
@@ -408,6 +483,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		foreach ( $all_meta_value_keys as $single_key ) {
 			if ( substr( $single_key, 0, strlen( 'user_registration_' ) ) == 'user_registration_' ) {
 				if ( ! isset( $fields[ $single_key ] ) ) {
+
 					$field_label_array     = explode( '_', str_replace( 'user_registration_', '', $single_key ) );
 					$field_label           = join( ' ', array_map( 'ucwords', $field_label_array ) );
 					$fields[ $single_key ] = array(

@@ -599,7 +599,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 				}
 			}
-
 			return $fields;
 		}
 
