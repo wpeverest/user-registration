@@ -375,6 +375,7 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'date':
 				$field_type = 'date';
+				break;
 			case 'radio':
 				$field_type = 'radio';
 				break;
