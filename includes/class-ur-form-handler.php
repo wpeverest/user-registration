@@ -71,6 +71,7 @@ class UR_Form_Handler {
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
+			//echo "<pre>"; print_r($profile); echo "</pre>";
 
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
@@ -94,7 +95,6 @@ class UR_Form_Handler {
 
 			// Hook to allow modification of value.
 			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $_POST[ $key ] );
-
 
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) ) {
@@ -120,18 +120,14 @@ class UR_Form_Handler {
 			}
 		}// End foreach().
 
-
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
-
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
 
 			$user_data = array();
 
 			foreach ( $profile as $key => $field ) {
-				if( $_POST[ $key ] == '' || $_POST[ $key ] == '0'){
-					return;
-				}
+
 				$new_key = str_replace( 'user_registration_', '', $key );
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
@@ -146,15 +142,16 @@ class UR_Form_Handler {
 				} else {
 
 					$update_key = $key;
-
 					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
-
 						$update_key = str_replace( 'user_', '', $new_key );
 					}
-					update_user_meta( $user_id, $update_key, $_POST[ $key ] );
-				}
 
+					if( $field['custom_attributes']['disabled'] !== 'disabled' ){
+						update_user_meta( $user_id, $update_key, $_POST[ $key ] );				
+					}
+				}
 			}
+
 			if ( count( $user_data ) > 0 ) {
 
 

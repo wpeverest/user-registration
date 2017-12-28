@@ -273,7 +273,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label><br/>';
 						}
 					} else {
-						echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($value) . '</label>';
+						echo '<label><input checked type="checkbox" disabled="disabled"/></label>';
 
 					}
 

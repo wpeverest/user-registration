@@ -227,88 +227,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				else {
+
 					$user_id = get_current_user_id();
-					$value     = get_user_meta( $user_id, $key, true );
-					$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
-					$label = isset( $extra_params->label ) ? $extra_params->label : '';
-
-					switch ( $field_key ) {
-						case "checkbox":
-							$checkbox_array = json_decode( $value, true );
-							
-							if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
-								echo '<label>'. $label . '</label>';
-								foreach ( $checkbox_array as $check ) {
-
-									echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label>';
-								}
-							} else {
-
-								echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($label) .'</label>';
-							}
-						break;
-
-						case "select":
-						$old_value = $value;
-						$result = explode('__', $value);
-						if( is_array( $result ) && isset( $result[1] )){
-							$value = $result[1];
-						}
-							echo '<label>'. $label . '</label>';
-						?>	
-							<select name="<?php echo esc_attr( $key ); ?>"
-								    id="<?php echo esc_attr( $key );?>"
-
-								    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-							disabled/>
-								<option value="<?php echo esc_attr( $old_value );?>"><?php echo esc_attr( $value );?></option>
-							</select>
-						<?php
-
-						break;
-
-						case "radio":
-						$old_value = $value;
-						$result = explode('__', $value);
-						if( is_array( $result ) && isset( $result[1] )){
-							$value = $result[1];
-						}
-							echo '<label>'. $label . '</label>';
-						?>
-							<label><input type="radio" name="<?php echo esc_attr( $key ); ?>"
-				       			id="<?php echo esc_attr( $key ); ?>"
-				       			value="<?php echo esc_attr( $old_value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
-						<?php
-						break;
-
-						case "country":
-					
-						include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
-
-						$country = new UR_Country;
-						$countries = $country->get_country();
-
-						if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
-								echo '<label>'. $label . '</label>';
-							?>
-								<select name="<?php echo esc_attr( $key ); ?>"
-									    id="<?php echo esc_attr( $key );?>"
-									    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-								disabled/>
-								<option><?php echo esc_attr( $countries[$value] );?></option>
-							<?php
-						}
-						
-						break;
-
-						default:
-						echo '<label>'. $label . '</label>';
-						?><input type="text" name="<?php echo esc_attr( $key ); ?>"
-				       			id="<?php echo esc_attr( $key ); ?>"
-				       			value="<?php echo esc_attr( $value ); ?>" disabled/>
-				       	<?php
-						
-					}
+					show_undefined_frontend_fields( $key, $user_id, $field, $extra_params);					
 				}
 
 				break;
@@ -573,6 +494,92 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 	}
 }
 
+if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
+
+	function show_undefined_frontend_fields( $key, $user_id, $field, $extra_params) {
+	$value     = get_user_meta( $user_id, $key, true );
+		$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
+		$label = isset( $extra_params->label ) ? $extra_params->label : '';
+
+		switch ( $field_key ) {
+			case "checkbox":
+				$checkbox_array = json_decode( $value, true );
+				
+				if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
+					echo '<label>'. $label . '</label>';
+					foreach ( $checkbox_array as $check ) {
+
+						echo '<label><input checked value="'. trim( $check ) .'" type="checkbox" disabled="disabled"/>' . esc_html( $check ) . '</label>';
+					}
+				} else {
+
+					echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($label) .'</label>';
+				}
+			break;
+
+			case "select":
+			$old_value = $value;
+			$result = explode('__', $value);
+			if( is_array( $result ) && isset( $result[1] )){
+				$value = $result[1];
+			}
+				echo '<label>'. $label . '</label>';
+			?>	
+				<select name="<?php echo esc_attr( $key ); ?>"
+					    id="<?php echo esc_attr( $key );?>"
+
+					    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+				disabled/>
+					<option value="<?php echo esc_attr( $old_value );?>"><?php echo esc_attr( $value );?></option>
+				</select>
+			<?php
+
+			break;
+
+			case "radio":
+			$old_value = $value;
+			$result = explode('__', $value);
+			if( is_array( $result ) && isset( $result[1] )){
+				$value = $result[1];
+			}
+				echo '<label>'. $label . '</label>';
+			?>
+				<label><input type="radio" name="<?php echo esc_attr( $key ); ?>"
+	       			id="<?php echo esc_attr( $key ); ?>"
+	       			value="<?php echo esc_attr( $old_value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
+			<?php
+			break;
+
+			case "country":
+		
+			include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
+
+			$country = new UR_Country;
+			$countries = $country->get_country();
+
+			if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
+					echo '<label>'. $label . '</label>';
+				?>
+					<select name="<?php echo esc_attr( $key ); ?>"
+						    id="<?php echo esc_attr( $key );?>"
+						    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+					disabled/>
+					<option><?php echo esc_attr( $countries[$value] );?></option>
+				<?php
+			}
+			
+			break;
+
+			default:
+			echo '<label>'. $label . '</label>';
+			?><input type="text" name="<?php echo esc_attr( $key ); ?>"
+	       			id="<?php echo esc_attr( $key ); ?>"
+	       			value="<?php echo esc_attr( $value ); ?>" disabled/>
+	       	<?php
+			
+		}
+	}
+}
 /**
  * Get logout endpoint.
  *
