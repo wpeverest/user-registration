@@ -71,7 +71,6 @@ class UR_Form_Handler {
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
-			//echo "<pre>"; print_r($profile); echo "</pre>";
 
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';

@@ -227,7 +227,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				else {
-
 					$user_id = get_current_user_id();
 					show_undefined_frontend_fields( $key, $user_id, $field, $extra_params);					
 				}
@@ -497,7 +496,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
 
 	function show_undefined_frontend_fields( $key, $user_id, $field, $extra_params) {
-	$value     = get_user_meta( $user_id, $key, true );
+		$value     = get_user_meta( $user_id, $key, true );
 		$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
 		$label = isset( $extra_params->label ) ? $extra_params->label : '';
 
