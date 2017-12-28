@@ -226,9 +226,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( empty( $extra_params ) ) {
 					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
-				else {
+
+				else if ( isset( $args['custom_attributes']['disabled'] ) && $args['custom_attributes']['disabled']  == 'disabled' )
+				{
 					$user_id = get_current_user_id();
-					show_undefined_frontend_fields( $key, $user_id, $field, $extra_params);					
+					show_undefined_frontend_fields( $key, $user_id, $field, $extra_params);	
+				}
+				else
+				{ 
+					$field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 
 				break;
@@ -277,6 +283,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
+			
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
 						'a'    => array(
 							'href'  => array(),
@@ -496,6 +503,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
 
 	function show_undefined_frontend_fields( $key, $user_id, $field, $extra_params) {
+
 		$value     = get_user_meta( $user_id, $key, true );
 		$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
 		$label = isset( $extra_params->label ) ? $extra_params->label : '';
@@ -551,7 +559,7 @@ if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
 
 			case "country":
 		
-			include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
+			include_once( UR_ABSPATH . 'includes/form/class-ur-country.php' );
 
 			$country = new UR_Country;
 			$countries = $country->get_country();
@@ -564,6 +572,7 @@ if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
 						    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 					disabled/>
 					<option><?php echo esc_attr( $countries[$value] );?></option>
+				</select>
 				<?php
 			}
 			

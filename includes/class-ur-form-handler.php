@@ -144,8 +144,8 @@ class UR_Form_Handler {
 					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
 						$update_key = str_replace( 'user_', '', $new_key );
 					}
-
-					if( isset( $field['custom_attributes']['disabled'] ) !== 'disabled' ){
+					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';  
+					if( $disabled !== 'disabled' ){
 						update_user_meta( $user_id, $update_key, $_POST[ $key ] );				
 					}
 				}

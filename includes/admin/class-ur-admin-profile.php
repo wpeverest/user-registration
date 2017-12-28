@@ -213,6 +213,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									} else {
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
+
 										if ( empty( $extra_params ) ) {
 											?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
