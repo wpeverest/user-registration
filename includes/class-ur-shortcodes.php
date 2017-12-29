@@ -211,6 +211,7 @@ class UR_Shortcodes {
 
 		}
 
+		include_once( UR_ABSPATH . 'includes/frontend/class-ur-frontend.php' );
 		ur_get_template( 'form-registration.php', array(
 			'form_data_array'        => $form_data_array,
 			'is_field_exists'        => $is_field_exists,
@@ -219,6 +220,5 @@ class UR_Shortcodes {
 			'recaptcha_node'         => $recaptcha_node,
 
 		) );
-
 	}
 }

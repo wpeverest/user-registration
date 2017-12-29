@@ -68,6 +68,7 @@ class UR_Shortcode_My_Account {
 			do_action( 'before-user-registration-my-account-shortcode' );
 
 			// Collect notices before output
+			include_once( UR_ABSPATH . 'includes/functions-ur-notice.php' );
 			$notices = ur_get_notices();
 
 			// Output the new account page
