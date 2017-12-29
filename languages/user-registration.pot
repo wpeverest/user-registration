@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.5\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-12-28 06:23:33+00:00\n"
+"POT-Creation-Date: 2017-12-29 08:53:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -190,7 +190,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:258
+#: includes/admin/class-ur-admin-profile.php:259
 msgid "Attachment not found."
 msgstr ""
 
@@ -2337,7 +2337,7 @@ msgstr ""
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:243
+#: includes/functions-ur-template.php:249
 msgid "Choose an option"
 msgstr ""
 
@@ -2361,20 +2361,20 @@ msgstr ""
 msgid "Are you sure you want to log out? <a href=\"%s\">Confirm and log out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:215
+#: includes/shortcodes/class-ur-shortcode-my-account.php:216
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:238
-#: includes/shortcodes/class-ur-shortcode-my-account.php:243
+#: includes/shortcodes/class-ur-shortcode-my-account.php:239
+#: includes/shortcodes/class-ur-shortcode-my-account.php:244
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:256
+#: includes/shortcodes/class-ur-shortcode-my-account.php:257
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:271
+#: includes/shortcodes/class-ur-shortcode-my-account.php:272
 msgid ""
 "The email could not be sent. Possible reason: your host may have disabled "
 "the mail() function. "
