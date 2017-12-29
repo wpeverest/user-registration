@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php else : ?>
 							<h2><?php echo esc_html( $addon->title ); ?></h2>
 						<?php endif; ?>
-						<span class="price"><?php echo wp_kses_post( $addon->price ); ?></span>
+						<span class="price"><?php echo isset( $addon->price ) ? wp_kses_post( $addon->price ) : ''; ?></span>
 						<p><?php echo wp_kses_post( $addon->excerpt ); ?></p>
 					</a>
 				</li>
