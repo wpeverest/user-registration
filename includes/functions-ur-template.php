@@ -578,6 +578,9 @@ if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
 			
 			break;
 
+			case "privacy_policy":
+			break;
+
 			default:
 			echo '<label>'. $label . '</label>';
 			?><input type="text" name="<?php echo esc_attr( $key ); ?>"
