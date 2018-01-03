@@ -48,7 +48,7 @@ class UR_Settings_Email_Configure extends UR_Settings_Page {
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
 						'desc'     => __( 'Enable this email sent after successful user registration.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_enable_strong_password',
+						'id'       => 'user_registration_enable_this_email',
 						'default'  => 'yes',
 						'type'     => 'checkbox',
 						'autoload' => false,
