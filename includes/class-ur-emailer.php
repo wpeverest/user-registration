@@ -26,7 +26,7 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-		if('yes' == get_option('user_registration_general_setting_disable_email')){
+		if('yes' == get_option('user_registration_email_setting_disable_email')){
 			return;
 		}
 
@@ -170,18 +170,7 @@ class UR_Emailer {
 
 		$subject = __( 'A New User Registered', 'user-registration' );
 
-		$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
-
-			'Hi Admin,
-					<br/>
-               <br/>
-					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
-					<br/>
-               <br/>
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
-               <br/>
-               <br/>
-					Thank You!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
+		$message = get_option( 'user_registration_email_configuration', ur_get_admin_email() );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
 
