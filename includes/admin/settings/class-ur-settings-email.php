@@ -105,11 +105,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			);
 				return apply_filters( 'user_registration_get_email_settings_' . $this->id, $settings );
 		}
-	
-		public function save() {
-			$settings = $this->get_settings();
-			UR_Admin_Settings::save_fields( $settings );
-		}
 
 		public function email_notification_setting() {
 		?>
@@ -131,12 +126,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						</thead>
 						<tbody>
 							<?php echo '<td class="ur-email-settings-table-email-name">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=asdf' ) . 
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_configure' ) . 
 													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('This option allows you to customize the email sent to admin when a new user register','user-registration' ) ) . '
 										</td>
 										
 										<td class="ur-email-settings-table-email-configure">
-													<a class="button alignright tips" data-tip="'. __( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=asdf' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_configure' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
 										</td>';
 							?>
 						</tbody>
@@ -146,6 +141,30 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		<?php
 		}
 
+	
+	
+		public function save() {
+			$settings = $this->get_settings();
+			UR_Admin_Settings::save_fields( $settings );
+		}
+
+		/**
+		 * Output the settings.
+		 */
+		public function output() {
+			global $current_section;
+
+			if ( $current_section ) {
+				
+					if ( strtolower( 'ur_settings_email_configure' ) == $current_section ) {
+						echo "Section here";
+					}
+				
+			} else {
+				$settings = $this->get_settings();
+				UR_Admin_Settings::output_fields( $settings );
+			}
+		}
 	}
 
 endif;
