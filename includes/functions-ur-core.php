@@ -973,9 +973,7 @@ function ur_get_all_user_registration_form() {
 }
 
 function ur_get_user_login_option() {
-
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
-		
 		return array(
 			'title'    => __( 'Disable emails', 'user-registration' ),
 			'desc'     => __( 'Disable emails sent after registration.', 'user-registration' ),
@@ -984,12 +982,14 @@ function ur_get_user_login_option() {
 			'type'     => 'checkbox',
 			'autoload' => false,
 		);
-
 	}
 	else {
 		update_option( 'user_registration_email_setting_disable_email' , 'no');
 	}
+}
 
+function ur_back_link( $label, $url ) {
+	echo '<small class="orr-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }
 
 /**
