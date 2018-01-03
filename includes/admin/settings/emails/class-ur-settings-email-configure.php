@@ -60,7 +60,7 @@ class UR_Settings_Email_Configure extends UR_Settings_Page {
 						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
 						'id'       => 'user_registration_email_configuration',
 		 				'type'     => 'tinymce',
-		 				'default'  => $this->ur_get_admin_email(),
+		 				'default'  => ur_get_admin_email(),
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 					),
@@ -74,24 +74,6 @@ class UR_Settings_Email_Configure extends UR_Settings_Page {
 			);
 
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
-		}
-
-		public function ur_get_admin_email() {
-	
-			$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
-
-				'Hi Admin,
-						<br/>
-	               <br/>
-						A new user {{username}} - {{user_email}} has successfully registered to your site <a href="{{blog_info}}">{{blog_info}}</a>.
-						<br/>
-	               <br/>
-						Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
-	               <br/>
-	               <br/>
-						Thank You!'), 'user-registration' ) );
-
-			return $message;
 		}
 
 		/**

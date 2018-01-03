@@ -170,7 +170,13 @@ class UR_Emailer {
 
 		$subject = __( 'A New User Registered', 'user-registration' );
 
-		$message = get_option( 'user_registration_email_configuration', ur_get_admin_email() );
+		include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-configure.php' );
+
+		$message = new UR_Settings_Email_Configure();
+
+		$message = $message->ur_get_admin_email();
+
+		$message = get_option( 'user_registration_email_configuration', $message );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
 
