@@ -976,7 +976,7 @@ function ur_get_user_login_option() {
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 		return array(
 			'title'    => __( 'Disable emails', 'user-registration' ),
-			'desc'     => __( 'Disable emails sent after registration.', 'user-registration' ),
+			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
 			'id'       => 'user_registration_email_setting_disable_email',
 			'default'  => 'no',
 			'type'     => 'checkbox',

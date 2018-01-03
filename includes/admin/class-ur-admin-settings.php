@@ -211,6 +211,7 @@ class UR_Admin_Settings {
 	 * @param array[] $options Opens array to output
 	 */
 	public static function output_fields( $options ) {
+
 		foreach ( $options as $value ) {
 			if ( ! isset( $value['type'] ) ) {
 				continue;
@@ -531,6 +532,37 @@ class UR_Admin_Settings {
 						<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tooltip_html; ?></th>
 						<td class="forminp">
 							<?php echo str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+						</td>
+					</tr><?php
+					break;
+					
+				case 'tinymce':
+
+					$settings = array(
+						'name' => esc_attr($value['id']),
+						'id' =>  esc_attr( $value['id'] ),
+						'style' => esc_attr( $value['css'] ),
+						'default' => esc_attr($value['default']),
+						'class'=> esc_attr( $value['class'] ),
+						'quicktags'     => array( 'buttons' => 'em,strong,link' ),
+						'tinymce'       => array(
+							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+							'theme_advanced_buttons2' => '',
+						),
+						'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+					);
+
+					$option_value = self::get_option( $value['id'], $value['default'] );
+
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+						<th scope="row" class="titledesc">
+							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+							<?php echo $tooltip_html; ?>
+						</th>
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<?php echo $description; ?>
+
+							<?php wp_editor($option_value, $value['id'], $settings);?>
 						</td>
 					</tr><?php
 					break;

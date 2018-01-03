@@ -19,68 +19,69 @@ if ( ! class_exists( 'UR_Settings_Email_Configure', false ) ) :
  */
 class UR_Settings_Email_Configure extends UR_Settings_Page {
 
-	/**
-	 * Constructor.
-	 */
+	
 	public function __construct() {
 		$this->id             = 'email_configure';
 		$this->title          = __( 'Configure Emails', 'user-registration' );
+		add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+		add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
+		add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 	}
 
-	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled' => array(
-				'title'         => __( 'Enable/Disable', 'online-restaurant-reservation' ),
-				'type'          => 'checkbox',
-				'label'         => __( 'Enable this email notification', 'online-restaurant-reservation' ),
-				'default'       => 'yes',
-			),
-			'recipient' => array(
-				'title'         => __( 'Recipient(s)', 'online-restaurant-reservation' ),
-				'type'          => 'text',
-				'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'online-restaurant-reservation' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
-				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true,
-			),
-			'subject' => array(
-				'title'         => __( 'Subject', 'online-restaurant-reservation' ),
-				'type'          => 'text',
-				'desc_tip'      => true,
-				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'online-restaurant-reservation' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' ),
-				'placeholder'   => $this->get_default_subject(),
-				'default'       => '',
-			),
-			'heading' => array(
-				'title'         => __( 'Email heading', 'online-restaurant-reservation' ),
-				'type'          => 'text',
-				'desc_tip'      => true,
-				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'online-restaurant-reservation' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' ),
-				'placeholder'   => $this->get_default_heading(),
-				'default'       => '',
-			),
-			'email_type' => array(
-				'title'         => __( 'Email type', 'online-restaurant-reservation' ),
-				'type'          => 'select',
-				'description'   => __( 'Choose which format of email to send.', 'online-restaurant-reservation' ),
-				'default'       => 'html',
-				'class'         => 'email_type orr-enhanced-select',
-				'options'       => $this->get_email_type_options(),
-				'desc_tip'      => true,
-			),
-		);
-	}
-	public function admin_options() {
-		// Do admin actions.
-		?>
-		<h2><?php echo esc_html__('Email Configuration','user-registration'); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
+		/**
+		 * Get settings
+		 *
+		 * @return array
+		 */
+		public function get_settings() {
 
-		<?php
-			
-		
-	}
+			$settings = apply_filters(
+				'user_registration_email_configuration', array(
+
+					array(
+						'title' => __( 'Email Configuration', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'email_configuration',
+					),
+
+					array(
+						'title'    => __( 'Enable this email', 'user-registration' ),
+						'desc'     => __( 'Enable this email sent after successful user registration.', 'user-registration' ),
+						'id'       => 'user_registration_general_setting_enable_strong_password',
+						'default'  => 'yes',
+						'type'     => 'checkbox',
+						'autoload' => false,
+					),
+
+					array(
+						'title'    => __( 'Email Content', 'user-registration' ),
+						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+						'id'       => 'user_registration_email_configuration',
+		 				'type'     => 'tinymce',
+		 				'default'  => '',
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'email_configuration',
+					),
+
+				)
+			);
+
+			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+		}
+
+		/**
+		 * Save settings
+		 */
+		public function save() {
+			$settings = $this->get_settings();
+			UR_Admin_Settings::save_fields( $settings );
+		}
 
 }
 endif;

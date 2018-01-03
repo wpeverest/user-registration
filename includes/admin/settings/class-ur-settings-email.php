@@ -153,12 +153,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			global $current_section;
 
 			if ( $current_section ) {
-					if ( strtolower( 'ur_settings_email_configure' ) == $current_section ) {
-						include_once( UR_ABSPATH . 'includes/admin/settings/class-ur-settings-email-configure.php' );
-						$show_fields = new UR_Settings_Email_Configure;
-						$show_fields->admin_options();
+				if ( strtolower( 'ur_settings_email_configure' ) == $current_section ) {
+					include_once( UR_ABSPATH . 'includes/admin/settings/class-ur-settings-email-configure.php' );
 					
-					}
+					$settings = new UR_Settings_Email_Configure();
+					UR_Admin_Settings::output_fields( $settings->get_settings() );
+
+				}
 				
 			} else {
 				$settings = $this->get_settings();
