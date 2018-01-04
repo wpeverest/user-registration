@@ -176,7 +176,7 @@ class UR_Emailer {
 
 		$message = $message->ur_get_admin_email();
 
-		$message = get_option( 'user_registration_email_configuration', $message );
+		$message = get_option( 'user_registration_admin_email', $message );
 
 		wp_mail( $admin_email, $subject, $message, $headers );
 
