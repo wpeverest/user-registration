@@ -33,6 +33,11 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 
 			add_action( 'user_registration_admin_field_email_notification', array( $this, 'email_notification_setting' ) );
+
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
+
 			parent::__construct();
 		}
 
@@ -125,14 +130,33 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							</tr>
 						</thead>
 						<tbody>
-							<?php echo '<td class="ur-email-settings-table-email-name">
+							<?php echo '<tr><td class="ur-email-settings-table-admin-email">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . 
-													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('This option allows you to customize the email sent to admin when a new user register','user-registration' ) ) . '
+													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to admin when a new user register','user-registration' ) ) . '
 										</td>
 										
-										<td class="ur-email-settings-table-email-configure">
+										<td class="ur-email-settings-table-admin-email">
 													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
-										</td>';
+										</td></tr>
+										<tr>
+										<td class="ur-email-settings-table-email-confirmation">
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_confirmation' ) . 
+													'">'. __('Email Confirmation', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when email confimation login option is active','user-registration' ) ) . '
+										</td>
+										<td class="ur-email-settings-table-email-confirmation">
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_confirmation' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+										</td></tr>
+										<tr>
+										<td class="ur-email-settings-table-successfully-registered-email">
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_successfully_registered_email' ) . 
+													'">'. __('Successfully Registered Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is complete','user-registration' ) ) . '
+										</td>
+										<td class="ur-email-settings-table-email-confirmation">
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_successfully_registered_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+										</td>
+										</tr>
+
+										';
 							?>
 						</tbody>
 					</table>
@@ -144,19 +168,26 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public function save() {
 			global $current_section;
 
-			if ( $current_section ) {
-				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
+			switch ( $current_section ) {
+			 	case 'ur_settings_admin_email':
+			 		$settings = new UR_Settings_Admin_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
 
-					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
-					$settings = new UR_Settings_Admin_Email();
-					UR_Admin_Settings::save_fields( $settings->get_settings() );	
-				}
-			}
-			else {
+			 	case 'ur_settings_email_confirmation':
+			 		$settings = new UR_Settings_Email_Confirmation();
+			 		$settings = $settings->get_settings();
+			 	break;
 
-				$settings = $this->get_settings();
-				UR_Admin_Settings::save_fields( $settings );
-			}
+			 	case 'ur_settings_successfully_registered_email':
+			 		$settings = new UR_Settings_Successfully_Registered_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	default:
+			 		$settings = $this->get_settings();
+			 }
+			 	UR_Admin_Settings::save_fields( $settings );
 		}
 
 		/**
@@ -165,18 +196,27 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public function output() {
 			global $current_section;
 
-			if ( $current_section ) {
-				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
-					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
-					
-					$settings = new UR_Settings_Admin_Email();
-					UR_Admin_Settings::output_fields( $settings->get_settings() );
-				}
-				
-			} else {
-				$settings = $this->get_settings();
-				UR_Admin_Settings::output_fields( $settings );
-			}
+			switch ( $current_section ) {
+				case 'ur_settings_admin_email':
+					$settings = new UR_Settings_Admin_Email;
+					$settings = $settings->get_settings();
+				break;
+
+				case 'ur_settings_email_confirmation':
+			 		$settings = new UR_Settings_Email_Confirmation();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	case 'ur_settings_successfully_registered_email':
+			 		$settings = new UR_Settings_Successfully_Registered_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	default:
+			 		$settings = $this->get_settings();
+			 }
+			 	UR_Admin_Settings::output_fields( $settings );
+
 		}
 	}
 

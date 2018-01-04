@@ -80,20 +80,20 @@ class UR_Emailer {
 		if( $email_status === '0' ) {
 
 			$subject = __( sprintf( 'Please confirm your registration on %s', $blog_info ), 'user-registration' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			$message = new UR_Settings_Email_Confirmation();
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
-               <br/>
- 					Please click on this verification link '.get_home_url().'/wp-login.php/?ur_token='. $email_token .' to confirm registration.
- 					<br/>
-               <br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = $message->ur_get_email_confirmation();
+
+			$message = get_option( 'user_registration_email_confirmation', $message );
+
+			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
 		}
 
 		else if ( $status == 0 ) {
@@ -139,22 +139,25 @@ class UR_Emailer {
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have successfully completed user registration on <a href="%s">%s</a>.
- 					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
-               <br/>
-               <br/>
-               Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Email_Confirmation();
 
+			$message = $message->ur_get_email_confirmation();
+
+			$message = get_option( 'user_registration_email_confirmation', $message );
+
+			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
 		}
 		wp_mail( $email, $subject, $message, $headers );
-
 	}
 
 	/**
@@ -180,12 +183,13 @@ class UR_Emailer {
 
 		$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}");
 
-		$replace_with = array($username, $user_email, $blog_info);
+		$replace_with = array( $username, $user_email, $blog_info );
 
-		$message = str_replace($to_replace, $replace_with, $message);
+		$message = str_replace( $to_replace, $replace_with, $message );
 
-		wp_mail( $admin_email, $subject, $message, $headers );
-
+		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ){
+			wp_mail( $admin_email, $subject, $message, $headers );
+		}
 	}
 
 	/**

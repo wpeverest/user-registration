@@ -2,7 +2,7 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Email_Configure
+ * @class    UR_Settings_Email_Confirmation
  * @extends  UR_Settings_Email
  * @category Class
  * @author   WPEverest
@@ -15,14 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 
 /**
- * UR_Settings_Email_Configure Class.
+ * UR_Settings_Admin_Email Class.
  */
 class UR_Settings_Admin_Email{
 
 	
 	public function __construct() {
-		$this->id             = 'email_configure';
-		$this->title          = __( 'Configure Emails', 'user-registration' );
+		$this->id             = 'admin_email';
+		$this->title          = __( 'Configure Admin Email', 'user-registration' );
 	}
 
 		/**
@@ -32,21 +32,21 @@ class UR_Settings_Admin_Email{
 		 */
 		public function get_settings() {
 
-		?><h2><?php echo esc_html__('Email Configuration','user-registration'); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
+		?><h2><?php echo esc_html__('Admin Email','user-registration'); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
 
 		<?php
 			$settings = apply_filters(
-				'user_registration_email_configuration', array(
+				'user_registration_admin_email', array(
 
 					array(
 						'type'  => 'title',
 						'desc'  => '',
-						'id'    => 'email_configuration',
+						'id'    => 'admin_email',
 					),
 
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
-						'desc'     => __( 'Enable this email sent after successful user registration.', 'user-registration' ),
+						'desc'     => __( 'Enable this email sent to admin after successfull user registration.', 'user-registration' ),
 						'id'       => 'user_registration_enable_admin_email',
 						'default'  => 'yes',
 						'type'     => 'checkbox',
@@ -65,7 +65,7 @@ class UR_Settings_Admin_Email{
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'email_configuration',
+						'id'   => 'admin_email',
 					),
 
 				)
