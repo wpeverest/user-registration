@@ -12,19 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'UR_Settings_Email_Configure', false ) ) :
+if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 
 /**
  * UR_Settings_Email_Configure Class.
  */
-class UR_Settings_Email_Configure extends UR_Settings_Page {
+class UR_Settings_Admin_Email{
 
 	
 	public function __construct() {
 		$this->id             = 'email_configure';
 		$this->title          = __( 'Configure Emails', 'user-registration' );
-		add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
-		add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 	}
 
 		/**
@@ -95,4 +93,4 @@ class UR_Settings_Email_Configure extends UR_Settings_Page {
 }
 endif;
 
-return new UR_Settings_Email_Configure();
+return new UR_Settings_Admin_Email();

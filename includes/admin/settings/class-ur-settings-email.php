@@ -148,7 +148,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
 
 					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
-					$settings = new UR_Settings_Email_Configure();
+					$settings = new UR_Settings_Admin_Email();
 					UR_Admin_Settings::save_fields( $settings->get_settings() );	
 				}
 			}
@@ -169,7 +169,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
 					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
 					
-					$settings = new UR_Settings_Email_Configure();
+					$settings = new UR_Settings_Admin_Email();
 					UR_Admin_Settings::output_fields( $settings->get_settings() );
 				}
 				
