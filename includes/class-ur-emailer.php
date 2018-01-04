@@ -178,6 +178,12 @@ class UR_Emailer {
 
 		$message = get_option( 'user_registration_admin_email', $message );
 
+		$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}");
+
+		$replace_with = array($username, $user_email, $blog_info);
+
+		$message = str_replace($to_replace, $replace_with, $message);
+
 		wp_mail( $admin_email, $subject, $message, $headers );
 
 	}
