@@ -170,9 +170,9 @@ class UR_Emailer {
 
 		$subject = __( 'A New User Registered', 'user-registration' );
 
-		include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-configure.php' );
+		include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
 
-		$message = new UR_Settings_Email_Configure();
+		$message = new UR_Settings_Admin_Email();
 
 		$message = $message->ur_get_admin_email();
 

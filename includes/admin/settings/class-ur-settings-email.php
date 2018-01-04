@@ -126,12 +126,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						</thead>
 						<tbody>
 							<?php echo '<td class="ur-email-settings-table-email-name">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_configure' ) . 
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . 
 													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('This option allows you to customize the email sent to admin when a new user register','user-registration' ) ) . '
 										</td>
 										
 										<td class="ur-email-settings-table-email-configure">
-													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_configure' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
 										</td>';
 							?>
 						</tbody>
@@ -142,8 +142,21 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		}
 	
 		public function save() {
-			$settings = $this->get_settings();
-			UR_Admin_Settings::save_fields( $settings );
+			global $current_section;
+
+			if ( $current_section ) {
+				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
+
+					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
+					$settings = new UR_Settings_Email_Configure();
+					UR_Admin_Settings::save_fields( $settings->get_settings() );	
+				}
+			}
+			else {
+
+				$settings = $this->get_settings();
+				UR_Admin_Settings::save_fields( $settings );
+			}
 		}
 
 		/**
@@ -153,8 +166,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			global $current_section;
 
 			if ( $current_section ) {
-				if ( strtolower( 'ur_settings_email_configure' ) == $current_section ) {
-					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-configure.php' );
+				if ( strtolower( 'ur_settings_admin_email' ) == $current_section ) {
+					include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
 					
 					$settings = new UR_Settings_Email_Configure();
 					UR_Admin_Settings::output_fields( $settings->get_settings() );
