@@ -992,24 +992,6 @@ function ur_back_link( $label, $url ) {
 	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }
 
-function ur_get_admin_email() {
-	
-	$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
-
-			'Hi Admin,
-					<br/>
-               <br/>
-					A new user {{username}} - {{user_email}} has successfully registered to your site <a href="{{blog_info}}">{{blog_info}}</a>.
-					<br/>
-               <br/>
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
-               <br/>
-               <br/>
-					Thank You!'), 'user-registration' ) );
-
-	return $message;
-}
-
 /**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
