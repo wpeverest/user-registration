@@ -94,26 +94,31 @@ class UR_Emailer {
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
+			wp_mail( $email, $subject, $message, $headers );
+
 		}
 
 		else if ( $status == 0 ) {
 
 			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
- 					Please wait until the site admin approves your registration.
- 					<br/>
- 					You will be notified after it is approved.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
+
+			$message = $message->ur_get_awaiting_admin_approval_email();
+
+			$message = get_option( 'user_registration_awaiting_admin_approval', $message );
+
+			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
 
 
 		} else if ( $status == - 1 ) {
@@ -133,6 +138,10 @@ class UR_Emailer {
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
 
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
@@ -226,18 +235,23 @@ class UR_Emailer {
 
 			$subject = __( sprintf( 'Sorry! Registration denied on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a> has been denied.
- 					<br/>
- 					Sorry for the inconvenience.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Denied_Email();
+
+			$message = $message->ur_get_registration_denied_email();
+
+			$message = get_option( 'user_registration_registration_denied_email', $message );
+
+			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
 
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration approved on %s', $blog_info ), 'user-registration' );
