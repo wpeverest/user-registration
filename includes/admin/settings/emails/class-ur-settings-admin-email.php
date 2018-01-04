@@ -2,7 +2,7 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Email_Confirmation
+ * @class    UR_Settings_Admin_Email
  * @extends  UR_Settings_Email
  * @category Class
  * @author   WPEverest

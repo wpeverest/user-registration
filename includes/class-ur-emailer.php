@@ -120,21 +120,19 @@ class UR_Emailer {
 
 			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
- 					Unfortunately your registration is denied.
- 					<br/>
-               <br/>
- 					Sorry for the inconvenience.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Denied_Email();
+
+			$message = $message->ur_get_registration_denied_email();
+
+			$message = get_option( 'user_registration_registration_denied_email', $message );
+
+			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
 
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
