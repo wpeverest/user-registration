@@ -30,11 +30,23 @@ class UR_Emailer {
 			return;
 		}
 
+		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
+	}
 
+	public function ur_sender_email(){
+		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
+		return $sender_email;
+	}
+
+	public function ur_sender_name(){
+		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		return $sender_name;
 	}
 
 	/**
