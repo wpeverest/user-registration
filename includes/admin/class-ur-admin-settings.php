@@ -644,6 +644,7 @@ class UR_Admin_Settings {
 			if ( strstr( $option['id'], '[' ) ) {
 				parse_str( $option['id'], $option_name_array );
 				$option_name  = current( array_keys( $option_name_array ) );
+
 				$setting_name = key( $option_name_array[ $option_name ] );
 				$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null;
 			} else {
@@ -654,6 +655,7 @@ class UR_Admin_Settings {
 
 			// Format the value based on option type.
 			switch ( $option['type'] ) {
+
 				case 'checkbox' :
 					$value = '1' === $raw_value || 'yes' === $raw_value ? 'yes' : 'no';
 					break;
@@ -672,6 +674,10 @@ class UR_Admin_Settings {
 					$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
 					$value   = in_array( $raw_value, $allowed_values ) ? $raw_value : $default;
 					break;
+				case 'tinymce':
+					$value = wpautop( $raw_value );
+				break;
+
 				default :
 					$value = ur_clean( $raw_value );
 					break;
