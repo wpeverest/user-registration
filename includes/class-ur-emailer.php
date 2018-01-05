@@ -108,7 +108,7 @@ class UR_Emailer {
 
 			$message = $message->ur_get_awaiting_admin_approval_email();
 
-			$message = get_option( 'user_registration_awaiting_admin_approval', $message );
+			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
 
 			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}");
 
@@ -152,7 +152,7 @@ class UR_Emailer {
 
 			$message = $message->ur_get_email_confirmation();
 
-			$message = get_option( 'user_registration_email_confirmation', $message );
+			$message = get_option( 'user_registration_successfully_registered_email', $message );
 
 			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
 
@@ -164,7 +164,6 @@ class UR_Emailer {
 				wp_mail( $email, $subject, $message, $headers );			
 			}
 		}
-		wp_mail( $email, $subject, $message, $headers );
 	}
 
 	/**
