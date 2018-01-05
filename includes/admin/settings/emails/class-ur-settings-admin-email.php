@@ -46,7 +46,7 @@ class UR_Settings_Admin_Email{
 
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
-						'desc'     => __( 'Enable this email sent to admin after successfull user registration.', 'user-registration' ),
+						'desc'     => __( 'Enable this email sent to admin after successful user registration.', 'user-registration' ),
 						'id'       => 'user_registration_enable_admin_email',
 						'default'  => 'yes',
 						'type'     => 'checkbox',
