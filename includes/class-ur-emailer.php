@@ -39,12 +39,12 @@ class UR_Emailer {
 		), 10, 3 );
 	}
 
-	public function ur_sender_email(){
+	public static function ur_sender_email(){
 		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
 		return $sender_email;
 	}
 
-	public function ur_sender_name(){
+	public static function ur_sender_name(){
 		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
 		return $sender_name;
 	}
