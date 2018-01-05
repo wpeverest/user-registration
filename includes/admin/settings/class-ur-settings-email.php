@@ -162,7 +162,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 										<tr>
 										<td class="ur-email-settings-table-registration-denied-email">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_denied_email' ) . 
-													'">'. __('Registration Denied Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is complete','user-registration' ) ) . '
+													'">'. __('Registration Denied Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user notifying the registration is denied by admin','user-registration' ) ) . '
 										</td>
 										<td class="ur-email-settings-table-registration-denied-email">
 													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_denied_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
