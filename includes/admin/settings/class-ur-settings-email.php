@@ -39,6 +39,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
 
 			parent::__construct();
 		}
@@ -169,10 +171,28 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 										<tr>
 										<td class="ur-email-settings-table-awaiting-admin-approval-email">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_awaiting_admin_approval_email' ) . 
-													'">'. __('Awaiting Admin Approval', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is complete','user-registration' ) ) . '
+													'">'. __('Awaiting Admin Approval', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is awaiting admin approval','user-registration' ) ) . '
 										</td>
 										<td class="ur-email-settings-table-awaiting-admin-approval-email">
 													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_awaiting_admin_approval_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+										</td>
+										</tr>
+										<tr>
+										<td class="ur-email-settings-table-registratin-approved-email">
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_approved_email' ) . 
+													'">'. __('Registration Approved Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user after the admin approves the registration','user-registration' ) ) . '
+										</td>
+										<td class="ur-email-settings-table-registration-approved-email">
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_approved_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
+										</td>
+										</tr>
+										<tr>
+										<td class="ur-email-settings-table-registratin-pending-email">
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_pending_email' ) . 
+													'">'. __('Registration Pending Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user notifying the registration is pending','user-registration' ) ) . '
+										</td>
+										<td class="ur-email-settings-table-registration-pending-email">
+													<a class="button alignright tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_pending_email' ) . '">' . esc_html__( 'Configure', 'user-registration' ) . ' </a>
 										</td>
 										</tr>
 										';
@@ -209,7 +229,17 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			 	break;
 
 			 	case 'ur_settings_awaiting_admin_approval_email':
-			 		$settings = new UR_Settings_Registration_Awaiting_Admin_Approval_Email();
+			 		$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	case 'ur_settings_registration_approved_email':
+			 		$settings = new UR_Settings_Registration_Approved_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	case 'ur_settings_registration_pending_email':
+			 		$settings = new UR_Settings_Registration_Pending_Email();
 			 		$settings = $settings->get_settings();
 			 	break;
 
@@ -248,6 +278,16 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			 	case 'ur_settings_awaiting_admin_approval_email':
 			 		$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	case 'ur_settings_registration_approved_email':
+			 		$settings = new UR_Settings_Registration_Approved_Email();
+			 		$settings = $settings->get_settings();
+			 	break;
+
+			 	case 'ur_settings_registration_pending_email':
+			 		$settings = new UR_Settings_Registration_Pending_Email();
 			 		$settings = $settings->get_settings();
 			 	break;
 

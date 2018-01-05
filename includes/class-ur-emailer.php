@@ -214,22 +214,23 @@ class UR_Emailer {
 
 			$subject = __( sprintf( 'Sorry! Registration changed to pending on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a> has been changed to pending.
- 					<br/>
- 					Sorry for the inconvenience.
- 					<br/>
-               <br/>
- 					You will be notified after it is approved.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Pending_Email();
 
+			$message = $message->ur_get_registration_pending_email();
+
+			$message = get_option( 'user_registration_registration_pending_email', $message );
+
+			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
 
 		} else if ( $status == - 1 ) {
 
@@ -256,23 +257,26 @@ class UR_Emailer {
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration approved on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a>  has been approved.
- 					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
-               <br/>
-               <br/>
-               Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Approved_Email();
+
+			$message = $message->ur_get_registration_approved_email();
+
+			$message = get_option( 'user_registration_registration_approved_email', $message );
+
+			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, $headers );			
+			}
+
 
 		}
-		wp_mail( $email, $subject, $message, $headers );
-
-
 	}
 
 	/**
