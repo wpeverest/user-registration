@@ -176,21 +176,20 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 	
 		public function save() {
 			global $current_section;
-			
 			$emails = $this->get_emails();
-			
+
 			foreach($emails as $email)
-			{		
-				if( $current_section === 'ur_settings_'. $email->id .' ' )
+			{
+				if($current_section == 'ur_settings_'.$email->id.'')
 				{
 					$settings = new $email;
 					$settings = $settings->get_settings();
 				}
 			}
 
-			$settings = isset( $settings ) ? $settings : $this->get_settings(); 
+			$settings = isset( $settings ) ? $settings : $this->get_settings();
+
 			UR_Admin_Settings::save_fields( $settings );
-			
 		}
 
 		/**
@@ -198,21 +197,20 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 */
 		public function output() {
 			global $current_section;
-			
 			$emails = $this->get_emails();
 			
 			foreach($emails as $email)
 			{
-				if( $current_section === 'ur_settings_'. $email->id .' ' )
+				if($current_section == 'ur_settings_'.$email->id.'')
 				{
 					$settings = new $email;
 					$settings = $settings->get_settings();
 				}
 			}
 
-			$settings = isset( $settings ) ? $settings : $this->get_settings(); 
-			UR_Admin_Settings::output_fields( $settings );
+			$settings = isset( $settings ) ? $settings : $this->get_settings();
 
+			UR_Admin_Settings::output_fields( $settings );
 		}
 	}
 
