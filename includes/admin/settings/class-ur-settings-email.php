@@ -155,11 +155,11 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 						<?php 
 						$emails = $this->get_emails();
-						foreach($emails as $email)
+						foreach( $emails as $email )
 						{	
 							echo '<tr><td class="ur-email-settings-table">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . 
-													'">'. __($email->title, 'user-registration') .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id .'' ) . 
+													'">'. __( $email->title, 'user-registration' ) .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
 										</td>
 										<td class="ur-email-settings-table">
 													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
@@ -178,9 +178,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			global $current_section;
 			$emails = $this->get_emails();
 
-			foreach($emails as $email)
+			foreach( $emails as $email )
 			{
-				if($current_section == 'ur_settings_'.$email->id.'')
+				if( $current_section == 'ur_settings_' . $email->id . '' )
 				{
 					$settings = new $email;
 					$settings = $settings->get_settings();
@@ -199,9 +199,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			global $current_section;
 			$emails = $this->get_emails();
 			
-			foreach($emails as $email)
+			foreach( $emails as $email )
 			{
-				if($current_section == 'ur_settings_'.$email->id.'')
+				if( $current_section == 'ur_settings_' . $email->id . '' )
 				{
 					$settings = new $email;
 					$settings = $settings->get_settings();
