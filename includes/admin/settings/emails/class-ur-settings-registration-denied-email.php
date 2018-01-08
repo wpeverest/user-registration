@@ -22,7 +22,8 @@ class UR_Settings_Registration_Denied_Email{
 	
 	public function __construct() {
 		$this->id             = 'registration_denied_email';
-		$this->title          = __( 'Configure Admin Email', 'user-registration' );
+		$this->title          = __( 'Registration Denied Email', 'user-registration' );
+		$this->description    = __( 'Email sent to the user notifying the registration is denied by the admin', 'user-registration' );
 	}
 
 		/**

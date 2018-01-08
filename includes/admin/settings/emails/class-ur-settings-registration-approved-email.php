@@ -22,7 +22,8 @@ class UR_Settings_Registration_Approved_Email{
 	
 	public function __construct() {
 		$this->id             = 'registration_approved_email';
-		$this->title          = __( 'Configure Registration Approved Email', 'user-registration' );
+		$this->title          = __( 'Registration Approved Email', 'user-registration' );
+		$this->description    = __( 'Email sent to the user notifying the registration is approved by site admin', 'user-registration' );
 	}
 
 		/**

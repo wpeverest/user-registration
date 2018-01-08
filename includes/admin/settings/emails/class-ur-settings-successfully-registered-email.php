@@ -22,7 +22,8 @@ class UR_Settings_Successfully_Registered_Email{
 	
 	public function __construct() {
 		$this->id             = 'successfully_registered_email';
-		$this->title          = __( 'Configure Successfully Registered Email', 'user-registration' );
+		$this->title          = __( 'Successfully Registered Email', 'user-registration' );
+		$this->description    = __( 'Email sent to the user after successful registration', 'user-registration' );
 	}
 
 		/**

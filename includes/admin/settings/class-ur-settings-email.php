@@ -157,8 +157,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						$emails = $this->get_emails();
 						foreach($emails as $email)
 						{	
-							echo "<pre>"; print_r($email); echo '</pre>';
-
 							echo '<tr><td class="ur-email-settings-table">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . 
 													'">'. __($email->title, 'user-registration') .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
@@ -178,47 +176,21 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 	
 		public function save() {
 			global $current_section;
+			
+			$emails = $this->get_emails();
+			
+			foreach($emails as $email)
+			{		
+				if( $current_section === 'ur_settings_'. $email->id .' ' )
+				{
+					$settings = new $email;
+					$settings = $settings->get_settings();
+				}
+			}
 
-			switch ( $current_section ) {
-			 	case 'ur_settings_admin_email':
-			 		$settings = new UR_Settings_Admin_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_email_confirmation':
-			 		$settings = new UR_Settings_Email_Confirmation();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_successfully_registered_email':
-			 		$settings = new UR_Settings_Successfully_Registered_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_denied_email':
-			 		$settings = new UR_Settings_Registration_Denied_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_awaiting_admin_approval_email':
-			 		$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_approved_email':
-			 		$settings = new UR_Settings_Registration_Approved_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_pending_email':
-			 		$settings = new UR_Settings_Registration_Pending_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	default:
-			 		$settings = $this->get_settings();
-			 }
-			 	UR_Admin_Settings::save_fields( $settings );
+			$settings = isset( $settings ) ? $settings : $this->get_settings(); 
+			UR_Admin_Settings::save_fields( $settings );
+			
 		}
 
 		/**
@@ -226,47 +198,20 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 */
 		public function output() {
 			global $current_section;
-
-			switch ( $current_section ) {
-				case 'ur_settings_admin_email':
-					$settings = new UR_Settings_Admin_Email;
+			
+			$emails = $this->get_emails();
+			
+			foreach($emails as $email)
+			{
+				if( $current_section === 'ur_settings_'. $email->id .' ' )
+				{
+					$settings = new $email;
 					$settings = $settings->get_settings();
-				break;
+				}
+			}
 
-				case 'ur_settings_email_confirmation':
-			 		$settings = new UR_Settings_Email_Confirmation();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_successfully_registered_email':
-			 		$settings = new UR_Settings_Successfully_Registered_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_denied_email':
-			 		$settings = new UR_Settings_Registration_Denied_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_awaiting_admin_approval_email':
-			 		$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_approved_email':
-			 		$settings = new UR_Settings_Registration_Approved_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	case 'ur_settings_registration_pending_email':
-			 		$settings = new UR_Settings_Registration_Pending_Email();
-			 		$settings = $settings->get_settings();
-			 	break;
-
-			 	default:
-			 		$settings = $this->get_settings();
-			 }
-			 	UR_Admin_Settings::output_fields( $settings );
+			$settings = isset( $settings ) ? $settings : $this->get_settings(); 
+			UR_Admin_Settings::output_fields( $settings );
 
 		}
 	}

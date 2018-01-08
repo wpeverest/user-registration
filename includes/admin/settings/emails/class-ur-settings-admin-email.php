@@ -21,7 +21,8 @@ class UR_Settings_Admin_Email{
 	
 	public function __construct() {
 		$this->id             = 'admin_email';
-		$this->title          = __( 'Configure Admin Email', 'user-registration' );
+		$this->title          = __( 'Admin Email', 'user-registration' );
+		$this->description    = __( 'Email sent to the admin when a new user registers', 'user-registration' );
 	}
 
 		/**

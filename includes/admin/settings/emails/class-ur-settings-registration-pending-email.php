@@ -21,7 +21,8 @@ class UR_Settings_Registration_Pending_Email{
 
 	public function __construct() {
 		$this->id             = 'registration_pending_email';
-		$this->title          = __( 'Configure Registration Pending Email', 'user-registration' );
+		$this->title          = __( 'Registration Pending Email', 'user-registration' );
+		$this->description    = __( 'Email sent to the user notifying the registration is pending', 'user-registration' );
 	}
 
 		/**

@@ -22,7 +22,8 @@ class UR_Settings_Awaiting_Admin_Approval_Email{
 	
 	public function __construct() {
 		$this->id             = 'awaiting_admin_approval_email';
-		$this->title          = __( 'Configure Admin Email', 'user-registration' );
+		$this->title          = __( 'Awaiting Admin Approval', 'user-registration' );
+		$this->description    = __( 'Email sent to the user notifying the registration is awaiting admin approval', 'user-registration' );
 	}
 
 		/**

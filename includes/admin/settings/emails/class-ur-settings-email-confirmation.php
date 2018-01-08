@@ -22,6 +22,7 @@ class UR_Settings_Email_Confirmation{
 	public function __construct() {
 		$this->id             = 'email_confirmation';
 		$this->title          = __( 'Email Confirmation', 'user-registration' );
+		$this->description    = __( 'Email sent to the a new when email confirmation to register option is choosen', 'user-registration' );
 	}
 
 		/**
