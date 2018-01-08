@@ -152,69 +152,23 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						</thead>
 						<tbody>
 						
-							<?php echo '<tr><td class="ur-email-settings-table-admin-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . 
-													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to admin when a new user register','user-registration' ) ) . '
+
+						<?php 
+						$emails = $this->get_emails();
+						foreach($emails as $email)
+						{	
+							echo "<pre>"; print_r($email); echo '</pre>';
+
+							echo '<tr><td class="ur-email-settings-table">
+													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . 
+													'">'. __($email->title, 'user-registration') .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
 										</td>
-										
-										<td class="ur-email-settings-table-admin-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td></tr>
-										<tr>
-										<td class="ur-email-settings-table-email-confirmation">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_confirmation' ) . 
-													'">'. __('Email Confirmation', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when email confimation login option is active','user-registration' ) ) . '
+										<td class="ur-email-settings-table">
+													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
 										</td>
-										<td class="ur-email-settings-table-email-confirmation">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_email_confirmation' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td></tr>
-										<tr>
-										<td class="ur-email-settings-table-successfully-registered-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_successfully_registered_email' ) . 
-													'">'. __('Successfully Registered Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is complete','user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table-successfully-registered-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_successfully_registered_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-										</tr>
-										<tr>
-										<td class="ur-email-settings-table-registration-denied-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_denied_email' ) . 
-													'">'. __('Registration Denied Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user notifying the registration is denied by admin','user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table-registration-denied-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_denied_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-										</tr>
-										<tr>
-										<td class="ur-email-settings-table-awaiting-admin-approval-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_awaiting_admin_approval_email' ) . 
-													'">'. __('Awaiting Admin Approval', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user when the registration is awaiting admin approval','user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table-awaiting-admin-approval-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_awaiting_admin_approval_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-										</tr>
-										<tr>
-										<td class="ur-email-settings-table-registratin-approved-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_approved_email' ) . 
-													'">'. __('Registration Approved Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user after the admin approves the registration','user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table-registration-approved-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_approved_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-										</tr>
-										<tr>
-										<td class="ur-email-settings-table-registratin-pending-email">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_pending_email' ) . 
-													'">'. __('Registration Pending Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to user notifying the registration is pending','user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table-registration-pending-email">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_registration_pending_email' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-										</tr>
-										';
-							?>
+									</tr>';	
+						}
+						?>
 						</tbody>
 					</table>
 				</td>
