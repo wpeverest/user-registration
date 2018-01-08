@@ -20,6 +20,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 	 */
 	class UR_Settings_Email extends UR_Settings_Page {
 
+		/**
+		 * Email notification classes.
+		 *
+		 * @var array
+		 */
+	
+		public $emails = array();
 
 		/**
 		 * Constructor.
@@ -28,21 +35,27 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$this->id    = 'email';
 			$this->label = __( 'Emails', 'user-registration' );
+			
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 
 			add_action( 'user_registration_admin_field_email_notification', array( $this, 'email_notification_setting' ) );
 
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
+			$this->emails['UR_Settings_Admin_Email']                = include( 'emails/class-ur-settings-admin-email.php' );
+			$this->emails['UR_Settings_Awaiting_Admin_Approval_Email'] = include( 'emails/class-ur-settings-awaiting-admin-approval-email.php' );
+			
+			$this->emails['UR_Settings_Email_Confirmation'] = include( 'emails/class-ur-settings-email-confirmation.php' );
 
-			parent::__construct();
+			$this->emails['UR_Settings_Registration_Approved_Email'] = include( 'emails/class-ur-settings-registration-approved-email.php' );
+			
+			$this->emails['UR_Settings_Registration_Denied_Email'] = include( 'emails/class-ur-settings-registration-denied-email.php' );
+
+			$this->emails['UR_Settings_Registration_Pending_Email'] = include( 'emails/class-ur-settings-registration-pending-email.php' );
+
+			$this->emails['UR_Settings_Successfully_Registered_Email'] = include( 'emails/class-ur-settings-successfully-registered-email.php' );
+
+			$this->emails = apply_filters( 'user_registration_email_classes', $this->emails );
 		}
 
 		/**
@@ -114,6 +127,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			);
 				return apply_filters( 'user_registration_get_email_settings_' . $this->id, $settings );
 		}
+		
+		public function get_emails() {
+			return $this->emails;
+		}
 
 		public function email_notification_setting() {
 		?>
@@ -134,6 +151,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							</tr>
 						</thead>
 						<tbody>
+						
 							<?php echo '<tr><td class="ur-email-settings-table-admin-email">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_admin_email' ) . 
 													'">'. __('Admin Email', 'user-registration') .'</a>' . ur_help_tip( __('Customize the email sent to admin when a new user register','user-registration' ) ) . '

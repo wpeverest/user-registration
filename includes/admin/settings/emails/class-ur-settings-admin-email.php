@@ -18,7 +18,6 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
  * UR_Settings_Admin_Email Class.
  */
 class UR_Settings_Admin_Email{
-
 	
 	public function __construct() {
 		$this->id             = 'admin_email';
