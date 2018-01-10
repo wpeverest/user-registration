@@ -92,6 +92,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+= 1.1.6 - 10/01/2018 =
+* Feature - Privacy Policy checkbox field added
+* Feature - Radio button field added
+* Fix - Welcome message reappearing issue
+* Fix - User data deletion on uninstall
+* Fix - Undefined function call ur_get_notices
+* Fix - Shortcode issue with elementor
+
 = 1.1.5 - 03/12/2017 =
 * Feature - Introduced Checkbox form field
 * Feature - Email confirmation option for login
