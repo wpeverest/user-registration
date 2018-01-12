@@ -158,7 +158,7 @@ class UR_Emailer {
 		} else {
 			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
 
-			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
 
 			$message = new UR_Settings_Successfully_Registered_Email();
 
