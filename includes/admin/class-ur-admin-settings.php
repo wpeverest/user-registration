@@ -131,7 +131,7 @@ class UR_Admin_Settings {
 
 		do_action( 'user_registration_settings_start' );
 
-		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'select2' ), UR_VERSION, true );
+		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris' ), UR_VERSION, true );
 
 		wp_localize_script( 'user-registration-settings', 'user_registration_settings_params', array(
 			'i18n_nav_warning' => __( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
