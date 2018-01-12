@@ -124,7 +124,7 @@ class UR_Emailer {
 
 			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
 
-			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
@@ -166,9 +166,9 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
 
-			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
 
-			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
@@ -199,9 +199,9 @@ class UR_Emailer {
 
 		$message = get_option( 'user_registration_admin_email', $message );
 
-		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}");
+		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
 
-		$replace_with = array( $username, $user_email, $blog_info );
+		$replace_with = array( $username, $user_email, $blog_info, get_home_url() );
 
 		$message = str_replace( $to_replace, $replace_with, $message );
 
