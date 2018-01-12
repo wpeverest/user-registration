@@ -100,7 +100,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_email_confirmation', $message );
 
-			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
 
@@ -122,7 +122,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
 
-			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}");
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
 
@@ -145,7 +145,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_registration_denied_email', $message );
 
-			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
@@ -160,13 +160,13 @@ class UR_Emailer {
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
 
-			$message = new UR_Settings_Email_Confirmation();
+			$message = new UR_Settings_Successfully_Registered_Email();
 
-			$message = $message->ur_get_email_confirmation();
+			$message = $message->ur_get_successfully_registered_email();
 
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
 
-			$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
 
@@ -199,7 +199,7 @@ class UR_Emailer {
 
 		$message = get_option( 'user_registration_admin_email', $message );
 
-		$to_replace = array("{{user_name}}", "{{user_email}}", "{{blog_info}}");
+		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}");
 
 		$replace_with = array( $username, $user_email, $blog_info );
 
@@ -233,7 +233,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_registration_pending_email', $message );
 
-			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
@@ -255,7 +255,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_registration_denied_email', $message );
 
-			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
@@ -276,7 +276,7 @@ class UR_Emailer {
 
 			$message = get_option( 'user_registration_registration_approved_email', $message );
 
-			$to_replace = array( "{{user_name}}", "{{user_email}}", "{{blog_info}}", "{{home_url}}" );
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 

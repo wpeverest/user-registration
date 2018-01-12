@@ -78,7 +78,7 @@ class UR_Settings_Registration_Pending_Email{
 	
 		$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
 
-			'Hi {{user_name}},
+			'Hi {{username}},
 					<br/>
            <br/>
 					Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending.

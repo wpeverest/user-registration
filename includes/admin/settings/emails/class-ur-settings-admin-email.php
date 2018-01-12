@@ -80,7 +80,7 @@ class UR_Settings_Admin_Email{
 
 				'Hi Admin,
 					<br/><br/>
-					A new user {{username}} - {{user_email}} has successfully registered to your site <a href="{{blog_info}}">{{blog_info}}</a>.
+					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>.
 						<br/>
 	               <br/>
 						Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.

@@ -79,7 +79,7 @@ class UR_Settings_Registration_Approved_Email{
 	
 		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
 
-				'Hi {{user_name}},
+				'Hi {{username}},
  					<br/>
                <br/>
  					Your registration on <a href="{{home_url}}">{{blog_info}}</a>  has been approved.
