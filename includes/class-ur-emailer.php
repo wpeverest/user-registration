@@ -39,14 +39,22 @@ class UR_Emailer {
 		), 10, 3 );
 	}
 
-	public static function ur_sender_email(){
+	public static function ur_sender_email() {
 		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
 		return $sender_email;
 	}
 
-	public static function ur_sender_name(){
+	public static function ur_sender_name() {
 		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
 		return $sender_name;
+	}
+
+	public static function ur_get_header() {
+		$header = "From: {self::ur_sender_name()} <{self::ur_sender_address()}>\r\n";
+		$header .= "Reply-To: {$this->ur_sender_address()}\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8"; 
+
+		return $header;
 	}
 
 	/**
@@ -87,8 +95,6 @@ class UR_Emailer {
 
 		$blog_info = get_bloginfo();
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-
 		if( $email_status === '0' ) {
 
 			$subject = get_option('user_registration_email_confirmation_subject', __('Please confirm your registration on {{blog_info}}', 'user-registration') );
@@ -109,7 +115,7 @@ class UR_Emailer {
 
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			wp_mail( $email, $subject, $message, $headers );
+			wp_mail( $email, $subject, $message, self::ur_get_header() );
 
 		}
 
@@ -134,7 +140,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
 			}
 
 
@@ -157,7 +163,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
 			}
 
 		} else {
@@ -180,7 +186,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
 			}
 		}
 	}
@@ -190,7 +196,7 @@ class UR_Emailer {
 	 */
 	private static function send_mail_to_admin( $user_email, $username, $user_id ) {
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		$headers = array( 'Content-Type: text/html; charset=UTF-8', );
 
 		$admin_email = get_option( 'admin_email' );
 
@@ -251,7 +257,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
 			}
 
 		} else if ( $status == - 1 ) {
@@ -275,7 +281,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
 			}
 
 		} else {
@@ -298,7 +304,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, $headers );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
 			}
 
 
