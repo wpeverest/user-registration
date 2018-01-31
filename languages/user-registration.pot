@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.7\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-01-31 08:34:14+00:00\n"
+"POT-Creation-Date: 2018-01-31 09:57:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -399,6 +399,10 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-email.php:145
 #: includes/admin/settings/class-ur-settings-email.php:165
 msgid "Configure"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:218
+msgid "Smart Tags Used"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:30
