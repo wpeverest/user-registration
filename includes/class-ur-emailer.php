@@ -26,15 +26,35 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-		if('yes' == get_option('user_registration_general_setting_disable_email')){
+		if('yes' == get_option('user_registration_email_setting_disable_email')){
 			return;
 		}
+
+		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
 
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
+	}
 
+	public static function ur_sender_email() {
+		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
+		return $sender_email;
+	}
+
+	public static function ur_sender_name() {
+		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		return $sender_name;
+	}
+
+	public static function ur_get_header() {
+		$header = "From: ". self::ur_sender_name()." <".self::ur_sender_email().">\r\n";
+		$header .= "Reply-To: ".self::ur_sender_email()."\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8";
+
+		return $header; 
 	}
 
 	/**
@@ -75,86 +95,100 @@ class UR_Emailer {
 
 		$blog_info = get_bloginfo();
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-
 		if( $email_status === '0' ) {
 
-			$subject = __( sprintf( 'Please confirm your registration on %s', $blog_info ), 'user-registration' );
+			$subject = get_option('user_registration_email_confirmation_subject', __('Please confirm your registration on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
-               <br/>
- 					Please click on this verification link '.get_home_url().'/wp-login.php/?ur_token='. $email_token .' to confirm registration.
- 					<br/>
-               <br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Email_Confirmation();
+
+			$message = $message->ur_get_email_confirmation();
+
+			$message = get_option( 'user_registration_email_confirmation', $message );
+
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}","{{email_token}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url(), $email_token );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			wp_mail( $email, $subject, $message, self::ur_get_header() );
+
 		}
 
 		else if ( $status == 0 ) {
 
-			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_awaiting_admin_approval_email_subject', __('Thank you for registration on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
- 					Please wait until the site admin approves your registration.
- 					<br/>
- 					You will be notified after it is approved.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
+
+			$message = $message->ur_get_awaiting_admin_approval_email();
+
+			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
+
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+			}
 
 
 		} else if ( $status == - 1 ) {
 
 			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have registered on <a href="%s">%s</a>.
- 					<br/>
- 					Unfortunately your registration is denied.
- 					<br/>
-               <br/>
- 					Sorry for the inconvenience.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Denied_Email();
+
+			$message = $message->ur_get_registration_denied_email();
+
+			$message = get_option( 'user_registration_registration_denied_email', $message );
+
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+			}
 
 		} else {
-			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_successfully_registered_email_subject',__('Congratulations! Registration Complete on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					You have successfully completed user registration on <a href="%s">%s</a>.
- 					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
-               <br/>
-               <br/>
-               Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Successfully_Registered_Email();
 
+			$message = $message->ur_get_successfully_registered_email();
+
+			$message = get_option( 'user_registration_successfully_registered_email', $message );
+
+			$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
+			}
 		}
-		wp_mail( $email, $subject, $message, $headers );
-
 	}
 
 	/**
@@ -162,29 +196,37 @@ class UR_Emailer {
 	 */
 	private static function send_mail_to_admin( $user_email, $username, $user_id ) {
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		$header = "Reply-To: {{email}} \r\n";
+		
+		$header .= "Content-Type: text/html; charset=UTF-8";
 
 		$admin_email = get_option( 'admin_email' );
 
+		$subject = get_option( 'user_registration_admin_email_submit', __('A New User Registered', 'user_registration') );
+
 		$blog_info = get_bloginfo();
 
-		$subject = __( 'A New User Registered', 'user-registration' );
+		include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
 
-		$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
+		$message = new UR_Settings_Admin_Email();
 
-			'Hi Admin,
-					<br/>
-               <br/>
-					A new user (%s - %s) has successfully registered to your site <a href="%s">%s</a>.
-					<br/>
-               <br/>
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
-               <br/>
-               <br/>
-					Thank You!', $username, $user_email, get_home_url(), $blog_info ), 'user-registration' ) );
+		$message = $message->ur_get_admin_email();
 
-		wp_mail( $admin_email, $subject, $message, $headers );
+		$message = get_option( 'user_registration_admin_email', $message );
 
+		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}");
+
+		$replace_with = array( $username, $user_email, $blog_info, get_home_url() );
+
+		$message = str_replace( $to_replace, $replace_with, $message );
+
+		$subject = str_replace( $to_replace, $replace_with, $subject );
+		
+		$header = str_replace( $to_replace, $replace_with, $header );
+
+		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ){
+			wp_mail( $admin_email, $subject, $message, $header );
+		}
 	}
 
 	/**
@@ -200,62 +242,77 @@ class UR_Emailer {
 
 		if ( $status == 0 ) {
 
-			$subject = __( sprintf( 'Sorry! Registration changed to pending on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_pending_email_subject', __('Sorry! Registration changed to pending on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a> has been changed to pending.
- 					<br/>
- 					Sorry for the inconvenience.
- 					<br/>
-               <br/>
- 					You will be notified after it is approved.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Pending_Email();
 
+			$message = $message->ur_get_registration_pending_email();
+
+			$message = get_option( 'user_registration_registration_pending_email', $message );
+
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
+			}
 
 		} else if ( $status == - 1 ) {
 
-			$subject = __( sprintf( 'Sorry! Registration denied on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a> has been denied.
- 					<br/>
- 					Sorry for the inconvenience.
- 					<br/>
- 					<br/>
- 					Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Denied_Email();
+
+			$message = $message->ur_get_registration_denied_email();
+
+			$message = get_option( 'user_registration_registration_denied_email', $message );
+
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+			}
 
 		} else {
-			$subject = __( sprintf( 'Congratulations! Registration approved on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_approved_email_subject',  __('Congratulations! Registration approved on {{blog_info}}', 'user-registration') );
 
-			$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
 
-				'Hi %s,
- 					<br/>
-               <br/>
- 					Your registration on <a href="%s">%s</a>  has been approved.
- 					<br/>
- 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="%s">%s</a>.
-               <br/>
-               <br/>
-               Thank You!',
-				$username, get_home_url(), $blog_info, get_home_url(), $blog_info ), 'user-registration' ) );
+			$message = new UR_Settings_Registration_Approved_Email();
+
+			$message = $message->ur_get_registration_approved_email();
+
+			$message = get_option( 'user_registration_registration_approved_email', $message );
+
+			$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+
+			$replace_with = array( $username, $email, $blog_info, get_home_url() );
+
+			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
+			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
+				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+			}
+
 
 		}
-		wp_mail( $email, $subject, $message, $headers );
-
-
 	}
 
 	/**

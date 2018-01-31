@@ -972,6 +972,26 @@ function ur_get_all_user_registration_form() {
 	return $all_forms;
 }
 
+function ur_get_user_login_option() {
+	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
+		return array(
+			'title'    => __( 'Disable emails', 'user-registration' ),
+			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
+			'id'       => 'user_registration_email_setting_disable_email',
+			'default'  => 'no',
+			'type'     => 'checkbox',
+			'autoload' => false,
+		);
+	}
+	else {
+		update_option( 'user_registration_email_setting_disable_email' , 'no');
+	}
+}
+
+function ur_back_link( $label, $url ) {
+	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+}
+
 /**
  * @since 1.1.2
  * Output any queued javascript code in the footer.

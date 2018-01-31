@@ -145,15 +145,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Disable emails', 'user-registration' ),
-						'desc'     => __( 'Disable emails sent after registration.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_disable_email',
-						'default'  => 'no',
-						'type'     => 'checkbox',
-						'autoload' => false,
-					),
-
-					array(
 						'title'    => __( 'Form submit button label', 'user-registration' ),
 						'desc'     => __( 'This option let you change the submit button label.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_form_submit_label',

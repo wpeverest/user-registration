@@ -6,6 +6,7 @@
 jQuery(function () {
 
 	var mySelect = jQuery('#user_registration_general_setting_login_options option:selected').val();
+	
 	if ( mySelect == 'email_confirmation' ) {
 		jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
 		jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);

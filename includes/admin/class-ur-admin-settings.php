@@ -50,6 +50,7 @@ class UR_Admin_Settings {
 
 			$settings[] = include( 'settings/class-ur-settings-general.php' );
  	        $settings[] = include( 'settings/class-ur-settings-integration.php' );
+ 	        $settings[] = include( 'settings/class-ur-settings-email.php' );
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
@@ -130,7 +131,7 @@ class UR_Admin_Settings {
 
 		do_action( 'user_registration_settings_start' );
 
-		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'select2' ), UR_VERSION, true );
+		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris' ), UR_VERSION, true );
 
 		wp_localize_script( 'user-registration-settings', 'user_registration_settings_params', array(
 			'i18n_nav_warning' => __( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
@@ -210,6 +211,7 @@ class UR_Admin_Settings {
 	 * @param array[] $options Opens array to output
 	 */
 	public static function output_fields( $options ) {
+
 		foreach ( $options as $value ) {
 			if ( ! isset( $value['type'] ) ) {
 				continue;
@@ -533,6 +535,37 @@ class UR_Admin_Settings {
 						</td>
 					</tr><?php
 					break;
+					
+				case 'tinymce':
+
+					$settings = array(
+						'name' => esc_attr($value['id']),
+						'id' =>  esc_attr( $value['id'] ),
+						'style' => esc_attr( $value['css'] ),
+						'default' => esc_attr($value['default']),
+						'class'=> esc_attr( $value['class'] ),
+						'quicktags'     => array( 'buttons' => 'em,strong,link' ),
+						'tinymce'       => array(
+							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+							'theme_advanced_buttons2' => '',
+						),
+						'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+					);
+
+					$option_value = self::get_option( $value['id'], $value['default'] );
+
+					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+						<th scope="row" class="titledesc">
+							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+							<?php echo $tooltip_html; ?>
+						</th>
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<?php echo $description; ?>
+
+							<?php wp_editor($option_value, $value['id'], $settings);?>
+						</td>
+					</tr><?php
+					break;
 
 				// Default: run an action
 				default:
@@ -611,6 +644,7 @@ class UR_Admin_Settings {
 			if ( strstr( $option['id'], '[' ) ) {
 				parse_str( $option['id'], $option_name_array );
 				$option_name  = current( array_keys( $option_name_array ) );
+
 				$setting_name = key( $option_name_array[ $option_name ] );
 				$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null;
 			} else {
@@ -621,6 +655,7 @@ class UR_Admin_Settings {
 
 			// Format the value based on option type.
 			switch ( $option['type'] ) {
+
 				case 'checkbox' :
 					$value = '1' === $raw_value || 'yes' === $raw_value ? 'yes' : 'no';
 					break;
@@ -639,6 +674,10 @@ class UR_Admin_Settings {
 					$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
 					$value   = in_array( $raw_value, $allowed_values ) ? $raw_value : $default;
 					break;
+				case 'tinymce':
+					$value = wpautop( $raw_value );
+				break;
+
 				default :
 					$value = ur_clean( $raw_value );
 					break;
