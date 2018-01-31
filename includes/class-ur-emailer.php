@@ -50,11 +50,19 @@ class UR_Emailer {
 	}
 
 	public static function ur_get_header() {
-		$header = "From: {self::ur_sender_name()} <{self::ur_sender_address()}>\r\n";
-		$header .= "Reply-To: {$this->ur_sender_address()}\r\n";
-		$header .= "Content-Type: text/html; charset=UTF-8"; 
+		$header = "From: ". self::ur_sender_name() ." <". self::ur_sender_email() .">\r\n";
+		$header .= "Reply-To: ". self::ur_sender_email() ."\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8";
 
-		return $header;
+		return $header; 
+	}
+
+	public static function ur_get_admin_email_header() {
+
+		$header = "Reply-To: {{email}}\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8";
+
+		return $header; 
 	}
 
 	/**
@@ -196,8 +204,6 @@ class UR_Emailer {
 	 */
 	private static function send_mail_to_admin( $user_email, $username, $user_id ) {
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8', );
-
 		$admin_email = get_option( 'admin_email' );
 
 		$subject = get_option( 'user_registration_admin_email_submit', __('A New User Registered', 'user_registration') );
@@ -220,8 +226,12 @@ class UR_Emailer {
 
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
+		$header = self::get_ur_admin_email_header(); 
+
+		$header = str_replace( $to_replace, $replace_with, $header );
+
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ){
-			wp_mail( $admin_email, $subject, $message, $headers );
+			wp_mail( $admin_email, $subject, $message, $header );
 		}
 	}
 
