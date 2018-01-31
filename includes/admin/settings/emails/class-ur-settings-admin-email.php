@@ -54,7 +54,7 @@ class UR_Settings_Admin_Email{
 					array(
 						'title'    => __( 'Email Subject', 'user-registration' ),
 						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_admin_email_submit',
+						'id'       => 'user_registration_admin_email_subject',
 		 				'type'     => 'text',
 		 				'default'  => __('Thank you for registration on {{blog_info}}', 'user-registration'),
 						'css'      => 'min-width: 350px;',

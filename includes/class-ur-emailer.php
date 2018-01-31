@@ -121,7 +121,7 @@ class UR_Emailer {
 
 		else if ( $status == 0 ) {
 
-			$subject = get_option( 'user_registration_enable_awaiting_admin_approval_email_subject', __('Thank you for registration on {{blog_info}}', 'user-registration') );
+			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __('Thank you for registration on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
 
@@ -146,7 +146,7 @@ class UR_Emailer {
 
 		} else if ( $status == - 1 ) {
 
-			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
@@ -161,6 +161,8 @@ class UR_Emailer {
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, self::ur_get_header() );			
@@ -202,7 +204,7 @@ class UR_Emailer {
 
 		$admin_email = get_option( 'admin_email' );
 
-		$subject = get_option( 'user_registration_admin_email_submit', __('A New User Registered', 'user_registration') );
+		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user_registration') );
 
 		$blog_info = get_bloginfo();
 
@@ -242,7 +244,7 @@ class UR_Emailer {
 
 		if ( $status == 0 ) {
 
-			$subject = get_option( 'user_registration_enable_registration_pending_email_subject', __('Sorry! Registration changed to pending on {{blog_info}}', 'user-registration') );
+			$subject = get_option( 'user_registration_registration_pending_email_subject', __('Sorry! Registration changed to pending on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
 
@@ -266,7 +268,7 @@ class UR_Emailer {
 
 		} else if ( $status == - 1 ) {
 
-			$subject = get_option( 'user_registration_enable_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
+			$subject = get_option( 'user_registration_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
@@ -289,7 +291,7 @@ class UR_Emailer {
 			}
 
 		} else {
-			$subject = get_option( 'user_registration_enable_registration_approved_email_subject',  __('Congratulations! Registration approved on {{blog_info}}', 'user-registration') );
+			$subject = get_option( 'user_registration_registration_approved_email_subject',  __('Congratulations! Registration approved on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
 
