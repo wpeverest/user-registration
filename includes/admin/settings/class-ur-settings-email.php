@@ -107,7 +107,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 					array(
 						'title'             => __( '"From" address', 'user-registration' ),
-						'desc'              => __( 'How the sender email appears in outgoing user registration emails.', 'online-restaurant-reservation' ),
+						'desc'              => __( 'How the sender email appears in outgoing user registration emails.', 'user-registration' ),
 						'id'                => 'user_registration_email_from_address',
 						'type'              => 'email',
 						'custom_attributes' => array(
@@ -141,7 +141,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							<tr>
 								<?php
 									$columns = apply_filters( 'user_registration_email_setting_columns', array(
-										'name'       => __( 'Email', 'user-registrtion' ),
+										'name'       => __( 'Email', 'user-registration' ),
 										'actions'    => __( 'Configure', 'user-registration' ),
 									) );
 									foreach ( $columns as $key => $column ) {

@@ -204,7 +204,7 @@ class UR_Emailer {
 
 		$admin_email = get_option( 'admin_email' );
 
-		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user_registration') );
+		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user-registration') );
 
 		$blog_info = get_bloginfo();
 

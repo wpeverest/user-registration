@@ -1,14 +1,14 @@
-# Copyright (C) 2017 WPEverest
+# Copyright (C) 2018 WPEverest
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.1.5\n"
+"Project-Id-Version: User Registration 1.1.7\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2017-12-29 08:53:49+00:00\n"
+"POT-Creation-Date: 2018-01-31 08:34:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n1.0.0\n"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:247
 #: includes/admin/class-ur-admin-notices.php:120
-#: includes/admin/class-ur-admin-settings.php:67
+#: includes/admin/class-ur-admin-settings.php:68
 #: includes/admin/class-ur-admin-status.php:167
 msgid "Action failed. Please refresh the page and retry."
 msgstr ""
@@ -158,7 +158,7 @@ msgid "User Registration endpoints"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:460
-#: includes/admin/settings/class-ur-settings-general.php:200
+#: includes/admin/settings/class-ur-settings-general.php:191
 #: includes/class-ur-query.php:79
 msgid "Lost password"
 msgstr ""
@@ -194,15 +194,15 @@ msgstr ""
 msgid "Attachment not found."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:77
+#: includes/admin/class-ur-admin-settings.php:78
 msgid "Your settings have been saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:136
+#: includes/admin/class-ur-admin-settings.php:137
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:532
+#: includes/admin/class-ur-admin-settings.php:534
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -354,6 +354,53 @@ msgstr ""
 msgid "Empty trash"
 msgstr ""
 
+#: includes/admin/settings/class-ur-settings-email.php:37
+msgid "Emails"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:69
+msgid "General Email Settings"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:82
+msgid "Email notifications"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:82
+msgid ""
+"Email notifications sent from user registration are listed below. Click on "
+"an email to configure it."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:91
+msgid "Email Sender Options"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:98
+msgid "\"From\" name"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:99
+msgid "How the sender name appears in outgoing user registration emails."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:109
+msgid "\"From\" address"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:110
+msgid "How the sender email appears in outgoing user registration emails."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:144
+msgid "Email"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-email.php:145
+#: includes/admin/settings/class-ur-settings-email.php:165
+msgid "Configure"
+msgstr ""
+
 #: includes/admin/settings/class-ur-settings-general.php:30
 msgid "General"
 msgstr ""
@@ -404,7 +451,7 @@ msgid "This option lets you enter the label to registration url in login form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:110
-#: templates/myaccount/form-login.php:75
+#: templates/myaccount/form-login.php:73
 msgid "Not a member yet? Register now."
 msgstr ""
 
@@ -436,58 +483,50 @@ msgid "Check to use strong password on user registration form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:148
-msgid "Disable emails"
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-general.php:149
-msgid "Disable emails sent after registration."
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-general.php:157
 #: includes/functions-ur-core.php:631
 msgid "Form submit button label"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:158
+#: includes/admin/settings/class-ur-settings-general.php:149
 msgid "This option let you change the submit button label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:175
+#: includes/admin/settings/class-ur-settings-general.php:166
 msgid "My account endpoints"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:177
+#: includes/admin/settings/class-ur-settings-general.php:168
 msgid ""
 "Endpoints are appended to your page URLs to handle specific actions on the "
 "accounts pages. They should be unique and can be left blank to disable the "
 "endpoint."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:182
+#: includes/admin/settings/class-ur-settings-general.php:173
 msgid "Edit account"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:183
+#: includes/admin/settings/class-ur-settings-general.php:174
 msgid "Endpoint for the \"My account &rarr; Edit account\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:191
+#: includes/admin/settings/class-ur-settings-general.php:182
 msgid "Edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:192
+#: includes/admin/settings/class-ur-settings-general.php:183
 msgid "Endpoint for the \"My account &rarr; Edit profile\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:201
+#: includes/admin/settings/class-ur-settings-general.php:192
 msgid "Endpoint for the \"My account &rarr; Lost password\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:209
+#: includes/admin/settings/class-ur-settings-general.php:200
 msgid "User logout"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:210
+#: includes/admin/settings/class-ur-settings-general.php:201
 msgid ""
 "Endpoint for the triggering logout. You can add this to your menus via a "
 "custom link: yoursite.com/?user-logout=true"
@@ -515,6 +554,184 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:66
 msgid "Get secret key from google %1$s reCaptcha %2$s."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:35
+msgid "Admin Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:25
+msgid "Email sent to the admin when a new user registers"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:35
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:35
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:35
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:36
+msgid "Return to emails"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:47
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:49
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:49
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:49
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:48
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:49
+msgid "Enable this email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:48
+msgid "Enable this email sent to admin after successful user registration."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:55
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:58
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:47
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:58
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:58
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:57
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:58
+msgid "Email Subject"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:56
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:59
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:48
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:59
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:59
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:58
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:59
+msgid "The email subject you want to customize."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:59
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:62
+#: includes/class-ur-emailer.php:124
+msgid "Thank you for registration on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:65
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:68
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:57
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:69
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:69
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:67
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:67
+msgid "Email Content"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:66
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:69
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:58
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:70
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:70
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:68
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:68
+msgid "The email content you want to customize."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:25
+msgid "Awaiting Admin Approval"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:26
+msgid "Email sent to the user notifying the registration is awaiting admin approval"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:36
+msgid "Awaiting Admin Approval Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:50
+msgid ""
+"Enable this email sent to user notifying the registration is awaiting admin "
+"approval."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:24
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:35
+msgid "Email Confirmation"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:25
+msgid ""
+"Email sent to the a new when email confirmation to register option is "
+"choosen"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
+#: includes/class-ur-emailer.php:100
+msgid "Please confirm your registration on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:25
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:36
+msgid "Registration Approved Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:26
+msgid "Email sent to the user notifying the registration is approved by site admin"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:50
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:50
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:49
+msgid "Enable this email sent to admin after successfull user registration."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:62
+#: includes/class-ur-emailer.php:294
+msgid "Congratulations! Registration approved on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:25
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:36
+msgid "Registration Denied Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:26
+msgid "Email sent to the user notifying the registration is denied by the admin"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:62
+#: includes/class-ur-emailer.php:149 includes/class-ur-emailer.php:271
+msgid "Sorry! Registration denied on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:24
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:35
+msgid "Registration Pending Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:25
+msgid "Email sent to the user notifying the registration is pending"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
+#: includes/class-ur-emailer.php:247
+msgid "Sorry! Registration changed to pending on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:25
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:36
+msgid "Successfully Registered Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:26
+msgid "Email sent to the user after successful registration"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:50
+msgid "Enable this email sent after successful user registration."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:62
+#: includes/class-ur-emailer.php:172
+msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
 #: includes/admin/updater/class-ur-addon-updater.php:210
@@ -729,19 +946,19 @@ msgid ""
 "the link sent to your email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:171
+#: includes/class-ur-emailer.php:207
 msgid "A New User Registered"
 msgstr ""
 
-#: includes/class-ur-emailer.php:271
+#: includes/class-ur-emailer.php:330
 msgid "Someone has requested a password reset for the following account:"
 msgstr ""
 
-#: includes/class-ur-emailer.php:274
+#: includes/class-ur-emailer.php:333
 msgid "If this was a mistake, just ignore this email and nothing will happen."
 msgstr ""
 
-#: includes/class-ur-emailer.php:275
+#: includes/class-ur-emailer.php:334
 msgid "To reset your password, visit the following address:"
 msgstr ""
 
@@ -2324,6 +2541,14 @@ msgstr ""
 msgid ""
 "The class <code>%s</code> provided by user_registration_logging_class "
 "filter must implement <code>UR_Logger_Interface</code>."
+msgstr ""
+
+#: includes/functions-ur-core.php:978
+msgid "Disable emails"
+msgstr ""
+
+#: includes/functions-ur-core.php:979
+msgid "Disable all emails sent after registration."
 msgstr ""
 
 #: includes/functions-ur-notice.php:29 includes/functions-ur-notice.php:64
