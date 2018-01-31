@@ -75,7 +75,6 @@ class UR_Settings_Admin_Email{
 						'type' => 'sectionend',
 						'id'   => 'admin_email',
 					),
-
 				)
 			);
 

@@ -211,6 +211,14 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$settings = isset( $settings ) ? $settings : $this->get_settings();
 
 			UR_Admin_Settings::output_fields( $settings );
+
+			if( ! empty( $current_section ) ) {
+				?>
+				<div id ="smart-tags">
+					<a href="https://docs.wpeverest.com/docs/user-registration/email-settings/smart-tags/"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
+				</div>
+				<?php 
+			}
 		}
 	}
 
