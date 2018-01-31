@@ -57,7 +57,7 @@ class UR_Settings_Registration_Approved_Email{
 					array(
 						'title'    => __( 'Email Subject', 'user-registration' ),
 						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_awaiting_admin_approval_email_subject',
+						'id'       => 'user_registration_registration_approved_email_subject',
 		 				'type'     => 'text',
 		 				'default'  => __('Congratulations! Registration approved on {{blog_info}}', 'user-registration'),
 						'css'      => 'min-width: 350px;',

@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+= 1.1.7 - xx/xx/2018 =
+* Feature - Email Customizer
+* Fix - Broken dependencies on scripts
+* Fix - Fix fatal error in PHP version < 5.5
+
 = 1.1.6 - 10/01/2018 =
 * Feature - Privacy Policy checkbox field added
 * Feature - Radio button field added
