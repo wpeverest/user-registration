@@ -187,9 +187,9 @@ class UR_Emailer {
 
 		$admin_email = get_option( 'admin_email' );
 
-		$blog_info = get_bloginfo();
+		$subject = get_option( 'user_registration_admin_email_submit', __('A New User Registered', 'user_registration') );
 
-		$subject = __( 'A New User Registered', 'user-registration' );
+		$blog_info = get_bloginfo();
 
 		include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-admin-email.php' );
 

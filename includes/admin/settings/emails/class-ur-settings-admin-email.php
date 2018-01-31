@@ -43,7 +43,6 @@ class UR_Settings_Admin_Email{
 						'desc'  => '',
 						'id'    => 'admin_email',
 					),
-
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
 						'desc'     => __( 'Enable this email sent to admin after successful user registration.', 'user-registration' ),
@@ -51,6 +50,15 @@ class UR_Settings_Admin_Email{
 						'default'  => 'yes',
 						'type'     => 'checkbox',
 						'autoload' => false,
+					),
+					array(
+						'title'    => __( 'Email Subject', 'user-registration' ),
+						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+						'id'       => 'user_registration_admin_email_submit',
+		 				'type'     => 'text',
+		 				'default'  => __('A New User Registered', 'user-registration'),
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
 					),
 
 					array(
