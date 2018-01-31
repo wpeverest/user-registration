@@ -59,13 +59,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?', 'user-registration' ); ?></a>
 					</p>
 
-					
-					<?php if(!empty(get_option('user_registration_general_setting_registration_url_options')))
+					<?php $url_options = get_option('user_registration_general_setting_registration_url_options');?>
+
+					<?php if( ! empty( $url_options ) )
 						{
 							echo '<p class="user-registration-register register">';
-							if(!empty(get_option('user_registration_general_setting_registration_label')))
+							$label = get_option('user_registration_general_setting_registration_label');
+							
+							if(! empty( $label ) )
 							{
-
 								?><a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option('user_registration_general_setting_registration_label');?>			
 									</a>
 								<?php
