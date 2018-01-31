@@ -43,6 +43,15 @@ class UR_Settings_Email_Confirmation{
 						'desc'  => '',
 						'id'    => 'email_confirmation',
 					),
+					array(
+						'title'    => __( 'Email Subject', 'user-registration' ),
+						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+						'id'       => 'user_registration_email_confirmation_subject',
+		 				'type'     => 'text',
+		 				'default'  => __('Please confirm your registration on {{blog_info}}', 'user-registration'),
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+					),
 
 					array(
 						'title'    => __( 'Email Content', 'user-registration' ),

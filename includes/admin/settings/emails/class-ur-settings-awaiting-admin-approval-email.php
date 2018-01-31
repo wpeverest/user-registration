@@ -55,6 +55,16 @@ class UR_Settings_Awaiting_Admin_Approval_Email{
 					),
 
 					array(
+						'title'    => __( 'Email Subject', 'user-registration' ),
+						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+						'id'       => 'user_registration_awaiting_admin_approval_email_subject',
+		 				'type'     => 'text',
+		 				'default'  => __('Thank you for registration on {{blog_info}}', 'user-registration'),
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+					),
+
+					array(
 						'title'    => __( 'Email Content', 'user-registration' ),
 						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
 						'id'       => 'user_registration_awaiting_admin_approval_email',

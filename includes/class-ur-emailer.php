@@ -91,7 +91,8 @@ class UR_Emailer {
 
 		if( $email_status === '0' ) {
 
-			$subject = __( sprintf( 'Please confirm your registration on %s', $blog_info ), 'user-registration' );
+			$subject = get_option('user_registration_email_confirmation_subject', __('Please confirm your registration on {{blog_info}}', 'user-registration') );
+
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-email-confirmation.php' );
 
 			$message = new UR_Settings_Email_Confirmation();
@@ -106,13 +107,15 @@ class UR_Emailer {
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
 			wp_mail( $email, $subject, $message, $headers );
 
 		}
 
 		else if ( $status == 0 ) {
 
-			$subject = __( sprintf( 'Thank you for Registration on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_awaiting_admin_approval_email_subject', __('Thank you for registration on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php' );
 
@@ -127,6 +130,8 @@ class UR_Emailer {
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, $headers );			
@@ -156,7 +161,7 @@ class UR_Emailer {
 			}
 
 		} else {
-			$subject = __( sprintf( 'Congratulations! Registration Complete on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_successfully_registered_email_subject',__('Congratulations! Registration Complete on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php' );
 
@@ -171,6 +176,8 @@ class UR_Emailer {
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, $headers );			
@@ -205,6 +212,8 @@ class UR_Emailer {
 
 		$message = str_replace( $to_replace, $replace_with, $message );
 
+		$subject = str_replace( $to_replace, $replace_with, $subject );
+
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ){
 			wp_mail( $admin_email, $subject, $message, $headers );
 		}
@@ -223,7 +232,7 @@ class UR_Emailer {
 
 		if ( $status == 0 ) {
 
-			$subject = __( sprintf( 'Sorry! Registration changed to pending on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_pending_email_subject', __('Sorry! Registration changed to pending on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-pending-email.php' );
 
@@ -239,13 +248,15 @@ class UR_Emailer {
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
 			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, $headers );			
 			}
 
 		} else if ( $status == - 1 ) {
 
-			$subject = __( sprintf( 'Sorry! Registration denied on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-denied-email.php' );
 
@@ -261,12 +272,14 @@ class UR_Emailer {
 
 			$message = str_replace( $to_replace, $replace_with, $message );
 
+			$subject = str_replace( $to_replace, $replace_with, $subject );
+
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, $headers );			
 			}
 
 		} else {
-			$subject = __( sprintf( 'Congratulations! Registration approved on %s', $blog_info ), 'user-registration' );
+			$subject = get_option( 'user_registration_enable_registration_approved_email_subject',  __('Congratulations! Registration approved on {{blog_info}}', 'user-registration') );
 
 			include_once( UR_ABSPATH . 'includes/admin/settings/emails/class-ur-settings-registration-approved-email.php' );
 
@@ -281,6 +294,8 @@ class UR_Emailer {
 			$replace_with = array( $username, $email, $blog_info, get_home_url() );
 
 			$message = str_replace( $to_replace, $replace_with, $message );
+
+			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, $headers );			

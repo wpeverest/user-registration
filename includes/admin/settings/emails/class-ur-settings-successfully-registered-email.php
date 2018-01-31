@@ -53,7 +53,16 @@ class UR_Settings_Successfully_Registered_Email{
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
-
+					
+					array(
+						'title'    => __( 'Email Subject', 'user-registration' ),
+						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+						'id'       => 'user_registration_successfully_registered_email_subject',
+		 				'type'     => 'text',
+		 				'default'  => __('Congratulations! Registration Complete on {{blog_info}}', 'user-registration'),
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+					),
 					array(
 						'title'    => __( 'Email Content', 'user-registration' ),
 						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
