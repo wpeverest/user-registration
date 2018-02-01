@@ -188,7 +188,7 @@ class UR_Frontend_Form_Handler {
 				update_user_meta( $user_id, $field_key, $data->value );
 				if ( isset( $data->extra_params ) ) {
 
-					update_user_meta( $user_id, 'ur_' . $field_key_for_param . '_params', json_encode( $data->extra_params ) );
+				update_user_meta( $user_id, 'ur_' . $field_key_for_param . '_params', wp_json_encode( $data->extra_params, JSON_UNESCAPED_UNICODE ) );
 				}
 			}
 		}
