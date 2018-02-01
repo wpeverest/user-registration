@@ -96,6 +96,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature - Email Customizer
 * Fix - Broken dependencies on scripts
 * Fix - Fix fatal error in PHP version < 5.5
+* Fix - Json unescaped unicode
 
 = 1.1.6 - 10/01/2018 =
 * Feature - Privacy Policy checkbox field added
