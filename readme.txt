@@ -1,6 +1,6 @@
-=== User Registration ===
+=== User Registration - User Profile, Membership and More ===
 Contributors: WPEverest
-Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login
+Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
 Stable tag: 1.1.7
@@ -26,7 +26,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 
 = User Registration Plugin in action: =
 
-[youtube https://www.youtube.com/watch?v=H34GC40Ly88]
+[youtube https://www.youtube.com/watch?v=zNhNvj8jPhM]
 
 ### Features And Options:
 * Simple, Clean and Beautiful Registration Forms
@@ -37,6 +37,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Shortcode Support
 * Google Recaptcha Support
 * Email notifications
+* Email Customizers
 * Form Duplicate Option
 * Profile account page
 * Admin approval option
@@ -92,7 +93,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
-= 1.1.7 - xx/xx/2018 =
+= 1.1.7 - 02/02/2018 =
 * Feature - Email Customizer
 * Fix - Broken dependencies on scripts
 * Fix - Fix fatal error in PHP version < 5.5
