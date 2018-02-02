@@ -35,7 +35,7 @@ final class UserRegistration {
 	 * Plugin version.
 	 * @var string
 	 */
-	public $version = '1.1.6';
+	public $version = '1.1.7';
 
 	/**
 	 * Session instance.
