@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.1.7\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-01-31 09:57:53+00:00\n"
+"POT-Creation-Date: 2018-02-02 09:00:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -613,9 +613,8 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:59
-#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:62
-#: includes/class-ur-emailer.php:124
-msgid "Thank you for registration on {{blog_info}}"
+#: includes/class-ur-emailer.php:207
+msgid "A New User Registered"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:65
@@ -654,6 +653,11 @@ msgstr ""
 msgid ""
 "Enable this email sent to user notifying the registration is awaiting admin "
 "approval."
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:62
+#: includes/class-ur-emailer.php:124
+msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:24
@@ -948,10 +952,6 @@ msgstr ""
 msgid ""
 "Your account is still pending approval. Verifiy your email by clicking on "
 "the link sent to your email."
-msgstr ""
-
-#: includes/class-ur-emailer.php:207
-msgid "A New User Registered"
 msgstr ""
 
 #: includes/class-ur-emailer.php:330
