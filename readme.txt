@@ -93,6 +93,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+= 1.1.8 - xx/02/2018 =
+* Fix - Default admin email subject
+
 = 1.1.7 - 02/02/2018 =
 * Feature - Email Customizer
 * Fix - Broken dependencies on scripts

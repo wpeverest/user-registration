@@ -1,4 +1,7 @@
-= 1.1.7 - xx/xx/2018 =
+= 1.1.8 - xx/02/2018 =
+* Fix - Default admin email subject
+
+= 1.1.7 - 02/02/2018 =
 * Feature - Email Customizer
 * Fix - Broken dependencies on scripts
 * Fix - Fix fatal error in PHP version < 5.5
