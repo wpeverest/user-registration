@@ -41,9 +41,12 @@ class UR_Email_Confirmation {
 
 	public function custom_registration_message()
 	{
-		$message = ur_print_notice(__('User successfully registered. Login to continue.','user-registration'));
+		return ur_print_notice( __('User successfully registered. Login to continue.','user-registration'));
+	}
 
-		return $message;
+	public function custom_registration_error_message()
+	{
+		return ur_print_notice( __('Token Mismatch!','user-registration'), 'error' );
 	}
 
 	public function check_token_before_authenticate()
@@ -58,19 +61,19 @@ class UR_Email_Confirmation {
 			$user_id = $this->my_simple_crypt( $output[1], 'd');
 			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-
+			add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
+			
 			if( $user_token == $_GET['ur_token'] )
 			{				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
-				add_action( 'login_enqueue_scripts', array($this, 'ur_enqueue_script'), 1 );
-				add_filter('login_message', array($this,'custom_registration_message') );
-				add_filter('user_registration_login_form_before_notice', array($this,'custom_registration_message') );
+				add_filter('login_message', array( $this,'custom_registration_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_error_message' ) );
 			}
 			else
 			{
-				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Token Mismatch!', 'user-registration' );
-
-				return new WP_Error( 'user_email_not_verified', $message );
+				add_filter('login_message', array( $this,'custom_registration_error_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_error_message' ) );
+				;
 			}
 		}
 
