@@ -21,14 +21,16 @@ class UR_Email_Confirmation {
 	
 	public function __construct() {
 
-		if('email_confirmation' !== get_option('user_registration_general_setting_login_options')){
+		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}
 
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_register', array( $this, 'set_email_status' ) );
-		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 30, 2);
+		add_action( 'wp', array( $this, 'check_token_before_authenticate' ), 30, 2);
+		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
+
 	}
 
 	public function ur_enqueue_script()
@@ -45,24 +47,23 @@ class UR_Email_Confirmation {
 	}
 
 	public function check_token_before_authenticate()
-	{
-		if(!isset($_GET['ur_token'])){
+	{	
+		if( ! isset( $_GET['ur_token'] ) ) {
 			return;
 		}
 		else
 		{		
-			$output = str_split($_GET['ur_token'], 50);
+			$output = str_split( $_GET['ur_token'], 50 );
 
-			$user_id = $this->my_simple_crypt($output[1],'d');
+			$user_id = $this->my_simple_crypt( $output[1], 'd');
 			
-			$user_token = get_user_meta($user_id,'ur_confirm_email_token',true);
-			
-			if($user_token == $_GET['ur_token'])
+			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+
+			if( $user_token == $_GET['ur_token'] )
 			{				
-				update_user_meta($user_id,'ur_confirm_email',1);
 				add_action( 'login_enqueue_scripts', array($this, 'ur_enqueue_script'), 1 );
-				add_filter('login_message', array($this,'custom_registration_message'));
-
+				add_filter('login_message', array($this,'custom_registration_message') );
+				add_filter('user_registration_login_form_before_notice', array($this,'custom_registration_message') );
 			}
 			else
 			{
@@ -98,12 +99,12 @@ class UR_Email_Confirmation {
 
 	public function getToken($user_id)
 	{
-		 $length = 50;
-	     $token = "";
-	     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
-	     $codeAlphabet.= "0123456789";
-	     $max = strlen($codeAlphabet); 
+		$length = 50;
+	    $token = "";
+	    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+	    $codeAlphabet.= "0123456789";
+	    $max = strlen($codeAlphabet); 
 
 	    for ($i=0; $i < $length; $i++) {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
@@ -118,7 +119,7 @@ class UR_Email_Confirmation {
 
 	public function set_email_status( $user_id ) {
 		
-		if('email_confirmation' === get_option('user_registration_general_setting_login_options'))
+		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) )
 		{
 			$token = $this->getToken($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0);

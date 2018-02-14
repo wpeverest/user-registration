@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<?php ur_print_notices(); ?>
+<?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
 
 <?php do_action( 'user_registration_before_customer_login_form' ); ?>
 
