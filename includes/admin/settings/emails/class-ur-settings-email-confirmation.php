@@ -84,7 +84,7 @@ class UR_Settings_Email_Confirmation{
  					You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
  					<br/>
                <br/>
- 					Please click on this verification link {{home_url}}/wp-login.php/?ur_token={{email_token}} to confirm registration.
+ 					Please click on this verification link {{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.
  					<br/>
                <br/>
  					Thank You!'), 'user-registration' ) );
