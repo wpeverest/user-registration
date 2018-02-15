@@ -1,3 +1,9 @@
+= 1.1.9 - xx/15/2018 =
+* Fix - Design issue in mobile view
+* Fix - Missing closing anchor tag
+* Fix - Remove email token after use
+* Feature - Redirect to custom page via email
+
 = 1.1.8 - xx/02/2018 =
 * Fix - Default admin email subject
 
