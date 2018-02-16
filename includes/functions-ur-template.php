@@ -369,14 +369,14 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 							case 'select':
 								$extra_params['options'] = explode( ',', $field->advance_setting->options );
 								foreach ($extra_params['options'] as $key => $value) {
-									$extra_params['options'][$key.'__'.$value] = $value;
+									$extra_params['options'][$value] = $value;
 									unset($extra_params['options'][$key]);
 								}							
 								break;
 							case 'checkbox':
 								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
 								foreach ($extra_params['choices'] as $key => $value) {
-									$extra_params['choices'][$key.'__'.$value] = $value;
+									$extra_params['choices'][$value] = $value;
 									unset($extra_params['choices'][$key]);
 								}
 								break;

@@ -67,6 +67,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$show_fields = $this->get_customer_meta_fields( $user->ID );
 
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
+
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
@@ -80,6 +81,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
+					
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
@@ -118,9 +120,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
-										foreach ( $field['options'] as $option_key => $option_value ) : ?>
-											<option data-val="<?php echo $selected; ?>"
-											        value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
+										foreach ( $field['options'] as $option_key => $option_value ) : ?>						
+											<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
 										<?php endforeach; ?>
 									</select>
 								
@@ -139,9 +140,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
 									<?php 
 									$db_value = get_user_meta( $user->ID, $key, true );
-									$db_value = explode("__", $db_value);
-									$db_value = isset( $db_value[1] ) ? $db_value[1] : '';
-
 									if( is_array( $field['options'] ) ) {
 										foreach( $field['options'] as $option_key => $option_value ) {
 											?>
@@ -407,7 +405,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 										foreach ( $option_data as $index_data => $option ) {
 
-											$fields[ $field_index ]['options'][ $index_data . '__' . $option ] = $option;
+											$fields[ $field_index ]['options'][ $option ] = $option;
 										}
 										$fields[ $field_index ]['type']  = 'select';
 										$fields[ $field_index ]['class'] = '';
@@ -421,7 +419,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 										foreach ( $option_data as $index_data => $option ) {
 
-											$fields[ $field_index ]['options'][ $index_data . '__' . $option ] = $option;
+											$fields[ $field_index ]['options'][ $option ] = $option;
 										}
 										$fields[ $field_index ]['type']  = 'radio';
 
