@@ -129,9 +129,7 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 
 				foreach ( $option_data as $index_data => $option ) {
-
-					$form_data['options'][ $index_data . '__' . $option ] = $option;
-
+					$form_data['options'][ $option ] = $option;				
 				}
 			}
 		}
@@ -142,9 +140,7 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 
 				foreach ( $option_data as $index_data => $option ) {
-
-					$form_data['options'][ $index_data . '__' . $option ] = $option;
-
+					$form_data['options'][ $option ] = $option;
 				}
 			}
 		}
@@ -155,9 +151,7 @@ abstract class UR_Form_Field {
 			if ( is_array( $choices ) ) {
 
 				foreach ( $choices as $index_data => $choice ) {
-
-					$form_data['choices'][ $index_data . '__' . $choice ] = $choice;
-
+					$form_data['choices'][ $choice ] = $choice;
 				}
 			}
 		}
