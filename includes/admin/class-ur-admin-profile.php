@@ -157,13 +157,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
 
-									$json = get_user_meta( $user->ID, $key, true );
-									$old_json = $json;
-
-									$array = (array) json_decode( $json, true );
-									if($old_json == '0'){
-										$array = array();
-									}
+									$array = get_user_meta( $user->ID, $key, true );
+									$array = unserialize($array);
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
@@ -250,7 +245,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-							$values = json_encode( $_POST[ $key ] );
+							$values = serialize( $_POST[ $key ] );
 							update_user_meta( $user_id, $key, $values );
 						} 
 						elseif( isset( $field['type'] ) && 'radio' === $field['type'] ) {
