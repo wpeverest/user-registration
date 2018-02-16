@@ -80,7 +80,8 @@ class UR_Form_Handler {
 				case 'checkbox' :
 				
 				if(isset($_POST[$key]) && is_array($_POST[$key])){
-					$_POST[$key] = json_encode($_POST[$key]);
+
+					$_POST[$key] = serialize($_POST[$key]);
 				}
 				else{
 

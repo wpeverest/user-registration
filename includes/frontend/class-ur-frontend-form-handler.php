@@ -185,7 +185,10 @@ class UR_Frontend_Form_Handler {
 				} else {
 					$field_key = 'user_registration_' . $field_key;
 				}
-
+				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
+					$data->value = json_decode( $data->value );
+					$data->value = serialize( $data->value );
+				}
 				update_user_meta( $user_id, $field_key, $data->value );
 			}
 		}
