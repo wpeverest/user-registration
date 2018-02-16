@@ -223,9 +223,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-										<?php } else {										
-											$this->show_undefined_fields( $key, $user->ID, $field, $extra_params );
-										}
+										<?php } 
 									} endif; ?>
 								<br/>
 								<span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span>
@@ -239,109 +237,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			endforeach;
 		}
 
-		/**
-		 * @param $key
-		 * @param $user_id
-		 * @param $field
-		 */
-		public function show_undefined_fields( $key, $user_id, $field, $extra_params ) {
-
-			$value     = $this->get_user_meta( $user_id, $key );
-			$field_key = $extra_params->field_key;
-		
-			$type      = 'hidden';
-			switch ( $field_key ) {
-				case "file":
-					$attachment_url = wp_get_attachment_thumb_url( $value );
-					if ( ! empty( $attachment_url ) ) {
-						echo '<img src="' . $attachment_url . '" width="80"/>';
-					} else {
-						echo __( 'Attachment not found.', 'user-registration' );
-					}
-					break;
-
-				case "privacy_policy":
-					echo '<input checked type="checkbox" disabled="disabled"/>';
-				break;
-
-				case "checkbox":
-
-					$checkbox_array = json_decode( $value, true );
-					if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
-
-						foreach ( $checkbox_array as $check ) {
-
-							echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($check) . '</label><br/>';
-						}
-					} else {
-						echo '<label><input checked type="checkbox" disabled="disabled"/></label>';
-
-					}
-
-					break;
-
-				case "select":
-				
-					$result = explode('__', $value);
-					if( is_array( $result ) && isset( $result[1] )){
-						$value = $result[1];
-					}
-
-					?>
-						<select name="<?php echo esc_attr( $key ); ?>"
-							    id="<?php echo esc_attr( $key );?>"
-							    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-						disabled/>
-						<option><?php echo esc_attr( $value );?></option>
-					<?php
-					break;
-
-				case "radio":
-
-					$result = explode('__', $value);
-					if( is_array( $result ) && isset( $result[1] )){
-						$value = $result[1];
-					}
-					?>
-						<input type="radio" name="<?php echo esc_attr( $key ); ?>"
-			       id="<?php echo esc_attr( $key ); ?>"
-			       value="<?php echo esc_attr( $value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?>
-					<?php
-					break;
-
-				case "country":
-					
-					include_once( dirname( __FILE__ ) . '\..\form\class-ur-country.php' );
-
-					$country = new UR_Country;
-					$countries = $country->get_country();
-
-					if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
-						?>
-							<select name="<?php echo esc_attr( $key ); ?>"
-								    id="<?php echo esc_attr( $key );?>"
-								    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-							disabled/>
-							<option><?php echo esc_attr( $countries[$value] );?></option>
-						<?php
-					}
-					
-					break;
-				
-				default:
-					$type = 'text';
-			}
-
-			?>
-
-			<input type="<?php echo $type; ?>" name="<?php echo esc_attr( $key ); ?>"
-			       id="<?php echo esc_attr( $key ); ?>"
-			       value="<?php echo esc_attr( $value ); ?>"
-			       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-			/>
-			<?php
-
-		}
 
 		/**
 		 * Save Address Fields on edit user pages.
@@ -579,27 +474,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					}// End foreach().
 				}// End foreach().
 			}// End foreach().
-
-			foreach ( $all_meta_value_keys as $single_key ) {
-
-				$field_label_array = explode( '_', str_replace( 'user_registration_', '', $single_key ) );
-
-				$field_label = join( ' ', array_map( 'ucwords', $field_label_array ) );
-
-				if ( ! isset( $fields[ $single_key ] ) ) {
-
-					$fields[ $single_key ] = array(
-						'label'       => __( $field_label, 'user-registration' ),
-						'description' => '',
-						'attributes'  => array(
-							'disabled' => 'disabled',
-
-						),
-
-					);
-
-				}
-			}
+			
 			return $fields;
 		}
 

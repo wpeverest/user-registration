@@ -415,27 +415,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 			}// End foreach().
 		}// End foreach().
 
-		foreach ( $all_meta_value_keys as $single_key ) {
-			if ( substr( $single_key, 0, strlen( 'user_registration_' ) ) == 'user_registration_' ) {
-				if ( ! isset( $fields[ $single_key ] ) ) {
-
-					$field_label_array     = explode( '_', str_replace( 'user_registration_', '', $single_key ) );
-					$field_label           = join( ' ', array_map( 'ucwords', $field_label_array ) );
-					$fields[ $single_key ] = array(
-						'label'             => __( $field_label, 'user-registration' ),
-						'description'       => '',
-						'type'              => 'text',
-						'field_key'         => 'text',
-						'required'          => false,
-						'custom_attributes' => array(
-							'disabled' => 'disabled',
-						),
-						'default'           => isset( $all_meta_value[ $single_key ][0] ) ? $all_meta_value[ $single_key ][0] : '',
-					);
-				}
-			}
-		}
-
+		
 		return $fields;
 	}
 }// End if().
@@ -500,97 +480,6 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 	}
 }
 
-if ( ! function_exists( 'show_undefined_frontend_fields' ) ) {
-
-	function show_undefined_frontend_fields( $key, $user_id, $field, $extra_params) {
-
-		$value     = get_user_meta( $user_id, $key, true );
-		$field_key = isset( $extra_params->field_key ) ? $extra_params->field_key : '';
-		$label = isset( $extra_params->label ) ? $extra_params->label : '';
-
-		switch ( $field_key ) {
-			case "checkbox":
-				$checkbox_array = json_decode( $value, true );
-				
-				if ( is_array( $checkbox_array ) && ! empty( $checkbox_array ) ) {
-					echo '<label>'. $label . '</label>';
-					foreach ( $checkbox_array as $check ) {
-
-						echo '<label><input checked value="'. trim( $check ) .'" type="checkbox" disabled="disabled"/>' . esc_html( $check ) . '</label>';
-					}
-				} else {
-
-					echo '<label><input checked type="checkbox" disabled="disabled"/>' . esc_html($label) .'</label>';
-				}
-			break;
-
-			case "select":
-			$old_value = $value;
-			$result = explode('__', $value);
-			if( is_array( $result ) && isset( $result[1] )){
-				$value = $result[1];
-			}
-				echo '<label>'. $label . '</label>';
-			?>	
-				<select name="<?php echo esc_attr( $key ); ?>"
-					    id="<?php echo esc_attr( $key );?>"
-
-					    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-				disabled/>
-					<option value="<?php echo esc_attr( $old_value );?>"><?php echo esc_attr( $value );?></option>
-				</select>
-			<?php
-
-			break;
-
-			case "radio":
-			$old_value = $value;
-			$result = explode('__', $value);
-			if( is_array( $result ) && isset( $result[1] )){
-				$value = $result[1];
-			}
-				echo '<label>'. $label . '</label>';
-			?>
-				<label><input type="radio" name="<?php echo esc_attr( $key ); ?>"
-	       			id="<?php echo esc_attr( $key ); ?>"
-	       			value="<?php echo esc_attr( $old_value ); ?>" checked="checked" disabled/> <?php echo esc_attr( $value );?></label>
-			<?php
-			break;
-
-			case "country":
-		
-			include_once( UR_ABSPATH . 'includes/form/class-ur-country.php' );
-
-			$country = new UR_Country;
-			$countries = $country->get_country();
-
-			if( is_array( $countries ) && array_key_exists( $value, $countries ) ){
-					echo '<label>'. $label . '</label>';
-				?>
-					<select name="<?php echo esc_attr( $key ); ?>"
-						    id="<?php echo esc_attr( $key );?>"
-						    class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-					disabled/>
-					<option><?php echo esc_attr( $countries[$value] );?></option>
-				</select>
-				<?php
-			}
-			
-			break;
-
-			case "privacy_policy":
-			break;
-
-			default:
-			echo '<label>'. $label . '</label>';
-			?><input type="text" name="<?php echo esc_attr( $key ); ?>"
-	       			id="<?php echo esc_attr( $key ); ?>"
-	       			value="<?php echo esc_attr( $value ); ?>" disabled/>
-	       	<?php
-			
-		}
-	}
-}
 /**
  * Get logout endpoint.
  *
