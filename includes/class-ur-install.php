@@ -24,6 +24,7 @@ class UR_Install {
 		),
 		'1.2.0' => array(
 			'ur_update_120_usermeta',
+			'ur_update_120_meta_values',
 			'ur_update_120_db_version',
 		),
 	);
