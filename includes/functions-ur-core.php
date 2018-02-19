@@ -1,19 +1,14 @@
 <?php
-
 /**
  * UserRegistration Functions.
  *
  * General core functions available on both the front-end and admin.
  *
- * @author   WPEverest
- * @category Core
- * @package  UserRegistration/Functions
- * @version  1.0.0
+ * @package UserRegistration/Functions
+ * @version 1.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 // Include core functions (available in both admin and frontend).
 include( UR_ABSPATH . 'includes/functions-ur-page.php' );
