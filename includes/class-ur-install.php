@@ -22,6 +22,10 @@ class UR_Install {
 		'1.0.0' => array(
 			'ur_update_100_db_version',
 		),
+		'1.2.0' => array(
+			'ur_update_120_usermeta',
+			'ur_update_120_db_version',
+		),
 	);
 
 	/** @var object Background update class */
@@ -148,7 +152,7 @@ class UR_Install {
 		self::update_ur_version();
 
 		delete_transient( 'ur_installing' );
-		
+
 		// Flush rules after install
 		do_action( 'user_registration_flush_rewrite_rules' );
 
