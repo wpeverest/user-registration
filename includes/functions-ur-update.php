@@ -28,12 +28,7 @@ function ur_update_120_usermeta() {
 
 	// Delete old user keys from usermeta.
 	foreach ( $usermeta as $metadata ) {
-		$user_id = intval( $metadata->user_id );
-		$exp_key = explode( '_', $metadata->meta_key );
-
-		if ( 'ur' === current( $exp_key ) && 'params' === end( $exp_key ) ) {
-			delete_user_meta( $user_id, $metadata->meta_key );
-		}
+		delete_user_meta( intval( $metadata->user_id ), $metadata->meta_key );
 	}
 }
 
@@ -49,8 +44,8 @@ function ur_update_120_meta_values() {
 	// Update old usermeta values.
 	foreach ( $usermeta as $metadata ) {
 		$user_id     = intval( $metadata->user_id );
-		$explode_val = explode( '__', $metadata->meta_value );
 		$json_val    = json_decode( $metadata->meta_value );
+		$explode_val = explode( '__', $metadata->meta_value );
 
 		if ( $json_val && $metadata->meta_value != $json_val ) {
 			update_user_meta( $user_id, $metadata->meta_key, json_decode( $metadata->meta_value ) );
