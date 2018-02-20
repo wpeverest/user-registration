@@ -24,7 +24,7 @@ function ur_update_120_usermeta() {
 	global $wpdb;
 
 	// Get usermeta.
-	$usermeta = $wpdb->get_results( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key LIKE 'ur_%params'" );
+	$usermeta = $wpdb->get_results( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key LIKE 'ur_%_params'" );
 
 	// Delete old user keys from usermeta.
 	foreach ( $usermeta as $metadata ) {
