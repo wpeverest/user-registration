@@ -157,7 +157,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
 
-									$array = get_user_meta( $user->ID, $key, true );								
+									$value = get_user_meta( $user->ID, $key, true );								
 
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
@@ -165,7 +165,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											                name="<?php echo esc_attr( $key ); ?>[]"
 											                id="<?php echo esc_attr( $key ); ?>"
 											                value="<?php echo esc_attr( trim( $choice ) ); ?>"
-											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if (is_array( $array ) && in_array( trim( $choice ), $array ) ) {
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if (is_array( $value ) && in_array( trim( $choice ), $value ) ) {
 												echo 'checked="checked"';
 											} ?> ><?php echo $choice; ?></label><br/>
 											<?php
@@ -174,7 +174,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										?>
 										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
 										       id="<?php echo esc_attr( $key ); ?>" value="1"
-										       class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( $json == '1' ) {
+										       class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( $value == '1' ) {
 											echo 'checked="checked"';
 										} ?> >
 										<?php
