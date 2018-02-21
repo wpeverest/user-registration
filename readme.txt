@@ -98,7 +98,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Missing closing anchor tag.
 * Fix - Remove email token after use.
 * Fix - Store radio field value properly.
-* Feature - Redirect to custom page via email
+* Fix - Console DOM error for checkbox field.
+* Feature - Redirect to custom page via email.
 * Refactor - Usermeta data store process.
 
 = 1.1.8 - 02/02/2018 =
