@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.1.8
+Stable tag: 1.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,7 +14,6 @@ Drag and Drop user registration and login form builder
 User Registration plugin provides you with an easy way to create frontend user registration and login forms. Drag and Drop fields make ordering and creating forms extremely easy. The plugin is lightweight, exendible and can be used to create any type of registration form.
 
 Supports frontend profile account page for profile edit, password change, Log out and more.
-
 
 View [All features](https://wpeverest.com/wordpress-plugins/user-registration/)
 
@@ -94,11 +93,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.1.9 - xx/15/2018 =
+= 1.2.0 - XX/02/2018 =
 * Fix - Design issue in mobile view
 * Fix - Missing closing anchor tag
 * Fix - Remove email token after use
 * Feature - Redirect to custom page via email
+* Refactor - Usermeta data store process.
 
 = 1.1.8 - 02/02/2018 =
 * Fix - Default admin email subject
