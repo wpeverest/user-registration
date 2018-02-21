@@ -254,7 +254,8 @@ module.exports = function( grunt ){
 					'!composer.json',
 					'!composer.lock',
 					'!node_modules/**',
-					'!phpcs.ruleset.xml'
+					'!package-lock.json',
+					'!phpcs.ruleset.xml',
 				],
 				dest: 'user-registration',
 				expand: true
