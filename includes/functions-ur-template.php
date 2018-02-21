@@ -197,7 +197,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 
 					$field .= '<label>';
-					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" value="'.trim($choice).'"' . $value . ' /> ';
+					$field .= ' <input ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
 					$field .= $choice . ' </label>';
 
 					$checkbox_start++;
