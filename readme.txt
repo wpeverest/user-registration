@@ -93,11 +93,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.1.9 - xx/15/2018 =
+= 1.2.0 - XX/02/2018 =
 * Fix - Design issue in mobile view
 * Fix - Missing closing anchor tag
 * Fix - Remove email token after use
 * Feature - Redirect to custom page via email
+* Refactor - Usermeta data store process.
 
 = 1.1.8 - 02/02/2018 =
 * Fix - Default admin email subject
