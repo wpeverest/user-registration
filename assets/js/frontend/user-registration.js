@@ -53,11 +53,10 @@
 									switch ( field_type ) {
 										case 'checkbox':
 										case 'radio':
-											this_field_value = this_field.prop('checked') ? this_field.val() : '';
+											this_field_value = this_field.prop('checked') ? this_field.val() : '';										
 											break;
 										default:
 											this_field_value = this_field.val();
-
 									}
 									break;
 								case 'select':
@@ -73,12 +72,16 @@
 							}
 						});
 
-						if(field_type == 'checkbox'){
+						if ( field_type == 'checkbox' ) {
 							var field_value_json = JSON.stringify(field_value);
-						}else
-						{
-							var field_value_json = field.val();			
 						}
+						else if ( field_type == 'radio') {		
+							var field_value_json = field_value[0];
+						} 
+						else {
+							var field_value_json = field.val();	
+						}
+
 						var single_form_field_name = multi_value_field[ multi_start ];
 						single_form_field_name = single_form_field_name.replace('[]', '');
 						var field_data = {
