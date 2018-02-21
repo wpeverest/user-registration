@@ -24,21 +24,6 @@ function ur_update_120_usermeta() {
 	global $wpdb;
 
 	// Get usermeta.
-	$usermeta = $wpdb->get_results( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key LIKE 'ur_%_params'" );
-
-	// Delete old user keys from usermeta.
-	foreach ( $usermeta as $metadata ) {
-		delete_user_meta( intval( $metadata->user_id ), $metadata->meta_key );
-	}
-}
-
-/**
- * Update meta values.
- */
-function ur_update_120_meta_values() {
-	global $wpdb;
-
-	// Get usermeta.
 	$usermeta = $wpdb->get_results( "SELECT user_id, meta_key, meta_value FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration_%'" );
 
 	// Update old usermeta values.
@@ -53,6 +38,9 @@ function ur_update_120_meta_values() {
 			update_user_meta( $user_id, $metadata->meta_key, end( $explode_val ) );
 		}
 	}
+
+	// Delete old user keys from usermeta.
+	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'ur_%_params';" );
 }
 
 /**
