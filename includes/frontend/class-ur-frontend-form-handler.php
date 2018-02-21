@@ -47,7 +47,8 @@ class UR_Frontend_Form_Handler {
 				'role'     => $user_role,
 			);
 
-				self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
+			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
+
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 			$user_id = wp_insert_user( $userdata );
 
@@ -184,12 +185,10 @@ class UR_Frontend_Form_Handler {
 				} else {
 					$field_key = 'user_registration_' . $field_key;
 				}
-
-				update_user_meta( $user_id, $field_key, $data->value );
-				if ( isset( $data->extra_params ) ) {
-
-				update_user_meta( $user_id, 'ur_' . $field_key_for_param . '_params', wp_json_encode( $data->extra_params, JSON_UNESCAPED_UNICODE ) );
+				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
+					$data->value = json_decode( $data->value );	
 				}
+				update_user_meta( $user_id, $field_key, $data->value );
 			}
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );

@@ -94,9 +94,10 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 == Changelog ==
 
 = 1.2.0 - XX/02/2018 =
-* Fix - Design issue in mobile view
-* Fix - Missing closing anchor tag
-* Fix - Remove email token after use
+* Fix - Design issue in mobile view.
+* Fix - Missing closing anchor tag.
+* Fix - Remove email token after use.
+* Fix - Store radio field value properly.
 * Feature - Redirect to custom page via email
 * Refactor - Usermeta data store process.
 

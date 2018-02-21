@@ -22,6 +22,10 @@ class UR_Install {
 		'1.0.0' => array(
 			'ur_update_100_db_version',
 		),
+		'1.2.0' => array(
+			'ur_update_120_usermeta',
+			'ur_update_120_db_version',
+		),
 	);
 
 	/** @var object Background update class */
@@ -34,10 +38,7 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array(
-			__CLASS__,
-			'in_plugin_update_message'
-		) );
+		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array( __CLASS__, 'in_plugin_update_message' ) );
 		add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -148,7 +149,7 @@ class UR_Install {
 		self::update_ur_version();
 
 		delete_transient( 'ur_installing' );
-		
+
 		// Flush rules after install
 		do_action( 'user_registration_flush_rewrite_rules' );
 

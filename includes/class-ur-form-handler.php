@@ -79,11 +79,10 @@ class UR_Form_Handler {
 			switch ( $field['type'] ) {
 				case 'checkbox' :
 				
-				if(isset($_POST[$key]) && is_array($_POST[$key])){
-					$_POST[$key] = json_encode($_POST[$key]);
+				if( isset( $_POST[$key] ) && is_array( $_POST[$key] ) ) {
+					$_POST[$key] = $_POST[$key];
 				}
-				else{
-
+				else {
 					$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 				}
 					break;
