@@ -77,8 +77,7 @@
 						}
 						else if ( field_type == 'radio') {		
 							var field_value_json = field_value[0];
-						} 
-						else {
+						} else {
 							var field_value_json = field.val();	
 						}
 
