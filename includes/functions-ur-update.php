@@ -35,7 +35,7 @@ function ur_update_120_usermeta() {
 		if ( $json_val && $metadata->meta_value != $json_val ) {
 			update_user_meta( $user_id, $metadata->meta_key, json_decode( $metadata->meta_value ) );
 		} elseif ( $metadata->meta_value !== end( $explode_val ) ) {
-			update_user_meta( $user_id, $metadata->meta_key, end( $explode_val ) );
+			update_user_meta( $user_id, $metadata->meta_key, trim( end( $explode_val ) ) );
 		}
 	}
 
