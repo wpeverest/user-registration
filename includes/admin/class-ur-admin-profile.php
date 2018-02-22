@@ -81,7 +81,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
-					
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
@@ -183,6 +182,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'button' === $field['type'] ) : ?>
 									<button id="<?php echo esc_attr( $key ); ?>"
 									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
+								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
+									<input checked type="checkbox" disabled="disabled"/>
+									
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
 									          id="<?php echo esc_attr( $key ); ?>"
@@ -217,6 +219,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											/>
 
 										<?php } 
+
 									} endif; ?>
 								<br/>
 								<span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span>
@@ -445,6 +448,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$fields[ $field_index ]['type']  = 'checkbox';
 									$fields[ $field_index ]['class'] = '';
 
+									break;
+								case 'privacy_policy':
+									$fields[ $field_index ]['type']  = 'privacy_policy';
 									break;
 							}
 						}// End switch().
