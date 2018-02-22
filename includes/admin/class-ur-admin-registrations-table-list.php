@@ -2,28 +2,23 @@
 /**
  * User Registration Table List
  *
- * @class    UR_Licenses_Table_List
- * @version  1.0.0
- * @package  UserRegistration/Admin/Registration
- * @category Admin
- * @author   WPEverest
+ * @version 1.2.0
+ * @package UserRegistration\Admin\Registration
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
 /**
- * UR_Licenses_Table_List Class.
+ * Registrations table list class.
  */
-class UR_Licenses_Table_List extends WP_List_Table {
+class UR_Admin_Registrations_Table_List extends WP_List_Table {
 
 	/**
-	 * Initialize the license table list.
+	 * Initialize the registration table list.
 	 */
 	public function __construct() {
 		parent::__construct( array(
@@ -50,7 +45,6 @@ class UR_Licenses_Table_List extends WP_List_Table {
 			'cb'        => '<input type="checkbox" />',
 			'title'     => __( 'Title', 'user-registration' ),
 			'shortcode' => __( 'Shortcode', 'user-registration' ),
-			// 'data_link' => __( 'Entry link', 'user-registration' ),
 			'author'    => __( 'Author', 'user-registration' ),
 			'date'      => __( 'Date', 'user-registration' ),
 		);
@@ -137,18 +131,6 @@ class UR_Licenses_Table_List extends WP_List_Table {
 		$output .= '<div class="row-actions">' . implode( ' | ', $row_actions ) . '</div>';
 
 		return $output;
-	}
-
-	/**
-	 * Column cb.
-	 *
-	 * @param  object $registration
-	 *
-	 * @return string
-	 */
-	public function column_data_link( $registration ) {
-
-		return sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=list-registration-data&form_id=' . $registration->ID ), __( 'View entries #' . $registration->ID, 'user-registration' ) );
 	}
 
 	function column_author( $registration ) {
@@ -344,14 +326,7 @@ class UR_Licenses_Table_List extends WP_List_Table {
 	public function prepare_items() {
 		global $wpdb;
 
-		$per_page = $this->get_items_per_page( 'user_registration_per_page' );
-		$columns  = $this->get_columns();
-		$hidden   = $this->get_hidden_columns();
-		$sortable = $this->get_sortable_columns();
-
-		// Column headers
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
+		$per_page     = $this->get_items_per_page( 'user_registration_per_page' );
 		$current_page = $this->get_pagenum();
 
 		// Query args
@@ -381,14 +356,5 @@ class UR_Licenses_Table_List extends WP_List_Table {
 			'per_page'    => $per_page,
 			'total_pages' => $registrations->max_num_pages,
 		) );
-	}
-
-	/**
-	 * Get a list of hidden columns.
-	 *
-	 * @return array
-	 */
-	protected function get_hidden_columns() {
-		return get_hidden_columns( $this->screen );
 	}
 }

@@ -35,6 +35,11 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA ) {
 	// Delete options.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'user_registration\_%';" );
 
+	// Delete user meta data.
+	foreach ( array( 'user_registration_per_page' ) as $meta_key ) {
+		delete_metadata( 'user', 0, $meta_key, '', true );
+	}
+
 	// Clear any cached data that has been removed.
 	wp_cache_flush();
 }
