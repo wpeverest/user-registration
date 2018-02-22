@@ -700,7 +700,7 @@ jQuery(function ( $ ) {
 		var array_value = value.split(',');
 		for ( var i = 0; i < array_value.length; i++ ) {
 			if ( array_value[ i ] !== '' ) {
-				checkbox.append('<label><input value="' + array_value[ i ].trim() + '" type="checkbox">' + array_value[ i ] +'</label>' );
+				checkbox.append('<label><input value="' + array_value[ i ].trim() + '" type="checkbox">' + array_value[ i ].trim() +'</label>' );
 			}
 		}
 	}
@@ -712,7 +712,7 @@ jQuery(function ( $ ) {
 		var array_value = value.split(',');
 		for ( var i = 0; i < array_value.length; i++ ) {
 			if ( array_value[ i ] !== '' ) {
-				radio.append('<label><input value="' + array_value[ i ].trim() + '" type="radio">' + array_value[ i ] +'</label>' );
+				radio.append('<label><input value="' + array_value[ i ].trim() + '" type="radio">' + array_value[ i ].trim() +'</label>' );
 			}
 		}
 	}	
@@ -724,7 +724,7 @@ jQuery(function ( $ ) {
 		var array_value = value.split(',');
 		for ( var i = 0; i < array_value.length; i++ ) {
 			if ( array_value[ i ] !== '' ) {
-				select.append('<option value=\'' + array_value[ i ] + '\'>' + array_value[ i ] + '</option>');
+				select.append('<option value=\'' + array_value[ i ] + '\'>' + array_value[ i ].trim() + '</option>');
 			}
 		}
 	}
