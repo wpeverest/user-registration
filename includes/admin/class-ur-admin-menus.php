@@ -274,23 +274,26 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array(
-				$this,
-				'registration_page',
-			), 'dashicons-universal-access-alt', '55.8' );
+			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 'dashicons-universal-access-alt', '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
-			add_action( 'manage_' . $registration_page . '_columns', array( $this, 'registration_columns' ) );
 		}
 
 		/**
 		 * Loads screen options into memory.
 		 */
 		public function registration_page_init() {
-			add_screen_option( 'per_page', array(
-				'default' => 20,
-				'option'  => 'user_registration_per_page',
-			) );
+			global $registration_table_list;
+
+			if ( ! isset( $_GET['add-new-registration'] ) ) { // WPCS: input var okay, CSRF ok.
+				$registration_table_list = new UR_Admin_Registrations_Table_List();
+
+				// Add screen option.
+				add_screen_option( 'per_page', array(
+					'default' => 20,
+					'option'  => 'user_registration_per_page',
+				) );
+			}
 		}
 
 		/**
@@ -334,54 +337,36 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Define custom columns for licenses.
-		 *
-		 * @param  array $columns
-		 *
-		 * @return array
-		 */
-		public function registration_columns( $columns ) {
-			$columns['cb']        = '<input type="checkbox" />';
-			$columns['title']     = __( 'Title', 'user-registration' );
-			$columns['shortcode'] = __( 'Shortcode', 'user-registration' );
-			$columns['data_link'] = __( 'Entry Link', 'user-registration' );
-			$columns['author']    = __( 'Author', 'user-registration' );
-			$columns['date']      = __( 'Date', 'user-registration' );
-
-			return $columns;
-		}
-
-		/**
 		 * Validate screen options on update.
 		 */
 		public function set_screen_option( $status, $option, $value ) {
-			if ( 'user_registration_per_page' == $option ) {
+			if ( in_array( $option, array( 'user_registration_per_page' ), true ) ) {
 				return $value;
 			}
+
+			return $status;
 		}
 
 		/**
 		 * Init the settings page.
 		 */
 		public function registration_page() {
-			include_once( 'class-ur-registration-table-list.php' );
+			global $registration_table_list;
 
-			$registration_table_list = new UR_Licenses_Table_List();
 			$registration_table_list->prepare_items();
-
 			?>
 			<div class="wrap">
-				<h1><?php _e( 'User Registration', 'user-registration' ); ?> <a
-						href="<?php echo admin_url( 'admin.php?page=add-new-registration' ); ?>"
-						class="add-new-h2"><?php _e( 'Add New', 'user-registration' ); ?></a></h1>
-				<form id="registration-management" method="post">
-					<input type="hidden" name="page" value="user-registration"/>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'usage-registration' ); ?></h1>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'usage-registration' ); ?></a>
+				<hr class="wp-header-end">
+				<form id="registration-list" method="post">
+					<input type="hidden" name="page" value="user-registration" />
 					<?php
-					$registration_table_list->views();
-					$registration_table_list->search_box( __( 'Search Registration', 'user-registration' ), 'registration' );
-					$registration_table_list->display();
+						$registration_table_list->views();
+						$registration_table_list->search_box( __( 'Search Registration', 'user-registration' ), 'registration' );
+						$registration_table_list->display();
 
-					wp_nonce_field( 'save', 'user_registration_nonce' );
+						wp_nonce_field( 'save', 'user_registration_nonce' );
 					?>
 				</form>
 			</div>
