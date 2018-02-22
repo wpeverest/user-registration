@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.2.0\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-02-21 08:26:09+00:00\n"
+"POT-Creation-Date: 2018-02-22 09:58:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,7 +30,7 @@ msgid "Clone"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:184
-#: includes/admin/class-ur-registration-table-list.php:118
+#: includes/admin/class-ur-admin-registrations-table-list.php:112
 msgid "Trash"
 msgstr ""
 
@@ -85,93 +85,68 @@ msgstr ""
 msgid "User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:300
+#: includes/admin/class-ur-admin-menus.php:303
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:300
+#: includes/admin/class-ur-admin-menus.php:303
 #: includes/class-ur-install.php:502
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:310
+#: includes/admin/class-ur-admin-menus.php:313
 msgid "User Registration Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:310
+#: includes/admin/class-ur-admin-menus.php:313
 #: includes/admin/class-ur-admin-user-list-manager.php:164
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:320
-#: includes/admin/class-ur-admin-menus.php:376
+#: includes/admin/class-ur-admin-menus.php:323
+#: includes/admin/class-ur-admin-menus.php:360
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:330
+#: includes/admin/class-ur-admin-menus.php:333
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:330
+#: includes/admin/class-ur-admin-menus.php:333
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:345
-#: includes/admin/class-ur-registration-table-list.php:51
-msgid "Title"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:346
-#: includes/admin/class-ur-registration-table-list.php:52
-msgid "Shortcode"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:347
-msgid "Entry Link"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:348
-#: includes/admin/class-ur-registration-table-list.php:54
-msgid "Author"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:349
-#: includes/admin/class-ur-registration-table-list.php:55
-#: includes/form/class-ur-date.php:44 includes/form/class-ur-date.php:51
-msgid "Date"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:381
+#: includes/admin/class-ur-admin-menus.php:366
 msgid "Search Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:403
+#: includes/admin/class-ur-admin-menus.php:388
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:406
+#: includes/admin/class-ur-admin-menus.php:391
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:441
+#: includes/admin/class-ur-admin-menus.php:426
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:460
+#: includes/admin/class-ur-admin-menus.php:445
 #: includes/admin/settings/class-ur-settings-general.php:191
 #: includes/class-ur-query.php:79
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:498
+#: includes/admin/class-ur-admin-menus.php:483
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:502
+#: includes/admin/class-ur-admin-menus.php:487
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:599
+#: includes/admin/class-ur-admin-menus.php:584
 msgid "Empty form data"
 msgstr ""
 
@@ -184,10 +159,104 @@ msgstr ""
 msgid "User Extra Information %s"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:120
-#: includes/admin/class-ur-admin-profile.php:131
+#: includes/admin/class-ur-admin-profile.php:119
+#: includes/admin/class-ur-admin-profile.php:130
 #: includes/form/class-ur-select.php:44 includes/form/class-ur-select.php:51
 msgid "Select"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:35
+msgid "No user registration found."
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:46
+msgid "Title"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:47
+msgid "Shortcode"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:48
+msgid "Author"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:49
+#: includes/form/class-ur-date.php:44 includes/form/class-ur-date.php:51
+msgid "Date"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:101
+msgid "ID: %d"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:105
+#: includes/class-ur-post-types.php:44
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
+msgid "Restore this item from the Trash"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
+#: includes/admin/class-ur-admin-registrations-table-list.php:302
+msgid "Restore"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:112
+msgid "Move this item to the Trash"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:115
+msgid "Delete this item permanently"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:115
+#: includes/admin/class-ur-admin-registrations-table-list.php:303
+msgid "Delete permanently"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:122
+msgid "Duplicate"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:169
+msgid "Y/m/d g:i:s A"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:179
+msgid "%s ago"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:181
+msgid "Y/m/d"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:200
+#: includes/admin/class-ur-admin-registrations-table-list.php:201
+#. translators: %s: count
+msgid "Published <span class=\"count\">(%s)</span>"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:209
+#: includes/admin/class-ur-admin-registrations-table-list.php:210
+#. translators: %s: count
+msgid "Draft <span class=\"count\">(%s)</span>"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:218
+#: includes/admin/class-ur-admin-registrations-table-list.php:219
+#. translators: %s: count
+msgid "Pending <span class=\"count\">(%s)</span>"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:308
+msgid "Move to trash"
+msgstr ""
+
+#: includes/admin/class-ur-admin-registrations-table-list.php:319
+msgid "Empty trash"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:78
@@ -271,83 +340,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:128
 msgid "Thank you for using User Registration."
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:40
-msgid "No user registration found."
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:107
-msgid "ID: %d"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:111
-#: includes/class-ur-post-types.php:44
-msgid "Edit"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:116
-msgid "Restore this item from the Trash"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:116
-#: includes/admin/class-ur-registration-table-list.php:320
-msgid "Restore"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:118
-msgid "Move this item to the Trash"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:121
-msgid "Delete this item permanently"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:121
-#: includes/admin/class-ur-registration-table-list.php:321
-msgid "Delete permanently"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:128
-msgid "Duplicate"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:187
-msgid "Y/m/d g:i:s A"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:197
-msgid "%s ago"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:199
-msgid "Y/m/d"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:218
-#: includes/admin/class-ur-registration-table-list.php:219
-#. translators: %s: count
-msgid "Published <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:227
-#: includes/admin/class-ur-registration-table-list.php:228
-#. translators: %s: count
-msgid "Draft <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:236
-#: includes/admin/class-ur-registration-table-list.php:237
-#. translators: %s: count
-msgid "Pending <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:326
-msgid "Move to trash"
-msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:337
-msgid "Empty trash"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:37
@@ -2846,6 +2838,14 @@ msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
 
+#: includes/admin/class-ur-admin-registrations-table-list.php:255
+#. translators: %s: count
+msgctxt "posts"
+msgid "All <span class=\"count\">(%s)</span>"
+msgid_plural "All <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/admin/class-ur-admin-user-list-manager.php:75
 msgctxt "The action on users list page"
 msgid "Approve"
@@ -2855,14 +2855,6 @@ msgstr ""
 msgctxt "The action on users list page"
 msgid "Deny"
 msgstr ""
-
-#: includes/admin/class-ur-registration-table-list.php:273
-#. translators: %s: count
-msgctxt "posts"
-msgid "All <span class=\"count\">(%s)</span>"
-msgid_plural "All <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
 
 #: includes/class-ur-install.php:275
 msgctxt "Page slug"
