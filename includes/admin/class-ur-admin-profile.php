@@ -120,7 +120,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
 										foreach ( $field['options'] as $option_key => $option_value ) : ?>						
-											<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
+											<option value="<?php echo esc_attr( trim ( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim ( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 								
@@ -132,7 +132,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
 										foreach ( $field['options'] as $option_key => $option_value ) : ?>
 											<option
-												value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( $option_value ); ?></option>
+												value="<?php echo esc_attr( trim ( $option_key ) ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( trim ( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 
@@ -145,8 +145,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											<label><input type="radio"
 											                name="<?php echo esc_attr( $key ); ?>"
 											                id="<?php echo esc_attr( $key ); ?>"
-											                value="<?php echo esc_attr( trim( $option_key ) ); ?>"
-											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, $option_value, true ); ?>  ><?php echo $option_value; ?>
+											                value="<?php echo esc_attr( trim ( $option_key ) ); ?>"
+											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, trim( $option_value ), true ); ?>  ><?php echo trim ( $option_value ); ?>
 											</label><br/>
 											<?php
 										}
@@ -166,7 +166,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											                value="<?php echo esc_attr( trim( $choice ) ); ?>"
 											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if (is_array( $value ) && in_array( trim( $choice ), $value ) ) {
 												echo 'checked="checked"';
-											} ?> ><?php echo $choice; ?></label><br/>
+											} ?> ><?php echo trim( $choice ); ?></label><br/>
 											<?php
 										}
 									} else {
