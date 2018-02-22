@@ -244,7 +244,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, $option_key, false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
 					$field .= '<select name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
@@ -260,7 +260,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 									
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">';
 
-						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim ( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />' . wp_kses( trim( $option_text ), array(
+						$field .= '<input type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim ( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, trim( $option_key ), false ) . ' />' . wp_kses( trim( $option_text ), array(
 								'a'    => array(
 									'href'  => array(),
 									'title' => array()
