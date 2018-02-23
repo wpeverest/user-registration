@@ -25,6 +25,7 @@ class UR_Post_Types {
 	 */
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 5 );
+		add_action( 'user_registration_after_register_post_type', array( __CLASS__, 'maybe_flush_rewrite_rules' ) );
 		add_action( 'user_registration_flush_rewrite_rules', array( __CLASS__, 'flush_rewrite_rules' ) );
 	}
 
@@ -32,6 +33,12 @@ class UR_Post_Types {
 	 * Register core post types.
 	 */
 	public static function register_post_types() {
+		if ( ! is_blog_installed() || post_type_exists( 'user_registration' ) ) {
+			return;
+		}
+
+		do_action( 'user_registration_register_post_type' );
+
 		register_post_type( 'user_registration',
 			apply_filters( 'user_registration_post_type',
 				array(
@@ -67,6 +74,20 @@ class UR_Post_Types {
 				)
 			)
 		);
+
+		do_action( 'user_registration_after_register_post_type' );
+	}
+
+	/**
+	 * Flush rules if the event is queued.
+	 *
+	 * @since 1.2.0
+	 */
+	public static function maybe_flush_rewrite_rules() {
+		if ( 'yes' === get_option( 'user_registration_queue_flush_rewrite_rules' ) ) {
+			update_option( 'user_registration_queue_flush_rewrite_rules', 'no' );
+			self::flush_rewrite_rules();
+		}
 	}
 
 	/**
