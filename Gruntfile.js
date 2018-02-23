@@ -30,7 +30,8 @@ module.exports = function( grunt ){
 				stylelintrc: '.stylelintrc'
 			},
 			all: [
-				'<%= dirs.css %>/*.scss'
+				'<%= dirs.css %>/*.scss',
+				'!<%= dirs.css %>/select2.scss'
 			]
 		},
 
@@ -73,7 +74,7 @@ module.exports = function( grunt ){
 				files: {
 					'<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js': ['<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js'],
 					'<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js': ['<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js'],
-					'<%= dirs.js %>/select2/select2.min.js': ['<%= dirs.js %>/select2/select2.js']
+					'<%= dirs.js %>/selectWoo/selectWoo.min.js': ['<%= dirs.js %>/selectWoo/selectWoo.js']
 				}
 			}
 		},
@@ -192,9 +193,10 @@ module.exports = function( grunt ){
 			},
 			files: {
 				src: [
-					'**/*.php',         // Include all files
-					'!node_modules/**', // Exclude node_modules/
-					'!vendor/**'        // Exclude vendor/
+					'**/*.php',               // Include all files
+					'!includes/libraries/**', // Exclude libraries/
+					'!node_modules/**',       // Exclude node_modules/
+					'!vendor/**'              // Exclude vendor/
 				],
 				expand: true
 			}
@@ -203,14 +205,14 @@ module.exports = function( grunt ){
 		// PHP Code Sniffer.
 		phpcs: {
 			options: {
-				bin: 'vendor/bin/phpcs',
-				standard: './phpcs.ruleset.xml'
+				bin: 'vendor/bin/phpcs'
 			},
 			dist: {
 				src:  [
-					'**/*.php',         // Include all files
-					'!node_modules/**', // Exclude node_modules/
-					'!vendor/**'        // Exclude vendor/
+					'**/*.php',               // Include all files
+					'!includes/libraries/**', // Exclude libraries/
+					'!node_modules/**',       // Exclude node_modules/
+					'!vendor/**'              // Exclude vendor/
 				]
 			}
 		},
@@ -233,33 +235,6 @@ module.exports = function( grunt ){
 					'<%= dirs.css %>/*.css'
 				]
 			}
-		},
-
-		// Compress files and folders.
-		compress: {
-			options: {
-				archive: 'user-registration.zip'
-			},
-			files: {
-				src: [
-					'**',
-					'!.*',
-					'!*.md',
-					'!*.zip',
-					'!.*/**',
-					'!sass/**',
-					'!vendor/**',
-					'!Gruntfile.js',
-					'!package.json',
-					'!composer.json',
-					'!composer.lock',
-					'!node_modules/**',
-					'!package-lock.json',
-					'!phpcs.ruleset.xml',
-				],
-				dest: 'user-registration',
-				expand: true
-			}
 		}
 	});
 
@@ -276,13 +251,12 @@ module.exports = function( grunt ){
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-compress' );
 
-	// Register tasks
+	// Register tasks.
 	grunt.registerTask( 'default', [
-		'jshint',
-		'uglify',
-		'css'
+		'js',
+		'css',
+		'i18n'
 	]);
 
 	grunt.registerTask( 'js', [
@@ -299,13 +273,13 @@ module.exports = function( grunt ){
 		'concat'
 	]);
 
+	// Only an alias to 'default' task.
 	grunt.registerTask( 'dev', [
-		'default',
-		'makepot'
+		'default'
 	]);
 
-	grunt.registerTask( 'zip', [
-		'dev',
-		'compress'
+	grunt.registerTask( 'i18n', [
+		'checktextdomain',
+		'makepot'
 	]);
 };

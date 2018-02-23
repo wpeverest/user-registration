@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.2.0\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-02-22 09:58:20+00:00\n"
+"POT-Creation-Date: 2018-02-23 07:08:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -90,7 +90,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:303
-#: includes/class-ur-install.php:502
+#: includes/class-ur-install.php:585
 msgid "Settings"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgid "ID: %d"
 msgstr ""
 
 #: includes/admin/class-ur-admin-registrations-table-list.php:105
-#: includes/class-ur-post-types.php:44
+#: includes/class-ur-post-types.php:51
 msgid "Edit"
 msgstr ""
 
@@ -402,7 +402,7 @@ msgid "General Options"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:62
-#: includes/functions-ur-core.php:597
+#: includes/functions-ur-core.php:609
 msgid "Default user role"
 msgstr ""
 
@@ -466,7 +466,7 @@ msgid "Page contents: [%s]"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:139
-#: includes/functions-ur-core.php:611
+#: includes/functions-ur-core.php:623
 msgid "Enable strong password"
 msgstr ""
 
@@ -475,7 +475,7 @@ msgid "Check to use strong password on user registration form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:148
-#: includes/functions-ur-core.php:626
+#: includes/functions-ur-core.php:638
 msgid "Form submit button label"
 msgstr ""
 
@@ -1087,28 +1087,28 @@ msgid ""
 "$ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:256
+#: includes/class-ur-install.php:316
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:502
-msgid "View User Registration Settings"
+#: includes/class-ur-install.php:585
+msgid "View User Registration settings"
 msgstr ""
 
-#: includes/class-ur-install.php:519
-msgid "View User Registration Documentation"
+#: includes/class-ur-install.php:601
+msgid "View User Registration documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:519
+#: includes/class-ur-install.php:601
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:520
-msgid "Visit Free Customer Support Forum"
+#: includes/class-ur-install.php:602
+msgid "Visit free customer support"
 msgstr ""
 
-#: includes/class-ur-install.php:520
-msgid "Free Support"
+#: includes/class-ur-install.php:602
+msgid "Free support"
 msgstr ""
 
 #: includes/class-ur-logger.php:57
@@ -1180,51 +1180,51 @@ msgstr ""
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
-#: includes/class-ur-post-types.php:39
+#: includes/class-ur-post-types.php:46
 msgid "Registrations"
 msgstr ""
 
-#: includes/class-ur-post-types.php:40
+#: includes/class-ur-post-types.php:47
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:42
+#: includes/class-ur-post-types.php:49
 msgid "Add registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:43
+#: includes/class-ur-post-types.php:50
 msgid "Add new registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:45
+#: includes/class-ur-post-types.php:52
 msgid "Edit registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:46
+#: includes/class-ur-post-types.php:53
 msgid "New registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:47
+#: includes/class-ur-post-types.php:54
 msgid "View registrations"
 msgstr ""
 
-#: includes/class-ur-post-types.php:48
+#: includes/class-ur-post-types.php:55
 msgid "View registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:49
+#: includes/class-ur-post-types.php:56
 msgid "Search registrations"
 msgstr ""
 
-#: includes/class-ur-post-types.php:50
+#: includes/class-ur-post-types.php:57
 msgid "No registrations found"
 msgstr ""
 
-#: includes/class-ur-post-types.php:51
+#: includes/class-ur-post-types.php:58
 msgid "No registrations found in trash"
 msgstr ""
 
-#: includes/class-ur-post-types.php:52
+#: includes/class-ur-post-types.php:59
 msgid "Parent registration"
 msgstr ""
 
@@ -2461,87 +2461,87 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: includes/functions-ur-core.php:481 includes/functions-ur-core.php:484
+#: includes/functions-ur-core.php:493 includes/functions-ur-core.php:496
 msgid "Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:489 includes/functions-ur-core.php:492
+#: includes/functions-ur-core.php:501 includes/functions-ur-core.php:504
 msgid "Field Name"
 msgstr ""
 
-#: includes/functions-ur-core.php:498 includes/functions-ur-core.php:501
+#: includes/functions-ur-core.php:510 includes/functions-ur-core.php:513
 msgid "Placeholder"
 msgstr ""
 
-#: includes/functions-ur-core.php:506
+#: includes/functions-ur-core.php:518
 msgid "Required"
 msgstr ""
 
-#: includes/functions-ur-core.php:512 includes/functions-ur-core.php:619
-#: includes/functions-ur-core.php:647
+#: includes/functions-ur-core.php:524 includes/functions-ur-core.php:631
+#: includes/functions-ur-core.php:659
 msgid "No"
 msgstr ""
 
-#: includes/functions-ur-core.php:513 includes/functions-ur-core.php:618
-#: includes/functions-ur-core.php:646
+#: includes/functions-ur-core.php:525 includes/functions-ur-core.php:630
+#: includes/functions-ur-core.php:658
 msgid "Yes"
 msgstr ""
 
-#: includes/functions-ur-core.php:639
+#: includes/functions-ur-core.php:651
 msgid "Enable %1$s %2$s reCaptcha %3$s support"
 msgstr ""
 
-#: includes/functions-ur-core.php:655
+#: includes/functions-ur-core.php:667
 msgid "Template"
 msgstr ""
 
-#: includes/functions-ur-core.php:662
+#: includes/functions-ur-core.php:674
 msgid "Default"
 msgstr ""
 
-#: includes/functions-ur-core.php:663
+#: includes/functions-ur-core.php:675
 msgid "Bordered"
 msgstr ""
 
-#: includes/functions-ur-core.php:664
+#: includes/functions-ur-core.php:676
 msgid "Flat"
 msgstr ""
 
-#: includes/functions-ur-core.php:665
+#: includes/functions-ur-core.php:677
 msgid "Rounded"
 msgstr ""
 
-#: includes/functions-ur-core.php:666
+#: includes/functions-ur-core.php:678
 msgid "Rounded Edge"
 msgstr ""
 
-#: includes/functions-ur-core.php:688
+#: includes/functions-ur-core.php:700
 msgid "Manual login after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:689
+#: includes/functions-ur-core.php:701
 msgid "Email confirmation to login"
 msgstr ""
 
-#: includes/functions-ur-core.php:690
+#: includes/functions-ur-core.php:702
 msgid "Auto login after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:691
+#: includes/functions-ur-core.php:703
 msgid "Admin approval after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:916
+#: includes/functions-ur-core.php:928
 msgid ""
 "The class <code>%s</code> provided by user_registration_logging_class "
 "filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
-#: includes/functions-ur-core.php:973
+#: includes/functions-ur-core.php:985
 msgid "Disable emails"
 msgstr ""
 
-#: includes/functions-ur-core.php:974
+#: includes/functions-ur-core.php:986
 msgid "Disable all emails sent after registration."
 msgstr ""
 
@@ -2856,27 +2856,27 @@ msgctxt "The action on users list page"
 msgid "Deny"
 msgstr ""
 
-#: includes/class-ur-install.php:275
+#: includes/class-ur-install.php:256
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:283
+#: includes/class-ur-install.php:265
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:276
+#: includes/class-ur-install.php:257
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:284
+#: includes/class-ur-install.php:266
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-post-types.php:41
+#: includes/class-ur-post-types.php:48
 msgctxt "Admin menu name"
 msgid "Registrations"
 msgstr ""

@@ -6,9 +6,14 @@ project.properties
 .project
 .settings*
 .idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+.sublimelinterrc
 
 # Grunt
 /node_modules/
+none
 
 # Sass
 .sass-cache/
@@ -21,4 +26,3 @@ Thumbs.db
 
 # Composer
 /vendor/
-tg-user-logger

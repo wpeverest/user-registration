@@ -356,8 +356,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$registration_table_list->prepare_items();
 			?>
 			<div class="wrap">
-				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'usage-registration' ); ?></h1>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'usage-registration' ); ?></a>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'user-registration' ); ?></h1>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				<hr class="wp-header-end">
 				<form id="registration-list" method="post">
 					<input type="hidden" name="page" value="user-registration" />

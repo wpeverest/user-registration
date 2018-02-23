@@ -3,21 +3,42 @@
   "description": "Easily allows to create registration and login page.",
   "homepage": "https://wpeverest.com/plugins/user-registration/",
   "type": "wordpress-plugin",
-  "license": "GPL-3.0+",
+  "license": "GPL-3.0-or-later",
   "require": {
     "composer/installers": "~1.2"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "*",
-    "wp-coding-standards/wpcs": "*",
-    "phpunit/phpunit": "5.7.19"
+    "wp-coding-standards/wpcs": "^0.14",
+    "wpeverest/wpeverest-git-hooks": "*",
+    "wpeverest/wpeverest-sniffs": "*",
+    "wimg/php-compatibility": "^8.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
   },
   "scripts": {
+    "pre-update-cmd": [
+      "WPEverest\\GitHooks\\Hooks::preHooks"
+    ],
+    "pre-install-cmd": [
+      "WPEverest\\GitHooks\\Hooks::preHooks"
+    ],
     "post-install-cmd": [
-      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+      "WPEverest\\GitHooks\\Hooks::postHooks"
     ],
     "post-update-cmd": [
-      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+      "WPEverest\\GitHooks\\Hooks::postHooks"
+    ],
+    "phpcs": [
+      "phpcs -s -p"
+    ],
+    "phpcbf": [
+      "phpcbf -p"
     ]
+  },
+  "extra": {
+    "scripts-description": {
+      "phpcs": "Analyze code against the WordPress coding standard with PHP_CodeSniffer",
+      "phpcbf": "Fix coding standards warnings/errors automattically with PHP Code Beautifier"
+    }
   }
 }
