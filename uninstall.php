@@ -30,7 +30,7 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA ) {
 	wp_trash_post( get_option( 'user_registration_default_form_page_id' ) );
 
 	// Tables.
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}user_registration_sessions" );
+	UR_Install::drop_tables();
 
 	// Delete options.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'user_registration\_%';" );
