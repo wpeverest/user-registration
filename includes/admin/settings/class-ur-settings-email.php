@@ -157,6 +157,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						$emails = $this->get_emails();
 						foreach( $emails as $email )
 						{	
+							if( $email->id === 'registration_pending_email' )
+							continue;
+							
 							echo '<tr><td class="ur-email-settings-table">
 													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id .'' ) . 
 													'">'. __( $email->title, 'user-registration' ) .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
