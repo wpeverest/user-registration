@@ -140,7 +140,7 @@ class UR_Admin_User_List_Manager {
    		 // Get the results from the query, returning the first user
   	 	$users = $user_query->get_results();
   	 	if( count( $users ) > 0 ) { 
-  	 	 	echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>User Registration: There are ' . count( $users ) . ' users pending approval.</strong></p></div>';
+  	 	 	echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>User Registration:</strong> ' . count( $users ) . ' <a href="'. admin_url('users.php') .'">'.( ( count( $users ) === 1 ) ? "User" : "Users").'</a> pending approval.</p></div>';
   	 	}
 	}
 
