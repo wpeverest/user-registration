@@ -29,7 +29,8 @@ class UR_Admin_User_List_Manager {
 		// -------------------- ACTIONS & FILTERS --------------------
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		add_action( 'admin_notices', array( $this, 'display_admin_notices' ), 99 );
-
+  		add_action( 'admin_notices', array($this, 'pending_users_notices') );
+		
 		//Functions about users listing
 		add_action( 'restrict_manage_users', array($this, 'add_status_filter') );
 		add_action( 'admin_footer-users.php', array( $this, 'add_bulk_actions' ) );
@@ -43,6 +44,7 @@ class UR_Admin_User_List_Manager {
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'pre_get_users', array($this, 'filter_users_by_approval_status') );
+
 
 	}
 
@@ -125,6 +127,21 @@ class UR_Admin_User_List_Manager {
 			wp_redirect( $redirect );
 			exit;
 		}
+	}
+
+	//Display a notice to admin notifying the pending users
+	public function pending_users_notices() {
+		$user_query = new WP_User_Query(
+        	array(
+            	'meta_key'    =>    'ur_user_status',
+            	'meta_value'    =>  0
+    	    )
+	    );
+   		 // Get the results from the query, returning the first user
+  	 	$users = $user_query->get_results();
+  	 	if( count( $users ) > 0 ) { 
+  	 	 	echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>User Registration:</strong> ' . count( $users ) . ' <a href="'. admin_url('users.php') .'">'.( ( count( $users ) === 1 ) ? "User" : "Users").'</a> pending approval.</p></div>';
+  	 	}
 	}
 
 	/**
