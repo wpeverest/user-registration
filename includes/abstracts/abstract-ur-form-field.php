@@ -329,7 +329,7 @@ abstract class UR_Form_Field {
 
 			echo '</div>';
 		}
-		do_action( 'user_registration_after_advance_settings' );
+		do_action( 'user_registration_after_advance_settings', $this->id );
 		
 	}
 
