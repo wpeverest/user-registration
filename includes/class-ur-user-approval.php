@@ -99,7 +99,7 @@ class UR_User_Approval {
 	 */
 	public function send_notification_to_user_about_status_changing( $status, $user_id, $alert_user ) {
 
-		if ( ! $alert_user || $status == UR_Admin_User_Manager::PENDING ) {
+		if ( ! $alert_user ) {
 			return;
 		}
 

@@ -82,7 +82,10 @@ class UR_Autoloader {
 			$path = $this->include_path . 'admin/meta-boxes/';
 		} elseif ( strpos( $class, 'ur_admin' ) === 0 ) {
 			$path = $this->include_path . 'admin/';
-		} elseif ( strpos( $class, 'ur_form' ) === 0 ) {
+		} elseif ( strpos($class, 'ur_settings') === 0 ) {
+			$path = $this->include_path . 'admin/settings/emails/';
+		} 
+		elseif ( strpos( $class, 'ur_form' ) === 0 ) {
 			$path = $this->include_path . 'form/';
 		} elseif ( strpos( $class, 'ur_log_handler_' ) === 0 ) {
 			$path = $this->include_path . 'log-handlers/';
