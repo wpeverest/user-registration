@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.2.0\n"
+"Project-Id-Version: User Registration 1.2.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-02-23 07:17:06+00:00\n"
+"POT-Creation-Date: 2018-03-15 10:32:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -99,7 +99,7 @@ msgid "User Registration Status"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:313
-#: includes/admin/class-ur-admin-user-list-manager.php:164
+#: includes/admin/class-ur-admin-user-list-manager.php:181
 msgid "Status"
 msgstr ""
 
@@ -271,45 +271,61 @@ msgstr ""
 msgid "Select a page&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:146
+#: includes/admin/class-ur-admin-user-list-manager.php:143
+msgid "User Registration:"
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-list-manager.php:143
+msgid "User"
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-list-manager.php:143
+msgid "Users"
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-list-manager.php:143
+msgid "pending approval."
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-list-manager.php:163
 msgid "User approved."
 msgid_plural "%s users approved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:148
+#: includes/admin/class-ur-admin-user-list-manager.php:165
 msgid "User denied."
 msgid_plural "%s users denied."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:209
+#: includes/admin/class-ur-admin-user-list-manager.php:226
 msgid "All statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:211
+#: includes/admin/class-ur-admin-user-list-manager.php:228
 msgid "All approval statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:220
+#: includes/admin/class-ur-admin-user-list-manager.php:237
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:304
-#: includes/admin/class-ur-admin-user-list-manager.php:305
+#: includes/admin/class-ur-admin-user-list-manager.php:321
+#: includes/admin/class-ur-admin-user-list-manager.php:322
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:307
-#: includes/admin/class-ur-admin-user-list-manager.php:308
+#: includes/admin/class-ur-admin-user-list-manager.php:324
+#: includes/admin/class-ur-admin-user-list-manager.php:325
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:387
+#: includes/admin/class-ur-admin-user-list-manager.php:404
 msgid "Approval Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:399
+#: includes/admin/class-ur-admin-user-list-manager.php:416
 msgid "If user has access to sign in or not."
 msgstr ""
 
@@ -601,7 +617,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:59
-#: includes/class-ur-emailer.php:207
+#: includes/class-ur-emailer.php:212
 msgid "A New User Registered"
 msgstr ""
 
@@ -644,7 +660,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:62
-#: includes/class-ur-emailer.php:124
+#: includes/class-ur-emailer.php:147
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -660,7 +676,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
-#: includes/class-ur-emailer.php:100
+#: includes/class-ur-emailer.php:129
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -680,7 +696,7 @@ msgid "Enable this email sent to admin after successfull user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:62
-#: includes/class-ur-emailer.php:294
+#: includes/class-ur-emailer.php:285
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -694,7 +710,7 @@ msgid "Email sent to the user notifying the registration is denied by the admin"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:62
-#: includes/class-ur-emailer.php:149 includes/class-ur-emailer.php:271
+#: includes/class-ur-emailer.php:166 includes/class-ur-emailer.php:268
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -708,7 +724,7 @@ msgid "Email sent to the user notifying the registration is pending"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:247
+#: includes/class-ur-emailer.php:250
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -726,7 +742,7 @@ msgid "Enable this email sent after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:62
-#: includes/class-ur-emailer.php:172
+#: includes/class-ur-emailer.php:183
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -945,15 +961,19 @@ msgstr ""
 msgid "Email not verified!"
 msgstr ""
 
-#: includes/class-ur-emailer.php:330
+#: includes/class-ur-emailer.php:83
+msgid "Chosen Password"
+msgstr ""
+
+#: includes/class-ur-emailer.php:315
 msgid "Someone has requested a password reset for the following account:"
 msgstr ""
 
-#: includes/class-ur-emailer.php:333
+#: includes/class-ur-emailer.php:318
 msgid "If this was a mistake, just ignore this email and nothing will happen."
 msgstr ""
 
-#: includes/class-ur-emailer.php:334
+#: includes/class-ur-emailer.php:319
 msgid "To reset your password, visit the following address:"
 msgstr ""
 
@@ -2846,12 +2866,12 @@ msgid_plural "All <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:75
+#: includes/admin/class-ur-admin-user-list-manager.php:77
 msgctxt "The action on users list page"
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:76
+#: includes/admin/class-ur-admin-user-list-manager.php:78
 msgctxt "The action on users list page"
 msgid "Deny"
 msgstr ""

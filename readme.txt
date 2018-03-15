@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.2.0 - xx/03/2018 =
+Feature - Pending users notice for admin
+Feature - Form filled data in email
+Fix - Pending email issue
+Fix - Redirect from email url to default login message issue
+Fix - Load email classes only on demand
+
 
 = 1.2.0 - 22/02/2018 =
 * Fix - Design issue in mobile view.

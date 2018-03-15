@@ -1,3 +1,20 @@
+= 1.2.0 - xx/03/2018 =
+Feature - Pending users notice for admin
+Feature - Form filled data in email
+Fix - Pending email issue
+Fix - Redirect from email url to default login message issue
+Fix - Load email classes only on demand
+
+
+= 1.2.0 - 22/02/2018 =
+* Fix - Design issue in mobile view.
+* Fix - Missing closing anchor tag.
+* Fix - Remove email token after use.
+* Fix - Store radio field value properly.
+* Fix - Console DOM error for checkbox field.
+* Feature - Redirect to custom page via email.
+* Refactor - Usermeta data store process.
+
 = 1.1.9 - xx/15/2018 =
 * Fix - Design issue in mobile view
 * Fix - Missing closing anchor tag
