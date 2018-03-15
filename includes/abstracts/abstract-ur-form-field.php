@@ -329,7 +329,8 @@ abstract class UR_Form_Field {
 
 			echo '</div>';
 		}
-
+		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
+		
 	}
 
 	public abstract function validation( $single_form_field, $form_data, $filter_hook, $form_id );
