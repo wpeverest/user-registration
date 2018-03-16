@@ -93,8 +93,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.2.0 - xx/03/2018 =
-Feature - Pending users notice for admin
+= 1.2.1 - 16/03/2018 =
+Feature - Pending users approval notice for admin
 Feature - Form filled data in email
 Fix - Pending email issue
 Fix - Redirect from email url to default login message issue
