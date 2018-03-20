@@ -180,11 +180,7 @@ class UR_Frontend_Form_Handler {
 				$field_key           = $data->field_name;
 				$field_key_for_param = $data->field_name;
 
-				if ( substr( $data->field_name, 0, 5 ) == 'user_' ) {
-					$field_key = trim( str_replace( 'user_', '', $field_key ) );
-				} else {
-					$field_key = 'user_registration_' . $field_key;
-				}
+				$field_key = 'user_registration_' . $field_key;
 				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
 					$data->value = json_decode( $data->value );	
 				}
