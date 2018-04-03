@@ -28,8 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="ur-frontend-form login" id="ur-frontend-form">
 
-	<h2><?php _e( 'Login', 'user-registration' ); ?></h2>
-
 	<form class="user-registration-form user-registration-form-login login" method="post">
 
 		<div class="ur-form-row">

@@ -30,8 +30,23 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$this->label = __( 'General', 'user-registration' );
 
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+		}
+		
+		/**
+		 * Get sections.
+		 *
+		 * @return array
+		 */
+		public function get_sections() {
+			$sections = array(
+				''                 => __( 'General Options', 'user-registration' ),
+				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
+			);
+
+			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
 		/**
@@ -214,15 +229,98 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			);
 
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+		}	
+
+		public function get_frontend_messages_settings() {
+			
+			$settings = apply_filters(
+				'user_registration_frontend_messages_settings', array(
+
+					array(
+						'title' => __( 'Frontend Messages', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'frontend_messages_settings',
+					),
+
+					array(
+						'title'    => __( 'Manual login after registration', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on manual login after registration.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_manual_registation',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px; min-height: 100px;',
+						'default'  => __( 'User successfully registered.','user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Email confirmation to login', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on email confirmation to login.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px; min-height: 100px;',
+						'default'  => __('User registered. Verify your email by clicking on the link sent to your email..','user-registration'),
+					),
+
+					array(
+						'title'    => __( 'Admin approval after registration', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_admin_approval',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px; min-height: 100px;',
+						'default'  => __('User registered. Wait until admin approves your registration.','user-registration'),
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'frontend_messages_settings',
+					),
+
+				)
+			);
+
+			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
+		}
+		/**
+		 * Output the settings.
+		 */
+	
+		public function output() {
+			
+			global $current_section;
+			if( $current_section === '') {
+				$settings = $this->get_settings();
+
+			
+			} elseif ( $current_section === 'frontend-messages') {
+				$settings = $this->get_frontend_messages_settings();
+
+			}
+			UR_Admin_Settings::output_fields( $settings );
 		}
 
 		/**
 		 * Save settings
 		 */
 		public function save() {
+
+			global $current_section;
 			$settings = $this->get_settings();
+
+			if( $current_section === '') {
+				$settings = $this->get_settings();
+
+			
+			} elseif ( $current_section === 'frontend-messages') {
+				$settings = $this->get_frontend_messages_settings();
+
+			}
 			UR_Admin_Settings::save_fields( $settings );
 		}
+
+
 	}
 
 endif;

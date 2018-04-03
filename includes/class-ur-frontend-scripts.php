@@ -297,9 +297,9 @@ class UR_Frontend_Scripts {
 					'login_option'					   => get_option('user_registration_general_setting_login_options'),
 
 					'ursL10n'                          => array(
-						'user_successfully_saved' => __( 'User successfully registered.', 'user-registration' ),
-						'user_under_approval' => __( 'User registered. Wait until admin approves your registration.', 'user-registration' ),
-						'user_email_pending' => __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ),
+						'user_successfully_saved' => __( get_option('user_registration_successful_form_submission_message_manual_registation', 'User successfully registered.' ), 'user-registration' ),
+						'user_under_approval' => __( get_option('user_registration_successful_form_submission_message_admin_approval', 'User registered. Wait until admin approves your registration.' ), 'user-registration' ),
+						'user_email_pending' => __( get_option('user_registration_successful_form_submission_message_email_confirmation', 'User registered. Verify your email by clicking on the link sent to your email.'), 'user-registration' ),
 						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
 
 					),
