@@ -237,10 +237,40 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				'user_registration_frontend_messages_settings', array(
 
 					array(
-						'title' => __( 'Frontend Messages Settings', 'user-registration' ),
+						'title' => __( 'Frontend Messages', 'user-registration' ),
 						'type'  => 'title',
 						'desc'  => '',
 						'id'    => 'frontend_messages_settings',
+					),
+
+					array(
+						'title'    => __( 'Manual login after registration', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on manual login after registration.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_manual_registation',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 250px; min-height: 100px;',
+						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
+					),
+
+					array(
+						'title'    => __( 'Email confirmation to login', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on email confirmation to login.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 250px; min-height: 100px;',
+						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
+					),
+
+					array(
+						'title'    => __( 'Admin approval after registration', 'user-registration' ),
+						'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
+						'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 250px; min-height: 100px;',
+						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
 					),
 
 					array(
@@ -263,11 +293,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-				UR_Admin_Settings::output_fields( $settings );
+			
 			} elseif ( $current_section === 'frontend-messages') {
 				$settings = $this->get_frontend_messages_settings();
-			}
 
+			}
+			UR_Admin_Settings::output_fields( $settings );
 		}
 
 		/**
