@@ -50,6 +50,17 @@ class UR_Frontend_Form_Handler {
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
 
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
+			
+			if( ! isset( $userdata['user_login'] ) ) {
+
+				$part_of_email = explode( "@", $userdata['user_email'] );
+
+				if( username_exists( $part_of_email[0] ) ) {
+					$userdata['user-login'] = $part_of_email[0].'_1';
+				}
+				
+			}
+
 			$user_id = wp_insert_user( $userdata );
 
 
