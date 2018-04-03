@@ -66,7 +66,17 @@ class UR_User_Username extends UR_Form_Field {
 
 		$username = isset( $form_data->value ) ? $form_data->value : '';
 
-		if( $username == '' ) {
+		if ( username_exists( $username ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) {
+
+				return __( 'Username already exists.', 'user-registration' );
+
+			} );
+
+		}
+
+		if( empty( $username ) ) {
 			return;
 		}
 
@@ -79,16 +89,6 @@ class UR_User_Username extends UR_Form_Field {
 				return __( 'Invalid username', 'user-registration' );
 
 			} );
-		}
-
-		if ( username_exists( $username ) ) {
-
-			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Username already exists.', 'user-registration' );
-
-			} );
-
 		}
 
 	}
