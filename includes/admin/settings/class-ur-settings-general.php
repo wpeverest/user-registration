@@ -250,7 +250,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 250px; min-height: 100px;',
-						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
+						'default'  => __( 'User successfully registered.','user-registration' ),
 					),
 
 					array(
@@ -260,17 +260,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 250px; min-height: 100px;',
-						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
+						'default'  => __('User registered. Verify your email by clicking on the link sent to your email..','user-registration'),
 					),
 
 					array(
 						'title'    => __( 'Admin approval after registration', 'user-registration' ),
 						'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
-						'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
+						'id'       => 'user_registration_successful_form_submission_message_admin_approval',
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 250px; min-height: 100px;',
-						'default'  => __('Thanks for contacting us! We will be in touch with you shortly.','everest-forms'),
+						'default'  => __('User registered. Wait until admin approves your registration.','user-registration'),
 					),
 
 					array(
@@ -305,7 +305,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * Save settings
 		 */
 		public function save() {
-			
+
 			global $current_section;
 			$settings = $this->get_settings();
 
