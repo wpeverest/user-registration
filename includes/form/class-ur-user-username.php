@@ -52,7 +52,6 @@ class UR_User_Username extends UR_Form_Field {
 		);
 	}
 
-
 	public function get_registered_admin_fields() {
 
 		return '<li id="' . $this->id . '_list "
@@ -66,6 +65,10 @@ class UR_User_Username extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$username = isset( $form_data->value ) ? $form_data->value : '';
+
+		if( $username == '' ) {
+			return;
+		}
 
 		$status = validate_username( $username );
 
