@@ -55,7 +55,9 @@ class UR_Frontend_Form_Handler {
 
 				$part_of_email = explode( "@", $userdata['user_email'] );
 
-				$userdata['user_login'] = $part_of_email[0].ur_get_random_number();
+				if( username_exists( $part_of_email[0] ) ) {
+					$userdata['user-login'] = $part_of_email[0].'_1';
+				}
 				
 			}
 
