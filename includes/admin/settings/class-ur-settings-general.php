@@ -30,8 +30,23 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$this->label = __( 'General', 'user-registration' );
 
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+		}
+		
+		/**
+		 * Get sections.
+		 *
+		 * @return array
+		 */
+		public function get_sections() {
+			$sections = array(
+				''                 => __( 'General Options', 'user-registration' ),
+				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
+			);
+
+			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
 		/**
@@ -214,6 +229,45 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			);
 
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+		}	
+
+		public function get_frontend_messages_settings() {
+			
+			$settings = apply_filters(
+				'user_registration_frontend_messages_settings', array(
+
+					array(
+						'title' => __( 'Frontend Messages Settings', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'frontend_messages_settings',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'frontend_messages_settings',
+					),
+
+				)
+			);
+
+			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
+		}
+		/**
+		 * Output the settings.
+		 */
+	
+		public function output() {
+			
+			global $current_section;
+			if( $current_section === '') {
+				$settings = $this->get_settings();
+
+				UR_Admin_Settings::output_fields( $settings );
+			} elseif ( $current_section === 'frontend-messages') {
+				$settings = $this->get_frontend_messages_settings();
+			}
+
 		}
 
 		/**
@@ -223,6 +277,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = $this->get_settings();
 			UR_Admin_Settings::save_fields( $settings );
 		}
+
+
 	}
 
 endif;
