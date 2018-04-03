@@ -326,7 +326,6 @@ function ur_get_required_fields() {
 	return apply_filters( 'user_registration_required_form_fields', array(
 		'user_email',
 		'user_password',
-		'user_username',
 	) );
 }
 

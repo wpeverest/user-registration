@@ -213,8 +213,6 @@ class UR_AJAX {
 
 				'user_password',
 
-				'user_username',
-
 			);
 
 			$containsSearch = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
