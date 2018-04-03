@@ -249,7 +249,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'id'       => 'user_registration_successful_form_submission_message_manual_registation',
 						'type'     => 'textarea',
 						'desc_tip' => true,
-						'css'      => 'min-width: 250px; min-height: 100px;',
+						'css'      => 'min-width: 350px; min-height: 100px;',
 						'default'  => __( 'User successfully registered.','user-registration' ),
 					),
 
@@ -259,7 +259,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
 						'type'     => 'textarea',
 						'desc_tip' => true,
-						'css'      => 'min-width: 250px; min-height: 100px;',
+						'css'      => 'min-width: 350px; min-height: 100px;',
 						'default'  => __('User registered. Verify your email by clicking on the link sent to your email..','user-registration'),
 					),
 
@@ -269,7 +269,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'id'       => 'user_registration_successful_form_submission_message_admin_approval',
 						'type'     => 'textarea',
 						'desc_tip' => true,
-						'css'      => 'min-width: 250px; min-height: 100px;',
+						'css'      => 'min-width: 350px; min-height: 100px;',
 						'default'  => __('User registered. Wait until admin approves your registration.','user-registration'),
 					),
 
