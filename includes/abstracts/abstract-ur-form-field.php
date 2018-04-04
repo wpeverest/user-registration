@@ -79,7 +79,7 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-echo "<pre>"; print_r($data); echo "</pre>";
+
 		$this->form_id = $form_id;
 
 		$form_data = array(
@@ -91,8 +91,12 @@ echo "<pre>"; print_r($data); echo "</pre>";
 			'hide_label' => $data['general_setting']->hide_label,
 
 			'type' => $field_type,
-
 		);
+
+		if( $form_data['hide_label'] === 'yes' ) {
+			unset( $form_data['label'] );
+		}
+
 		if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
 
 			$form_data['required'] = true;
