@@ -630,6 +630,11 @@ jQuery(function ( $ ) {
 						trigger_general_setting_required($(this));
 					});
 					break;
+				case 'hide-label':
+					$this_obj.on('change', function () {
+						trigger_general_setting_hide_label($(this));
+					});
+					break;
 			}
 		});
 		var advance_settings = $('.ur_advance_setting');
@@ -748,6 +753,15 @@ jQuery(function ( $ ) {
 	}
 
 	function trigger_general_setting_required ( $label ) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-label').find('label').find('span').remove();
+		if ( $label.val() === 'yes' ) {
+			wrapper.find('.ur-label').find('label').append('<span style="color:red">*</span>');
+		}
+		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
+	}
+
+	function trigger_general_setting_hide_label ( $label ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').find('span').remove();
 		if ( $label.val() === 'yes' ) {
