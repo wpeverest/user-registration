@@ -524,6 +524,18 @@ function ur_get_general_settings() {
 				'yes' => __( 'Yes', 'user-registration' ),
 			),
 		),
+		'hide-label'    => array(
+			'type'        => 'select',
+			'label'       => __( 'Hide Label', 'user-registration' ),
+			'name'        => 'ur_general_setting[hide-label]',
+			'id'          => 'ur_general_setting_hide_label',
+			'placeholder' => '',
+			'required'    => true,
+			'options'     => array(
+				'no'  => __( 'No', 'user-registration' ),
+				'yes' => __( 'Yes', 'user-registration' ),
+			),
+		),
 	);
 
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings );
