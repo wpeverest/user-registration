@@ -88,6 +88,8 @@ abstract class UR_Form_Field {
 
 			'placeholder' => $data['general_setting']->placeholder,
 
+			'hide_label' => $data['general_setting']->hide_label,
+
 			'type' => $field_type,
 
 		);
