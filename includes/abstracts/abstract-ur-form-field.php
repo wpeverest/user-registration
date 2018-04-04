@@ -79,7 +79,7 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-
+echo "<pre>"; print_r($data); echo "</pre>";
 		$this->form_id = $form_id;
 
 		$form_data = array(

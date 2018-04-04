@@ -630,7 +630,7 @@ jQuery(function ( $ ) {
 						trigger_general_setting_required($(this));
 					});
 					break;
-				case 'hide-label':
+				case 'hide_label':
 					$this_obj.on('change', function () {
 						trigger_general_setting_hide_label($(this));
 					});

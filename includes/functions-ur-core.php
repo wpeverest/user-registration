@@ -524,10 +524,10 @@ function ur_get_general_settings() {
 				'yes' => __( 'Yes', 'user-registration' ),
 			),
 		),
-		'hide-label'    => array(
+		'hide_label'    => array(
 			'type'        => 'select',
 			'label'       => __( 'Hide Label', 'user-registration' ),
-			'name'        => 'ur_general_setting[hide-label]',
+			'name'        => 'ur_general_setting[hide_label]',
 			'id'          => 'ur_general_setting_hide_label',
 			'placeholder' => '',
 			'required'    => true,
