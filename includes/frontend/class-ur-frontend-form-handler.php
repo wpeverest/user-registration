@@ -55,25 +55,9 @@ class UR_Frontend_Form_Handler {
 
 				$part_of_email = explode( "@", $userdata['user_email'] );
 
-				if( username_exists( $part_of_email[0] ) ) {
-
-					$last_char = substr( $part_of_email[0], -1 );
-
-					if( is_numeric( $last_char ) ) {
-
-						$strip_last_char = substr( $part_of_email[0], 0, -1 );
-						
-						$last_char = $last_char+1;
-
-						$userdata['user_login'] = $strip_last_char.$last_char;
-					}
-					else {
-						$userdata['user_login'] = $part_of_email[0].'_1';
-					}
-				}
-				else {					
-					$userdata['user_login'] = $part_of_email[0];
-				}
+				$username = check_username( $part_of_email[0] );
+				
+				$userdata['user_login'] = $username;
 				
 			}
 

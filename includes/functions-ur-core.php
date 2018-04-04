@@ -961,6 +961,38 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta= false ) {
 
 }
 
+//Check if username already exists in case of optional username
+function check_username( $username ) {
+
+	if( username_exists( $username ) ) {
+
+		$last_char = substr( $username, -1 );
+
+		if( is_numeric( $last_char ) ) {
+
+			$strip_last_char = substr( $username, 0, -1 );
+			
+			$last_char = $last_char+1;
+
+			$username = $strip_last_char.$last_char;
+
+			$username = check_username( $username );
+
+			return $username;
+		}
+		else {
+			$username = $username.'_1';
+
+			$username = check_username( $username );
+
+			return $username;
+		}
+	}
+
+	return $username;
+
+}
+
 function ur_get_all_user_registration_form() {
 
 	$args        = array(
