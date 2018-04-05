@@ -635,6 +635,11 @@ jQuery(function ( $ ) {
 						trigger_general_setting_hide_label($(this));
 					});
 					break;
+				case 'description':
+					$this_obj.on('change', function () {
+						trigger_general_setting_description($(this));
+					});
+					break;
 			}
 		});
 		var advance_settings = $('.ur_advance_setting');
@@ -744,6 +749,12 @@ jQuery(function ( $ ) {
 		wrapper.find('.ur-label').find('label').text($label.val());
 		var label_id = $label.attr('id');
 		wrapper.find('.ur-general-setting-block').find('#' + label_id).val($label.val());
+	}
+
+	function trigger_general_setting_description ( $label ) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-field').find('textarea').attr('description', $label.val());
+		wrapper.find('.ur-general-setting-block').find('textarea[data-field="' + $label.attr('data-field') + '"]').val($label.val());
 	}
 
 	function trigger_general_setting_placeholder ( $label ) {

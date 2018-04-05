@@ -285,13 +285,13 @@ abstract class UR_Form_Field {
 					}
 
 					break;
+					
 				case 'textarea':
-
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
 
 					if ( true == $setting_value['required'] ) {
 
-						$general_setting_wrapper .= ' required ';
+						$general_setting_wrapper .= ' required >';
 
 					}
 

@@ -495,6 +495,14 @@ function ur_get_general_settings() {
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
 		),
+		'description'      => array(
+			'type'        => 'textarea',
+			'label'       => __( 'Description', 'user-registration' ),
+			'name'        => 'ur_general_setting[description]',
+			'id'          => 'ur_general_setting_description',
+			'placeholder' => __( 'Label', 'user-registration' ),
+			'required'    => true,
+		),
 		'field_name' => array(
 			'type'        => 'text',
 			'label'       => __( 'Field Name', 'user-registration' ),
