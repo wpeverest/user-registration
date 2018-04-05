@@ -292,7 +292,7 @@ class UR_AJAX {
 	}
 
 	public static function sweep_array( &$array ) {
-
+		
 		foreach ( $array as $key => &$value ) {
 
 			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
@@ -318,8 +318,12 @@ class UR_AJAX {
 					}
 					array_push( self::$field_key_aray, $value );
 				}
-				$value = sanitize_text_field( $value );
-
+				if( $key === 'description' ) {
+					$value = str_replace('"', "'", $value); //TODO:: use wp_kses to allow certain html
+				}
+				else{
+					$value = sanitize_text_field( $value );
+				}
 			}
 		}
 	}

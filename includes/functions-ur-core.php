@@ -495,6 +495,14 @@ function ur_get_general_settings() {
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
 		),
+		'description'      => array(
+			'type'        => 'textarea',
+			'label'       => __( 'Description', 'user-registration' ),
+			'name'        => 'ur_general_setting[description]',
+			'id'          => 'ur_general_setting_description',
+			'placeholder' => __( 'Label', 'user-registration' ),
+			'required'    => true,
+		),
 		'field_name' => array(
 			'type'        => 'text',
 			'label'       => __( 'Field Name', 'user-registration' ),
@@ -517,6 +525,18 @@ function ur_get_general_settings() {
 			'label'       => __( 'Required', 'user-registration' ),
 			'name'        => 'ur_general_setting[required]',
 			'id'          => 'ur_general_setting_required',
+			'placeholder' => '',
+			'required'    => true,
+			'options'     => array(
+				'no'  => __( 'No', 'user-registration' ),
+				'yes' => __( 'Yes', 'user-registration' ),
+			),
+		),
+		'hide_label'    => array(
+			'type'        => 'select',
+			'label'       => __( 'Hide Label', 'user-registration' ),
+			'name'        => 'ur_general_setting[hide_label]',
+			'id'          => 'ur_general_setting_hide_label',
 			'placeholder' => '',
 			'required'    => true,
 			'options'     => array(

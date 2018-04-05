@@ -630,6 +630,16 @@ jQuery(function ( $ ) {
 						trigger_general_setting_required($(this));
 					});
 					break;
+				case 'hide_label':
+					$this_obj.on('change', function () {
+						trigger_general_setting_hide_label($(this));
+					});
+					break;
+				case 'description':
+					$this_obj.on('change', function () {
+						trigger_general_setting_description($(this));
+					});
+					break;
 			}
 		});
 		var advance_settings = $('.ur_advance_setting');
@@ -741,6 +751,12 @@ jQuery(function ( $ ) {
 		wrapper.find('.ur-general-setting-block').find('#' + label_id).val($label.val());
 	}
 
+	function trigger_general_setting_description ( $label ) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-field').find('textarea').attr('description', $label.val());
+		wrapper.find('.ur-general-setting-block').find('textarea[data-field="' + $label.attr('data-field') + '"]').val($label.val());
+	}
+
 	function trigger_general_setting_placeholder ( $label ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
@@ -748,6 +764,15 @@ jQuery(function ( $ ) {
 	}
 
 	function trigger_general_setting_required ( $label ) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-label').find('label').find('span').remove();
+		if ( $label.val() === 'yes' ) {
+			wrapper.find('.ur-label').find('label').append('<span style="color:red">*</span>');
+		}
+		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
+	}
+
+	function trigger_general_setting_hide_label ( $label ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').find('span').remove();
 		if ( $label.val() === 'yes' ) {

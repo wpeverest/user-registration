@@ -88,9 +88,18 @@ abstract class UR_Form_Field {
 
 			'placeholder' => $data['general_setting']->placeholder,
 
-			'type' => $field_type,
+			'description' => $data['general_setting']->description,
 
+			'hide_label' => $data['general_setting']->hide_label,
+
+			'type' => $field_type,
 		);
+
+
+		if( $form_data['hide_label'] === 'yes' ) {
+			unset( $form_data['label'] );
+		}
+
 		if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
 
 			$form_data['required'] = true;
@@ -279,13 +288,13 @@ abstract class UR_Form_Field {
 					}
 
 					break;
+					
 				case 'textarea':
-
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
 
 					if ( true == $setting_value['required'] ) {
 
-						$general_setting_wrapper .= ' required ';
+						$general_setting_wrapper .= ' required >';
 
 					}
 

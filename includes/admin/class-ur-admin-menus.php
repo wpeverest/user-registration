@@ -503,7 +503,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			try {
 				$form_data_array = json_decode( $form_data );
 
-
 				if ( json_last_error() != JSON_ERROR_NONE ) {
 
 					throw new Exception( '' );
