@@ -292,7 +292,7 @@ class UR_AJAX {
 	}
 
 	public static function sweep_array( &$array ) {
-
+		
 		foreach ( $array as $key => &$value ) {
 
 			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
@@ -318,6 +318,10 @@ class UR_AJAX {
 					}
 					array_push( self::$field_key_aray, $value );
 				}
+				if( $key == 'description' ) {
+					$value = $value;
+				}
+				
 				$value = sanitize_text_field( $value );
 
 			}
