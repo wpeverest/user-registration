@@ -88,10 +88,13 @@ abstract class UR_Form_Field {
 
 			'placeholder' => $data['general_setting']->placeholder,
 
+			'description' => $data['general_setting']->description,
+
 			'hide_label' => $data['general_setting']->hide_label,
 
 			'type' => $field_type,
 		);
+
 
 		if( $form_data['hide_label'] === 'yes' ) {
 			unset( $form_data['label'] );

@@ -318,12 +318,12 @@ class UR_AJAX {
 					}
 					array_push( self::$field_key_aray, $value );
 				}
-				if( $key == 'description' ) {
-					$value = $value;
+				if( $key === 'description' ) {
+					$value = $value; //TODO:: use wp_kses to allow certain html
 				}
-				
-				$value = sanitize_text_field( $value );
-
+				else{
+					$value = sanitize_text_field( $value );
+				}
 			}
 		}
 	}
