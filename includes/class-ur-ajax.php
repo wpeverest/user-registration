@@ -319,7 +319,7 @@ class UR_AJAX {
 					array_push( self::$field_key_aray, $value );
 				}
 				if( $key === 'description' ) {
-					$value = $value; //TODO:: use wp_kses to allow certain html
+					$value = str_replace('"', "'", $value); //TODO:: use wp_kses to allow certain html
 				}
 				else{
 					$value = sanitize_text_field( $value );
