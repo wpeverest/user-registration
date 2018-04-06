@@ -84,13 +84,13 @@ abstract class UR_Form_Field {
 
 		$form_data = array(
 
-			'label' => $data['general_setting']->label,
+			'label' => isset( $data['general_setting']->label ) ? $data['general_setting']->label : '',
 
-			'placeholder' => $data['general_setting']->placeholder,
+			'placeholder' => isset( $data['general_setting']->placeholder ) ? $data['general_setting']->placeholder : '',
 
-			'description' => $data['general_setting']->description,
+			'description' => isset( $data['general_setting']->description ) ? $data['general_setting']->description : '',
 
-			'hide_label' => $data['general_setting']->hide_label,
+			'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
 
 			'type' => $field_type,
 		);
