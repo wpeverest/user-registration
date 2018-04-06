@@ -1,9 +1,17 @@
-= 1.2.0 - xx/03/2018 =
-Feature - Pending users notice for admin
-Feature - Form filled data in email
-Fix - Pending email issue
-Fix - Redirect from email url to default login message issue
-Fix - Load email classes only on demand
+= 1.2.2 - xx/04/2018 =
+* Feature - Login without username option
+* Feature - Customizable form submission messages
+* Feature - Hide label option in each field
+* Feature - Description box for each field
+* Fix - Date rendering issue
+* Tweak - Remove login header from login shortcode
+
+= 1.2.1 - 16/03/2018 =
+* Feature - Pending users approval notice for admin
+* Feature - Form filled data in email
+* Fix - Pending email issue
+* Fix - Redirect from email url to default login message issue
+* Fix - Load email classes only on demand
 
 
 = 1.2.0 - 22/02/2018 =
@@ -15,13 +23,7 @@ Fix - Load email classes only on demand
 * Feature - Redirect to custom page via email.
 * Refactor - Usermeta data store process.
 
-= 1.1.9 - xx/15/2018 =
-* Fix - Design issue in mobile view
-* Fix - Missing closing anchor tag
-* Fix - Remove email token after use
-* Feature - Redirect to custom page via email
-
-= 1.1.8 - xx/02/2018 =
+= 1.1.8 - 02/02/2018 =
 * Fix - Default admin email subject
 
 = 1.1.7 - 02/02/2018 =
