@@ -93,8 +93,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.2.2 - xx/04/2018 =
-* Feature - Login without username option
+= 1.2.2 - 06/04/2018 =
+* Feature - Registration without username option
 * Feature - Customizable form submission messages
 * Feature - Hide label option in each field
 * Feature - Description box for each field
