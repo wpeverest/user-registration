@@ -1,1 +1,60 @@
-.ur_plugin_upgrade_notice{font-weight:400;color:#fff;background:#d54d21;padding:1em;margin:9px 0}.ur_plugin_upgrade_notice::before{content:'\f348';display:inline-block;font:400 18px/1 dashicons;speak:none;margin:0 8px 0 -2px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;vertical-align:top}.user-registration-updater-licensed td,.user-registration-updater-licensed th{box-shadow:none!important}.user-registration-updater-license-key{border:0;font-size:13px;font-weight:400;padding:6px 12px;margin:5px 20px 15px 40px;background-color:rgba(0,0,0,.03);line-height:27px}.user-registration-updater-license-key input{margin:0 4px;vertical-align:middle}.user-registration-updater-license-key::before{color:#32373c;content:'\f160';margin:0 8px 0 -2px;display:inline-block;font:400 20px/27px dashicons;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;vertical-align:middle}
+/**
+ * menu.scss
+ * Styles applied to dashboard menu items added via UserRegistration.
+ * Adds icons to top level menu items, etc.
+ */
+/**
+ * Imports
+ */
+/**
+ * _mixins.scss
+ * User Registration Mixins
+ */
+/**
+ * UserRegistration CSS Variables
+ */
+/**
+ * Styling begins
+ */
+.ur_plugin_upgrade_notice {
+  font-weight: normal;
+  color: #fff;
+  background: #d54d21;
+  padding: 1em;
+  margin: 9px 0; }
+  .ur_plugin_upgrade_notice::before {
+    content: '\f348';
+    display: inline-block;
+    font: 400 18px/1 dashicons;
+    speak: none;
+    margin: 0 8px 0 -2px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: top; }
+
+/**
+ * Plugin Updater.
+ */
+.user-registration-updater-licensed th, .user-registration-updater-licensed td {
+  box-shadow: none !important; }
+
+.user-registration-updater-license-key {
+  border: 0;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 6px 12px;
+  margin: 5px 20px 15px 40px;
+  background-color: rgba(0, 0, 0, 0.03);
+  line-height: 27px; }
+  .user-registration-updater-license-key input {
+    margin: 0 4px;
+    vertical-align: middle; }
+  .user-registration-updater-license-key::before {
+    color: #32373c;
+    content: '\f160';
+    margin: 0 8px 0 -2px;
+    display: inline-block;
+    font: 400 20px/27px dashicons;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: middle; }
