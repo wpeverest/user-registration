@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.2.3 - 06/04/2018 =
+* Fix - undefined index error in frontend 
 
 = 1.2.2 - 06/04/2018 =
 * Feature - Registration without username option
