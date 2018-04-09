@@ -99,7 +99,7 @@ class UR_Emailer {
 
 		$username = isset( $user_username_object->value ) && ! empty( $user_username_object->value ) ? $user_username_object->value : '';
 
-		if ( ! empty( $email ) && ! empty ( $username ) && ! empty( $user_id ) ) {
+		if ( ! empty( $email ) && ! empty( $user_id ) ) {
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html );
 
