@@ -67,6 +67,11 @@ class UR_Email_Confirmation {
 			{				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
+
+				$user = get_user_by( 'id', $user_id );
+
+				UR_Emailer::send_mail_to_admin( $user->user_email, $user->user_login, $user_id, array() );
+
 				add_filter('login_message', array( $this,'custom_registration_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_message' ) );
 			}
@@ -123,7 +128,7 @@ class UR_Email_Confirmation {
 	}
 
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		
+
 		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			$token = $this->getToken($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0);

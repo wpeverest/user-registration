@@ -201,8 +201,10 @@ class UR_Emailer {
 	/**
 	 * @param $user_email
 	 */
-	private static function send_mail_to_admin( $user_email, $username, $user_id, $data_html ) {
-
+	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html ) {
+		
+		$email_token = get_user_meta( $user_id, 'ur_confirm_email', true );
+		
 		$header = "Reply-To: {{email}} \r\n";
 		
 		$header .= "Content-Type: text/html; charset=UTF-8";
@@ -227,7 +229,7 @@ class UR_Emailer {
 		
 		$header = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ){
+		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') && '0' != $email_token ){
 			wp_mail( $admin_email, $subject, $message, $header );
 		}
 	}
