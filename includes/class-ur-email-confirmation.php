@@ -50,7 +50,17 @@ class UR_Email_Confirmation {
 	}
 
 	public function check_token_before_authenticate()
-	{	
+	{
+
+		if( isset( $_GET['user_id'] ) ) {
+			$this->getToken( $_GET['user_id'] );
+			$this->set_email_status( array(), '', $_GET['user_id'] );
+
+			$user = get_user_by( 'id', $_GET['user_id'] );
+
+			UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $_GET['user_id'], array() );
+		}	
+
 		if( ! isset( $_GET['ur_token'] ) ) {
 			return;
 		}
@@ -144,7 +154,7 @@ class UR_Email_Confirmation {
 
 		if( $email_status === '0' )
 		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a href="">Resend Email</a>', 'user-registration' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?user_id='. $user->ID .'">Resend Email</a>', 'user-registration' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}

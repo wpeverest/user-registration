@@ -112,7 +112,7 @@ class UR_Emailer {
 	 * @param $email
 	 */
 
-	private static function send_mail_to_user( $email, $username, $user_id, $data_html ) {
+	public static function send_mail_to_user( $email, $username, $user_id, $data_html ) {
 
 		$status = ur_get_user_approval_status( $user_id );
 
