@@ -56,7 +56,7 @@ class UR_Email_Confirmation {
 	public function check_token_before_authenticate()
 	{
 
-		if( isset( $_GET['user_id'] ) ) {
+		if( isset( $_GET['user_id'] ) && $_GET['ur_resend_token'] == 'true') {
 			$this->getToken( $_GET['user_id'] );
 			$this->set_email_status( array(), '', $_GET['user_id'] );
 
@@ -162,7 +162,7 @@ class UR_Email_Confirmation {
 
 		if( $email_status === '0' )
 		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?user_id='. $user->ID .'">Resend Verification Link</a>', 'user-registration' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?user_id='. $user->ID .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
