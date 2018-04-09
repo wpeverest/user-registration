@@ -46,7 +46,11 @@ class UR_Email_Confirmation {
 
 	public function custom_registration_error_message()
 	{
-		return ur_print_notice( __('Token Mismatch! <a href="">Resend Email</a>','user-registration'), 'error' );
+		return ur_print_notice( __('Token Mismatch! <a id="resend-email" href="?user_id='. $user->ID .'">Resend Email</a>','user-registration'), 'error' );
+	}
+
+	public function custom_resend_email_token_message() {
+		return ur_print_notice( __('Verification Email Sent!','user-registration'));
 	}
 
 	public function check_token_before_authenticate()
@@ -59,6 +63,10 @@ class UR_Email_Confirmation {
 			$user = get_user_by( 'id', $_GET['user_id'] );
 
 			UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $_GET['user_id'], array() );
+			
+			add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
+			add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
+
 		}	
 
 		if( ! isset( $_GET['ur_token'] ) ) {
