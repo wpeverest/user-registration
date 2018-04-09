@@ -55,7 +55,8 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-
+		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
+		
 		if( isset( $_GET['user_id'] ) && $_GET['ur_resend_token'] == 'true') {
 			$this->getToken( $_GET['user_id'] );
 			$this->set_email_status( array(), '', $_GET['user_id'] );
@@ -79,7 +80,6 @@ class UR_Email_Confirmation {
 			$user_id = $this->my_simple_crypt( $output[1], 'd');
 			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-			add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 			
 			if( $user_token == $_GET['ur_token'] )
 			{				
