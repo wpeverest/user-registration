@@ -27,7 +27,7 @@ class UR_Email_Confirmation {
 
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
-		add_action( 'user_register', array( $this, 'set_email_status' ) );
+		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'wp', array( $this, 'check_token_before_authenticate' ), 30, 2);
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
 
@@ -122,10 +122,9 @@ class UR_Email_Confirmation {
 	    do_action('user_registration_get_token');
 	}
 
-	public function set_email_status( $user_id ) {
+	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 		
-		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) )
-		{
+		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			$token = $this->getToken($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0);
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
