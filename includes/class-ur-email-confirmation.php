@@ -49,8 +49,43 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __('Token Mismatch!','user-registration'), 'error' );
 	}
 
+	public function custom_resend_email_token_message() {
+		return ur_print_notice( __('Verification Email Sent!','user-registration'));
+	}
+
+	public function custom_resend_email_token_error_message() {
+		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
+	}
+
 	public function check_token_before_authenticate()
-	{	
+	{
+		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
+		
+		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
+			
+			$user_id = $this->my_simple_crypt( $_GET['ur_resend_id'], 'd' );
+
+			$user = get_user_by( 'id', $user_id );
+
+			if( $user ) {
+
+				$this->getToken( $user_id );
+
+				$this->set_email_status( array(), '', $user_id );
+
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '' );
+				
+				add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
+			} else {
+
+				add_filter('login_message', array( $this,'custom_resend_email_token_error_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_error_message' ) );
+				;
+			}			
+
+		}	
+
 		if( ! isset( $_GET['ur_token'] ) ) {
 			return;
 		}
@@ -61,16 +96,11 @@ class UR_Email_Confirmation {
 			$user_id = $this->my_simple_crypt( $output[1], 'd');
 			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-			add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 			
 			if( $user_token == $_GET['ur_token'] )
 			{				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
-
-				$user = get_user_by( 'id', $user_id );
-
-				UR_Emailer::send_mail_to_admin( $user->user_email, $user->user_login, $user_id, array() );
 
 				add_filter('login_message', array( $this,'custom_registration_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_message' ) );
@@ -144,7 +174,7 @@ class UR_Email_Confirmation {
 
 		if( $email_status === '0' )
 		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email.', 'user-registration' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->my_simple_crypt( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
