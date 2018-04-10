@@ -82,9 +82,7 @@ class UR_Email_Confirmation {
 				add_filter('login_message', array( $this,'custom_resend_email_token_error_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_error_message' ) );
 				;
-			}
-
-			
+			}			
 
 		}	
 
@@ -103,10 +101,6 @@ class UR_Email_Confirmation {
 			{				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
-
-				$user = get_user_by( 'id', $user_id );
-
-				UR_Emailer::send_mail_to_admin( $user->user_email, $user->user_login, $user_id, array() );
 
 				add_filter('login_message', array( $this,'custom_registration_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_message' ) );
