@@ -53,6 +53,10 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __('Verification Email Sent!','user-registration'));
 	}
 
+	public function custom_resend_email_token_error_message() {
+		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
+	}
+
 	public function check_token_before_authenticate()
 	{
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
@@ -61,16 +65,26 @@ class UR_Email_Confirmation {
 			
 			$user_id = $this->my_simple_crypt( $_GET['ur_resend_id'], 'd' );
 
-			$this->getToken( $user_id );
-
-			$this->set_email_status( array(), '', $user_id );
-
 			$user = get_user_by( 'id', $user_id );
 
-			UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, array() );
+			if( $user ) {
+
+				$this->getToken( $user_id );
+
+				$this->set_email_status( array(), '', $user_id );
+
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, array() );
+				
+				add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
+			} else {
+
+				add_filter('login_message', array( $this,'custom_resend_email_token_error_message' ) );
+				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_error_message' ) );
+				;
+			}
+
 			
-			add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
-			add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
 
 		}	
 
