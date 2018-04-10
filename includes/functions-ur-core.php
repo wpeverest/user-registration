@@ -872,9 +872,8 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 
 		}
 
-		return $form_data_array;
 	}
-
+		return $form_data_array;
 
 }
 
