@@ -2,14 +2,15 @@
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
 (function ( $ ) {
-	var user_registration = {
-		$user_registration: $( 'form.register' ),
+
+		var user_registration = {
+		$user_registration: $( '.ur-frontend-form form.register' ),
 		init: function() {
 			this.init_datepicker();
 			this.load_validation();
 
 			// Inline validation
-			this.$user_registration.on( 'input validate change', '.input-text, select, input:checkbox', this.validate_field );
+			this.$user_registration.on( 'input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field );
 		},
 		init_datepicker: function () {
 			$( '.date-picker-field, .date-picker' ).datepicker({
@@ -70,7 +71,7 @@
 							$element.addClass( errorClass ).removeClass( validClass );
 						}
 
-						$parent.removeClass( 'user-registration-validated' ).addClass( 'user-registration-invalid user-registration-has-error' );
+						$parent.addClass( 'user-registration-has-error' );
 					},
 					unhighlight: function( element, errorClass, validClass ) {
 						var $element  = $( element ),
@@ -85,8 +86,8 @@
 
 						$parent.removeClass( 'user-registration-has-error' );
 					},
-					submitHandler: function( errorClass, form ) {
-               			form.submit();
+					submitHandler: function( errorClass, form) {
+						$( '.ur-frontend-form form.register' ).ur_form_submission();    		
 					}
 				});
 			});
@@ -100,17 +101,17 @@
 				event_type        = e.type;
 
 			if ( 'input' === event_type ) {
-				$parent.removeClass( 'everest-forms-invalid everest-forms-invalid-required-field everest-forms-invalid-email everest-forms-validated' );
+				$parent.removeClass( 'user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email user-registration-validated' );
 			}
 
 			if ( 'validate' === event_type || 'change' === event_type ) {
 
 				if ( validate_required ) {
 					if ( 'checkbox' === $this.attr( 'type' ) && ! $this.is( ':checked' ) ) {
-						$parent.removeClass( 'everest-forms-validated' ).addClass( 'everest-forms-invalid everest-forms-invalid-required-field' );
+						$parent.removeClass( 'user-registration-validated' ).addClass( 'user-registration-invalid user-registration-invalid-required-field' );
 						validated = false;
 					} else if ( $this.val() === '' ) {
-						$parent.removeClass( 'everest-forms-validated' ).addClass( 'everest-forms-invalid everest-forms-invalid-required-field' );
+						$parent.removeClass( 'user-registration-validated' ).addClass( 'user-registration-invalid user-registration-invalid-required-field' );
 						validated = false;
 					}
 				}
@@ -121,23 +122,26 @@
 						var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
 
 						if ( ! pattern.test( $this.val()  ) ) {
-							$parent.removeClass( 'everest-forms-validated' ).addClass( 'everest-forms-invalid everest-forms-invalid-email' );
+							$parent.removeClass( 'user-registration-validated' ).addClass( 'user-registration-invalid user-registration-invalid-email' );
 							validated = false;
 						}
 					}
 				}
 
 				if ( validated ) {
-					$parent.removeClass( 'everest-forms-invalid everest-forms-invalid-required-field everest-forms-invalid-email' ).addClass( 'everest-forms-validated' );
+					$parent.removeClass( 'user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email' ).addClass( 'user-registration-validated' );
 				}
 			}
 		}
 	};
+
 	user_registration.init();
+
 
 	var ursL10n = user_registration_params.ursL10n;
 
 	$.fn.ur_form_submission = function () {
+
 		// traverse all nodes
 		return this.each(function () {
 			// express a single node as a jQuery object
@@ -289,6 +293,7 @@
 				},
 				form_submit_event: function () {
 					$this.on('submit', function ( event ) {
+
 						if ( $this.find('.user-registration-password-strength').length > 0 ) {
 
 							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
@@ -412,7 +417,7 @@
 	};
 
 	$(function () {
-		$('.ur-frontend-form form.register').ur_form_submission();
+		
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
 			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'yy-mm-dd').datepicker({
