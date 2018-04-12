@@ -236,7 +236,7 @@ abstract class UR_Form_Field {
 
 					$value = 'user_' == $sub_string_key && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
 
-					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
 					if ( true == $setting_value['required'] ) {
 
@@ -260,7 +260,7 @@ abstract class UR_Form_Field {
 
 						}
 					} else {
-						$general_setting_wrapper .= '<input data-field="' . $setting_key . '"  class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="radio" name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+						$general_setting_wrapper .= '<input data-field="' . $setting_key . '"  class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="radio" name="' . $setting_value['name'] . '"   placeholder="' . $setting_value['placeholder'] . '"';
 
 						if ( true == $setting_value['required'] ) {
 
@@ -275,7 +275,7 @@ abstract class UR_Form_Field {
 
 					if ( isset( $setting_value['options'] ) && gettype( $setting_value['options'] ) == 'array' ) {
 
-						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '" >';
+						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '">';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
 
@@ -290,7 +290,7 @@ abstract class UR_Form_Field {
 					break;
 					
 				case 'textarea':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
 
 					if ( true == $setting_value['required'] ) {
 

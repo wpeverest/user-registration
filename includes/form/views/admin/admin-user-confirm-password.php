@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="ur-field" data-field-key="user_confirm_password">
 
-		<input type="password" id="ur-input-type-user-password"
+		<input type="password" id="ur-input-type-user-confirm-password"
 			   placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
 
 	</div>
