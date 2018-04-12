@@ -745,10 +745,9 @@ jQuery(function ( $ ) {
 	}
 
 	function trigger_general_setting_label ( $label ) {
-		var wrapper = $('.ur-selected-item.ur-item-active');
-		wrapper.find('.ur-label').find('label').text($label.val());
-		var label_id = $label.attr('id');
-		wrapper.find('.ur-general-setting-block').find('#' + label_id).val($label.val());
+	var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
+		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').val($label.val());
 	}
 
 	function trigger_general_setting_description ( $label ) {

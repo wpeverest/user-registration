@@ -107,7 +107,7 @@ abstract class UR_Field_Settings {
 
 				case 'textarea':
 
-					$this->fields_html .= '<textarea data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" id="' . esc_attr($field['id']) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
+					$this->fields_html .= '<textarea data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" data-id="' . esc_attr($field['data-id']) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
 
 					if ( true == $field['required'] ) {
 

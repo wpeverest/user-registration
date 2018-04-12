@@ -40,7 +40,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 
 				'label' => __( 'Custom Class', 'user-registration' ),
 
-				'data-id' => $this->field_id . '_custom_class',
+				'id' => $this->field_id . '_custom_class',
 
 				'name' => $this->field_id . '[custom_class]',
 
