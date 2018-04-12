@@ -671,8 +671,8 @@ jQuery(function ( $ ) {
 
 	function trigger_advance_setting ( $this_node, node_type ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
-		var this_node_id = $this_node.attr('data-id');
-		var hidden_node = wrapper.find('.ur-advance-setting-block').find('[data-id="'+this_node_id+'"]');
+		var this_node_id = $this_node.attr('id');
+		var hidden_node = wrapper.find('.ur-advance-setting-block').find('#' + this_node_id);
  		switch ( node_type ) {
 			case 'input':
 				hidden_node.val($this_node.val());
@@ -746,7 +746,11 @@ jQuery(function ( $ ) {
 
 	function trigger_general_setting_label ( $label ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-label').find('label').text($label.val());
+		
+		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+	
 	}
 
 	function trigger_general_setting_description ( $label ) {
