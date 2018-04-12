@@ -87,7 +87,7 @@
 						$parent.removeClass( 'user-registration-has-error' );
 					},
 					submitHandler: function( errorClass, form) {
-						$( '.ur-frontend-form form.register' ).ur_form_submission();    		
+						$('form.register').ur_form_submission();    		
 					}
 				});
 			});
@@ -292,7 +292,8 @@
 					this.form_submit_event();
 				},
 				form_submit_event: function () {
-					$this.on('submit', function ( event ) {
+
+					$('form.register').on('submit', function ( event ) {
 
 						if ( $this.find('.user-registration-password-strength').length > 0 ) {
 
@@ -417,7 +418,7 @@
 	};
 
 	$(function () {
-		
+		 
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
 			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'yy-mm-dd').datepicker({
