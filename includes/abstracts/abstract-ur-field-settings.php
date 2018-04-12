@@ -67,7 +67,7 @@ abstract class UR_Field_Settings {
 
 				case 'text':
 
-					$this->fields_html .= '<input data-advance-field="' . esc_attr($field_key) . '" value="' . esc_attr($value) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" id="' . esc_attr($field['id']) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
+					$this->fields_html .= '<input data-advance-field="' . esc_attr($field_key) . '" value="' . esc_attr($value) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
 
 					if ( true == $field['required'] ) {
 
@@ -81,7 +81,7 @@ abstract class UR_Field_Settings {
 
 				case 'select':
 
-					$this->fields_html .= '<select data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" id="' . esc_attr($field['id']) . '"  placeholder="' . esc_attr($field['placeholder']) . '" ';
+					$this->fields_html .= '<select data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '" ';
 
 					if ( true == $field['required'] ) {
 
@@ -107,7 +107,7 @@ abstract class UR_Field_Settings {
 
 				case 'textarea':
 
-					$this->fields_html .= '<textarea data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" id="' . esc_attr($field['id']) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
+					$this->fields_html .= '<textarea data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
 
 					if ( true == $field['required'] ) {
 

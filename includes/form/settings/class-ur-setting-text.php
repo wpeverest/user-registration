@@ -40,7 +40,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 
 				'label' => __( 'Size','user-registration' ),
 
-				'id' => $this->field_id . '_size',
+				'data-id' => $this->field_id . '_size',
 
 				'name' => $this->field_id . '[size]',
 
@@ -59,7 +59,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 
 				'label' => __( 'Default Value','user-registration' ),
 
-				'id' => $this->field_id . '_default_value',
+				'data-id' => $this->field_id . '_default_value',
 
 				'name' => $this->field_id . '[default_value]',
 
