@@ -745,9 +745,8 @@ jQuery(function ( $ ) {
 	}
 
 	function trigger_general_setting_label ( $label ) {
-	var wrapper = $('.ur-selected-item.ur-item-active');
-		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
-		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').val($label.val());
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
 	}
 
 	function trigger_general_setting_description ( $label ) {
