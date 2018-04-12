@@ -40,7 +40,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 
 				'label' => __( 'Default Value','user-registration' ),
 
-				'id' => $this->field_id . '_default_value',
+				'data-id' => $this->field_id . '_default_value',
 
 				'name' => $this->field_id . '[default_value]',
 
@@ -59,7 +59,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 
 				'label' => __( 'Custom Class', 'user-registration' ),
 
-				'id' => $this->field_id . '_custom_class',
+				'data-id' => $this->field_id . '_custom_class',
 
 				'name' => $this->field_id . '[custom_class]',
 

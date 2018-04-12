@@ -40,7 +40,7 @@ class UR_Setting_Password extends UR_Field_Settings {
 
 				'label' => __( 'Password Size','user-registration' ),
 
-				'id' => $this->field_id . '_size',
+				'data-id' => $this->field_id . '_size',
 
 				'name' => $this->field_id . '[size]',
 

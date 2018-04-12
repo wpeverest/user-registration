@@ -40,7 +40,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 
 				'label' => __( 'Custom Class','user-registration' ),
 
-				'id' => $this->field_id . '_custom_class',
+				'data-id' => $this->field_id . '_custom_class',
 
 				'name' => $this->field_id . '[custom_class]',
 

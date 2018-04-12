@@ -65,7 +65,6 @@ class UR_Checkbox extends UR_Form_Field {
                 data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
 	}
 
-
 	/**
 	 * @param $single_form_field
 	 * @param $form_data
