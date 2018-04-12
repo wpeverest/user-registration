@@ -65,13 +65,6 @@
 							$parent   = $element.closest( '.form-row' ),
 							inputName = $element.attr( 'name' );
 
-						if ( $element.attr( 'type' ) === 'radio' || $element.attr( 'type' ) === 'checkbox' ) {
-							$parent.find( 'input[name=\''+inputName+'\']' ).addClass( errorClass ).removeClass( validClass );
-						} else {
-							$element.addClass( errorClass ).removeClass( validClass );
-						}
-
-						$parent.addClass( 'user-registration-has-error' );
 					},
 					unhighlight: function( element, errorClass, validClass ) {
 						var $element  = $( element ),
