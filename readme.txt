@@ -93,10 +93,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.2.4 - 10/04/2018 =
+= 1.2.4 - xx/04/2018 =
+* Feature - Introduce jquery validate for client side validation
 * Feature - Allow user to resend email verification link
 * Fix - Manually created user requiring verification issue
 * Fix - Get form data by key issue
+* Fix - Console errors in the backend
 
 = 1.2.3 - 06/04/2018 =
 * Fix - undefined index error in frontend 
