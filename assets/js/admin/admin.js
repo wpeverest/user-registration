@@ -671,8 +671,8 @@ jQuery(function ( $ ) {
 
 	function trigger_advance_setting ( $this_node, node_type ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
-		var this_node_id = $this_node.attr('id');
-		var hidden_node = wrapper.find('.ur-advance-setting-block').find('#' + this_node_id);
+		var this_node_id = $this_node.attr('data-id');
+		var hidden_node = wrapper.find('.ur-advance-setting-block').find('[data-id="'+this_node_id+'"]');
  		switch ( node_type ) {
 			case 'input':
 				hidden_node.val($this_node.val());
