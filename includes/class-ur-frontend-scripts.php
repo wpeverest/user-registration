@@ -174,9 +174,14 @@ class UR_Frontend_Scripts {
 	private static function register_scripts() {
 		$suffix           = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$register_scripts = array(
+			'ur-jquery-validate' => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => UR_VERSION,
+			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery' , 'jquery-ui-datepicker'),
+				'deps'    => array( 'jquery' , 'jquery-ui-datepicker','ur-jquery-validate'),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(
@@ -189,6 +194,7 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
 				'version' => UR_VERSION,
 			),
+			
 			'ur-google-recaptcha'        => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
@@ -233,6 +239,7 @@ class UR_Frontend_Scripts {
 		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
 
 			self::enqueue_script( 'user-registration' );
+			self::enqueue_script('ur-jquery-validate');
 
 			if ( 'yes' == get_option( 'user_registration_general_setting_enable_strong_password' ) ) {
 
