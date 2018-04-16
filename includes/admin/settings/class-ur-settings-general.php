@@ -260,7 +260,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __('User registered. Verify your email by clicking on the link sent to your email..','user-registration'),
+						'default'  => __('User registered. Verify your email by clicking on the link sent to your email.','user-registration'),
 					),
 
 					array(
