@@ -215,7 +215,7 @@ class UR_Install {
 
 		$db_needs_update = array( '1.2.2','1.2.3','1.2.4' );
 
-		if( in_array( $db_needs_updates, $current_db_version ) ) {
+		if( in_array( $current_db_version, $db_needs_update ) ) {
 			$updates['1.2.5'] = array(
 				'ur_update_125_usermeta',
 				'ur_update_125_db_version',
