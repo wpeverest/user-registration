@@ -49,3 +49,45 @@ function ur_update_120_usermeta() {
 function ur_update_120_db_version() {
 	UR_Install::update_db_version( '1.2.0' );
 }
+
+/**
+ * Update usermeta.
+ */
+function ur_update_125_usermeta() {
+	
+	$users = get_users( array( 'fields' => array( 'ID' ) ) );
+	
+	foreach( $users as $user_id ) {
+
+		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_first_name' ) ) {
+			$first_name = get_user_meta ( $user_id->ID, 'user_registration_user_first_name', true );
+			update_user_meta ( $user_id->ID, 'first_name', $first_name );
+			delete_user_meta( $user_id->ID, 'user_registration_user_first_name');
+		}
+
+		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_last_name' ) ) {
+			$last_name = get_user_meta ( $user_id->ID, 'user_registration_user_last_name', true );
+			update_user_meta ( $user_id->ID, 'last_name', $last_name );
+			delete_user_meta( $user_id->ID, 'user_registration_user_last_name');
+		}
+		
+		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_description' ) ) {
+			$description = get_user_meta ( $user_id->ID, 'user_registration_user_description', true );
+			update_user_meta ( $user_id->ID, 'description', $description );
+			delete_user_meta( $user_id->ID, 'user_registration_user_description');
+		}
+
+		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_nickname' ) ) {
+			$nickname = get_user_meta ( $user_id->ID, 'user_registration_user_nickname', true );
+			update_user_meta ( $user_id->ID, 'nickname', $nickname );
+			delete_user_meta( $user_id->ID, 'user_registration_user_nickname');
+		}
+	
+    }
+}
+/**
+ * Update DB Version.
+ */
+function ur_update_125_db_version() {
+	UR_Install::update_db_version( '1.2.5' );
+}
