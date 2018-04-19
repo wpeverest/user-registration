@@ -26,10 +26,6 @@ class UR_Install {
 			'ur_update_120_usermeta',
 			'ur_update_120_db_version',
 		),
-		'1.2.5' => array(
-			'ur_update_125_usermeta',
-			'ur_update_125_db_version',
-		),
 	);
 
 	/**
@@ -214,7 +210,18 @@ class UR_Install {
 	 * @return array
 	 */
 	public static function get_db_update_callbacks() {
-		return self::$db_updates;
+		$updates = self::$db_updates;
+		$current_db_version = get_option( 'user_registration_db_version' );
+
+		$db_needs_update = array( '1.2.2','1.2.3','1.2.4' );
+
+		if( in_array( $db_needs_updates, $current_db_version ) ) {
+			$updates['1.2.5'] = array(
+				'ur_update_125_usermeta',
+				'ur_update_125_db_version',
+			);
+		}
+		return $updates;
 	}
 
 	/**
