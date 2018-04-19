@@ -73,13 +73,13 @@ function ur_update_125_usermeta() {
 		
 		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_description' ) ) {
 			$description = get_user_meta ( $user_id->ID, 'user_registration_user_description', true );
-			isset( $description ) ? update_user_meta ( $user_id->ID, 'description', $description ) : '';
+			update_user_meta ( $user_id->ID, 'description', $description );
 			delete_user_meta( $user_id->ID, 'user_registration_user_description');
 		}
 
 		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_nickname' ) ) {
 			$nickname = get_user_meta ( $user_id->ID, 'user_registration_user_nickname', true );
-			isset( $nickname ) ? update_user_meta ( $user_id->ID, 'nickname', $nickname ) : '';
+			update_user_meta ( $user_id->ID, 'nickname', $nickname );
 			delete_user_meta( $user_id->ID, 'user_registration_user_nickname');
 		}
 	
