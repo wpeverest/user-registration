@@ -1,4 +1,7 @@
-= 1.2.4 - xx/04/2018 =
+= 1.2.4.1 - 19/04/2018 =
+* Fix - Default meta keys issue
+
+= 1.2.4 - 12/04/2018 =
 * Feature - Introduce jquery validate for client side validation
 * Feature - Allow user to resend email verification link
 * Fix - Manually created user requiring verification issue
