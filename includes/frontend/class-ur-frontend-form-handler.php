@@ -191,14 +191,20 @@ class UR_Frontend_Form_Handler {
 				$field_key           = $data->field_name;
 				$field_key_for_param = $data->field_name;
 
-				$field_key = 'user_registration_' . $field_key;
+				$default_meta = array( 'user_description', 'user_nickname', 'user_first_name', 'user_last_name' );
+				if( in_array( $field_key, $default_meta ) ) {
+					$field_key = trim( str_replace( 'user_', '', $field_key ) );				
+				} else {
+					$field_key = 'user_registration_' . $field_key;
+				}
+
 				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
 					$data->value = json_decode( $data->value );	
 				}
 				update_user_meta( $user_id, $field_key, $data->value );
 			}
-		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
+		}
 	}
 	private static function match_password( &$form_data ) {
 		$confirm_password     = '';
