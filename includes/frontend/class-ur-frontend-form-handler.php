@@ -38,7 +38,7 @@ class UR_Frontend_Form_Handler {
 		if ( count( self::$response_array ) == 0 ) {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$userdata = array(
-				'user_login' => self::$valid_form_data['user_username']->value,
+				'user_login' => isset( self::$valid_form_data['user_username'] ) ? self::$valid_form_data['user_username']->value : '',
 				'user_pass' => self::$valid_form_data['user_password']->value,
 				'user_email' => self::$valid_form_data['user_email']->value,
 				'display_name' => isset( self::$valid_form_data['user_display_name']->value ) ? self::$valid_form_data['user_display_name']->value : '',
@@ -69,7 +69,7 @@ class UR_Frontend_Form_Handler {
 			if ( $user_id > 0 ) {
 				$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 				$success_params = array(
-					'username' => self::$valid_form_data['user_username']->value,
+					'username' => isset( self::$valid_form_data['user_username'] ) ? self::$valid_form_data['user_username']->value : '',
 				);
 				if ( 'auto_login' === $login_option ) {
 					wp_clear_auth_cookie();
