@@ -1,3 +1,7 @@
+= 1.2.5.1 - 27/04/2018 =
+* Tweak - Text color of paragraph in myaccount section
+* Fix - Use template_redirect hook instead to check verification token
+
 = 1.2.5 - 19/04/2018 =
 * Fix - Default meta keys issue
 * Refactor - Default user meta keys migration
