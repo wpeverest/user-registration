@@ -28,7 +28,7 @@ class UR_Email_Confirmation {
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
-		add_action( 'wp', array( $this, 'check_token_before_authenticate' ), 30, 2);
+		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2);
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
 
 	}
