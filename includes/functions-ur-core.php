@@ -341,6 +341,7 @@ function ur_get_field_type( $field_key ) {
 
 			case 'user_email':
 			case 'email':
+			case 'billing_email':
 				$field_type = 'email';
 				break;
 			case 'user_confirm_password':
@@ -365,6 +366,8 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'select':
 			case 'country':
+			case 'billing_country':
+			case 'shipping_country':
 				$field_type = 'select';
 				break;
 			case 'file':
@@ -374,9 +377,12 @@ function ur_get_field_type( $field_key ) {
 			case 'privacy_policy':
 				$field_type = 'privacy-policy';
 			case 'checkbox':
+			case 'separate_shipping':
 				$field_type = 'checkbox';
 				break;
 			case 'number':
+			case 'billing_postcode':
+			case 'shipping_postcode':
 				$field_type = 'number';
 				break;
 			case 'date':

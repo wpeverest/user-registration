@@ -228,11 +228,13 @@ abstract class UR_Form_Field {
 
 			$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
 
+			$woocommerce_fields = function_exists( 'ur_get_all_woocommerce_fields' ) ? ur_get_all_woocommerce_fields() : array();
+
 			switch ( $setting_value['type'] ) {
 
 				case 'text':
 
-					$extra_attribute = 'user_' == $sub_string_key && 'field_name' == $setting_key ? "disabled='disabled'" : '';
+					$extra_attribute = ( 'user_' == $sub_string_key || in_array( $strip_prefix, $woocommerce_fields ) ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
 
 					$value = 'user_' == $sub_string_key && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
 
