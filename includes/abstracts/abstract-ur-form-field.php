@@ -228,6 +228,8 @@ abstract class UR_Form_Field {
 
 			$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
 
+			$strip_prefix = substr( $this->id, 18 );
+
 			$woocommerce_fields = function_exists( 'ur_get_all_woocommerce_fields' ) ? ur_get_all_woocommerce_fields() : array();
 
 			switch ( $setting_value['type'] ) {
