@@ -76,7 +76,7 @@ class UR_Settings_Email_Confirmation{
 
 	public function ur_get_email_confirmation() {
 	
-		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_get_email_confirmation', __( sprintf(
 
 				'Hi {{username}},
  					<br/>

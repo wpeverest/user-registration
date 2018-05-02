@@ -86,7 +86,7 @@ class UR_Settings_Successfully_Registered_Email{
 
 	public function ur_get_successfully_registered_email() {
 		
-		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_get_successfully_registered_email', __( sprintf(
 
 			'Hi {{username}},
 					<br/>
