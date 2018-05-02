@@ -197,7 +197,7 @@ class UR_Email_Confirmation {
 
 		if ( $email_status === '0' ) {
 
-			$error_message = __( 'Email not verified!', 'user-registration' );
+			$error_message = __( 'Email not verified! Verifiy your email by clicking on the link sent to your email.', 'user-registration' );
 			$result = new WP_Error( 'user_email_not_verified', $error_message );
 		}
 
