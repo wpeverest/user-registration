@@ -267,9 +267,8 @@ class UR_Shortcode_My_Account {
 		$key = get_password_reset_key( $user_data );
 
 		// Send email notification
-		if(UR_Emailer::lost_password_email($user_login,$user_data,$key) == false)
-		{	
-			ur_add_notice( __( 'The email could not be sent. Possible reason: your host may have disabled the mail() function. ', 'user-registration' ), 'error' );
+		if( UR_Emailer::lost_password_email( $user_login, $user_data, $key) == false ) {	
+			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
 			return false;
 		}
 

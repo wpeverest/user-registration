@@ -307,8 +307,18 @@ class UR_Emailer {
 	 * @param $user_data
 	 * @param $key
 	 */
-	public static function lost_password_email( $user_login,$user_data,$key )
+	public static function lost_password_email( $user_login, $user_data, $key )
 	{
+		$user = get_user_by( 'login', $user_login );
+
+		$email = isset( $user->data->user_email ) ? $user->data->user_email : '';
+
+		$username = isset( $user->data->user_login ) ? $user->data->user_login : '';
+
+		if( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 
 		$subject = get_option( 'user_registration_reset_password_email_subject',  __('Password Reset Email: {{blog_info}}', 'user-registration') );
@@ -331,7 +341,7 @@ class UR_Emailer {
 			wp_mail( $email, $subject, $message, $headers );			
 			return true;
 		}
-
+		
 		return false;
 	}
 
