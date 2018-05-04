@@ -17,17 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter( 'login_errors', 'login_error_message' );
 
+//Modify error message on invalid username or password
 function login_error_message( $error ) {
 
     //check if that's the error you are looking for
     $pos = strpos( $error, 'incorrect' );
-    
-    if ( is_int( $pos ) ) {
-        //its the correct username with incorrect password
-        $error = __( "The password you entered for the " . $_POST['username'] ."  is incorrect. <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Passowrd?','user-registration')."</a>", "user-registration" );
-    } else {
-    	$error =  __( "Invalid Username! ", "user-registration" );
+
+    if( empty( $_POST['username'] ) || empty( $_POST['password'] ) ) {
+    	$error =  __( "Empty Username or Password! ", "user-registration" );
     }
+    else if ( is_int( $pos ) ) {
+        //its the correct username with incorrect password
+        $error = __( "The password you entered for the " . $_POST['username'] ."  is incorrect. <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration')."</a>", "user-registration" );
+    } 
+    else {
+    	$error =  __( "Invalid Credentials! ", "user-registration" );
+    }
+    
     return $error;
 }
 
