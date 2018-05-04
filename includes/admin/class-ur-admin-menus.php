@@ -615,27 +615,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 			echo ' </ul > ';
 		}
-
-		private function get_woocommerce_billing_fields() {
-			$registered_form_fields = function_exists( 'ur_get_Woocommerce_billing_fields' ) ? ur_get_Woocommerce_billing_fields() : array();
-			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
-			foreach ( $registered_form_fields as $field ) {
-				$this->ur_get_list( $field );
-			}
-			echo ' </ul > ';
-		}
-
-		private function get_woocommerce_shipping_fields() {
-			$registered_form_fields = function_exists( 'ur_get_Woocommerce_shipping_fields' ) ? ur_get_Woocommerce_shipping_fields() : array();
-			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
-			foreach ( $registered_form_fields as $field ) {
-				$this->ur_get_list( $field );
-			}
-			echo ' </ul > ';
-		}
-
-
-		private function ur_get_list( $field ) {
+		
+		public function ur_get_list( $field ) {
 
 			$class_name = ur_load_form_field_class( $field );
 
