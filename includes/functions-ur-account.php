@@ -24,14 +24,14 @@ function login_error_message( $error ) {
     $pos = strpos( $error, 'incorrect' );
 
     if( empty( $_POST['username'] ) || empty( $_POST['password'] ) ) {
-    	$error =  __( "Empty Username or Password! ", "user-registration" );
+    	$error =  __( "Empty username or password! ", "user-registration" );
     }
     else if ( is_int( $pos ) ) {
         //its the correct username with incorrect password
         $error = __( "The password you entered for the " . $_POST['username'] ."  is incorrect. <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration')."</a>", "user-registration" );
     } 
     else {
-    	$error =  __( "Invalid Credentials! ", "user-registration" );
+    	$error =  __( "Invalid Username! <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration')."</a> ", "user-registration" );
     }
     
     return $error;
