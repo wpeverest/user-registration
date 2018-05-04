@@ -388,7 +388,7 @@ function ur_get_field_type( $field_key ) {
 		}
 	}
 
-	return $field_type;
+	return apply_filters( 'user_registration_field_keys', $field_type, $field_key );
 }
 
 function ur_get_one_time_draggable_fields() {

@@ -192,9 +192,16 @@ class UR_Frontend_Form_Handler {
 				$field_key_for_param = $data->field_name;
 
 				$default_meta = array( 'user_description', 'user_nickname', 'user_first_name', 'user_last_name' );
+				
+				$woocommerce_fields = function_exists( 'ur_get_all_woocommerce_fields' ) ? ur_get_all_woocommerce_fields() : array(); 
+				
 				if( in_array( $field_key, $default_meta ) ) {
 					$field_key = trim( str_replace( 'user_', '', $field_key ) );				
-				} else {
+				} 
+				elseif( in_array( $field_key, $woocommerce_fields) ) {
+					// do nothing 
+				}
+				else {
 					$field_key = 'user_registration_' . $field_key;
 				}
 

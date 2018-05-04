@@ -42,7 +42,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$all_meta_for_user = $this->get_user_meta_by_prefix( $user_id, 'user_registration_' );
 
 			$extra_meta_fields = $this->get_user_meta_fields( $all_meta_for_user, $form_id );
-
+			
 			if ( ! empty( $extra_meta_fields ) ) {
 				$show_fields = apply_filters( 'user_registration_profile_meta_fields', array(
 					'user_registration' => array(
@@ -316,7 +316,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					}
 				}
 			}
-
 			return $return_values;
 		}
 
@@ -365,7 +364,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						if ( $field_name != '' ) {
 
 							$field_index = '';
-
+							$woocommerce_fields = function_exists( 'ur_get_all_woocommerce_fields' ) ? ur_get_all_woocommerce_fields() : array();
 							if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 
 								$field_index            = 'user_registration_' . $field_name;
@@ -376,14 +375,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								);
 
-							} elseif ( ! in_array( $field_name, ur_get_user_field_only() ) ) {
+							} 
+							elseif ( ! in_array( $field_name, ur_get_user_field_only() ) && ! in_array( $field_name, $woocommerce_fields ) ) {
 
 								$field_index           = $field_name;
 								$fields[ $field_name ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
 									'description' => '',
-
-
 								);
 							}
 							switch ( $field_key ) {
