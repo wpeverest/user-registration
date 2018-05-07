@@ -313,7 +313,7 @@ function ur_get_user_table_fields() {
 		'user_password',
 		'user_username',
 		'user_url',
-		'user_display_name',
+		'display_name',
 	) );
 }
 
@@ -349,17 +349,17 @@ function ur_get_field_type( $field_key ) {
 				$field_type = 'password';
 				break;
 			case 'user_username':
-			case 'user_nickname':
-			case 'user_first_name':
-			case 'user_last_name':
-			case 'user_display_name':
+			case 'nickname':
+			case 'first_name':
+			case 'flast_name':
+			case 'display_name':
 			case 'text':
 				$field_type = 'text';
 				break;
 			case 'user_url':
 				$field_type = 'url';
 				break;
-			case 'user_description':
+			case 'description':
 			case 'textarea':
 				$field_type = 'textarea';
 				break;
@@ -405,7 +405,7 @@ function ur_get_account_details_fields() {
 		'user_confirm_password',
 		'user_username',
 		'first_name',
-		'user_last_name',
+		'last_name',
 
 	) );
 
@@ -421,11 +421,11 @@ function ur_get_user_profile_field_only() {
 
 /*
 * All fields to update without adding prefix
+* @returns array
 */
-
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
-	return apply_filters( 'user_registration_user_form_fields', $fields );
+	return apply_filters( 'user_registration_fields_without_prefix', $fields );
 
 }
 
@@ -435,12 +435,12 @@ function ur_get_user_field_only() {
 		'user_password',
 		'user_confirm_password',
 		'user_username',
-		'user_nickname',
+		'nickname',
 		'first_name',
-		'user_last_name',
+		'last_name',
 		'user_url',
-		'user_display_name',
-		'user_description',
+		'display_name',
+		'description',
 	) );
 }
 
@@ -458,10 +458,10 @@ function ur_get_other_form_fields() {
  */
 function ur_get_registered_user_meta_fields() {
 	return apply_filters( 'user_registration_registered_user_meta_fields', array(
-		'user_nickname',
+		'nickname',
 		'first_name',
-		'user_last_name',
-		'user_description'
+		'last_name',
+		'description'
 
 	) );
 }
@@ -475,12 +475,12 @@ function ur_get_registered_form_fields() {
 		'user_password',
 		'user_confirm_password',
 		'user_username',
-		'user_nickname',
+		'nickname',
 		'first_name',
-		'user_last_name',
+		'last_name',
 		'user_url',
-		'user_display_name',
-		'user_description',
+		'display_name',
+		'description',
 		'text',
 		'password',
 		'email',
