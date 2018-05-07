@@ -41,7 +41,7 @@ class UR_Frontend_Form_Handler {
 				'user_login' => isset( self::$valid_form_data['user_username'] ) ? self::$valid_form_data['user_username']->value : '',
 				'user_pass' => self::$valid_form_data['user_password']->value,
 				'user_email' => self::$valid_form_data['user_email']->value,
-				'display_name' => isset( self::$valid_form_data['user_display_name']->value ) ? self::$valid_form_data['user_display_name']->value : '',
+				'display_name' => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
 				'user_url' => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
 				// When creating an user, `user_pass` is expected.
 				'role'     => $user_role,
