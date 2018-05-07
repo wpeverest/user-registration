@@ -404,7 +404,7 @@ function ur_get_account_details_fields() {
 		'user_password',
 		'user_confirm_password',
 		'user_username',
-		'user_first_name',
+		'first_name',
 		'user_last_name',
 
 	) );
@@ -419,16 +419,29 @@ function ur_get_user_profile_field_only() {
 	return $user_fields;
 }
 
+/*
+* All fields to update without adding prefix
+*/
+
+function ur_get_fields_without_prefix() {
+	$fields = ur_get_user_field_only();
+	return apply_filters( 'user_registration_user_form_fields', $fields );
+
+}
+
 function ur_get_user_field_only() {
-	$user_fields = array();
-
-	foreach ( ur_get_registered_form_fields() as $field ) {
-		if ( substr( $field, 0, 5 ) == 'user_' ) {
-			array_push( $user_fields, $field );
-		}
-	}
-
-	return $user_fields;
+	return apply_filters( 'user_registration_user_form_fields', array(
+		'user_email',
+		'user_password',
+		'user_confirm_password',
+		'user_username',
+		'user_nickname',
+		'first_name',
+		'user_last_name',
+		'user_url',
+		'user_display_name',
+		'user_description',
+	) );
 }
 
 function ur_get_other_form_fields() {
@@ -446,7 +459,7 @@ function ur_get_other_form_fields() {
 function ur_get_registered_user_meta_fields() {
 	return apply_filters( 'user_registration_registered_user_meta_fields', array(
 		'user_nickname',
-		'user_first_name',
+		'first_name',
 		'user_last_name',
 		'user_description'
 
@@ -463,7 +476,7 @@ function ur_get_registered_form_fields() {
 		'user_confirm_password',
 		'user_username',
 		'user_nickname',
-		'user_first_name',
+		'first_name',
 		'user_last_name',
 		'user_url',
 		'user_display_name',
