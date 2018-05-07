@@ -302,33 +302,6 @@ function ur_enable_ur_plugin_headers( $headers ) {
 
 add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
 
-/**
- * Get user table fields.
- *
- * @return array
- */
-function ur_get_user_table_fields() {
-	return apply_filters( 'user_registration_user_table_fields', array(
-		'user_email',
-		'user_password',
-		'user_username',
-		'user_url',
-		'display_name',
-	) );
-}
-
-/**
- * Get required fields.
- *
- * @return array
- */
-function ur_get_required_fields() {
-	return apply_filters( 'user_registration_required_form_fields', array(
-		'user_email',
-		'user_password',
-	) );
-}
-
 function ur_get_field_type( $field_key ) {
 
 	$fields = ur_get_registered_form_fields();
@@ -391,12 +364,49 @@ function ur_get_field_type( $field_key ) {
 	return apply_filters( 'user_registration_field_keys', $field_type, $field_key );
 }
 
-function ur_get_one_time_draggable_fields() {
-	$form_fields = ur_get_user_field_only();
+/**
+ * Get user table fields.
+ *
+ * @return array
+ */
+function ur_get_user_table_fields() {
+	return apply_filters( 'user_registration_user_table_fields', array(
+		'user_email',
+		'user_password',
+		'user_username',
+		'user_url',
+		'display_name',
+	) );
+}
 
+/**
+ * Get required fields.
+ *
+ * @return array
+ */
+function ur_get_required_fields() {
+	return apply_filters( 'user_registration_required_form_fields', array(
+		'user_email',
+		'user_password',
+	) );
+}
+
+/**
+ * Get one time draggable fields fields.
+ *
+ * @return array
+ */
+function ur_get_one_time_draggable_fields() {
+
+	$form_fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_one_time_draggable_form_fields', $form_fields );
 }
 
+/**
+ * Get all fiels appearing in my account tab.
+ *
+ * @return array
+ */
 function ur_get_account_details_fields() {
 
 	return apply_filters( 'user_registration_registered_account_fields', array(
@@ -406,17 +416,19 @@ function ur_get_account_details_fields() {
 		'user_username',
 		'first_name',
 		'last_name',
-
 	) );
-
-
 }
 
+/**
+ * Get all fields appearing in profile tab.
+ *
+ * @return array
+ */
 function ur_get_user_profile_field_only() {
 
 	$user_fields = array_diff( ur_get_registered_form_fields(), ur_get_account_details_fields() );
 
-	return $user_fields;
+	return apply_filters( 'user_registration_registered_account_fields', $user_fields );
 }
 
 /*
@@ -429,6 +441,11 @@ function ur_get_fields_without_prefix() {
 
 }
 
+/**
+ * Get all default fields by wordpress.
+ *
+ * @return array
+*/
 function ur_get_user_field_only() {
 	return apply_filters( 'user_registration_user_form_fields', array(
 		'user_email',
@@ -444,16 +461,23 @@ function ur_get_user_field_only() {
 	) );
 }
 
+
+/**
+ * Get all extra form fields 
+ *
+ * @return array
+*/
 function ur_get_other_form_fields() {
 	$registered  = ur_get_registered_form_fields();
 	$user_fields = ur_get_user_field_only();
 	$result      = array_diff( $registered, $user_fields );
 
-	return $result;
+	return apply_filters( 'user_registration_other_form_fields', $result );
 }
 
 
 /**
+ * All default fields storing in usermeta table
  * @return mixed|array
  */
 function ur_get_registered_user_meta_fields() {
@@ -466,6 +490,7 @@ function ur_get_registered_user_meta_fields() {
 }
 
 /**
+ * All registered form fields
  * @return mixed|array
  */
 function ur_get_registered_form_fields() {
