@@ -38,8 +38,8 @@ class UR_Frontend_Form_Handler {
 		if ( count( self::$response_array ) == 0 ) {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$userdata = array(
-				'user_login' => isset( self::$valid_form_data['user_username'] ) ? self::$valid_form_data['user_username']->value : '',
-				'user_pass' => self::$valid_form_data['user_password']->value,
+				'user_login' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
+				'user_pass' => self::$valid_form_data['user_pass']->value,
 				'user_email' => self::$valid_form_data['user_email']->value,
 				'display_name' => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
 				'user_url' => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
@@ -69,7 +69,7 @@ class UR_Frontend_Form_Handler {
 			if ( $user_id > 0 ) {
 				$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 				$success_params = array(
-					'username' => isset( self::$valid_form_data['user_username'] ) ? self::$valid_form_data['user_username']->value : '',
+					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
 				if ( 'auto_login' === $login_option ) {
 					wp_clear_auth_cookie();
@@ -93,7 +93,7 @@ class UR_Frontend_Form_Handler {
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
-					if ( 'confirm_user_password' != $field->general_setting->field_name ) {
+					if ( 'confirm_user_pass' != $field->general_setting->field_name ) {
 						array_push( $form_field_data_array, $field );
 					}
 				}
@@ -173,10 +173,10 @@ class UR_Frontend_Form_Handler {
 			case 'user_email':
 				$form_data->value = sanitize_email( $form_data->value );
 				break;
-			case 'user_username':
+			case 'user_login':
 				$form_data->value = sanitize_user( $form_data->value );
 				break;
-			case 'user_password':
+			case 'user_pass':
 				break;
 			default:
 				$form_data->value = sanitize_text_field( $form_data->value );
@@ -215,7 +215,7 @@ class UR_Frontend_Form_Handler {
 				$has_confirm_password = true;
 				unset( $form_data[ $index ] );
 			}
-			if ( 'user_password' == $single_data->field_name ) {
+			if ( 'user_pass' == $single_data->field_name ) {
 				$password = $single_data->value;
 			}
 		}
