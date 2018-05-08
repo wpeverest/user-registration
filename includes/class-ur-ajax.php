@@ -211,7 +211,7 @@ class UR_AJAX {
 
 				'user_email',
 
-				'user_password',
+				'user_pass',
 
 			);
 

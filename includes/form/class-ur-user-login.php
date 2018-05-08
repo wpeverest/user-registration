@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Username
+ * @class    UR_User_Login
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Username Class
+ * UR_User_Login Class
  */
-class UR_User_Username extends UR_Form_Field {
+class UR_User_Login extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,7 +35,7 @@ class UR_User_Username extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_username';
+		$this->id = 'user_registration_user_login';
 
 		$this->form_id = 1;
 
@@ -96,4 +96,4 @@ class UR_User_Username extends UR_Form_Field {
 
 }
 
-return UR_User_Username::get_instance();
+return UR_User_Login::get_instance();

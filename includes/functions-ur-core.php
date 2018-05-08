@@ -318,10 +318,10 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'user_confirm_password':
 			case 'password':
-			case 'user_password':
+			case 'user_pass':
 				$field_type = 'password';
 				break;
-			case 'user_username':
+			case 'user_login':
 			case 'nickname':
 			case 'first_name':
 			case 'flast_name':
@@ -372,8 +372,8 @@ function ur_get_field_type( $field_key ) {
 function ur_get_user_table_fields() {
 	return apply_filters( 'user_registration_user_table_fields', array(
 		'user_email',
-		'user_password',
-		'user_username',
+		'user_pass',
+		'user_login',
 		'user_url',
 		'display_name',
 	) );
@@ -387,7 +387,7 @@ function ur_get_user_table_fields() {
 function ur_get_required_fields() {
 	return apply_filters( 'user_registration_required_form_fields', array(
 		'user_email',
-		'user_password',
+		'user_pass',
 	) );
 }
 
@@ -411,9 +411,9 @@ function ur_get_account_details_fields() {
 
 	return apply_filters( 'user_registration_registered_account_fields', array(
 		'user_email',
-		'user_password',
+		'user_pass',
 		'user_confirm_password',
-		'user_username',
+		'user_login',
 		'first_name',
 		'last_name',
 	) );
@@ -449,9 +449,9 @@ function ur_get_fields_without_prefix() {
 function ur_get_user_field_only() {
 	return apply_filters( 'user_registration_user_form_fields', array(
 		'user_email',
-		'user_password',
+		'user_pass',
 		'user_confirm_password',
-		'user_username',
+		'user_login',
 		'nickname',
 		'first_name',
 		'last_name',
@@ -496,9 +496,9 @@ function ur_get_registered_user_meta_fields() {
 function ur_get_registered_form_fields() {
 	return apply_filters( 'user_registration_registered_form_fields', array(
 		'user_email',
-		'user_password',
+		'user_pass',
 		'user_confirm_password',
-		'user_username',
+		'user_login',
 		'nickname',
 		'first_name',
 		'last_name',
