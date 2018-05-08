@@ -104,7 +104,6 @@ function ur_update_126_db_version() {
  */
 function ur_update_126_post() {
 	$posts = get_posts( 'post_type=user_registration' );
-
 	foreach( $posts as $post ) {
 		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
 		$post_content_array = json_decode( $post_content );
@@ -138,10 +137,14 @@ function ur_update_126_post() {
 							$field_name = $field_key = 'nickname';
 							break;
 					}
+					
+					$field->general_setting->field_name	= isset ( $field->general_setting->field_name ) ? $field_name : '';
+					$field->field_key	= isset ( $field->field_key ) ? $field_key : '';
 				}
 			}
+			$post_content = json_encode( $post_content_array ); 
+			$post->post_content = $post_content;				
 		}
 		wp_update_post( $post );
 	}
-
 }
