@@ -96,8 +96,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 *
 	 * @return string
 	 */
-	function user_registration_form_field( $key, $args, $value = null ) {
-
+	function user_registration_form_field( $key, $args, $value = null ) {	
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',

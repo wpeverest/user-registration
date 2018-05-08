@@ -91,3 +91,17 @@ function ur_update_125_usermeta() {
 function ur_update_125_db_version() {
 	UR_Install::update_db_version( '1.2.5' );
 }
+
+/**
+ * Update DB Version.
+ */
+function ur_update_126_db_version() {
+	UR_Install::update_db_version( '1.2.6' );
+}
+
+/**
+ * Update usermeta.
+ */
+function ur_update_126_post() {
+		
+}
