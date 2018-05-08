@@ -103,5 +103,45 @@ function ur_update_126_db_version() {
  * Update usermeta.
  */
 function ur_update_126_post() {
-		
+	$posts = get_posts( 'post_type=user_registration' );
+
+	foreach( $posts as $post ) {
+		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+		$post_content_array = json_decode( $post_content );
+
+		foreach ( $post_content_array as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					$field_name  = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
+
+					switch( $field_key ) {
+						case 'user_username':
+							$field_name = $field_key = 'user_login';
+							break;
+						case 'user_password':
+							$field_name = $field_key = 'user_pass';
+							break;
+						case 'user_dispaly_name':
+							$field_name = $field_key = 'display_name';
+							break;
+						case 'user_description':
+							$field_name = $field_key = 'description';
+							break;
+						case 'user_first_name':
+							$field_name = $field_key = 'first_name';
+							break;
+						case 'user_last_name':
+							$field_name = $field_key = 'last_name';
+							break;
+						case 'user_nickname':
+							$field_name = $field_key = 'nickname';
+							break;
+					}
+				}
+			}
+		}
+		wp_update_post( $post );
+	}
+
 }
