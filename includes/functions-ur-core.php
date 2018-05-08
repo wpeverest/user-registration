@@ -427,8 +427,7 @@ function ur_get_account_details_fields() {
 function ur_get_user_profile_field_only() {
 
 	$user_fields = array_diff( ur_get_registered_form_fields(), ur_get_account_details_fields() );
-
-	return apply_filters( 'user_registration_registered_account_fields', $user_fields );
+	return apply_filters( 'user_registration_user_profile_field_only', $user_fields );
 }
 
 /*
