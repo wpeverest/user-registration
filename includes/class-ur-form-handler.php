@@ -130,7 +130,7 @@ class UR_Form_Handler {
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
-					if ( $new_key === 'user_display_name' ) {
+					if ( $new_key === 'display_name' ) {
 
 						$user_data['display_name'] = $_POST[ $key ];
 					} else {

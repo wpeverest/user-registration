@@ -138,7 +138,7 @@ class UR_Shortcode_My_Account {
 
  				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
 
-			}else if(isset($user_data->display_name) && $key==='user_registration_user_display_name'){
+			}else if(isset($user_data->display_name) && $key==='user_registration_display_name'){
 
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 
