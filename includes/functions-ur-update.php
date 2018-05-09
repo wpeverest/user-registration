@@ -95,14 +95,14 @@ function ur_update_125_db_version() {
 /**
  * Update DB Version.
  */
-function ur_update_126_db_version() {
-	UR_Install::update_db_version( '1.2.6' );
+function ur_update_130_db_version() {
+	UR_Install::update_db_version( '1.3.0' );
 }
 
 /**
  * Update usermeta.
  */
-function ur_update_126_post() {
+function ur_update_130_post() {
 	$posts = get_posts( 'post_type=user_registration' );
 	foreach( $posts as $post ) {
 		$post_content       = isset( $post->post_content ) ? $post->post_content : '';

@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.2.5.1
+Stable tag: 1.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.3.0 - - 09/05/2018 =
+* Refactor - user_password field for mod security reason
+* Refactor - Meta keys matching to wordpress
+* Feature - Cutomizable reset password email
+* Feature - Deafult user fields on profile tab in my account section
+* Fix - Redirect via template_redirect hook removing js redirection
+* Add - Filter hooks for every email classes
 
 = 1.2.5.1 - 27/04/2018 =
 * Tweak - Text color of paragraph in myaccount section
