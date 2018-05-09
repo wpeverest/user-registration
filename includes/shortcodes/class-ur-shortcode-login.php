@@ -51,11 +51,6 @@ class UR_Shortcode_Login {
 				ur_get_template( 'myaccount/form-login.php' );
 			}
 
-		}else if(is_user_logged_in() && !empty(trim($redirect_url)) ){
-			?>	<script>
-				window.location = "<?php echo trim($redirect_url);?>";
-			</script>
-			<?php
 		}
 		else
 		{

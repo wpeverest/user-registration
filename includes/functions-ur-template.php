@@ -33,6 +33,7 @@ function ur_template_redirect() {
 }
 
 add_action( 'template_redirect', 'ur_template_redirect' );
+add_action( 'template_redirect', 'ur_login_template_redirect' );
 
 /**
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
