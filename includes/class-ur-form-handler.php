@@ -282,7 +282,7 @@ class UR_Form_Handler {
 
 			try {
 				$creds = array(
-					'user_pass' => $_POST['password'],
+					'user_password' => $_POST['password'],
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
