@@ -307,24 +307,41 @@ class UR_Emailer {
 	 * @param $user_data
 	 * @param $key
 	 */
-	public static function lost_password_email($user_login,$user_data,$key)
+	public static function lost_password_email( $user_login, $user_data, $key )
 	{
-		$headers = array('Content-Type: text/html; charset=UTF-8');
-		$blog_info = get_bloginfo();
-		$subject = apply_filters( 'retrieve_password_title', __( sprintf( 'Password Reset Email %s', $blog_info ), 'user-registration' ), $user_login, $user_data );
-		$message = __('Someone has requested a password reset for the following account:','user-registration') . "<br/>";
-		$message .= network_home_url( '/' ) . "<br/>";
-		$message .= __(sprintf('Username: %s', $user_login),'user-registration') . "<br/>";
-		$message .= __('If this was a mistake, just ignore this email and nothing will happen.','user-registration') . "<br/>";
-		$message .= __('To reset your password, visit the following address:','user-registration') . "<br/>";
-		$redirectUrl=network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login');
-		$message .= __( sprintf( '<a href="%s">%s</a>', $redirectUrl ,$redirectUrl ), 'user-registration' );
-		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
+		$user = get_user_by( 'login', $user_login );
 
-		if(wp_mail( $user_data->user_email, $subject, $message, $headers))
-		{
+		$email = isset( $user->data->user_email ) ? $user->data->user_email : '';
+
+		$username = isset( $user->data->user_login ) ? $user->data->user_login : '';
+
+		if( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+
+		$subject = get_option( 'user_registration_reset_password_email_subject',  __('Password Reset Email: {{blog_info}}', 'user-registration') );
+			
+		$message = new UR_Settings_Reset_Password_Email();
+
+		$message = $message->ur_get_reset_password_email();
+
+		$message = get_option( 'user_registration_reset_password_email', $message );
+
+		$to_replace = array( "{{username}}", "{{key}}", "{{blog_info}}", "{{home_url}}" );
+
+		$replace_with = array( $username, $key, get_bloginfo(), get_home_url() );
+
+		$message = str_replace( $to_replace, $replace_with, $message );
+
+		$subject = str_replace( $to_replace, $replace_with, $subject );
+
+		if ( 'yes' == get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
+			wp_mail( $email, $subject, $message, $headers );			
 			return true;
 		}
+		
 		return false;
 	}
 
