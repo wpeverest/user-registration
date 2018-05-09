@@ -14,6 +14,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
+add_filter( 'login_errors', 'login_error_message' );
+
+//Modify error message on invalid username or password
+function login_error_message( $error ) {
+	
+	// Don't redirect to the user registration endpoint on global network admin lost passwords.
+	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
+		return $error;
+	}
+
+    //check if that's the error you are looking for
+    $pos = strpos( $error, 'incorrect' );
+
+	if ( is_int( $pos ) ) {
+        //its the correct username with incorrect password
+        $error = __( "The password you entered for the " . $_POST['username'] ."  is incorrect. <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration')."</a>", "user-registration" );
+    } 
+    return $error;
+}
+
 /**
  * Returns the url to the lost password endpoint url.
  *
@@ -22,10 +43,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string
  */
 function ur_lostpassword_url( $default_url = '' ) {
-	// Don't redirect to the user registration endpoint on global network admin lost passwords.
-	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( $_GET['redirect_to'], network_admin_url() ) ) {
-		return $default_url;
-	}
 
 	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
