@@ -372,18 +372,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$fields[ $field_index ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
 									'description' => '',
-
-
 								);
 
-							} elseif ( ! in_array( $field_name, ur_get_user_field_only() ) ) {
+							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
 
 								$field_index           = $field_name;
 								$fields[ $field_name ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
 									'description' => '',
-
-
 								);
 							}
 							switch ( $field_key ) {

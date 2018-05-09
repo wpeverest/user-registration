@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Username
+ * @class    UR_User_Display_Name
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Username Class
+ * UR_Display_Name Class
  */
-class UR_User_Username extends UR_Form_Field {
+class UR_Display_Name extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,22 +35,24 @@ class UR_User_Username extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_username';
+		$this->id = 'user_registration_display_name';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Username','user-registration' ),
+			'label' => __( 'Display Name','user-registration' ),
 
 			'icon' => 'dashicons dashicons-id',
 		);
+		$this->field_defaults           = array(
 
-		$this->field_defaults = array(
+			'default_label' => __( 'Display Name','user-registration' ),
 
-			'default_label' => __( 'Username','user-registration' ),
+			'default_field_name' => 'display_name',
 		);
 	}
+
 
 	public function get_registered_admin_fields() {
 
@@ -64,36 +66,9 @@ class UR_User_Username extends UR_Form_Field {
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
-		$username = isset( $form_data->value ) ? $form_data->value : '';
-
-		if ( username_exists( $username ) ) {
-
-			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Username already exists.', 'user-registration' );
-
-			} );
-
-		}
-
-		if( empty( $username ) ) {
-			return;
-		}
-
-		$status = validate_username( $username );
-
-		if ( ! $status ) {
-
-			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Invalid username', 'user-registration' );
-
-			} );
-		}
-
 	}
 
 
 }
 
-return UR_User_Username::get_instance();
+return UR_Display_Name::get_instance();

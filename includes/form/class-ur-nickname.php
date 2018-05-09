@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Nickname
+ * @class    UR_Nickname
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Nickname Class
+ * UR_Nickname Class
  */
-class UR_User_Nickname extends UR_Form_Field {
+class UR_Nickname extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,7 +35,7 @@ class UR_User_Nickname extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_nickname';
+		$this->id = 'user_registration_nickname';
 
 		$this->form_id = 1;
 
@@ -48,6 +48,8 @@ class UR_User_Nickname extends UR_Form_Field {
 		$this->field_defaults           = array(
 
 			'default_label' => __( 'Nickname','user-registration' ),
+
+			'default_field_name' => 'description',
 		);
 	}
 
@@ -69,4 +71,4 @@ class UR_User_Nickname extends UR_Form_Field {
 
 }
 
-return UR_User_Nickname::get_instance();
+return UR_Nickname::get_instance();

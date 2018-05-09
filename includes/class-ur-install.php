@@ -26,6 +26,10 @@ class UR_Install {
 			'ur_update_120_usermeta',
 			'ur_update_120_db_version',
 		),
+		'1.2.6' => array(
+			'ur_update_126_db_version',
+			'ur_update_126_post',
+		)
 	);
 
 	/**
@@ -319,7 +323,7 @@ class UR_Install {
 		$hasposts = get_posts( 'post_type=user_registration' );
 
 		if ( 0 === count( $hasposts ) ) {
-			$post_content = '[[[{"field_key":"user_username","general_setting":{"label":"Username","field_name":"user_username","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_password","general_setting":{"label":"User Password","field_name":"user_password","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
 
 			// Insert default form :)
 			$default_post_id = wp_insert_post( array(

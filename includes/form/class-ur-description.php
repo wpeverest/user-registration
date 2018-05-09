@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Description Class
+ * UR_Description Class
  */
-class UR_User_Description extends UR_Form_Field {
+class UR_Description extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,7 +35,7 @@ class UR_User_Description extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_description';
+		$this->id = 'user_registration_description';
 
 		$this->form_id = 1;
 
@@ -49,6 +49,8 @@ class UR_User_Description extends UR_Form_Field {
 		$this->field_defaults = array(
 
 			'default_label' => __( 'User Bio','user-registration' ),
+			
+			'default_field_name' => 'description',
 		);
 	}
 
@@ -70,4 +72,4 @@ class UR_User_Description extends UR_Form_Field {
 
 }
 
-return UR_User_Description::get_instance();
+return UR_Description::get_instance();

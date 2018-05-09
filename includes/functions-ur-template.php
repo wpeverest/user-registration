@@ -96,8 +96,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 *
 	 * @return string
 	 */
-	function user_registration_form_field( $key, $args, $value = null ) {
-
+	function user_registration_form_field( $key, $args, $value = null ) {	
 		$defaults = array(
 			'type'              => 'text',
 			'label'             => '',
@@ -396,6 +395,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
+
+
 						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
@@ -404,7 +405,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
-						} elseif ( ! in_array( $field_name, ur_get_account_details_fields() ) ) {
+						} elseif ( in_array( $field_name, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
 								'description' => '',

@@ -79,7 +79,7 @@ class UR_Emailer {
 			$label = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
 			$value = isset( $form_data->value ) ? $form_data->value : '';
 
-			if( $field_meta === 'user_password') {
+			if( $field_meta === 'user_pass') {
 				$value = __('Chosen Password', 'user-registration'); 
 			}
 
@@ -93,11 +93,11 @@ class UR_Emailer {
 
 		$email_object = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
 
-		$user_username_object = isset( $valid_form_data['user_username'] ) ? $valid_form_data['user_username'] : array();
+		$user_login_object = isset( $valid_form_data['user_login'] ) ? $valid_form_data['user_login'] : array();
 
 		$email = isset( $email_object->value ) && ! empty( $email_object->value ) ? $email_object->value : '';
 
-		$username = isset( $user_username_object->value ) && ! empty( $user_username_object->value ) ? $user_username_object->value : '';
+		$username = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
 

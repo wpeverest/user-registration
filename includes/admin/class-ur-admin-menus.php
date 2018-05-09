@@ -616,7 +616,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			echo ' </ul > ';
 		}
 
-		private function ur_get_list( $field ) {
+		public function ur_get_list( $field ) {
 
 			$class_name = ur_load_form_field_class( $field );
 
