@@ -65,7 +65,7 @@ class UR_Emailer {
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
 		$data_html = '';
-		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : '';
+		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
 		foreach( $valid_form_data as $field_meta => $form_data ) {
 			if( $field_meta === 'user_confirm_password' ) {

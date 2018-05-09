@@ -88,7 +88,7 @@ class UR_Settings_Registration_Approved_Email{
 
 	public function ur_get_registration_approved_email() {
 	
-		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_get_registration_approved_email', __( sprintf(
 
 				'Hi {{username}},
  					<br/>

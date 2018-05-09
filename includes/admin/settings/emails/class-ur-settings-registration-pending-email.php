@@ -86,7 +86,7 @@ class UR_Settings_Registration_Pending_Email{
 
 	public function ur_get_registration_pending_email() {
 	
-		$message = apply_filters( 'user_registration_user_status_change_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_get_registration_pending_email', __( sprintf(
 
 			'Hi {{username}},
 					<br/>

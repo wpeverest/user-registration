@@ -87,7 +87,7 @@ class UR_Settings_Awaiting_Admin_Approval_Email{
 
 	public function ur_get_awaiting_admin_approval_email() {
 		
-		$message = apply_filters( 'user_registration_user_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_get_awaiting_admin_approval_email', __( sprintf(
 
 				'Hi {{username}},
  					<br/>
