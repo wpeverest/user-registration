@@ -59,7 +59,7 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
-		$user_reg_successful = false; //ERICH	
+		$user_reg_successful = false;
 		
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 		
@@ -101,7 +101,7 @@ class UR_Email_Confirmation {
 			
 			if( $user_token == $_GET['ur_token'] )
 			{				
-				$user_reg_successful = true; //ERICH
+				$user_reg_successful = true;
 				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
@@ -117,7 +117,7 @@ class UR_Email_Confirmation {
 			}
 		}
 
-		do_action('user_registration_check_token_complete', $user_id, $user_reg_successful ); // ERICH added $user_id and $user_reg_successful
+		do_action('user_registration_check_token_complete', $user_id, $user_reg_successful );
 
 	}
 
