@@ -121,7 +121,7 @@ function ur_update_130_post() {
 						case 'user_password':
 							$field_name = $field_key = 'user_pass';
 							break;
-						case 'user_dispaly_name':
+						case 'user_display_name':
 							$field_name = $field_key = 'display_name';
 							break;
 						case 'user_description':
