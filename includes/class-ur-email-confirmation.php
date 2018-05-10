@@ -104,8 +104,6 @@ class UR_Email_Confirmation {
 				$user_reg_successful = true;
 				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
-				delete_user_meta( $user_id, 'ur_confirm_email_token');
-
 				add_filter('login_message', array( $this,'custom_registration_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_message' ) );
 			}
