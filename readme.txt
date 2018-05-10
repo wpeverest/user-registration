@@ -93,7 +93,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.3.0 - - 09/05/2018 =
+= 1.3.0 - - 10/05/2018 =
 * Refactor - user_password field for mod security reason
 * Refactor - Meta keys matching to wordpress
 * Feature - Cutomizable reset password email
@@ -144,41 +144,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature - Redirect to custom page via email.
 * Refactor - Usermeta data store process.
 
-= 1.1.8 - 02/02/2018 =
-* Fix - Default admin email subject
-
-= 1.1.7 - 02/02/2018 =
-* Feature - Email Customizer
-* Fix - Broken dependencies on scripts
-* Fix - Fix fatal error in PHP version < 5.5
-* Fix - Json unescaped unicode
-
-= 1.1.6 - 10/01/2018 =
-* Feature - Privacy Policy checkbox field added
-* Feature - Radio button field added
-* Fix - Welcome message reappearing issue
-* Fix - User data deletion on uninstall
-* Fix - Undefined function call ur_get_notices
-* Fix - Shortcode issue with elementor
-
-= 1.1.5 - 03/12/2017 =
-* Feature - Introduced Checkbox form field
-* Feature - Email confirmation option for login
-* Feature - Disable Email option
-* Fix - Select box issue in user profile
-* Fix - Shortcode content appearing on top
-* Fix - Administrator status set to pending in admin approval
-
-= 1.1.3 - 17/10/2017 =
-* Fix - Login shortcode required parameter issue resolved.
-= 1.1.2 - 16/10/2017 =
-
-* Feature - New shortcode for login [user_registration_login]
-* Feature - 2 More template added for user registration form
-* Feature - WordPress rating link on user registration admin section
-* Fix - Disable profile detail tab (if there is no data) on user dashboard
-* Fix - form design improvement
-* Fix - Escaping issue of form builder
-* Fix - Datepicker issue on safari ( added new jquery datepicker)
-* Fix - Email message formatting
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
+
+== Upgrade Notice ==
+
+= 1.3.0 =
+1.3.0 is a major release. Make a full site backup and run the database updater immediately after the upgrade.
