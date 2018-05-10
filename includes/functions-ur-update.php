@@ -135,6 +135,9 @@ function ur_update_130_post() {
 							case 'user_nickname':
 								$field_name = $field_key = 'nickname';
 								break;
+							default:
+								$field_name = $fied->general_setting->field_name;
+								$field_key = $field->key;
 						}
 						
 						$field->general_setting->field_name = $field_name;
