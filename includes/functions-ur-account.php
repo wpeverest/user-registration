@@ -19,8 +19,8 @@ add_filter( 'login_errors', 'login_error_message' );
 
 //Modify error message on invalid username or password
 function login_error_message( $error ) {
-	
-	// Don't redirect to the user registration endpoint on global network admin lost passwords.
+
+	// Don't change login error messages on admin site.
 	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
 		return $error;
 	}
@@ -43,6 +43,11 @@ function login_error_message( $error ) {
  * @return string
  */
 function ur_lostpassword_url( $default_url = '' ) {
+	
+	// Don't redirect to the user registration endpoint on global network admin lost passwords.
+	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( $_GET['redirect_to'], network_admin_url() ) ) {
+		return $default_url;
+	}
 
 	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
