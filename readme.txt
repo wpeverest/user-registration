@@ -182,3 +182,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Datepicker issue on safari ( added new jquery datepicker)
 * Fix - Email message formatting
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
+
+== Upgrade Notice ==
+
+= 1.3.0-beta-3 =
+1.3.0-beta-3 is a minor update. Make a full site backup, update your theme and extensions, and ensure they are compatible before upgrading.
