@@ -59,6 +59,8 @@ class UR_Email_Confirmation {
 
 	public function check_token_before_authenticate()
 	{
+		$user_reg_successful = false;
+		
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 		
 		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
@@ -99,6 +101,8 @@ class UR_Email_Confirmation {
 			
 			if( $user_token == $_GET['ur_token'] )
 			{				
+				$user_reg_successful = true;
+				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
 
@@ -113,7 +117,7 @@ class UR_Email_Confirmation {
 			}
 		}
 
-		do_action('user_registration_check_token_complete');
+		do_action('user_registration_check_token_complete', $user_id, $user_reg_successful );
 
 	}
 
