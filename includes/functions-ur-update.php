@@ -115,33 +115,27 @@ function ur_update_130_post() {
 					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
 						switch( $field->field_key ) {
 							case 'user_username':
-								$field_name = $field_key = 'user_login';
+								$field->general_setting->field_name = $field->field_key = 'user_login';
 								break;
 							case 'user_password':
-								$field_name = $field_key = 'user_pass';
+								$field->general_setting->field_name = $field->field_key  = 'user_pass';
 								break;
 							case 'user_display_name':
-								$field_name = $field_key = 'display_name';
+								$field->general_setting->field_name = $field->field_key = 'display_name';
 								break;
 							case 'user_description':
-								$field_name = $field_key = 'description';
+								$field->general_setting->field_name = $field->field_key = 'description';
 								break;
 							case 'user_first_name':
-								$field_name = $field_key = 'first_name';
+								$field->general_setting->field_name = $field->field_key = 'first_name';
 								break;
 							case 'user_last_name':
-								$field_name = $field_key = 'last_name';
+								$field->general_setting->field_name = $field->field_key = 'last_name';
 								break;
 							case 'user_nickname':
-								$field_name = $field_key = 'nickname';
+								$field->general_setting->field_name = $field->field_key = 'nickname';
 								break;
-							default:
-								$field_name = $fied->general_setting->field_name;
-								$field_key = $field->key;
 						}
-						
-						$field->general_setting->field_name = $field_name;
-						$field->field_key = $field_key;
 					}
 				}
 			}
