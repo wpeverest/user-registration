@@ -111,35 +111,35 @@ function ur_update_130_post() {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					$field_name  = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
-					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
 
-					switch( $field_key ) {
-						case 'user_username':
-							$field_name = $field_key = 'user_login';
-							break;
-						case 'user_password':
-							$field_name = $field_key = 'user_pass';
-							break;
-						case 'user_display_name':
-							$field_name = $field_key = 'display_name';
-							break;
-						case 'user_description':
-							$field_name = $field_key = 'description';
-							break;
-						case 'user_first_name':
-							$field_name = $field_key = 'first_name';
-							break;
-						case 'user_last_name':
-							$field_name = $field_key = 'last_name';
-							break;
-						case 'user_nickname':
-							$field_name = $field_key = 'nickname';
-							break;
+					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+						switch( $field->field_key ) {
+							case 'user_username':
+								$field_name = $field_key = 'user_login';
+								break;
+							case 'user_password':
+								$field_name = $field_key = 'user_pass';
+								break;
+							case 'user_display_name':
+								$field_name = $field_key = 'display_name';
+								break;
+							case 'user_description':
+								$field_name = $field_key = 'description';
+								break;
+							case 'user_first_name':
+								$field_name = $field_key = 'first_name';
+								break;
+							case 'user_last_name':
+								$field_name = $field_key = 'last_name';
+								break;
+							case 'user_nickname':
+								$field_name = $field_key = 'nickname';
+								break;
+						}
+						
+						$field->general_setting->field_name = $field_name;
+						$field->field_key = $field_key;
 					}
-					
-					$field->general_setting->field_name	= isset ( $field->general_setting->field_name ) ? $field_name : '';
-					$field->field_key	= isset ( $field->field_key ) ? $field_key : '';
 				}
 			}
 			$post_content = json_encode( $post_content_array ); 
