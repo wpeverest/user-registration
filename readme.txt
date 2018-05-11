@@ -93,7 +93,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.3.0 - - 10/05/2018 =
+= 1.3.0 - - 11/05/2018 =
 * Refactor - user_password field for mod security reason
 * Refactor - Meta keys and field keys
 * Feature - Cutomizable reset password email
