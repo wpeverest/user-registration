@@ -144,4 +144,46 @@ function ur_update_130_post() {
 		}
 		wp_update_post( $post );
 	}
+
+	$mailchimp_settings = get_option( 'urmc_mailchimp_settings' );
+
+	 if( $mailchimp_settings && is_array( $mailchimp_settings ) ) {
+	 
+		if( isset( $mailchimp_settings['data'] ) && is_array( $mailchimp_settings['data'] ) ) {
+
+	 		foreach( $mailchimp_settings['data'] as $id =>  $mailchimp_data ) {
+	 			
+				if( isset( $mailchimp_data['fields'] ) ) {
+				
+					foreach( $mailchimp_data['fields'] as $key => $field ) {
+
+						switch( $field ) {
+							case 'user_username':
+								$mailchimp_data['fields'][ $key ] = 'user_login';
+								break;
+								$mailchimp_data['fields'][ $key ] = 'user_pass';
+								break;
+							case 'user_display_name':
+								$mailchimp_data['fields'][ $key ] = 'display_name';
+								break;
+							case 'user_description':
+								$mailchimp_data['fields'][ $key ] = 'description';
+								break;
+							case 'user_first_name':
+								$mailchimp_data['fields'][ $key ] = 'first_name';
+								break;
+							case 'user_last_name':
+								$mailchimp_data['fields'][ $key ] = 'last_name';
+								break;
+							case 'user_nickname':
+								$mailchimp_data['fields'][ $key ] = 'nickname';
+								break;
+						}
+					}
+	 			}
+	 			$mailchimp_settings['data'][ $id ] =  $mailchimp_data ;
+	 		}
+	 	}
+		update_option( 'urmc_mailchimp_settings', $mailchimp_settings );
+	}
 }
