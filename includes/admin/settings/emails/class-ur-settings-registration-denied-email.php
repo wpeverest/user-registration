@@ -88,7 +88,7 @@ class UR_Settings_Registration_Denied_Email{
 
 	public function ur_get_registration_denied_email() {
 		
-		$message = apply_filters( 'user_registration_get_registration_denied_email', __( sprintf(
+		$message = apply_filters( 'user_registration_get_registration_denied_email', sprintf( __( 
 
 				'Hi {{username}},
  					<br/>
@@ -101,7 +101,7 @@ class UR_Settings_Registration_Denied_Email{
  					Sorry for the inconvenience.
  					<br/>
  					<br/>
- 					Thank You!'), 'user-registration' ) );
+ 					Thank You!', 'user-registration' ) ) );
 		
 		return $message;
 	}

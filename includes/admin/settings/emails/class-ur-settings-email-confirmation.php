@@ -76,7 +76,7 @@ class UR_Settings_Email_Confirmation{
 
 	public function ur_get_email_confirmation() {
 	
-		$message = apply_filters( 'user_registration_get_email_confirmation', __( sprintf(
+		$message = apply_filters( 'user_registration_get_email_confirmation', sprintf( __( 
 
 				'Hi {{username}},
  					<br/>
@@ -87,7 +87,7 @@ class UR_Settings_Email_Confirmation{
  					Please click on this verification link {{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.
  					<br/>
                <br/>
- 					Thank You!'), 'user-registration' ) );
+ 					Thank You!', 'user-registration' ) ) );
 		return $message;
 	}
 }
