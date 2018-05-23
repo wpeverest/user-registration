@@ -82,13 +82,13 @@ class UR_Settings_Reset_Password_Email{
 
 	public function ur_get_reset_password_email() {
 	
-		$message = apply_filters( 'user_registration_reset_password_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_reset_password_email_message', sprintf( __( 
 			'Someone has requested a password reset for the following account:
 <br/><br/> SiteName: {{blog_info}} <br/><br/> Username: {{username}}<br/><br/>
 If this was a mistake, just ignore this email and nothing will happen. <br/><br/>
 To reset your password, visit the following address:<br/>
 {{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}<br/></br>
-Thank You!'), 'user-registration' ) );
+Thank You!', 'user-registration' ) ) );
 
 		return $message;
 	}

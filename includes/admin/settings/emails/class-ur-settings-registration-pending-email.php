@@ -86,7 +86,7 @@ class UR_Settings_Registration_Pending_Email{
 
 	public function ur_get_registration_pending_email() {
 	
-		$message = apply_filters( 'user_registration_get_registration_pending_email', __( sprintf(
+		$message = apply_filters( 'user_registration_get_registration_pending_email', sprintf( __(
 
 			'Hi {{username}},
 					<br/>
@@ -99,7 +99,7 @@ class UR_Settings_Registration_Pending_Email{
 					You will be notified after it is approved.
 					<br/>
 					<br/>
-					Thank You!'), 'user-registration' ) );
+					Thank You!', 'user-registration' ) ) );
 
 		return $message;
 	}

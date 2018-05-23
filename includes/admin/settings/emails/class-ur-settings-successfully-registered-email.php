@@ -86,7 +86,7 @@ class UR_Settings_Successfully_Registered_Email{
 
 	public function ur_get_successfully_registered_email() {
 		
-		$message = apply_filters( 'user_registration_get_successfully_registered_email', __( sprintf(
+		$message = apply_filters( 'user_registration_get_successfully_registered_email', sprintf( __(
 
 			'Hi {{username}},
 					<br/>
@@ -96,7 +96,7 @@ class UR_Settings_Successfully_Registered_Email{
 					Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
            <br/>
            <br/>
-           Thank You!'), 'user-registration' ) );
+           Thank You!', 'user-registration' ) ) );
 
 		return $message;
 	}

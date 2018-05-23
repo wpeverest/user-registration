@@ -83,7 +83,7 @@ class UR_Settings_Admin_Email{
 
 	public function ur_get_admin_email() {
 	
-		$message = apply_filters( 'user_registration_admin_email_message', __( sprintf(
+		$message = apply_filters( 'user_registration_admin_email_message', sprintf( __( 
 
 				'Hi Admin,
 					<br/><br/>
@@ -93,7 +93,7 @@ class UR_Settings_Admin_Email{
 						Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
 	               <br/>
 	               <br/>
-						Thank You!'), 'user-registration' ) );
+						Thank You!', 'user-registration' ) ) );
 
 		return $message;
 	}

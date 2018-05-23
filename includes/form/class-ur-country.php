@@ -33,7 +33,7 @@ class UR_Country extends UR_Form_Field {
 
 	public function get_country() {
 
-		return array(
+		return apply_filters( 'user_registration_countries_list', array(
 			'AF' => __( 'Afghanistan', 'user-registration' ),
 			'AX' => __( '&#197;land Islands', 'user-registration' ),
 			'AL' => __( 'Albania', 'user-registration' ),
@@ -283,8 +283,7 @@ class UR_Country extends UR_Form_Field {
 			'YE' => __( 'Yemen', 'user-registration' ),
 			'ZM' => __( 'Zambia', 'user-registration' ),
 			'ZW' => __( 'Zimbabwe', 'user-registration' ),
-		);
-
+		) );
 	}
 
 	/**
