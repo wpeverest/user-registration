@@ -33,31 +33,47 @@ function ur_get_screen_ids() {
 
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
 }
+ 
+add_filter( 'wp_privacy_personal_data_exporters', 'user_registration_register_data_exporter', 10 );
+add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data_eraser' );
+
+function user_registration_register_data_exporter( $exporters ) {
+	
+	$exporters['user-registration'] = array(
+	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
+	    'callback' => 'user_registration_data_exporter',
+	);
+
+	return $exporters;
+}
 
 function user_registration_data_exporter( $email_address, $page = 1 ) {
 	
 	global $wpdb;
-	$user = get_user_by( 'email', $email_address );
-	$user_id = $user->ID;
-	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
-
+	
 	$form_data = array();
 	$posts = get_posts( 'post_type=user_registration' );
-		foreach( $posts as $post ) {
-			$post_content       = isset( $post->post_content ) ? $post->post_content : '';
-			$post_content_array = json_decode( $post_content );
-			foreach ( $post_content_array as $post_content_row ) {
-				foreach ( $post_content_row as $post_content_grid ) {
-					foreach ( $post_content_grid as $field ) {
-						if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
-							$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;	
-						}
-
+	
+	foreach( $posts as $post ) {
+		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+		$post_content_array = json_decode( $post_content );
+		foreach ( $post_content_array as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+						$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;	
 					}
 				}
 			}
-		}	
-
+		}
+	}	
+	
+	$user = get_user_by( 'email', $email_address );
+	$user_id = isset( $user->ID ) ? $user->ID : 0;
+	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+	
+	$usermeat = isset( $usermeta ) ? $usermeta : array();
+	
 	foreach( $usermeta as $meta ) {
 
 		$strip_prefix = substr( $meta->meta_key, 18 );
@@ -72,7 +88,6 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 				array(  'name'  => $form_data[ $strip_prefix ],
 				  	    'value' => $meta->meta_value,
 			);
-
 		}
 	}
 	
@@ -89,22 +104,50 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	);
 }
 
-
-function user_registration_register_data_exporter( $exporters ) {
-	
-	$exporters['user-registration'] = array(
-	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
-	    'callback' => 'user_registration_data_exporter',
+function user_registration_register_data_eraser( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'WordPress User Extra Information' ),
+		'callback'               => 'user_registration_data_eraser',
 	);
-
-	return $exporters;
+	return $erasers;
 }
- 
-add_filter(
-  'wp_privacy_personal_data_exporters',
-  'user_registration_register_data_exporter',
-  10
-);
+
+function user_registration_data_eraser( $email_address, $page = 1 ) {
+	
+	if ( empty( $email_address ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
+	$user         = get_user_by( 'email', $email_address );
+	
+	$messages = array();
+	$items_removed  = false;
+	$items_retained = false;
+
+	if ( $user && $user->ID ) {
+		$user_id = $user->ID;
+		$delete_usermeta = $wpdb->get_results( " DELETE * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+
+		if( $delete_usermeta ) {	
+			$items_removed = true;
+		} else {
+			$messages[] = __( 'Your data was unable to be removed at this time.');
+			$items_retained = true;
+		}
+	}
+
+	return array(
+		'items_removed'  => $items_removed,
+		'items_retained' => $items_retained,
+		'messages'       => $messages,
+		'done'           => true,
+	);
+}
 
 /**
  * Create a page and store the ID in an option.
