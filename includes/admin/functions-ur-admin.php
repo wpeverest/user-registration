@@ -73,14 +73,15 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 				  	    'value' => $meta->meta_value,
 			);
 
-			$export_items = array(
-				'group_id'    => 'user-registration',
-				'group_label' => __( 'User Extra Information' ),
-				'item_id'     => "user-registration-{$meta->umeta_id}",
-				'data'        => $data,
-			);
 		}
 	}
+	
+	$export_items[] = array(
+		'group_id'    => 'user-registration',
+		'group_label' => __( 'User Extra Information' ),
+		'item_id'     => "user-registration-{$meta->umeta_id}",
+		'data'        => $data,
+	);	
 
 	return array(
 		'data' => $export_items,
