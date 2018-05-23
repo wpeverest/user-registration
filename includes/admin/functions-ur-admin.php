@@ -72,31 +72,33 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	$user_id = isset( $user->ID ) ? $user->ID : 0;
 	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
 	
-	$usermeat = isset( $usermeta ) ? $usermeta : array();
+	$export_items = array();
+	if( $usermeta && is_array( $usermeta )) {
 
-	foreach( $usermeta as $meta ) {
+		foreach( $usermeta as $meta ) {
 
-		$strip_prefix = substr( $meta->meta_key, 18 );
-		if( array_key_exists( $strip_prefix, $form_data ) ) {
+			$strip_prefix = substr( $meta->meta_key, 18 );
+			if( array_key_exists( $strip_prefix, $form_data ) ) {
 
-			if( is_serialized( $meta->meta_value ) ) {
-				$meta->meta_value = unserialize( $meta->meta_value );
-				$meta->meta_value = implode( ",", $meta->meta_value );
+				if( is_serialized( $meta->meta_value ) ) {
+					$meta->meta_value = unserialize( $meta->meta_value );
+					$meta->meta_value = implode( ",", $meta->meta_value );
+				}
+				
+				$data[] = 
+					array(  'name'  => $form_data[ $strip_prefix ],
+					  	    'value' => $meta->meta_value,
+				);
 			}
-			
-			$data[] = 
-				array(  'name'  => $form_data[ $strip_prefix ],
-				  	    'value' => $meta->meta_value,
-			);
 		}
-	}
-	
-	$export_items[] = array(
-		'group_id'    => 'user-registration',
-		'group_label' => __( 'User Extra Information', 'user-registration' ),
-		'item_id'     => "user-registration-{$meta->umeta_id}",
-		'data'        => $data,
-	);	
+		
+		$export_items[] = array(
+			'group_id'    => 'user-registration',
+			'group_label' => __( 'User Extra Information', 'user-registration' ),
+			'item_id'     => "user-registration-{$meta->umeta_id}",
+			'data'        => $data,
+		);
+	}	
 
 	return array(
 		'data' => $export_items,
