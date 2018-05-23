@@ -39,9 +39,42 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	global $wpdb;
 	$user = get_user_by( 'email', $email_address );
 	$user_id = $user->ID;
-	
 	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+
+	$form_data = array();
+	$posts = get_posts( 'post_type=user_registration' );
+		foreach( $posts as $post ) {
+			$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+			$post_content_array = json_decode( $post_content );
+			foreach ( $post_content_array as $post_content_row ) {
+				foreach ( $post_content_row as $post_content_grid ) {
+					foreach ( $post_content_grid as $field ) {
+						if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+							$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;	
+						}
+
+					}
+				}
+			}
+		}	
+
+	foreach( $usermeta as $meta ) {
+		$strip_prefix = substr( $meta->meta_key, 18 );
+		if( array_key_exists( $strip_prefix, $form_data ) ) {
+
+			if( is_serialized( $meta->meta_value ) ) {
+				$meta->meta_value = unserialize( $meta->meta_value );
+				$meta->meta_value = implode( ",", $meta->meta_value );
+			}
+			
+			$data[] = 
+				array(  'name'  => $form_data[ $strip_prefix ],
+				  	    'value' => $meta->meta_value,
+			);
+		}
+	}
 }
+
 
 function user_registration_register_data_exporter( $exporters ) {
 	
@@ -49,7 +82,7 @@ function user_registration_register_data_exporter( $exporters ) {
 	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
 	    'callback' => 'user_registration_data_exporter',
 	);
-
+	user_registration_data_exporter('sanjubaba@gmail.com');
 	return $exporters;
 }
  
