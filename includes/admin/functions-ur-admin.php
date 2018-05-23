@@ -33,6 +33,124 @@ function ur_get_screen_ids() {
 
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
 }
+ 
+add_filter( 'wp_privacy_personal_data_exporters', 'user_registration_register_data_exporter', 10 );
+add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data_eraser' );
+
+function user_registration_register_data_exporter( $exporters ) {
+	
+	$exporters['user-registration'] = array(
+	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
+	    'callback' => 'user_registration_data_exporter',
+	);
+
+	return $exporters;
+}
+
+function user_registration_data_exporter( $email_address, $page = 1 ) {
+	
+	global $wpdb;
+	
+	$form_data = array();
+	$posts = get_posts( 'post_type=user_registration' );
+	
+	foreach( $posts as $post ) {
+		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+		$post_content_array = json_decode( $post_content );
+		foreach ( $post_content_array as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+						$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;	
+					}
+				}
+			}
+		}
+	}	
+	
+	$user = get_user_by( 'email', $email_address );
+	$user_id = isset( $user->ID ) ? $user->ID : 0;
+	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+	
+	$export_items = array();
+	if( $usermeta && is_array( $usermeta )) {
+
+		foreach( $usermeta as $meta ) {
+
+			$strip_prefix = substr( $meta->meta_key, 18 );
+			if( array_key_exists( $strip_prefix, $form_data ) ) {
+
+				if( is_serialized( $meta->meta_value ) ) {
+					$meta->meta_value = unserialize( $meta->meta_value );
+					$meta->meta_value = implode( ",", $meta->meta_value );
+				}
+				
+				$data[] = 
+					array(  'name'  => $form_data[ $strip_prefix ],
+					  	    'value' => $meta->meta_value,
+				);
+			}
+		}
+		
+		$export_items[] = array(
+			'group_id'    => 'user-registration',
+			'group_label' => __( 'User Extra Information', 'user-registration' ),
+			'item_id'     => "user-registration-{$meta->umeta_id}",
+			'data'        => $data,
+		);
+	}	
+
+	return array(
+		'data' => $export_items,
+		'done' => true,
+	);
+}
+
+function user_registration_register_data_eraser( $erasers = array() ) {
+	$erasers['user-registration'] = array(
+		'eraser_friendly_name' => __( 'WordPress User Extra Information', 'user-registration' ),
+		'callback'               => 'user_registration_data_eraser',
+	);
+	return $erasers;
+}
+
+function user_registration_data_eraser( $email_address, $page = 1 ) {
+	
+	global $wpdb;
+	
+	if ( empty( $email_address ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
+	$user         = get_user_by( 'email', $email_address );
+	
+	$messages = array();
+	$items_removed  = false;
+	$items_retained = false;
+
+	if ( $user && $user->ID ) {
+		$user_id = $user->ID;
+		$delete_usermeta = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+		
+		$delete_form_data = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'ur_form_id' AND user_id = ". $user_id ." ;");
+
+		if( $delete_usermeta && $delete_form_data ) {	
+			$items_removed = true;
+		}
+	}
+
+	return array(
+		'items_removed'  => $items_removed,
+		'items_retained' => $items_retained,
+		'messages'       => $messages,
+		'done'           => true,
+	);
+}
 
 /**
  * Create a page and store the ID in an option.
