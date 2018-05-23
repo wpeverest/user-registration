@@ -59,6 +59,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 		}	
 
 	foreach( $usermeta as $meta ) {
+
 		$strip_prefix = substr( $meta->meta_key, 18 );
 		if( array_key_exists( $strip_prefix, $form_data ) ) {
 
@@ -71,8 +72,20 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 				array(  'name'  => $form_data[ $strip_prefix ],
 				  	    'value' => $meta->meta_value,
 			);
+
+			$export_items = array(
+				'group_id'    => 'user-registration',
+				'group_label' => __( 'User Extra Information' ),
+				'item_id'     => "user-registration-{$meta->umeta_id}",
+				'data'        => $data,
+			);
 		}
 	}
+
+	return array(
+		'data' => $export_items,
+		'done' => true,
+	);
 }
 
 
@@ -82,7 +95,7 @@ function user_registration_register_data_exporter( $exporters ) {
 	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
 	    'callback' => 'user_registration_data_exporter',
 	);
-	user_registration_data_exporter('sanjubaba@gmail.com');
+
 	return $exporters;
 }
  
