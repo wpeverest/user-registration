@@ -40,7 +40,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data
 function user_registration_register_data_exporter( $exporters ) {
 	
 	$exporters['user-registration'] = array(
-	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
+	    'exporter_friendly_name' => __( 'User Extra Information', 'user-registration' ),
 	    'callback' => 'user_registration_data_exporter',
 	);
 

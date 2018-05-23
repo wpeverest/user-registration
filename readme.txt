@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -93,7 +93,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.3.0 - - 11/05/2018 =
+= 1.3.1 - 23/05/2018 =
+* Feature - Extend Data Export/Erasure tool to export/erase user extra information
+* Fix - Translation ready email contents
+* Fix - Apply filters to strip countries list
+
+= 1.3.0 - 11/05/2018 =
 * Refactor - user_password field for mod security reason
 * Refactor - Meta keys and field keys
 * Feature - Cutomizable reset password email

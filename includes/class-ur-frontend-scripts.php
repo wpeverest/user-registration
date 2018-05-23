@@ -327,7 +327,7 @@ class UR_Frontend_Scripts {
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'    => __( 'Hint: The password should be a at least seven characters long. To make it stronger, user upper and lower case letters, numbers and symbol like ! * ? $ % ^ & ).', 'user-registration' ),
+					'i18n_password_hint'    => __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols such as ! * ? $ % ^ & ).', 'user-registration' ),
 				);
 				break;
 		}

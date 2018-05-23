@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.3.0\n"
+"Project-Id-Version: User Registration 1.3.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-05-10 06:10:07+00:00\n"
+"POT-Creation-Date: 2018-05-23 11:29:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -363,6 +363,15 @@ msgstr ""
 msgid "Thank you for using User Registration."
 msgstr ""
 
+#: includes/admin/functions-ur-admin.php:43
+#: includes/admin/functions-ur-admin.php:97
+msgid "User Extra Information"
+msgstr ""
+
+#: includes/admin/functions-ur-admin.php:111
+msgid "WordPress User Extra Information"
+msgstr ""
+
 #: includes/admin/settings/class-ur-settings-email.php:37
 msgid "Emails"
 msgstr ""
@@ -705,6 +714,21 @@ msgstr ""
 msgid "The email content you want to customize."
 msgstr ""
 
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:86
+msgid ""
+"Hi Admin,\r\n"
+"\t\t\t\t\t<br/><br/>\r\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered "
+"to your site <a href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\t\t\t\t\t\t<br/>\r\n"
+"\t               <br/>\r\n"
+"\t\t\t\t\t\tPlease review the user role and details at '<b>Users</b>' menu "
+"in your WP dashboard.\r\n"
+"\t               <br/>\r\n"
+"\t               <br/>\r\n"
+"\t\t\t\t\t\tThank You!"
+msgstr ""
+
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:25
 msgid "Awaiting Admin Approval"
 msgstr ""
@@ -728,6 +752,22 @@ msgstr ""
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:90
+msgid ""
+"Hi {{username}},\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tPlease wait until the site admin approves your registration.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tYou will be notified after it is approved.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tThank You!"
+msgstr ""
+
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:24
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:35
 msgid "Email Confirmation"
@@ -742,6 +782,23 @@ msgstr ""
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
 #: includes/class-ur-emailer.php:129
 msgid "Please confirm your registration on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:79
+msgid ""
+"Hi {{username}},\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tPlease click on this verification link "
+"{{home_url}}/wp-login.php?ur_token={{email_token}} to confirm "
+"registration.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tThank You!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:25
@@ -764,6 +821,22 @@ msgstr ""
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:91
+msgid ""
+"Hi {{username}},\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  "
+"has been approved.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account "
+"details and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"               <br/>\r\n"
+"               <br/>\r\n"
+"               Thank You!"
+msgstr ""
+
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:25
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:36
 msgid "Registration Denied Email"
@@ -778,6 +851,23 @@ msgstr ""
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:91
+msgid ""
+"Hi {{username}},\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tUnfortunately your registration is denied.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+"               <br/>\r\n"
+" \t\t\t\t\tSorry for the inconvenience.\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\t<br/>\r\n"
+" \t\t\t\t\tThank You!"
+msgstr ""
+
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:24
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:35
 msgid "Registration Pending Email"
@@ -790,6 +880,23 @@ msgstr ""
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
 #: includes/class-ur-emailer.php:250
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:89
+msgid ""
+"Hi {{username}},\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"           <br/>\r\n"
+"\t\t\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a> "
+"has been changed to pending.\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"\t\t\t\t\tSorry for the inconvenience.\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"           <br/>\r\n"
+"\t\t\t\t\tYou will be notified after it is approved.\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"\t\t\t\t\tThank You!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:23
@@ -810,6 +917,19 @@ msgstr ""
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
+#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:85
+msgid ""
+"Someone has requested a password reset for the following account:\r\n"
+"<br/><br/> SiteName: {{blog_info}} <br/><br/> Username: "
+"{{username}}<br/><br/>\r\n"
+"If this was a mistake, just ignore this email and nothing will happen. "
+"<br/><br/>\r\n"
+"To reset your password, visit the following address:<br/>\r\n"
+"{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}<br/></"
+"br>\r\n"
+"Thank You!"
+msgstr ""
+
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:25
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:36
 msgid "Successfully Registered Email"
@@ -826,6 +946,22 @@ msgstr ""
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:62
 #: includes/class-ur-emailer.php:183
 msgid "Congratulations! Registration Complete on {{blog_info}}"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:89
+msgid ""
+"Hi {{username}},\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"           <br/>\r\n"
+"\t\t\t\t\tYou have successfully completed user registration on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\t\t\t\t\t<br/>\r\n"
+"\t\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account "
+"details and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"           <br/>\r\n"
+"           <br/>\r\n"
+"           Thank You!"
 msgstr ""
 
 #: includes/admin/updater/class-ur-addon-updater.php:210
@@ -1162,9 +1298,9 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:330
 msgid ""
-"Hint: The password should be a at least seven characters long. To make it "
-"stronger, user upper and lower case letters, numbers and symbol like ! * ? "
-"$ % ^ & )."
+"Hint: The password should be at least seven characters long. To make it "
+"stronger, use upper and lower case letters, numbers and symbols such as ! * "
+"? $ % ^ & )."
 msgstr ""
 
 #: includes/class-ur-install.php:331
@@ -2325,8 +2461,8 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#: includes/form/class-ur-country.php:301
-#: includes/form/class-ur-country.php:308
+#: includes/form/class-ur-country.php:300
+#: includes/form/class-ur-country.php:307
 msgid "Country"
 msgstr ""
 
