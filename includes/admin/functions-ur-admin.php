@@ -34,6 +34,31 @@ function ur_get_screen_ids() {
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
 }
 
+function user_registration_data_exporter( $email_address, $page = 1 ) {
+	
+	global $wpdb;
+	$user = get_user_by( 'email', $email_address );
+	$user_id = $user->ID;
+	
+	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+}
+
+function user_registration_register_data_exporter( $exporters ) {
+	
+	$exporters['user-registration'] = array(
+	    'exporter_friendly_name' => __( 'WordPress User Extra Information' ),
+	    'callback' => 'user_registration_data_exporter',
+	);
+
+	return $exporters;
+}
+ 
+add_filter(
+  'wp_privacy_personal_data_exporters',
+  'user_registration_register_data_exporter',
+  10
+);
+
 /**
  * Create a page and store the ID in an option.
  *
