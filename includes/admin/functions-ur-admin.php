@@ -93,7 +93,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	
 	$export_items[] = array(
 		'group_id'    => 'user-registration',
-		'group_label' => __( 'User Extra Information' ),
+		'group_label' => __( 'User Extra Information', 'user-registration' ),
 		'item_id'     => "user-registration-{$meta->umeta_id}",
 		'data'        => $data,
 	);	
@@ -106,7 +106,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 
 function user_registration_register_data_eraser( $erasers = array() ) {
 	$erasers['user-registration'] = array(
-		'eraser_friendly_name' => __( 'WordPress User Extra Information' ),
+		'eraser_friendly_name' => __( 'WordPress User Extra Information', 'user-registration' ),
 		'callback'               => 'user_registration_data_eraser',
 	);
 	return $erasers;
@@ -133,8 +133,11 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 
 	if ( $user && $user->ID ) {
 		$user_id = $user->ID;
-		$delete_usermeta = $wpdb->get_results( " DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
-		if( $delete_usermeta ) {	
+		$delete_usermeta = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+		
+		$delete_form_data = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'ur_form_id' AND user_id = ". $user_id ." ;");
+
+		if( $delete_usermeta && $delete_form_data ) {	
 			$items_removed = true;
 		}
 	}
