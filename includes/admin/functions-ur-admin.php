@@ -73,7 +73,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
 	
 	$usermeat = isset( $usermeta ) ? $usermeta : array();
-	
+
 	foreach( $usermeta as $meta ) {
 
 		$strip_prefix = substr( $meta->meta_key, 18 );
@@ -105,7 +105,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 }
 
 function user_registration_register_data_eraser( $erasers = array() ) {
-	$erasers[] = array(
+	$erasers['user-registration'] = array(
 		'eraser_friendly_name' => __( 'WordPress User Extra Information' ),
 		'callback'               => 'user_registration_data_eraser',
 	);
@@ -113,6 +113,8 @@ function user_registration_register_data_eraser( $erasers = array() ) {
 }
 
 function user_registration_data_eraser( $email_address, $page = 1 ) {
+	
+	global $wpdb;
 	
 	if ( empty( $email_address ) ) {
 		return array(
@@ -131,13 +133,9 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 
 	if ( $user && $user->ID ) {
 		$user_id = $user->ID;
-		$delete_usermeta = $wpdb->get_results( " DELETE * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
-
+		$delete_usermeta = $wpdb->get_results( " DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
 		if( $delete_usermeta ) {	
 			$items_removed = true;
-		} else {
-			$messages[] = __( 'Your data was unable to be removed at this time.');
-			$items_retained = true;
 		}
 	}
 
