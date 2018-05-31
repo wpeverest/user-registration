@@ -189,7 +189,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			if( isset($args['choices']) && count($args['choices']) >1 ){
 
-				$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();		
+				//TODO
+				//$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();		
+				$default = array();
 
 				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 
