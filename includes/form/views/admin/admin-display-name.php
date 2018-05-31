@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="display_name">
-		<input type="text" value="<?php echo esc_attr($this->get_general_setting_data( 'default' )); ?>" id="ur-input-type-display-name"  placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
+		<input type="text" value="<?php echo esc_attr( $this->get_advance_setting_data( 'default_value' )); ?>" id="ur-input-type-display-name"  placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
 	</div>
 
 	<?php

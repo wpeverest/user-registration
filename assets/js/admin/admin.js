@@ -573,6 +573,16 @@ jQuery(function ( $ ) {
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
 
+		$.each(general_setting_field, function () {
+		        general_setting_data[ $(this).attr('data-field') ] = get_ur_data($(this));
+		});
+		return general_setting_data;
+	}
+
+	function get_field_advance_setting ( $single_item ) {
+		var advance_setting_field = $single_item.find('.ur-advance-setting-block').find('.ur_advance_setting');
+		var advance_setting_data = {};
+
 		//Store default values
 		if( $single_item.find('.ur-field input').length != 0 ) {
 			var default_value = $single_item.find('.ur-field input').val();
@@ -582,19 +592,10 @@ jQuery(function ( $ ) {
 			var default_value = $single_item.find('.ur-field textarea').val();
         }
 
-		$.each(general_setting_field, function () {
-		        general_setting_data[ $(this).attr('data-field') ] = get_ur_data($(this));
-		});
-		general_setting_data.default = default_value;
-		return general_setting_data;
-	}
-
-	function get_field_advance_setting ( $single_item ) {
-		var advance_setting_field = $single_item.find('.ur-advance-setting-block').find('.ur_advance_setting');
-		var advance_setting_data = {};
 		$.each(advance_setting_field, function () {
 			advance_setting_data[ $(this).attr('data-advance-field') ] = get_ur_data($(this));
 		});
+		advance_setting_data.default_value = default_value;
 		return advance_setting_data;
 	}
 

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="ur-field" data-field-key="textarea">
 
-		<textarea id="ur-input-type-textarea"><?php echo esc_attr($this->get_general_setting_data( 'default' )); ?></textarea>
+		<textarea id="ur-input-type-textarea"><?php echo esc_attr( $this->get_advance_setting_data( 'default_value' )); ?></textarea>
 
 	</div>
 	<?php
