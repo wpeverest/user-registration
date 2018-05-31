@@ -237,10 +237,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				'user_registration_frontend_messages_settings', array(
 
 					array(
-						'title' => __( 'Frontend Messages', 'user-registration' ),
+						'title' => __( 'Success Messages', 'user-registration' ),
 						'type'  => 'title',
 						'desc'  => '',
-						'id'    => 'frontend_messages_settings',
+						'id'    => 'frontend_success_messages_settings',
 					),
 
 					array(
@@ -275,9 +275,72 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'frontend_messages_settings',
+						'id'   => 'frontend_success_messages_settings',
 					),
 
+					array(
+						'title' => __( 'Error Messages', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'frontend_error_message_messages_settings',
+					),
+
+
+					array(
+						'title'    => __( 'Required', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on required fields.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_required_fields',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __('This field is required.'),
+					),
+
+					array(
+						'title'    => __( 'Website URL', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on website/URL.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_website_URL',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __('Please enter a valid URL.'),
+					),
+
+					array(
+						'title'    => __( 'Email', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Email.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __('Please enter a valid email address.'),
+					),
+
+					array(
+						'title'    => __( 'Number', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Number.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_number',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __('Please enter a valid number.'),
+					),
+
+					array(
+						'title'    => __( 'Confirm Password', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Confim Password.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_confirm_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __('Password do not match.'),
+					),
+
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'frontend_error_messages_settings',
+					),
 				)
 			);
 
