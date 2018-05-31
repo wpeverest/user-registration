@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="ur-field" data-field-key="email">
 
-		<input type="email" id="ur-input-type-email"/>
+		<input type="email" value="<?php echo esc_attr($this->get_general_setting_data( 'default' )); ?>" id="ur-input-type-email"/>
 
 	</div>
 	<?php
