@@ -92,6 +92,8 @@ abstract class UR_Form_Field {
 
 			'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
 
+			'default' => isset( $data['general_setting']->default ) ? $data['general_setting']->default : '',
+
 			'type' => $field_type,
 		);
 
