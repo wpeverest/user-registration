@@ -572,9 +572,20 @@ jQuery(function ( $ ) {
 	function get_field_general_setting ( $single_item ) {
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
+
+		//Store default values
+		if( $single_item.find('.ur-field input').length != 0 ) {
+			var default_value = $single_item.find('.ur-field input').val();
+		} else if( $single_item.find('.ur-field select').length != 0 ) {
+			var default_value = $single_item.find('.ur-field select').find(':selected').attr('value');
+        } else if( $single_item.find('.ur-field textarea').length != 0 ){
+			var default_value = $single_item.find('.ur-field textarea').val();
+        }
+
 		$.each(general_setting_field, function () {
-			general_setting_data[ $(this).attr('data-field') ] = get_ur_data($(this));
+		        general_setting_data[ $(this).attr('data-field') ] = get_ur_data($(this));
 		});
+		general_setting_data.default = default_value;
 		return general_setting_data;
 	}
 
