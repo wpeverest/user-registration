@@ -132,7 +132,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( is_null( $value ) ) {
 			$value = $args['default'];
 		}
-
 		// Custom attribute handling
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
@@ -294,7 +293,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
-			
+
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
 						'a'    => array(
 							'href'  => array(),
