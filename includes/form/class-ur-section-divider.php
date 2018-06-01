@@ -43,7 +43,7 @@ class UR_Section_Divider extends UR_Form_Field {
 
 			'label' => __( 'Section Divider','user-registration' ),
 
-			'icon' => 'dashicons dashicons-marker',
+			'icon' => 'dashicons dashicons-minus',
 		);
 
 		$this->field_defaults = array(
