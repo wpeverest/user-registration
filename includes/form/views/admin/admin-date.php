@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	UR_Date::get_instance()->get_setting();
+	UR_Field_Date::get_instance()->get_setting();
 
 	?>
 </div>

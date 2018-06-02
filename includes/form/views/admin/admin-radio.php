@@ -29,7 +29,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 	</div>
 	<?php
 
-	  UR_Radio::get_instance()->get_setting();
+	  UR_Field_Radio::get_instance()->get_setting();
 
 	?>
 </div>

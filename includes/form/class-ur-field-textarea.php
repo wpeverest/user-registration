@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Textarea
+ * @class    UR_Field_Textarea
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Textarea Class
+ * UR_Field_Textarea Class
  */
-class UR_Textarea extends UR_Form_Field {
+class UR_Field_Textarea extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -70,4 +70,4 @@ class UR_Textarea extends UR_Form_Field {
 	}
 }
 
-return UR_Textarea::get_instance();
+return UR_Field_Textarea::get_instance();

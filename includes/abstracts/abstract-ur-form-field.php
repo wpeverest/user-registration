@@ -128,7 +128,7 @@ abstract class UR_Form_Field {
 
 		if ( 'country' == $field_key ) {
 
-			$form_data['options'] = UR_Country::get_instance()->get_country();
+			$form_data['options'] = UR_Field_Country::get_instance()->get_country();
 
 		}
 		if ( 'select' == $field_key ) {
@@ -138,7 +138,7 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 
 				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;				
+					$form_data['options'][ $option ] = $option;
 				}
 			}
 		}
@@ -290,7 +290,7 @@ abstract class UR_Form_Field {
 					}
 
 					break;
-					
+
 				case 'textarea':
 					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
 

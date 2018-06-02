@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<?php
 
-	UR_Password::get_instance()->get_setting();
+	UR_Field_Password::get_instance()->get_setting();
 
 	?>
 </div>

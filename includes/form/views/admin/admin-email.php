@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	  UR_Email::get_instance()->get_setting();
+	  UR_Field_Email::get_instance()->get_setting();
 
 		?>
 </div>

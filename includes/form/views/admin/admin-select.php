@@ -31,7 +31,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 	</div>
 	<?php
 
-	  UR_Select::get_instance()->get_setting();
+	  UR_Field_Select::get_instance()->get_setting();
 
 	?>
 </div>

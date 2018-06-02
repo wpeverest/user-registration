@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	UR_Description::get_instance()->get_setting();
+	UR_Field_Description::get_instance()->get_setting();
 
 	?>
 </div>

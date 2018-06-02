@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Admin
+ * @class    UR_Field_Checkbox
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * UR_Admin Class
  */
-class UR_Checkbox extends UR_Form_Field {
+class UR_Field_Checkbox extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -76,4 +76,4 @@ class UR_Checkbox extends UR_Form_Field {
 	}
 }
 
-return UR_Checkbox::get_instance();
+return UR_Field_Checkbox::get_instance();

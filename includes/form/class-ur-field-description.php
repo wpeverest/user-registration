@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Description
+ * @class    UR_Field_Description
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Description Class
+ * UR_Field_Description Class
  */
-class UR_Description extends UR_Form_Field {
+class UR_Field_Description extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -49,7 +49,7 @@ class UR_Description extends UR_Form_Field {
 		$this->field_defaults = array(
 
 			'default_label' => __( 'User Bio','user-registration' ),
-			
+
 			'default_field_name' => 'description',
 		);
 	}
@@ -72,4 +72,4 @@ class UR_Description extends UR_Form_Field {
 
 }
 
-return UR_Description::get_instance();
+return UR_Field_Description::get_instance();

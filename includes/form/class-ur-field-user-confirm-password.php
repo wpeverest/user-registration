@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Confirm_Password
+ * @class    UR_Field_User_Confirm_Password
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Confirm_Password Class
+ * UR_Field_User_Confirm_Password Class
  */
-class UR_User_Confirm_Password extends UR_Form_Field {
+class UR_Field_User_Confirm_Password extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -69,4 +69,4 @@ class UR_User_Confirm_Password extends UR_Form_Field {
 
 }
 
-return UR_User_Confirm_Password::get_instance();
+return UR_Field_User_Confirm_Password::get_instance();
