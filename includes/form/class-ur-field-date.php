@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Field_Date
+ * @class    UR_Form_Field_Date
  * @since    1.0.5
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Field_Date Class
+ * UR_Form_Field_Date Class
  */
-class UR_Field_Date extends UR_Form_Field {
+class UR_Form_Field_Date extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -111,4 +111,4 @@ class UR_Field_Date extends UR_Form_Field {
 	}
 }
 
-return UR_Field_Date::get_instance();
+return UR_Form_Field_Date::get_instance();

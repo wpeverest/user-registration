@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Field_Privacy_Policy
+ * @class    UR_Form_Field_Privacy_Policy
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Field_Privacy_Policy Class
+ * UR_Form_Field_Privacy_Policy Class
  */
-class UR_Field_Privacy_Policy extends UR_Form_Field {
+class UR_Form_Field_Privacy_Policy extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -77,4 +77,4 @@ class UR_Field_Privacy_Policy extends UR_Form_Field {
 	}
 }
 
-return UR_Field_Privacy_Policy::get_instance();
+return UR_Form_Field_Privacy_Policy::get_instance();

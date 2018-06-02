@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Field_User_Email
+ * @class    UR_Form_Field_User_Email
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Field_User_Email Class
+ * UR_Form_Field_User_Email Class
  */
-class UR_Field_User_Email extends UR_Form_Field {
+class UR_Form_Field_User_Email extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -90,4 +90,4 @@ class UR_Field_User_Email extends UR_Form_Field {
 	}
 }
 
-return UR_Field_User_Email::get_instance();
+return UR_Form_Field_User_Email::get_instance();

@@ -128,7 +128,7 @@ abstract class UR_Form_Field {
 
 		if ( 'country' == $field_key ) {
 
-			$form_data['options'] = UR_Field_Country::get_instance()->get_country();
+			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 
 		}
 		if ( 'select' == $field_key ) {
