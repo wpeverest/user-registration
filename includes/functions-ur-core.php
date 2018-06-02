@@ -462,7 +462,7 @@ function ur_get_user_field_only() {
 
 
 /**
- * Get all extra form fields 
+ * Get all extra form fields
  *
  * @return array
 */
@@ -587,13 +587,13 @@ function ur_get_general_settings() {
 function ur_load_form_field_class( $class_key ) {
 	$exploded_class = explode( '_', $class_key );
 	$class_path     = UR_FORM_PATH . 'class-ur-' . join( '-', array_map( 'strtolower', $exploded_class ) ) . '.php';
-	$class_name     = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
+	$class_name     = 'UR_Form_Field_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 	$class_path     = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 
 	if ( ! class_exists( $class_name ) ) {
 		if ( file_exists( $class_path ) ) {
 
-			include_once( $class_path );
+			//include_once( $class_path );
 		}
 	}
 
@@ -1020,7 +1020,7 @@ function check_username( $username ) {
 		if( is_numeric( $last_char ) ) {
 
 			$strip_last_char = substr( $username, 0, -1 );
-			
+
 			$last_char = $last_char+1;
 
 			$username = $strip_last_char.$last_char;
