@@ -213,10 +213,11 @@ abstract class UR_Form_Field {
 
 	/**
 	 * @return string
+	 * @param string $id Form field name
 	 */
 	public function get_field_general_settings() {
 
-		$general_settings = ur_get_general_settings();
+		$general_settings = ur_get_general_settings( $this->id );
 
 		$general_setting_html = '';
 
@@ -328,7 +329,7 @@ abstract class UR_Form_Field {
 
 		echo '</div>';
 
-		$advance_settings = $this->get_field_advance_settings();
+		$advance_settings = $this->get_field_advance_settings( );
 
 		if ( '' != $advance_settings ) {
 

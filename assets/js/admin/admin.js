@@ -6,7 +6,7 @@
 jQuery(function () {
 
 	var mySelect = jQuery('#user_registration_general_setting_login_options option:selected').val();
-	
+
 	if ( mySelect == 'email_confirmation' ) {
 		jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
 		jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
@@ -725,7 +725,7 @@ jQuery(function ( $ ) {
 				radio.append('<label><input value="' + array_value[ i ].trim() + '" type="radio">' + array_value[ i ].trim() +'</label>' );
 			}
 		}
-	}	
+	}
 	function render_select_box ( value ) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
@@ -747,10 +747,10 @@ jQuery(function ( $ ) {
 	function trigger_general_setting_label ( $label ) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').text($label.val());
-		
+
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
-	
+
 	}
 
 	function trigger_general_setting_description ( $label ) {

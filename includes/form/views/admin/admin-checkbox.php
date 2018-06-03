@@ -31,7 +31,7 @@ $choices = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', 
 	</div>
 	<?php
 
-	UR_Form_Field_Checkbox::get_instance()->get_setting();
+	UR_Form_Field_Checkbox::get_instance()->get_setting( $this->id );
 
 	?>
 </div>

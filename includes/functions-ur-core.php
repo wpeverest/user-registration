@@ -521,7 +521,7 @@ function ur_get_registered_form_fields() {
 /**
  * @return mixed|array
  */
-function ur_get_general_settings() {
+function ur_get_general_settings( $id ) {
 	$general_settings = array(
 		'label'      => array(
 			'type'        => 'text',
@@ -576,7 +576,7 @@ function ur_get_general_settings() {
 		),
 	);
 
-	return apply_filters( 'user_registration_field_options_general_settings', $general_settings );
+	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 
 /**
