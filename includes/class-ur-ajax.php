@@ -292,7 +292,7 @@ class UR_AJAX {
 	}
 
 	public static function sweep_array( &$array ) {
-		
+
 		foreach ( $array as $key => &$value ) {
 
 			if ( is_array( $value ) || gettype( $value ) == 'object' ) {

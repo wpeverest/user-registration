@@ -40,14 +40,14 @@ if ( $form_template == 'Bordered' ) {
 
 	$template_class = 'ur-frontend-form--flat';
 
-} else if($form_template == 'Rounded'){	
+} else if($form_template == 'Rounded'){
 
-	$template_class = 'ur-frontend-form--rounded';	
+	$template_class = 'ur-frontend-form--rounded';
 
-} else if($form_template == 'Rounded Edge'){	
+} else if($form_template == 'Rounded Edge'){
 
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
-} 
+}
 
 ?>
 	<div class='ur-frontend-form <?php echo $template_class; ?>' id='ur-frontend-form'>

@@ -358,6 +358,12 @@ function ur_get_field_type( $field_key ) {
 			case 'radio':
 				$field_type = 'radio';
 				break;
+			case 'section_title':
+				$field_type = 'section_title';
+				break;
+			case 'section_title':
+				$field_type = 'section_title';
+				break;
 		}
 	}
 
@@ -515,6 +521,8 @@ function ur_get_registered_form_fields() {
 		'checkbox',
 		'privacy_policy',
 		'radio',
+		'custom_html',
+		'section_title'
 	) );
 }
 
