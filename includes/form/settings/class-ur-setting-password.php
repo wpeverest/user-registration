@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract UR Setting Password Class
+ * UR Setting Password Class
  *
  * @version  1.0.0
  * @package  UserRegistration/Form/Settings
@@ -22,7 +22,6 @@ class UR_Setting_Password extends UR_Field_Settings {
 
 	public function output( $field_data = array() ) {
 
-		// TODO: Implement output() method.
 		$this->field_data = $field_data;
 
 		$this->register_fields();
@@ -33,7 +32,7 @@ class UR_Setting_Password extends UR_Field_Settings {
 	}
 
 	public function register_fields() {
-		// TODO: Implement register_fields() method.
+
 		$fields = array(
 
 			'size' => array(

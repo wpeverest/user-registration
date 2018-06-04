@@ -4,11 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract UR Setting Text Class
+ * UR Setting Text Class
  *
  * @version  1.0.0
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
  * @author   WPEverest
  */
 class UR_Setting_Text extends UR_Field_Settings {
@@ -22,7 +21,6 @@ class UR_Setting_Text extends UR_Field_Settings {
 
 	public function output( $field_data = array() ) {
 
-		// TODO: Implement output() method.
 		$this->field_data = $field_data;
 
 		$this->register_fields();
@@ -33,7 +31,6 @@ class UR_Setting_Text extends UR_Field_Settings {
 	}
 
 	public function register_fields() {
-		// TODO: Implement register_fields() method.
 		$fields = array(
 
 			'size'          => array(
@@ -53,25 +50,6 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'default' => '20',
 
 				'placeholder' => __( 'Size','user-registration' ),
-
-			),
-			'default_value' => array(
-
-				'label' => __( 'Default Value','user-registration' ),
-
-				'data-id' => $this->field_id . '_default_value',
-
-				'name' => $this->field_id . '[default_value]',
-
-				'class' => $this->default_class . ' ur-settings-default-value',
-
-				'type' => 'text',
-
-				'required' => false,
-
-				'default' => '',
-
-				'placeholder' => __( 'Default Value','user-registration' ),
 
 			),
 			'custom_class'  => array(
