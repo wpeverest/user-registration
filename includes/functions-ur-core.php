@@ -521,8 +521,6 @@ function ur_get_registered_form_fields() {
 		'checkbox',
 		'privacy_policy',
 		'radio',
-		'custom_html',
-		'section_title'
 	) );
 }
 
