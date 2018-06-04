@@ -187,3 +187,25 @@ function ur_update_130_post() {
 		update_option( 'urmc_mailchimp_settings', $mailchimp_settings );
 	}
 }
+
+/**
+ * Update DB Version.
+ */
+function ur_update_132_db_version() {
+	UR_Install::update_db_version( '1.3.2' );
+}
+
+/**
+ * Delete unused option.
+ */
+function ur_update_130_option() {
+	$unused_options = array(
+		'user_registration_general_setting_default_user_role',
+		'user_registration_general_setting_enable_strong_password',
+		'user_registration_general_setting_form_submit_label',
+	);
+
+	foreach( $unused_options as $unused_option ) {
+		delete_option( $unused_option );
+	}
+}
