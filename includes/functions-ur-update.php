@@ -198,7 +198,7 @@ function ur_update_132_db_version() {
 /**
  * Delete unused option.
  */
-function ur_update_130_option() {
+function ur_update_132_option() {
 	$unused_options = array(
 		'user_registration_general_setting_default_user_role',
 		'user_registration_general_setting_enable_strong_password',
