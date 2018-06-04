@@ -290,7 +290,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'section_title':
 
-					$field .= '<input data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<h3 id="'.esc_attr( $args['id'] ) .'">'.esc_html( $args['label'] ) .'</h3>';
 
 				break;
 		}// End switch().
@@ -298,7 +298,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( ! empty( $field ) ) {
 			$field_html = '';
 
-			if ( $args['label'] && 'checkbox' != $args['type'] ) {
+			if ( $args['label'] && 'checkbox' != $args['type'] && 'section_title' != $args['type'] ) {
 
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
 						'a'    => array(
