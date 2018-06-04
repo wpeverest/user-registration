@@ -16,12 +16,11 @@ $instance = UR_Country::get_instance();
 	</div>
 
 	<div class="ur-field" data-field-key="country">
+		<?php $selected = $this->get_advance_setting_data( 'default_value' ); ?>
 		<select id="ur-input-type-country">
 			<?php
 				foreach ( $instance->get_country() as $country_key => $country_name ) {
-					?>
-						<option value="<?php echo esc_attr( $country_key ) ?>"><?php echo esc_html( $country_name ); ?></option>
-					<?php
+					echo "<option value='" . esc_attr( $country_key ) . "' '"  . selected( $selected, $country_key ) . "' >" . esc_html( trim( $country_name ) ) . '</option>';
 				}
 			?>
 		</select>
