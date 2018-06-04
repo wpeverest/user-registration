@@ -664,8 +664,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
-
-
 			),
 			array(
 				'type'              => 'select',
@@ -692,8 +690,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Register' ),
-
-
 			),
 			array(
 				'type'              => 'select',
