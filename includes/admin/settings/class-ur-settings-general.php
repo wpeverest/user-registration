@@ -260,7 +260,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __('User registered. Verify your email by clicking on the link sent to your email.','user-registration'),
+						'default'  => __( 'User registered. Verify your email by clicking on the link sent to your email.','user-registration' ),
 					),
 
 					array(
@@ -270,7 +270,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __('User registered. Wait until admin approves your registration.','user-registration'),
+						'default'  => __( 'User registered. Wait until admin approves your registration.','user-registration' ),
 					),
 
 					array(
@@ -285,7 +285,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'id'    => 'frontend_error_message_messages_settings',
 					),
 
-
 					array(
 						'title'    => __( 'Required', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on required fields.', 'user-registration' ),
@@ -293,7 +292,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __('This field is required.'),
+						'default'  => __( 'This field is required.' ),
 					),
 
 					array(
@@ -303,7 +302,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __('Please enter a valid URL.'),
+						'default'  => __( 'Please enter a valid URL.' ),
 					),
 
 					array(
@@ -313,7 +312,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __('Please enter a valid email address.'),
+						'default'  => __( 'Please enter a valid email address.' ),
 					),
 
 					array(
@@ -323,7 +322,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __('Please enter a valid number.'),
+						'default'  => __( 'Please enter a valid number.' ),
 					),
 
 					array(
@@ -333,9 +332,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __('Password do not match.'),
+						'default'  => __( 'Password and confirm password not matched.' ),
 					),
-
 
 					array(
 						'type' => 'sectionend',

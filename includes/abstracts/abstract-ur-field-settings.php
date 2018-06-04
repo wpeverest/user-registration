@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class UR_Field_Settings {
 
-
 	public $field_id;
 
 	public $fields_html;
