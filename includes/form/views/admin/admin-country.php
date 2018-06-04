@@ -35,7 +35,7 @@ $instance = UR_Form_Field_Country::get_instance();
 	</div>
 	<?php
 
-
+	UR_Form_Field_Country::get_instance()->get_setting();
 	$instance->get_setting();
 
 	?>

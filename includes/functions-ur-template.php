@@ -169,7 +169,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
 		}
-		echo $args['type'];
 		switch ( $args['type'] ) {
 
 			case 'textarea' :
