@@ -207,7 +207,11 @@ class UR_Emailer {
 		
 		$header .= "Content-Type: text/html; charset=UTF-8";
 
-		$admin_email = get_option( 'admin_email' );
+		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
+
+		$admin_email = explode( ',', $admin_email );
+
+		$admin_email = array_map( 'trim', $admin_email );
 
 		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user-registration') );
 
@@ -227,8 +231,9 @@ class UR_Emailer {
 		
 		$header = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {
-			wp_mail( $admin_email, $subject, $message, $header );
+		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {											foreach($admin_email as $email ) {
+				wp_mail( $admin_email, $subject, $message, $header );	
+			}
 		}
 	}
 
