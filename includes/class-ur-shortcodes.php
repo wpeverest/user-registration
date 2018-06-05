@@ -171,9 +171,9 @@ class UR_Shortcodes {
 
 		$recaptcha_enable = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
 
-		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key', - 1 );
+		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 
-		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret', - 1 );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if ( 'yes' == $recaptcha_enable && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
