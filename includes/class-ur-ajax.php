@@ -247,8 +247,7 @@ class UR_AJAX {
 
 			}
 
-
-			$post_id = wp_insert_post( $post_data );
+			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
 
@@ -329,7 +328,6 @@ class UR_AJAX {
 					}
 				}
 				else{
-
 					$value = sanitize_text_field( $value );
 				}
 			}
