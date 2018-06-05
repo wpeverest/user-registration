@@ -310,7 +310,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'html':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'Custom HTML', 'user-registration').'"> ';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'HTML', 'user-registration').'"> ';
 
 					$general_setting_wrapper .= $this->get_general_setting_data( $setting_key ) . '</textarea>';
 
