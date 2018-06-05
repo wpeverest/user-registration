@@ -273,6 +273,7 @@ class UR_Frontend_Scripts {
 	 * @param  string $handle
 	 */
 	private static function localize_script( $handle ) {
+		
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) {
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
 			self::$wp_localize_scripts[] = $handle;
@@ -290,8 +291,7 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-		//global $wp;
-
+		
 		switch ( $handle ) {
 			case 'user-registration' :
 
