@@ -584,12 +584,26 @@ jQuery(function ( $ ) {
 		var advance_setting_data = {};
 
 		//Store default values
-		if( $single_item.find('.ur-field input').length != 0 ) {
-			var default_value = $single_item.find('.ur-field input').val();
-
-		} else if( $single_item.find('.ur-field select').length != 0 ) {
+		if( $single_item.find('.ur-field input:checkbox').length > 0 ) {
+			if( $single_item.find('.ur-field input:checkbox').length == 1  ){
+				var default_value = $single_item.find('.ur-field input:checkbox:checked').val();
+			}
+			else {
+				var checked_fields = $single_item.find('.ur-field input:checkbox:checked');
+				var default_value = [];
+				checked_fields.each( function( key, value) {
+					default_value[ key ] = jQuery(this).val();
+				});			
+			}
+	
+		} else if( $single_item.find('.ur-field input:radio').length > 0 ){
+			var default_value = $single_item.find('.ur-field input:radio:checked').val();
+		} else if( $single_item.find('.ur-field input').length > 0 ) {
+			var default_value = $single_item.find('.ur-field input').val();						
+		} 
+		 else if( $single_item.find('.ur-field select').length > 0 ) {
 			var default_value = $single_item.find('.ur-field select').find(':selected').attr('value');
-        } else if( $single_item.find('.ur-field textarea').length != 0 ){
+        } else if( $single_item.find('.ur-field textarea').length > 0 ){
 			var default_value = $single_item.find('.ur-field textarea').val();
         }
 
