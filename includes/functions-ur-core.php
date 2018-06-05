@@ -361,8 +361,8 @@ function ur_get_field_type( $field_key ) {
 			case 'section_title':
 				$field_type = 'section_title';
 				break;
-			case 'section_title':
-				$field_type = 'section_title';
+			case 'html':
+				$field_type = 'html';
 				break;
 		}
 	}
@@ -540,7 +540,7 @@ function ur_get_general_settings( $id ) {
 			'type'        => 'textarea',
 			'label'       => __( 'Description', 'user-registration' ),
 			'name'        => 'ur_general_setting[description]',
-			'placeholder' => __( 'Label', 'user-registration' ),
+			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
 		),
 		'field_name' => array(

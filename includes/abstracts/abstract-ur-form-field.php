@@ -82,18 +82,20 @@ abstract class UR_Form_Field {
 
 		$this->form_id = $form_id;
 
-		$form_data = array(
+		$form_data = (array) $data['general_setting'];
+		$form_data['type'] = $field_type;
+		// $form_data = array(
 
-			'label' => isset( $data['general_setting']->label ) ? $data['general_setting']->label : '',
+		// 	'label' => isset( $data['general_setting']->label ) ? $data['general_setting']->label : '',
 
-			'placeholder' => isset( $data['general_setting']->placeholder ) ? $data['general_setting']->placeholder : '',
+		// 	'placeholder' => isset( $data['general_setting']->placeholder ) ? $data['general_setting']->placeholder : '',
 
-			'description' => isset( $data['general_setting']->description ) ? $data['general_setting']->description : '',
+		// 	'description' => isset( $data['general_setting']->description ) ? $data['general_setting']->description : '',
 
-			'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
+		// 	'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
 
-			'type' => $field_type,
-		);
+		// 	'type' => $field_type,
+		// );
 
 
 		if( $form_data['hide_label'] === 'yes' ) {
@@ -101,6 +103,7 @@ abstract class UR_Form_Field {
 		}
 
 		if( isset( $data['general_setting']->required ) ) {
+
 			if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
 
 				$form_data['required'] = true;
@@ -297,20 +300,13 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'textarea':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. esc_attr( $setting_value['placeholder'] ) .'" ';
 
 					if ( true == $setting_value['required'] ) {
 
 						$general_setting_wrapper .= ' required >';
 
 					}
-
-					$general_setting_wrapper .= $this->get_general_setting_data( $setting_key ) . '</textarea>';
-
-					break;
-
-				case 'html':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'HTML', 'user-registration').'"> ';
 
 					$general_setting_wrapper .= $this->get_general_setting_data( $setting_key ) . '</textarea>';
 

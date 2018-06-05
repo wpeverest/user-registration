@@ -122,7 +122,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
-		if ( $args['required'] ) {
+		if ( $args['required'] == 'yes' ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
@@ -291,6 +291,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'section_title':
 
 					$field .= '<h3 id="'.esc_attr( $args['id'] ) .'">'.esc_html( $args['label'] ) .'</h3>';
+
+				break;
+			case 'html':
+
+					$field .= '<span id="'.esc_attr( $args['id'] ) .'">'. $args['html'] .'</span>';
 
 				break;
 		}// End switch().
