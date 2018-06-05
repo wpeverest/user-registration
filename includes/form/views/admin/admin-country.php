@@ -1,7 +1,7 @@
 <?php
 /**
  * Form View: Country
-*/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +20,7 @@ $instance = UR_Country::get_instance();
 		<select id="ur-input-type-country">
 			<?php
 				foreach ( $instance->get_country() as $country_key => $country_name ) {
-					echo "<option value='" . esc_attr( $country_key ) . "' '"  . selected( $selected, $country_key ) . "' >" . esc_html( trim( $country_name ) ) . '</option>';
+					echo "<option value=" . esc_attr( $country_key ) . " "  . selected( $selected, $country_key ) . " >" . esc_html( trim( $country_name ) ) . "</option>";
 				}
 			?>
 		</select>

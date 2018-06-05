@@ -15,15 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	</div>
 	<div class="ur-field" data-field-key="privacy_policy">
-
-		<input type="checkbox" id="ur-input-type-privacy-policy" value="<?php echo esc_attr( $this->get_advance_setting_data( 'default_value' )); ?>"
-		       placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
-
+		<?php $selected = $this->get_advance_setting_data( 'default_value' ); ?>
+		<input type="checkbox" id="ur-input-type-privacy-policy" value="1" <?php echo checked( $selected, 1, false );?> >
 	</div>
 	<?php
-
-	UR_Privacy_Policy::get_instance()->get_setting();
-
+		UR_Privacy_Policy::get_instance()->get_setting();
 	?>
 </div>
 

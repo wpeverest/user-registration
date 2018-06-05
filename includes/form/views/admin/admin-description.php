@@ -1,7 +1,7 @@
 <?php
 /**
  * Form View: User Description
-*/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

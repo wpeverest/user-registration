@@ -1,7 +1,7 @@
 <?php
 /**
  * Form View: Input Display Name
-*/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -586,6 +586,7 @@ jQuery(function ( $ ) {
 		//Store default values
 		if( $single_item.find('.ur-field input').length != 0 ) {
 			var default_value = $single_item.find('.ur-field input').val();
+
 		} else if( $single_item.find('.ur-field select').length != 0 ) {
 			var default_value = $single_item.find('.ur-field select').find(':selected').attr('value');
         } else if( $single_item.find('.ur-field textarea').length != 0 ){

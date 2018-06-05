@@ -1,7 +1,7 @@
 <?php
 /**
  * Form View: Select
-*/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +20,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 		<select id="ur-input-type-select">
 			<?php
 				foreach ( $options as $option ) {
-					echo "<option value='" . esc_attr($option) . "' '"  . selected( $selected, $option ) . "' >" . esc_html( trim( $option ) ) . '</option>';
+					echo "<option value=" . esc_attr($option) . " " . selected( $selected, $option ) . ">" . esc_html( trim( $option ) ) . '</option>';
 				}
 			?>
 		</select>
