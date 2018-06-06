@@ -83,7 +83,6 @@ class UR_Emailer {
 				$value = __('Chosen Password', 'user-registration'); 
 			}
 
-
 			if ( is_array( $value ) ) {
 				$value = implode( ',', $value );
 			}
@@ -102,17 +101,12 @@ class UR_Emailer {
 		}
 
 		$email_object = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
-
 		$user_login_object = isset( $valid_form_data['user_login'] ) ? $valid_form_data['user_login'] : array();
-
 		$email = isset( $email_object->value ) && ! empty( $email_object->value ) ? $email_object->value : '';
-
 		$username = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value );
-
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value );
 		}
 	}
@@ -125,13 +119,10 @@ class UR_Emailer {
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value ) {
 
 		$status = ur_get_user_approval_status( $user_id );
-
 		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
-
 		$email_token = get_user_meta($user_id, 'ur_confirm_email_token', true);
 
 		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{email_token}}", "{{all_fields}}" );
-
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
 
 		//add the field name and values from $name_value to the replacement arrays.
@@ -144,15 +135,10 @@ class UR_Emailer {
 		if( $email_status === '0' ) {
 
 			$subject = get_option('user_registration_email_confirmation_subject', __('Please confirm your registration on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Email_Confirmation();
-
 			$message = $message->ur_get_email_confirmation();
-
 			$message = get_option( 'user_registration_email_confirmation', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			wp_mail( $email, $subject, $message, self::ur_get_header() );
@@ -162,15 +148,10 @@ class UR_Emailer {
 		else if ( $status == 0 ) {
 
 			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __('Thank you for registration on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
-
 			$message = $message->ur_get_awaiting_admin_approval_email();
-
 			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
@@ -181,15 +162,10 @@ class UR_Emailer {
 		} else if ( $status == - 1 ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Registration_Denied_Email();
-
 			$message = $message->ur_get_registration_denied_email();
-
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
@@ -198,15 +174,10 @@ class UR_Emailer {
 
 		} else {
 			$subject = get_option( 'user_registration_successfully_registered_email_subject',__('Congratulations! Registration Complete on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Successfully_Registered_Email();
-
 			$message = $message->ur_get_successfully_registered_email();
-
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
@@ -221,21 +192,14 @@ class UR_Emailer {
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value ) {
 		
 		$header = "Reply-To: {{email}} \r\n";
-		
 		$header .= "Content-Type: text/html; charset=UTF-8";
-
 		$admin_email = get_option( 'admin_email' );
-
 		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user-registration') );
-
 		$message = new UR_Settings_Admin_Email();
-
 		$message = $message->ur_get_admin_email();
-
 		$message = get_option( 'user_registration_admin_email', $message );
 
 		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{all_fields}}");
-
 		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
 		
 		//add the field name and values from $name_value to the replacement arrays.
@@ -246,9 +210,7 @@ class UR_Emailer {
 		array_walk( $to_replace, function(&$value, $key) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
 		$message = str_replace( $to_replace, $replace_with, $message );
-
 		$subject = str_replace( $to_replace, $replace_with, $subject );
-		
 		$header = str_replace( $to_replace, $replace_with, $header );
 
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {
@@ -264,23 +226,16 @@ class UR_Emailer {
 	public static function status_change_email( $email, $username, $status ) {
 
 		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
-
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
-
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 		if ( $status == 0 ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __('Sorry! Registration changed to pending on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Registration_Pending_Email();
-
 			$message = $message->ur_get_registration_pending_email();
-
 			$message = get_option( 'user_registration_registration_pending_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
@@ -290,15 +245,10 @@ class UR_Emailer {
 		} else if ( $status == - 1 ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __('Sorry! Registration denied on {{blog_info}}', 'user-registration') );
-
 			$message = new UR_Settings_Registration_Denied_Email();
-
 			$message = $message->ur_get_registration_denied_email();
-
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
@@ -306,23 +256,17 @@ class UR_Emailer {
 			}
 
 		} else {
+
 			$subject = get_option( 'user_registration_registration_approved_email_subject',  __('Congratulations! Registration approved on {{blog_info}}', 'user-registration') );
-			
 			$message = new UR_Settings_Registration_Approved_Email();
-
 			$message = $message->ur_get_registration_approved_email();
-
 			$message = get_option( 'user_registration_registration_approved_email', $message );
-
 			$message = str_replace( $to_replace, $replace_with, $message );
-
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
 				wp_mail( $email, $subject, $message, self::ur_get_header() );			
 			}
-
-
 		}
 	}
 
@@ -334,9 +278,7 @@ class UR_Emailer {
 	public static function lost_password_email( $user_login, $user_data, $key )
 	{
 		$user = get_user_by( 'login', $user_login );
-
 		$email = isset( $user->data->user_email ) ? $user->data->user_email : '';
-
 		$username = isset( $user->data->user_login ) ? $user->data->user_login : '';
 
 		if( empty( $email ) || empty( $username ) ) {
@@ -344,21 +286,13 @@ class UR_Emailer {
 		}
 
 		$headers = array('Content-Type: text/html; charset=UTF-8');
-
 		$subject = get_option( 'user_registration_reset_password_email_subject',  __('Password Reset Email: {{blog_info}}', 'user-registration') );
-			
 		$message = new UR_Settings_Reset_Password_Email();
-
 		$message = $message->ur_get_reset_password_email();
-
 		$message = get_option( 'user_registration_reset_password_email', $message );
-
 		$to_replace = array( "{{username}}", "{{key}}", "{{blog_info}}", "{{home_url}}" );
-
 		$replace_with = array( $username, $key, get_bloginfo(), get_home_url() );
-
 		$message = str_replace( $to_replace, $replace_with, $message );
-
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
 		if ( 'yes' == get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
