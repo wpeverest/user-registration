@@ -91,6 +91,16 @@ class UR_Emailer {
 			$data_html .= $label . ' : ' . $value . '<br/>';
 		}
 
+		$name_value = array();
+
+		foreach( $valid_form_data as $form_data ) {
+			if( isset( $form_data->value ) && is_array( $form_data->value ) ) {
+				$form_data->value = implode( ",", $form_data->value );
+			}
+
+			$name_value[ $form_data->field_name ] = isset( $form_data->value ) ? $form_data->value : '';
+		}
+
 		$email_object = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
 
 		$user_login_object = isset( $valid_form_data['user_login'] ) ? $valid_form_data['user_login'] : array();
@@ -101,9 +111,9 @@ class UR_Emailer {
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
 
-			self::send_mail_to_user( $email, $username, $user_id, $data_html );
+			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value );
 
-			self::send_mail_to_admin( $email, $username, $user_id, $data_html );
+			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value );
 		}
 	}
 
@@ -112,7 +122,7 @@ class UR_Emailer {
 	 * @param $email
 	 */
 
-	public static function send_mail_to_user( $email, $username, $user_id, $data_html ) {
+	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value ) {
 
 		$status = ur_get_user_approval_status( $user_id );
 
@@ -120,9 +130,16 @@ class UR_Emailer {
 
 		$email_token = get_user_meta($user_id, 'ur_confirm_email_token', true);
 
-		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{email_token}}", "{{all_fields}}");
+		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{email_token}}", "{{all_fields}}" );
 
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
+
+		//add the field name and values from $name_value to the replacement arrays.
+		$to_replace = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		//surround every key with {{ and }}.
+		array_walk( $to_replace, function(&$value, $key) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
 		if( $email_status === '0' ) {
 
@@ -201,7 +218,7 @@ class UR_Emailer {
 	/**
 	 * @param $user_email
 	 */
-	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html ) {
+	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value ) {
 		
 		$header = "Reply-To: {{email}} \r\n";
 		
@@ -220,6 +237,13 @@ class UR_Emailer {
 		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{all_fields}}");
 
 		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
+		
+		//add the field name and values from $name_value to the replacement arrays.
+		$to_replace = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		//surround every key with {{ and }}.
+		array_walk( $to_replace, function(&$value, $key) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
 		$message = str_replace( $to_replace, $replace_with, $message );
 
