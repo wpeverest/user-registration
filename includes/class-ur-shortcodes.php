@@ -136,7 +136,7 @@ class UR_Shortcodes {
 		ob_start();
 
 		self::render_form( $atts['id'] );
-		
+
 		return ob_get_clean();
 	}
 

@@ -231,12 +231,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'url' :
 			case 'date':
 			case 'file':
+			case 'timepicker':
 
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) ." " .esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				else
 				{
@@ -296,6 +297,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'html':
 
 					$field .= '<span id="'.esc_attr( $args['id'] ) .'">'. $args['html'] .'</span>';
+
+				break;
+			case 'wysiwyg':
+
+				$field .= get_wp_editor( $args );
 
 				break;
 		}// End switch().
