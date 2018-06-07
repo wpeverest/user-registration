@@ -1081,6 +1081,16 @@ function ur_back_link( $label, $url ) {
 }
 
 /**
+ * wp_doing ajax() is introduced in core @since 4.7, 
+ * Filters whether the current request is a WordPress Ajax request.
+ */
+if ( ! function_exists( 'wp_doing_ajax' ) ) {
+	function wp_doing_ajax() {
+		return apply_filters( 'wp_doing_ajax', defined( 'DOING_AJAX' ) && DOING_AJAX );
+	}
+}
+
+/**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */
