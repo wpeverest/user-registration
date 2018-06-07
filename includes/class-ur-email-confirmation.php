@@ -41,6 +41,9 @@ class UR_Email_Confirmation {
 	 * @return array
 	 */
 	public function add_column_head( $columns ) {
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return $columns;
+		}
 
 		$the_columns['ur_user_user_email_status'] = __( 'Status', 'user-registration' );
 
@@ -61,7 +64,10 @@ class UR_Email_Confirmation {
 	 * @return string
 	 */
 	public function add_column_cell( $val, $column_name, $user_id ) {
-		
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return false;
+		}
+
 		if ( $column_name == 'ur_user_user_email_status') {
 			$val = get_user_meta( $user_id, 'ur_confirm_email', true );
 			$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
@@ -70,13 +76,14 @@ class UR_Email_Confirmation {
 				$val = __( 'Verified', 'user-registration' );
 			} elseif ( $val == '0' && isset( $token ) ) {
 				$val = __( 'Pending', 'user-registration' );
+			} else {
+				$val = '-';
 			}
 		}
 
 		return $val;
 	}
 	
-
 	public function ur_enqueue_script()
 	{
 		wp_register_style( 'user-registration-css', UR()->plugin_url().'/assets/css/user-registration.css', array(), UR_VERSION ); 
