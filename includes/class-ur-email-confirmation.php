@@ -24,14 +24,58 @@ class UR_Email_Confirmation {
 		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}
-
+		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
+		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2);
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
-
 	}
+	
+	/**
+	 * Add the column header for the email status column
+	 *
+	 * @param array $columns
+	 *
+	 * @return array
+	 */
+	public function add_column_head( $columns ) {
+
+		$the_columns['ur_user_user_email_status'] = __( 'Status', 'user-registration' );
+
+		$newcol = array_slice( $columns, 0, -1 );
+		$newcol = array_merge( $newcol, $the_columns );
+		$columns = array_merge( $newcol, array_slice( $columns, 1 ) );
+
+		return $columns;
+	}
+
+	/**
+	 * Set the status value for each user in the users list
+	 *
+	 * @param string $val
+	 * @param string $column_name
+	 * @param int $user_id
+	 *
+	 * @return string
+	 */
+	public function add_column_cell( $val, $column_name, $user_id ) {
+		
+		if ( $column_name == 'ur_user_user_email_status') {
+			$val = get_user_meta( $user_id, 'ur_confirm_email', true );
+			$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+
+			if( '1' === $val ) {
+				$val = __( 'Verified', 'user-registration' );
+			} elseif ( $val == '0' && isset( $token ) ) {
+				$val = __( 'Pending', 'user-registration' );
+			}
+		}
+
+		return $val;
+	}
+	
 
 	public function ur_enqueue_script()
 	{
@@ -164,8 +208,8 @@ class UR_Email_Confirmation {
 
 		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			$token = $this->get_token($user_id);
-			update_user_meta( $user_id, 'ur_confirm_email', 0);
-			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
+			update_user_meta( $user_id, 'ur_confirm_email', 0 );
+			update_user_meta( $user_id, 'ur_confirm_email_token', $token );	
 		}
 	}
 
