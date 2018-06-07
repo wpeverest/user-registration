@@ -57,21 +57,21 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
 	}
 
-	public function check_token_before_authenticate()
-	{
+	public function check_token_before_authenticate() {
+		$this->my_simple_crypt();
 		$user_reg_successful = false;
 		
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 		
 		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
 			
-			$user_id = $this->my_simple_crypt( $_GET['ur_resend_id'], 'd' );
+			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
 
 			$user = get_user_by( 'id', $user_id );
 
 			if( $user ) {
 
-				$this->getToken( $user_id );
+				$this->get_token( $user_id );
 
 				$this->set_email_status( array(), '', $user_id );
 
@@ -95,7 +95,7 @@ class UR_Email_Confirmation {
 		{		
 			$output = str_split( $_GET['ur_token'], 50 );
 
-			$user_id = $this->my_simple_crypt( $output[1], 'd');
+			$user_id = $this->crypt_the_string( $output[1], 'd');
 			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 			
@@ -121,10 +121,10 @@ class UR_Email_Confirmation {
 
 	}
 
-	public function my_simple_crypt( $string, $action = 'e' ) {
+	public function crypt_the_string( $string, $action = 'e' ) {
 	    
-	    $secret_key = 'my_simple_secret_key';
-	    $secret_iv = 'my_simple_secret_iv';
+	    $secret_key = 'ur_secret_key';
+	    $secret_iv = 'ur_secret_iv';
 	 
 	    $output = false;
 	    $encrypt_method = "AES-256-CBC";
@@ -141,8 +141,7 @@ class UR_Email_Confirmation {
 	    return $output;
 	}
 
-	public function getToken($user_id)
-	{
+	public function get_token($user_id) {
 		$length = 50;
 	    $token = "";
 	    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -154,7 +153,7 @@ class UR_Email_Confirmation {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
 	    }
 
-	    $token .=$this->my_simple_crypt($user_id,'e');
+	    $token .=$this->crypt_the_string($user_id,'e');
 
 	    return $token;
 
@@ -164,7 +163,7 @@ class UR_Email_Confirmation {
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 
 		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
-			$token = $this->getToken($user_id);
+			$token = $this->get_token($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0);
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
 		}
@@ -178,7 +177,7 @@ class UR_Email_Confirmation {
 
 		if( $email_status === '0' )
 		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->my_simple_crypt( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
