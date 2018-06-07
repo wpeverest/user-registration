@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 // Include core functions (available in both admin and frontend).
 include( UR_ABSPATH . 'includes/functions-ur-page.php' );
 include( UR_ABSPATH . 'includes/functions-ur-account.php' );
+include( UR_ABSPATH . 'includes/functions-ur-deprecated.php' );
 
 /**
  * Define a constant if it is not already defined.

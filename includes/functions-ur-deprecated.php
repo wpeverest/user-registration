@@ -101,7 +101,7 @@ function ur_caught_exception( $exception_object, $function = '', $args = array()
  * @param string $message  Message to log.
  * @param string $version  Version the message was added in.
  */
-function ur_doing_it_wrong( $function, $message, $version ) {
+function ur_deprecated_doing_it_wrong( $function, $message, $version ) {
 	// @codingStandardsIgnoreStart
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
 

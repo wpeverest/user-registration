@@ -58,7 +58,7 @@ class UR_Email_Confirmation {
 	}
 
 	public function check_token_before_authenticate() {
-		$this->my_simple_crypt();
+
 		$user_reg_successful = false;
 		
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
@@ -205,6 +205,22 @@ class UR_Email_Confirmation {
 		}
 
 		return $result;
+	}
+
+	/* @deprecated 1.3.2
+	 * @param string $string the string to encrypt/decrypt, $action the action encrypt or decrypt
+	 * @return void
+	 */
+	public function my_simple_crypt( $string, $action ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.3.2', 'UR_Email_Confirmation::crypt_the_string' );
+	}
+
+	/* @deprecated 1.3.2
+	 * @param $user_id 
+	 * @return void
+	 */
+	public function getToken( $user_id ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::getToken', '1.3.2', 'UR_Email_Confirmation::get_token' );
 	}
 }
 
