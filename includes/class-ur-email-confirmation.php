@@ -26,11 +26,29 @@ class UR_Email_Confirmation {
 		}
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
+		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2);
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
+	}
+
+	/**
+	 * Create two quick links Approve and Deny for each user in the users list
+	 *
+	 * @param $actions
+	 * @param $user
+	 *
+	 * @return array
+	 */
+	public function ceate_quick_links( $actions, $user ) {
+		
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return $actions;
+		}
+
+		return $actions;
 	}
 	
 	/**
