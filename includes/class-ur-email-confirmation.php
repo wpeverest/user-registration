@@ -211,6 +211,7 @@ class UR_Email_Confirmation {
 	}
 
 	public function get_token($user_id) {
+
 		$length = 50;
 	    $token = "";
 	    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

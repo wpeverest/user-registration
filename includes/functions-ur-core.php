@@ -344,9 +344,10 @@ function ur_get_field_type( $field_key ) {
 			case 'file':
 				$field_type = 'file';
 				break;
-			case 'mailchimp':
 			case 'privacy_policy':
 				$field_type = 'privacy-policy';
+				break;
+			case 'mailchimp':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -358,18 +359,6 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'radio':
 				$field_type = 'radio';
-				break;
-			case 'section_title':
-				$field_type = 'section_title';
-				break;
-			case 'html':
-				$field_type = 'html';
-				break;
-			case 'timepicker':
-				$field_type = 'timepicker';
-				break;
-			case 'wysiwyg':
-				$field_type = 'wysiwyg';
 				break;
 		}
 	}

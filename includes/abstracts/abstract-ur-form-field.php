@@ -84,19 +84,6 @@ abstract class UR_Form_Field {
 
 		$form_data = (array) $data['general_setting'];
 		$form_data['type'] = $field_type;
-		// $form_data = array(
-
-		// 	'label' => isset( $data['general_setting']->label ) ? $data['general_setting']->label : '',
-
-		// 	'placeholder' => isset( $data['general_setting']->placeholder ) ? $data['general_setting']->placeholder : '',
-
-		// 	'description' => isset( $data['general_setting']->description ) ? $data['general_setting']->description : '',
-
-		// 	'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
-
-		// 	'type' => $field_type,
-		// );
-
 
 		if( $form_data['hide_label'] === 'yes' ) {
 			unset( $form_data['label'] );
@@ -240,23 +227,23 @@ abstract class UR_Form_Field {
 
 			switch ( $setting_value['type'] ) {
 
-					case 'text':
+				case 'text':
 
-						$extra_attribute = in_array( $strip_prefix, ur_get_fields_without_prefix() )  && 'field_name' == $setting_key ? "disabled='disabled'" : '';
+					$extra_attribute = in_array( $strip_prefix, ur_get_fields_without_prefix() )  && 'field_name' == $setting_key ? "disabled='disabled'" : '';
 
-						$value = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
+					$value = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
 
-						$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
-						if ( true == $setting_value['required'] ) {
+					if ( true == $setting_value['required'] ) {
 
-							$general_setting_wrapper .= ' required ';
+						$general_setting_wrapper .= ' required ';
 
-						}
+					}
 
-						$general_setting_wrapper .= $extra_attribute . ' />';
+					$general_setting_wrapper .= $extra_attribute . ' />';
 
-						break;
+					break;
 
 				case 'radio':
 
@@ -280,7 +267,9 @@ abstract class UR_Form_Field {
 
 						$general_setting_wrapper .= ' />';
 					}
+
 					break;
+
 				case 'select':
 
 					if ( isset( $setting_value['options'] ) && gettype( $setting_value['options'] ) == 'array' ) {

@@ -118,11 +118,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'priority'          => '',
 		);
 
-
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
-		if ( $args['required'] == 'yes' ) {
+		if ( true === $args['required'] ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
@@ -172,57 +171,49 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		switch ( $args['type'] ) {
 
 			case 'textarea' :
-
 				$field .= '<textarea data-id=""' . esc_attr( $key ) . '"" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
-
 				break;
 
 			case 'checkbox' :
-
-			$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';
-
-			if( 'privacy_policy' == $field_key ) {
-				break;
-			}
-
-			if( isset($args['choices']) && count($args['choices']) >1 ){
-
-				$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();
-
-				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
-
-				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
-				$field   .= $args['label'] . $required . '</label>';
-				$checkbox_start =0;
-				foreach ( $choices as $choice_index => $choice ) {
-
-					$value = '';
-					if ( in_array(trim($choice), $default) ) {
-						$value = 'checked="checked"';
-					}
-
-					$field .= '<label>';
-					$field .= ' <input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
-					$field .= trim( $choice ) . ' </label>';
-
-
-					$checkbox_start++;
+				$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';
+				if( 'privacy_policy' == $field_key ) {
+					break;
 				}
-			}
-			else
-			{
-				$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
-						<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-				         . $args['label'] . $required . '</label>';
 
-			}
+				if( isset($args['choices']) && count($args['choices']) >1 ){
 
-			if ( $args['description'] ) {
-				$field .= '<span class="description">' . $args['description'] . '</span>';
-			}
+					$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();
+
+					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+
+					$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
+					$field   .= $args['label'] . $required . '</label>';
+					$checkbox_start =0;
+					foreach ( $choices as $choice_index => $choice ) {
+
+						$value = '';
+						if ( in_array(trim($choice), $default) ) {
+							$value = 'checked="checked"';
+						}
+
+						$field .= '<label>';
+						$field .= ' <input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
+						$field .= trim( $choice ) . ' </label>';
 
 
-			break;
+						$checkbox_start++;
+					}
+				} else {
+					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
+							<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+					         . $args['label'] . $required . '</label>';
+				}
+
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+				break;
+
 			case 'password' :
 			case 'text' :
 			case 'email' :
@@ -232,19 +223,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'date':
 			case 'file':
 			case 'timepicker':
-
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) ." " .esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
-				else
-				{
+				else {
 					$field .= '<input data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
-
 				break;
+
 			case 'select' :
 				$options = $field = '';
 				if ( ! empty( $args['options'] ) ) {
@@ -267,10 +256,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( $args['description'] ) {
 					$field .= '<span class="description">' . $args['description'] . '</span>';
 				}
-
-
 				break;
+
 			case 'radio' :
+
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
@@ -286,23 +275,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							) ) . '</label>';
 					}
 				}
-
 				break;
 
 			case 'section_title':
-
-					$field .= '<h3 id="'.esc_attr( $args['id'] ) .'">'.esc_html( $args['label'] ) .'</h3>';
-
+				$field .= '<h3 id="'.esc_attr( $args['id'] ) .'">'.esc_html( $args['label'] ) .'</h3>';
 				break;
+
 			case 'html':
-
-					$field .= '<span id="'.esc_attr( $args['id'] ) .'">'. $args['html'] .'</span>';
-
+				$field .= '<span id="'.esc_attr( $args['id'] ) .'">'. $args['html'] .'</span>';
 				break;
+
 			case 'wysiwyg':
-
 				$field .= get_wp_editor( $args );
-
 				break;
 		}// End switch().
 
