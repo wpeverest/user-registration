@@ -40,18 +40,20 @@ class UR_Shortcode_Login {
 	public static function output( $atts ) {
 		global $wp, $post;
 
-		$redirect_url = isset( $atts['redirect_url'] ) ? $atts['redirect_url'] : '';
-		$enable_recaptcha = isset( $atts['enable_recaptcha'] ) ? $atts['enable_recaptcha'] : '';
+		$redirect_url = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
 
 		if ( ! is_user_logged_in() ) {
+
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php', set_query_var( "recaptcha", $enable_recaptcha )
-				);
+
+				ur_get_template( 'myaccount/form-login.php' );
 			}
+
 		}
-		else {
+		else
+		{
 			echo sprintf( __('You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) ;
 		}
 	}
