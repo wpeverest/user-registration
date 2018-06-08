@@ -1,6 +1,7 @@
 /* global  user_registration_params */
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
+
 (function ( $ ) {
 
 		var user_registration = {
@@ -30,10 +31,11 @@
 
 			// Validator messages.
 			$.extend( $.validator.messages, {
-				required: user_registration_params.i18n_messages_required,
-				url: user_registration_params.i18n_messages_url,
-				email: user_registration_params.i18n_messages_email,
-				number: user_registration_params.i18n_messages_number
+				required: user_registration_params.message_required_fields,
+				url: user_registration_params.message_url_fields,
+				email: user_registration_params.message_email_fields,
+				number: user_registration_params.message_number_fields,
+				confirmpassword: user_registration_params.message_confirm_password_fields,
 			});
 
 			// Validate email addresses.
@@ -132,7 +134,7 @@
 
 
 	var ursL10n = user_registration_params.ursL10n;
-
+	
 	$.fn.ur_form_submission = function () {
 
 		// traverse all nodes
@@ -292,7 +294,6 @@
 					this.form_submit_event();
 				},
 				form_submit_event: function () {
-
 					$('form.register').on('submit', function ( event ) {
 
 						if( ! $this.valid() ) {

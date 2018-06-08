@@ -43,6 +43,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<input class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
 					</p>
 
+					<p>
+					<?php 
+						$enable_recaptcha =  get_query_var("recaptcha"); 
+						if( "yes" == $enable_recaptcha ) {
+							$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+							$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+							
+							wp_enqueue_script( 'ur-google-recaptcha' );
+
+							wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
+
+								'site_key' => $recaptcha_site_key,
+
+								'site_secret' => $recaptcha_site_secret,
+
+								'is_captcha_enable' => true,
+
+							) );
+							$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+							echo $recaptcha_node;
+						}
+					?>
+					</p>
+
 					<?php do_action( 'user_registration_login_form' ); ?>
 
 					<p class="form-row">
@@ -77,7 +101,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 							echo '</p>';
 						}
 					?>
-					</p>
 					<?php do_action( 'user_registration_login_form_end' ); ?>
 			</div>
 		</div>

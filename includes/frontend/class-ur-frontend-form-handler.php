@@ -116,7 +116,6 @@ class UR_Frontend_Form_Handler {
 	}
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
-
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
 		if ( count( $duplicate_field_key ) > 0 ) {
@@ -223,7 +222,7 @@ class UR_Frontend_Form_Handler {
 			if ( empty( $confirm_password ) ) {
 				array_push( self::$response_array, __( 'Empty confirm password', 'user-registration' ) );
 			} elseif ( strcasecmp( $confirm_password, $password ) != 0 ) {
-				array_push( self::$response_array, __( 'Password and confirm password not matched', 'user-registration' ) );
+				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
 			}
 		}
 		return $form_data;

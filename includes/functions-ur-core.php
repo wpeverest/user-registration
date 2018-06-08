@@ -344,9 +344,10 @@ function ur_get_field_type( $field_key ) {
 			case 'file':
 				$field_type = 'file';
 				break;
-			case 'mailchimp':
 			case 'privacy_policy':
 				$field_type = 'privacy-policy';
+				break;
+			case 'mailchimp':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -358,18 +359,6 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'radio':
 				$field_type = 'radio';
-				break;
-			case 'section_title':
-				$field_type = 'section_title';
-				break;
-			case 'html':
-				$field_type = 'html';
-				break;
-			case 'timepicker':
-				$field_type = 'timepicker';
-				break;
-			case 'wysiwyg':
-				$field_type = 'wysiwyg';
 				break;
 		}
 	}
@@ -678,8 +667,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
-
-
 			),
 			array(
 				'type'              => 'select',
@@ -743,11 +730,21 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
 			),
-
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Custom CSS class', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_custom_class',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'			=> ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
+			),
 		)
 	);
-	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
+	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
 	return $arguments['setting_data'];
 

@@ -273,6 +273,7 @@ class UR_Frontend_Scripts {
 	 * @param  string $handle
 	 */
 	private static function localize_script( $handle ) {
+		
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) {
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
 			self::$wp_localize_scripts[] = $handle;
@@ -290,8 +291,7 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-		global $wp;
-
+		
 		switch ( $handle ) {
 			case 'user-registration' :
 
@@ -300,9 +300,13 @@ class UR_Frontend_Scripts {
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
-					'redirect_url'                     => get_option('user_registration_general_setting_redirect_options'),
-					'login_option'					   => get_option('user_registration_general_setting_login_options'),
-
+					'redirect_url'                     => get_option( 'user_registration_general_setting_redirect_options' ),
+					'login_option'					   => get_option( 'user_registration_general_setting_login_options' ),
+					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields' ),
+					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email' ),
+					'message_url_fields'			   => get_option( 'user_registration_form_submission_error_message_website_URL' ),
+					'message_number_fields'			   => get_option( 'user_registration_form_submission_error_message_number' ),
+					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password' ),
 					'ursL10n'                          => array(
 						'user_successfully_saved' => __( get_option('user_registration_successful_form_submission_message_manual_registation', 'User successfully registered.' ), 'user-registration' ),
 						'user_under_approval' => __( get_option('user_registration_successful_form_submission_message_admin_approval', 'User registered. Wait until admin approves your registration.' ), 'user-registration' ),
