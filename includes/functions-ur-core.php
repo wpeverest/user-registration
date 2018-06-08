@@ -602,13 +602,14 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path     = UR_FORM_PATH . 'class-ur-' . join( '-', array_map( 'strtolower', $exploded_class ) ) . '.php';
 	$class_name     = 'UR_Form_Field_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 	$class_path     = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
-
-	if ( ! class_exists( $class_name ) ) {
-		if ( file_exists( $class_path ) ) {
-
-			//include_once( $class_path );
+	/* Backward Compat */
+	if ( file_exists( $class_path ) ) {
+		$class_name     = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
+		if ( ! class_exists( $class_name ) ) {
+			include_once( $class_path );
 		}
 	}
+	/* Backward compat end*/
 
 	return $class_name;
 }
@@ -1093,7 +1094,7 @@ function ur_back_link( $label, $url ) {
 }
 
 /**
- * wp_doing ajax() is introduced in core @since 4.7, 
+ * wp_doing ajax() is introduced in core @since 4.7,
  * Filters whether the current request is a WordPress Ajax request.
  */
 if ( ! function_exists( 'wp_doing_ajax' ) ) {
