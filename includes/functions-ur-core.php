@@ -677,8 +677,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
-
-
 			),
 			array(
 				'type'              => 'select',
@@ -742,11 +740,21 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
 			),
-
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Custom CSS class', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_custom_class',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'			=> ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
+			),
 		)
 	);
-	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
+	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
 	return $arguments['setting_data'];
 
