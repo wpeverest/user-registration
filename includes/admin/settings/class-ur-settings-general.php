@@ -354,10 +354,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			
 			} elseif ( $current_section === 'frontend-messages') {
 				$settings = $this->get_frontend_messages_settings();
-
 			}
 			UR_Admin_Settings::output_fields( $settings );
 		}
@@ -373,7 +371,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			
 			} elseif ( $current_section === 'frontend-messages') {
 				$settings = $this->get_frontend_messages_settings();
 

@@ -219,7 +219,7 @@ class UR_Emailer {
 
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {										
       		foreach($admin_email as $email ) {
-				wp_mail( $admin_email, $subject, $message, $header );	
+				wp_mail( $email, $subject, $message, $header );	
 			}
 		}
 	}
