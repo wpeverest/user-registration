@@ -588,7 +588,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( class_exists( $class_name ) ) {
 				echo $class_name::get_instance()->get_admin_template( $single_field );
 			}
-			/* Backward Compat */
+			/* Backward Compat since 1.4.0 */
 			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
 			if( class_exists( $class_name_old ) ) {
 				echo $class_name_old::get_instance()->get_admin_template( $single_field );
