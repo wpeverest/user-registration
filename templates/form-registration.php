@@ -98,7 +98,7 @@ if ( $form_template == 'Bordered' ) {
 
 			if ( $is_field_exists ) {
 				?>
-					<?php if( isset( $recaptcha_node ) ) {
+					<?php if( ! empty( $recaptcha_node ) ) {
 						echo 	'<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
 					}
 					?>

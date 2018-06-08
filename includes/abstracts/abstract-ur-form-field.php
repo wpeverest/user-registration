@@ -85,7 +85,7 @@ abstract class UR_Form_Field {
 		$form_data = (array) $data['general_setting'];
 		$form_data['type'] = $field_type;
 
-		if( $form_data['hide_label'] === 'yes' ) {
+		if( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
 			unset( $form_data['label'] );
 		}
 
