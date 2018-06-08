@@ -188,10 +188,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			if( isset($args['choices']) && count($args['choices']) >1 ){
 
-				$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();		
-
+				$default = !empty($args['default']) ? $args['default'] : array();		
 				$choices = isset( $args['choices'] ) ? $args['choices'] : array();
-
 				$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 				$field   .= $args['label'] . $required . '</label>';
 				$checkbox_start =0;

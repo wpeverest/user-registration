@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract UR Setting Email Class
+ * UR Setting Email Class
  *
  * @version  1.0.0
  * @package  UserRegistration/Form/Settings
@@ -22,7 +22,6 @@ class UR_Setting_Email extends UR_Field_Settings {
 
 	public function output( $field_data = array() ) {
 
-		// TODO: Implement output() method.
 		$this->field_data = $field_data;
 
 		$this->register_fields();
@@ -33,7 +32,7 @@ class UR_Setting_Email extends UR_Field_Settings {
 	}
 
 	public function register_fields() {
-		// TODO: Implement register_fields() method.
+
 		$fields = array(
 
 			'custom_class' => array(

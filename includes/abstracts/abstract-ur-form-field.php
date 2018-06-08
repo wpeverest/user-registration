@@ -56,6 +56,20 @@ abstract class UR_Form_Field {
 		return '';
 	}
 
+	public function get_advance_setting_data( $key ) {
+
+		if ( isset( $this->admin_data->advance_setting->$key ) ) {
+
+			return $this->admin_data->advance_setting->$key;
+		}
+
+		if ( isset( $this->field_defaults[ 'default_' . $key ] ) ) {
+
+			return $this->field_defaults[ 'default_' . $key ];
+		}
+
+		return '';
+	}
 
 	public function get_admin_template( $admin_data = array() ) {
 
