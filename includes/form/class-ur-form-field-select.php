@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Display_Name
+ * @class    UR_Form_Field_Select
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Display_Name Class
+ * UR_Form_Field_Select Class
  */
-class UR_Display_Name extends UR_Form_Field {
+class UR_Form_Field_Select extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,21 +35,23 @@ class UR_Display_Name extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_display_name';
+		$this->id = 'user_registration_select';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Display Name','user-registration' ),
+			'label' => __( 'Select','user-registration' ),
 
-			'icon' => 'dashicons dashicons-id',
+			'icon' => 'dashicons dashicons-image-flip-vertical',
 		);
-		$this->field_defaults           = array(
 
-			'default_label' => __( 'Display Name','user-registration' ),
+		$this->field_defaults = array(
 
-			'default_field_name' => 'display_name',
+			'default_label' => __( 'Select','user-registration' ),
+
+			'default_field_name' => 'select_' . ur_get_random_number(),
+
 		);
 	}
 
@@ -65,10 +67,8 @@ class UR_Display_Name extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
-
 }
 
-return UR_Display_Name::get_instance();
+return UR_Form_Field_Select::get_instance();

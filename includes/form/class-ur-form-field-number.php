@@ -2,8 +2,8 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Admin
- * @version  1.0.0
+ * @class    UR_Form_Field_Number
+ * @since    1.0.5
  * @package  UserRegistration/Form
  * @category Admin
  * @author   WPEverest
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Admin Class
+ * UR_Form_Field_Number Class
  */
-class UR_Text extends UR_Form_Field {
+class UR_Form_Field_Number extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,22 +35,22 @@ class UR_Text extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_text';
+		$this->id = 'user_registration_number';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Input Field', 'user-registration' ),
+			'label' => __( 'Number', 'user-registration' ),
 
-			'icon' => 'dashicons dashicons-format-aside',
+			'icon' => 'dashicons dashicons-image-filter',
 		);
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Input Field', 'user-registration' ),
+			'default_label' => __( 'Number', 'user-registration' ),
 
-			'default_field_name' => 'input_box_' . ur_get_random_number(),
+			'default_field_name' => 'number_box_' . ur_get_random_number(),
 		);
 	}
 
@@ -82,8 +82,17 @@ class UR_Text extends UR_Form_Field {
 			} );
 
 		}
+		if ( ! is_numeric( $value ) && ! empty( $value ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
+
+				return __( $field_label . ' must be numeric value.', 'user-registration' );
+
+			} );
+
+		}
 
 	}
 }
 
-return UR_Text::get_instance();
+return UR_Form_Field_Number::get_instance();

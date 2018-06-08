@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Email
+ * @class    UR_Form_Field_Nickname
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Email Class
+ * UR_Form_Field_Nickname Class
  */
-class UR_User_Email extends UR_Form_Field {
+class UR_Form_Field_Nickname extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,23 +35,24 @@ class UR_User_Email extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_email';
+		$this->id = 'user_registration_nickname';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Email ' ,'user-registration' ),
+			'label' => __( 'Nickname','user-registration' ),
 
-			'icon' => 'dashicons dashicons-email-alt',
+			'icon' => 'dashicons dashicons-id',
 		);
+		$this->field_defaults           = array(
 
-		$this->field_defaults = array(
+			'default_label' => __( 'Nickname','user-registration' ),
 
-			'default_label' => __( 'User Email','user-registration' ),
+			'default_field_name' => 'description',
 		);
-
 	}
+
 
 	public function get_registered_admin_fields() {
 
@@ -64,30 +65,10 @@ class UR_User_Email extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// TODO: Implement validation() method.
-		$email = isset( $form_data->value ) ? $form_data->value : '';
 
-		$status = is_email( $email );
-
-		if ( ! $status ) {
-
-			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Invalid email address.', 'user-registration' );
-
-			} );
-		}
-
-		if ( email_exists( $email ) ) {
-
-			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Email already exists.', 'user-registration' );
-
-			} );
-
-		}
 	}
+
+
 }
 
-return UR_User_Email::get_instance();
+return UR_Form_Field_Nickname::get_instance();

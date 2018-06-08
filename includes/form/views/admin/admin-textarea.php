@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	UR_Textarea::get_instance()->get_setting();
+	UR_Form_Field_Textarea::get_instance()->get_setting();
 
 	?>
 </div>

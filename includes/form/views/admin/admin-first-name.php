@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	UR_First_Name::get_instance()->get_setting();
+	UR_Form_Field_First_Name::get_instance()->get_setting();
 
 	?>
 </div>

@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Textarea
+ * @class    UR_Form_Field_Last_Name
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Textarea Class
+ * UR_Form_Field_Last_Name Class
  */
-class UR_Textarea extends UR_Form_Field {
+class UR_Form_Field_Last_Name extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,24 +35,23 @@ class UR_Textarea extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_textarea';
+		$this->id = 'user_registration_last_name';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Textarea','user-registration' ),
+			'label' => __( 'Last Name ','user-registration' ),
 
-			'icon' => 'dashicons dashicons-editor-textcolor',
+			'icon' => 'dashicons dashicons-id',
 		);
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Textarea','user-registration' ),
+			'default_label' => __( 'Last Name','user-registration' ),
 
-			'default_field_name' => 'textarea_' . ur_get_random_number(),
+			'default_field_name' => 'last_name',
 		);
 	}
-
 
 
 	public function get_registered_admin_fields() {
@@ -70,4 +69,4 @@ class UR_Textarea extends UR_Form_Field {
 	}
 }
 
-return UR_Textarea::get_instance();
+return UR_Form_Field_Last_Name::get_instance();

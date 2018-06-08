@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$instance = UR_Country::get_instance();
+$instance = UR_Form_Field_Country::get_instance();
 ?>
 <div class="ur-input-type-country ur-admin-template">
 
@@ -35,7 +35,7 @@ $instance = UR_Country::get_instance();
 	</div>
 	<?php
 
-
+	UR_Form_Field_Country::get_instance()->get_setting();
 	$instance->get_setting();
 
 	?>
