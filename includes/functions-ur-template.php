@@ -222,6 +222,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'url' :
 			case 'date':
 			case 'file':
+			case 'timepicker':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
