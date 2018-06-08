@@ -97,23 +97,18 @@ if ( $form_template == 'Bordered' ) {
 			<?php } // End foreach().
 
 			if ( $is_field_exists ) {
-
 				?>
-				<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;">
-
-					<?php
-
-					echo $recaptcha_node;
-
+					<?php if( isset( $recaptcha_node ) ) {
+						echo 	'<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
+					}
 					?>
+					<button type="submit"
+					        class="btn button ur-submit-button">
+						<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
+					</button>
 
-				</div>
-				<button type="submit"
-				        class="btn button ur-submit-button">
-					<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
-				</button>
-
-			<?php }
+				<?php 
+			}
 
 
 			if ( count( $form_data_array ) == 0 ) {
