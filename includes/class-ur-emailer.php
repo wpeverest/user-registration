@@ -198,7 +198,7 @@ class UR_Emailer {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-    $subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user-registration') );
+		$subject = get_option( 'user_registration_admin_email_subject', __('A New User Registered', 'user-registration') );
 		$message = new UR_Settings_Admin_Email();
 		$message = $message->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
@@ -218,7 +218,7 @@ class UR_Emailer {
 		$header = str_replace( $to_replace, $replace_with, $header );
 
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {										
-      foreach($admin_email as $email ) {
+      		foreach($admin_email as $email ) {
 				wp_mail( $admin_email, $subject, $message, $header );	
 			}
 		}
@@ -282,7 +282,7 @@ class UR_Emailer {
 	 * @param $key
 	 */
 	public static function lost_password_email( $user_login, $user_data, $key ) {
-    
+
 		$user = get_user_by( 'login', $user_login );
 		$email = isset( $user->data->user_email ) ? $user->data->user_email : '';
 		$username = isset( $user->data->user_login ) ? $user->data->user_login : '';
