@@ -177,7 +177,7 @@ class UR_Frontend_Scripts {
 			'ur-jquery-validate' => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => UR_VERSION,
+				'version' => '1.15.1',
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
@@ -198,7 +198,7 @@ class UR_Frontend_Scripts {
 			'ur-google-recaptcha'        => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
-				'version' => UR_VERSION,
+				'version' => '2.0.0',
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {

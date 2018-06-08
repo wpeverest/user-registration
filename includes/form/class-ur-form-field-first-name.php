@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Nickname
+ * @class    UR_Form_Field_First_Name
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Nickname Class
+ * UR_Form_Field_First_Name Class
  */
-class UR_Nickname extends UR_Form_Field {
+class UR_Form_Field_First_Name extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,21 +35,22 @@ class UR_Nickname extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_nickname';
+		$this->id = 'user_registration_first_name';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Nickname','user-registration' ),
+			'label' => __( 'First Name', 'user-registration' ),
 
 			'icon' => 'dashicons dashicons-id',
 		);
 		$this->field_defaults           = array(
 
-			'default_label' => __( 'Nickname','user-registration' ),
+			'default_label' => __( 'First Name','user-registration' ),
 
-			'default_field_name' => 'description',
+			'default_field_name' => 'first_name',
+
 		);
 	}
 
@@ -65,10 +66,8 @@ class UR_Nickname extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
-
 }
 
-return UR_Nickname::get_instance();
+return UR_Form_Field_First_Name::get_instance();

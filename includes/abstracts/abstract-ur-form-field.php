@@ -82,29 +82,21 @@ abstract class UR_Form_Field {
 
 		$this->form_id = $form_id;
 
-		$form_data = array(
-
-			'label' => isset( $data['general_setting']->label ) ? $data['general_setting']->label : '',
-
-			'placeholder' => isset( $data['general_setting']->placeholder ) ? $data['general_setting']->placeholder : '',
-
-			'description' => isset( $data['general_setting']->description ) ? $data['general_setting']->description : '',
-
-			'hide_label' => isset( $data['general_setting']->hide_label ) ? $data['general_setting']->hide_label : '',
-
-			'type' => $field_type,
-		);
-
+		$form_data = (array) $data['general_setting'];
+		$form_data['type'] = $field_type;
 
 		if( $form_data['hide_label'] === 'yes' ) {
 			unset( $form_data['label'] );
 		}
 
-		if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
+		if( isset( $data['general_setting']->required ) ) {
 
-			$form_data['required'] = true;
+			if ( in_array( $field_key, ur_get_required_fields() ) || 'yes' === $data['general_setting']->required ) {
 
-			$form_data['custom_attributes']['required'] = 'required';
+				$form_data['required'] = true;
+
+				$form_data['custom_attributes']['required'] = 'required';
+			}
 		}
 
 		if ( isset( $data['advance_setting']->size ) ) {
@@ -128,7 +120,7 @@ abstract class UR_Form_Field {
 
 		if ( 'country' == $field_key ) {
 
-			$form_data['options'] = UR_Country::get_instance()->get_country();
+			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 
 		}
 		if ( 'select' == $field_key ) {
@@ -138,7 +130,7 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 
 				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;				
+					$form_data['options'][ $option ] = $option;
 				}
 			}
 		}
@@ -174,7 +166,9 @@ abstract class UR_Form_Field {
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
 
-		user_registration_form_field( $data['general_setting']->field_name, $form_data );
+		if( isset( $data['general_setting']->field_name ) ) {
+			user_registration_form_field( $data['general_setting']->field_name, $form_data );
+		}
 
 	}
 
@@ -213,10 +207,11 @@ abstract class UR_Form_Field {
 
 	/**
 	 * @return string
+	 * @param string $id Form field name
 	 */
 	public function get_field_general_settings() {
 
-		$general_settings = ur_get_general_settings();
+		$general_settings = ur_get_general_settings( $this->id );
 
 		$general_setting_html = '';
 
@@ -272,7 +267,9 @@ abstract class UR_Form_Field {
 
 						$general_setting_wrapper .= ' />';
 					}
+
 					break;
+
 				case 'select':
 
 					if ( isset( $setting_value['options'] ) && gettype( $setting_value['options'] ) == 'array' ) {
@@ -290,9 +287,9 @@ abstract class UR_Form_Field {
 					}
 
 					break;
-					
+
 				case 'textarea':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. __( 'Description', 'user-registration').'" ';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. esc_attr( $setting_value['placeholder'] ) .'" ';
 
 					if ( true == $setting_value['required'] ) {
 
@@ -328,7 +325,7 @@ abstract class UR_Form_Field {
 
 		echo '</div>';
 
-		$advance_settings = $this->get_field_advance_settings();
+		$advance_settings = $this->get_field_advance_settings( );
 
 		if ( '' != $advance_settings ) {
 

@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Radio
+ * @class    UR_Form_Field_User_Confirm_Password
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Radio Class
+ * UR_Form_Field_User_Confirm_Password Class
  */
-class UR_Radio extends UR_Form_Field {
+class UR_Form_Field_User_Confirm_Password extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,23 +35,19 @@ class UR_Radio extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_radio';
+		$this->id = 'user_registration_user_confirm_password';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Radio','user-registration' ),
+			'label' => __( 'Confirm Password ','user-registration' ),
 
-			'icon' => 'dashicons dashicons-marker',
+			'icon' => 'dashicons dashicons-lock',
 		);
+		$this->field_defaults           = array(
 
-		$this->field_defaults = array(
-
-			'default_label' => __( 'Radio','user-registration' ),
-
-			'default_field_name' => 'radio_' . ur_get_random_number(),
-
+			'default_label' => __( 'Confirm Password','user-registration' ),
 		);
 	}
 
@@ -67,8 +63,10 @@ class UR_Radio extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// TODO: Implement validation() method.
+
 	}
+
+
 }
 
-return UR_Radio::get_instance();
+return UR_Form_Field_User_Confirm_Password::get_instance();

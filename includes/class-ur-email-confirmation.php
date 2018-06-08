@@ -24,15 +24,84 @@ class UR_Email_Confirmation {
 		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}
-
+		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
+		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
+		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2);
 		add_action( 'wp_authenticate', array($this, 'check_token_before_authenticate'), 40, 2);
-
 	}
 
+	/**
+	 * Create two quick links Approve and Deny for each user in the users list
+	 *
+	 * @param $actions
+	 * @param $user
+	 *
+	 * @return array
+	 */
+	public function ceate_quick_links( $actions, $user ) {
+		
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return $actions;
+		}
+
+		return $actions;
+	}
+	
+	/**
+	 * Add the column header for the email status column
+	 *
+	 * @param array $columns
+	 *
+	 * @return array
+	 */
+	public function add_column_head( $columns ) {
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return $columns;
+		}
+
+		$the_columns['ur_user_user_email_status'] = __( 'Status', 'user-registration' );
+
+		$newcol = array_slice( $columns, 0, -1 );
+		$newcol = array_merge( $newcol, $the_columns );
+		$columns = array_merge( $newcol, array_slice( $columns, 1 ) );
+
+		return $columns;
+	}
+
+	/**
+	 * Set the status value for each user in the users list
+	 *
+	 * @param string $val
+	 * @param string $column_name
+	 * @param int $user_id
+	 *
+	 * @return string
+	 */
+	public function add_column_cell( $val, $column_name, $user_id ) {
+		if ( ! current_user_can( 'edit_user' ) ) {
+			return false;
+		}
+
+		if ( $column_name == 'ur_user_user_email_status') {
+			$val = get_user_meta( $user_id, 'ur_confirm_email', true );
+			$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+
+			if( '1' === $val ) {
+				$val = __( 'Verified', 'user-registration' );
+			} elseif ( $val == '0' && isset( $token ) ) {
+				$val = __( 'Pending', 'user-registration' );
+			} else {
+				$val = '-';
+			}
+		}
+
+		return $val;
+	}
+	
 	public function ur_enqueue_script()
 	{
 		wp_register_style( 'user-registration-css', UR()->plugin_url().'/assets/css/user-registration.css', array(), UR_VERSION ); 
@@ -57,21 +126,21 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
 	}
 
-	public function check_token_before_authenticate()
-	{
+	public function check_token_before_authenticate() {
+
 		$user_reg_successful = false;
 		
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 		
 		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
 			
-			$user_id = $this->my_simple_crypt( $_GET['ur_resend_id'], 'd' );
+			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
 
 			$user = get_user_by( 'id', $user_id );
 
 			if( $user ) {
 
-				$this->getToken( $user_id );
+				$this->get_token( $user_id );
 
 				$this->set_email_status( array(), '', $user_id );
 
@@ -95,7 +164,7 @@ class UR_Email_Confirmation {
 		{		
 			$output = str_split( $_GET['ur_token'], 50 );
 
-			$user_id = $this->my_simple_crypt( $output[1], 'd');
+			$user_id = $this->crypt_the_string( $output[1], 'd');
 			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 			
@@ -121,10 +190,10 @@ class UR_Email_Confirmation {
 
 	}
 
-	public function my_simple_crypt( $string, $action = 'e' ) {
+	public function crypt_the_string( $string, $action = 'e' ) {
 	    
-	    $secret_key = 'my_simple_secret_key';
-	    $secret_iv = 'my_simple_secret_iv';
+	    $secret_key = 'ur_secret_key';
+	    $secret_iv = 'ur_secret_iv';
 	 
 	    $output = false;
 	    $encrypt_method = "AES-256-CBC";
@@ -141,8 +210,8 @@ class UR_Email_Confirmation {
 	    return $output;
 	}
 
-	public function getToken($user_id)
-	{
+	public function get_token($user_id) {
+
 		$length = 50;
 	    $token = "";
 	    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -154,7 +223,7 @@ class UR_Email_Confirmation {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
 	    }
 
-	    $token .=$this->my_simple_crypt($user_id,'e');
+	    $token .=$this->crypt_the_string($user_id,'e');
 
 	    return $token;
 
@@ -164,9 +233,9 @@ class UR_Email_Confirmation {
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 
 		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
-			$token = $this->getToken($user_id);
-			update_user_meta( $user_id, 'ur_confirm_email', 0);
-			update_user_meta( $user_id, 'ur_confirm_email_token', $token);	
+			$token = $this->get_token($user_id);
+			update_user_meta( $user_id, 'ur_confirm_email', 0 );
+			update_user_meta( $user_id, 'ur_confirm_email_token', $token );	
 		}
 	}
 
@@ -178,7 +247,7 @@ class UR_Email_Confirmation {
 
 		if( $email_status === '0' )
 		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->my_simple_crypt( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
@@ -206,6 +275,22 @@ class UR_Email_Confirmation {
 		}
 
 		return $result;
+	}
+
+	/* @deprecated 1.3.2
+	 * @param string $string the string to encrypt/decrypt, $action the action encrypt or decrypt
+	 * @return void
+	 */
+	public function my_simple_crypt( $string, $action ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.3.2', 'UR_Email_Confirmation::crypt_the_string' );
+	}
+
+	/* @deprecated 1.3.2
+	 * @param $user_id 
+	 * @return void
+	 */
+	public function getToken( $user_id ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::getToken', '1.3.2', 'UR_Email_Confirmation::get_token' );
 	}
 }
 

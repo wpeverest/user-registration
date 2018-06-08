@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Description
+ * @class    UR_Form_Field_Radio
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Description Class
+ * UR_Form_Field_Radio Class
  */
-class UR_Description extends UR_Form_Field {
+class UR_Form_Field_Radio extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,22 +35,23 @@ class UR_Description extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_description';
+		$this->id = 'user_registration_radio';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'User Bio','user-registration' ),
+			'label' => __( 'Radio','user-registration' ),
 
-			'icon' => 'dashicons dashicons-id-alt',
+			'icon' => 'dashicons dashicons-marker',
 		);
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'User Bio','user-registration' ),
-			
-			'default_field_name' => 'description',
+			'default_label' => __( 'Radio','user-registration' ),
+
+			'default_field_name' => 'radio_' . ur_get_random_number(),
+
 		);
 	}
 
@@ -66,10 +67,8 @@ class UR_Description extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
-
 }
 
-return UR_Description::get_instance();
+return UR_Form_Field_Radio::get_instance();

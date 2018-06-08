@@ -82,7 +82,7 @@
 						$parent.removeClass( 'user-registration-has-error' );
 					},
 					submitHandler: function( form ) {
-						return false;							
+						return false;
 					}
 				});
 			});
@@ -184,7 +184,7 @@
 									switch ( field_type ) {
 										case 'checkbox':
 										case 'radio':
-											this_field_value = this_field.prop('checked') ? this_field.val() : '';										
+											this_field_value = this_field.prop('checked') ? this_field.val() : '';
 											break;
 										default:
 											this_field_value = this_field.val();
@@ -206,10 +206,10 @@
 						if ( field_type == 'checkbox' ) {
 							var field_value_json = JSON.stringify(field_value);
 						}
-						else if ( field_type == 'radio') {		
+						else if ( field_type == 'radio') {
 							var field_value_json = field_value[0];
 						} else {
-							var field_value_json = field.val();	
+							var field_value_json = field.val();
 						}
 
 						var single_form_field_name = multi_value_field[ multi_start ];
@@ -223,15 +223,15 @@
 
 						form_data.push(field_data);
  					}
-		
+
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
 				},
 				get_fieldwise_data: function ( field ) {
-
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
+					var textarea_type = field.get(0).className.split(" ")[0]	;
 					formwise_data.value = '';
 					switch ( node_type ) {
 						case 'input':
@@ -249,7 +249,14 @@
 							formwise_data.value = field.val();
 							break;
 						case 'textarea':
-							formwise_data.value = field.val();
+							switch ( textarea_type ) {
+								case 'wysiwyg':
+									tinyMCE.triggerSave();
+									formwise_data.value = field.val();
+									break;
+								default:
+									formwise_data.value = field.val();
+							}
 							break;
 						default:
 					}
@@ -288,7 +295,7 @@
 				},
 				form_submit_event: function () {
 					$('form.register').on('submit', function ( event ) {
-						
+
 						if( ! $this.valid() ) {
 							return;
 						}
@@ -416,7 +423,7 @@
 	};
 
 	$(function () {
-		 $('form.register').ur_form_submission();  
+		 $('form.register').ur_form_submission();
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
 			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'yy-mm-dd').datepicker({

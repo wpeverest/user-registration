@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 // Include core functions (available in both admin and frontend).
 include( UR_ABSPATH . 'includes/functions-ur-page.php' );
 include( UR_ABSPATH . 'includes/functions-ur-account.php' );
+include( UR_ABSPATH . 'includes/functions-ur-deprecated.php' );
 
 /**
  * Define a constant if it is not already defined.
@@ -343,9 +344,10 @@ function ur_get_field_type( $field_key ) {
 			case 'file':
 				$field_type = 'file';
 				break;
-			case 'mailchimp':
 			case 'privacy_policy':
 				$field_type = 'privacy-policy';
+				break;
+			case 'mailchimp':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -462,7 +464,7 @@ function ur_get_user_field_only() {
 
 
 /**
- * Get all extra form fields 
+ * Get all extra form fields
  *
  * @return array
 */
@@ -521,7 +523,7 @@ function ur_get_registered_form_fields() {
 /**
  * @return mixed|array
  */
-function ur_get_general_settings() {
+function ur_get_general_settings( $id ) {
 	$general_settings = array(
 		'label'      => array(
 			'type'        => 'text',
@@ -534,7 +536,7 @@ function ur_get_general_settings() {
 			'type'        => 'textarea',
 			'label'       => __( 'Description', 'user-registration' ),
 			'name'        => 'ur_general_setting[description]',
-			'placeholder' => __( 'Label', 'user-registration' ),
+			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
 		),
 		'field_name' => array(
@@ -576,7 +578,7 @@ function ur_get_general_settings() {
 		),
 	);
 
-	return apply_filters( 'user_registration_field_options_general_settings', $general_settings );
+	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 
 /**
@@ -587,13 +589,13 @@ function ur_get_general_settings() {
 function ur_load_form_field_class( $class_key ) {
 	$exploded_class = explode( '_', $class_key );
 	$class_path     = UR_FORM_PATH . 'class-ur-' . join( '-', array_map( 'strtolower', $exploded_class ) ) . '.php';
-	$class_name     = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
+	$class_name     = 'UR_Form_Field_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 	$class_path     = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 
 	if ( ! class_exists( $class_name ) ) {
 		if ( file_exists( $class_path ) ) {
 
-			include_once( $class_path );
+			//include_once( $class_path );
 		}
 	}
 
@@ -664,8 +666,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
-
-
 			),
 			array(
 				'type'              => 'select',
@@ -729,11 +729,21 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
 			),
-
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Custom CSS class', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_custom_class',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'			=> ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
+			),
 		)
 	);
-	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
+	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
 	return $arguments['setting_data'];
 
@@ -1020,7 +1030,7 @@ function check_username( $username ) {
 		if( is_numeric( $last_char ) ) {
 
 			$strip_last_char = substr( $username, 0, -1 );
-			
+
 			$last_char = $last_char+1;
 
 			$username = $strip_last_char.$last_char;
@@ -1077,6 +1087,16 @@ function ur_get_user_login_option() {
 
 function ur_back_link( $label, $url ) {
 	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+}
+
+/**
+ * wp_doing ajax() is introduced in core @since 4.7, 
+ * Filters whether the current request is a WordPress Ajax request.
+ */
+if ( ! function_exists( 'wp_doing_ajax' ) ) {
+	function wp_doing_ajax() {
+		return apply_filters( 'wp_doing_ajax', defined( 'DOING_AJAX' ) && DOING_AJAX );
+	}
 }
 
 /**
@@ -1152,3 +1172,14 @@ function ur_delete_expired_transients() {
 	return absint( $rows + $rows2 );
 }
 add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
+
+function get_wp_editor( $args ) {
+
+		$settings = array(
+			'media_buttons' => false,
+			'editor_class'  => 'wysiwyg input-text ur-frontend-field'
+		);
+		ob_start();
+		wp_editor( '', $args['id'], $settings );
+		return ob_get_clean();
+	}

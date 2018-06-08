@@ -30,6 +30,8 @@ $frontend = UR_Frontend::instance();
 
 $form_template = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 
+$custom_class = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
+
 $template_class = '';
 
 if ( $form_template == 'Bordered' ) {
@@ -40,17 +42,17 @@ if ( $form_template == 'Bordered' ) {
 
 	$template_class = 'ur-frontend-form--flat';
 
-} else if($form_template == 'Rounded'){	
+} else if($form_template == 'Rounded'){
 
-	$template_class = 'ur-frontend-form--rounded';	
+	$template_class = 'ur-frontend-form--rounded';
 
-} else if($form_template == 'Rounded Edge'){	
+} else if($form_template == 'Rounded Edge'){
 
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
-} 
+}
 
 ?>
-	<div class='ur-frontend-form <?php echo $template_class; ?>' id='ur-frontend-form'>
+	<div class='ur-frontend-form <?php echo $template_class .' '. $custom_class; ?>' id='ur-frontend-form'>
 		<form method='post' class='register'
 		      data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
 
@@ -95,23 +97,18 @@ if ( $form_template == 'Bordered' ) {
 			<?php } // End foreach().
 
 			if ( $is_field_exists ) {
-
 				?>
-				<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;">
-
-					<?php
-
-					echo $recaptcha_node;
-
+					<?php if( isset( $recaptcha_node ) ) {
+						echo 	'<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
+					}
 					?>
+					<button type="submit"
+					        class="btn button ur-submit-button">
+						<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
+					</button>
 
-				</div>
-				<button type="submit"
-				        class="btn button ur-submit-button">
-					<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
-				</button>
-
-			<?php }
+				<?php 
+			}
 
 
 			if ( count( $form_data_array ) == 0 ) {

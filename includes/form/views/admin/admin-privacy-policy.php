@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<?php
 
-	UR_Privacy_Policy::get_instance()->get_setting();
+	UR_Form_Field_Privacy_Policy::get_instance()->get_setting();
 
 	?>
 </div>

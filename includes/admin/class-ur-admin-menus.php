@@ -583,7 +583,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				throw new Exception( __( 'Empty form data', 'user-registration' ) );
 			}
 
-			$class_name = 'UR_' . ucwords( $single_field->field_key );
+			$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
 
 			if ( class_exists( $class_name ) ) {
 				echo $class_name::get_instance()->get_admin_template( $single_field );
