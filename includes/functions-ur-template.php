@@ -125,7 +125,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
-			$required = '';
+			$args['required'] = $required = '';
 		}
 
 		if ( is_null( $value ) ) {
