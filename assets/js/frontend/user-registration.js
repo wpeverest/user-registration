@@ -1,7 +1,6 @@
 /* global  user_registration_params */
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
-
 (function ( $ ) {
 
 		var user_registration = {
@@ -28,15 +27,6 @@
 			if ( typeof $.fn.validate === 'undefined' ) {
 				return false;
 			}
-
-			// Validator messages.
-			$.extend( $.validator.messages, {
-				required: user_registration_params.message_required_fields,
-				url: user_registration_params.message_url_fields,
-				email: user_registration_params.message_email_fields,
-				number: user_registration_params.message_number_fields,
-				confirmpassword: user_registration_params.message_confirm_password_fields,
-			});
 
 			// Validate email addresses.
 			$.validator.methods.email = function( value, element ) {
@@ -88,6 +78,16 @@
 			});
 		},
 		validate_field: function ( e ) {
+
+			// Validator messages.
+			$.extend( $.validator.messages, {
+				required: user_registration_params.message_required_fields,
+				url: user_registration_params.message_url_fields,
+				email: user_registration_params.message_email_fields,
+				number: user_registration_params.message_number_fields,
+				confirmpassword: user_registration_params.message_confirm_password_fields,
+			});
+
 			var $this             = $( this ),
 				$parent           = $this.closest( '.form-row' ),
 				validated         = true,
@@ -131,7 +131,6 @@
 	};
 
 	user_registration.init();
-
 
 	var ursL10n = user_registration_params.ursL10n;
 	
@@ -294,6 +293,7 @@
 					this.form_submit_event();
 				},
 				form_submit_event: function () {
+
 					$('form.register').on('submit', function ( event ) {
 
 						if( ! $this.valid() ) {

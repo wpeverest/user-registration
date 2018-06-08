@@ -302,17 +302,16 @@ class UR_Frontend_Scripts {
 					'form_required_fields'             => ur_get_required_fields(),
 					'redirect_url'                     => get_option( 'user_registration_general_setting_redirect_options' ),
 					'login_option'					   => get_option( 'user_registration_general_setting_login_options' ),
-					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields' ),
-					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email' ),
-					'message_url_fields'			   => get_option( 'user_registration_form_submission_error_message_website_URL' ),
-					'message_number_fields'			   => get_option( 'user_registration_form_submission_error_message_number' ),
-					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password' ),
+					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
+					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
+					'message_url_fields'			   => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration') ),
+					'message_number_fields'			   => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.','user-registration' ) ),
+					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
 					'ursL10n'                          => array(
-						'user_successfully_saved' => __( get_option('user_registration_successful_form_submission_message_manual_registation', 'User successfully registered.' ), 'user-registration' ),
-						'user_under_approval' => __( get_option('user_registration_successful_form_submission_message_admin_approval', 'User registered. Wait until admin approves your registration.' ), 'user-registration' ),
-						'user_email_pending' => __( get_option('user_registration_successful_form_submission_message_email_confirmation', 'User registered. Verify your email by clicking on the link sent to your email.'), 'user-registration' ),
-						'captcha_error'           => __( 'Captcha code error, please try again.', 'user-registration' ),
-
+						'user_successfully_saved' 	=> get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
+						'user_under_approval' 		=> get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
+						'user_email_pending' 		=> get_option('user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
+						'captcha_error'             => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
 					),
 				);
 

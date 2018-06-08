@@ -84,6 +84,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'options'  => $all_roles,
 					),
+
 					array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
@@ -124,7 +125,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.','user-registration' )
 					),
-
 
 					array(
 						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
@@ -168,8 +168,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'autoload' => false,
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-
-
 					),
 
 					array(
@@ -292,17 +290,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __( 'This field is required.' ),
-					),
-
-					array(
-						'title'    => __( 'Website URL', 'user-registration' ),
-						'desc'     => __( 'Enter the error message in form submission on website/URL.', 'user-registration' ),
-						'id'       => 'user_registration_form_submission_error_message_website_URL',
-						'type'     => 'text',
-						'desc_tip' => true,
-						'css'      => 'min-width: 350px;',
-						'default'  => __( 'Please enter a valid URL.' ),
+						'default'  => __( 'This field is required.', 'user-registration' ),
 					),
 
 					array(
@@ -312,7 +300,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __( 'Please enter a valid email address.' ),
+						'default'  => __( 'Please enter a valid email address.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Website URL', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on website/URL.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_website_URL',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Please enter a valid URL.', 'user-registration' ),
 					),
 
 					array(
@@ -322,7 +320,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __( 'Please enter a valid number.' ),
+						'default'  => __( 'Please enter a valid number.', 'user-registration' ),
 					),
 
 					array(
@@ -332,7 +330,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __( 'Password and confirm password not matched.' ),
+						'default'  => __( 'Password and confirm password not matched.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Google reCaptcha', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on google recaptcha.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_recaptcha',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Captcha code error, please try again.', 'user-registration' ),
 					),
 
 					array(
