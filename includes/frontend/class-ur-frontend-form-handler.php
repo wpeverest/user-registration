@@ -150,6 +150,13 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Triger validation method for user fields
+	 * Useful for custom fields validation
+	 * @param array $form_field_data
+	 * @param array $form_data
+	 */
 	public static function add_hook( $form_field_data = array(), $form_data = array() ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		foreach ( $form_data as $data ) {
