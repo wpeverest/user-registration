@@ -60,8 +60,7 @@ class UR_Frontend_Form_Handler {
 
 			}
 
-			$user_id = 	( $userdata );
-
+			$user_id = wp_insert_user( $userdata );
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
 			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
