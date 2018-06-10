@@ -69,7 +69,7 @@ class UR_AJAX {
 
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
 
-		$form_id = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 
 		$nonce = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
 
