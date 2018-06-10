@@ -32,7 +32,6 @@ class UR_Frontend_Form_Handler {
 		}
 		self::match_password( $form_data );
 		$form_field_data = self::get_form_field_data( $post_content_array );
-
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
 		if ( count( self::$response_array ) == 0 ) {
@@ -56,12 +55,12 @@ class UR_Frontend_Form_Handler {
 				$part_of_email = explode( "@", $userdata['user_email'] );
 
 				$username = check_username( $part_of_email[0] );
-				
+
 				$userdata['user_login'] = $username;
-				
+
 			}
 
-			$user_id = wp_insert_user( $userdata );
+			$user_id = 	( $userdata );
 
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
@@ -80,7 +79,7 @@ class UR_Frontend_Form_Handler {
 				wp_send_json_success( $success_params );
 			}
 			wp_send_json_error( array(
-				'message' => __( 'Someting error! please try again', 'user-registration' ),
+				'message' => __( 'Something went wrong! please try again', 'user-registration' ),
 			) );
 		} else {
 			wp_send_json_error( array(
@@ -166,19 +165,30 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Sanitize default WordPress User fields
+	 * @param  obj &$form_data
+	 * @return object
+	 */
 	private static function get_sanitize_value( &$form_data ) {
 		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
-		switch ( $field_name ) {
-			case 'user_email':
-				$form_data->value = sanitize_email( $form_data->value );
-				break;
-			case 'user_login':
-				$form_data->value = sanitize_user( $form_data->value );
-				break;
-			case 'user_pass':
-				break;
-			default:
-				$form_data->value = sanitize_text_field( $form_data->value );
+		$default_user_field = ur_get_user_field_only();
+		if( in_array( $field_name, $default_user_field ) ) {
+			switch ( $field_name ) {
+				case 'user_email':
+					$form_data->value = sanitize_email( $form_data->value );
+					break;
+				case 'user_login':
+					$form_data->value = sanitize_user( $form_data->value );
+					break;
+				case 'user_pass':
+					break;
+				case 'user_url':
+					$form_data->value = esc_url_raw( $form_data->value );
+				default:
+					$form_data->value = sanitize_text_field( $form_data->value );
+			}
 		}
 		return $form_data;
 	}
@@ -194,10 +204,10 @@ class UR_Frontend_Form_Handler {
 
 				if( ! in_array( $field_key, $fields_without_prefix ) ) {
 					$field_key = 'user_registration_' . $field_key;
-				} 
-				
+				}
+
 				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
-					$data->value = json_decode( $data->value );	
+					$data->value = json_decode( $data->value );
 				}
 				update_user_meta( $user_id, $field_key, $data->value );
 			}
