@@ -173,6 +173,7 @@ class UR_Frontend_Form_Handler {
 				break;
 			case 'user_url':
 				$form_data->value = esc_url_raw( $form_data->value );
+				break;
 			case 'description':
 			case 'textarea':
 				$form_data->value = sanitize_textarea_field( $form_data->value );
