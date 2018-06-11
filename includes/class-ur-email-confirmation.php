@@ -43,7 +43,7 @@ class UR_Email_Confirmation {
 	 * @return array
 	 */
 	public function ceate_quick_links( $actions, $user ) {
-		
+		//TODO
 		if ( ! current_user_can( 'edit_user' ) ) {
 			return $actions;
 		}

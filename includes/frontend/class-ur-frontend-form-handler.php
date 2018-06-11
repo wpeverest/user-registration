@@ -51,10 +51,9 @@ class UR_Frontend_Form_Handler {
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
 			if( empty( $userdata['user_login'] ) ) {
-
 				$part_of_email = explode( "@", $userdata['user_email'] );
-
 				$username = check_username( $part_of_email[0] );
+
 
 				$userdata['user_login'] = $username;
 
@@ -129,16 +128,17 @@ class UR_Frontend_Form_Handler {
 		foreach ( $form_data as $data ) {
 
 			if ( in_array( $data->field_name, $form_key_list ) ) {
-				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$form_data_index = array_search( $data->field_name, $form_key_list );
 				$single_form_field = $form_field_data[ $form_data_index ];
 				$general_setting = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 				$single_field_key = $single_form_field->field_key;
 				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
-				self::$valid_form_data[ $data->field_name ]->extra_params = array(
+				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label
 				);
+				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
+
 				$hook = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook = $hook . '_message';
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
@@ -178,25 +178,26 @@ class UR_Frontend_Form_Handler {
 	 * @return object
 	 */
 	private static function get_sanitize_value( &$form_data ) {
-		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
-		$default_user_field = ur_get_user_field_only();
-		if( in_array( $field_name, $default_user_field ) ) {
-			switch ( $field_name ) {
-				case 'user_email':
-					$form_data->value = sanitize_email( $form_data->value );
-					break;
-				case 'user_login':
-					$form_data->value = sanitize_user( $form_data->value );
-					break;
-				case 'user_pass':
-					break;
-				case 'user_url':
-					$form_data->value = esc_url_raw( $form_data->value );
-				default:
-					$form_data->value = sanitize_text_field( $form_data->value );
-			}
+		$field_key = isset( $form_data->extra_params->field_key ) ? $form_data->extra_params->field_key : '';
+		switch ( $field_key ) {
+			case 'user_email':
+			case 'email':
+				$form_data->value = sanitize_email( $form_data->value );
+				break;
+			case 'user_login':
+				$form_data->value = sanitize_user( $form_data->value );
+				break;
+			case 'user_url':
+				$form_data->value = esc_url_raw( $form_data->value );
+				break;
+			case 'description':
+			case 'textarea':
+				$form_data->value = sanitize_textarea_field( $form_data->value );
+				break;
+			default:
+				$form_data->value = sanitize_text_field( $form_data->value );
 		}
-		return $form_data;
+		return apply_filters( 'user_registration_validate_field', $form_data, $field_key );
 	}
 
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
