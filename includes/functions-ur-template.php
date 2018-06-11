@@ -222,7 +222,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'url' :
 			case 'date':
 			case 'file':
-			case 'timepicker':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
@@ -277,23 +276,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				break;
 
-			case 'section_title':
-				$field .= '<h3 id="'.esc_attr( $args['id'] ) .'">'.esc_html( $args['label'] ) .'</h3>';
-				break;
-
-			case 'html':
-				$field .= '<span id="'.esc_attr( $args['id'] ) .'">'. $args['html'] .'</span>';
-				break;
-
-			case 'wysiwyg':
-				$field .= get_wp_editor( $args );
-				break;
 		}// End switch().
 
 		if ( ! empty( $field ) ) {
 			$field_html = '';
 
-			if ( $args['label'] && 'checkbox' != $args['type'] && 'section_title' != $args['type'] ) {
+			if ( $args['label'] && 'checkbox' != $args['type'] ) {
 
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
 						'a'    => array(

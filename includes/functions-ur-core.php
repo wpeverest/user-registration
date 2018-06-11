@@ -1173,14 +1173,3 @@ function ur_delete_expired_transients() {
 	return absint( $rows + $rows2 );
 }
 add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
-
-function get_wp_editor( $args ) {
-
-		$settings = array(
-			'media_buttons' => false,
-			'editor_class'  => 'wysiwyg input-text ur-frontend-field'
-		);
-		ob_start();
-		wp_editor( '', $args['id'], $settings );
-		return ob_get_clean();
-	}
