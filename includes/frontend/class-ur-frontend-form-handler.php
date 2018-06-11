@@ -124,7 +124,6 @@ class UR_Frontend_Form_Handler {
 		if ( false === $containsSearch ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
-
 		foreach ( $form_data as $data ) {
 
 			if ( in_array( $data->field_name, $form_key_list ) ) {
@@ -178,26 +177,31 @@ class UR_Frontend_Form_Handler {
 	 * @return object
 	 */
 	private static function get_sanitize_value( &$form_data ) {
-		$field_key = isset( $form_data->extra_params->field_key ) ? $form_data->extra_params->field_key : '';
-		switch ( $field_key ) {
-			case 'user_email':
-			case 'email':
-				$form_data->value = sanitize_email( $form_data->value );
-				break;
-			case 'user_login':
-				$form_data->value = sanitize_user( $form_data->value );
-				break;
-			case 'user_url':
-				$form_data->value = esc_url_raw( $form_data->value );
-				break;
-			case 'description':
-			case 'textarea':
-				$form_data->value = sanitize_textarea_field( $form_data->value );
-				break;
-			default:
-				$form_data->value = sanitize_text_field( $form_data->value );
+		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
+		$default_user_field = ur_get_user_field_only();
+		if( in_array( $field_key, $default_user_field ) ) {
+			switch ( $field_key ) {
+				case 'user_email':
+				case 'email':
+					$form_data->value = sanitize_email( $form_data->value );
+					break;
+				case 'user_login':
+					$form_data->value = sanitize_user( $form_data->value );
+					break;
+				case 'user_url':
+					$form_data->value = esc_url_raw( $form_data->value );
+					break;
+				case 'description':
+					$form_data->value = sanitize_textarea_field( $form_data->value );
+					break;
+				case 'number':
+					$form_data->value = intval( $form_data->value );
+					break;
+				default:
+					$form_data->value = sanitize_text_field( $form_data->value );
+			}
 		}
-		return apply_filters( 'user_registration_validate_field', $form_data, $field_key );
+		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
 	}
 
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {

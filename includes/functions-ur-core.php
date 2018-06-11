@@ -1173,3 +1173,25 @@ function ur_delete_expired_transients() {
 	return absint( $rows + $rows2 );
 }
 add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
+
+add_filter( 'user_registration_sanitize_field', 'user_registration_sanitize_fields', 10, 2 );
+/**
+ * Sanitize fields on frontend submit
+ * @param  array $form_data
+ * @param  string $field_key
+ * @return array
+ */
+function user_registration_sanitize_fields( $form_data, $field_key ) {
+	switch ( $field_key ) {
+		case 'number':
+			$form_data->value = intval( $form_data->value );
+			break;
+		case 'text':
+			$form_data->value = sanitize_text_field( $form_data->value );
+			break;
+		case 'email':
+			$form_data->value =  sanitize_email( $form_data->value );
+			break;
+	}
+	return $form_data;
+}
