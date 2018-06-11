@@ -177,9 +177,12 @@ class UR_Frontend_Form_Handler {
 	 * @return object
 	 */
 	private static function get_sanitize_value( &$form_data ) {
+
 		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
-		$default_user_field = ur_get_user_field_only();
-		if( in_array( $field_key, $default_user_field ) ) {
+		$fields = ur_get_registered_form_fields();
+
+		if( in_array( $field_key, $fields ) ) {
+
 			switch ( $field_key ) {
 				case 'user_email':
 				case 'email':
@@ -191,14 +194,28 @@ class UR_Frontend_Form_Handler {
 				case 'user_url':
 					$form_data->value = esc_url_raw( $form_data->value );
 					break;
+				case 'textarea' :
 				case 'description':
 					$form_data->value = sanitize_textarea_field( $form_data->value );
 					break;
 				case 'number':
 					$form_data->value = intval( $form_data->value );
 					break;
-				default:
+				case 'nickname':
+				case 'first_name':
+				case 'last_name':
+				case 'display_name':
+				case 'text':
+				case 'radio':
+				case 'checkbox':
+				case 'privacy_policy':
+				case 'mailchimp':
+				case 'select':
+				case 'country':
+				case 'file':
+				case 'date':
 					$form_data->value = sanitize_text_field( $form_data->value );
+					break;
 			}
 		}
 		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
@@ -207,20 +224,20 @@ class UR_Frontend_Form_Handler {
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
-				$field_key           = $data->field_name;
-				$field_key_for_param = $data->field_name;
 
+			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
+
+				$field_name           = $data->field_name;
 				$fields_without_prefix = ur_get_fields_without_prefix();
 
-				if( ! in_array( $field_key, $fields_without_prefix ) ) {
-					$field_key = 'user_registration_' . $field_key;
+				if( ! in_array( $field_name, $fields_without_prefix ) ) {
+					$field_name = 'user_registration_' . $field_name;
 				}
 
 				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
 					$data->value = json_decode( $data->value );
 				}
-				update_user_meta( $user_id, $field_key, $data->value );
+				update_user_meta( $user_id, $field_name, $data->value );
 			}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
 		}
