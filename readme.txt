@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -93,6 +93,17 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.4.0 - 12/06/2018 =
+* Refactor - Form fields
+* Remove - Repeated settings from global
+* Feature - Custom validation error messages
+* Feature - Cutomizable/multiple admin emails
+* Feature - Custom class for registration form
+* Feature - Smart tags to email every form field filled
+* Feature - Display email status column in users tab for email confirmation
+* Fix - Display reCaptcha node only if enabled
+* Deprecate - Functions my_simple_crypt() and getToken()
+
 = 1.3.1 - 23/05/2018 =
 * Feature - Extend Data Export/Erasure tool to export/erase user extra information
 * Fix - Translation ready email contents
@@ -131,23 +142,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature - Description box for each field
 * Fix - Date rendering issue
 * Tweak - Remove login header from login shortcode
-
-= 1.2.1 - 16/03/2018 =
-* Feature - Pending users approval notice for admin
-* Feature - Form filled data in email
-* Fix - Pending email issue
-* Fix - Redirect from email url to default login message issue
-* Fix - Load email classes only on demand
-
-
-= 1.2.0 - 22/02/2018 =
-* Fix - Design issue in mobile view.
-* Fix - Missing closing anchor tag.
-* Fix - Remove email token after use.
-* Fix - Store radio field value properly.
-* Fix - Console DOM error for checkbox field.
-* Feature - Redirect to custom page via email.
-* Refactor - Usermeta data store process.
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
 
