@@ -191,14 +191,14 @@ function ur_update_130_post() {
 /**
  * Update DB Version.
  */
-function ur_update_132_db_version() {
-	UR_Install::update_db_version( '1.3.2' );
+function ur_update_140_db_version() {
+	UR_Install::update_db_version( '1.4.0' );
 }
 
 /**
  * Delete unused option.
  */
-function ur_update_132_option() {
+function ur_update_140_option() {
 	$unused_options = array(
 		'user_registration_general_setting_default_user_role',
 		'user_registration_general_setting_enable_strong_password',
