@@ -1258,3 +1258,14 @@ line-height: inherit;
 #smart-tags{
 	text-align: center;
 }
+
+/**
+ * Advanced Fields
+ */
+#ur-setting-form {
+	.ur-general-setting-section_title, .ur-general-setting-html  {
+		.ur-general-setting-description, .ur-general-setting-placeholder, .ur-general-setting-required, .ur-general-setting-hide-label	{
+			display: none;
+		}
+	}
+}
