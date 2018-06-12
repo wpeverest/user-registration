@@ -62,8 +62,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			unset($all_roles_except_admin['administrator']);
 
-
-		$settings = apply_filters(
+			$settings = apply_filters(
 				'user_registration_general_settings', array(
 
 					array(
@@ -72,7 +71,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'  => '',
 						'id'    => 'general_options',
 					),
-          array(
+          			array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
@@ -182,7 +181,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type' => 'sectionend',
 						'id'   => 'account_endpoint_options',
 					),
-
 				)
 			);
 
