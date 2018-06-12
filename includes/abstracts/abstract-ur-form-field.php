@@ -217,7 +217,7 @@ abstract class UR_Form_Field {
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
 
-			$general_setting_wrapper = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . '">';
+			$general_setting_wrapper = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . str_replace(" ", "-", strtolower( $setting_value['label']) ) . '">';
 
 			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . '</label>';
 
@@ -316,8 +316,13 @@ abstract class UR_Form_Field {
 
 
 	public function get_setting() {
+		$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
 
-		echo "<div class='ur-general-setting-block'>";
+		$strip_prefix = substr( $this->id, 18 );
+
+		$class  = 'ur-general-setting-'.$strip_prefix;
+
+		echo "<div class='ur-general-setting-block " . esc_attr( $class ) ."'>";
 
 		echo '<h2>' . __( 'General Settings', 'user-registration' ) . '</h2>';
 
