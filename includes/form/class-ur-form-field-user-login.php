@@ -67,33 +67,18 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 		$username = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( username_exists( $username ) ) {
-
 			add_filter( $filter_hook, function ( $msg ) {
-
 				return __( 'Username already exists.', 'user-registration' );
-
 			} );
-
-		}
-
-		if( empty( $username ) ) {
-			return;
 		}
 
 		$status = validate_username( $username );
 
 		if ( ! $status ) {
-
 			add_filter( $filter_hook, function ( $msg ) {
-
-				return __( 'Invalid username', 'user-registration' );
-
-			} );
+				return __( 'Invalid username ! ', 'user-registration' );
+			});
 		}
-
 	}
-
-
 }
-
 return UR_Form_Field_User_Login::get_instance();

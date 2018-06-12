@@ -34,6 +34,7 @@ class UR_Frontend_Form_Handler {
 		$form_field_data = self::get_form_field_data( $post_content_array );
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
+
 		if ( count( self::$response_array ) == 0 ) {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$userdata = array(
@@ -53,10 +54,7 @@ class UR_Frontend_Form_Handler {
 			if( empty( $userdata['user_login'] ) ) {
 				$part_of_email = explode( "@", $userdata['user_email'] );
 				$username = check_username( $part_of_email[0] );
-
-
 				$userdata['user_login'] = $username;
-
 			}
 
 			$user_id = wp_insert_user( $userdata );
@@ -137,7 +135,6 @@ class UR_Frontend_Form_Handler {
 					'label'     => $single_field_label
 				);
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
-
 				$hook = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook = $hook . '_message';
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
@@ -224,13 +221,12 @@ class UR_Frontend_Form_Handler {
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
-
-				$field_name           = $data->field_name;
+				$field_name = $data->field_name;
+				$field_key = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 				$fields_without_prefix = ur_get_fields_without_prefix();
 
-				if( ! in_array( $field_name, $fields_without_prefix ) ) {
+				if( ! in_array( $field_key, $fields_without_prefix ) ) {
 					$field_name = 'user_registration_' . $field_name;
 				}
 
