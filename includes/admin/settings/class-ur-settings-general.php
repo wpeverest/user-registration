@@ -62,8 +62,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			unset($all_roles_except_admin['administrator']);
 
-
-		$settings = apply_filters(
+			$settings = apply_filters(
 				'user_registration_general_settings', array(
 
 					array(
@@ -72,20 +71,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'  => '',
 						'id'    => 'general_options',
 					),
-
-					array(
-						'title'    => __( 'Default user role', 'user-registration' ),
-						'desc'     => __( 'This option lets you choose user role for frontend registration.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_default_user_role',
-						'default'  => 'subscriber',
-						'type'     => 'select',
-						'class'    => 'ur-enhanced-select',
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-						'options'  => $all_roles,
-					),
-
-					array(
+          			array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
@@ -96,7 +82,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'options'  => ur_login_option(),
 					),
-
 					array(
 						'title'    => __( 'Redirect URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
@@ -104,9 +89,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-
 					),
-
 					array(
 						'title'    => __( 'Registration URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
@@ -115,7 +98,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
 					),
-
 					array(
 						'title'    => __( 'Registration URL label', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
@@ -125,7 +107,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.','user-registration' )
 					),
-
 					array(
 						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
 						'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
@@ -137,7 +118,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'options'  => $all_roles_except_admin,
 					),
-
 					array(
 						'title'    => __( 'My account page', 'user-registration' ),
 						'desc'     => sprintf( __( 'Page contents: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
@@ -149,27 +129,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'display'  => 'none'
 					),
-
-					array(
-						'title'    => __( 'Enable strong password', 'user-registration' ),
-						'desc'     => __( 'Check to use strong password on user registration form.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_enable_strong_password',
-						'default'  => 'yes',
-						'type'     => 'checkbox',
-						'autoload' => false,
-					),
-
-					array(
-						'title'    => __( 'Form submit button label', 'user-registration' ),
-						'desc'     => __( 'This option let you change the submit button label.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_form_submit_label',
-						'default'  => 'Submit',
-						'type'     => 'text',
-						'autoload' => false,
-						'desc_tip' => true,
-						'css'      => 'min-width: 350px;',
-					),
-
 					array(
 						'type' => 'sectionend',
 						'id'   => 'general_options',
@@ -222,7 +181,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type' => 'sectionend',
 						'id'   => 'account_endpoint_options',
 					),
-
 				)
 			);
 
