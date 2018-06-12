@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Nickname
+ * @class    UR_Form_Field_Textarea
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Nickname Class
+ * UR_Form_Field_Textarea Class
  */
-class UR_Nickname extends UR_Form_Field {
+class UR_Form_Field_Textarea extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,23 +35,24 @@ class UR_Nickname extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_nickname';
+		$this->id = 'user_registration_textarea';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Nickname','user-registration' ),
+			'label' => __( 'Textarea','user-registration' ),
 
-			'icon' => 'dashicons dashicons-id',
+			'icon' => 'dashicons dashicons-editor-textcolor',
 		);
-		$this->field_defaults           = array(
+		$this->field_defaults = array(
 
-			'default_label' => __( 'Nickname','user-registration' ),
+			'default_label' => __( 'Textarea','user-registration' ),
 
-			'default_field_name' => 'description',
+			'default_field_name' => 'textarea_' . ur_get_random_number(),
 		);
 	}
+
 
 
 	public function get_registered_admin_fields() {
@@ -65,10 +66,8 @@ class UR_Nickname extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
-
 }
 
-return UR_Nickname::get_instance();
+return UR_Form_Field_Textarea::get_instance();

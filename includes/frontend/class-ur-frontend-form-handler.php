@@ -32,9 +32,9 @@ class UR_Frontend_Form_Handler {
 		}
 		self::match_password( $form_data );
 		$form_field_data = self::get_form_field_data( $post_content_array );
-
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
+
 		if ( count( self::$response_array ) == 0 ) {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$userdata = array(
@@ -52,17 +52,12 @@ class UR_Frontend_Form_Handler {
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
 			if( empty( $userdata['user_login'] ) ) {
-
 				$part_of_email = explode( "@", $userdata['user_email'] );
-
 				$username = check_username( $part_of_email[0] );
-				
 				$userdata['user_login'] = $username;
-				
 			}
 
 			$user_id = wp_insert_user( $userdata );
-
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
 			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
@@ -80,7 +75,7 @@ class UR_Frontend_Form_Handler {
 				wp_send_json_success( $success_params );
 			}
 			wp_send_json_error( array(
-				'message' => __( 'Someting error! please try again', 'user-registration' ),
+				'message' => __( 'Something went wrong! please try again', 'user-registration' ),
 			) );
 		} else {
 			wp_send_json_error( array(
@@ -116,7 +111,6 @@ class UR_Frontend_Form_Handler {
 	}
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
-
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
 		if ( count( $duplicate_field_key ) > 0 ) {
@@ -128,20 +122,19 @@ class UR_Frontend_Form_Handler {
 		if ( false === $containsSearch ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
-
 		foreach ( $form_data as $data ) {
 
 			if ( in_array( $data->field_name, $form_key_list ) ) {
-				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$form_data_index = array_search( $data->field_name, $form_key_list );
 				$single_form_field = $form_field_data[ $form_data_index ];
 				$general_setting = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 				$single_field_key = $single_form_field->field_key;
 				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
-				self::$valid_form_data[ $data->field_name ]->extra_params = array(
+				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label
 				);
+				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$hook = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook = $hook . '_message';
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
@@ -152,6 +145,13 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Triger validation method for user fields
+	 * Useful for custom fields validation
+	 * @param array $form_field_data
+	 * @param array $form_data
+	 */
 	public static function add_hook( $form_field_data = array(), $form_data = array() ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		foreach ( $form_data as $data ) {
@@ -167,40 +167,73 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Sanitize default WordPress User fields
+	 * @param  obj &$form_data
+	 * @return object
+	 */
 	private static function get_sanitize_value( &$form_data ) {
-		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
-		switch ( $field_name ) {
-			case 'user_email':
-				$form_data->value = sanitize_email( $form_data->value );
-				break;
-			case 'user_login':
-				$form_data->value = sanitize_user( $form_data->value );
-				break;
-			case 'user_pass':
-				break;
-			default:
-				$form_data->value = sanitize_text_field( $form_data->value );
+
+		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
+		$fields = ur_get_registered_form_fields();
+
+		if( in_array( $field_key, $fields ) ) {
+
+			switch ( $field_key ) {
+				case 'user_email':
+				case 'email':
+					$form_data->value = sanitize_email( $form_data->value );
+					break;
+				case 'user_login':
+					$form_data->value = sanitize_user( $form_data->value );
+					break;
+				case 'user_url':
+					$form_data->value = esc_url_raw( $form_data->value );
+					break;
+				case 'textarea' :
+				case 'description':
+					$form_data->value = sanitize_textarea_field( $form_data->value );
+					break;
+				case 'number':
+					$form_data->value = intval( $form_data->value );
+					break;
+				case 'nickname':
+				case 'first_name':
+				case 'last_name':
+				case 'display_name':
+				case 'text':
+				case 'radio':
+				case 'checkbox':
+				case 'privacy_policy':
+				case 'mailchimp':
+				case 'select':
+				case 'country':
+				case 'file':
+				case 'date':
+					$form_data->value = sanitize_text_field( $form_data->value );
+					break;
+			}
 		}
-		return $form_data;
+		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
 	}
 
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
-				$field_key           = $data->field_name;
-				$field_key_for_param = $data->field_name;
-
+				$field_name = $data->field_name;
+				$field_key = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 				$fields_without_prefix = ur_get_fields_without_prefix();
 
 				if( ! in_array( $field_key, $fields_without_prefix ) ) {
-					$field_key = 'user_registration_' . $field_key;
-				} 
-				
-				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
-					$data->value = json_decode( $data->value );	
+					$field_name = 'user_registration_' . $field_name;
 				}
-				update_user_meta( $user_id, $field_key, $data->value );
+
+				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
+					$data->value = json_decode( $data->value );
+				}
+				update_user_meta( $user_id, $field_name, $data->value );
 			}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
 		}
@@ -223,7 +256,7 @@ class UR_Frontend_Form_Handler {
 			if ( empty( $confirm_password ) ) {
 				array_push( self::$response_array, __( 'Empty confirm password', 'user-registration' ) );
 			} elseif ( strcasecmp( $confirm_password, $password ) != 0 ) {
-				array_push( self::$response_array, __( 'Password and confirm password not matched', 'user-registration' ) );
+				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
 			}
 		}
 		return $form_data;

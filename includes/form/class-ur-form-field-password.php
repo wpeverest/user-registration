@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Description
+ * @class    UR_Form_Field_Password
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,12 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Description Class
+ * UR_Form_Field_Password Class
  */
-class UR_Description extends UR_Form_Field {
+class UR_Form_Field_Password extends UR_Form_Field {
 
 	private static $_instance;
-
 
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
@@ -35,22 +34,23 @@ class UR_Description extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_description';
+		$this->id = 'user_registration_password';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'User Bio','user-registration' ),
+			'label' => __( 'Password Field','user-registration' ),
 
-			'icon' => 'dashicons dashicons-id-alt',
-		);
+			 'icon' => 'dashicons dashicons-lock',
+
+		 );
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'User Bio','user-registration' ),
-			
-			'default_field_name' => 'description',
+			'default_label' => __( 'Password Field','user-registration' ),
+
+			'default_field_name' => 'password_' . ur_get_random_number(),
 		);
 	}
 
@@ -66,10 +66,8 @@ class UR_Description extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
-
 }
 
-return UR_Description::get_instance();
+return UR_Form_Field_Password::get_instance();

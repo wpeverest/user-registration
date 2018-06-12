@@ -72,7 +72,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'  => '',
 						'id'    => 'general_options',
 					),
-					array(
+          array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
@@ -195,10 +195,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				'user_registration_frontend_messages_settings', array(
 
 					array(
-						'title' => __( 'Frontend Messages', 'user-registration' ),
+						'title' => __( 'Success Messages', 'user-registration' ),
 						'type'  => 'title',
 						'desc'  => '',
-						'id'    => 'frontend_messages_settings',
+						'id'    => 'frontend_success_messages_settings',
 					),
 
 					array(
@@ -218,7 +218,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __('User registered. Verify your email by clicking on the link sent to your email.','user-registration'),
+						'default'  => __( 'User registered. Verify your email by clicking on the link sent to your email.','user-registration' ),
 					),
 
 					array(
@@ -228,14 +228,85 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __('User registered. Wait until admin approves your registration.','user-registration'),
+						'default'  => __( 'User registered. Wait until admin approves your registration.','user-registration' ),
 					),
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'frontend_messages_settings',
+						'id'   => 'frontend_success_messages_settings',
 					),
 
+					array(
+						'title' => __( 'Error Messages', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'frontend_error_message_messages_settings',
+					),
+
+					array(
+						'title'    => __( 'Required', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on required fields.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_required_fields',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'This field is required.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Email', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Email.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Please enter a valid email address.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Website URL', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on website/URL.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_website_URL',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Please enter a valid URL.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Number', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Number.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_number',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Please enter a valid number.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Confirm Password', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Confim Password.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_confirm_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Password and confirm password not matched.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Google reCaptcha', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on google recaptcha.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_recaptcha',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Captcha code error, please try again.', 'user-registration' ),
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'frontend_error_messages_settings',
+					),
 				)
 			);
 
@@ -251,10 +322,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			
 			} elseif ( $current_section === 'frontend-messages') {
 				$settings = $this->get_frontend_messages_settings();
-
 			}
 			UR_Admin_Settings::output_fields( $settings );
 		}
@@ -270,7 +339,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			
 			} elseif ( $current_section === 'frontend-messages') {
 				$settings = $this->get_frontend_messages_settings();
 

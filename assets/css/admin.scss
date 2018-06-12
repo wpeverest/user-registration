@@ -906,9 +906,12 @@
 	input[type="password"],
 	input[type="number"],
 	input[type="date"],
+	input[type="phone"],
+	input[type="timepicker"],
 	textarea,
 	.ui-widget select,
 	select {
+		border: 1px solid #ddd;
 		display: block;
 		width: 100%;
 		color: $color_gray_four;

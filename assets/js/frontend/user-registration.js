@@ -28,14 +28,6 @@
 				return false;
 			}
 
-			// Validator messages.
-			$.extend( $.validator.messages, {
-				required: user_registration_params.i18n_messages_required,
-				url: user_registration_params.i18n_messages_url,
-				email: user_registration_params.i18n_messages_email,
-				number: user_registration_params.i18n_messages_number
-			});
-
 			// Validate email addresses.
 			$.validator.methods.email = function( value, element ) {
 				/* https://stackoverflow.com/questions/2855865/jquery-validate-e-mail-address-regex */
@@ -80,12 +72,22 @@
 						$parent.removeClass( 'user-registration-has-error' );
 					},
 					submitHandler: function( form ) {
-						return false;							
+						return false;
 					}
 				});
 			});
 		},
 		validate_field: function ( e ) {
+
+			// Validator messages.
+			$.extend( $.validator.messages, {
+				required: user_registration_params.message_required_fields,
+				url: user_registration_params.message_url_fields,
+				email: user_registration_params.message_email_fields,
+				number: user_registration_params.message_number_fields,
+				confirmpassword: user_registration_params.message_confirm_password_fields,
+			});
+
 			var $this             = $( this ),
 				$parent           = $this.closest( '.form-row' ),
 				validated         = true,
@@ -130,9 +132,8 @@
 
 	user_registration.init();
 
-
 	var ursL10n = user_registration_params.ursL10n;
-
+	
 	$.fn.ur_form_submission = function () {
 
 		// traverse all nodes
@@ -182,7 +183,7 @@
 									switch ( field_type ) {
 										case 'checkbox':
 										case 'radio':
-											this_field_value = this_field.prop('checked') ? this_field.val() : '';										
+											this_field_value = this_field.prop('checked') ? this_field.val() : '';
 											break;
 										default:
 											this_field_value = this_field.val();
@@ -204,10 +205,10 @@
 						if ( field_type == 'checkbox' ) {
 							var field_value_json = JSON.stringify(field_value);
 						}
-						else if ( field_type == 'radio') {		
+						else if ( field_type == 'radio') {
 							var field_value_json = field_value[0];
 						} else {
-							var field_value_json = field.val();	
+							var field_value_json = field.val();
 						}
 
 						var single_form_field_name = multi_value_field[ multi_start ];
@@ -221,15 +222,15 @@
 
 						form_data.push(field_data);
  					}
-		
+
 					$(document).trigger("user_registration_frontend_form_data_filter", [ form_data ]);
 					return form_data;
 				},
 				get_fieldwise_data: function ( field ) {
-
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
+					var textarea_type = field.get(0).className.split(" ")[0]	;
 					formwise_data.value = '';
 					switch ( node_type ) {
 						case 'input':
@@ -247,7 +248,14 @@
 							formwise_data.value = field.val();
 							break;
 						case 'textarea':
-							formwise_data.value = field.val();
+							switch ( textarea_type ) {
+								case 'wysiwyg':
+									tinyMCE.triggerSave();
+									formwise_data.value = field.val();
+									break;
+								default:
+									formwise_data.value = field.val();
+							}
 							break;
 						default:
 					}
@@ -287,7 +295,7 @@
 				form_submit_event: function () {
 
 					$('form.register').on('submit', function ( event ) {
-						
+
 						if( ! $this.valid() ) {
 							return;
 						}
@@ -415,7 +423,7 @@
 	};
 
 	$(function () {
-		 $('form.register').ur_form_submission();  
+		 $('form.register').ur_form_submission();
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
 			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'yy-mm-dd').datepicker({

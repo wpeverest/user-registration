@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Admin
+ * @class    UR_Form_Field_Nickname
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,11 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Admin Class
+ * UR_Form_Field_Nickname Class
  */
-class UR_Privacy_Policy extends UR_Form_Field {
+class UR_Form_Field_Nickname extends UR_Form_Field {
 
 	private static $_instance;
+
 
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
@@ -34,28 +35,25 @@ class UR_Privacy_Policy extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_privacy_policy';
+		$this->id = 'user_registration_nickname';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Privacy Policy', 'user-registration' ),
+			'label' => __( 'Nickname','user-registration' ),
 
-			'icon' => 'dashicons dashicons-yes',
+			'icon' => 'dashicons dashicons-id',
 		);
+		$this->field_defaults           = array(
 
-		$this->field_defaults = array(
+			'default_label' => __( 'Nickname','user-registration' ),
 
-			'default_label' => __( 'Privacy Policy', 'user-registration' ),
-
-			'default_field_name' => 'privacy_policy_' . ur_get_random_number(),
+			'default_field_name' => 'description',
 		);
 	}
 
-	/**
-	 * @return string
-	 */
+
 	public function get_registered_admin_fields() {
 
 		return '<li id="' . $this->id . '_list "
@@ -66,15 +64,11 @@ class UR_Privacy_Policy extends UR_Form_Field {
 	}
 
 
-	/**
-	 * @param $single_form_field
-	 * @param $form_data
-	 * @param $filter_hook
-	 * @param $form_id
-	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// TODO: Implement validation() method.
+
 	}
+
+
 }
 
-return UR_Privacy_Policy::get_instance();
+return UR_Form_Field_Nickname::get_instance();

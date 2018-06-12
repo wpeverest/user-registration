@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Email
+ * @class    UR_Form_Field_Text
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Email Class
+ * UR_Form_Field_Text Class
  */
-class UR_Email extends UR_Form_Field {
+class UR_Form_Field_Text extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,24 +35,24 @@ class UR_Email extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_email';
+		$this->id = 'user_registration_text';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Secondary Email ','user-registration' ),
+			'label' => __( 'Input Field', 'user-registration' ),
 
-			'icon' => 'dashicons dashicons-email-alt',
+			'icon' => 'dashicons dashicons-format-aside',
 		);
+
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Secondary Email','user-registration' ),
+			'default_label' => __( 'Input Field', 'user-registration' ),
 
-			'default_field_name' => 'email_' . ur_get_random_number(),
+			'default_field_name' => 'input_box_' . ur_get_random_number(),
 		);
 	}
-
 
 
 	public function get_registered_admin_fields() {
@@ -67,8 +67,23 @@ class UR_Email extends UR_Form_Field {
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// TODO: Implement validation() method.
-	}
+		$required = isset( $single_form_field->label ) ? $single_form_field->general_setting->required : 'no';
 
+		$field_label = isset( $form_data->label ) ? $form_data->label : '';
+
+		$value = isset( $form_data->value ) ? $form_data->value : '';
+
+		if ( 'yes' == $required && ! empty( $value ) ) {
+
+			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
+
+				return __( $field_label . ' is required.', 'user-registration' );
+
+			} );
+
+		}
+
+	}
 }
 
-return UR_Email::get_instance();
+return UR_Form_Field_Text::get_instance();

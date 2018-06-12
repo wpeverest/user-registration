@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Pass
+ * @class    UR_Form_Field_User_Pass
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Pass Class
+ * UR_Form_Field_User_Pass Class
  */
-class UR_User_Pass extends UR_Form_Field {
+class UR_Form_Field_User_Pass extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -108,4 +108,4 @@ class UR_User_Pass extends UR_Form_Field {
 	}
 }
 
-return UR_User_Pass::get_instance();
+return UR_Form_Field_User_Pass::get_instance();

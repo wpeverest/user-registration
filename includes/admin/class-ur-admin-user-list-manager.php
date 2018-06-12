@@ -65,7 +65,6 @@ class UR_Admin_User_List_Manager {
 			return $actions;
 		}
 
-
 		$approve_link = add_query_arg( array( 'action' => 'approve', 'user' => $user->ID ) );
 		$approve_link = remove_query_arg( array( 'new_role' ), $approve_link );
 		$approve_link = wp_nonce_url( $approve_link, 'ur_user_change_status' );

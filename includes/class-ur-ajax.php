@@ -69,7 +69,7 @@ class UR_AJAX {
 
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
 
-		$form_id = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 
 		$nonce = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
 
@@ -247,8 +247,7 @@ class UR_AJAX {
 
 			}
 
-
-			$post_id = wp_insert_post( $post_data );
+			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
 
@@ -292,7 +291,7 @@ class UR_AJAX {
 	}
 
 	public static function sweep_array( &$array ) {
-		
+
 		foreach ( $array as $key => &$value ) {
 
 			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
@@ -319,7 +318,14 @@ class UR_AJAX {
 					array_push( self::$field_key_aray, $value );
 				}
 				if( $key === 'description' ) {
+
 					$value = str_replace('"', "'", $value); //TODO:: use wp_kses to allow certain html
+
+				} elseif( $key == 'html') {
+
+					if ( ! current_user_can( 'unfiltered_html' ) ) {
+						$value = wp_kses_post( $value );
+					}
 				}
 				else{
 					$value = sanitize_text_field( $value );

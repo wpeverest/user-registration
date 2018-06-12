@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_User_Confirm_Password
+ * @class    UR_Form_Field_Email
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_User_Confirm_Password Class
+ * UR_Form_Field_Email Class
  */
-class UR_User_Confirm_Password extends UR_Form_Field {
+class UR_Form_Field_Email extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,21 +35,24 @@ class UR_User_Confirm_Password extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_user_confirm_password';
+		$this->id = 'user_registration_email';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Confirm Password ','user-registration' ),
+			'label' => __( 'Secondary Email ','user-registration' ),
 
-			'icon' => 'dashicons dashicons-lock',
+			'icon' => 'dashicons dashicons-email-alt',
 		);
-		$this->field_defaults           = array(
+		$this->field_defaults = array(
 
-			'default_label' => __( 'Confirm Password','user-registration' ),
+			'default_label' => __( 'Secondary Email','user-registration' ),
+
+			'default_field_name' => 'email_' . ur_get_random_number(),
 		);
 	}
+
 
 
 	public function get_registered_admin_fields() {
@@ -63,10 +66,9 @@ class UR_User_Confirm_Password extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		// TODO: Implement validation() method.
 	}
-
 
 }
 
-return UR_User_Confirm_Password::get_instance();
+return UR_Form_Field_Email::get_instance();

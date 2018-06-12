@@ -2,7 +2,7 @@
 /**
  * UserRegistration Admin.
  *
- * @class    UR_Select
+ * @class    UR_Form_Field_Radio
  * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Select Class
+ * UR_Form_Field_Radio Class
  */
-class UR_Select extends UR_Form_Field {
+class UR_Form_Field_Radio extends UR_Form_Field {
 
 	private static $_instance;
 
@@ -35,22 +35,22 @@ class UR_Select extends UR_Form_Field {
 	 */
 	public function __construct() {
 
-		$this->id = 'user_registration_select';
+		$this->id = 'user_registration_radio';
 
 		$this->form_id = 1;
 
 		$this->registered_fields_config = array(
 
-			'label' => __( 'Select','user-registration' ),
+			'label' => __( 'Radio','user-registration' ),
 
-			'icon' => 'dashicons dashicons-image-flip-vertical',
+			'icon' => 'dashicons dashicons-marker',
 		);
 
 		$this->field_defaults = array(
 
-			'default_label' => __( 'Select','user-registration' ),
+			'default_label' => __( 'Radio','user-registration' ),
 
-			'default_field_name' => 'select_' . ur_get_random_number(),
+			'default_field_name' => 'radio_' . ur_get_random_number(),
 
 		);
 	}
@@ -71,4 +71,4 @@ class UR_Select extends UR_Form_Field {
 	}
 }
 
-return UR_Select::get_instance();
+return UR_Form_Field_Radio::get_instance();
