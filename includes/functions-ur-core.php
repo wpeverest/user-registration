@@ -693,8 +693,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Register' ),
-
-
 			),
 			array(
 				'type'              => 'select',
@@ -784,22 +782,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 		return $post_meta[0];
 	}
 
-	$form_setting_meta_key = str_replace( 'form_setting', 'general_setting', $meta_key );
-
-	$options = get_option( $form_setting_meta_key, $default );
-
-	if ( isset( $options[0] ) && is_array( $options ) ) {
-
-		return $options[0];
-	}
-	if ( '' != $options && 'string' == gettype( $options ) ) {
-
-		return $options;
-	}
-
 	return $default;
-
-
 }
 
 /**

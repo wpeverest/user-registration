@@ -240,9 +240,10 @@ class UR_Frontend_Scripts {
 
 			self::enqueue_script( 'user-registration' );
 			self::enqueue_script('ur-jquery-validate');
+ 				
+ 			$enable = ur_get_single_post_meta( $post->ID, 'user_registration_form_setting_enable_strong_password' );
 
-			if ( 'yes' == get_option( 'user_registration_general_setting_enable_strong_password' ) ) {
-
+			if ( 'yes' === $enable ) {
 				self::enqueue_script( 'ur-password-strength-meter' );
 			}
 		}
