@@ -167,8 +167,11 @@ class UR_Shortcodes {
 
 		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 
-		wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
-
+		if ( 'yes' === $enable_strong_password ) {
+			wp_enqueue_script( 'ur-password-strength-meter' );
+			wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
+		}
+		
 		$recaptcha_enable = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
 
 		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );

@@ -651,7 +651,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 	$all_roles = ur_get_default_admin_roles();
 
-
 	$arguments = array(
 		'form_id' => $form_id,
 
@@ -692,7 +691,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Register' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 			),
 			array(
 				'type'              => 'select',
@@ -890,7 +889,6 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 					}
 
 				}
-
 
 			}
 

@@ -194,7 +194,6 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
 				'version' => UR_VERSION,
 			),
-			
 			'ur-google-recaptcha'        => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
@@ -237,16 +236,10 @@ class UR_Frontend_Scripts {
 		self::register_styles();
 
 		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
-
 			self::enqueue_script( 'user-registration' );
 			self::enqueue_script('ur-jquery-validate');
- 				
- 			$enable = ur_get_single_post_meta( $post->ID, 'user_registration_form_setting_enable_strong_password' );
-
-			if ( 'yes' === $enable ) {
-				self::enqueue_script( 'ur-password-strength-meter' );
-			}
 		}
+
 		if ( is_ur_lost_password_page() ) {
 			self::enqueue_script( 'ur-lost-password' );
 		}
