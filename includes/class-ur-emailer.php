@@ -39,16 +39,25 @@ class UR_Emailer {
 		), 10, 3 );
 	}
 
+	/**
+	 * @return string sender's email
+	 */
 	public static function ur_sender_email() {
 		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
 		return $sender_email;
 	}
 
+	/**
+	 * @return string sender's name
+	 */
 	public static function ur_sender_name() {
 		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
 		return $sender_name;
 	}
 
+	/**
+	 * @return string email header
+	 */
 	public static function ur_get_header() {
 		$header = "From: ". self::ur_sender_name()." <".self::ur_sender_email().">\r\n";
 		$header .= "Reply-To: ".self::ur_sender_email()."\r\n";
@@ -110,12 +119,14 @@ class UR_Emailer {
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value );
 		}
 	}
-
-
 	/**
-	 * @param $email
+	 * @param  string $email
+	 * @param  string $username
+	 * @param  int $user_id
+	 * @param  string $data_html For all fields
+	 * @param  array $name_value For smart tags
+	 * @return void
 	 */
-
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value ) {
 
 		$status = ur_get_user_approval_status( $user_id );
@@ -187,7 +198,12 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param $user_email
+	 * @param  string $user_email
+	 * @param  string $username
+	 * @param  int $user_id
+	 * @param  string $data_html
+	 * @param  $name_value
+	 * @return void
 	 */
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value ) {
 		

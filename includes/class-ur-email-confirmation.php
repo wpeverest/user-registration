@@ -18,9 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 class UR_Email_Confirmation {
-	
+
 	public function __construct() {
 
+		// return if the login option is not email confirmation
 		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}
@@ -102,19 +103,20 @@ class UR_Email_Confirmation {
 		return $val;
 	}
 	
-	public function ur_enqueue_script()
-	{
+	/**
+	 * Enqueque CSS to load notice
+	 * @return void
+	 */
+	public function ur_enqueue_script() {
 		wp_register_style( 'user-registration-css', UR()->plugin_url().'/assets/css/user-registration.css', array(), UR_VERSION ); 
 		wp_enqueue_style('user-registration-css');
 	}
 
-	public function custom_registration_message()
-	{
+	public function custom_registration_message() {
 		return ur_print_notice( __('User successfully registered. Login to continue.','user-registration'));
 	}
 
-	public function custom_registration_error_message()
-	{
+	public function custom_registration_error_message() {
 		return ur_print_notice( __('Token Mismatch!','user-registration'), 'error' );
 	}
 
@@ -126,6 +128,10 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
 	}
 
+	/**
+	 * Compare user token with token in url
+	 * @return void
+	 */
 	public function check_token_before_authenticate() {
 
 		$user_reg_successful = false;
@@ -135,16 +141,13 @@ class UR_Email_Confirmation {
 		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
 			
 			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
-
 			$user = get_user_by( 'id', $user_id );
 
 			if( $user ) {
-
 				$this->get_token( $user_id );
-
 				$this->set_email_status( array(), '', $user_id );
 
-				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '' );
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', array() );
 				
 				add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
