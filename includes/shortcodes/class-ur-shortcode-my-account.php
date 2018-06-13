@@ -24,10 +24,9 @@ class UR_Shortcode_My_Account {
 	 * Get the shortcode content.
 	 *
 	 * @param array $atts
-	 * @return string
+	 * @return mixed
 	 */
 	public static function get( $atts ) {
-
 		return UR_Shortcodes::shortcode_wrapper( array( __CLASS__, 'output' ), $atts );
 	}
 
@@ -96,54 +95,37 @@ class UR_Shortcode_My_Account {
 	public static function edit_profile() {
 
 		$user_id=get_current_user_id();
-
 		$form_id_array=get_user_meta($user_id,'ur_form_id');
-
 		$form_id=0;
 
 		if( isset($form_id_array[0]) ){
-
 			$form_id = $form_id_array[0];
 		}
 
  		$profile = user_registration_form_data( $user_id, $form_id );
-
 		$user_data_obj = get_userdata($user_id);
-
 		$user_data = $user_data_obj->data;
 
-		if(count($profile)<1){
+		if( count( $profile ) < 1 ) {
 			return;
 		}
 
 		// Prepare values
 		foreach ( $profile as $key => $field ) {
-
 			$value = get_user_meta( get_current_user_id(), $key, true );
-
 			$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-
 			$new_key=str_replace('user_registration_','',$key);
 
-
 			if(in_array($new_key,ur_get_registered_user_meta_fields())){
-
 				$value = get_user_meta( get_current_user_id(), (str_replace('user_','',$new_key)), true );
-
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-
 			}elseif(isset($user_data->$new_key) && in_array($new_key,ur_get_user_table_fields())){
-
  				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
 
 			}else if(isset($user_data->display_name) && $key==='user_registration_display_name'){
-
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
-
 			}
-
 		}
-
 
 		ur_get_template( 'myaccount/form-edit-profile.php', array(
 			'profile' => apply_filters( 'user_registration_profile_to_edit', $profile ),
@@ -166,7 +148,6 @@ class UR_Shortcode_My_Account {
 		/**
 		 * After sending the reset link, don't show the form again.
 		 */
-	
 		if ( ! empty( $_GET['reset-link-sent'] ) ) {
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
@@ -210,10 +191,8 @@ class UR_Shortcode_My_Account {
 		$login = trim( $_POST['user_login'] );
 
 		if ( empty( $login ) ) {
-
 			ur_add_notice( __( 'Enter a username or email address.', 'user-registration' ), 'error' );
 			return false;
-
 		} else {
 			// Check on username first, as customers can use emails as usernames.
 			$user_data = get_user_by( 'login', $login );
@@ -225,7 +204,6 @@ class UR_Shortcode_My_Account {
 		}
 
 		$errors = new WP_Error();
-
 		do_action( 'lostpassword_post', $errors );
 
 		if ( $errors->get_error_code() ) {
@@ -245,18 +223,14 @@ class UR_Shortcode_My_Account {
 
 		// Redefining user_login ensures we return the right case in the email.
 		$user_login = $user_data->user_login;
-
 		do_action( 'retrieve_password', $user_login );
-
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 
 		if ( ! $allow ) {
-
 			ur_add_notice( __( 'Password reset is not allowed for this user', 'user-registration' ), 'error' );
 			return false;
 
 		} elseif ( is_wp_error( $allow ) ) {
-
 			ur_add_notice( $allow->get_error_message(), 'error' );
 			return false;
 		}
@@ -303,11 +277,8 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
-
-
 		wp_set_password( $new_pass, $user->ID );
 		self::set_reset_password_cookie();
-
 		wp_password_change_notification( $user );
 	}
 

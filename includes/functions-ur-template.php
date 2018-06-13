@@ -294,7 +294,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( $args['return'] ) {
 			return $field;
 		} else {
-			echo esc_attr( $field );
+			echo $field;
 		}
 	}
 }// End if().
