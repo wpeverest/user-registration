@@ -121,6 +121,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							<th>
 								<label
 									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
+								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
 							</th>
 							<td>	
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
@@ -230,7 +231,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									} endif; ?>
 								<br/>
-								<span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span>
 							</td>
 						</tr>
 						<?php
@@ -364,6 +364,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					foreach ( $post_content_grid as $field ) {
 						$field_name = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 						$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+						$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 						$field_key = isset( $field->field_key ) ? $field->field_key : '';
 
 						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
@@ -378,14 +379,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$field_index            = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
-									'description' => '',
+									'description' => __( $field_description, 'user-registration' ),
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
 								$field_index           = $field_name;
 								$fields[ $field_name ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
-									'description' => '',
+									'description' => __( $field_description, 'user-registration' ),
 								);
 							}
 							switch ( $field_key ) {
