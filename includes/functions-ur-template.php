@@ -186,7 +186,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 
-					$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
+					$field   .= '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 					$field   .= $args['label'] . $required . '</label>';
 					$checkbox_start =0;
 					foreach ( $choices as $choice_index => $choice ) {
@@ -207,10 +207,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
 							<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 					         . $args['label'] . $required . '</label>';
-				}
-
-				if ( $args['description'] ) {
-					$field .= '<span class="description">' . $args['description'] . '</span>';
 				}
 				break;
 
@@ -235,7 +231,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select' :
-				$options = $field = '';
+				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 
@@ -252,9 +248,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<select data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 							' . $options . '
 						</select>';
-				}
-				if ( $args['description'] ) {
-					$field .= '<span class="description">' . $args['description'] . '</span>';
 				}
 				break;
 

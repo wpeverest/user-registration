@@ -26,8 +26,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 	<form class="user-registration-EditProfileForm edit-profile" action="" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-
 				<div class="user-registration-profile-fields">
+
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 
 					<div class="user-registration-profile-fields__field-wrapper">
@@ -35,9 +35,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<?php user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] ); ?>
 						<?php endforeach; ?>
 					</div>
-
 					<?php do_action( 'user_registration_edit_profile_form' ); ?>
-
 					<p>
 						<?php wp_nonce_field( 'save_profile_details' ); ?>
 						<input type="submit" class="user-registration-Button button" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
