@@ -31,7 +31,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 
 					<div class="user-registration-profile-fields__field-wrapper">
-						<?php foreach ( $profile as $key => $field ) : ?>							
+						<?php foreach ( $profile as $key => $field ) : ?>						
 							<?php user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] ); ?>
 						<?php endforeach; ?>
 					</div>

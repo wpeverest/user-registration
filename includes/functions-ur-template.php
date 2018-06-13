@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
  */
-
 function ur_template_redirect() {
 	global $wp;
 
@@ -46,11 +45,9 @@ function ur_login_template_redirect() {
 		$attributes = shortcode_parse_atts( $matches[3] );
 
 		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
-
 		$redirect_url = trim( $redirect_url, ']' );
 		$redirect_url = trim( $redirect_url, '"' );
 		$redirect_url = trim( $redirect_url, "'" );
-
 
 		if ( ! empty( $redirect_url ) ) {
 			wp_redirect( $redirect_url );
@@ -67,9 +64,7 @@ function ur_login_template_redirect() {
  */
 function ur_body_class( $classes ) {
 	$classes = (array) $classes;
-
 	if ( is_ur_account_page() ) {
-
 		$classes[] = 'user-registration-account';
 		$classes[] = 'user-registration-page';
 	}
@@ -186,8 +181,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 
-					$field   .= '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
+					$field   = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 					$field   .= $args['label'] . $required . '</label>';
+					if ( $args['description'] ) {
+						$field .= '<span class="description">' . $args['description'] . '</span>';
+					}
 					$checkbox_start =0;
 					foreach ( $choices as $choice_index => $choice ) {
 
@@ -199,14 +197,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<label>';
 						$field .= ' <input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
 						$field .= trim( $choice ) . ' </label>';
-
-
 						$checkbox_start++;
 					}
 				} else {
 					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
 							<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 					         . $args['label'] . $required . '</label>';
+				    if ( $args['description'] ) {
+						$field .= '<span class="description">' . $args['description'] . '</span>';
+					}
 				}
 				break;
 
@@ -252,7 +251,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio' :
-
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
@@ -273,10 +271,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		}// End switch().
 
 		if ( ! empty( $field ) ) {
+
 			$field_html = '';
-
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
-
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '">' . wp_kses( $args['label'], array(
 						'a'    => array(
 							'href'  => array(),
@@ -287,7 +284,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			}
 
 			$field_html .= $field;
-
 			$container_class = esc_attr( implode( ' ', $args['class'] ) );
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
@@ -298,7 +294,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( $args['return'] ) {
 			return $field;
 		} else {
-			echo $field;
+			echo esc_attr( $field );
 		}
 	}
 }// End if().
@@ -339,6 +335,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 				foreach ( $post_content_grid as $field ) {
 					$field_name  = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type  = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required    = isset( $general_setting->required ) ? $general_setting->required :'';
@@ -379,11 +376,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
 
-
 						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
-								'description' => '',
+								'description' => __( $field_description, 'user-registration' ),
 								'type'        => $field_type,
 								'field_key'   => $field_key,
 								'required'    => $required,
@@ -391,7 +387,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						} elseif ( in_array( $field_name, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
-								'description' => '',
+								'description' => __( $field_description, 'user-registration' ),
 								'type'        => $field_type,
 								'field_key'   => $field_key,
 								'required'    => $required,
@@ -428,7 +424,6 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 				if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
 					do_action( 'user_registration_account_' . $key . '_endpoint', $value );
-
 					return;
 				}
 			}

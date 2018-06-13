@@ -101,7 +101,6 @@ class UR_Shortcode_My_Account {
 
 		$form_id=0;
 
-
 		if( isset($form_id_array[0]) ){
 
 			$form_id = $form_id_array[0];
@@ -119,7 +118,6 @@ class UR_Shortcode_My_Account {
 
 		// Prepare values
 		foreach ( $profile as $key => $field ) {
-
 
 			$value = get_user_meta( get_current_user_id(), $key, true );
 
