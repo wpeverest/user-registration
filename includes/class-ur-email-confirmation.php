@@ -162,17 +162,13 @@ class UR_Email_Confirmation {
 
 		if( ! isset( $_GET['ur_token'] ) ) {
 			return;
-		}
-		else
-		{		
-			$output = str_split( $_GET['ur_token'], 50 );
+		} else {
 
+			$output = str_split( $_GET['ur_token'], 50 );
 			$user_id = $this->crypt_the_string( $output[1], 'd');
-			
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 			
-			if( $user_token == $_GET['ur_token'] )
-			{				
+			if( $user_token == $_GET['ur_token'] ) {				
 				$user_reg_successful = true;
 				
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
@@ -180,12 +176,9 @@ class UR_Email_Confirmation {
 
 				add_filter('login_message', array( $this,'custom_registration_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_message' ) );
-			}
-			else
-			{
+			} else {
 				add_filter('login_message', array( $this,'custom_registration_error_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_registration_error_message' ) );
-				;
 			}
 		}
 
@@ -242,15 +235,14 @@ class UR_Email_Confirmation {
 		}
 	}
 
-	public function check_email_status( WP_User $user )
-	{
+	public function check_email_status( WP_User $user ) {
+
 		$email_status = get_user_meta($user->ID, 'ur_confirm_email', true);
 
 		do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
-		if( $email_status === '0' )
-		{
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. <a id="resend-email" href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">Resend Verification Link</a>', 'user-registration' );
+		if( $email_status === '0' ) {
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">'. __( 'Resend Verification Link', 'user-registration' ). '</a>' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
@@ -272,7 +264,6 @@ class UR_Email_Confirmation {
 		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
 
 		if ( $email_status === '0' ) {
-
 			$error_message = __( 'Email not verified! Verifiy your email by clicking on the link sent to your email.', 'user-registration' );
 			$result = new WP_Error( 'user_email_not_verified', $error_message );
 		}

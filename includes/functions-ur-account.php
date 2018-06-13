@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 add_filter( 'login_errors', 'login_error_message' );
 
 //Modify error message on invalid username or password
@@ -30,7 +29,7 @@ function login_error_message( $error ) {
 
 	if ( is_int( $pos ) ) {
         //its the correct username with incorrect password
-        $error = __( "The password you entered for the " . $_POST['username'] ."  is incorrect. <a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration')."</a>", "user-registration" );
+        $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registraion' ),  $_POST['username'], "<a href='". $_POST['redirect'] . '&' . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     } 
     return $error;
 }
@@ -82,27 +81,25 @@ function ur_get_account_menu_items() {
 	);
 
 	$user_id = get_current_user_id();
-
 	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
-
 	$form_id = 0;
 
 	if ( isset( $form_id_array[0] ) ) {
-
 		$form_id = $form_id_array[0];
 	}
-	$profile = user_registration_form_data( $user_id, $form_id );
-	if ( count( $profile ) < 1 ) {
 
+	$profile = user_registration_form_data( $user_id, $form_id );
+	
+	if ( count( $profile ) < 1 ) {
 		unset($items['edit-profile']);
 	}
+
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
 		if ( empty( $endpoint ) ) {
 			unset( $items[ $endpoint_id ] );
 		}
 	}
-
 
 	return apply_filters( 'user_registration_account_menu_items', $items );
 }

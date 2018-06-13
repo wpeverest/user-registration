@@ -22,8 +22,6 @@ class UR_Shortcodes {
 	 * Init Shortcodes.
 	 */
 	public static function init() {
-
-
 		$shortcodes = array(
 			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
 			'user_registration_my_account' => __CLASS__ . '::my_account',
@@ -77,8 +75,14 @@ class UR_Shortcodes {
 		) ));
 	}
 
+	/**
+	 * My account page shortcode.
+	 *
+	 * @param mixed $atts
+	 *
+	 * @return string
+	 */
 	public static function login( $atts ) {
-
 		return self::shortcode_wrapper( array( 'UR_Shortcode_Login', 'output' ), $atts,apply_filters('user_registration_login_shortcode',array(
 			'class'  => 'user-registration',
 			'before' => null,
@@ -88,18 +92,17 @@ class UR_Shortcodes {
 
 	/**
 	 * User Registration form shortcode.
+	 * @param mixed $atts
 	 */
 	public static function form( $atts ) {
-		if ( empty( $atts ) ) {
+		if ( empty( $atts ) || ! isset( $atts['id'] ) ) {
 			return '';
 		}
 
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! is_user_logged_in() ) {
-
 			if ( ! $users_can_register ) {
-
 				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only an administrator can add new users.', 'user-registration' ) . '</p>' );
 			}
 		} else {
@@ -119,14 +122,7 @@ class UR_Shortcodes {
 				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
 
 				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( "You are currently logged in as %1s. You don't need another account. %2s", 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
-
 			}
-
-		}
-
-
-		if ( ! isset( $atts['id'] ) ) {
-			return '';
 		}
 
 		$atts = shortcode_atts( array(
@@ -134,7 +130,6 @@ class UR_Shortcodes {
 		), $atts, 'user_registration_form' );
 
 		ob_start();
-
 		self::render_form( $atts['id'] );
 
 		return ob_get_clean();
