@@ -19,35 +19,38 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 	 */
 	class UR_Admin_Profile {
 
-		/**
-		 * Hook in tabs.
-		 */
 		public function __construct() {
-			add_action( 'show_user_profile', array( $this, 'add_customer_meta_fields' ) );
-			add_action( 'edit_user_profile', array( $this, 'add_customer_meta_fields' ) );
-
-			add_action( 'personal_options_update', array( $this, 'save_customer_meta_fields' ) );
-			add_action( 'edit_user_profile_update', array( $this, 'save_customer_meta_fields' ) );
+			add_action( 'show_user_profile', array( $this, 'show_user_extra_fields' ) );
+			add_action( 'edit_user_profile', array( $this, 'show_user_extra_fields' ) );
+			add_action( 'personal_options_update', array( $this, 'update_user_profile' ) );
+			add_action( 'edit_user_profile_update', array( $this, 'update_user_profile' ) );
 		}
 
 		/**
-		 * Get Address Fields for the edit user pages.
-		 *
+		 * @deprecated 1.4.1
+		 * @param array $all_meta_value, int $form_id
+		 */
+		public function get_customer_meta_fields( $all_meta_value, $form_id ) {
+			ur_deprecated_function( 'UR_Admin_Profile::get_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::get_user_meta_by_form_fields' );
+		}
+
+		/**
+		 * Get User extra fields from usermeta and integrate with form
+		 * @param  $user_id
 		 * @return array Fields to display which are filtered through user_registration_profile_meta_fields before being returned
 		 */
-		public function get_customer_meta_fields( $user_id ) {
+		public function get_user_meta_by_form_fields( $user_id ) {
+
 			$show_fields = array();
 			$form_id     = $this->get_user_meta( $user_id, 'ur_form_id' );
-
 			$all_meta_for_user = $this->get_user_meta_by_prefix( $user_id, 'user_registration_' );
+			$form_fields = $this->get_form_fields( $all_meta_for_user, $form_id );
 
-			$extra_meta_fields = $this->get_user_meta_fields( $all_meta_for_user, $form_id );
-
-			if ( ! empty( $extra_meta_fields ) ) {
+			if ( ! empty( $form_fields ) ) {
 				$show_fields = apply_filters( 'user_registration_profile_meta_fields', array(
 					'user_registration' => array(
 						'title'  => sprintf( __( 'User Extra Information %s', 'user-registration' ), '' ),
-						'fields' => $extra_meta_fields,
+						'fields' => $form_fields,
 					),
 				) );
 			}
@@ -55,19 +58,26 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		}
 
 		/**
-		 * Show Address Fields on edit user pages.
+		 * @deprecated 1.4.1
+		 * @param array $all_meta_value, int $form_id
+		 */
+		public function add_customer_meta_fields( $all_meta_value, $form_id ) {
+			ur_deprecated_function( 'UR_Admin_Profile::add_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::show_user_extra_fields' );
+		}
+
+		/**
+		 * Show user extra information in users profile page.
 		 *
 		 * @param WP_User $user
 		 */
-		public function add_customer_meta_fields( $user ) {
+		public function show_user_extra_fields( $user ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
-			$show_fields = $this->get_customer_meta_fields( $user->ID );
+			$show_fields = $this->get_user_meta_by_form_fields( $user->ID );
 
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
-
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
@@ -81,11 +91,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
+						
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
-
 						$attribute_string = '';
+
 						foreach ( $attributes as $name => $value ) {
 							if ( is_bool( $value ) ) {
 								if ( $value ) {
@@ -97,7 +108,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						}
 
 						$field_label = $field['label'];
-
 						$field_type = isset( $field['type'] ) ? $field['type'] : '';
 
 						if ( ! in_array( $field_type, $profile_field_type ) ) {
@@ -155,9 +165,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
-
-									$value = get_user_meta( $user->ID, $key, true );								
-
+									$value = get_user_meta( $user->ID, $key, true );	
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
@@ -233,23 +241,35 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			endforeach;
 		}
 
+		/**
+		 * @deprecated 1.4.1
+		 * @param array $all_meta_value, int $form_id
+		 */
+		public function save_customer_meta_fields( $all_meta_value, $form_id ) {
+			ur_deprecated_function( 'UR_Admin_Profile::save_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::update_user_profile' );
+		}
 
 		/**
-		 * Save Address Fields on edit user pages.
+		 * Save user extra fields on edit user pages.
 		 *
 		 * @param int $user_id User ID of the user being saved
 		 */
-		public function save_customer_meta_fields( $user_id ) {
+		public function update_user_profile( $user_id ) {
 
-			$save_fields = $this->get_customer_meta_fields( $user_id );
+			$save_fields = $this->get_user_meta_by_form_fields( $user_id );
 
 			foreach ( $save_fields as $fieldset ) {
 				foreach ( $fieldset['fields'] as $key => $field ) {
-
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
-						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-							update_user_meta( $user_id, $key, $_POST[ $key ] );
+						if ( isset( $_POST[ $key ] ) ) {
+							if( is_array( $_POST[ $key ] ) ) {
+								$values = array_map( 'sanitize_text_field', $_POST[ $key ] );
+								update_user_meta( $user_id, $key, $values );
+							}
 						} 
+						else {
+							update_user_meta( $user_id, $key, '' );
+						}
 					} elseif ( isset( $_POST[ $key ] ) ) {
 						update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 					}
@@ -259,11 +279,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 		/**
 		 * Get user meta for a given key, with fallbacks to core user info for pre-existing fields.
-		 *
-		 * @since 3.1.0
-		 *
 		 * @param int    $user_id User ID of the user being edited
-		 * @param string $key     Key for user meta field
+		 * @param string $key  key for user meta field
 		 *
 		 * @return string
 		 */
@@ -281,38 +298,27 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		}
 
 		/**
-		 * Get user meta for a given key, with fallbacks to core user info for pre-existing fields.
-		 *
-		 * @since 3.1.0
+		 * Get user meta for a given key prefix, with fallbacks to core user info for pre-existing fields.
 		 *
 		 * @param int    $user_id User ID of the user being edited
-		 * @param string $key     Key for user meta field
-		 *
+		 * @param string $key_prefix
 		 * @return array
 		 */
 		protected function get_user_meta_by_prefix( $user_id, $key_prefix ) {
 
 			$values = get_user_meta( $user_id );
-
 			$return_values = array();
 
 			if ( gettype( $values ) != 'array' ) {
-
 				return $return_values;
 			}
 
 			foreach ( $values as $meta_key => $value ) {
-
 				if ( substr( $meta_key, 0, strlen( $key_prefix ) ) == $key_prefix ) {
-
 					if ( isset( $value[0] ) ) {
-
 						$return_values[ $meta_key ] = $value[0];
-
 					} elseif ( gettype( $values ) == 'string' ) {
-
 						$return_values[ $meta_key ] = $value;
-
 					}
 				}
 			}
@@ -320,7 +326,20 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			return $return_values;
 		}
 
-		protected function get_user_meta_fields( $all_meta_value, $form_id ) {
+		/**
+		 * @deprecated 1.4.1
+		 * @param array $all_meta_value, int $form_id
+		 */
+		public function get_user_meta_fields( $all_meta_value, $form_id ) {
+			ur_deprecated_function( 'UR_Admin_Profile::get_user_meta_fields', '1.4.1', 'UR_Admin_Profile::get_form_fields' );
+		}
+
+		/**
+		 * Get all the registration form fields
+		 * @param $all_meta_value
+		 * @param int $form_id
+		 */
+		protected function get_form_fields( $all_meta_value, $form_id ) {
 
 			$post_id   = $form_id;
 			$args      = array(
@@ -328,46 +347,34 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				'post_status' => 'publish',
 				'post__in'    => array( $post_id ),
 			);
+
 			$post_data = get_posts( $args );
-
 			$post_content = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
-
 			$fields = array();
-
 			$post_content_array = json_decode( $post_content );
 
 			if ( gettype( $post_content_array ) != 'array' ) {
-
 				return $fields;
 			}
+
 			$all_meta_value_keys = array_keys( $all_meta_value );
 
 			foreach ( $post_content_array as $post_content_row ) {
-
 				foreach ( $post_content_row as $post_content_grid ) {
-
 					foreach ( $post_content_grid as $field ) {
-
 						$field_name = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
-
 						$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
-
 						$field_key = isset( $field->field_key ) ? $field->field_key : '';
 
 						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
-
 							$field_label_array = explode( '_', $field->general_setting->field_name );
-
 							$field_label = join( ' ', array_map( 'ucwords', $field_label_array ) );
-
 						}
 
 						if ( $field_name != '' ) {
-
 							$field_index = '';
 
 							if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
-
 								$field_index            = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
@@ -375,7 +382,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
-
 								$field_index           = $field_name;
 								$fields[ $field_name ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
@@ -385,56 +391,43 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							switch ( $field_key ) {
 
 								case 'select':
-
 									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
-
 										foreach ( $option_data as $index_data => $option ) {
-
 											$fields[ $field_index ]['options'][ $option ] = $option;
 										}
 										$fields[ $field_index ]['type']  = 'select';
 										$fields[ $field_index ]['class'] = '';
 									}
 									break;
-								case 'radio':
 
+								case 'radio':
 									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
-
 										foreach ( $option_data as $index_data => $option ) {
-
 											$fields[ $field_index ]['options'][ $option ] = $option;
 										}
 										$fields[ $field_index ]['type']  = 'radio';
-
 										$fields[ $field_index ]['class'] = '';
 									}
 									break;
 
 								case 'country':
-
 									$country = ur_load_form_field_class( $field_key );
-
 									$fields[ $field_index ]['options'] = $country::get_instance()->get_country();
-
 									$fields[ $field_index ]['type'] = 'country';
-
 									$fields[ $field_index ]['class'] = '';
-
 									break;
+
 								case 'textarea':
-
 									$fields[ $field_index ]['type'] = 'textarea';
-
 									$fields[ $field_index ]['class'] = '';
-
 									break;
+
 								case 'mailchimp':
 								case 'checkbox':
-
 									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
 
 									$choices_data = explode( ",", $choices_data );
@@ -445,6 +438,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$fields[ $field_index ]['class'] = '';
 
 									break;
+
 								case 'privacy_policy':
 									$fields[ $field_index ]['type']  = 'privacy_policy';
 									break;
@@ -461,13 +455,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						}
 					}// End foreach().
 				}// End foreach().
-			}// End foreach().
-			
+			}// End foreach().	
 			return $fields;
 		}
-
 	}
-
 endif;
 
 return new UR_Admin_Profile();
