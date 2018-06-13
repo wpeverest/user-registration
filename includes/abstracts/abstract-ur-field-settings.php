@@ -14,11 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class UR_Field_Settings {
 
 	public $field_id;
-
 	public $fields_html;
-
 	public $field_data = array();
-
 	public $default_class = 'ur_advance_setting';
 
 	/**
@@ -29,7 +26,6 @@ abstract class UR_Field_Settings {
 	public function get_advance_setting_data( $key ) {
 
 		if ( isset( $this->field_data->advance_setting->$key ) ) {
-
 			return $this->field_data->advance_setting->$key;
 		}
 
@@ -57,7 +53,6 @@ abstract class UR_Field_Settings {
 		foreach ( $fields as $field_key => $field ) {
 
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr($field_key) . '">';
-
 			$this->fields_html .= '<label for="' . esc_attr($field['class']) . '">' . esc_html($field['label']) . '</label>';
 
 			$value = $this->get_advance_setting_data( $field_key ) == '' ? $field['default'] : $this->get_advance_setting_data( $field_key );
@@ -65,27 +60,20 @@ abstract class UR_Field_Settings {
 			switch ( $field['type'] ) {
 
 				case 'text':
-
 					$this->fields_html .= '<input data-advance-field="' . esc_attr($field_key) . '" value="' . esc_attr($value) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
 
 					if ( true == $field['required'] ) {
-
 						$this->fields_html .= ' required ';
-
 					}
 
 					$this->fields_html .= ' />';
-
 					break;
 
 				case 'select':
-
 					$this->fields_html .= '<select data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '" ';
 
 					if ( true == $field['required'] ) {
-
 						$this->fields_html .= ' required ';
-
 					}
 
 					$field_options = isset( $field['options'] ) ? $field['options'] : array();
@@ -93,37 +81,27 @@ abstract class UR_Field_Settings {
 					$this->fields_html .= '>';
 
 					foreach ( $field_options as $option_key => $option_value ) {
-
 						$required = $value === $option_key ? 'selected="selected"' : '';
-
 						$this->fields_html .= '<option value="' . esc_attr($option_key) . '" ' . $required . '>' . esc_html($option_value) . '</option>';
-
 					}
 
 					$this->fields_html .= '</select>';
-
 					break;
 
 				case 'textarea':
-
 					$this->fields_html .= '<textarea data-advance-field="' . esc_attr($field_key) . '" class="' . esc_attr($field['class']) . '" type="text" name="' . esc_attr($field['name']) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr($field['placeholder']) . '"';
 
 					if ( true == $field['required'] ) {
-
 						$this->fields_html .= ' required ';
-
 					}
 
 					$this->fields_html .= '>' . esc_html($value) . '</textarea>';
-
 					break;
 
 				default:
-
 			}
 
 			$this->fields_html .= '</div>';
 		}// End foreach().
 	}
-
 }

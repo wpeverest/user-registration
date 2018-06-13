@@ -2,8 +2,7 @@
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
 (function ( $ ) {
-
-		var user_registration = {
+	var user_registration = {
 		$user_registration: $( '.ur-frontend-form form.register' ),
 		init: function() {
 			this.init_datepicker();
@@ -446,6 +445,4 @@ var onloadURCallback = function () {
 		'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
 
 	});
-
-
 };

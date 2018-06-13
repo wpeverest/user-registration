@@ -2,18 +2,15 @@
  * UserRegistration Admin JS
  * global i18n_admin
  */
-
 jQuery(function () {
 
 	var mySelect = jQuery('#user_registration_general_setting_login_options option:selected').val();
-
 	if ( mySelect == 'email_confirmation' ) {
 		jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
 		jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
 	}
 
 	jQuery("body").on('select2:select', "#user_registration_general_setting_login_options", function () {
-
 		if ( jQuery(this).find('option:selected').val() == "email_confirmation" ) {
 			jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
 			jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
@@ -23,7 +20,6 @@ jQuery(function () {
 		}
 	});
 });
-
 
 jQuery(function ( $ ) {
 	// Tooltips
@@ -837,21 +833,14 @@ jQuery(function ( $ ) {
 
 			}
 		});
-
-
 	}
 
 	function ur_math_ceil ( value ) {
-
 		return Math.ceil(value, 0);
-
 	}
 
 	function ur_parse_int ( value ) {
-
 		return parseInt(value, 0);
 	}
 
-
 }(jQuery, window.user_registration_admin_data));
-
