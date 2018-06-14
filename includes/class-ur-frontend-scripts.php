@@ -174,6 +174,11 @@ class UR_Frontend_Scripts {
 	private static function register_scripts() {
 		$suffix           = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$register_scripts = array(
+			'ur-inputmask'       => array(
+				'src'     => self::get_asset_url( 'assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => '4.0.0-beta.58',
+			),
 			'ur-jquery-validate' => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
@@ -198,6 +203,7 @@ class UR_Frontend_Scripts {
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
 				'version' => '2.0.0',
+
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
@@ -238,6 +244,7 @@ class UR_Frontend_Scripts {
 		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
 			self::enqueue_script( 'user-registration' );
 			self::enqueue_script('ur-jquery-validate');
+			self::enqueue_script( 'ur-inputmask' );
 		}
 
 		if ( is_ur_lost_password_page() ) {

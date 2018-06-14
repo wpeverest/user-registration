@@ -7,9 +7,15 @@
 		init: function() {
 			this.init_datepicker();
 			this.load_validation();
+			this.init_inputMask();
 
 			// Inline validation
 			this.$user_registration.on( 'input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field );
+		},
+		init_inputMask: function() {
+			if ( typeof $.fn.inputmask !== 'undefined' ) {
+				$( '.ur-masked-input' ).inputmask();
+			}
 		},
 		init_datepicker: function () {
 			$( '.date-picker-field, .date-picker' ).datepicker({
