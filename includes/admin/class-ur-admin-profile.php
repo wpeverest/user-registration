@@ -91,7 +91,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'radio'
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
-						
+
 						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
@@ -123,18 +123,18 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
 								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
 							</th>
-							<td>	
+							<td>
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
-										foreach ( $field['options'] as $option_key => $option_value ) : ?>						
+										foreach ( $field['options'] as $option_key => $option_value ) : ?>
 											<option value="<?php echo esc_attr( trim ( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim ( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
-								
+
 								<?php elseif ( ! empty( $field['type'] ) && 'country' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
@@ -148,7 +148,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									</select>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
-									<?php 
+									<?php
 									$db_value = get_user_meta( $user->ID, $key, true );
 									if( is_array( $field['options'] ) ) {
 										foreach( $field['options'] as $option_key => $option_value ) {
@@ -166,7 +166,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 									<?php
-									$value = get_user_meta( $user->ID, $key, true );	
+
+									$value = get_user_meta( $user->ID, $key, true );
+
 									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
@@ -193,7 +195,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
 								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
 									<input checked type="checkbox" disabled="disabled"/>
-									
+
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
 									          id="<?php echo esc_attr( $key ); ?>"
@@ -203,7 +205,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										      rows="5"
 										      cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
-								<?php else  :							
+								<?php else  :
 
 									if ( ! empty( $field['type'] ) ) {
 										$data = array(
@@ -227,7 +229,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-										<?php } 
+										<?php }
 
 									} endif; ?>
 								<br/>
@@ -266,7 +268,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$values = array_map( 'sanitize_text_field', $_POST[ $key ] );
 								update_user_meta( $user_id, $key, $values );
 							}
-						} 
+						}
 						else {
 							update_user_meta( $user_id, $key, '' );
 						}
@@ -456,7 +458,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						}
 					}// End foreach().
 				}// End foreach().
-			}// End foreach().	
+			}// End foreach().
+
 			return $fields;
 		}
 	}

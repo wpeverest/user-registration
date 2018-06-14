@@ -397,11 +397,20 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
 							$fields[ 'user_registration_' . $field_name ] = array_merge( $fields[ 'user_registration_' . $field_name ], $extra_params );
 						}
+						$filter_data         = array(
+							'fields'     => $fields,
+							'field'      => $field,
+							'field_name' => $field_name
+						);
+
+						$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data );
+						if ( isset( $filtered_data_array['fields'] ) ) {
+							$fields = $filtered_data_array['fields'];
+						}
 					}// End if().
 				}// End foreach().
 			}// End foreach().
 		}// End foreach().
-
 
 		return $fields;
 	}
