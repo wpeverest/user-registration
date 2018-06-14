@@ -596,6 +596,8 @@
 			}
 			.ur-tab-content {
 				padding: 10px;
+				height: calc(100vh - 85px);
+				overflow-y: auto;
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $color_gray_eight;
@@ -661,6 +663,8 @@
 		box-sizing: border-box;
 		border-left: 1px solid $color_gray_six;
 		padding: 20px;
+		height: calc(100vh - 50px);
+		overflow-y: auto;
 		.ur-single-row {
 			background-color: $color_gray_eight;
 			margin-bottom: 20px;
