@@ -242,9 +242,9 @@ class UR_Frontend_Scripts {
 		self::register_styles();
 
 		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
-			self::enqueue_script( 'user-registration' );
 			self::enqueue_script('ur-jquery-validate');
 			self::enqueue_script( 'ur-inputmask' );
+			self::enqueue_script( 'user-registration' );
 		}
 
 		if ( is_ur_lost_password_page() ) {
