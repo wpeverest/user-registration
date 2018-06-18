@@ -38,13 +38,11 @@ class UR_Settings_Registration_Denied_Email{
 		<?php
 			$settings = apply_filters(
 				'user_registration_registration_denied_email', array(
-
 					array(
 						'type'  => 'title',
 						'desc'  => '',
 						'id'    => 'registration_denied_email',
 					),
-
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
 						'desc'     => __( 'Enable this email sent to admin after successfull user registration.', 'user-registration' ),
@@ -53,7 +51,6 @@ class UR_Settings_Registration_Denied_Email{
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
-
 					array(
 						'title'    => __( 'Email Subject', 'user-registration' ),
 						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
@@ -63,8 +60,6 @@ class UR_Settings_Registration_Denied_Email{
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 					),
-
-
 					array(
 						'title'    => __( 'Email Content', 'user-registration' ),
 						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
@@ -74,7 +69,6 @@ class UR_Settings_Registration_Denied_Email{
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 					),
-
 					array(
 						'type' => 'sectionend',
 						'id'   => 'registration_denied_email',
@@ -89,19 +83,13 @@ class UR_Settings_Registration_Denied_Email{
 	public function ur_get_registration_denied_email() {
 		
 		$message = apply_filters( 'user_registration_get_registration_denied_email', sprintf( __( 
-
 				'Hi {{username}},
- 					<br/>
-               <br/>
- 					You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
- 					<br/>
- 					Unfortunately your registration is denied.
- 					<br/>
-               <br/>
- 					Sorry for the inconvenience.
- 					<br/>
- 					<br/>
- 					Thank You!', 'user-registration' ) ) );
+
+				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+ 				
+ 				Unfortunately your registration is denied. Sorry for the inconvenience.
+ 				
+ 				Thank You!', 'user-registration' ) ) );
 		
 		return $message;
 	}

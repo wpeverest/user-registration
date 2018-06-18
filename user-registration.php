@@ -160,13 +160,11 @@ final class UserRegistration {
 		/**
 		 * Class autoloader.
 		 */
-
 		include_once( UR_ABSPATH . 'includes/class-ur-autoloader.php' );
 
 		/**
 		 * Interfaces.
 		 */
-
 		include_once( UR_ABSPATH . 'includes/interfaces/class-ur-logger-interface.php' );
 		include_once( UR_ABSPATH . 'includes/interfaces/class-ur-log-handler-interface.php' );
 
