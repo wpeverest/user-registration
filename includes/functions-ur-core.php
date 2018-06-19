@@ -399,26 +399,29 @@ function ur_get_required_fields() {
  * @return array
  */
 function ur_get_one_time_draggable_fields() {
-
 	$form_fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_one_time_draggable_form_fields', $form_fields );
 }
 
 /**
- * Get all fiels appearing in my account tab.
+ * Get fields excluding in profile tab
  *
  * @return array
  */
-function ur_get_account_details_fields() {
-
-	return apply_filters( 'user_registration_registered_account_fields', array(
-		'user_email',
+function ur_exclude_profile_details_fields() {
+	return apply_filters( 'user_registration_exclude_profile_fields', array(
 		'user_pass',
 		'user_confirm_password',
-		'user_login',
-		'first_name',
-		'last_name',
+		'privacy_policy'
 	) );
+}
+
+/**
+ * @deprecated 1.4.1
+ * @return void
+ */
+function ur_get_account_details_fields() {
+	ur_deprecated_function( 'ur_get_account_details_fields', '1.4.1', 'ur_exclude_profile_details_fields' );
 }
 
 /**
@@ -427,8 +430,7 @@ function ur_get_account_details_fields() {
  * @return array
  */
 function ur_get_user_profile_field_only() {
-
-	$user_fields = array_diff( ur_get_registered_form_fields(), ur_get_account_details_fields() );
+	$user_fields = array_diff( ur_get_registered_form_fields(), ur_exclude_profile_details_fields() );
 	return apply_filters( 'user_registration_user_profile_field_only', $user_fields );
 }
 

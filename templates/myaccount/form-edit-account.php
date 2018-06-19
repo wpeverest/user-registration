@@ -28,21 +28,6 @@ do_action( 'user_registration_before_edit_account_form' ); ?>
 			<div class="ur-form-grid">
 				<?php do_action( 'user_registration_edit_account_form_start' ); ?>
 
-				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="account_first_name"><?php _e( 'First name', 'user-registration' ); ?> <span class="required">*</span></label>
-					<input type="text" class="user-registration-Input user-registration-Input--text input-text" name="account_first_name" id="account_first_name" value="<?php echo esc_attr( $user->first_name ); ?>" />
-				</p>
-				<p class="user-registration-form-row user-registration-form-row--last form-row form-row-last">
-					<label for="account_last_name"><?php _e( 'Last name', 'user-registration' ); ?> <span class="required">*</span></label>
-					<input type="text" class="user-registration-Input user-registration-Input--text input-text" name="account_last_name" id="account_last_name" value="<?php echo esc_attr( $user->last_name ); ?>" />
-				</p>
-				<div class="clear"></div>
-
-				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
-					<label for="account_email"><?php _e( 'Email address', 'user-registration' ); ?> <span class="required">*</span></label>
-					<input type="email" class="user-registration-Input user-registration-Input--email input-text" name="account_email" id="account_email" value="<?php echo esc_attr( $user->user_email ); ?>" />
-				</p>
-
 				<fieldset>
 					<legend><?php _e( 'Password change', 'user-registration' ); ?></legend>
 

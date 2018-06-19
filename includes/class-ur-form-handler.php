@@ -60,14 +60,12 @@ class UR_Form_Handler {
 		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
-
 		$form_id = 0;
 
-
 		if ( isset( $form_id_array[0] ) ) {
-
 			$form_id = $form_id_array[0];
 		}
+
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
@@ -78,13 +76,12 @@ class UR_Form_Handler {
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox' :
-				
-				if( isset( $_POST[$key] ) && is_array( $_POST[$key] ) ) {
-					$_POST[$key] = $_POST[$key];
-				}
-				else {
-					$_POST[ $key ] = (int) isset( $_POST[ $key ] );
-				}
+					if( isset( $_POST[$key] ) && is_array( $_POST[$key] ) ) {
+						$_POST[$key] = $_POST[$key];
+					}
+					else {
+						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
+					}
 					break;
 				default :
 					$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
@@ -152,7 +149,6 @@ class UR_Form_Handler {
 
 			if ( count( $user_data ) > 0 ) {
 
-
 				$user_data["ID"] = get_current_user_id();
 
 				wp_update_user( $user_data );
@@ -190,43 +186,10 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$account_first_name = ! empty( $_POST['account_first_name'] ) ? ur_clean( $_POST['account_first_name'] ) : '';
-		$account_last_name  = ! empty( $_POST['account_last_name'] ) ? ur_clean( $_POST['account_last_name'] ) : '';
-		$account_email      = ! empty( $_POST['account_email'] ) ? ur_clean( $_POST['account_email'] ) : '';
 		$pass_cur           = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';
 		$pass1              = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
 		$pass2              = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
 		$save_pass          = true;
-
-		$user->first_name = $account_first_name;
-		$user->last_name  = $account_last_name;
-
-		// Prevent emails being displayed, or leave alone.
-		$user->display_name = is_email( $current_user->display_name ) ? $user->first_name : $current_user->display_name;
-
-		// Handle required fields
-		$required_fields = apply_filters( 'user_registration_save_account_details_required_fields', array(
-			'account_first_name' => __( 'First name', 'user-registration' ),
-			'account_last_name'  => __( 'Last name', 'user-registration' ),
-			'account_email'      => __( 'Email address', 'user-registration' ),
-		) );
-
-		foreach ( $required_fields as $field_key => $field_name ) {
-			if ( empty( $_POST[ $field_key ] ) ) {
-				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), '<strong>' . esc_html( $field_name ) . '</strong>' ), 'error' );
-			}
-		}
-
-		if ( $account_email ) {
-			$account_email = sanitize_email( $account_email );
-			if ( ! is_email( $account_email ) ) {
-				ur_add_notice( __( 'Please provide a valid email address.', 'user-registration' ), 'error' );
-			} elseif ( email_exists( $account_email ) && $account_email !== $current_user->user_email ) {
-				ur_add_notice( __( 'This email address is already registered.', 'user-registration' ), 'error' );
-			}
-			$user->user_email = $account_email;
-		}
-
 		if ( ! empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
 			ur_add_notice( __( 'Please fill out all password fields.', 'user-registration' ), 'error' );
 			$save_pass = false;
