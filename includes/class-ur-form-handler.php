@@ -21,7 +21,7 @@ class UR_Form_Handler {
 	public static function init() {
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
-		add_action( 'template_redirect', array( __CLASS__, 'save_account_details' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
@@ -69,7 +69,6 @@ class UR_Form_Handler {
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
-
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
@@ -128,7 +127,6 @@ class UR_Form_Handler {
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
 					if ( $new_key === 'display_name' ) {
-
 						$user_data['display_name'] = $_POST[ $key ];
 					} else {
 						$user_data[ $new_key ] = $_POST[ $key ];
@@ -163,16 +161,25 @@ class UR_Form_Handler {
 		}
 	}
 
-	/**
-	 * Save the password/account details and redirect back to the my account page.
-	 */
-	public static function save_account_details() {
 
+	/**
+	 * @deprecated 1.4.1
+	 * @param $user_id 
+	 * @return void
+	 */
+	public function save_account_details( $user_id ) {
+		ur_deprecated_function( 'UR_Form_Handler::save_account_details', '1.4.1', 'UR_Form_Handler::save_change_password' );
+	}
+
+	/**
+	 * Save the password and redirect back to the my account page.
+	 */
+	public static function save_change_password() {
 		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'save_account_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_account_details' ) ) {
+		if ( empty( $_POST['action'] ) || 'save_change_password' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_change_password' ) ) {
 			return;
 		}
 
@@ -190,7 +197,8 @@ class UR_Form_Handler {
 		$pass1              = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
 		$pass2              = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
 		$save_pass          = true;
-		if ( ! empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
+
+		if ( ( ! empty( $pass_cur ) || empty( $pass_cur ) ) && empty( $pass1 ) && empty( $pass2 ) ) {
 			ur_add_notice( __( 'Please fill out all password fields.', 'user-registration' ), 'error' );
 			$save_pass = false;
 		} elseif ( ! empty( $pass1 ) && empty( $pass_cur ) ) {
@@ -224,7 +232,7 @@ class UR_Form_Handler {
 
 			wp_update_user( $user );
 
-			ur_add_notice( __( 'Account details changed successfully.', 'user-registration' ) );
+			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 
 			do_action( 'user_registration_save_account_details', $user->ID );
 

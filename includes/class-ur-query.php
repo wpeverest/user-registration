@@ -52,7 +52,7 @@ class UR_Query {
 		// Query vars to add to WP.
 		$this->query_vars = array(
 			// My account actions.
-			'edit-account'  => get_option( 'user_registration_myaccount_edit_account_endpoint', 'edit-account' ),
+			'edit-password'  => get_option( 'user_registration_myaccount_edit_account_endpoint', 'edit-password' ),
 			'edit-profile'  => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
 			'lost-password' => get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ),
 			'user-logout'   => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
@@ -69,8 +69,8 @@ class UR_Query {
 		global $wp;
 
 		switch ( $endpoint ) {
-			case 'edit-account' :
-				$title = __( 'Account details', 'user-registration' );
+			case 'edit-password' :
+				$title = __( 'Change Password', 'user-registration' );
 			break;
 			case 'edit-profile' :
 				$title = __( 'Profile Details', 'user-registration' );

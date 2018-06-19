@@ -146,7 +146,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'     => __( 'Endpoint for the "My account &rarr; Edit account" page.', 'user-registration' ),
 						'id'       => 'user_registration_myaccount_edit_account_endpoint',
 						'type'     => 'text',
-						'default'  => 'edit-account',
+						'default'  => 'edit-password',
 						'desc_tip' => true,
 					),
 

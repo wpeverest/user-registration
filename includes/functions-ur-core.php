@@ -84,7 +84,7 @@ if ( ! function_exists( 'is_ur_edit_account_page' ) ) {
 	function is_ur_edit_account_page() {
 		global $wp;
 
-		return ( is_ur_account_page() && isset( $wp->query_vars['edit-account'] ) );
+		return ( is_ur_account_page() && isset( $wp->query_vars['edit-password'] ) );
 	}
 }
 
