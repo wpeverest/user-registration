@@ -25,7 +25,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 *
 		 * @var array
 		 */
-	
 		public $emails = array();
 
 		/**
@@ -39,7 +38,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
-
 			add_action( 'user_registration_admin_field_email_notification', array( $this, 'email_notification_setting' ) );
 
 			$this->emails['UR_Settings_Admin_Email']                = include( 'emails/class-ur-settings-admin-email.php' );
@@ -81,7 +79,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						'id'   => 'general_email_setting',
 					),
 
-					array( 'title' => __( 'Email notifications', 'user-registration' ),  'desc' => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration' ), 'type' => 'title', 'id' => 'email_notification_settings' ),
+					array( 
+						'title' => __( 'Email notifications', 'user-registration' ),
+						'desc' => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration' ), 
+						'type' => 'title', 
+						'id' => 'email_notification_settings'
+					),
 
 					array( 'type' => 'email_notification' ),
 
@@ -153,20 +156,18 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							</tr>
 						</thead>
 						<tbody>
-						
 
 						<?php 
 						$emails = $this->get_emails();
-						foreach( $emails as $email )
-						{	
+						foreach( $emails as $email ) {	
 							echo '<tr><td class="ur-email-settings-table">
-													<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id .'' ) . 
-													'">'. __( $email->title, 'user-registration' ) .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
-										</td>
-										<td class="ur-email-settings-table">
-													<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
-										</td>
-									</tr>';	
+												<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id .'' ) . 
+												'">'. __( $email->title, 'user-registration' ) .'</a>' . ur_help_tip( __($email->description,'user-registration' ) ) . '
+									</td>
+									<td class="ur-email-settings-table">
+												<a class="button tips" data-tip="'. esc_attr__( 'Configure','user-registration' ) .'" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_'. $email->id.'' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>
+									</td>
+								</tr>';	
 						}
 						?>
 						</tbody>
@@ -201,10 +202,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			global $current_section;
 			$emails = $this->get_emails();
 			
-			foreach( $emails as $email )
-			{
-				if( $current_section == 'ur_settings_' . $email->id . '' )
-				{
+			foreach( $emails as $email ) {
+				if( $current_section == 'ur_settings_' . $email->id . '' ) {
 					$settings = new $email;
 					$settings = $settings->get_settings();
 				}

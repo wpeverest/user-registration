@@ -20,7 +20,6 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 	 */
 	class UR_Settings_Integration extends UR_Settings_Page {
 
-
 		/**
 		 * Constructor.
 		 */
@@ -43,14 +42,12 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 			$settings = apply_filters(
 				'user_registration_integration_settings', array(
-
 					array(
 						'title' => __( 'Google reCaptcha Integation', 'user-registration' ),
 						'type'  => 'title',
 						'desc'  => '',
 						'id'    => 'integration_options',
 					),
-
 					array(
 						'title'    => __( 'Site Key', 'user-registration' ),
 						'desc'     => sprintf( __('Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),						'id'       => 'user_registration_integration_setting_recaptcha_site_key',
@@ -70,16 +67,11 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 						'class'    => '',
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
-
 					),
-
-
 					array(
 						'type' => 'sectionend',
 						'id'   => 'general_options',
 					),
-
-
 				)
 			);
 
