@@ -20,7 +20,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 	 */
 	class UR_Settings_General extends UR_Settings_Page {
 
-
 		/**
 		 * Constructor.
 		 */

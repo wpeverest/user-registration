@@ -69,4 +69,7 @@ do_action( 'user_registration_before_change_password_form' );
 	</form>
 </div>
 
-<?php do_action( 'user_registration_after_edit_account_form' ); ?>
+<?php 
+	ur_do_deprecated_action( 'user_registration_after_edit_account_form', array(), '1.4.1', 'user_registration_after_change_password_form' );
+	do_action( 'user_registration_after_edit_account_form' ); 
+?>
