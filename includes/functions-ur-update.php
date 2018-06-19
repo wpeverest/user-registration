@@ -209,3 +209,19 @@ function ur_update_140_option() {
 		delete_option( $unused_option );
 	}
 }
+
+/**
+ * Update DB Version.
+ */
+function ur_update_141_db_version() {
+	UR_Install::update_db_version( '1.4.0' );
+}
+
+/**
+ * Replace option name user_registration_myaccount_edit_account_endpoint to user_registration_myaccount_change_password_endpoint.
+ */
+function ur_update_141_option() {
+	$value = get_option( 'user_registration_myaccount_edit_account_endpoint' );
+	update_option( 'user_registration_myaccount_change_password_endpoint', $value );
+	delete_option( 'user_registration_myaccount_edit_account_endpoint' );
+}

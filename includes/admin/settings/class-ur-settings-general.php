@@ -140,16 +140,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'  => __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
 						'id'    => 'account_endpoint_options',
 					),
-
-					array(
-						'title'    => __( 'Edit account', 'user-registration' ),
-						'desc'     => __( 'Endpoint for the "My account &rarr; Edit account" page.', 'user-registration' ),
-						'id'       => 'user_registration_myaccount_edit_account_endpoint',
-						'type'     => 'text',
-						'default'  => 'edit-password',
-						'desc_tip' => true,
-					),
-
 					array(
 						'title'    => __( 'Edit profile', 'user-registration' ),
 						'desc'     => __( 'Endpoint for the "My account &rarr; Edit profile" page.', 'user-registration' ),
@@ -158,7 +148,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'edit-profile',
 						'desc_tip' => true,
 					),
-
+					array(
+						'title'    => __( 'Change Password', 'user-registration' ),
+						'desc'     => __( 'Endpoint for the "My account &rarr; Change Password" page.', 'user-registration' ),
+						'id'       => 'user_registration_myaccount_change_password_endpoint',
+						'type'     => 'text',
+						'default'  => 'edit-password',
+						'desc_tip' => true,
+					),
 					array(
 						'title'    => __( 'Lost password', 'user-registration' ),
 						'desc'     => __( 'Endpoint for the "My account &rarr; Lost password" page.', 'user-registration' ),
@@ -167,7 +164,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'lost-password',
 						'desc_tip' => true,
 					),
-
 					array(
 						'title'    => __( 'User logout', 'user-registration' ),
 						'desc'     => __( 'Endpoint for the triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
@@ -176,7 +172,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'user-logout',
 						'desc_tip' => true,
 					),
-
 					array(
 						'type' => 'sectionend',
 						'id'   => 'account_endpoint_options',

@@ -52,7 +52,7 @@ class UR_Query {
 		// Query vars to add to WP.
 		$this->query_vars = array(
 			// My account actions.
-			'edit-password'  => get_option( 'user_registration_myaccount_edit_account_endpoint', 'edit-password' ),
+			'edit-password'  => get_option( 'user_registration_myaccount_change_password_endpoint', 'edit-password' ),
 			'edit-profile'  => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
 			'lost-password' => get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ),
 			'user-logout'   => get_option( 'user_registration_logout_endpoint', 'user-logout' ),

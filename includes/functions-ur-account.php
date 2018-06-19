@@ -69,7 +69,7 @@ add_filter( 'lostpassword_url', 'ur_lostpassword_url', 20, 1 );
 function ur_get_account_menu_items() {
 	$endpoints = array(
 		'edit-profile' => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
-		'edit-password' => get_option( 'user_registration_myaccount_edit_account_endpoint', 'edit-password' ),
+		'edit-password' => get_option( 'user_registration_myaccount_change_password_endpoint', 'edit-password' ),
 		'user-logout'  => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
 	);
 

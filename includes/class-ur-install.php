@@ -33,6 +33,10 @@ class UR_Install {
 		'1.4.0' => array(
 			'ur_update_140_db_version',
 			'ur_update_140_option',
+		),
+		'1.4.1' => array(
+			'ur_update_141_db_version',
+			'ur_update_141_option',
 		)
 	);
 
