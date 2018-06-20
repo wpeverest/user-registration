@@ -345,8 +345,6 @@ function ur_get_field_type( $field_key ) {
 				$field_type = 'file';
 				break;
 			case 'privacy_policy':
-				$field_type = 'privacy-policy';
-				break;
 			case 'mailchimp':
 			case 'checkbox':
 				$field_type = 'checkbox';
