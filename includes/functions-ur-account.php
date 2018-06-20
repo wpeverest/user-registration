@@ -29,7 +29,7 @@ function login_error_message( $error ) {
 
 	if ( is_int( $pos ) ) {
         //its the correct username with incorrect password
-        $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registraion' ),  $_POST['username'], "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+        $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     } 
     return $error;
 }
