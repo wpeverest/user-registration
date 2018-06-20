@@ -809,7 +809,6 @@ jQuery(function ( $ ) {
 
 	function manage_draggable_users_fields () {
 
-
 		var single_draggable_fields = user_registration_admin_data.form_one_time_draggable_fields;
 
 		var ul_node = $('#ur-tab-registered-fields').find('ul.ur-registered-list');
@@ -832,6 +831,18 @@ jQuery(function ( $ ) {
 				}
 
 			}
+		});
+
+		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
+		 	var field_label = jQuery(this).find('.ur-label label').text();
+		 	var field_names =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+
+		 	field_names.each( function() {
+		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
+		 		if( typeof field_name !== 'undefined') {
+		 			jQuery('.urcl-rules .empty-fields select.ur_advance_setting.urcl-settings-rules_field_1').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 		}
+		 	});
 		});
 	}
 
