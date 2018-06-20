@@ -1,3 +1,9 @@
+= 1.4.1 - 20/06/2018 =
+* Fix - Privacy policy field issue
+* Fix - Translation ready texts
+* Fix - Lost password url
+* Add - Scroll bar for overflow form fields
+
 = 1.4.0 - 12/06/2018 =
 * Refactor - Form fields
 * Remove - Repeated settings from global
