@@ -101,9 +101,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$rules['rules'] = isset( $args['rules'] ) ? $args['rules'] : array();
 			$rules['required'] = isset( $args['required'] ) ? $args['required'] : '';
 			
-			foreach( $rules['rules'] as $key => $rule ) {
+			foreach( $rules['rules'] as $rules_key => $rule ) {
 				if( empty( $rule['field'] ) ) {
-					unset( $rules['rules'][ $key ] );
+					unset( $rules['rules'][ $rules_key ] );
 				}
 			}
 			$rules['rules'] = array_values( $rules['rules'] );
