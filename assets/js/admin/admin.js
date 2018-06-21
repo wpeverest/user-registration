@@ -840,7 +840,7 @@ jQuery(function ( $ ) {
 		 	field_names.each( function() {
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
-		 			jQuery('.urcl-rules .empty-fields select.ur_advance_setting.urcl-settings-rules_field_1').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
 		 		}
 		 	});
 		});
