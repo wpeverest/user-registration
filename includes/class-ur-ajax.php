@@ -257,7 +257,17 @@ class UR_AJAX {
 					array_push( self::$field_key_aray, $value );
 				}
 				if( $key === 'description' ) {
-					$value = str_replace('"', "'", $value); //TODO:: use wp_kses to allow certain html
+					$value = str_replace('"', "'", $value);
+					$value = wp_kses( $value, array(
+										    'a' => array(
+										        'href' => array(),
+										        'title' => array()
+										    ),
+										    'br' => array(),
+										    'em' => array(),
+										    'strong' => array(),
+										)
+							);
 
 				} elseif( $key == 'html') {
 
