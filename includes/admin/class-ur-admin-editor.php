@@ -21,7 +21,6 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 		/**
 		 * Primary class constructor.
 		 */
-
 		public function __construct() {
 
 			add_action( 'media_buttons', array( $this, 'media_button' ), 15 );			
@@ -98,7 +97,6 @@ if ( ! class_exists( 'UR_Admin_Editor', false ) ) :
 							</div>
 						</form>
 					</div>
-		
            	<?php
 		}
 	}

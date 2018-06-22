@@ -313,7 +313,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		/**
 		 * Output the settings.
 		 */
-	
 		public function output() {
 			
 			global $current_section;

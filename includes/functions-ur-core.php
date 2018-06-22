@@ -303,6 +303,11 @@ function ur_enable_ur_plugin_headers( $headers ) {
 
 add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
 
+/**
+ * Set field type for all registrered field keys
+ * @param  string $field_key field's field key
+ * @return string $field_type
+ */
 function ur_get_field_type( $field_key ) {
 
 	$fields = ur_get_registered_form_fields();
@@ -460,7 +465,6 @@ function ur_get_user_field_only() {
 	) );
 }
 
-
 /**
  * Get all extra form fields
  *
@@ -473,7 +477,6 @@ function ur_get_other_form_fields() {
 
 	return apply_filters( 'user_registration_other_form_fields', $result );
 }
-
 
 /**
  * All default fields storing in usermeta table
@@ -519,6 +522,8 @@ function ur_get_registered_form_fields() {
 }
 
 /**
+ * General settings for each fields
+ * @param string $id id for each field 
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
@@ -791,18 +796,14 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 
 	$fields = ur_admin_form_settings_fields( $form_id );
-
 	$value = '';
 
 	foreach ( $fields as $field ) {
 
 		if ( isset( $field['id'] ) && $meta_key == $field['id'] ) {
-
 			$value = isset( $field['default'] ) ? $field['default'] : $default;
-
 			break;
 		}
-
 	}
 
 	return $value;
@@ -824,17 +825,13 @@ function ur_get_user_approval_status( $user_id ) {
 		$user_status = get_user_meta( $user_id, 'ur_user_status', true );
 
 		if ( $user_status == 0 || $user_status == - 1 ) {
-
 			return $user_status;
 		}
 
 		return $user_status;
-
-
 	}
 
 	return $user_status;
-
 }
 
 /**
@@ -853,48 +850,31 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 				$field_key = isset( $field_data->field_key ) && $field_data->field_key !== null ? $field_data->field_key : '';
 
 				if ( ! empty( $field_key ) ) {
-
-
 					$field_name = isset( $field_data->general_setting->field_name ) && $field_data->general_setting->field_name !== null ? $field_data->general_setting->field_name : '';
 
 					if ( $key === null ) {
 
 						if ( ! empty( $field_name ) ) {
-
 							$form_data_array[ $field_name ] = $field_data;
-
 						} else {
-
 							$form_data_array[] = $field_data;
-
 						}
 					} else {
 
 						if ( $field_key === $key ) {
 
 							if ( ! empty( $field_name ) ) {
-
 								$form_data_array[ $field_name ] = $field_data;
-
 							} else {
-
 								$form_data_array[] = $field_data;
-
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 		return $form_data_array;
-
 }
 
 /**
@@ -1000,28 +980,27 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta= false ) {
 
 }
 
-//Check if username already exists in case of optional username
+/**
+ * Check if username already exists in case of optional username
+ * And while stripping through email address and incremet last number by 1.
+ * @param  string $username
+ * @return string $username Modified username
+ */
 function check_username( $username ) {
 
 	if( username_exists( $username ) ) {
-
 		$last_char = substr( $username, -1 );
 
 		if( is_numeric( $last_char ) ) {
-
 			$strip_last_char = substr( $username, 0, -1 );
-
 			$last_char = $last_char+1;
-
 			$username = $strip_last_char.$last_char;
-
 			$username = check_username( $username );
 
 			return $username;
 		}
 		else {
 			$username = $username.'_1';
-
 			$username = check_username( $username );
 
 			return $username;
@@ -1029,9 +1008,12 @@ function check_username( $username ) {
 	}
 
 	return $username;
-
 }
 
+/**
+ * Get all user registration forms title with respective id.
+ * @return array $all_forms form id as key and form title as value.
+ */
 function ur_get_all_user_registration_form() {
 
 	$args        = array(
@@ -1040,15 +1022,18 @@ function ur_get_all_user_registration_form() {
 	);
 
 	$posts_array = get_posts( $args );
+	$all_forms = array();
 
 	foreach ( $posts_array as $post ) {
-
 		$all_forms[ $post->ID ] = $post->post_title;
 	}
 
 	return $all_forms;
 }
 
+/**
+ * Check user login option, if not email confirmation force not disable emails.
+ */
 function ur_get_user_login_option() {
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 		return array(
@@ -1065,6 +1050,11 @@ function ur_get_user_login_option() {
 	}
 }
 
+/**
+ * Get link for back button used on email settings.
+ * @param  string $label 
+ * @param  string $url ]
+ */
 function ur_back_link( $label, $url ) {
 	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }

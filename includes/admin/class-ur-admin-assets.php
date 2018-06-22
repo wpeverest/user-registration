@@ -118,20 +118,16 @@ class UR_Admin_Assets {
 			'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'user-registration' ),
 			'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'user-registration' ),
 		) );
+
 		if ( 'user-registration_page_user-registration-modules' === $screen_id ) {
-
 			wp_enqueue_style( 'user-registration-modules' );
-
 			wp_enqueue_script( 'user-registration-modules-script' );
-
-
 			wp_localize_script( 'user-registration-modules-script', 'user_registration_module_params', array(
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
 				'error_could_not_install' => __( 'Could not install.', 'user-registration' )
-
-			) );
-
+			));
 		}
+
 		// UserRegistration admin pages
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
 			wp_enqueue_script( 'user-registration-admin' );

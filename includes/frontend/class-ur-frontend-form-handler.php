@@ -15,10 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * UR_Frontend_Form_Handler Class
  */
 class UR_Frontend_Form_Handler {
+
 	public static $form_id = 0;
 	public static $response_array = array();
 	private static $valid_form_data = array();
 
+	/**
+	 * Handle frontend form POST data
+	 * @param  array $form_data Submitted form data
+	 * @param  int $form_id ID of the form
+	 * @return void
+	 */
 	public static function handle_form( $form_data, $form_id ) {
 
 		self::$form_id = $form_id;
@@ -57,9 +64,9 @@ class UR_Frontend_Form_Handler {
 				$userdata['user_login'] = $username;
 			}
 
-			$user_id = wp_insert_user( $userdata );
+			$user_id = wp_insert_user( $userdata ); //Insert user data in users table.
 
-			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id );
+			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); //Insert user data in usermeta table.
 			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 			if ( $user_id > 0 ) {
 				$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
@@ -83,6 +90,12 @@ class UR_Frontend_Form_Handler {
 			) );
 		}// End if().
 	}
+
+	/**
+	 * Get form field data by post_content array passed
+	 * @param  array $post_content_array
+	 * @return array
+	 */
 	private static function get_form_field_data( $post_content_array ) {
 		$form_field_data_array = array();
 		foreach ( $post_content_array as $row_index => $row ) {
@@ -96,6 +109,12 @@ class UR_Frontend_Form_Handler {
 		}
 		return ( $form_field_data_array );
 	}
+
+	/**
+	 * Get post content by form id
+	 * @param  int $form_id form id
+	 * @return mixed
+	 */
 	private static function get_post_content( $form_id ) {
 		$args      = array(
 			'post_type' => 'user_registration',
@@ -109,6 +128,13 @@ class UR_Frontend_Form_Handler {
 			return '';
 		}
 	}
+
+	/**
+	 * Validation from each field's class validation() method.
+	 * Sanitization from get_sanitize_value(). 
+	 * @param  array  $form_field_data 
+	 * @param  array  $form_data  Form data to validate                      
+	 */
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
@@ -123,7 +149,6 @@ class UR_Frontend_Form_Handler {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
 		foreach ( $form_data as $data ) {
-
 			if ( in_array( $data->field_name, $form_key_list ) ) {
 				$form_data_index = array_search( $data->field_name, $form_key_list );
 				$single_form_field = $form_field_data[ $form_data_index ];
@@ -169,7 +194,7 @@ class UR_Frontend_Form_Handler {
 	}
 
 	/**
-	 * Sanitize default WordPress User fields
+	 * Sanitize form data
 	 * @param  obj &$form_data
 	 * @return object
 	 */
@@ -218,6 +243,13 @@ class UR_Frontend_Form_Handler {
 		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
 	}
 
+	/**
+	 * Update form data to usermeta table.
+	 * @param  int $user_id
+	 * @param  array $valid_form_data All valid form data.
+	 * @param  int $form_id
+	 * @return void
+	 */
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
@@ -238,6 +270,12 @@ class UR_Frontend_Form_Handler {
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
 		}
 	}
+
+	/**
+	 * Match password and confirm password field
+	 * @param  obj &$form_data Form data submitted
+	 * @return obj $form_data
+	 */
 	private static function match_password( &$form_data ) {
 		$confirm_password     = '';
 		$has_confirm_password = false;

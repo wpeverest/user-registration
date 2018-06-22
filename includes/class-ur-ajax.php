@@ -51,7 +51,10 @@ class UR_AJAX {
 		}
 	}
 
-
+	/**
+	 * Get Post data on frontend form submit
+	 * @return void
+	 */
 	public static function user_form_submit() {
 
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
@@ -138,7 +141,10 @@ class UR_AJAX {
 		}
 	}
 
-
+	/**
+	 * Form save form backend
+	 * @return void
+	 */
 	public static function form_save_action() {
 
 		try {
@@ -233,6 +239,10 @@ class UR_AJAX {
 		return false;
 	}
 
+	/**
+	 * Sanitize values of form field in backend
+	 * @param  array &$array
+	 */
 	public static function sweep_array( &$array ) {
 
 		foreach ( $array as $key => &$value ) {
