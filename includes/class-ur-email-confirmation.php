@@ -28,6 +28,8 @@ class UR_Email_Confirmation {
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
+		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
+
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
@@ -44,13 +46,64 @@ class UR_Email_Confirmation {
 	 * @return array
 	 */
 	public function ceate_quick_links( $actions, $user ) {
-		//TODO
-		if ( ! current_user_can( 'edit_user' ) ) {
-			return $actions;
-		}
+		
+		$verify_link = add_query_arg( array( 'action' => 'verify', 'user' => $user->ID ) );
+		$verify_link = remove_query_arg( array( 'new_role' ), $verify_link );
+		$verify_link = wp_nonce_url( $verify_link, 'ur_user_change_email_status' );
 
+		$unverify_link = add_query_arg( array( 'action' => 'unverify', 'user' => $user->ID ) );
+		$unverify_link = remove_query_arg( array( 'new_role' ), $unverify_link );
+		$unverify_link = wp_nonce_url( $unverify_link, 'ur_user_change_email_status' );
+
+		$verify_action = '<a style="color:#086512" href="' . esc_url( $verify_link ) . '">' . _x( 'Verify', 'The action on users list page', 'user-registration' ) . '</a>';
+		$unverify_action = '<a style="color:#e20707" href="' . esc_url( $unverify_link ) . '">' . _x( 'Unverify', 'The action on users list page', 'user-registration' ) . '</a>';
+		
+		if ( current_user_can( 'edit_user' ) ) {
+			$get_user_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
+			
+			if( '0' === $get_user_status ) {
+				$actions['ur_user_verify_action'] = $verify_action;
+			} elseif( '1' === $get_user_status ) {
+				$actions['ur_user_unverify_action'] = $unverify_action;
+			} 
+		}
 		return $actions;
 	}
+
+	/**
+	 * Trigger the action query and check if some users have been verified or unverified
+	 */
+	public function trigger_query_actions() {
+
+		$action  = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
+		$mode    = isset( $_POST['mode'] ) ? $_POST['mode'] : false;
+
+		// If this is a multisite, bulk request, stop now!
+		if ( 'list' == $mode ) {
+			return;
+		}
+
+		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify' ) ) && !isset( $_GET['new_role'] ) ) {
+
+			check_admin_referer( 'ur_user_change_email_status' );
+
+			$redirect = admin_url( 'users.php' );
+			$status = $action;
+			$user_id = absint( $_GET['user'] );
+
+			if ( $status == 'verify' ) {
+				update_user_meta( $user_id, 'ur_confirm_email', '1' );				
+				$redirect = add_query_arg( array( 'verified' => 1 ), $redirect );
+			} else {
+				update_user_meta( $user_id, 'ur_confirm_email', '0' );
+				$redirect = add_query_arg( array( 'unverified' => 1 ), $redirect );
+			}
+
+			wp_redirect( $redirect );
+			exit;
+		}
+	}
+
 	
 	/**
 	 * Add the column header for the email status column
