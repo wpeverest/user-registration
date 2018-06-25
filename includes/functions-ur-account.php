@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_filter( 'login_errors', 'login_error_message' );
+add_filter( 'login_errors', 'ur_login_error_message' );
 
 //Modify error message on invalid username or password
-function login_error_message( $error ) {
+function ur_login_error_message( $error ) {
 
 	// Don't change login error messages on admin site.
 	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
