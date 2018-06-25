@@ -14,7 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+add_action( 'template_redirect', 'ur_template_redirect' );
+add_action( 'template_redirect', 'ur_login_template_redirect' );
+
 /**
+ * Redirect after logout.
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
  */
 function ur_template_redirect() {
@@ -31,19 +35,19 @@ function ur_template_redirect() {
 	}
 }
 
-add_action( 'template_redirect', 'ur_template_redirect' );
-add_action( 'template_redirect', 'ur_login_template_redirect' );
-
 /**
+ * Check for login shortcode in the page and redirect to the url passed with login shortcode parameter redirect_url
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
  */
 function ur_login_template_redirect() {
 	global $post;
+
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
+
 	if ( has_shortcode( $post_content, 'user_registration_login' ) && is_user_logged_in() ) {
 		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
-		$attributes = shortcode_parse_atts( $matches[3] );
 
+		$attributes = shortcode_parse_atts( $matches[3] );
 		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
 		$redirect_url = trim( $redirect_url, ']' );
 		$redirect_url = trim( $redirect_url, '"' );
@@ -79,12 +83,10 @@ function ur_body_class( $classes ) {
 }
 
 
-/** Forms */
-
 if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 	/**
-	 * Outputs a profile form field.
+	 * Outputs a form fields on frontend.
 	 *
 	 * @param string $key
 	 * @param mixed  $args
@@ -302,7 +304,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 	/**
-	 * Get a profile form field data.
+	 * Get form fields to display on profile tab
 	 *
 	 * @param string $user_id
 	 * @param string $form_id
