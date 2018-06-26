@@ -386,7 +386,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
-						} elseif ( in_array( $field_name, ur_get_user_profile_field_only() ) ) {
+						} elseif ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => __( $field_label, 'user-registration' ),
 								'description' => __( $field_description, 'user-registration' ),
@@ -413,7 +413,6 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 				}// End foreach().
 			}// End foreach().
 		}// End foreach().
-
 		return $fields;
 	}
 }// End if().
