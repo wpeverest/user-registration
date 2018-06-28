@@ -161,6 +161,7 @@ jQuery(function ( $ ) {
 								}
 
 								manage_draggable_users_fields();
+								manage_conditional_field_options();
 							}
 						});
 					},
@@ -832,7 +833,9 @@ jQuery(function ( $ ) {
 
 			}
 		});
+	}
 
+	function manage_conditional_field_options() {
 		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
 		 	var field_label = jQuery(this).find('.ur-label label').text();
 		 	var field_names =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
