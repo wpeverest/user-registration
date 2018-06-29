@@ -159,7 +159,6 @@ jQuery(function ( $ ) {
 									$(template).insertBefore(container);
 									container.remove();
 								}
-
 								manage_draggable_users_fields();
 								manage_conditional_field_options();
 							}
@@ -839,7 +838,6 @@ jQuery(function ( $ ) {
 		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
 		 	var field_label = jQuery(this).find('.ur-label label').text();
 		 	var field_names =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-
 		 	field_names.each( function() {
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
@@ -847,6 +845,7 @@ jQuery(function ( $ ) {
 		 		}
 		 	});
 		});
+		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass( 'empty-fields');
 	}
 
 	function ur_math_ceil ( value ) {
