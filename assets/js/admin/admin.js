@@ -846,9 +846,15 @@ jQuery(function ( $ ) {
 
 		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
 		 	var field_label = jQuery(this).find('.ur-label label').text();
-		 	var field_names =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+		 	var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
 
-		 	field_names.each( function() {
+		 	//strip certain fields
+			if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
+				return;	
+			}
+
+		 	var general_setting =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+		 	general_setting.each( function() {	
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
 
