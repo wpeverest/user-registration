@@ -159,8 +159,8 @@ jQuery(function ( $ ) {
 									$(template).insertBefore(container);
 									container.remove();
 								}
-
 								manage_draggable_users_fields();
+								manage_conditional_field_options();
 							}
 						});
 					},
@@ -330,10 +330,12 @@ jQuery(function ( $ ) {
 					remove_selected_item: function () {
 						var $this = this;
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function () {
+							var removed_item = $(this).closest('.ur-selected-item ').find( "[data-field='field_name']").val();
 							$(this).closest('.ur-selected-item ').remove();
 							$this.check_grid();
 							builder.manage_empty_grid();
 							manage_draggable_users_fields();
+							manage_conditional_field_options( removed_item );
 
 						});
 					},
@@ -443,6 +445,7 @@ jQuery(function ( $ ) {
 				}
 			});
 		});
+
 	});
 	function show_message ( message, type ) {
 		var message_string;
@@ -832,7 +835,13 @@ jQuery(function ( $ ) {
 
 			}
 		});
+	}
 
+	function manage_conditional_field_options( removed_item = false ) {
+		if ( removed_item ) {
+			jQuery('[class*="urcl-settings-rules_field_"] option[value="'+ removed_item + '"]').remove();
+			return;
+		}
 		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
 		 	var field_label = jQuery(this).find('.ur-label label').text();
 		 	var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
@@ -846,10 +855,18 @@ jQuery(function ( $ ) {
 		 	general_setting.each( function() {	
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
-		 			jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+
+		 			//check if option exist in the given select
+		 			var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +field_name+ "']").length > 0;
+		 			if (! select_value == true ) {
+		 				jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			} else {
+		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			}
 		 		}
 		 	});
 		});
+		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass( 'empty-fields');
 	}
 
 	function ur_math_ceil ( value ) {
