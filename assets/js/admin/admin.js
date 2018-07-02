@@ -443,6 +443,7 @@ jQuery(function ( $ ) {
 				}
 			});
 		});
+
 	});
 	function show_message ( message, type ) {
 		var message_string;
@@ -841,7 +842,13 @@ jQuery(function ( $ ) {
 		 	field_names.each( function() {
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
-		 			jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			//check if option exist in the given select
+		 			var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +field_name+ "']").length > 0;
+		 			if (! select_value == true ) {
+		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			} else {
+		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 			}
 		 		}
 		 	});
 		});
