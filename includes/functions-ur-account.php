@@ -16,21 +16,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter( 'login_errors', 'ur_login_error_message' );
 
-//Modify error message on invalid username or password
+// Modify error message on invalid username or password.
 function ur_login_error_message( $error ) {
-
 	// Don't change login error messages on admin site.
 	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
 		return $error;
 	}
 
-    //check if that's the error you are looking for
+    //Check if the error contains incorrect string.
     $pos = strpos( $error, 'incorrect' );
 
+    //Check if the error contains Invalid string.
+    $pos2 = strpos( $error, 'Invalid' );
+
+    //Its the correct username with incorrect password.
 	if ( is_int( $pos ) && isset( $_POST['redirect'] ) && isset( $_POST['username'] ) ) {
-        //its the correct username with incorrect password
         $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
-    } 
+    } // It's invalid username. 
+    elseif( is_int( $pos2 ) && isset( $_POST['redirect'] ) && isset( $_POST['username'] ) ) {
+    	$error = sprintf( __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+    }
+
     return $error;
 }
 
