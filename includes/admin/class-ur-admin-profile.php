@@ -264,10 +264,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				foreach ( $fieldset['fields'] as $key => $field ) {
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						if ( isset( $_POST[ $key ] ) ) {
+							$value = $_POST[ $key ];
 							if( is_array( $_POST[ $key ] ) ) {
-								$values = array_map( 'sanitize_text_field', $_POST[ $key ] );
-								update_user_meta( $user_id, $key, $values );
-							}
+								$value = array_map( 'sanitize_text_field', $value );
+							} 
+							update_user_meta( $user_id, $key, $value );
 						}
 						else {
 							update_user_meta( $user_id, $key, '' );
