@@ -527,6 +527,7 @@ function ur_get_registered_form_fields() {
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
+
 	$general_settings = array(
 		'label'      => array(
 			'type'        => 'text',
@@ -581,6 +582,18 @@ function ur_get_general_settings( $id ) {
 		),
 	);
 
+	$exclude_placeholder = array( 
+		'user_registration_checkbox', 
+		'user_registration_country', 
+		'user_registration_date',
+		'user_registration_privacy_policy',
+		'user_registration_radio',
+		'user_registration_select'
+	);
+
+	if( in_array( $id, $exclude_placeholder ) ) {
+		unset( $general_settings['placeholder'] );
+	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 

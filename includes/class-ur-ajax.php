@@ -75,7 +75,7 @@ class UR_AJAX {
 
 			if ( ! $users_can_register ) {
 				wp_send_json_error( array(
-					'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only an administrator can add new users.', 'user-registration' ) )
+					'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) )
 				) );
 			}
 		} else {

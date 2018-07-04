@@ -103,7 +103,7 @@ class UR_Shortcodes {
 
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
-				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only an administrator can add new users.', 'user-registration' ) . '</p>' );
+				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only administrators can add new users.', 'user-registration' ) . '</p>' );
 			}
 		} else {
 

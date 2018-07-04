@@ -291,11 +291,11 @@ class UR_Form_Handler {
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
 				if ( $validation_error->get_error_code() ) {
-					throw new Exception( '<strong>' . __( 'Error:', 'user-registration' ) . '</strong> ' . $validation_error->get_error_message() );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $validation_error->get_error_message() );
 				}
 
 				if ( empty( $username ) ) {
-					throw new Exception( '<strong>' . __( 'Error:', 'user-registration' ) . '</strong> ' . __( 'Username is required.', 'user-registration' ) );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Username is required.', 'user-registration' ) );
 				}
 
 				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -304,7 +304,7 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'Error:', 'user-registration' ) . '</strong> ' . __( 'A user could not be found with this email address.', 'user-registration' ) );
+						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'A user could not be found with this email address.', 'user-registration' ) );
 					}
 				} else {
 					$creds['user_login'] = $username;

@@ -198,14 +198,14 @@ class UR_Admin_Assets {
 
 		$i18n = array(
 
-			'i18n_are_you_sure_want_to_delete'                       => _x( 'Are you sure want to delete ?', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_row_need_to_select'                   => _x( 'At least one row need to choose.', 'user registration admin', 'user-registration' ),
-			'i18n_user_required_field_already_there'                 => _x( 'User required field is already there, could not dragged.', 'user registration admin', 'user-registration' ),
-			'i18n_user_required_field_already_there_could_not_clone' => _x( 'User required field is already there, could not clone.', 'user registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete'                       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_row_need_to_select'                   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_user_required_field_already_there'                 => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
+			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
 			'i18n_form_successfully_saved'                           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
 			'i18n_success'                                           => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                                             => _x( 'Error', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_field_need_to_select'                 => _x( 'At least one field  need to select.', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_field_need_to_select'                 => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                                   => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'                      => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 			'i18n_duplicate_field_name'                              => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
