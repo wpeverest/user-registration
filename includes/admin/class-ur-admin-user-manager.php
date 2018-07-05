@@ -78,8 +78,16 @@ class UR_Admin_User_Manager {
 		do_action( 'ur_user_status_updated', $status, $this->user->ID, $alert_user );
 
 		$action_label = '';
-		$action_label = ( $status == UR_Admin_User_Manager::APPROVED ) ? 'approved' : '';
-		$action_label = ( $status == UR_Admin_User_Manager::DENIED ) ? 'denied' : '';
+
+		switch ($status) {
+		    case UR_Admin_User_Manager::APPROVED:
+		        $action_label = 'approved';
+		        break;
+
+		    case UR_Admin_User_Manager::DENIED:
+		        $action_label = 'denied';
+		        break;
+		}
 
 		if ( ! empty( $action_label ) ) {
 			do_action( 'ur_user_' . $action_label, $this->user->ID );
