@@ -23,7 +23,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 				echo "<input type = 'radio'  value='1'/>";
 			}
 			foreach ( $options as $option ) {
-				echo "<input type = 'radio'  value='" . esc_attr( $option ) . "'/>" . esc_html( trim( $option ) ) . '<br>';
+				echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "'/>" . esc_html( trim( $option ) ) . '<br>';
 			}
 			?>
 	</div>

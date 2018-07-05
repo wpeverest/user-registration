@@ -23,7 +23,7 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 			<?php
 			foreach ( $options as $option ) {
 
-				echo "<option value='" . esc_attr($option) . "'>" . esc_html( trim( $option ) ) . '</option>';
+				echo "<option value='" . esc_attr( trim( $option ) ) . "'>" . esc_html( trim( $option ) ) . '</option>';
 			}
 			?>
 		</select>
