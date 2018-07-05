@@ -268,6 +268,7 @@ class UR_Frontend_Form_Handler {
 				update_user_meta( $user_id, $field_name, $data->value );
 			}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
+		update_user_meta( $user_id, 'last_activity', '' ); //BuddyPress members area compatibility.
 		}
 	}
 
