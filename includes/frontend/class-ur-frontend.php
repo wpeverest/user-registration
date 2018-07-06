@@ -25,6 +25,7 @@ class UR_Frontend {
 
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
+		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
 	}
 
 	public static function instance() {
@@ -59,6 +60,21 @@ class UR_Frontend {
 
 			$instance->frontend_includes( $setting, $form_id, $field_type, $field_object->field_key );
 		}
+	}
+
+	/**
+	 * My Account layouts(vertical/horizontal) by adding class.
+	 * @param $attributes
+	 * @since  1.4.2
+	 * @return  $attributes
+	 */
+	public function user_registration_my_account_layout( $attributes ) {
+
+		if ( is_user_logged_in() ) {
+			$layout            = get_option( 'user_registration_my_account_layout', 'horizontal' );
+			$attributes['class'] = $attributes['class'] . ' ' . $layout;
+		}
+		return $attributes;
 	}
 }
 

@@ -135,12 +135,35 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title' => __( 'My account endpoints', 'user-registration' ),
+						'title' => __( 'My account Section', 'user-registration' ),
 						'type'  => 'title',
-						'desc'  => __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
+						'id'    => 'my_account_options',
+					),
+					array(
+						'title'    => __( 'Layout', 'user-registration' ),
+						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
+						'id'       => 'user_registration_my_account_layout',
+						'default'  => 'horizontal',
+						'type'     => 'select',
+						'class'    => 'ur-enhanced-select',
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+						'options'  => array(
+										'horizontal' => __( 'Horizontal', 'user-registration' ) ,
+										'vertical' => __( 'Vertical', 'user-registration' )
+									),
+					),
+					array(
+						'type' => 'sectionend',
+						'id'   => 'my_account_options',
+					),
+					array(
+						'title' => __( '', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '<strong>'. __( 'Endpoints: ','user-registration' ). '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
+						'css'      => 'min-width: 250px;',
 						'id'    => 'account_endpoint_options',
 					),
-
 					array(
 						'title'    => __( 'Edit account', 'user-registration' ),
 						'desc'     => __( 'Endpoint for the "My account &rarr; Edit account" page.', 'user-registration' ),
