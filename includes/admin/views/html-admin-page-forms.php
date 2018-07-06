@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap ur-form-container">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Registration forms', 'user-registration' ) ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'user-registration' ) ?></h1>
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
 		<div id="menu-management">
 			<div class="menu-edit ">
