@@ -76,6 +76,12 @@ class UR_Frontend_Scripts {
 				'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
 				'has_rtl' => true,
 			),
+			'user-registration-my-account-layout' => array(
+				'src'		=> self::get_asset_url( 'assets/css/my-account-layout.css' ),
+				'deps'		=> '',
+				'version' 	=> UR_VERSION,
+				'media'		=> 'all',
+			)
 		) );
 	}
 
