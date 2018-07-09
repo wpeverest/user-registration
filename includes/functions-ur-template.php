@@ -192,14 +192,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if( 'privacy_policy' == $field_key ) {
 					break;
 				}
+				$default = $args['default'];
 				if( isset( $args['choices'] ) && array_filter( $args['choices'] ) ) {
 
-					if( ! empty( $args['default'] ) ) {
-						if( is_array( $args['default'] ) ) {
-							$default = unserialize( $args['default'] );
-						} else {
-							$default = $args['default'];
-						}
+					if( ! empty( $default ) ) {
+						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
 					}
 
 					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
