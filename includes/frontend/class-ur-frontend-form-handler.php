@@ -48,7 +48,6 @@ class UR_Frontend_Form_Handler {
 			);
 
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
-
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
 			if( empty( $userdata['user_login'] ) ) {
@@ -122,8 +121,8 @@ class UR_Frontend_Form_Handler {
 		if ( false === $containsSearch ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
-		foreach ( $form_data as $data ) {
 
+		foreach ( $form_data as $data ) {
 			if ( in_array( $data->field_name, $form_key_list ) ) {
 				$form_data_index = array_search( $data->field_name, $form_key_list );
 				$single_form_field = $form_field_data[ $form_data_index ];
@@ -231,7 +230,7 @@ class UR_Frontend_Form_Handler {
 				}
 
 				if( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
-					$data->value = json_decode( $data->value );
+					$data->value = ( json_decode( $data->value ) !== NULL ) ? json_decode( $data->value ) : $data->value;
 				}
 				update_user_meta( $user_id, $field_name, $data->value );
 			}

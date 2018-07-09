@@ -192,10 +192,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if( 'privacy_policy' == $field_key ) {
 					break;
 				}
+				if( isset( $args['choices'] ) && array_filter( $args['choices'] ) ) {
 
-				if( isset($args['choices']) && count($args['choices']) >1 ){
-
-					$default = !empty($args['default']) ? unserialize( $args['default'] ) : array();
+					if( ! empty( $args['default'] ) ) {
+						if( is_array( $args['default'] ) ) {
+							$default = unserialize( $args['default'] );
+						} else {
+							$default = $args['default'];
+						}
+					}
 
 					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
 
@@ -208,7 +213,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
-						if ( in_array(trim($choice), $default) ) {
+						if ( is_array( $default ) && in_array( trim( $choice ), $default ) ) {
+							$value = 'checked="checked"';
+						} elseif( $default === $choice ) {
 							$value = 'checked="checked"';
 						}
 
