@@ -850,23 +850,23 @@ jQuery(function ( $ ) {
 
 		 	//strip certain fields
 			if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
-				return;	
+				return;
 			}
 
 		 	var general_setting =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-		 	general_setting.each( function() {	
+		 	general_setting.each( function() {
 		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
 		 		if( typeof field_name !== 'undefined') {
 
 		 			//check if option exist in the given select
 		 			var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +field_name+ "']").length > 0;
 		 			if (! select_value == true ) {
-		 				jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 				jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="'+ field_name +'" data-type="' + field_key + '">'+field_label+' </option>');
 		 				if( field_name == populated_item ) {
 		 					jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="'+ populated_item + '"]').remove();
 		 				}
 		 			} else {
-		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'">'+field_label+' </option>');
+		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'" data-type="'+ field_key + '">'+field_label+' </option>');
 		 			}
 		 		}
 		 	});
