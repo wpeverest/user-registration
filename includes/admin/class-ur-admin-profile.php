@@ -462,7 +462,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					}// End foreach().
 				}// End foreach().
 			}// End foreach().
-			echo '<pre>'; print_r( $fields ); echo '</pre>';
 			return $fields;
 		}
 	}
