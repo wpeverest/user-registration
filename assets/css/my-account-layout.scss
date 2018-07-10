@@ -1,0 +1,101 @@
+#user-registration {
+    &.vertical {
+        display: flex;
+        flex-wrap: wrap;
+        
+        .user-registration-error, .user-registration-message {
+            float:none;
+            width: 100%;
+        }
+        
+        .user-registration-MyAccount-navigation {
+            width: 20%;
+            
+            ul {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                
+                .user-registration-MyAccount-navigation-link {
+                    border-left: 1px solid #ddd;
+                    border-top: 1px solid #ddd;
+                    border-bottom: none transparent;
+                    border-right: none transparent;
+                    
+                    &:last-child {
+                        border-bottom: 1px solid #ddd;
+                    }
+                    
+                    &.is-active {
+                        border-right: none transparent;
+                        
+                        &::before {
+                            bottom: auto;
+                            right: -1px;
+                            width: 1px;
+                            height: 100%;
+                            left: auto;
+                            top: auto;
+                        }
+                    }
+                    
+                    a {
+                        padding: 15px 20px;
+                    }
+                }
+            }
+        } 
+        
+        .user-registration-MyAccount-content {
+            width: 80%;
+        }
+    }
+}
+@media screen and (max-width: 980px) {
+    #user-registration {
+        &.vertical {
+            .user-registration-MyAccount-navigation {
+                width: 30%;
+            }
+            
+            .user-registration-MyAccount-content {
+                width: 70%;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+	#user-registration {
+        &.vertical {
+            .user-registration-MyAccount-navigation {
+                width: 100%;
+                
+                ul {
+                    .user-registration-MyAccount-navigation-link {
+                        border-right:1px solid #ddd;
+                        
+                        &:last-child {
+                            border-bottom: none transparent;
+                        }
+                        
+                        &.is-active {
+                            border-right: 1px solid #ddd;
+                            
+                            &::before {
+                                display: none;
+                            }
+                        }
+
+                        a {
+                            padding: 15px 20px;
+                        }
+                    }
+                }
+            }
+            
+            .user-registration-MyAccount-content {
+                width: 100%;
+            }
+        }
+    }
+}
