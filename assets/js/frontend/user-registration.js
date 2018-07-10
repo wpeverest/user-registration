@@ -165,7 +165,6 @@
 						} else {
 							if ( $.inArray(field_name, multi_value_field) < 0 ) {
 								multi_value_field.push(field_name);
-
 							}
 						}
 					});
@@ -218,9 +217,10 @@
 
 						var single_form_field_name = multi_value_field[ multi_start ];
 						single_form_field_name = single_form_field_name.replace('[]', '');
+
 						var field_data = {
 							value: field_value_json,
-							field_type: field.eq(0).attr('id').replace('ur-input-type-', ''),
+							field_type: field_type,
 							label: field.eq(0).attr('data-label'),
 							field_name: single_form_field_name,
 						};
@@ -246,7 +246,6 @@
 									break;
 								default:
 									formwise_data.value = field.val();
-
 							}
 							break;
 						case 'select':
@@ -266,7 +265,7 @@
 					}
 
 					$(document).trigger("user_registration_frontend_form_data_render", [ field, formwise_data ]);
-					formwise_data.field_type = field.attr('id').replace('ur-input-type-', '');
+					formwise_data.field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
 					if ( field.attr('data-label') !== undefined ) {
 						formwise_data.label = field.attr('data-label');
 					} else if ( field.prev().get(0).tagName.toLowerCase() === 'label' ) {
@@ -276,6 +275,7 @@
 					}
 					if ( field.attr('name') !== undefined && field.attr('name') !== '' ) {
 						formwise_data.field_name = field.attr('name');
+						formwise_data.field_name = formwise_data.field_name.replace('[]', '');
 					} else {
 						formwise_data.field_name = '';
 					}

@@ -1074,6 +1074,17 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
 }
 
 /**
+ * Checks if the string is json or not
+ * @param  string  $str
+ * @since  1.4.2
+ * @return mixed
+ */
+function ur_is_json( $str ) {
+    $json = json_decode( $str );
+    return $json && $str != $json;
+}
+
+/**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */

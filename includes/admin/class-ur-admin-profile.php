@@ -169,13 +169,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									$value = get_user_meta( $user->ID, $key, true );
 
-									if ( count( $field['choices'] ) > 1 && is_array( $field['choices'] ) ) {
+									if ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											?><label><input type="checkbox"
 											                name="<?php echo esc_attr( $key ); ?>[]"
 											                id="<?php echo esc_attr( $key ); ?>"
 											                value="<?php echo esc_attr( trim( $choice ) ); ?>"
 											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if (is_array( $value ) && in_array( trim( $choice ), $value ) ) {
+												echo 'checked="checked"';
+											}elseif( $value == $choice ) {
 												echo 'checked="checked"';
 											} ?> ><?php echo trim( $choice ); ?></label><br/>
 											<?php

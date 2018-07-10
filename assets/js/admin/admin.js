@@ -159,8 +159,11 @@ jQuery(function ( $ ) {
 									$(template).insertBefore(container);
 									container.remove();
 								}
-
 								manage_draggable_users_fields();
+
+								var populated_item = template.closest('.ur-selected-item ').find( "[data-field='field_name']").val();
+								manage_conditional_field_options( populated_item );
+
 							}
 						});
 					},
@@ -330,10 +333,14 @@ jQuery(function ( $ ) {
 					remove_selected_item: function () {
 						var $this = this;
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function () {
+							var removed_item = $(this).closest('.ur-selected-item ').find( "[data-field='field_name']").val();
 							$(this).closest('.ur-selected-item ').remove();
 							$this.check_grid();
 							builder.manage_empty_grid();
 							manage_draggable_users_fields();
+
+							//remove item from conditional logic options
+							jQuery('[class*="urcl-settings-rules_field_"] option[value="'+ removed_item + '"]').remove();
 
 						});
 					},
@@ -443,6 +450,7 @@ jQuery(function ( $ ) {
 				}
 			});
 		});
+
 	});
 	function show_message ( message, type ) {
 		var message_string;
@@ -806,7 +814,6 @@ jQuery(function ( $ ) {
 
 	function manage_draggable_users_fields () {
 
-
 		var single_draggable_fields = user_registration_admin_data.form_one_time_draggable_fields;
 
 		var ul_node = $('#ur-tab-registered-fields').find('ul.ur-registered-list');
@@ -830,6 +837,38 @@ jQuery(function ( $ ) {
 
 			}
 		});
+	}
+
+	function manage_conditional_field_options( populated_item = false ) {
+
+		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
+		 	var field_label = jQuery(this).find('.ur-label label').text();
+		 	var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
+
+		 	//strip certain fields
+			if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
+				return;
+			}
+
+		 	var general_setting =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+		 	general_setting.each( function() {
+		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
+		 		if( typeof field_name !== 'undefined') {
+
+		 			//check if option exist in the given select
+		 			var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +field_name+ "']").length > 0;
+		 			if (! select_value == true ) {
+		 				jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="'+ field_name +'" data-type="' + field_key + '">'+field_label+' </option>');
+		 				if( field_name == populated_item ) {
+		 					jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="'+ populated_item + '"]').remove();
+		 				}
+		 			} else {
+		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'" data-type="'+ field_key + '">'+field_label+' </option>');
+		 			}
+		 		}
+		 	});
+		});
+		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass( 'empty-fields');
 	}
 
 	function ur_math_ceil ( value ) {
