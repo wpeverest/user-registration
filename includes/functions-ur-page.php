@@ -22,7 +22,7 @@ add_filter( 'body_class', 'ur_body_class' );
 add_action( 'user_registration_account_navigation', 'user_registration_account_navigation' );
 add_action( 'user_registration_account_content', 'user_registration_account_content' );
 add_action( 'user_registration_account_edit-profile_endpoint', 'user_registration_account_edit_profile' );
-add_action( 'user_registration_account_edit-account_endpoint', 'user_registration_account_edit_account' );
+add_action( 'user_registration_account_edit-password_endpoint', 'user_registration_account_edit_account' );
 
 /**
  * Replace a page title with the endpoint title.

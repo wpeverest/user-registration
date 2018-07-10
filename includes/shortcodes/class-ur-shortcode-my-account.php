@@ -136,7 +136,7 @@ class UR_Shortcode_My_Account {
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
-		ur_get_template( 'myaccount/form-edit-account.php', array(
+		ur_get_template( 'myaccount/form-edit-password.php', array(
 			'user' => get_user_by( 'id', get_current_user_id() ),
 		) );
 	}

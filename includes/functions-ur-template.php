@@ -340,7 +340,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 					$field_key   = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type  = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
-					$required    = isset( $general_setting->required ) ? $general_setting->required :'';
+					$required    = isset( $field->general_setting->required ) ? $field->general_setting->required :'';
 					$required    = 'yes' == $required ? true : false;
 
 					if ( empty( $field_label ) ) {

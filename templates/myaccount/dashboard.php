@@ -34,10 +34,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?></p>
 
 <p><?php
-	/* translators: %1$s is replaced with the number of href */
+	/* translators: 1 profile details url, 2: change password url */
 	printf(
-		__( 'From your account dashboard you can manage your profile details and <a href="%1$s">edit your password and account details</a>.', 'user-registration' ),
-		esc_url( ur_get_endpoint_url( 'edit-account' ) )
+		__( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url('edit-profile') ),
+		esc_url( ur_get_endpoint_url( 'edit-password' ) )
 	);
 ?></p>
 

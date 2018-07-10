@@ -55,7 +55,7 @@ function ur_deprecated_function( $function, $version, $replacement = null ) {
  *
  * @since 1.0.0
  * @param string $hook        The hook that was used.
- * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $version     The version of User Registration that deprecated the hook.
  * @param string $replacement The hook that should have been used.
  * @param string $message     A message regarding the change.
  */

@@ -311,7 +311,6 @@ class UR_Email_Confirmation {
 	 *
 	 * @return \WP_Error
 	 */
-	
 	public function allow_password_reset( $result, $user_id ) {
 	
 		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
