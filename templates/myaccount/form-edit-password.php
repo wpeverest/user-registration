@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), '1.4.1', 'user_registration_before_change_password_form' );
+ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), '1.4.2', 'user_registration_before_change_password_form' );
 do_action( 'user_registration_before_change_password_form' );
 ?>
 <div class="ur-frontend-form login" id="ur-frontend-form">
@@ -28,7 +28,7 @@ do_action( 'user_registration_before_change_password_form' );
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<?php 
-					ur_do_deprecated_action( 'user_registration_edit_account_form_start', array(), '1.4.1', 'user_registration_change_password_form_start' );
+					ur_do_deprecated_action( 'user_registration_edit_account_form_start', array(), '1.4.2', 'user_registration_change_password_form_start' );
 					do_action( 'user_registration_change_password_form_start' );
 				?>
 					<fieldset>
@@ -50,7 +50,7 @@ do_action( 'user_registration_before_change_password_form' );
 				<div class="clear"></div>
 
 				<?php 
-					ur_do_deprecated_action( 'user_registration_edit_account_form', array(), '1.4.1', 'user_registration_change_password_form' );
+					ur_do_deprecated_action( 'user_registration_edit_account_form', array(), '1.4.2', 'user_registration_change_password_form' );
 					do_action( 'user_registration_change_password_form' );
 				?>
 
@@ -61,7 +61,7 @@ do_action( 'user_registration_before_change_password_form' );
 				</p>
 
 				<?php 
-					ur_do_deprecated_action( 'user_registration_edit_account_form_end', array(), '1.4.1', 'user_registration_change_password_form_end' );
+					ur_do_deprecated_action( 'user_registration_edit_account_form_end', array(), '1.4.2', 'user_registration_change_password_form_end' );
 					do_action( 'user_registration_change_password_form_end' );
 				?>
 			</div>
