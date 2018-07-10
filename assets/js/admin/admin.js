@@ -839,7 +839,7 @@ jQuery(function ( $ ) {
 		});
 	}
 
-	function manage_conditional_field_options( populated_item = false ) {
+	function manage_conditional_field_options( populated_item ) {
 
 		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
 		 	var field_label = jQuery(this).find('.ur-label label').text();
