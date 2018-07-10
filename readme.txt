@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -53,13 +53,17 @@ User Registration can be easily extended with some premium addons.
 
 * [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
 
-* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
 
-* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allow you to add upload field in registration form so that users can upload documents, images and more.
+* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
 * [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
 
-* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Let you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
+* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
+
+* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/) - Let yous add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
+
+* [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
 
 == Installation ==
 
@@ -93,6 +97,22 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.4.2 - 10/07/2018 =
+* Feature - Gravatar on user profile
+* Feature - Layout(vertical/horizontal) on user account
+* Feature - Verify/Unverify user by admin in email confirmation
+* Refactor - Change account details tab to change password
+* Add - Necessary changes required for conditional logic
+* Fix - Broken resend verification email link
+* Fix - Exclude placeholder for unnecessary fields
+* Fix - Single checkbox update issue from admin profile
+
+= 1.4.1 - 20/06/2018 =
+* Fix - Privacy policy field issue
+* Fix - Translation ready texts
+* Fix - Lost password url
+* Add - Scroll bar for overflow form fields
+
 = 1.4.0 - 12/06/2018 =
 * Refactor - Form fields
 * Remove - Repeated settings from global
@@ -116,32 +136,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature - Deafult user fields on profile tab in my account section
 * Fix - Redirect via template_redirect hook removing js redirection
 * Add - Filter hooks for every email classes
-
-= 1.2.5.1 - 27/04/2018 =
-* Tweak - Text color of paragraph in myaccount section
-* Fix - Use template_redirect hook instead to check verification token
-
-= 1.2.5 - 19/04/2018 =
-* Fix - Default meta keys issue
-* Refactor - Default user meta keys migration
-
-= 1.2.4 - 12/04/2018 =
-* Feature - Introduce jquery validate for client side validation
-* Feature - Allow user to resend email verification link
-* Fix - Manually created user requiring verification issue
-* Fix - Get form data by key issue
-* Fix - Console errors in the backend
-
-= 1.2.3 - 06/04/2018 =
-* Fix - undefined index error in frontend
-
-= 1.2.2 - 06/04/2018 =
-* Feature - Registration without username option
-* Feature - Customizable form submission messages
-* Feature - Hide label option in each field
-* Feature - Description box for each field
-* Fix - Date rendering issue
-* Tweak - Remove login header from login shortcode
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
 

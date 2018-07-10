@@ -388,8 +388,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
-								$field_index           = $field_name;
-								$fields[ $field_name ] = array(
+								$field_index           = 'user_registration_' . $field_name;
+								$fields[ $field_index ] = array(
 									'label'       => __( $field_label, 'user-registration' ),
 									'description' => __( $field_description, 'user-registration' ),
 								);
@@ -462,7 +462,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					}// End foreach().
 				}// End foreach().
 			}// End foreach().
-
+			echo '<pre>'; print_r( $fields ); echo '</pre>';
 			return $fields;
 		}
 	}
