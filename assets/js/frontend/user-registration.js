@@ -54,7 +54,11 @@
 								element.parent().find( 'select:last' ).after( error );
 							}
 						} else {
-							error.insertAfter( element );
+							if( element.hasClass('urfu-file-input') ) {
+								error.insertAfter( element.parent().parent() );
+							}else {
+								error.insertAfter( element );
+							}
 						}
 					},
 					highlight: function( element, errorClass, validClass ) {
