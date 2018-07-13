@@ -2,7 +2,7 @@
 /**
  * Deactivation admin notice
  *
- * Link to settings page.
+ * Link to WPEverst contact form page.
  *
  * @author      WPEverest
  * @category    Admin
