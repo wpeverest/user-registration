@@ -116,8 +116,8 @@ class UR_Emailer {
 		$username = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value );
-			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value );
+			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
+			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
 		}
 	}
 	/**
