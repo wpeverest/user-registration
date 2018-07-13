@@ -228,9 +228,9 @@ class UR_AJAX {
 
 	/**
 	 * AJAX plugin deactivation notice.
+	 * @since  1.4.2
 	 */
 	public static function deactivation_notice() {
-		global $status, $page, $s;
 
 		check_ajax_referer( 'deactivation-notice', 'security' );
 
