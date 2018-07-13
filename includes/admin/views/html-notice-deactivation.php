@@ -10,6 +10,10 @@
  * @since    	1.1.4
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $reason_deactivation_url = 'http://wpeverest.com/contact';
 global $status, $page, $s;
 
