@@ -73,6 +73,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
+		$attachments = apply_filters('user_registration_email_attachement', array(), $valid_form_data, $form_id, $user_id );
 		$data_html = '';
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
@@ -127,11 +128,12 @@ class UR_Emailer {
 	 * @param  array $name_value For smart tags
 	 * @return void
 	 */
-	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value ) {
+	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
+		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$status = ur_get_user_approval_status( $user_id );
-		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
-		$email_token = get_user_meta($user_id, 'ur_confirm_email_token', true);
+		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
+		$email_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
 		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{email_token}}", "{{all_fields}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
@@ -152,8 +154,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			wp_mail( $email, $subject, $message, self::ur_get_header() );
-
+			wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 		}
 
 		else if ( $status == 0 ) {
@@ -166,7 +167,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
 
 
@@ -180,7 +181,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
 
 		} else {
@@ -192,7 +193,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
+				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment  );
 			}
 		}
 	}
@@ -205,11 +206,12 @@ class UR_Emailer {
 	 * @param  $name_value
 	 * @return void
 	 */
-	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value ) {
-		
+	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
+
 		$header = "Reply-To: {{email}} \r\n";
 		$header .= "Content-Type: text/html; charset=UTF-8";
 
+		$attachment = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
 		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
@@ -235,7 +237,7 @@ class UR_Emailer {
 
 		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {										
       		foreach($admin_email as $email ) {
-				wp_mail( $email, $subject, $message, $header );	
+				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
 		}
 	}
