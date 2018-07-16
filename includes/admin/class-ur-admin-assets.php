@@ -153,6 +153,20 @@ class UR_Admin_Assets {
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
 		}
+
+		// Plugins page.
+		if ( in_array( $screen_id, array( 'plugins' ) ) ) {
+			wp_register_script( 'ur-plugins', UR()->plugin_url() . '/assets/js/admin/plugins' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
+			wp_enqueue_script( 'ur-plugins' );
+			wp_localize_script(
+				'ur-plugins',
+				'ur_plugins_params',
+				array(
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'deactivation_nonce' => wp_create_nonce( 'deactivation-notice' ),
+				)
+			);
+		}
 	}
 
 	/**

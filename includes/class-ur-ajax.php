@@ -39,6 +39,7 @@ class UR_AJAX {
 			'user_input_dropped' => true,
 			'form_save_action' => true,
 			'user_form_submit' => true,
+			'deactivation_notice' => false,
 			'rated' => false,
 		);
 
@@ -223,6 +224,21 @@ class UR_AJAX {
 
 		}// End try().
 
+	}
+
+	/**
+	 * AJAX plugin deactivation notice.
+	 * @since  1.4.2
+	 */
+	public static function deactivation_notice() {
+
+		check_ajax_referer( 'deactivation-notice', 'security' );
+
+		ob_start();
+		include_once( UR_ABSPATH . 'includes/admin/views/html-notice-deactivation.php' );
+
+		$content = ob_get_clean();
+		wp_send_json( $content ); // WPCS: XSS OK.
 	}
 
 	private static function is_regex_pass( $value ) {
