@@ -77,7 +77,7 @@ class UR_Form_Field_Email extends UR_Form_Field {
 			});
 		}
 
-		if( is_email( $value ) ) {
+		if( ! is_email( $value ) ) {
 			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
 				return __( $field_label . ' must be a valid email address.', 'user-registration' );
 			});
