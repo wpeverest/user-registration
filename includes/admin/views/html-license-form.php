@@ -22,7 +22,7 @@ $license_key = sanitize_title( $this->plugin_slug . '_license_key' );
 	</td>
 	<script>
 		jQuery( function() {
-			jQuery( 'tr#<?php echo esc_attr( $this->plugin_slug ); ?>-license-row' ).prev().attr( 'id', '<?php echo sanitize_title( $this->plugin_slug ); ?>' ).addClass( 'update restaurantpress-updater-licensed' );
+			jQuery( 'tr#<?php echo esc_attr( $this->plugin_slug ); ?>-license-row' ).prev().attr( 'id', '<?php echo sanitize_title( $this->plugin_slug ); ?>' ).addClass( 'update user-registration-updater-licensed' );
 		});
 	</script>
 </tr>
