@@ -23,8 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class UR_Admin_User_List_Manager {
 
 	/**
- * UR_Admin_User_List_Manager constructor.
-*/public function __construct() {
+	* UR_Admin_User_List_Manager constructor.
+	*/
+	public function __construct() {
 
 		// -------------------- ACTIONS & FILTERS --------------------
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
