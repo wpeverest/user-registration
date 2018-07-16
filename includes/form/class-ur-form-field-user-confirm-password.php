@@ -63,7 +63,7 @@ class UR_Form_Field_User_Confirm_Password extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
+		//TODO
 	}
 
 

@@ -66,26 +66,18 @@ class UR_Form_Field_User_Email extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$email = isset( $form_data->value ) ? $form_data->value : '';
-
 		$status = is_email( $email );
 
 		if ( ! $status ) {
-
 			add_filter( $filter_hook, function ( $msg ) {
-
 				return __( 'Invalid email address.', 'user-registration' );
-
-			} );
+			});
 		}
 
 		if ( email_exists( $email ) ) {
-
 			add_filter( $filter_hook, function ( $msg ) {
-
 				return __( 'Email already exists.', 'user-registration' );
-
-			} );
-
+			});
 		}
 	}
 }

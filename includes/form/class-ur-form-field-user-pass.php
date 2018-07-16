@@ -67,32 +67,12 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		$password = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( empty( $password ) ) {
-
 			add_filter( $filter_hook, function ( $msg ) {
-
 				return __( 'Empty password.', 'user-registration' );
-
-			} );
+			});
 		}
-		/*if ( 'yes' == ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_strong_password' ) ) {
-
-			if ( self::check_password_length( $password ) < 2 ) {
-
-				add_filter( $filter_hook, function ( $msg ) {
-
-					return __( 'Weak password, please try again.', 'user-registration' );
-
-				} );
-
-			}
-		}*/
-
 	}
 
-	// 1 - weak
-	// 2 - not weak
-	// 3 - acceptable
-	// 4 - strong
 	private static function check_password_length( $password ) {
 
 		$strength = 0;
@@ -104,7 +84,6 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		}
 
 		return $strength;
-
 	}
 }
 

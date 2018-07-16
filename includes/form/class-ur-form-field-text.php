@@ -66,23 +66,16 @@ class UR_Form_Field_Text extends UR_Form_Field {
 
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// TODO: Implement validation() method.
-		$required = isset( $single_form_field->label ) ? $single_form_field->general_setting->required : 'no';
 
+		$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
 		$field_label = isset( $form_data->label ) ? $form_data->label : '';
-
 		$value = isset( $form_data->value ) ? $form_data->value : '';
 
-		if ( 'yes' == $required && ! empty( $value ) ) {
-
+		if ( 'yes' == $required && empty( $value ) ) {
 			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
-
 				return __( $field_label . ' is required.', 'user-registration' );
-
-			} );
-
+			});
 		}
-
 	}
 }
 
