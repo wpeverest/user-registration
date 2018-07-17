@@ -5,7 +5,6 @@
 	var user_registration = {
 		$user_registration: $( '.ur-frontend-form form.register' ),
 		init: function() {
-			this.init_datepicker();
 			this.load_validation();
 			this.init_inputMask();
 
@@ -16,17 +15,6 @@
 			if ( typeof $.fn.inputmask !== 'undefined' ) {
 				$( '.ur-masked-input' ).inputmask();
 			}
-		},
-		init_datepicker: function () {
-			$( '.date-picker-field, .date-picker' ).datepicker({
-				changeMonth: true,
-				changeYear: true,
-				defaultDate: '',
-				dateFormat: 'yy-mm-dd',
-				numberOfMonths: 1,
-				minDate: '-15Y',
-				maxDate: '+15Y'
-			});
 		},
 		load_validation: function() {
 			if ( typeof $.fn.validate === 'undefined' ) {
@@ -435,12 +423,7 @@
 		 $('form.register').ur_form_submission();
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
-			date_selector.addClass('ur-date').attr('type', 'text').attr('placeholder', 'yy-mm-dd').datepicker({
-				dateFormat: 'yy-mm-dd',
-				changeMonth: true,
-				changeYear: true,
-				yearRange: '1901:2099',
-			});
+			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr();
 		}
 	});
 

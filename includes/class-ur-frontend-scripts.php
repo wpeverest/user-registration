@@ -69,6 +69,13 @@ class UR_Frontend_Scripts {
 				'version' => '1.12.1',
 				'media'   => 'all',
 			),
+			'flatpickr' => array(
+				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
+				'deps'    => array(),
+				'version' => '4.5.1',
+				'media'	  => 'all',
+				'has_rtl' => false,
+			),
 			'user-registration-smallscreen' => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
 				'deps'    => '',
@@ -185,6 +192,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery' ),
 				'version' => '4.0.0-beta.58',
 			),
+			'flatpickr' => array(
+				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => '1.17.0',
+			),
 			'ur-jquery-validate' => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
@@ -192,7 +204,7 @@ class UR_Frontend_Scripts {
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery' , 'jquery-ui-datepicker','ur-jquery-validate'),
+				'deps'    => array( 'jquery' , 'flatpickr','ur-jquery-validate'),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(
@@ -248,7 +260,7 @@ class UR_Frontend_Scripts {
 		self::register_styles();
 
 		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
-			self::enqueue_script('ur-jquery-validate');
+			self::enqueue_script( 'flatpickr' );
 			self::enqueue_script( 'ur-inputmask' );
 			self::enqueue_script( 'user-registration' );
 		}
