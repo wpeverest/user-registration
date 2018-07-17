@@ -235,6 +235,32 @@ module.exports = function( grunt ){
 					'<%= dirs.css %>/*.css'
 				]
 			}
+		},
+
+		// Compress files and folders.
+		compress: {
+			options: {
+				archive: 'user-registration.zip'
+			},
+			files: {
+				src: [
+					'**',
+					'!.*',
+					'!*.md',
+					'!*.zip',
+					'!.*/**',
+					'!sass/**',
+					'!vendor/**',
+					'!Gruntfile.js',
+					'!package.json',
+					'!composer.json',
+					'!composer.lock',
+					'!node_modules/**',
+					'!phpcs.ruleset.xml'
+				],
+				dest: 'user-registration',
+				expand: true
+			}
 		}
 	});
 
@@ -251,6 +277,7 @@ module.exports = function( grunt ){
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks('grunt-contrib-compress');
 
 	// Register tasks.
 	grunt.registerTask( 'default', [
@@ -281,5 +308,10 @@ module.exports = function( grunt ){
 	grunt.registerTask( 'i18n', [
 		'checktextdomain',
 		'makepot'
+	]);
+
+	grunt.registerTask( 'zip', [
+		'dev',
+		'compress'
 	]);
 };
