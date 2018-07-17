@@ -63,7 +63,7 @@ class UR_Emailer {
 		$header .= "Reply-To: ".self::ur_sender_email()."\r\n";
 		$header .= "Content-Type: text/html\r\n; charset=UTF-8";
 
-		return $header; 
+		return $header;
 	}
 
 	/**
@@ -73,7 +73,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
-		$attachments = apply_filters('user_registration_email_attachement', array(), $valid_form_data, $form_id, $user_id );
+		$attachments = apply_filters('user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$data_html = '';
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
@@ -90,7 +90,7 @@ class UR_Emailer {
 			$value = isset( $form_data->value ) ? $form_data->value : '';
 
 			if( $field_meta === 'user_pass') {
-				$value = __('Chosen Password', 'user-registration'); 
+				$value = __('Chosen Password', 'user-registration');
 			}
 
 			if ( is_array( $value ) ) {
@@ -223,7 +223,7 @@ class UR_Emailer {
 
 		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{all_fields}}");
 		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
-		
+
 		//add the field name and values from $name_value to the replacement arrays.
 		$to_replace = array_merge( $to_replace, array_keys( $name_value ) );
 		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
@@ -235,7 +235,7 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 		$header = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {										
+		if ( 'yes' == get_option(' user_registration_enable_admin_email ', 'yes') ) {
       		foreach($admin_email as $email ) {
 				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
@@ -263,7 +263,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header()  );			
+				wp_mail( $email, $subject, $message, self::ur_get_header()  );
 			}
 
 		} else if ( $status == - 1 ) {
@@ -276,7 +276,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
 
 		} else {
@@ -289,7 +289,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ){
-				wp_mail( $email, $subject, $message, self::ur_get_header() );			
+				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
 		}
 	}
@@ -320,10 +320,10 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
 		if ( 'yes' == get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
-			wp_mail( $email, $subject, $message, $headers );			
+			wp_mail( $email, $subject, $message, $headers );
 			return true;
 		}
-		
+
 		return false;
 	}
 
