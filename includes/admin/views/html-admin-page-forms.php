@@ -31,7 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							       value='[user_registration_form id=<?php echo '"' . $post_data[0]->ID . '"' ?>]'
 							       class=" code" size="35">
 
-							       <button id="copy-shortcode" class="button button-primary ur-copy-shortcode" href="#" data-copied="Copied!"> Copy!</button>
+							<button id="copy-shortcode" class="button button-primary ur-copy-shortcode" href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+						    <span class=""><?php esc_html_e( 'Copy', 'user-registration' ); ?></span>
+							</button>
 
 							<?php
 						}
