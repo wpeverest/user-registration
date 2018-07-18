@@ -84,8 +84,7 @@ class UR_Admin_Assets {
 			'jquery-ui-droppable',
 			'jquery-tiptip',
 			'ur-backbone-modal',
-			'ur-enhanced-select'
-
+			'ur-enhanced-select',
 
 		), UR_VERSION );
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
@@ -103,6 +102,10 @@ class UR_Admin_Assets {
 			'jquery',
 			'selectWoo',
 		), UR_VERSION );
+
+		wp_enqueue_script( 'ur-jquery-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-jquery-copy' . $suffix . '.js', 'jquery' );
+
+		wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
 
 		wp_enqueue_script('admin-editor-js');
 
