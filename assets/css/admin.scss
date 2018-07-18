@@ -160,6 +160,15 @@
 		.ur-form-name {
 			width: 25%;
 		}
+		#copy-shortcode {
+		    margin-left: -5px;
+		    border-radius: 0 3px 3px 0;
+
+		    svg {
+		    	fill: #ffffff;
+		    	margin-top: 4px;
+		    }
+		}
 	}
 
 	.blank-slate .menu-settings {
