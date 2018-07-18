@@ -96,17 +96,13 @@ class UR_Admin_Assets {
 		), UR_VERSION );
 
 		wp_register_script ( 'admin-editor-js', UR()->plugin_url() . '/assets/js/admin/admin-editor' . $suffix . '.js', 'jquery' );
-
 		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
 		wp_register_script( 'ur-enhanced-select', UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js', array(
 			'jquery',
 			'selectWoo',
 		), UR_VERSION );
 
-		wp_enqueue_script( 'ur-jquery-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-jquery-copy' . $suffix . '.js', 'jquery' );
-
 		wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
-
 		wp_enqueue_script('admin-editor-js');
 
 		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(

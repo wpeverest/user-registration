@@ -1,9 +1,23 @@
-/* exported evfSetClipboard, evfClearClipboard */
-
 /**
  * Simple text copy functions using native browser clipboard capabilities.
- * @since 1.2.0
+ * @since 1.4.3
  */
+jQuery( function ($){
+	$(document.body).on( 'click', '.ur-copy-shortcode' , function( evt ) {
+		var res = $('.code').val();
+		urSetClipboard(res, $( this ) );
+
+		$( '.ur-copy-shortcode' ).tipTip({
+				'attribute': 'data-copied',
+				'activation': 'focus',
+				'fadeIn': 50,
+				'fadeOut': 50,
+				'delay': 200
+			}).focus();
+
+		evt.preventDefault();
+	});
+});
 
 /**
  * Set the user's clipboard contents.
@@ -15,6 +29,7 @@ function urSetClipboard( data, $el ) {
 	if ( 'undefined' === typeof $el ) {
 		$el = jQuery( document );
 	}
+
 	var $temp_input = jQuery( '<textarea style="opacity:0">' );
 	jQuery( 'body' ).append( $temp_input );
 	$temp_input.val( data ).select();
@@ -36,16 +51,3 @@ function urSetClipboard( data, $el ) {
 function urClearClipboard() {
 	urSetClipboard( '' );
 }
-
-
-/* global user_registration_settings_params ur-copy-shortcode*/ 
-// (function ( $ ) {
-
-// 	// Open modal when media button is clicked
-// 	$(document).on('click', '.ur-copy-shortcode', function(event) {			
-// 		event.preventDefault();
-// 		var res = $.copy($('input').text());
-//     	$("#status").text(res);
-// 	});
-
-// })(jQuery);
