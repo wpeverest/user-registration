@@ -57,7 +57,7 @@ User Registration can be easily extended with some premium addons.
 
 * [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce-integration/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
 
 * [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
