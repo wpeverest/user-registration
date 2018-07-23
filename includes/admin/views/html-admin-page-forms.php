@@ -77,14 +77,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div id="ur-tab-field-settings" class="ur-tab-content">
 
 									<form method="post" id="ur-field-settings" onsubmit="return false;">
-
 										<?php
-
-
-										$form_id = isset( $post_data[0]->ID ) ? $post_data[0]->ID : 0;
-
-										ur_admin_form_settings( $form_id );
-
+											$form_id = isset( $post_data[0]->ID ) ? $post_data[0]->ID : 0;
+											ur_admin_form_settings( $form_id );
+											do_action( 'user_registration_after_form_settings', $form_id );
 										?>
 									</form>
 
