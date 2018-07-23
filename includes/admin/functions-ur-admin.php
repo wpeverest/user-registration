@@ -315,7 +315,8 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		}
 
 	}
-	$setting_fields = ur_admin_form_settings_fields( $form_id );
+
+	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
 
 	foreach ( $setting_fields as $field_data ) {
 
@@ -327,10 +328,6 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 
 				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
 			}
-
 		}
-
 	}
-
-
 }
