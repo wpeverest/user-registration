@@ -364,11 +364,11 @@
 								var type = 'error';
 								try {
 									var response = $.parseJSON(ajax_response.responseText);
-									if ( typeof response.success !== 'undefined' && response.success === true ) {
-										type = 'message';
-									}
 									if ( typeof response.success !== 'undefined' && response.success === true && typeof response.data.paypal_redirect !== 'undefined') {
 										window.location = response.data.paypal_redirect;
+									}
+									if ( typeof response.success !== 'undefined' && response.success === true ) {
+										type = 'message';
 									}
 									if ( typeof response.data.message === 'object' ) {
 										$.each(response.data.message, function () {
@@ -405,6 +405,8 @@
 											}
 										}
 
+									} else {
+										message.append('<li>' + response.data.message + '</li>');
 									}
 								} catch ( e ) {
 									//message.addClass(type);
