@@ -367,6 +367,9 @@
 									if ( typeof response.success !== 'undefined' && response.success === true ) {
 										type = 'message';
 									}
+									if ( typeof response.success !== 'undefined' && response.success === true && typeof response.data.paypal_redirect !== 'undefined') {
+										window.location = response.data.paypal_redirect;
+									}
 									if ( typeof response.data.message === 'object' ) {
 										$.each(response.data.message, function () {
 											$('<li/>').text(this).appendTo(message);
@@ -382,6 +385,9 @@
 										}
 										else if ( user_registration_params.login_option == 'email_confirmation' ) {
 											message.append('<li>' + ursL10n.user_email_pending + '</li>');
+										}
+										else if( user_registration_params.login_option == 'payment' ) {
+											message.append('<li>' + response.data.message + '</li>');
 										}
 										else {
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
