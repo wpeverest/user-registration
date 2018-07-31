@@ -193,7 +193,7 @@ class UR_Frontend_Scripts {
 				'version' => '4.0.0-beta.58',
 			),
 			'flatpickr' => array(
-				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr' . $suffix . '.js' ),
+				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => '1.17.0',
 			),
