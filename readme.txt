@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -65,6 +65,10 @@ User Registration can be easily extended with some premium addons.
 
 * [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
 
+* [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/) - Allows admin to connect users registered via other forms to User Registration selected form.
+
+* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Let's you Export user's data in PDF, PDF file as email attachment on form submission.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -96,6 +100,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.4.3 - 31/07/2018 =
+* Feature - Copy form shortcode
+* Add - Deactivation feedback notice
+* Change - Date picker to flatpickr
+* Add - Email attachement filter
 
 = 1.4.2 - 11/07/2018 =
 * Feature - Gravatar on user profile

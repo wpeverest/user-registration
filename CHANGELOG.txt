@@ -1,3 +1,9 @@
+= 1.4.3 - 31/07/2018 =
+* Feature - Copy form shortcode
+* Add - Deactivation feedback notice
+* Change - Date picker to flatpickr
+* Add - Email attachement filter
+
 = 1.4.2 - 11/07/2018 =
 * Feature - Gravatar on user profile
 * Feature - Layout(vertical/horizontal) on user account
