@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$reason_deactivation_url = 'http://wpeverest.com/contact';
+$reason_deactivation_url = 'https://wpeverest.com/deactivation/user-registration/';
 global $status, $page, $s;
 
 $deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . UR_PLUGIN_BASENAME . '&amp;plugin_status=' . $status . '&amp;paged=' . $page . '&amp;s=' . $s, 'deactivate-plugin_' . UR_PLUGIN_BASENAME );
