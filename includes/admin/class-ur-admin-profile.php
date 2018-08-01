@@ -243,6 +243,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				</table>
 				<?php
 			endforeach;
+
+			do_action( 'user_registration_after_user_extra_information', $user );
 		}
 
 		/**
