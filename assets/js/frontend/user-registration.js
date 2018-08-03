@@ -387,6 +387,8 @@
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										}
 										$this[ 0 ].reset();
+										jQuery( '#billing_country' ).trigger( 'change' );
+										jQuery( '#shipping_country' ).trigger( 'change' );
 
 										if ( user_registration_params.redirect_url !== '' ) {
 											window.setTimeout(function () {
