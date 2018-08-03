@@ -287,7 +287,8 @@ class UR_AJAX {
 					$value = wp_kses( $value, array(
 										    'a' => array(
 										        'href' => array(),
-										        'title' => array()
+										        'title' => array(),
+										        'target' => array(),
 										    ),
 										    'br' => array(),
 										    'em' => array(),
