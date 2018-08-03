@@ -415,7 +415,6 @@ function ur_exclude_profile_details_fields() {
 	return apply_filters( 'user_registration_exclude_profile_fields', array(
 		'user_pass',
 		'user_confirm_password',
-		'privacy_policy'
 	) );
 }
 

@@ -191,10 +191,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'checkbox' :
 				$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';
-				if( 'privacy_policy' == $field_key ) {
-					break;
-				}
 				$default = $args['default'];
+
 				if( isset( $args['choices'] ) && array_filter( $args['choices'] ) ) {
 
 					if( ! empty( $default ) ) {
