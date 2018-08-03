@@ -57,17 +57,17 @@ User Registration can be easily extended with some premium addons.
 
 * [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/) - Integrate and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
 
 * [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
-* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/) - Let you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
+* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/) - Lets you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
 
 * [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
 
 * [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/) - Allows admin to connect users registered via other forms to User Registration selected form.
 
-* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Let's you Export user's data in PDF, PDF file as email attachment on form submission.
+* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
 
 == Installation ==
 
