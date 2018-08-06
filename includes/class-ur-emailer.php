@@ -184,7 +184,7 @@ class UR_Emailer {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
 
-		} else {
+		} else if( 'default' === get_option( 'user_registration_general_setting_login_options' ) || 'auto_login' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			$subject = get_option( 'user_registration_successfully_registered_email_subject',__('Congratulations! Registration Complete on {{blog_info}}', 'user-registration') );
 			$message = new UR_Settings_Successfully_Registered_Email();
 			$message = $message->ur_get_successfully_registered_email();

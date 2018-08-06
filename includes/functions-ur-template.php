@@ -95,7 +95,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null ) {
-		
+
 		/* Conditional Logic codes */
 			$rules = array();
 			$rules['conditional_rules'] = isset ( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';
