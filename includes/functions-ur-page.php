@@ -59,9 +59,11 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 20 );
  */
 function ur_get_page_id( $page ) {
 
-	$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
-
-	$page = get_the_ID();
+	if( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+		$page = get_the_ID();
+	} else {
+		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
+	}
 
 	return $page ? absint( $page ) : - 1;
 }
