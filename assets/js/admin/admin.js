@@ -621,6 +621,7 @@ jQuery(function ( $ ) {
 					});
 					break;
 				case 'field_name':
+				case 'input_mask':
 					$this_obj.on('change', function () {
 						trigger_general_setting_field_name($(this));
 					});
@@ -641,9 +642,6 @@ jQuery(function ( $ ) {
 					});
 					break;
 				case 'description':
-					$this_obj.on('keyup', function () {
-						trigger_general_setting_description($(this));
-					});
 				case 'html':
 					$this_obj.on('keyup', function () {
 						trigger_general_setting_description($(this));
