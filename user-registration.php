@@ -84,7 +84,7 @@ final class UserRegistration {
 	}
 
 	/**
-	 * FlashToolkit Constructor.
+	 * UserRegistration Constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();
@@ -103,7 +103,6 @@ final class UserRegistration {
 		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
 	}
-
 
 	/**
 	 * Define FT Constants.
