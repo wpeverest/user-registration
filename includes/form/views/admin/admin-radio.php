@@ -14,23 +14,22 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 
 	<div class="ur-label">
 		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
-
 	</div>
-	<div class="ur-field" data-field-key="radio">
 
+	<div class="ur-field" data-field-key="radio">
 			<?php
-			if(count($options)<1){
-				echo "<input type = 'radio'  value='1'/>";
-			}
-			foreach ( $options as $option ) {
-				echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "'/>" . esc_html( trim( $option ) ) . '<br>';
-			}
+				if( count( $options ) < 1 ) {
+					echo "<input type = 'radio'  value='1'/>";
+				}
+
+				foreach ( $options as $option ) {
+					echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "'/>" . esc_html( trim( $option ) ) . '<br>';
+				}
 			?>
 	</div>
+
 	<?php
-
 	  UR_Form_Field_Radio::get_instance()->get_setting();
-
 	?>
 </div>
 
