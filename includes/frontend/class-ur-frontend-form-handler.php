@@ -301,4 +301,5 @@ class UR_Frontend_Form_Handler {
 		return $form_data;
 	}
 }
+
 return new UR_Frontend_Form_Handler();

@@ -1,9 +1,7 @@
 <?php
 /**
- * UserRegistration Admin.
+ * UR_Form_Field_Nickname.
  *
- * @class    UR_Form_Field_Nickname
- * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
  * @author   WPEverest
@@ -20,7 +18,6 @@ class UR_Form_Field_Nickname extends UR_Form_Field {
 
 	private static $_instance;
 
-
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -30,25 +27,17 @@ class UR_Form_Field_Nickname extends UR_Form_Field {
 		return self::$_instance;
 	}
 
-	/**
-	 * Hook in tabs.
-	 */
 	public function __construct() {
 
 		$this->id = 'user_registration_nickname';
-
 		$this->form_id = 1;
-
 		$this->registered_fields_config = array(
-
 			'label' => __( 'Nickname','user-registration' ),
-
 			'icon' => 'dashicons dashicons-id',
 		);
+
 		$this->field_defaults           = array(
-
 			'default_label' => __( 'Nickname','user-registration' ),
-
 			'default_field_name' => 'description',
 		);
 	}
@@ -56,11 +45,7 @@ class UR_Form_Field_Nickname extends UR_Form_Field {
 
 	public function get_registered_admin_fields() {
 
-		return '<li id="' . $this->id . '_list "
-
-				class="ur-registered-item draggable"
-
-                data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
+		return '<li id="' . $this->id . '_list " class="ur-registered-item draggable" data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
 	}
 
 

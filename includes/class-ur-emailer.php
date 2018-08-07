@@ -26,7 +26,7 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-		if('yes' == get_option('user_registration_email_setting_disable_email')){
+		if( 'yes' === get_option('user_registration_email_setting_disable_email' ) ) {
 			return;
 		}
 

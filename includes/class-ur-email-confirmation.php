@@ -16,12 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class UR_Email_Confirmation
  */
-
 class UR_Email_Confirmation {
 
 	public function __construct() {
 
-		// return if the login option is not email confirmation
+		// Return if the login option is not email confirmation
 		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}

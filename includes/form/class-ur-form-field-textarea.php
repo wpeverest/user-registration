@@ -1,9 +1,7 @@
 <?php
 /**
- * UserRegistration Admin.
+ * UR_Form_Field_Textarea.
  *
- * @class    UR_Form_Field_Textarea
- * @version  1.0.0
  * @package  UserRegistration/Form
  * @category Admin
  * @author   WPEverest
@@ -20,7 +18,6 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 
 	private static $_instance;
 
-
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -30,38 +27,24 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 		return self::$_instance;
 	}
 
-	/**
-	 * Hook in tabs.
-	 */
 	public function __construct() {
 
 		$this->id = 'user_registration_textarea';
-
 		$this->form_id = 1;
-
 		$this->registered_fields_config = array(
-
 			'label' => __( 'Textarea','user-registration' ),
-
 			'icon' => 'dashicons dashicons-editor-textcolor',
 		);
+
 		$this->field_defaults = array(
-
 			'default_label' => __( 'Textarea','user-registration' ),
-
 			'default_field_name' => 'textarea_' . ur_get_random_number(),
 		);
 	}
 
-
-
 	public function get_registered_admin_fields() {
 
-		return '<li id="' . $this->id . '_list "
-
-				class="ur-registered-item draggable"
-
-                data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
+		return '<li id="' . $this->id . '_list " class="ur-registered-item draggable" data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
 	}
 
 

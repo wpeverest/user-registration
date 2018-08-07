@@ -42,6 +42,7 @@ class UR_Form_Handler {
 
 	/**
 	 * Save and update a profie fields if the form was submitted through the user account page.
+	 * @return mixed
 	 */
 	public static function save_profile_details() {
 
@@ -117,11 +118,9 @@ class UR_Form_Handler {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-
 			$user_data = array();
 
 			foreach ( $profile as $key => $field ) {
-
 				$new_key = str_replace( 'user_registration_', '', $key );
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
@@ -133,12 +132,13 @@ class UR_Form_Handler {
 					}
 
 				} else {
-
 					$update_key = $key;
+
 					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
 						$update_key = str_replace( 'user_', '', $new_key );
 					}
-					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';  
+					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+
 					if( $disabled !== 'disabled' ){
 						update_user_meta( $user_id, $update_key, $_POST[ $key ] );				
 					}

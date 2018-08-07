@@ -35,16 +35,13 @@ function ur_notice_count( $notice_type = '' ) {
 	$all_notices  = UR()->session->get( 'ur_notices', array() );
 
 	if ( isset( $all_notices[ $notice_type ] ) ) {
-
 		$notice_count = absint( sizeof( $all_notices[ $notice_type ] ) );
-
 	} elseif ( empty( $notice_type ) ) {
 
 		foreach ( $all_notices as $notices ) {
 			$notice_count += absint( sizeof( $all_notices ) );
 		}
 	}
-
 
 	return $notice_count;
 }
@@ -62,7 +59,6 @@ function ur_notice_count( $notice_type = '' ) {
 function ur_has_notice( $message, $notice_type = 'success' ) {
 	if ( ! did_action( 'user_registration_init' ) ) {
 		ur_doing_it_wrong( __FUNCTION__, __( 'This function should not be called before user_registration_init.', 'user-registration' ), '1.0' );
-
 		return;
 	}
 
@@ -155,7 +151,6 @@ function ur_print_notices() {
 	}
 
 	ur_clear_notices();
-
 }
 
 /**
@@ -174,7 +169,6 @@ function ur_print_notice( $message, $notice_type = 'success' ) {
 	ur_get_template( "notices/{$notice_type}.php", array(
 		'messages' => array( apply_filters( 'user_registration_add_' . $notice_type, $message ) ),
 	) );
-
 }
 
 /**

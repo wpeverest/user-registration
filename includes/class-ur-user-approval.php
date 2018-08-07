@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class UR_User_Approval
  */
@@ -58,18 +57,17 @@ class UR_User_Approval {
 
 	}
 
-
 	/**
 	 * Display a message the provide instruction after the use regsitration and remove the login form from there
 	 *
 	 * @param $errors
+	 * @return mixed
 	 */
 	public function registration_completed_message( $errors ) {
 
 		if ( ! ( isset( $_GET['checkemail'] ) && $_GET['checkemail'] == 'registered' ) ) {
 			return $errors;
 		}
-
 
 		return '';
 	}
@@ -131,8 +129,6 @@ class UR_User_Approval {
 		if ( $this->is_admin_creation_process() ) {
 			return;
 		}
-
-
 	}
 
 	/**
@@ -207,7 +203,6 @@ class UR_User_Approval {
 		$user_manager = new UR_Admin_User_Manager();
 
 		if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
-
 			return;
 		}
 
@@ -218,7 +213,6 @@ class UR_User_Approval {
 		}
 
 		wp_logout();
-
 	}
 
 	/**
@@ -257,9 +251,7 @@ class UR_User_Approval {
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
 		if ( ! $user_manager->is_approved() ) {
-
 			$error_message = 'message_reset_password_not_allowed';
-
 			$result = new WP_Error( 'user_not_approved', $error_message );
 		}
 
@@ -304,7 +296,6 @@ class UR_User_Approval {
 			$query->set( 'meta_query', $meta_query );
 		}
 	}
-
 }
 
 new UR_User_Approval();

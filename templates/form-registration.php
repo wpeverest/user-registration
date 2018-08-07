@@ -23,31 +23,26 @@
  * @var $form_id         int
  * @var $is_field_exists boolean
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+
 $frontend = UR_Frontend::instance();
-
 $form_template = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
-
-$custom_class = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
-
+$custom_class  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
 $template_class = '';
 
-if ( $form_template == 'Bordered' ) {
-
+if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--bordered';
 
-} else if ( $form_template == 'Flat' ) {
-
+} elseif ( 'Flat' === $form_template ) {
 	$template_class = 'ur-frontend-form--flat';
 
-} else if($form_template == 'Rounded'){
-
+} elseif( 'Rounded' === $form_template ) {
 	$template_class = 'ur-frontend-form--rounded';
 
-} else if($form_template == 'Rounded Edge'){
-
+} elseif( 'Rounded Edge' === $form_template ) {
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 }
 
@@ -57,80 +52,70 @@ if ( $form_template == 'Bordered' ) {
 		      data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
 
 			<?php
-
-			foreach ( $form_data_array as $data ) {
-				?>
-
-				<div class='ur-form-row'>
-
-					<?php
-					$width = floor( 100 / count( $data ) ) - count( $data );
-
-					foreach ( $data as $grid_key => $grid_data ) {
-
-						?>
-						<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>"
-						     style="width:<?php echo $width; ?>%">
+				foreach ( $form_data_array as $data ) {
+					?>
+						<div class='ur-form-row'>
 							<?php
-							foreach ( $grid_data as $grid_data_key => $single_item ) {
+								$width = floor( 100 / count( $data ) ) - count( $data );
 
-								if ( isset( $single_item->field_key ) ) {
+								foreach ( $data as $grid_key => $grid_data ) {
 									?>
+										<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>"
+										     style="width:<?php echo $width; ?>%">
+											<?php
+												foreach ( $grid_data as $grid_data_key => $single_item ) {
 
-									<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
-										<?php
-
-										$frontend->user_registration_frontend_form( $single_item, $form_id );
-										$is_field_exists = true;
-
-										?>
-									</div>
+													if ( isset( $single_item->field_key ) ) {
+														?>
+															<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+																<?php
+																	$frontend->user_registration_frontend_form( $single_item, $form_id );
+																	$is_field_exists = true;
+																?>
+															</div>
+														<?php
+													}
+												}
+											?>
+										</div>
 									<?php
 								}
-							}
 							?>
 						</div>
-						<?php
-					}
+					<?php
+				}
+
+				if ( $is_field_exists ) {
 					?>
-				</div>
-			<?php } // End foreach().
+						<?php 
+							if( ! empty( $recaptcha_node ) ) {
+								echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
+							}
+						?>
+						<button type="submit" class="btn button ur-submit-button">
+							<span></span>
+								<?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
+						</button>
 
-			if ( $is_field_exists ) {
-				?>
-					<?php if( ! empty( $recaptcha_node ) ) {
-						echo 	'<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
-					}
+					<?php 
+				}
+
+				if ( count( $form_data_array ) == 0 ) {
 					?>
-					<button type="submit"
-					        class="btn button ur-submit-button">
-						<span></span><?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
-					</button>
-
-				<?php 
-			}
-
-
-			if ( count( $form_data_array ) == 0 ) {
-				?>
-
-				<h2><?php echo __( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
-
-				<?php
-
-			}
+						<h2><?php echo __( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
+					<?php
+				}
 			?>
+
 			<div style="clear:both"></div>
-
 			<input type="hidden" name="ur-user-form-id" value="<?php echo $form_id; ?>"/>
-
-			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false );
-			?>
+			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 		</form>
 
 		<div style="clear:both"></div>
 	</div>
 <?php
+
 /**
  * User registration form template.
  *

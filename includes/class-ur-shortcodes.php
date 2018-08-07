@@ -110,15 +110,11 @@ class UR_Shortcodes {
 			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 			if ( ! current_user_can( $current_user_capability ) ) {
-
-				$user_ID = get_current_user_id();
-
-				$user = get_user_by( 'ID', $user_ID );
-
 				global $wp;
 
+				$user_ID = get_current_user_id();
+				$user = get_user_by( 'ID', $user_ID );
 				$current_url = home_url( add_query_arg( array(), $wp->request ) );
-
 				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
 
 				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( "You are currently logged in as %1s. %2s", 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
@@ -159,7 +155,6 @@ class UR_Shortcodes {
 		}
 
 		$is_field_exists = false;
-
 		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 
 		if ( 'yes' === $enable_strong_password ) {
@@ -168,23 +163,15 @@ class UR_Shortcodes {
 		}
 		
 		$recaptcha_enable = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
-
 		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-
 		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if ( 'yes' == $recaptcha_enable && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
-
 			wp_enqueue_script( 'ur-google-recaptcha' );
-
 			wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
-
 				'site_key' => $recaptcha_site_key,
-
 				'site_secret' => $recaptcha_site_secret,
-
 				'is_captcha_enable' => true,
-
 			) );
 
 			$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
@@ -194,12 +181,12 @@ class UR_Shortcodes {
 		
 		include_once( UR_ABSPATH . 'includes/frontend/class-ur-frontend.php' );
 		ur_get_template( 'form-registration.php', array(
-			'form_data_array'        => $form_data_array,
-			'is_field_exists'        => $is_field_exists,
-			'form_id'                => $form_id,
-			'enable_strong_password' => $enable_strong_password,
-			'recaptcha_node'         => $recaptcha_node,
-
-		) );
+				'form_data_array'        => $form_data_array,
+				'is_field_exists'        => $is_field_exists,
+				'form_id'                => $form_id,
+				'enable_strong_password' => $enable_strong_password,
+				'recaptcha_node'         => $recaptcha_node,
+			)
+		);
 	}
 }

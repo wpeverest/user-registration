@@ -763,7 +763,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
 
 	return $arguments['setting_data'];
-
 }
 
 /**
@@ -850,9 +849,7 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 	$form_data_array = array();
 
 	foreach ( $form_data as $data ) {
-
 		foreach ( $data as $single_data ) {
-
 			foreach ( $single_data as $field_data ) {
 
 				$field_key = isset( $field_data->field_key ) && $field_data->field_key !== null ? $field_data->field_key : '';
@@ -882,7 +879,8 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 			}
 		}
 	}
-		return $form_data_array;
+
+	return $form_data_array;
 }
 
 /**
@@ -1040,7 +1038,7 @@ function ur_get_all_user_registration_form() {
 }
 
 /**
- * Check user login option, if not email confirmation force not disable emails.
+ * Checks user login option, if not email confirmation force not disable emails.
  */
 function ur_get_user_login_option() {
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {

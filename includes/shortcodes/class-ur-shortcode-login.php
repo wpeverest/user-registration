@@ -27,7 +27,6 @@ class UR_Shortcode_Login {
 	 * @return string
 	 */
 	public static function get( $atts ) {
-
 		return UR_Shortcodes::shortcode_wrapper( array( __CLASS__, 'output' ), $atts );
 	}
 
@@ -36,7 +35,6 @@ class UR_Shortcode_Login {
 	 *
 	 * @param array $atts
 	 */
-
 	public static function output( $atts ) {
 		global $wp, $post;
 
@@ -47,15 +45,12 @@ class UR_Shortcode_Login {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-
 				ur_get_template( 'myaccount/form-login.php' );
 			}
-
 		}
 		else
 		{
 			echo sprintf( __('You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) ;
 		}
 	}
-
 }

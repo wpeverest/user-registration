@@ -23,13 +23,13 @@ function ur_login_error_message( $error ) {
 		return $error;
 	}
 
-    //Check if the error contains incorrect string.
+    // Check if the error contains incorrect string.
     $pos = strpos( $error, 'incorrect' );
 
-    //Check if the error contains Invalid string.
+    // Check if the error contains Invalid string.
     $pos2 = strpos( $error, 'Invalid' );
 
-    //Its the correct username with incorrect password.
+    // Its the correct username with incorrect password.
 	if ( is_int( $pos ) && isset( $_POST['redirect'] ) && isset( $_POST['username'] ) ) {
         $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     } // It's invalid username. 

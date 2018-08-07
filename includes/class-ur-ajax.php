@@ -241,6 +241,11 @@ class UR_AJAX {
 		wp_send_json( $content ); // WPCS: XSS OK.
 	}
 
+	/**
+	 * Checks if the string passes the regex
+	 * @param  string $value
+	 * @return boolean
+	 */
 	private static function is_regex_pass( $value ) {
 
 		$field_regex = "/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/";
@@ -301,8 +306,7 @@ class UR_AJAX {
 					if ( ! current_user_can( 'unfiltered_html' ) ) {
 						$value = wp_kses_post( $value );
 					}
-				}
-				else{
+				} else {
 					$value = sanitize_text_field( $value );
 				}
 			}
@@ -320,7 +324,6 @@ class UR_AJAX {
 		update_option( 'user_registration_admin_footer_text_rated', 1 );
 		wp_die();
 	}
-
 }
 
 UR_AJAX::init();

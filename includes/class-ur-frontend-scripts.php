@@ -313,9 +313,7 @@ class UR_Frontend_Scripts {
 		
 		switch ( $handle ) {
 			case 'user-registration' :
-
 				return array(
-
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
@@ -333,7 +331,6 @@ class UR_Frontend_Scripts {
 						'captcha_error'             => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
 					),
 				);
-
 			break;
 
 			case 'ur-password-strength-meter' :
