@@ -466,19 +466,16 @@ class UR_Admin_Settings {
 					if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
 						?>
 							<tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) );   echo ' ' .esc_attr( $value['row_class'] ); ?>">
-								<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?></th>
+								<th scope="row" class="titledesc">
+									<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+									<?php echo $tooltip_html; ?>
+								</th>
 								<td class="forminp forminp-checkbox">
 									<fieldset>
 						<?php
 					} else {
 						?>
 							<fieldset class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
-						<?php
-					}
-
-					if ( ! empty( $value['title'] ) ) {
-						?>
-							<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ) ?></span></legend>
 						<?php
 					}
 
@@ -493,7 +490,7 @@ class UR_Admin_Settings {
 								<?php checked( $option_value, 'yes' ); ?>
 								<?php echo implode( ' ', $custom_attributes ); ?>
 							/> <?php echo $description ?>
-						</label> <?php echo $tooltip_html; ?>
+						</label>
 					<?php
 
 					if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
@@ -605,9 +602,7 @@ class UR_Admin_Settings {
 			$description = '<span class="description">' . wp_kses_post( $description ) . '</span>';
 		}
 
-		if ( $tooltip_html && in_array( $value['type'], array( 'checkbox' ) ) ) {
-			$tooltip_html = '<p class="description">' . $tooltip_html . '</p>';
-		} elseif ( $tooltip_html ) {
+		if ( $tooltip_html ) {
 			$tooltip_html = ur_help_tip( $tooltip_html );
 		}
 
