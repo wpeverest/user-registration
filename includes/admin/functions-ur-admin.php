@@ -34,9 +34,15 @@ function ur_get_screen_ids() {
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
 }
  
+// Hook into exporter and eraser tool.
 add_filter( 'wp_privacy_personal_data_exporters', 'user_registration_register_data_exporter', 10 );
 add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data_eraser' );
 
+/**
+ * Add user registration data to exporters
+ * @param  array $exporters
+ * @return array
+ */
 function user_registration_register_data_exporter( $exporters ) {
 	
 	$exporters['user-registration'] = array(
@@ -47,6 +53,12 @@ function user_registration_register_data_exporter( $exporters ) {
 	return $exporters;
 }
 
+/**
+ * Get user registration data to export.
+ * @param  string $email_address user's email address
+ * @param  integer $page
+ * @return array exporting data
+ */
 function user_registration_data_exporter( $email_address, $page = 1 ) {
 	
 	global $wpdb;
@@ -54,6 +66,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	$form_data = array();
 	$posts = get_posts( 'post_type=user_registration' );
 	
+	// Get array of field name label mapping of user registration fields.
 	foreach( $posts as $post ) {
 		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
 		$post_content_array = json_decode( $post_content );
@@ -76,8 +89,8 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	if( $usermeta && is_array( $usermeta )) {
 
 		foreach( $usermeta as $meta ) {
-
 			$strip_prefix = substr( $meta->meta_key, 18 );
+
 			if( array_key_exists( $strip_prefix, $form_data ) ) {
 
 				if( is_serialized( $meta->meta_value ) ) {
@@ -106,6 +119,11 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 	);
 }
 
+/**
+ * Add user registration data to the eraser tool.
+ * @param  array  $erasers
+ * @return array
+ */
 function user_registration_register_data_eraser( $erasers = array() ) {
 	$erasers['user-registration'] = array(
 		'eraser_friendly_name' => __( 'WordPress User Extra Information', 'user-registration' ),
@@ -114,6 +132,12 @@ function user_registration_register_data_eraser( $erasers = array() ) {
 	return $erasers;
 }
 
+/**
+ * Get user registration data to erase
+ * @param  string $email_address user's email address
+ * @param  integer $page          [description]
+ * @return array
+ */
 function user_registration_data_eraser( $email_address, $page = 1 ) {
 	
 	global $wpdb;
@@ -304,16 +328,13 @@ function ur_admin_form_settings( $form_id = 0 ) {
  * @param $form_id
  */
 function ur_update_form_settings( $setting_data, $form_id ) {
-
 	$remap_setting_data = array();
 
 	foreach ( $setting_data as $setting ) {
 
 		if ( isset( $setting['name'] ) ) {
-
 			$remap_setting_data[ $setting['name'] ] = $setting;
 		}
-
 	}
 
 	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
@@ -323,7 +344,6 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
 
 			if ( isset( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
-
 				$remap_setting_data[ $field_data['id'] ]['value'] = sanitize_text_field( $remap_setting_data[ $field_data['id'] ]['value'] );
 
 				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );

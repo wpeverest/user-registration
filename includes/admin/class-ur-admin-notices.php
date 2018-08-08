@@ -186,8 +186,10 @@ class UR_Admin_Notices {
 	 * If we need to update, include a message with the update button.
 	 */
 	public static function update_notice() {
+
 		if ( version_compare( get_option( 'user_registration_db_version' ), UR_VERSION, '<' ) ) {
 			$updater = new UR_Background_Updater();
+
 			if ( $updater->is_updating() || ! empty( $_GET['do_update_user_registration'] ) ) {
 				include( 'views/html-notice-updating.php' );
 			} else {

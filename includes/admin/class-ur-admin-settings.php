@@ -43,6 +43,7 @@ class UR_Admin_Settings {
 	 * Include the settings page classes.
 	 */
 	public static function get_settings_pages() {
+
 		if ( empty( self::$settings ) ) {
 			$settings = array();
 
@@ -74,14 +75,15 @@ class UR_Admin_Settings {
 		do_action( 'user_registration_update_options' );
 
 		$flag = apply_filters( 'show_user_registration_setting_message', true );
-		if($flag){
-				self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
-			}
+
+		if( $flag ) {
+			self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
+		}
+
 		// Flush rules
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
 		do_action( 'user_registration_settings_saved' );
-
 	}
 
 	/**

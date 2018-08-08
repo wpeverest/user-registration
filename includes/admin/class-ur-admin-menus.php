@@ -21,10 +21,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 	class UR_Admin_Menus {
 
 		/**
-		 * Hook in tabs.
+		 * UR_Admin_Menus Constructor.
 		 */
 		public function __construct() {
-			// Add menus
+
+			// Add menus.
 			add_action( 'admin_init', array( $this, 'actions' ) );
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
@@ -46,6 +47,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Registration forms admin actions.
 		 */
 		public function actions() {
+
 			if ( isset( $_GET['page'] ) && 'user-registration' === $_GET['page'] ) {
 
 				// Bulk actions
@@ -59,26 +61,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				}
 
 				$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
 				$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
-
 				$form_id = isset( $_GET['form'] ) && is_numeric( $_GET['form'] ) ? $_GET['form'] : '';
 
 				if ( ! empty( $action ) && ! empty( $nonce ) && ! empty( $form_id ) ) {
-
 					$flag = wp_verify_nonce( $nonce, 'user_registration_form_duplicate' . $form_id );
 
 					if ( $flag == true && ! is_wp_error( $flag ) ) {
 
 						if ( 'duplicate' === $action ) {
-
 							$this->duplicate( $form_id );
-
 						}
-
 					}
-
-
 				}
 			}
 		}
@@ -494,6 +488,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		private function get_edit_form_field( $post_data ) {
+
 			if ( isset( $post_data[0] ) ) {
 				$form_data = $post_data[0]->post_content;
 			} else {
@@ -504,7 +499,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$form_data_array = json_decode( $form_data );
 
 				if ( json_last_error() != JSON_ERROR_NONE ) {
-
 					throw new Exception( '' );
 				}
 			}
@@ -521,24 +515,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$row_count ++;
 
 				echo '<div class="ur-single-row">';
-
 				echo '<div class="ur-grids">';
 
 				$grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
 
 				echo '<div class="ur-grid-navigation ur-nav-right dashicons dashicons-arrow-left-alt2"></div>';
-
 				echo '<div class="ur-grid-size" data-active-grid="' . count( $rows ) . '">' . $grid_string . '</div>';
-
 				echo '<div class="ur-grid-navigation ur-nav-left dashicons dashicons-arrow-right-alt2"></div>';
 
 				$add_or_remove_icon = '';
 
 				echo '<button type="button" class="dashicons dashicons-no-alt ur-remove-row">' . $add_or_remove_icon . '</button>';
-
 				echo '<div style="clear:both"></div>';
 				echo '</div>';
-
 
 				echo '<div class="ur-grid-lists">';
 
@@ -551,9 +540,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					echo '<div ur-grid-id="' . $grid_id . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
 
 					foreach ( $grid_lists as $single_field ) {
+
 						if ( isset( $single_field->field_key ) ) {
 							echo '<div class="ur-selected-item">';
-
 							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
 
 							$this->get_admin_field( $single_field );
@@ -561,24 +550,26 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							echo '</div>';
 						}
 					}
-					if ( count( $grid_lists ) == 0 ) {
 
+					if ( count( $grid_lists ) == 0 ) {
 						echo '<div class="user-registration-dragged-me">
 						<div class="user-registration-dragged-me-text"><p>' . esc_html( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
 						</div>';
 					}
+
 					echo '</div>';
 				}
 
 				echo '</div>';
-
 				echo '</div>';
+
 			}// End foreach().
 			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row">' . $add_or_remove_icon . '</button>';
 			echo '</div>';
 		}
 
 		public static function get_admin_field( $single_field ) {
+
 			if ( $single_field->field_key == null || $single_field->field_key == '' ) {
 				throw new Exception( __( 'Empty form data', 'user-registration' ) );
 			}
@@ -588,6 +579,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( class_exists( $class_name ) ) {
 				echo $class_name::get_instance()->get_admin_template( $single_field );
 			}
+
 			/* Backward Compat since 1.4.0 */
 			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
 			if( class_exists( $class_name_old ) ) {

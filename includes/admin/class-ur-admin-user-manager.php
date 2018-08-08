@@ -131,8 +131,6 @@ class UR_Admin_User_Manager {
 	 */
 	public function get_user_status( $exact_value = false ) {
 
-
-
 		//If the status is already get from the db and the requested status is not the exact value then provide the old one
 		if ( ! is_null( $this->user_status ) && ! $exact_value ) {
 			return $this->user_status;
@@ -145,13 +143,11 @@ class UR_Admin_User_Manager {
 			return $user_status;
 		}
 
-
 		//If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
 		$user_status = ( $user_status == '' || $user_status == array() ) ? self::APPROVED : $user_status;
 
 		//If the value requested is not the exact value, than store it in the object
 		$this->user_status = $user_status;
-
 
 		return $user_status;
 	}
@@ -189,7 +185,6 @@ class UR_Admin_User_Manager {
 		return ( $status == self::DENIED );
 	}
 
-
 	/**
 	 * Create a new password if it have to be sent to the user and return it.
 	 * If the password have not to be sent, it return an empty string.
@@ -216,7 +211,6 @@ class UR_Admin_User_Manager {
 		wp_set_password( $password, $this->user->ID );
 
 		return $password;
-
 	}
 
 	/**
@@ -227,7 +221,6 @@ class UR_Admin_User_Manager {
 			add_user_meta( $this->user->ID, 'ur_first_access', 1 );
 		}
 	}
-
 
 	/**
 	 * Save a flag from the db to recognize if an user has ever logged  in
@@ -315,13 +308,14 @@ class UR_Admin_User_Manager {
 	 * @return string
 	 */
 	public static function get_status_label( $status ) {
-
 		if ( $status == self::APPROVED ) {
 			$label = __( 'approved', 'user-registration' );
 		}
+
 		if ( $status == self::PENDING ) {
 			$label = __( 'pending', 'user-registration' );
 		}
+
 		if ( $status == self::DENIED ) {
 			$label = __( 'denied', 'user-registration' );
 		}

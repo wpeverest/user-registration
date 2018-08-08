@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class UR_Admin {
 
 	/**
-	 * Hook in tabs.
+	 * UR_Admin Constructor
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
@@ -27,10 +27,10 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
+
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			new UR_Admin_User_List_Manager();
 		}
-
 	}
 
 	/**
@@ -42,7 +42,6 @@ class UR_Admin {
 		include_once( dirname( __FILE__ ) . '/class-ur-admin-menus.php' );
 		include_once( dirname( __FILE__ ) . '/class-ur-admin-form-modal.php' );
 
-		// Abstract class
 		include_once( UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php' );
 	}
 
@@ -60,7 +59,7 @@ class UR_Admin {
 			case 'profile' :
 			case 'user-edit' :
 				include( 'class-ur-admin-profile.php' );
-				break;
+			break;
 		}
 	}
 
@@ -131,7 +130,6 @@ class UR_Admin {
 
 		return $footer_text;
 	}
-
 }
 
 return new UR_Admin();

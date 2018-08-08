@@ -29,18 +29,18 @@ class UR_Admin_Status {
 	 * Show the logs page.
 	 */
 	public static function status_logs() {
-
 		self::status_logs_file();
-
 	}
 
 	/**
 	 * Show the log page contents for file log handler.
 	 */
 	public static function status_logs_file() {
+
 		if ( ! empty( $_REQUEST['handle'] ) ) {
 			self::remove_log();
 		}
+
 		$logs = self::scan_log_files();
 
 		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( $_REQUEST['log_file'] ) ] ) ) {
@@ -50,7 +50,6 @@ class UR_Admin_Status {
 		}
 
 		$handle = ! empty( $viewed_log ) ? self::get_log_file_handle( $viewed_log ) : '';
-
 
 		include_once( 'views/html-admin-page-status-logs.php' );
 	}
@@ -122,6 +121,7 @@ class UR_Admin_Status {
 
 					if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
 						$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
+
 						foreach ( $sub_files as $sub_file ) {
 							$result[] = $value . DIRECTORY_SEPARATOR . $sub_file;
 						}
@@ -158,11 +158,11 @@ class UR_Admin_Status {
 		return $result;
 	}
 
-
 	/**
 	 * Remove/delete the chosen file.
 	 */
 	public static function remove_log() {
+
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'remove_log' ) ) {
 			wp_die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
@@ -172,5 +172,4 @@ class UR_Admin_Status {
 			$log_handler->remove( $_REQUEST['handle'] );
 		}
 	}
-
 }
