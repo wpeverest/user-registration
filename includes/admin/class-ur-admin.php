@@ -40,7 +40,7 @@ class UR_Admin {
 		include_once( dirname( __FILE__ ) . '/functions-ur-admin.php' );
 		include_once( dirname( __FILE__ ) . '/class-ur-admin-notices.php' );
 		include_once( dirname( __FILE__ ) . '/class-ur-admin-menus.php' );
-		include_once( dirname( __FILE__ ) . '/class-ur-form-modal.php' );
+		include_once( dirname( __FILE__ ) . '/class-ur-admin-form-modal.php' );
 
 		// Abstract class
 		include_once( UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php' );
