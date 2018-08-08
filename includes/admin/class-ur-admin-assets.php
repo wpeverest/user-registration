@@ -40,7 +40,7 @@ class UR_Admin_Assets {
 
 		// Register admin styles
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
-		wp_register_style ( 'admin-editor-css', UR()->plugin_url() . '/assets/css/admin-editor.css', array(), UR_VERSION );
+		wp_register_style ( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
@@ -51,7 +51,7 @@ class UR_Admin_Assets {
 
 		// Sitewide menu CSS
 		wp_enqueue_style( 'user-registration-menu' );
-		wp_enqueue_style('admin-editor-css');
+		wp_enqueue_style('user-registration-form-modal-css');
 
 		// Admin styles for UR pages only
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
@@ -95,7 +95,7 @@ class UR_Admin_Assets {
 			'wp-util',
 		), UR_VERSION );
 
-		wp_register_script ( 'admin-editor-js', UR()->plugin_url() . '/assets/js/admin/admin-editor' . $suffix . '.js', 'jquery' );
+		wp_register_script ( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
 		wp_register_script( 'ur-enhanced-select', UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js', array(
 			'jquery',
@@ -103,7 +103,7 @@ class UR_Admin_Assets {
 		), UR_VERSION );
 
 		wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
-		wp_enqueue_script('admin-editor-js');
+		wp_enqueue_script( 'user-registration-form-modal-js' );
 
 		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(
 			'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'user-registration' ),
