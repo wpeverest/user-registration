@@ -406,9 +406,6 @@
 												location.reload();
 											}
 										}
-
-									} else {
-										message.append('<li>' + response.data.message + '</li>');
 									}
 								} catch ( e ) {
 									//message.addClass(type);
