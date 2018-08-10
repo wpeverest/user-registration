@@ -138,12 +138,12 @@ class UR_Emailer {
 		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{email_token}}", "{{all_fields}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
 
-		//add the field name and values from $name_value to the replacement arrays.
+		// Add the field name and values from $name_value to the replacement arrays.
 		$to_replace = array_merge( $to_replace, array_keys( $name_value ) );
 		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
 
-		//surround every key with {{ and }}.
-		array_walk( $to_replace, function(&$value, $key) { $value = '{{'.trim( $value, '{}').'}}'; } );
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
 		if( $email_status === '0' ) {
 
@@ -224,12 +224,12 @@ class UR_Emailer {
 		$to_replace = array("{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}", "{{all_fields}}");
 		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
 
-		//add the field name and values from $name_value to the replacement arrays.
+		// Add the field name and values from $name_value to the replacement arrays.
 		$to_replace = array_merge( $to_replace, array_keys( $name_value ) );
 		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
 
-		//surround every key with {{ and }}.
-		array_walk( $to_replace, function(&$value, $key) { $value = '{{'.trim( $value, '{}').'}}'; } );
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
 		$message = str_replace( $to_replace, $replace_with, $message );
 		$subject = str_replace( $to_replace, $replace_with, $subject );
