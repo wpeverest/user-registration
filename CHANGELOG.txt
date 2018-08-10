@@ -1,3 +1,17 @@
+= 1.4.4 - 10/08/2018 =
+* Add - Hook to filter form settings
+* Add - Hook to filter success params after registration
+* Add - Action hook after user extra information on admin profile
+* Add - Input mask saving option
+* Fix - Conditionally load assets only on user registration pages
+* Fix - Fatal error while resending token
+* Fix - Tooltip on checkboxes
+* Fix - Error message during form submission
+* Fix - Send emails depending on different login options
+* Fix - Privacy Policy on profile details tab
+* Fix - Reset WooCommerce state value
+* Fix - Allow target attribute in description to add link
+
 = 1.4.3 - 31/07/2018 =
 * Feature - Copy form shortcode
 * Add - Deactivation feedback notice

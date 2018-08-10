@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,8 @@ User Registration can be easily extended with some premium addons.
 
 * [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
 
+* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/) - Integrates PayPal into your forms for registration fee payments, donations, and more. Pay for registration without directly using your credit or debit card, with connected email address.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -100,6 +102,20 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.4.4 - 10/08/2018 =
+* Add - Hook to filter form settings
+* Add - Hook to filter success params after registration
+* Add - Action hook after user extra information on admin profile
+* Add - Input mask saving option
+* Fix - Conditionally load assets only on user registration pages
+* Fix - Fatal error while resending token
+* Fix - Tooltip on checkboxes
+* Fix - Error message during form submission
+* Fix - Send emails depending on different login options
+* Fix - Privacy Policy on profile details tab
+* Fix - Reset WooCommerce state value
+* Fix - Allow target attribute in description to add link
 
 = 1.4.3 - 31/07/2018 =
 * Feature - Copy form shortcode
