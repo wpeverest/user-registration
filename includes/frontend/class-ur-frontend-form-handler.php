@@ -31,14 +31,19 @@ class UR_Frontend_Form_Handler {
 		self::$form_id = $form_id;
 		$post_content = self::get_post_content( $form_id );
 		$post_content_array = array();
+
 		if ( ! empty( $post_content ) ) {
 			$post_content_array = json_decode( $post_content );
 		}
+
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();
 		}
+
 		self::match_password( $form_data );
+
 		$form_field_data = self::get_form_field_data( $post_content_array );
+
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
 

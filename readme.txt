@@ -2,6 +2,7 @@
 Contributors: WPEverest
 Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
 Requires at least: 4.0
+Requires PHP: 5.4
 Tested up to: 4.9
 Stable tag: 1.4.4
 License: GPLv3
