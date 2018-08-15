@@ -22,6 +22,18 @@ jQuery(function () {
 });
 
 jQuery(function ( $ ) {
+
+	/**
+	 * Append form settings to fileds section.
+	 */
+	var selector = $('.ur-tab-lists').find('li').last();
+
+	$( selector ).on( 'click', function() {
+		$('.ur-selected-inputs').hide();
+		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
+
+	});
+
 	// Tooltips
 	$(document.body).on('init_tooltips', function () {
 		var tiptip_args = {
