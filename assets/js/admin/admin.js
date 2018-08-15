@@ -26,12 +26,18 @@ jQuery(function ( $ ) {
 	/**
 	 * Append form settings to fileds section.
 	 */
-	var selector = $('.ur-tab-lists').find('li').last();
+	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
 
 	$( selector ).on( 'click', function() {
-		$('.ur-selected-inputs').hide();
+		$fields_panel = $('.ur-selected-inputs');
+
+		// Empty fields panel.
+		$fields_panel.empty();
+
 		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
 
+		// Append form settings to fields panel.
+		form_settings.appendTo( $fields_panel );
 	});
 
 	// Tooltips
