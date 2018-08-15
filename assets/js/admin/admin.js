@@ -32,12 +32,38 @@ jQuery(function ( $ ) {
 		$fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
-		$fields_panel.empty();
+		$fields_panel.children().hide();
 
-		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
+		// Get form settings
+		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings form');
 
 		// Append form settings to fields panel.
 		form_settings.appendTo( $fields_panel );
+
+		// Show only the form settings in fields panel.
+		$fields_panel.find('form#ur-field-settings').show();
+
+		// Get all form settings
+		var accordions = $('.ur-selected-inputs form #ur-field-all-settings').children();
+
+		// Hide all fields settings from fields panel.
+		accordions.hide();
+
+		// Show general settings.
+		$('.ur-selected-inputs form #ur-field-all-settings #general-settings').show();
+
+		accordions.each( function( index, value ) {
+
+			var appending_texts = $( value ).find( 'h3' ).text();
+			var appending_id 	= $( value ).attr('id');
+
+			// Append the title and div now under form settings.
+			$('.ur-registered-inputs nav').find('#ur-tab-field-settings').append('<div id="'+ appending_id +'">'+appending_texts+'</div>');
+
+			// Display the fields section now.
+			$('#ur-tab-field-settings').show();;
+		});
+
 	});
 
 	// Tooltips
