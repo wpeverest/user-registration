@@ -2,25 +2,6 @@
  * UserRegistration Admin JS
  * global i18n_admin
  */
-jQuery(function () {
-
-	var mySelect = jQuery('#user_registration_general_setting_login_options option:selected').val();
-	if ( mySelect == 'email_confirmation' ) {
-		jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
-		jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
-	}
-
-	jQuery("body").on('select2:select', "#user_registration_general_setting_login_options", function () {
-		if ( jQuery(this).find('option:selected').val() == "email_confirmation" ) {
-			jQuery('#user_registration_general_setting_disable_email').attr('checked', false);
-			jQuery("#user_registration_general_setting_disable_email").attr("disabled", true);
-		}
-		else {
-			jQuery("#user_registration_general_setting_disable_email").attr("disabled", false);
-		}
-	});
-});
-
 jQuery(function ( $ ) {
 	// Tooltips
 	$(document.body).on('init_tooltips', function () {
