@@ -39,13 +39,22 @@ jQuery(function ( $ ) {
 			var appending_text = $( value ).find( 'h3' ).text();
 			var appending_id 	= $( value ).attr('id');
 
-			
 			// Append the title and div now under form settings.
 			if( form_settings_section.find('#'+appending_id).length === 0 ) {			
 				form_settings_section.append('<div id="'+ appending_id +'">'+appending_text+'</div>');
 			}
 
+			// Add active class to general settings and form-settings-tab for all settings.
+			form_settings_section.find('#general-settings').addClass( 'active' );
+			form_settings_section.find('#'+appending_id ).addClass('form-settings-tab');
+
 			$( form_settings_section.find('#'+appending_id ) ).on('click',function() {
+
+				// Remove all active classes initially.
+				$( this ).parent().find('.active').removeClass('active');
+
+				// Add active class on clicked tab.
+				$( this ).addClass('active');
 
 				// Hide other settings and show respective id's settings.
 				fields_panel.find('form #ur-field-all-settings').children().hide();
