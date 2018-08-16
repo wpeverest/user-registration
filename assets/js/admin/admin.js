@@ -10,19 +10,19 @@ jQuery(function ( $ ) {
 	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
 
 	$( selector ).on( 'click', function() {
-		$fields_panel = $('.ur-selected-inputs');
+		fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
-		$fields_panel.children().hide();
+		fields_panel.children().hide();
 
 		// Get form settings
 		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings form');
 
 		// Append form settings to fields panel.
-		form_settings.appendTo( $fields_panel );
+		form_settings.appendTo( fields_panel );
 
 		// Show only the form settings in fields panel.
-		$fields_panel.find('form#ur-field-settings').show();
+		fields_panel.find('form#ur-field-settings').show();
 
 		// Get all form settings
 		var accordions = $('.ur-selected-inputs form #ur-field-all-settings').children();
@@ -31,7 +31,7 @@ jQuery(function ( $ ) {
 		accordions.hide();
 
 		// Show general settings.
-		$('.ur-selected-inputs form #ur-field-all-settings #general-settings').show();
+		fields_panel.find('form #ur-field-all-settings #general-settings').show();
 
 		accordions.each( function( index, value ) {
 
@@ -40,11 +40,18 @@ jQuery(function ( $ ) {
 
 			// Append the title and div now under form settings.
 			$('.ur-registered-inputs nav').find('#ur-tab-field-settings').append('<div id="'+ appending_id +'">'+appending_texts+'</div>');
-
-			// Display the fields section now.
-			$('#ur-tab-field-settings').show();;
 		});
+	});
 
+	/**
+	 * Display fields panels on fields tab click.
+	 */
+	var fields = $('.ur-tab-lists').find('li').first(); // Fields tab.
+
+	$( fields ).on( 'click', function() {
+		fields_panel = $('.ur-selected-inputs');
+		fields_panel.children().show();
+		fields_panel.find('form#ur-field-settings').hide();
 	});
 
 	// Tooltips
