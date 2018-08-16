@@ -10,7 +10,7 @@ jQuery(function ( $ ) {
 	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
 
 	$( selector ).on( 'click', function() {
-		fields_panel = $('.ur-selected-inputs');
+		var fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
 		fields_panel.children().hide();
@@ -26,15 +26,15 @@ jQuery(function ( $ ) {
 		fields_panel.find('form#ur-field-settings').show();
 
 		// Get all form settings
-		var accordions = $('.ur-selected-inputs form #ur-field-all-settings').children();
+		var fields_panel_section = fields_panel.find('form #ur-field-all-settings').children();
 
 		// Hide all fields settings from fields panel.
-		accordions.hide();
+		fields_panel_section.hide();
 
 		// Show general settings.
 		fields_panel.find('form #ur-field-all-settings #general-settings').show();
 
-		accordions.each( function( index, value ) {
+		fields_panel_section.each( function( index, value ) {
 
 			var appending_text = $( value ).find( 'h3' ).text();
 			var appending_id 	= $( value ).attr('id');
