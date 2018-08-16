@@ -49,6 +49,7 @@ class UR_Admin_Notices {
 
 		if ( current_user_can( 'manage_user_registration' ) ) {
 			add_action( 'admin_print_styles', array( __CLASS__, 'add_notices' ) );
+			add_action( 'admin_print_scripts', array( __CLASS__, 'hide_unrelated_notices' ) );
 		}
 	}
 
@@ -147,6 +148,30 @@ class UR_Admin_Notices {
 					add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
 				} else {
 					add_action( 'admin_notices', array( __CLASS__, 'output_custom_notices' ) );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Remove Notices other than user registration on user registration builder page.
+	 *
+	 * @since 1.4.5
+	 */
+	public static function hide_unrelated_notices() {
+		global $wp_filter;
+
+		// Return on other than user registraion builder page.
+		if ( empty( $_REQUEST['page'] ) || 'add-new-registration' !== $_REQUEST['page'] ) {
+			return;
+		}
+
+ 		foreach ( array( 'user_admin_notices', 'admin_notices', 'all_admin_notices' ) as $wp_notice ) {
+			if ( ! empty( $wp_filter[ $wp_notice ]->callbacks ) && is_array( $wp_filter[ $wp_notice ]->callbacks ) ) {
+				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
+					foreach ( $hooks as $name => $arr ) {
+						unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+					}
 				}
 			}
 		}
