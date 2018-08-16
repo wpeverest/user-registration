@@ -1262,12 +1262,25 @@ img.tips {
 }
 
 #ur-tab-field-settings {
-
 	background: #F2F2F2;
 }
+
 .user-registration table.form-table dashicons .dashicons, .dashicons{
-line-height: inherit;
+	line-height: inherit;
 }
+
 #smart-tags{
 	text-align: center;
+}
+
+.form-settings-tab {
+    padding: 10px 15px;
+    cursor: pointer;
+    background: #c4c4c4;
+    margin-bottom: 10px;
+}
+
+.form-settings-tab.active {
+    background: #217dbb;
+    color: white;
 }

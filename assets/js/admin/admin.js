@@ -3,6 +3,77 @@
  * global i18n_admin
  */
 jQuery(function ( $ ) {
+
+	/**
+	 * Append form settings to fileds section.
+	 */
+	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
+
+	$( selector ).on( 'click', function() {
+		var fields_panel = $('.ur-selected-inputs');
+
+		// Empty fields panel.
+		fields_panel.children().hide();
+
+		// Get form settings
+		var form_settings_section = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
+		var form_settings = form_settings_section.find('form');
+
+		// Append form settings to fields panel.
+		form_settings.appendTo( fields_panel );
+
+		// Show only the form settings in fields panel.
+		fields_panel.find('form#ur-field-settings').show();
+
+		// Get all form settings
+		var fields_panel_section = fields_panel.find('form #ur-field-all-settings').children();
+
+		// Hide all fields settings from fields panel.
+		fields_panel_section.hide();
+
+		// Show general settings.
+		fields_panel.find('form #ur-field-all-settings #general-settings').show();
+
+		fields_panel_section.each( function( index, value ) {
+
+			var appending_text = $( value ).find( 'h3' ).text();
+			var appending_id 	= $( value ).attr('id');
+
+			// Append the title and div now under form settings.
+			if( form_settings_section.find('#'+appending_id).length === 0 ) {			
+				form_settings_section.append('<div id="'+ appending_id +'">'+appending_text+'</div>');
+			}
+
+			// Add active class to general settings and form-settings-tab for all settings.
+			form_settings_section.find('#general-settings').addClass( 'active' );
+			form_settings_section.find('#'+appending_id ).addClass('form-settings-tab');
+
+			$( form_settings_section.find('#'+appending_id ) ).on('click',function() {
+
+				// Remove all active classes initially.
+				$( this ).parent().find('.active').removeClass('active');
+
+				// Add active class on clicked tab.
+				$( this ).addClass('active');
+
+				// Hide other settings and show respective id's settings.
+				fields_panel.find('form #ur-field-all-settings').children().hide();
+				fields_panel.find('form #ur-field-all-settings').find('#'+appending_id).show();
+			});
+		});
+	});
+
+	/**
+	 * Display fields panels on fields tab click.
+	 */
+	var fields = $('.ur-tab-lists').find('li').first(); // Fields tab.
+
+	$( fields ).on( 'click', function() {
+		fields_panel = $('.ur-selected-inputs');
+		fields_panel.children().show();
+		fields_panel.find('form#ur-field-settings').hide();
+	});
+
 	// Tooltips
 	$(document.body).on('init_tooltips', function () {
 		var tiptip_args = {
