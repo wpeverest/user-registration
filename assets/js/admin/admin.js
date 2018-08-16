@@ -16,7 +16,8 @@ jQuery(function ( $ ) {
 		fields_panel.children().hide();
 
 		// Get form settings
-		var form_settings = $('.ur-registered-inputs nav').find('#ur-tab-field-settings form');
+		var form_settings_section = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
+		var form_settings = form_settings_section.find('form');
 
 		// Append form settings to fields panel.
 		form_settings.appendTo( fields_panel );
@@ -35,11 +36,21 @@ jQuery(function ( $ ) {
 
 		accordions.each( function( index, value ) {
 
-			var appending_texts = $( value ).find( 'h3' ).text();
+			var appending_text = $( value ).find( 'h3' ).text();
 			var appending_id 	= $( value ).attr('id');
 
+			
 			// Append the title and div now under form settings.
-			$('.ur-registered-inputs nav').find('#ur-tab-field-settings').append('<div id="'+ appending_id +'">'+appending_texts+'</div>');
+			if( form_settings_section.find('#'+appending_id).length === 0 ) {			
+				form_settings_section.append('<div id="'+ appending_id +'">'+appending_text+'</div>');
+			}
+
+			$( form_settings_section.find('#'+appending_id ) ).on('click',function() {
+
+				// Hide other settings and show respective id's settings.
+				fields_panel.find('form #ur-field-all-settings').children().hide();
+				fields_panel.find('form #ur-field-all-settings').find('#'+appending_id).show();
+			});
 		});
 	});
 
