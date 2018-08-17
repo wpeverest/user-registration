@@ -70,6 +70,8 @@ User Registration can be easily extended with some premium addons.
 
 * [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
 
+* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/) - Integrates PayPal into your forms for registration fee payments, donations, and more. Pay for registration without directly using your credit or debit card, with connected email address.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
