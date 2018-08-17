@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap restaurantpress ur_addons_wrap">
 	<nav class="nav-tab-wrapper ur-nav-tab-wrapper">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=rp-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'user-registration' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'user-registration' ); ?></a>
 	</nav>
 
 	<h1 class="screen-reader-text"><?php _e( 'User Registration Extensions', 'user-registration' ); ?></h1>
@@ -29,10 +29,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php foreach ( $addons as $addon ) : ?>
 				<li class="product">
 					<a href="<?php echo esc_attr( $addon->link ); ?>">
+						<h2><?php echo esc_html( $addon->title ); ?></h2>
 						<?php if ( ! empty( $addon->image ) ) : ?>
 							<span class="product-image"><img src="<?php echo esc_attr( $addon->image ); ?>"/></span>
-						<?php else : ?>
-							<h2><?php echo esc_html( $addon->title ); ?></h2>
 						<?php endif; ?>
 						<span class="price"><?php echo isset( $addon->price ) ? wp_kses_post( $addon->price ) : ''; ?></span>
 						<p><?php echo wp_kses_post( $addon->excerpt ); ?></p>
