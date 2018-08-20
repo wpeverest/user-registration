@@ -259,7 +259,7 @@ class UR_Frontend_Scripts {
 		self::register_scripts();
 		self::register_styles();
 
-		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
+		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) || ur_post_content_has_shortcode( 'user_registration_login' ) ) {
 			self::enqueue_script( 'flatpickr' );
 			self::enqueue_script( 'ur-inputmask' );
 			self::enqueue_script( 'user-registration' );
@@ -275,7 +275,7 @@ class UR_Frontend_Scripts {
 				if ( ! isset( $args['has_rtl'] ) ) {
 					$args['has_rtl'] = false;
 				}
-				if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ) {
+				if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ||ur_post_content_has_shortcode( 'user_registration_login' ) ) {
 					self::enqueue_style( $handle, $args['src'], $args['deps'], $args['version'], $args['media'], $args['has_rtl'] );
 				}
 			}
