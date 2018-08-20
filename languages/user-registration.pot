@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.4.3\n"
+"Project-Id-Version: User Registration 1.4.5\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-08-10 06:11:25+00:00\n"
+"POT-Creation-Date: 2018-08-20 08:52:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,6 +14,7 @@ msgstr ""
 "X-Generator: grunt-wp-i18n1.0.1\n"
 
 #: includes/abstracts/abstract-ur-form-field.php:286
+#: includes/admin/functions-ur-admin.php:317
 msgid "General Settings"
 msgstr ""
 
@@ -71,7 +72,7 @@ msgid "You do not have permissions to edit forms!"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:241
-#: includes/admin/class-ur-admin-notices.php:120
+#: includes/admin/class-ur-admin-notices.php:121
 #: includes/admin/class-ur-admin-settings.php:69
 #: includes/admin/class-ur-admin-status.php:167
 msgid "Action failed. Please refresh the page and retry."
@@ -151,7 +152,7 @@ msgstr ""
 msgid "Empty form data"
 msgstr ""
 
-#: includes/admin/class-ur-admin-notices.php:124 user-registration.php:74
+#: includes/admin/class-ur-admin-notices.php:125 user-registration.php:74
 #: user-registration.php:83
 msgid "Cheatin&#8217; huh?"
 msgstr ""
@@ -1063,7 +1064,7 @@ msgstr ""
 msgid "User Registration Extensions"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-addons.php:45
+#: includes/admin/views/html-admin-page-addons.php:44
 msgid ""
 "Our catalog of User Registration Extensions can be found on WPEverest.com "
 "here: <a href=\"%s\">User Registration Extensions Catalog</a>"
@@ -2712,23 +2713,23 @@ msgstr ""
 msgid "Default Value"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:85
+#: includes/frontend/class-ur-frontend-form-handler.php:90
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:143
+#: includes/frontend/class-ur-frontend-form-handler.php:148
 msgid "Duplicate field key in form, please contact site administrator."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:149
+#: includes/frontend/class-ur-frontend-form-handler.php:154
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:296
+#: includes/frontend/class-ur-frontend-form-handler.php:301
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:298
+#: includes/frontend/class-ur-frontend-form-handler.php:303
 msgid "Password and confirm password not matched"
 msgstr ""
 

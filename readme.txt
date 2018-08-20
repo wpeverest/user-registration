@@ -104,6 +104,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.4.5 - 20/08/2018 =
+* Fix - Load user registration assets on login page.
+* Tweak - Form settings UI
+* Tweak - Hide other admin notices on builder panel
+
 = 1.4.4 - 10/08/2018 =
 * Add - Hook to filter form settings
 * Add - Hook to filter success params after registration
@@ -150,19 +155,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Feature - Display email status column in users tab for email confirmation
 * Fix - Display reCaptcha node only if enabled
 * Deprecate - Functions my_simple_crypt() and getToken()
-
-= 1.3.1 - 23/05/2018 =
-* Feature - Extend Data Export/Erasure tool to export/erase user extra information
-* Fix - Translation ready email contents
-* Fix - Apply filters to strip countries list
-
-= 1.3.0 - 11/05/2018 =
-* Refactor - user_password field for mod security reason
-* Refactor - Meta keys and field keys
-* Feature - Cutomizable reset password email
-* Feature - Deafult user fields on profile tab in my account section
-* Fix - Redirect via template_redirect hook removing js redirection
-* Add - Filter hooks for every email classes
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
 

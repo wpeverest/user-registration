@@ -1,3 +1,8 @@
+= 1.4.5 - 20/08/2018 =
+* Fix - Load user registration assets on login page.
+* Tweak - Form settings UI
+* Tweak - Hide other admin notices on builder panel
+
 = 1.4.4 - 10/08/2018 =
 * Add - Hook to filter form settings
 * Add - Hook to filter success params after registration
