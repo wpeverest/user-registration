@@ -30,14 +30,31 @@ class UR_Emailer {
 			return;
 		}
 
-		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
-		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+		add_action( 'user_registration_email_send_before', array( __CLASS__, 'ur_send_email_before' ) );
+		add_action( 'user_registration_email_send_after', array( __CLASS__, 'ur_send_email_after' ) );
 
 		add_action( 'user_registration_after_register_user_action', array(
 			__CLASS__,
 			'ur_after_register_mail'
 		), 10, 3 );
 	}
+
+	/**
+	 * Apply filters to modify sender's details before email is sent.
+	 */
+	public static function ur_send_email_before() {
+		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+	}
+
+	/**
+	 * Remove filters after the email is sent.
+	 */
+	public static function ur_send_email_after() {
+		remove_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+	}
+
 
 	/**
 	 * @return string sender's email
@@ -116,10 +133,16 @@ class UR_Emailer {
 		$username = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
+			
+			do_action( 'user_registration_email_send_before' );
+
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
+
+			do_action( 'user_registration_email_send_after' );
 		}
 	}
+
 	/**
 	 * @param  string $email
 	 * @param  string $username
