@@ -26,7 +26,7 @@ class UR_Email_Confirmation {
 		}
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
-		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
+		add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 
 		add_filter( 'wp_authenticate_user', array( $this, 'check_email_status' ),10,2);
@@ -44,7 +44,7 @@ class UR_Email_Confirmation {
 	 *
 	 * @return array
 	 */
-	public function ceate_quick_links( $actions, $user ) {
+	public function create_quick_links( $actions, $user ) {
 		
 		$verify_link = add_query_arg( array( 'action' => 'verify', 'user' => $user->ID ) );
 		$verify_link = remove_query_arg( array( 'new_role' ), $verify_link );
