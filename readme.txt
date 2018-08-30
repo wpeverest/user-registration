@@ -1,6 +1,6 @@
 === User Registration - User Profile, Membership and More ===
 Contributors: WPEverest
-Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
+Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
