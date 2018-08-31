@@ -1,6 +1,6 @@
-=== User Registration - User Profile, Membership and More ===
+=== User Registration - Custom Registration Form, Login and User Profile for WordPress ===
 Contributors: WPEverest
-Tags: user registration, registration, profile-builder, user profile, form, registration form, login form, user login, membership
+Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
@@ -16,11 +16,11 @@ User Registration plugin provides you with an easy way to create frontend user r
 
 Supports frontend profile account page for profile edit, password change, Log out and more.
 
-View [All features](https://wpeverest.com/wordpress-plugins/user-registration/)
+View [All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
 
 View [Demo](http://demo.wpeverest.com/user-registration/)
 
-Get [free support](https://wpeverest.com/support-forum/)
+Get [free support](https://wpeverest.com/support-forum/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
 
 Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 
@@ -52,25 +52,25 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 
 User Registration can be easily extended with some premium addons.
 
-* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
+* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
 
-* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
 
-* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/) - Allows you to add upload field in registration form so that users can upload documents, images and more.
+* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
 
-* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
+* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
-* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/) - Lets you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
+* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
 
-* [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
+* [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
 
-* [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/) - Allows admin to connect users registered via other forms to User Registration selected form.
+* [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows admin to connect users registered via other forms to User Registration selected form.
 
-* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
+* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
 
-* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/) - Integrates PayPal into your forms for registration fee payments, donations, and more.
+* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
 == Installation ==
 
