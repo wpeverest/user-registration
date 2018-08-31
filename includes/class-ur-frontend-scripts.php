@@ -63,19 +63,6 @@ class UR_Frontend_Scripts {
 				'media'   => 'all',
 				'has_rtl' => true,
 			),
-			'jquery-ui-css'     => array(
-				'src'     => self::get_asset_url( 'assets/css/jquery-ui/jquery-ui.css' ),
-				'deps'    => '',
-				'version' => '1.12.1',
-				'media'   => 'all',
-			),
-			'flatpickr' => array(
-				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
-				'deps'    => array(),
-				'version' => '4.5.1',
-				'media'	  => 'all',
-				'has_rtl' => false,
-			),
 			'user-registration-smallscreen' => array(
 				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
 				'deps'    => '',
@@ -234,6 +221,20 @@ class UR_Frontend_Scripts {
 	 */
 	private static function register_styles() {
 		$register_styles = array(
+			'jquery-ui-css'     => array(
+				'src'     => self::get_asset_url( 'assets/css/jquery-ui/jquery-ui.css' ),
+				'deps'    => '',
+				'version' => '1.12.1',
+				'media'   => 'all',
+				'has_rtl' => false,
+			),
+			'flatpickr' => array(
+				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
+				'deps'    => array(),
+				'version' => '4.5.1',
+				'media'	  => 'all',
+				'has_rtl' => false,
+			),
 			'select2' => array(
 				'src'     => self::get_asset_url( 'assets/css/select2.css' ),
 				'deps'    => array(),

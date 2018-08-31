@@ -39,7 +39,8 @@ class UR_Shortcode_My_Account {
 
 		global $wp, $post;
 
-		// Enqueue user registration script.
+		// Enqueue script.
+		wp_enqueue_style( 'flatpickr' );
 		wp_enqueue_script( 'user-registration' );
 
 		if ( ! is_user_logged_in() ) {
