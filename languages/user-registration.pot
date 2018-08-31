@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.4.5\n"
+"Project-Id-Version: User Registration 1.4.6\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-08-20 08:52:10+00:00\n"
+"POT-Creation-Date: 2018-08-31 06:42:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -569,7 +569,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:227
-#: includes/class-ur-frontend-scripts.php:328
+#: includes/class-ur-frontend-scripts.php:322
 msgid "User successfully registered."
 msgstr ""
 
@@ -585,7 +585,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:237
-#: includes/class-ur-frontend-scripts.php:330
+#: includes/class-ur-frontend-scripts.php:324
 msgid ""
 "User registered. Verify your email by clicking on the link sent to your "
 "email."
@@ -603,7 +603,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:247
-#: includes/class-ur-frontend-scripts.php:329
+#: includes/class-ur-frontend-scripts.php:323
 msgid "User registered. Wait until admin approves your registration."
 msgstr ""
 
@@ -621,7 +621,7 @@ msgid "Enter the error message in form submission on required fields."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:269
-#: includes/class-ur-frontend-scripts.php:322
+#: includes/class-ur-frontend-scripts.php:316
 msgid "This field is required."
 msgstr ""
 
@@ -630,7 +630,7 @@ msgid "Enter the error message in form submission on Email."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:279
-#: includes/class-ur-frontend-scripts.php:323
+#: includes/class-ur-frontend-scripts.php:317
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -643,7 +643,7 @@ msgid "Enter the error message in form submission on website/URL."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:289
-#: includes/class-ur-frontend-scripts.php:324
+#: includes/class-ur-frontend-scripts.php:318
 msgid "Please enter a valid URL."
 msgstr ""
 
@@ -658,7 +658,7 @@ msgid "Enter the error message in form submission on Number."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:299
-#: includes/class-ur-frontend-scripts.php:325
+#: includes/class-ur-frontend-scripts.php:319
 msgid "Please enter a valid number."
 msgstr ""
 
@@ -672,7 +672,7 @@ msgid "Enter the error message in form submission on Confim Password."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:309
-#: includes/class-ur-frontend-scripts.php:326
+#: includes/class-ur-frontend-scripts.php:320
 msgid "Password and confirm password not matched."
 msgstr ""
 
@@ -685,7 +685,7 @@ msgid "Enter the error message in form submission on google recaptcha."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:319
-#: includes/class-ur-frontend-scripts.php:331
+#: includes/class-ur-frontend-scripts.php:325
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -778,7 +778,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:68
-#: includes/class-ur-emailer.php:219
+#: includes/class-ur-emailer.php:242
 msgid "A New User Registered"
 msgstr ""
 
@@ -836,7 +836,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:59
-#: includes/class-ur-emailer.php:162
+#: includes/class-ur-emailer.php:185
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -865,7 +865,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
-#: includes/class-ur-emailer.php:150
+#: includes/class-ur-emailer.php:173
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -899,7 +899,7 @@ msgid "Enable this email sent to admin after successfull user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:59
-#: includes/class-ur-emailer.php:284
+#: includes/class-ur-emailer.php:307
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -927,7 +927,7 @@ msgid "Email sent to the user notifying the registration is denied by the admin"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:59
-#: includes/class-ur-emailer.php:176 includes/class-ur-emailer.php:271
+#: includes/class-ur-emailer.php:199 includes/class-ur-emailer.php:294
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -954,7 +954,7 @@ msgid "Email sent to the user notifying the registration is pending"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:59
-#: includes/class-ur-emailer.php:258
+#: includes/class-ur-emailer.php:281
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:57
-#: includes/class-ur-emailer.php:313
+#: includes/class-ur-emailer.php:336
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -1020,7 +1020,7 @@ msgid "Enable this email sent after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:59
-#: includes/class-ur-emailer.php:188
+#: includes/class-ur-emailer.php:211
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -1215,19 +1215,19 @@ msgstr ""
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:79 includes/class-ur-shortcodes.php:106
+#: includes/class-ur-ajax.php:79 includes/class-ur-shortcodes.php:107
 msgid "Only administrators can add new users."
 msgstr ""
 
-#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:120
+#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:121
 msgid "You are currently logged in as %1s. %2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:120
+#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:121
 msgid "Log out of this account."
 msgstr ""
 
-#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:120
+#: includes/class-ur-ajax.php:95 includes/class-ur-shortcodes.php:121
 #: includes/functions-ur-account.php:86
 msgid "Logout"
 msgstr ""
@@ -1289,7 +1289,7 @@ msgid ""
 "email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:93
+#: includes/class-ur-emailer.php:110
 msgid "Chosen Password"
 msgstr ""
 
@@ -1345,31 +1345,31 @@ msgstr ""
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:340
+#: includes/class-ur-frontend-scripts.php:334
 msgid "Confirm password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:342
+#: includes/class-ur-frontend-scripts.php:336
 msgid "Too short password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:343
+#: includes/class-ur-frontend-scripts.php:337
 msgid "Bad password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:344
+#: includes/class-ur-frontend-scripts.php:338
 msgid "Good password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:345
+#: includes/class-ur-frontend-scripts.php:339
 msgid "Strong password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:346
+#: includes/class-ur-frontend-scripts.php:340
 msgid "Password with confirm password not matched."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:349
+#: includes/class-ur-frontend-scripts.php:343
 msgid ""
 "Hint: The password should be at least seven characters long. To make it "
 "stronger, use upper and lower case letters, numbers and symbols such as ! * "
@@ -2868,28 +2868,28 @@ msgstr ""
 msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:51
+#: includes/shortcodes/class-ur-shortcode-my-account.php:55
 msgid "Your password has been reset successfully."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:64
+#: includes/shortcodes/class-ur-shortcode-my-account.php:68
 msgid "Are you sure you want to log out? <a href=\"%s\">Confirm and log out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:194
+#: includes/shortcodes/class-ur-shortcode-my-account.php:198
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:215
-#: includes/shortcodes/class-ur-shortcode-my-account.php:220
+#: includes/shortcodes/class-ur-shortcode-my-account.php:219
+#: includes/shortcodes/class-ur-shortcode-my-account.php:224
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:230
+#: includes/shortcodes/class-ur-shortcode-my-account.php:234
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:243
+#: includes/shortcodes/class-ur-shortcode-my-account.php:247
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 

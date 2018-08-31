@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -103,6 +103,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.4.6 - 31/08/2018 =
+* Fix - Remove filter to avoid plugin conflict while sending emails
+* Fix - Load assests correctly
+* Fix - Remove backend required valiation if the field is hidden by condition
 
 = 1.4.5 - 20/08/2018 =
 * Fix - Load user registration assets on login page.

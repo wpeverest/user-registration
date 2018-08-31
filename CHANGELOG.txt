@@ -1,3 +1,8 @@
+= 1.4.6 - 31/08/2018 =
+* Fix - Remove filter to avoid plugin conflict while sending emails
+* Fix - Load assests correctly
+* Fix - Remove backend required valiation if the field is hidden by condition
+
 = 1.4.5 - 20/08/2018 =
 * Fix - Load user registration assets on login page.
 * Tweak - Form settings UI
