@@ -95,6 +95,7 @@ class UR_Shortcodes {
 	 * @param mixed $atts
 	 */
 	public static function form( $atts ) {
+
 		if ( empty( $atts ) || ! isset( $atts['id'] ) ) {
 			return '';
 		}
@@ -156,6 +157,9 @@ class UR_Shortcodes {
 
 		$is_field_exists = false;
 		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+
+		// Enqueue user registration script.
+		wp_enqueue_script( 'user-registration' );
 
 		if ( 'yes' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );

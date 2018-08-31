@@ -204,7 +204,7 @@ class UR_Frontend_Scripts {
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery' , 'flatpickr','ur-jquery-validate'),
+				'deps'    => array( 'jquery' , 'flatpickr','ur-jquery-validate', 'ur-inputmask' ),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(
@@ -259,12 +259,6 @@ class UR_Frontend_Scripts {
 		self::register_scripts();
 		self::register_styles();
 
-		if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) || ur_post_content_has_shortcode( 'user_registration_login' ) ) {
-			self::enqueue_script( 'flatpickr' );
-			self::enqueue_script( 'ur-inputmask' );
-			self::enqueue_script( 'user-registration' );
-		}
-
 		if ( is_ur_lost_password_page() ) {
 			self::enqueue_script( 'ur-lost-password' );
 		}
@@ -275,13 +269,12 @@ class UR_Frontend_Scripts {
 				if ( ! isset( $args['has_rtl'] ) ) {
 					$args['has_rtl'] = false;
 				}
-				if ( is_ur_account_page() || ur_post_content_has_shortcode( 'user_registration_form' ) ||ur_post_content_has_shortcode( 'user_registration_login' ) ) {
-					self::enqueue_style( $handle, $args['src'], $args['deps'], $args['version'], $args['media'], $args['has_rtl'] );
-				}
+
+				self::enqueue_style( $handle, $args['src'], $args['deps'], $args['version'], $args['media'], $args['has_rtl'] );
 			}
 		}
-		wp_enqueue_style( 'dashicons' );
 
+		wp_enqueue_style( 'dashicons' );
 	}
 
 	/**
