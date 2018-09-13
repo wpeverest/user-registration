@@ -127,6 +127,8 @@ class UR_Emailer {
 			$name_value[ $form_data->field_name ] = isset( $form_data->value ) ? $form_data->value : '';
 		}
 
+		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
+
 		$email_object = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
 		$user_login_object = isset( $valid_form_data['user_login'] ) ? $valid_form_data['user_login'] : array();
 		$email = isset( $email_object->value ) && ! empty( $email_object->value ) ? $email_object->value : '';
