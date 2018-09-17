@@ -403,6 +403,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Lockdown Message', 'user-registration' ),
+						'desc'     => __( 'Enter the time in minutes to lock the limit.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_login_limit_message',
+						'type'     => 'textarea',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px; min-height: 100px;',
+						'default'  => 'This IP has been blocked due to so many failed login attempts. Please Try again later.',
+					),
+
+					array(
 						'type' => 'sectionend',
 						'id'   => 'frontend_login_options_settings',
 					),
