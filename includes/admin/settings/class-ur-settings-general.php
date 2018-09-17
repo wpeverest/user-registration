@@ -41,7 +41,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				''                 => __( 'General Options', 'user-registration' ),
+				''                  => __( 'General Options', 'user-registration' ),
+				'login-options'		=> __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
 			);
 
@@ -208,7 +209,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_frontend_messages_settings() {
 			
 			$settings = apply_filters(
-				'user_registration_frontend_messages_settings', array(
+				'user_registration_login_options_settings', array(
 
 					array(
 						'title' => __( 'Success Messages', 'user-registration' ),
@@ -328,6 +329,69 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
 		}
+
+		/**
+		 * Get settings for login form
+		 * @return array
+		 */
+		public function get_login_options_settings() {
+			$settings = apply_filters(
+				'user_registration_frontend_messages_settings', array(
+
+					array(
+						'title' => __( 'Login Options', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'frontend_login_options_settings',
+					),
+
+					array(
+						'title'    => __( 'Form Template', 'user-registration' ),
+						'desc'     => __( 'Choose the login form template.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_form_template',
+						'type'     => 'select',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'default',
+						'options'  => array(
+							'default'  		=> __( 'Default', 'user-registration' ),
+							'bordered' 		=> __( 'Bordered', 'user-registration' ),
+							'flat'     		=> __( 'Flat', 'user-registration' ),
+							'rounded'  		=> __( 'Rounded', 'user-registration' ),
+							'rounded_edge'	=> __( 'Rounded Edge', 'user-registration' ),
+						),
+					),
+
+					array(
+						'title'    => __( 'Enable remember me', 'user-registration' ),
+						'desc'     => __( 'Check to enable/disable remember me.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_remember_me',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'yes',
+					),
+
+					array(
+						'title'    => __( 'Enable lost password', 'user-registration' ),
+						'desc'     => __( 'Check to enable/disable lost password.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_lost_password',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'yes',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'frontend_login_options_settings',
+					),
+				)
+			);
+
+			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
+		}
+
 		/**
 		 * Output the settings.
 		 */
@@ -337,9 +401,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			} elseif ( $current_section === 'frontend-messages') {
+			} elseif ( $current_section === 'frontend-messages' ) {
 				$settings = $this->get_frontend_messages_settings();
+			} elseif( $current_section === 'login-options' ) {
+				$settings = $this->get_login_options_settings();
 			}
+
 			UR_Admin_Settings::output_fields( $settings );
 		}
 
@@ -354,10 +421,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			if( $current_section === '') {
 				$settings = $this->get_settings();
 
-			} elseif ( $current_section === 'frontend-messages') {
+			} elseif ( $current_section === 'frontend-messages' ) {
 				$settings = $this->get_frontend_messages_settings();
-
+			} elseif( $current_section === 'login-options' ) {
+				$settings = $this->get_login_options_settings();
 			}
+
 			UR_Admin_Settings::save_fields( $settings );
 		}
 

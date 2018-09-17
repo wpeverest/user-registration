@@ -13,11 +13,27 @@
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
  * @author  WPEverest
  * @package UserRegistration/Templates
- * @version 1.0.0
+ * @version 1.4.7
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
+}
+
+$form_template = get_option( 'user_registration_login_options_form_template', 'default' );
+$template_class = '';
+
+if ( 'bordered' === $form_template ) {
+	$template_class = 'ur-frontend-form--bordered';
+
+} elseif ( 'flat' === $form_template ) {
+	$template_class = 'ur-frontend-form--flat';
+
+} elseif( 'rounded' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded';
+
+} elseif( 'rounded_edge' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 }
 
 ?>
@@ -26,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php do_action( 'user_registration_before_customer_login_form' ); ?>
 
-<div class="ur-frontend-form login" id="ur-frontend-form">
+<div class="ur-frontend-form login <?php echo $template_class; ?>" id="ur-frontend-form">
 
 	<form class="user-registration-form user-registration-form-login login" method="post">
 
@@ -53,13 +69,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php _e( 'Remember me', 'user-registration' ); ?></span>
 						</label>
 					</p>
-					<p class="user-registration-LostPassword lost_password">
-						<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?', 'user-registration' ); ?></a>
-					</p>
 
-					<?php $url_options = get_option( 'user_registration_general_setting_registration_url_options' ); ?>
+					<?php
+						$lost_password_enabled = get_option( 'user_registration_login_options_lost_password', 'yes' );
 
-					<?php if ( ! empty( $url_options ) ) {
+						if( 'yes' === $lost_password_enabled ) {						
+							?>
+								<p class="user-registration-LostPassword lost_password">
+									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?', 'user-registration' ); ?></a>
+								</p>
+							<?php
+						}
+					?>
+
+					<?php
+						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
+
+						if ( ! empty( $url_options ) ) {
 							echo '<p class="user-registration-register register">';
 							$label = get_option('user_registration_general_setting_registration_label');
 							
