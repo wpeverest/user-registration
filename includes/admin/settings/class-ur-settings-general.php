@@ -383,6 +383,26 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Limit number of login limits', 'user-registration' ),
+						'desc'     => __( 'Enter the number of login limits.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_login_limit_number',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 0,
+					),
+
+					array(
+						'title'    => __( 'Lockdown time in minutes', 'user-registration' ),
+						'desc'     => __( 'Enter the time in minutes to lock the limit.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_login_limit_time',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 0,
+					),
+
+					array(
 						'type' => 'sectionend',
 						'id'   => 'frontend_login_options_settings',
 					),
