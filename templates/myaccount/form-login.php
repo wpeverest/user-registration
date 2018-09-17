@@ -65,9 +65,18 @@ if ( 'bordered' === $form_template ) {
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<input type="submit" class="user-registration-Button button" name="login" value="<?php esc_attr_e( 'Login', 'user-registration' ); ?>" />
 						<input type="hidden" name="redirect" value="<?php the_permalink() ?>" />
-						<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
-							<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php _e( 'Remember me', 'user-registration' ); ?></span>
-						</label>
+
+						<?php
+							$remember_me_enabled = get_option( 'user_registration_login_options_remember_me', 'yes' );
+
+							if( 'yes' === $remember_me_enabled ) {
+								?>
+								<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
+									<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php _e( 'Remember me', 'user-registration' ); ?></span>
+								</label>
+								<?php
+							}
+						?>
 					</p>
 
 					<?php
