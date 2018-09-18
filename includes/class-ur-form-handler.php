@@ -265,7 +265,7 @@ class UR_Form_Handler {
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
 				if( 'yes' === $recaptcha_enabled && '' == $recaptcha_value ) {
-					throw new Exception( get_option( 'user_registration_form_submission_error_message_recaptcha' ), 					__( 'Captcha code error, please try again.', 'user-registration' ) );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.' ), 'user-registration' ) );
 				}
 
 				if ( $validation_error->get_error_code() ) {
