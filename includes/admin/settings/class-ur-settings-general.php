@@ -310,7 +310,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
-			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
+			return apply_filters( 'user_registration_get_frontend_messages_settings_'. $this->id, $settings );
 		}
 
 		/**
@@ -319,13 +319,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_login_options_settings() {
 			$settings = apply_filters(
-				'user_registration_frontend_messages_settings', array(
+				'user_registration_login_options_settings', array(
 
 					array(
 						'title' => __( 'Login Options', 'user-registration' ),
 						'type'  => 'title',
 						'desc'  => '',
-						'id'    => 'frontend_login_options_settings',
+						'id'    => 'login_options_settings',
 					),
 
 					array(
@@ -396,12 +396,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'frontend_login_options_settings',
+						'id'   => 'login_options_settings',
 					),
 				)
 			);
 
-			return apply_filters( 'user_registration_get_ettings_'. $this->id, $settings );
+			return apply_filters( 'user_registration_get_login_options_settings_'. $this->id, $settings );
 		}
 
 		/**
