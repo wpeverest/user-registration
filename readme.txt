@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -72,6 +72,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
+* [Geolocation] (https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -103,6 +105,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.4.7 - xx/xx/2018 =
+* Feature - Google reCaptcha on login form
+* Feature - Templates for login form
+* Feature - Enable/Disable remember me and lost password
+* Add - Filter to process smart tags
+* Tweak - Move login related settings from general to login options
+
 
 = 1.4.6 - 31/08/2018 =
 * Fix - Remove filter to avoid plugin conflict while sending emails
