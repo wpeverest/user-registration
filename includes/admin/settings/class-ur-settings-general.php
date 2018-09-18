@@ -366,6 +366,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Enable google reCaptcha', 'user-registration' ),
+						'desc'     => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+						'id'       => 'user_registration_login_options_lost_password',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'yes',
+					),
+
+					array(
 						'title'    => __( 'Registration URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_url_options',

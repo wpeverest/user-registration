@@ -59,6 +59,12 @@ if ( 'bordered' === $form_template ) {
 						<input class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
 					</p>
 
+					<?php 
+						if( ! empty( $recaptcha_node ) ) {
+							echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
+						}
+					?>
+
 					<?php do_action( 'user_registration_login_form' ); ?>
 
 					<p class="form-row">
