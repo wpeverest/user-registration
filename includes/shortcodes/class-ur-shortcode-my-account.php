@@ -43,6 +43,9 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_style( 'flatpickr' );
 		wp_enqueue_script( 'user-registration' );
 
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled );
+
 		if ( ! is_user_logged_in() ) {
 			$message = apply_filters( 'user_registration_my_account_message', '' );
 
@@ -58,7 +61,7 @@ class UR_Shortcode_My_Account {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				self::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php' );
+				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node ) );
 			}
 		} else {
 			// Start output buffer since the html may need discarding for BW compatibility

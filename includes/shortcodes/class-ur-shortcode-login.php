@@ -37,33 +37,22 @@ class UR_Shortcode_Login {
 	 */
 	public static function output( $atts ) {
 		global $wp, $post;
-		wp_enqueue_script( 'user-registration' );
 
-		$redirect_url = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
-		$recaptcha_enable = 'yes';
+		$redirect_url      = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 
-		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-
-		if ( 'yes' == $recaptcha_enable && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
-			wp_enqueue_script( 'ur-google-recaptcha' );
-			wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
-				'site_key' => $recaptcha_site_key,
-				'site_secret' => $recaptcha_site_secret,
-				'is_captcha_enable' => true,
-			) );
-
-			$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
-		} else {
-			$recaptcha_node = '';
+		if( 'yes' === $recaptcha_enabled ) {
+			wp_enqueue_script( 'user-registration' );
 		}
+
+		$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled );
 
 		if ( ! is_user_logged_in() ) {
 
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php',array( 'recaptcha_node' => $recaptcha_node ) );
+				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node ) );
 			}
 		}
 		else

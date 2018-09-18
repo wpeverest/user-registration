@@ -1041,6 +1041,7 @@ function ur_get_all_user_registration_form() {
  * Checks user login option, if not email confirmation force not disable emails.
  */
 function ur_get_user_login_option() {
+
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 		return array(
 			'title'    => __( 'Disable emails', 'user-registration' ),
@@ -1054,6 +1055,30 @@ function ur_get_user_login_option() {
 	else {
 		update_option( 'user_registration_email_setting_disable_email' , 'no');
 	}
+}
+
+/**
+ * Get the node to display google reCaptcha
+ * @return string
+ */
+function ur_get_recaptcha_node( $recaptcha_enabled = 'no' ) {
+	$recaptcha_site_key 	= get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+	$recaptcha_site_secret  = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+
+	if ( 'yes' == $recaptcha_enabled && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
+		wp_enqueue_script( 'ur-google-recaptcha' );
+		wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
+			'site_key' => $recaptcha_site_key,
+			'site_secret' => $recaptcha_site_secret,
+			'is_captcha_enable' => true,
+		) );
+
+		$recaptcha_node = '<div id="node_recaptcha" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+	} else {
+		$recaptcha_node = '';
+	}
+
+	return $recaptcha_node;
 }
 
 /**
