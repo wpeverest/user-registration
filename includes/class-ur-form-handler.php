@@ -248,6 +248,9 @@ class UR_Form_Handler {
 
 		$nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 		$nonce_value = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
+		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
+
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {
 
@@ -260,6 +263,10 @@ class UR_Form_Handler {
 				$username         = trim( $_POST['username'] );
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
+
+				if( 'yes' === $recaptcha_enabled && '' == $recaptcha_value ) {
+					throw new Exception( get_option( 'user_registration_form_submission_error_message_recaptcha' ), 					__( 'Captcha code error, please try again.', 'user-registration' ) );
+				}
 
 				if ( $validation_error->get_error_code() ) {
 					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $validation_error->get_error_message() );
