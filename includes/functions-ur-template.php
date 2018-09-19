@@ -504,6 +504,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 function ur_logout_url( $redirect = '' ) {
 	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
 	$redirect        = $redirect ? $redirect : ur_get_page_permalink( 'myaccount' );
+	$redirect        = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint ) {
 		return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
