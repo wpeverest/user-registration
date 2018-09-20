@@ -72,7 +72,7 @@ User Registration can be easily extended with some premium addons.
 
 * [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
-* [Geolocation] (https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
+* [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
 
 == Installation ==
 
