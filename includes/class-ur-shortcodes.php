@@ -168,7 +168,7 @@ class UR_Shortcodes {
 		}
 		
 		$recaptcha_enabled  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
-		$recaptcha_node 	= ur_get_recaptcha_node( $recaptcha_enabled );
+		$recaptcha_node 	= ur_get_recaptcha_node( $recaptcha_enabled, 'register' );
 		
 		include_once( UR_ABSPATH . 'includes/frontend/class-ur-frontend.php' );
 		ur_get_template( 'form-registration.php', array(

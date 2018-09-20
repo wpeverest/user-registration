@@ -45,9 +45,8 @@ class UR_Shortcode_Login {
 			wp_enqueue_script( 'user-registration' );
 		}
 
-		$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled );
-
 		if ( ! is_user_logged_in() ) {
+			$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();

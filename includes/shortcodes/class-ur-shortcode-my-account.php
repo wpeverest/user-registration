@@ -43,10 +43,12 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_style( 'flatpickr' );
 		wp_enqueue_script( 'user-registration' );
 
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled );
 
 		if ( ! is_user_logged_in() ) {
+
+			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+			$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+
 			$message = apply_filters( 'user_registration_my_account_message', '' );
 
 			if ( ! empty( $message ) ) {
