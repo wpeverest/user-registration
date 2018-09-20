@@ -372,7 +372,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'checkbox',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => 'yes',
+						'default'  => 'no',
 					),
 
 					array(
