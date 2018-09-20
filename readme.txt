@@ -106,7 +106,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.4.7 - xx/xx/2018 =
+= 1.4.7 - 20/09/2018 =
 * Feature - Google reCaptcha on login form
 * Feature - Templates for login form
 * Feature - Enable/Disable remember me and lost password
