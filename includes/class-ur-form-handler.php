@@ -302,7 +302,7 @@ class UR_Form_Handler {
 					}
 				}
 
-				// Process if login limit and limit time is not empty
+				// Process if login limit and limit time is not empty.
 				if( 0 !== $limit_number && 0 !== $limit_time ) {
 
 					$username = isset( $_POST['username'] ) ? $_POST['username'] : '';
@@ -316,11 +316,15 @@ class UR_Form_Handler {
 						$locked_till_time = $login_limit[ $user_ip ]['locked_time'] + ( 60 * $limit_time );
 
 						if( current_time( 'mysql' ) >= $locked_till_time ) {
+							unset( $login_limit[ $user_ip ] );
 
-						}else {
+						}elseif ( isset( $login_limit[ $user_ip ] ) ) {
 							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $limit_message );
 						}
-					}
+					}	// Remove attempts once logged in with correct creds.
+					 elseif( isset( $login_limit[ $user_ip ] ) ) {
+						unset( $login_limit[ $user_ip ] );
+					} 
 				}
 
 				// Perform the login
