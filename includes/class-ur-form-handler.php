@@ -320,11 +320,13 @@ class UR_Form_Handler {
 			}
 			catch ( Exception $e ) {
 
-				$limit_number = get_option( 'user_registration_login_options_login_limit_number' );
-				$limit_time   = get_option( 'user_registration_login_options_login_limit_time' );
+				$limit_number  = get_option( 'user_registration_login_options_login_limit_number', 0 );
+				$limit_time    = get_option( 'user_registration_login_options_login_limit_time', 0 );
+				$limit_message = get_option( 'user_registration_login_options_login_limit_message', __( 'This IP has been blocked due to so many failed login attempts. Please Try again later.', 'user-registration' ) );
+
 				$user_ip 	  = ur_get_ip_address();
 
-				if( 0 !== $limit_numner && 0 !== $limit_time ) {
+				if( 0 !== $limit_number && 0 !== $limit_time ) {
 
 					$username = isset( $_POST['username'] ) ? $_POST['username'] : '';
 					$user 	  = get_user_by( 'email', $username );
@@ -339,14 +341,20 @@ class UR_Form_Handler {
 					}
 
 					if( username_exists( $username ) || email_exists( $username ) ) {
+
 						$attempt++;
 						$ur_login_limit = array();
 
-						$ur_login_limit[ $user_ip ] = array(
+						if( $attempt >= $limit_number ) {
+							ur_add_notice( $limit_message, 'error' );
+							$ur_login_limit[ $user_ip ]['locked_time'] = now();
+							update_user_meta( $user->ID, 'ur_login_limit', $ur_login_limit );
 
-							'attempts' 	 => $attempt,
-						);
-						update_user_meta( $user->ID, 'ur_login_limit', $ur_login_limit );			
+						} else {
+
+							$ur_login_limit[ $user_ip ][ 'attempts' ] = $attempt;
+							update_user_meta( $user->ID, 'ur_login_limit', $ur_login_limit );
+						}
 					}
 				}
 
