@@ -11,7 +11,12 @@ jQuery( function( $ ) {
 
 		$.post( ur_plugins_params.ajax_url, data, function( response ) {
 			$( 'tr[data-plugin="user-registration/user-registration.php"] span.deactivate a' ).addClass( 'hasNotice' );
-			$( 'tr[id="user-registration-license-row"]' ).addClass( 'update user-registration-deactivation-notice' ).after( response  );
+
+			if( $( 'tr[id="user-registration-license-row"]' ).length !== 0 ) {
+				$( 'tr[id="user-registration-license-row"]' ).addClass( 'update user-registration-deactivation-notice' ).after( response  );
+			} else {
+				$( 'tr[data-plugin="user-registration/user-registration.php"]' ).addClass( 'update user-registration-deactivation-notice' ).after( response  );
+			}
 		}).fail( function( xhr ) {
 			window.console.log( xhr.responseText );
 		});
