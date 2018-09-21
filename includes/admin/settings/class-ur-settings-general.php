@@ -412,7 +412,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => 'This IP has been blocked due to so many failed login attempts. Please Try again later.',
+						'default'  => 'This IP has been blocked due to so many failed login attempts. Please try again later.',
 					),
 
 					array(

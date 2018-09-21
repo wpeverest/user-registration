@@ -251,6 +251,11 @@ class UR_Form_Handler {
 		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
 
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$limit_number  = absint( get_option( 'user_registration_login_options_login_limit_number', 0 ) );
+		$limit_time    = get_option( 'user_registration_login_options_login_limit_time', 0 );
+		$limit_message = get_option( 'user_registration_login_options_login_limit_message', __( 'This IP has been blocked due to so many failed login attempts. Please try again later.', 'user-registration' ) );
+		$user_ip  = ur_get_ip_address();
+
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {
 
@@ -297,6 +302,27 @@ class UR_Form_Handler {
 					}
 				}
 
+				// Process if login limit and limit time is not empty
+				if( 0 !== $limit_number && 0 !== $limit_time ) {
+
+					$username = isset( $_POST['username'] ) ? $_POST['username'] : '';
+					$user 	  = get_user_by( 'email', $username );
+					$user     = empty( $user ) ? get_user_by( 'login', $username ) : $user;
+
+					$login_limit = get_user_meta( $user->ID, 'ur_login_limit', true );
+
+					if( isset( $login_limit[ $user_ip ]['locked_time'] ) ) {
+
+						$locked_till_time = $login_limit[ $user_ip ]['locked_time'] + ( 60 * $limit_time );
+
+						if( current_time( 'mysql' ) >= $locked_till_time ) {
+
+						}else {
+							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $limit_message );
+						}
+					}
+				}
+
 				// Perform the login
 				$user = wp_signon( apply_filters( 'user_registration_login_credentials', $creds ), is_ssl() );
 
@@ -320,12 +346,7 @@ class UR_Form_Handler {
 			}
 			catch ( Exception $e ) {
 
-				$limit_number  = get_option( 'user_registration_login_options_login_limit_number', 0 );
-				$limit_time    = get_option( 'user_registration_login_options_login_limit_time', 0 );
-				$limit_message = get_option( 'user_registration_login_options_login_limit_message', __( 'This IP has been blocked due to so many failed login attempts. Please Try again later.', 'user-registration' ) );
-
-				$user_ip 	  = ur_get_ip_address();
-
+				// Process if login limit and limit time is not empty
 				if( 0 !== $limit_number && 0 !== $limit_time ) {
 
 					$username = isset( $_POST['username'] ) ? $_POST['username'] : '';
@@ -335,31 +356,38 @@ class UR_Form_Handler {
 					$login_limit = get_user_meta( $user->ID, 'ur_login_limit', true );
 
 					if( is_array( $login_limit ) ) {
-						$attempt = absint( $login_limit[ $user_ip ]['attempts'] );
+						$attempt = isset( $login_limit[ $user_ip ]['attempts'] ) ? absint( $login_limit[ $user_ip ]['attempts'] ) : 0;
 					} else {
-						$attempt = 1;
+						$attempt = 0;
 					}
 
+					// Check if username or email exists.
 					if( username_exists( $username ) || email_exists( $username ) ) {
 
 						$attempt++;
 						$ur_login_limit = array();
 
+						// Update attempts and locked time.
 						if( $attempt >= $limit_number ) {
+							$login_limit = is_array( $login_limit ) ? $login_limit : array();
+							$login_limit[ $user_ip ]['locked_time'] = current_time( 'mysql' );
+							$login_limit[ $user_ip ]['attempts'] = $attempt;
+
+							update_user_meta( $user->ID, 'ur_login_limit', $login_limit );
 							ur_add_notice( $limit_message, 'error' );
-							$ur_login_limit[ $user_ip ]['locked_time'] = now();
-							update_user_meta( $user->ID, 'ur_login_limit', $ur_login_limit );
+							do_action( 'user_registration_login_locked', $username );
 
 						} else {
-
 							$ur_login_limit[ $user_ip ][ 'attempts' ] = $attempt;
 							update_user_meta( $user->ID, 'ur_login_limit', $ur_login_limit );
+							ur_add_notice( apply_filters( 'login_errors', $e->getMessage() ), 'error' );
 						}
 					}
-				}
+				} else {
 
-				ur_add_notice( apply_filters( 'login_errors', $e->getMessage() ), 'error' );
-				do_action( 'user_registration_login_failed' );
+					ur_add_notice( apply_filters( 'login_errors', $e->getMessage() ), 'error' );
+					do_action( 'user_registration_login_failed' );
+				}
 			}
 		}
 	}
