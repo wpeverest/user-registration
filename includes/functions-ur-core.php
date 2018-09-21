@@ -1041,6 +1041,7 @@ function ur_get_all_user_registration_form() {
  * Checks user login option, if not email confirmation force not disable emails.
  */
 function ur_get_user_login_option() {
+
 	if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 		return array(
 			'title'    => __( 'Disable emails', 'user-registration' ),
@@ -1054,6 +1055,62 @@ function ur_get_user_login_option() {
 	else {
 		update_option( 'user_registration_email_setting_disable_email' , 'no');
 	}
+}
+
+/**
+ * Get the node to display google reCaptcha
+ * @return string
+ */
+function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
+
+	$recaptcha_site_key 	= get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+	$recaptcha_site_secret  = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+
+	static $rc_counter = 0;
+
+	if ( 'yes' == $recaptcha_enabled && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
+
+		if( 0 === $rc_counter ) {
+			wp_enqueue_script( 'ur-google-recaptcha' );
+			wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
+				'site_key' => $recaptcha_site_key,
+				'site_secret' => $recaptcha_site_secret,
+				'is_captcha_enable' => true,
+			) );
+
+		    $rc_counter++;
+		}
+
+		if( $context === 'login' ) {
+			$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+		} elseif ($context === 'register' ) {
+			$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+		} else {
+			$recaptcha_node = '';
+		}
+	} else {
+		$recaptcha_node = '';
+	}
+
+	return $recaptcha_node;
+}
+
+/**
+ * Get current user IP Address.
+ *
+ * @return string
+ */
+function ur_get_ip_address() {
+	if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) { // WPCS: input var ok, CSRF ok.
+		return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );  // WPCS: input var ok, CSRF ok.
+	} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
+		// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+		// Make sure we always only send through the first IP in the list which should always be the client IP.
+		return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+	} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+		return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+	}
+	return '';
 }
 
 /**

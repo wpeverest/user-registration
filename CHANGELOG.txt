@@ -1,3 +1,10 @@
+= 1.4.7 - 20/09/2018 =
+* Feature - Google reCaptcha on login form
+* Feature - Templates for login form
+* Feature - Enable/Disable remember me and lost password
+* Add - Filter to process smart tags
+* Tweak - Move login related settings from general to login options
+
 = 1.4.6 - 31/08/2018 =
 * Fix - Remove filter to avoid plugin conflict while sending emails
 * Fix - Load assests correctly

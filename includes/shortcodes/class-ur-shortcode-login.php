@@ -38,14 +38,20 @@ class UR_Shortcode_Login {
 	public static function output( $atts ) {
 		global $wp, $post;
 
-		$redirect_url = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
+		$redirect_url      = isset( $atts['redirect_url']) ? $atts['redirect_url'] : '';
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+
+		if( 'yes' === $recaptcha_enabled ) {
+			wp_enqueue_script( 'user-registration' );
+		}
 
 		if ( ! is_user_logged_in() ) {
+			$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php' );
+				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node ) );
 			}
 		}
 		else

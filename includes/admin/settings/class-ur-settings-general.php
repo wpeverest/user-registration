@@ -192,7 +192,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_frontend_messages_settings() {
 			
 			$settings = apply_filters(
-				'user_registration_login_options_settings', array(
+				'user_registration_frontend_messages_settings', array(
 
 					array(
 						'title' => __( 'Success Messages', 'user-registration' ),
@@ -319,7 +319,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_login_options_settings() {
 			$settings = apply_filters(
-				'user_registration_frontend_messages_settings', array(
+				'user_registration_login_options_settings', array(
 
 					array(
 						'title' => __( 'Login Options', 'user-registration' ),
