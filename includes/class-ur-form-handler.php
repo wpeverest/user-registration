@@ -246,16 +246,15 @@ class UR_Form_Handler {
 	 */
 	public static function process_login() {
 
-		$nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
-		$nonce_value = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
-		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
+		$nonce_value 		= isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+		$nonce_value 		= isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
+		$recaptcha_value 	= isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
 
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$limit_number  = absint( get_option( 'user_registration_login_options_login_limit_number', 0 ) );
-		$limit_time    = get_option( 'user_registration_login_options_login_limit_time', 0 );
-		$limit_message = get_option( 'user_registration_login_options_login_limit_message', __( 'This IP has been blocked due to so many failed login attempts. Please try again later.', 'user-registration' ) );
-		$user_ip  = ur_get_ip_address();
-
+		$recaptcha_enabled 	= get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$limit_number  		= absint( get_option( 'user_registration_login_options_login_limit_number', 0 ) );
+		$limit_time    		= absint( get_option( 'user_registration_login_options_login_limit_time', 0 ) );
+		$limit_message 		= get_option( 'user_registration_login_options_login_limit_message', __( 'This IP has been blocked due to so many failed login attempts. Please try again later.', 'user-registration' ) );
+		$user_ip  			= ur_get_ip_address();
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {
 
@@ -305,25 +304,25 @@ class UR_Form_Handler {
 				// Process if login limit and limit time is not empty.
 				if( 0 !== $limit_number && 0 !== $limit_time ) {
 
-					$username = isset( $_POST['username'] ) ? $_POST['username'] : '';
 					$user 	  = get_user_by( 'email', $username );
 					$user     = empty( $user ) ? get_user_by( 'login', $username ) : $user;
-
-					$login_limit = get_user_meta( $user->ID, 'ur_login_limit', true );
+				    $login_limit = get_user_meta( $user->ID, 'ur_login_limit', true );
 
 					if( isset( $login_limit[ $user_ip ]['locked_time'] ) ) {
 
-						$locked_till_time = $login_limit[ $user_ip ]['locked_time'] + ( 60 * $limit_time );
+						$locked_time      = $login_limit[ $user_ip ]['locked_time'];
+						$locked_time      = strtotime( $locked_time );
+						$locked_till_time = $locked_time + ( 60 * $limit_time );
+						$format_locked_till_time = date("Y-m-d H:i:s", $locked_till_time);
 
-						if( current_time( 'mysql' ) >= $locked_till_time ) {
+							echo 'sadf';
+						if( current_time( 'mysql' ) >= $format_locked_till_time ) {
 							unset( $login_limit[ $user_ip ] );
+							update_user_meta( $user->ID, 'ur_login_limit', $login_limit );
 
 						}elseif ( isset( $login_limit[ $user_ip ] ) ) {
 							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $limit_message );
 						}
-					}	// Remove attempts once logged in with correct creds.
-					 elseif( isset( $login_limit[ $user_ip ] ) ) {
-						unset( $login_limit[ $user_ip ] );
 					} 
 				}
 
@@ -335,6 +334,13 @@ class UR_Form_Handler {
 					$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 					throw new Exception( $message );
 				} else {
+
+					$login_limit = get_user_meta( $user->ID, 'ur_login_limit', true );
+					// Remove ip address if logged in successfully.
+					if( isset( $login_limit[ $user_ip ] ) ) {
+						unset( $login_limit[ $user_ip ] );
+						update_user_meta( $user->ID, 'ur_login_limit', $login_limit );
+					}
 
 					if ( ! empty( $_POST['redirect'] ) ) {
 						$redirect = $_POST['redirect'];
