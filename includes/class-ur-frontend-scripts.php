@@ -286,7 +286,7 @@ class UR_Frontend_Scripts {
 	 * @param  string $handle
 	 */
 	private static function localize_script( $handle ) {
-		
+
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) {
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
 			self::$wp_localize_scripts[] = $handle;
@@ -304,7 +304,7 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-		
+
 		switch ( $handle ) {
 			case 'user-registration' :
 				return array(
@@ -340,7 +340,7 @@ class UR_Frontend_Scripts {
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'    => __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols such as ! * ? $ % ^ & ).', 'user-registration' ),
+					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols such as ! * ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
 		}
