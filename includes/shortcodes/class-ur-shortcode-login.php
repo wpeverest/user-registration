@@ -56,7 +56,7 @@ class UR_Shortcode_Login {
 		}
 		else
 		{
-			echo sprintf( __('You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) ;
+			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) );
 		}
 	}
 }
