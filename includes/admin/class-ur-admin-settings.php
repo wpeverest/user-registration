@@ -534,7 +534,7 @@ class UR_Admin_Settings {
 						</td>
 					</tr><?php
 					break;
-					
+
 				case 'tinymce':
 
 					$settings = array(

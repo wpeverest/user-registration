@@ -102,12 +102,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$rules['logic_gate'] = isset( $args['logic_gate'] ) ? $args['logic_gate'] : '';
 			$rules['rules'] = isset( $args['rules'] ) ? $args['rules'] : array();
 			$rules['required'] = isset( $args['required'] ) ? $args['required'] : '';
-			
+
 			foreach( $rules['rules'] as $rules_key => $rule ) {
 				if( empty( $rule['field'] ) ) {
 					unset( $rules['rules'][ $rules_key ] );
 				}
 			}
+
 			$rules['rules'] = array_values( $rules['rules'] );
 
 			$rules = ( ! empty( $rules['rules'] ) && isset( $args['enable_conditional_logic'] ) ) ? wp_json_encode( $rules ) : "''";
@@ -267,6 +268,27 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 
 					$field .= '<select data-rules=' . $rules . ' data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+							' . $options . '
+						</select>';
+				}
+				break;
+
+			case 'multiselect' :
+				$options = $field .= '';
+				if ( ! empty( $args['options'] ) ) {
+					foreach ( $args['options'] as $option_key => $option_text ) {
+
+						if ( '' === $option_key ) {
+							// If we have a blank option, select2 needs a placeholder
+							if ( empty( $args['placeholder'] ) ) {
+								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
+							}
+							$custom_attributes[] = 'data-allow_clear="true"';
+						}
+						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+					}
+
+					$field .= '<select multiple data-rules=' . $rules . ' data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 							' . $options . '
 						</select>';
 				}
