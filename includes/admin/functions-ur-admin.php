@@ -349,11 +349,17 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
 
 	foreach ( $setting_fields as $field_data ) {
-
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
 
 			if ( isset( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
-				$remap_setting_data[ $field_data['id'] ]['value'] = sanitize_text_field( $remap_setting_data[ $field_data['id'] ]['value'] );
+
+				// Check if any settings value contains array
+				if( is_array( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
+					$remap_setting_data[ $field_data['id'] ]['value'] = array_map( 'sanitize_text_field', $remap_setting_data[ $field_data['id'] ]['value'] );
+					$remap_setting_data[ $field_data['id'] ]['value'] = maybe_serialize( $remap_setting_data[ $field_data['id'] ]['value'] );
+				} else {
+					$remap_setting_data[ $field_data['id'] ]['value'] = sanitize_text_field( $remap_setting_data[ $field_data['id'] ]['value'] );
+				}
 
 				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
 			}
