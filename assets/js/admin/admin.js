@@ -40,7 +40,7 @@ jQuery(function ( $ ) {
 			var appending_id 	= $( value ).attr('id');
 
 			// Append the title and div now under form settings.
-			if( form_settings_section.find('#'+appending_id).length === 0 ) {			
+			if( form_settings_section.find('#'+appending_id).length === 0 ) {
 				form_settings_section.append('<div id="'+ appending_id +'">'+appending_text+'</div>');
 			}
 
@@ -466,10 +466,13 @@ jQuery(function ( $ ) {
 			var form_data = get_form_data();
 			var ur_form_id = $('#ur_form_id').val();
 			var ur_form_id_localization = user_registration_admin_data.post_id;
+
 			if ( ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0) ) {
 				ur_form_id = 0;
 			}
+
 			var form_setting_data = $('#ur-field-settings').serializeArray();
+
 			var data = {
 				action: 'user_registration_form_save_action',
 				security: user_registration_admin_data.ur_form_save,

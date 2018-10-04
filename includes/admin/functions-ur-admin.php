@@ -33,7 +33,7 @@ function ur_get_screen_ids() {
 
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
 }
- 
+
 // Hook into exporter and eraser tool.
 add_filter( 'wp_privacy_personal_data_exporters', 'user_registration_register_data_exporter', 10 );
 add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data_eraser' );
@@ -44,7 +44,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data
  * @return array
  */
 function user_registration_register_data_exporter( $exporters ) {
-	
+
 	$exporters['user-registration'] = array(
 	    'exporter_friendly_name' => __( 'User Extra Information', 'user-registration' ),
 	    'callback' => 'user_registration_data_exporter',
@@ -60,12 +60,12 @@ function user_registration_register_data_exporter( $exporters ) {
  * @return array exporting data
  */
 function user_registration_data_exporter( $email_address, $page = 1 ) {
-	
+
 	global $wpdb;
-	
+
 	$form_data = array();
 	$posts = get_posts( 'post_type=user_registration' );
-	
+
 	// Get array of field name label mapping of user registration fields.
 	foreach( $posts as $post ) {
 		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
@@ -74,17 +74,17 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
-						$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;	
+						$form_data[ $field->general_setting->field_name ] =  $field->general_setting->label;
 					}
 				}
 			}
 		}
-	}	
-	
+	}
+
 	$user = get_user_by( 'email', $email_address );
 	$user_id = isset( $user->ID ) ? $user->ID : 0;
 	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
-	
+
 	$export_items = array();
 	if( $usermeta && is_array( $usermeta )) {
 
@@ -97,21 +97,21 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 					$meta->meta_value = unserialize( $meta->meta_value );
 					$meta->meta_value = implode( ",", $meta->meta_value );
 				}
-				
-				$data[] = 
+
+				$data[] =
 					array(  'name'  => $form_data[ $strip_prefix ],
 					  	    'value' => $meta->meta_value,
 				);
 			}
 		}
-		
+
 		$export_items[] = array(
 			'group_id'    => 'user-registration',
 			'group_label' => __( 'User Extra Information', 'user-registration' ),
 			'item_id'     => "user-registration-{$meta->umeta_id}",
 			'data'        => $data,
 		);
-	}	
+	}
 
 	return array(
 		'data' => $export_items,
@@ -139,9 +139,9 @@ function user_registration_register_data_eraser( $erasers = array() ) {
  * @return array
  */
 function user_registration_data_eraser( $email_address, $page = 1 ) {
-	
+
 	global $wpdb;
-	
+
 	if ( empty( $email_address ) ) {
 		return array(
 			'items_removed'  => false,
@@ -152,7 +152,7 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 	}
 
 	$user         = get_user_by( 'email', $email_address );
-	
+
 	$messages = array();
 	$items_removed  = false;
 	$items_retained = false;
@@ -160,10 +160,10 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 	if ( $user && $user->ID ) {
 		$user_id = $user->ID;
 		$delete_usermeta = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
-		
+
 		$delete_form_data = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'ur_form_id' AND user_id = ". $user_id ." ;");
 
-		if( $delete_usermeta && $delete_form_data ) {	
+		if( $delete_usermeta && $delete_form_data ) {
 			$items_removed = true;
 		}
 	}
@@ -308,9 +308,9 @@ function user_registration_settings_get_option( $option_name, $default = '' ) {
 	return UR_Admin_Settings::get_option( $option_name, $default );
 }
 
-
 /**
- * @param int $form_id
+ * General settings area display
+ * @param int $form_id Form ID.
  */
 function ur_admin_form_settings( $form_id = 0 ) {
 
@@ -326,15 +326,22 @@ function ur_admin_form_settings( $form_id = 0 ) {
 
 
 /**
- * @param $setting_data
- * @param $form_id
+ * Update Settings of the form.
+ * @param array $setting_data Settings data in name value array pair
+ * @param int	$form_id	  Form ID.
  */
 function ur_update_form_settings( $setting_data, $form_id ) {
 	$remap_setting_data = array();
+	$setting_data = ur_format_setting_data( $setting_data );
 
 	foreach ( $setting_data as $setting ) {
 
 		if ( isset( $setting['name'] ) ) {
+
+			if( '[]' === substr( $setting['name'], -2 ) ) {
+				$setting['name'] = substr( $setting['name'], 0, -2 );
+			}
+
 			$remap_setting_data[ $setting['name'] ] = $setting;
 		}
 	}
@@ -352,4 +359,46 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 			}
 		}
 	}
+}
+
+/**
+ * Format settings data for same name. e.g. multiselect
+ * Encloses all values in array for same name in settings.
+ * @param   array $setting_data unformatted settings data.
+ * @return 	array $settings		formatted settings data.
+ */
+function ur_format_setting_data( $setting_data ) {
+
+	$key_value = array();
+	foreach( $setting_data as $value ) {
+
+        if( array_key_exists( $value['name'], $key_value ) ) {
+			$value_array = array();
+
+            if( is_array( $key_value[ $value['name'] ] ) ) {
+
+                $value_array   = $key_value[ $value['name'] ];
+                $value_array[] = $value['value'];
+                $key_value[ $value['name'] ] = $value_array;
+            }
+            else {
+                $value_array[] = $key_value[ $value['name'] ];
+                $value_array[] = $value['value'];
+                $key_value[ $value['name'] ] = $value_array;
+            }
+        }
+        else {
+            $key_value[ $value['name'] ] = $value['value'];
+        }
+    }
+
+    $settings = array();
+    foreach ( $key_value as $key => $value ) {
+        $settings[] = [
+                "name" => $key,
+                "value" => $value
+            ];
+    }
+
+    return $settings;
 }
