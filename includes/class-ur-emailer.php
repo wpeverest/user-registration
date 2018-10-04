@@ -57,6 +57,7 @@ class UR_Emailer {
 
 
 	/**
+	 * Sender's Email address
 	 * @return string sender's email
 	 */
 	public static function ur_sender_email() {
@@ -65,6 +66,7 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Sender's name.
 	 * @return string sender's name
 	 */
 	public static function ur_sender_name() {
@@ -73,6 +75,7 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Emails Headers.
 	 * @return string email header
 	 */
 	public static function ur_get_header() {
@@ -84,9 +87,11 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param $valid_form_data
-	 * @param $form_id
-	 * @param $user_id
+	 * Email sending process after registration hook.
+	 * @param  array  $valid_form_data Form filled data.
+	 * @param  int    $form_id         Form ID.
+	 * @param  int    $user_id         User ID.
+	 * @return void
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
@@ -94,6 +99,7 @@ class UR_Emailer {
 		$data_html = '';
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
+		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach( $valid_form_data as $field_meta => $form_data ) {
 			if( $field_meta === 'user_confirm_password' ) {
 				continue;
@@ -127,6 +133,7 @@ class UR_Emailer {
 			$name_value[ $form_data->field_name ] = isset( $form_data->value ) ? $form_data->value : '';
 		}
 
+		// Smart tag process for extra fields.
 		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
 
 		$email_object = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
@@ -135,7 +142,7 @@ class UR_Emailer {
 		$username = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-			
+
 			do_action( 'user_registration_email_send_before' );
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
@@ -146,11 +153,12 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param  string $email
-	 * @param  string $username
-	 * @param  int $user_id
-	 * @param  string $data_html For all fields
-	 * @param  array $name_value For smart tags
+	 * Trigger the user email.
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int $user_id		  User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @return void
 	 */
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments ) {
@@ -224,11 +232,13 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param  string $user_email
-	 * @param  string $username
-	 * @param  int $user_id
-	 * @param  string $data_html
-	 * @param  $name_value
+	 * Trigger the admin email.
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int $user_id		  User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement
 	 * @return void
 	 */
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
@@ -268,9 +278,11 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param $email
-	 * @param $username
-	 * @param $status
+	 * Trigger status change email while admin changes users status on admin approval.
+	 * @param  string $email    Email address of the user.
+	 * @param  string $username Username of the user.
+	 * @param  bool   $status   Stautus of the user.
+	 * @return void
 	 */
 	public static function status_change_email( $email, $username, $status ) {
 
@@ -320,9 +332,11 @@ class UR_Emailer {
 	}
 
 	/**
-	 * @param $user_login
-	 * @param $user_data
-	 * @param $key
+	 * Lost Password Email Trigger
+	 * @param  string $user_login username
+	 * @param  obj $user_data user object
+	 * @param  string $key password reset key
+	 * @return bool
 	 */
 	public static function lost_password_email( $user_login, $user_data, $key ) {
 
@@ -351,7 +365,6 @@ class UR_Emailer {
 
 		return false;
 	}
-
 }
 
 UR_Emailer::init();
