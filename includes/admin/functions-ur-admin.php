@@ -332,8 +332,8 @@ function ur_admin_form_settings( $form_id = 0 ) {
  */
 function ur_update_form_settings( $setting_data, $form_id ) {
 	$remap_setting_data = array();
-	$setting_data = ur_format_setting_data( $setting_data );
 
+	$setting_data = ur_format_setting_data( $setting_data );
 	foreach ( $setting_data as $setting ) {
 
 		if ( isset( $setting['name'] ) ) {
@@ -363,6 +363,9 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 
 				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
 			}
+		} else {
+				// Update post meta if any setting value is not set for field data id.
+				update_post_meta( $form_id, $field_data['id'], '' );
 		}
 	}
 }
