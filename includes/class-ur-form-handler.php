@@ -140,7 +140,7 @@ class UR_Form_Handler {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if( $disabled !== 'disabled' ){
-						update_user_meta( $user_id, $update_key, $_POST[ $key ] );				
+						update_user_meta( $user_id, $update_key, $_POST[ $key ] );
 					}
 				}
 			}
@@ -164,7 +164,7 @@ class UR_Form_Handler {
 
 	/**
 	 * @deprecated 1.4.1
-	 * @param $user_id 
+	 * @param $user_id
 	 * @return void
 	 */
 	public function save_account_details( $user_id ) {
@@ -265,7 +265,7 @@ class UR_Form_Handler {
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
 				if( 'yes' === $recaptcha_enabled && '' == $recaptcha_value ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.' ), 'user-registration' ) );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
 				}
 
 				if ( $validation_error->get_error_code() ) {
