@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -74,6 +74,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
 
+* [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to view their registered learndash courses, course processes, expiry date etc. from my account tab. Automically enroll users to specified learndash courses and more.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -105,6 +107,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.4.8 - xx/10/2018 =
+* Fix - Default reCaptch checked on login settings
+* Fix - Deactivation notice on certain conditions
+* Fix - Multiselect support on form settings
+* Tweak - Formwise settings save format
 
 = 1.4.7 - 20/09/2018 =
 * Feature - Google reCaptcha on login form
