@@ -108,8 +108,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.4.8 - xx/10/2018 =
-* Fix - Default reCaptch checked on login settings
+= 1.4.8 - 09/10/2018 =
+* Fix - Default reCaptcha checked on login settings
 * Fix - Deactivation notice on certain conditions
 * Fix - Multiselect support on form settings
 * Tweak - Formwise settings save format
