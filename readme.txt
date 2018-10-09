@@ -74,7 +74,7 @@ User Registration can be easily extended with some premium addons.
 
 * [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
 
-* [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to view their registered learndash courses, course processes, expiry date etc. from my account tab. Automically enroll users to specified learndash courses and more.
+* [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to view their registered learndash courses, course progresses, expiry date on my account section and more.
 
 == Installation ==
 
