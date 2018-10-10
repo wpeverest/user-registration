@@ -45,7 +45,7 @@ class UR_Email_Confirmation {
 	 * @return array
 	 */
 	public function create_quick_links( $actions, $user ) {
-		
+
 		$verify_link = add_query_arg( array( 'action' => 'verify', 'user' => $user->ID ) );
 		$verify_link = remove_query_arg( array( 'new_role' ), $verify_link );
 		$verify_link = wp_nonce_url( $verify_link, 'ur_user_change_email_status' );
@@ -56,15 +56,15 @@ class UR_Email_Confirmation {
 
 		$verify_action = '<a style="color:#086512" href="' . esc_url( $verify_link ) . '">' . _x( 'Verify', 'The action on users list page', 'user-registration' ) . '</a>';
 		$unverify_action = '<a style="color:#e20707" href="' . esc_url( $unverify_link ) . '">' . _x( 'Unverify', 'The action on users list page', 'user-registration' ) . '</a>';
-		
+
 		if ( current_user_can( 'edit_user' ) ) {
 			$get_user_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
-			
+
 			if( '0' === $get_user_status ) {
 				$actions['ur_user_verify_action'] = $verify_action;
 			} elseif( '1' === $get_user_status ) {
 				$actions['ur_user_unverify_action'] = $unverify_action;
-			} 
+			}
 		}
 		return $actions;
 	}
@@ -91,7 +91,7 @@ class UR_Email_Confirmation {
 			$user_id = absint( $_GET['user'] );
 
 			if ( $status == 'verify' ) {
-				update_user_meta( $user_id, 'ur_confirm_email', '1' );				
+				update_user_meta( $user_id, 'ur_confirm_email', '1' );
 				$redirect = add_query_arg( array( 'verified' => 1 ), $redirect );
 			} else {
 				update_user_meta( $user_id, 'ur_confirm_email', '0' );
@@ -103,7 +103,6 @@ class UR_Email_Confirmation {
 		}
 	}
 
-	
 	/**
 	 * Add the column header for the email status column
 	 *
@@ -154,28 +153,32 @@ class UR_Email_Confirmation {
 
 		return $val;
 	}
-	
+
 	/**
 	 * Enqueque CSS to load notice
 	 * @return void
 	 */
 	public function ur_enqueue_script() {
-		wp_register_style( 'user-registration-css', UR()->plugin_url().'/assets/css/user-registration.css', array(), UR_VERSION ); 
+		wp_register_style( 'user-registration-css', UR()->plugin_url().'/assets/css/user-registration.css', array(), UR_VERSION );
 		wp_enqueue_style('user-registration-css');
 	}
 
+	// Successful registration message.
 	public function custom_registration_message() {
 		return ur_print_notice( __('User successfully registered. Login to continue.','user-registration'));
 	}
 
+	// Token mismatch message.
 	public function custom_registration_error_message() {
 		return ur_print_notice( __('Token Mismatch!','user-registration'), 'error' );
 	}
 
+	// Resend verification email message.
 	public function custom_resend_email_token_message() {
 		return ur_print_notice( __('Verification Email Sent!','user-registration'));
 	}
 
+	// Resend verification email error message.
 	public function custom_resend_email_token_error_message() {
 		return ur_print_notice( __('User doesnot exist!','user-registration'), 'error' );
 	}
@@ -187,11 +190,12 @@ class UR_Email_Confirmation {
 	public function check_token_before_authenticate() {
 
 		$user_reg_successful = false;
-		
+
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
-		
+
+		// Condition for resending token.
 		if( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true') {
-			
+
 			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
 			$user = get_user_by( 'id', $user_id );
 
@@ -202,7 +206,7 @@ class UR_Email_Confirmation {
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', array(), $attachments );
-				
+
 				add_filter('login_message', array( $this,'custom_resend_email_token_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_message' ) );
 			} else {
@@ -210,9 +214,9 @@ class UR_Email_Confirmation {
 				add_filter('login_message', array( $this,'custom_resend_email_token_error_message' ) );
 				add_filter('user_registration_login_form_before_notice', array( $this,'custom_resend_email_token_error_message' ) );
 				;
-			}			
+			}
 
-		}	
+		}
 
 		if( ! isset( $_GET['ur_token'] ) ) {
 			return;
@@ -221,10 +225,11 @@ class UR_Email_Confirmation {
 			$output = str_split( $_GET['ur_token'], 50 );
 			$user_id = $this->crypt_the_string( $output[1], 'd');
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-			
-			if( $user_token == $_GET['ur_token'] ) {				
+
+			// Check if the token matches the token value stored in db.
+			if( $user_token == $_GET['ur_token'] ) {
 				$user_reg_successful = true;
-				
+
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 				delete_user_meta( $user_id, 'ur_confirm_email_token');
 
@@ -240,34 +245,47 @@ class UR_Email_Confirmation {
 
 	}
 
+	/**
+	 * Encrypt/Decrypt the provided string.
+	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
+	 *
+	 * @param  string $string String to encrypt/decrypt
+	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt
+	 * @return string Encrypted/Decrypted string.
+	 */
 	public function crypt_the_string( $string, $action = 'e' ) {
-	    
+
 	    $secret_key = 'ur_secret_key';
 	    $secret_iv = 'ur_secret_iv';
-	 
+
 	    $output = false;
 	    $encrypt_method = "AES-256-CBC";
 	    $key = hash( 'sha256', $secret_key );
 	    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-	 
+
 	    if( $action == 'e' ) {
 	        $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
 	    }
 	    else if( $action == 'd' ){
 	        $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
 	    }
-	 
+
 	    return $output;
 	}
 
-	public function get_token($user_id) {
+	/**
+	 * Generate email token for the user.
+	 * @param  int 		$user_id User ID.
+	 * @return string   Token.
+	 */
+	public function get_token( $user_id ) {
 
 		$length = 50;
 	    $token = "";
 	    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
 	    $codeAlphabet.= "0123456789";
-	    $max = strlen($codeAlphabet); 
+	    $max = strlen($codeAlphabet);
 
 	    for ($i=0; $i < $length; $i++) {
 	        $token .= $codeAlphabet[random_int(0, $max-1)];
@@ -280,15 +298,26 @@ class UR_Email_Confirmation {
 	    do_action('user_registration_get_token');
 	}
 
+	/**
+	 * Set the token of the user and update it to usermeta table in database.
+	 * @param array  $valid_form_data Form filled data.
+	 * @param int	 $form_id         Form ID.
+	 * @param int	 $user_id         User ID.
+	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 
 		if( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			$token = $this->get_token($user_id);
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
-			update_user_meta( $user_id, 'ur_confirm_email_token', $token );	
+			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
 		}
 	}
 
+	/**
+	 * Check the email status during authentication
+	 * @param  WP_User $user User instance
+	 * @return mixed
+	 */
 	public function check_email_status( WP_User $user ) {
 
 		$email_status = get_user_meta($user->ID, 'ur_confirm_email', true);
@@ -313,7 +342,7 @@ class UR_Email_Confirmation {
 	 * @return \WP_Error
 	 */
 	public function allow_password_reset( $result, $user_id ) {
-	
+
 		$email_status = get_user_meta($user_id, 'ur_confirm_email', true);
 
 		if ( $email_status === '0' ) {
@@ -324,16 +353,19 @@ class UR_Email_Confirmation {
 		return $result;
 	}
 
-	/* @deprecated 1.4.0
-	 * @param string $string the string to encrypt/decrypt, $action the action encrypt or decrypt
+	/**
+	 * @deprecated 1.4.0
+	 * @param  string $string the string to encrypt/decrypt
+	 * @param  string $action the action encrypt or decrypt
 	 * @return void
 	 */
 	public function my_simple_crypt( $string, $action ) {
 		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.4.0', 'UR_Email_Confirmation::crypt_the_string' );
 	}
 
-	/* @deprecated 1.4.0
-	 * @param $user_id 
+	/**
+	 * @deprecated 1.4.0
+	 * @param $user_id User's ID.
 	 * @return void
 	 */
 	public function getToken( $user_id ) {

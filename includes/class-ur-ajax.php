@@ -155,8 +155,8 @@ class UR_AJAX {
 			if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( $_POST['data'] ) != 'array' ) ) {
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 
-			} elseif ( ! isset( $_POST['data']['form_data'] ) 
-				|| ( isset( $_POST['data']['form_data'] ) 
+			} elseif ( ! isset( $_POST['data']['form_data'] )
+				|| ( isset( $_POST['data']['form_data'] )
 				&& gettype( $_POST['data']['form_data'] ) != 'string' ) ) {
 
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
@@ -223,7 +223,6 @@ class UR_AJAX {
 			) );
 
 		}// End try().
-
 	}
 
 	/**
