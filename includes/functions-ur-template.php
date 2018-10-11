@@ -187,7 +187,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		switch ( $args['type'] ) {
 
 			case 'textarea' :
-				$field .= '<textarea data-rules="' . htmlentities( $rules ) . '" data-id=""' . esc_attr( $key ) . '"" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
+				$field .= '<textarea data-rules="' . esc_attr( $rules ) . '" data-id=""' . esc_attr( $key ) . '"" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 				break;
 
 			case 'checkbox' :
@@ -218,13 +218,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 
 						$field .= '<label>';
-						$field .= ' <input data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
+						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="'.trim($choice).'"' . $value . ' /> ';
 						$field .= trim( $choice ) . ' </label>';
 						$checkbox_start++;
 					}
 				} else {
 					$field = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">
-							<input data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
+							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
 					         . $args['label'] . $required . '</label>';
 				    if ( $args['description'] ) {
 						$field .= '<span class="description">' . $args['description'] . '</span>';
@@ -245,10 +245,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) ." " .esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) ." " .esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				else {
-					$field .= '<input data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				break;
 
@@ -267,7 +267,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
-					$field .= '<select data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 							' . $options . '
 						</select>';
 				}
@@ -301,7 +301,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 					}
 
-					$field .= '<select multiple data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" class="select ur-enhanced-select' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+					$field .= '<select multiple data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" class="select ur-enhanced-select' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 							' . $options . '
 						</select>';
 				}
@@ -314,7 +314,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">';
 
-						$field .= '<input data-rules="' . htmlentities( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" default_value="' . esc_attr( trim ( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_key ), false ) . ' />' . wp_kses( trim( $option_text ), array(
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" default_value="' . esc_attr( trim ( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_key ), false ) . ' />' . wp_kses( trim( $option_text ), array(
 								'a'    => array(
 									'href'  => array(),
 									'title' => array()
