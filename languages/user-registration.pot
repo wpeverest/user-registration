@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.4.7\n"
+"Project-Id-Version: User Registration 1.4.8\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-10-08 07:13:42+00:00\n"
+"POT-Creation-Date: 2018-10-11 08:38:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:307
 #: includes/admin/class-ur-admin-user-list-manager.php:174
-#: includes/class-ur-email-confirmation.php:119
+#: includes/class-ur-email-confirmation.php:118
 msgid "Status"
 msgstr ""
 
@@ -1304,11 +1304,11 @@ msgstr ""
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:147
+#: includes/class-ur-email-confirmation.php:146
 msgid "Verified"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:149
+#: includes/class-ur-email-confirmation.php:148
 msgid "Pending"
 msgstr ""
 
@@ -1316,19 +1316,19 @@ msgstr ""
 msgid "User successfully registered. Login to continue."
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:172
+#: includes/class-ur-email-confirmation.php:173
 msgid "Token Mismatch!"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:176
+#: includes/class-ur-email-confirmation.php:178
 msgid "Verification Email Sent!"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:180
+#: includes/class-ur-email-confirmation.php:183
 msgid "User doesnot exist!"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:299
+#: includes/class-ur-email-confirmation.php:328
 #: includes/class-ur-form-handler.php:268
 #: includes/class-ur-form-handler.php:272
 #: includes/class-ur-form-handler.php:276
@@ -1338,17 +1338,17 @@ msgstr ""
 msgid "ERROR:"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:299
+#: includes/class-ur-email-confirmation.php:328
 msgid ""
 "Your account is still pending approval. Verifiy your email by clicking on "
 "the link sent to your email. %s"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:299
+#: includes/class-ur-email-confirmation.php:328
 msgid "Resend Verification Link"
 msgstr ""
 
-#: includes/class-ur-email-confirmation.php:320
+#: includes/class-ur-email-confirmation.php:349
 msgid ""
 "Email not verified! Verifiy your email by clicking on the link sent to your "
 "email."
