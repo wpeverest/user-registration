@@ -87,7 +87,7 @@ if ( 'Bordered' === $form_template ) {
 
 				if ( $is_field_exists ) {
 					?>
-						<?php 
+						<?php
 							if( ! empty( $recaptcha_node ) ) {
 								echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
 							}
@@ -97,7 +97,7 @@ if ( 'Bordered' === $form_template ) {
 								<?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
 						</button>
 
-					<?php 
+					<?php
 				}
 
 				if ( count( $form_data_array ) == 0 ) {

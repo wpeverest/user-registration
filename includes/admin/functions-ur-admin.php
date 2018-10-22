@@ -324,7 +324,6 @@ function ur_admin_form_settings( $form_id = 0 ) {
 
 }
 
-
 /**
  * Update Settings of the form.
  * @param array $setting_data Settings data in name value array pair
@@ -403,10 +402,10 @@ function ur_format_setting_data( $setting_data ) {
 
     $settings = array();
     foreach ( $key_value as $key => $value ) {
-        $settings[] = [
+        $settings[] = array(
                 "name" => $key,
                 "value" => $value
-            ];
+            );
     }
 
     return $settings;
