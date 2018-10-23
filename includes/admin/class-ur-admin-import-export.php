@@ -22,6 +22,7 @@ class UR_Admin_Import_Export {
 	 * @return void
 	 */
 	public static function output() {
+		$all_forms = ur_get_all_user_registration_form();
 		include_once( dirname( __FILE__ ) . '/views/html-admin-page-import-export.php' );
 	}
 }

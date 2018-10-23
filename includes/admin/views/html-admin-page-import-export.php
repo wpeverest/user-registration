@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="ur-imort-export-page">
 	<div class="nav-tab-content">
 	    <div class="nav-tab-inside">
-	        <h3><?php _e( 'Export Forms', 'user-registration' ); ?></h3>
+	        <h3><?php _e( 'Export Registration Forms', 'user-registration' ); ?></h3>
 
 	        <p><?php _e( 'You can export your form, and the users along with their extra information registered with a user regstration form.', 'user-registration' ); ?></p>
 			<div class="postboxes metabox-holder two-col">
@@ -24,7 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 						<form action="admin-post.php?action=user_registration_export_forms" method="post">
 							<select name="export_forms[]" class="select ur-enhanced-select forms-list" multiple="multiple">
-								<option></option>
+                       		    <?php
+                       		     	foreach( $all_forms as $form_id => $form ) {
+
+                            	        echo '<option value ="'. esc_attr( $form_id ) .'" selected>'. esc_html( $form ).'</option>';
+                            		}
+                            	?>
 							</select>
 							<?php wp_nonce_field( 'user-registration-export-forms' ); ?>
 							<input type="submit" class="button button-primary" name="user_registration_export_forms" value="<?php _e( 'Export Forms', 'user-registration' ) ?>">
@@ -43,7 +48,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	                        <form action="admin-post.php?action=user_registration_export_user_entries" method="post">
 	                            <p>
 	                                <select name="export_users" class="forms-list">
-	                                    <option></option>
+	                           		    <?php
+	                           		     	foreach( $all_forms as $form_id => $form ) {
+
+		                            	        echo '<option value ="'. esc_attr( $form_id ) .'">'. esc_html( $form ).'</option>';
+	                                		}
+	                                	?>
 	                                </select>
 	                            </p>
 
@@ -60,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 	<div class="nav-tab-inside">
 	     	<h3><?php _e( 'Import Registration Form', 'user-registration' ); ?></h3>
 
-	        <p><?php _e( 'Browse and locate a json file you backed up before.', 'user-registration' ); ?></p>
+	        <p><?php _e( 'Upload a json file you backed up before.', 'user-registration' ); ?></p>
 
 	        <form action="" method="post" enctype="multipart/form-data" style="margin-top: 20px;">
 	            <input type="file" name="import-form" accept="application/json" />
