@@ -22,6 +22,6 @@ class UR_Admin_Import_Export {
 	 * @return void
 	 */
 	public static function output() {
-
+		include_once( dirname( __FILE__ ) . '/views/html-admin-page-import-export.php' );
 	}
 }
