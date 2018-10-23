@@ -17,6 +17,17 @@
 	@include loader();
 }
 
+.two-col {
+    display: flex;
+    flex-wrap: wrap;
+
+    .postbox {
+	    width: 50%;
+	    flex: 1;
+	    margin: 0 15px 10px;
+	}
+}
+
 .ur_addons_wrap {
 
 	.products {
