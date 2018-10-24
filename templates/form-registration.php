@@ -48,7 +48,7 @@ if ( 'Bordered' === $form_template ) {
 
 ?>
 	<div class='ur-frontend-form <?php echo $template_class .' '. $custom_class; ?>' id='ur-frontend-form'>
-		<form autocomplete='off' method='post' class='register'
+		<form method='post' class='register'
 		      data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
 
 			<?php
@@ -108,7 +108,7 @@ if ( 'Bordered' === $form_template ) {
 			?>
 
 			<div style="clear:both"></div>
-			<input type="hidden" name="ur-user-form-id" value="<?php echo $form_id; ?>" autocomplete="off"/>
+			<input type="hidden" name="ur-user-form-id" value="<?php echo $form_id; ?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 		</form>
 
