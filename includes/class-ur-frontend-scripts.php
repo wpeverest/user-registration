@@ -331,7 +331,7 @@ class UR_Frontend_Scripts {
 				return array(
 					'home_url'              => home_url(),
 					'min_password_strength' => 3,
-					'i18n_password_error'   => __( '', 'user-registration' ),
+					'i18n_password_error'   => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
 					'pwsL10n'               => array(
 						'shortpw'  => __( 'Too short password', 'user-registration' ),
 						'bad'      => __( 'Bad password', 'user-registration' ),
@@ -340,7 +340,7 @@ class UR_Frontend_Scripts {
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols such as ! * ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , esc_attr( wp_get_password_hint() ) ),
 				);
 				break;
 		}
