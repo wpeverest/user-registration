@@ -331,7 +331,7 @@ class UR_Frontend_Scripts {
 				return array(
 					'home_url'              => home_url(),
 					'min_password_strength' => 3,
-					'i18n_password_error'   => __( 'Confirm password', 'user-registration' ),
+					'i18n_password_error'   => __( '', 'user-registration' ),
 					'pwsL10n'               => array(
 						'shortpw'  => __( 'Too short password', 'user-registration' ),
 						'bad'      => __( 'Bad password', 'user-registration' ),

@@ -10,7 +10,7 @@ jQuery(function ( $ ) {
 		 */
 		init: function () {
 			var $this = this;
-			$(document.body).on('keyup change', 'input[name="user_pass"], input[name="password_2"]', function () {
+			$(document.body).on('keyup change', 'input[name="user_pass"]', function () {
 
 				var enable_strength_password = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
@@ -70,30 +70,27 @@ jQuery(function ( $ ) {
 			// Reset
 			meter.removeClass('short bad good strong');
 			hint.remove();
-			// Error to append
-			if ( strength < ur_password_strength_meter_params.min_password_strength ) {
-				error = ' - ' + ur_password_strength_meter_params.i18n_password_error;
-			}
+
 			wrapper.find('.user-registration-password-strength').attr('data-current-strength', strength);
 
 			switch ( strength ) {
 				case 0:
-					meter.addClass('short').html(pwsL10n.shortpw + error);
+					meter.addClass('short').html(pwsL10n.shortpw);
 					meter.after(hint_html);
 					break;
 				case 1:
-					meter.addClass('bad').html(pwsL10n.bad + error);
+					meter.addClass('bad').html(pwsL10n.bad);
 					meter.after(hint_html);
 					break;
 				case 2:
-					meter.addClass('bad').html(pwsL10n.bad + error);
+					meter.addClass('bad').html(pwsL10n.bad);
 					meter.after(hint_html);
 					break;
 				case 3:
-					meter.addClass('good').html(pwsL10n.good + error);
+					meter.addClass('good').html(pwsL10n.good);
 					break;
 				case 4:
-					meter.addClass('strong').html(pwsL10n.strong + error);
+					meter.addClass('strong').html(pwsL10n.strong);
 					break;
 				case 5:
 					meter.addClass('short').html(pwsL10n.mismatch);
