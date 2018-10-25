@@ -711,12 +711,12 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'options'           => array(
-					'weak' 	  => __( 'Weak', 'user-registration' ),
-					'medium'  => __( 'Medium', 'user-registration' ),
-					'strong'  => __( 'Strong', 'user-registration' ),
+					'1'  => __( 'Weak', 'user-registration' ),
+					'2'  => __( 'Medium', 'user-registration' ),
+					'3'  => __( 'Strong', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', 'strong' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
 			),
 			array(
 				'type'              => 'text',

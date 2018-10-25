@@ -330,7 +330,6 @@ class UR_Frontend_Scripts {
 			case 'ur-password-strength-meter' :
 				return array(
 					'home_url'              => home_url(),
-					'min_password_strength' => 3,
 					'i18n_password_error'   => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
 					'pwsL10n'               => array(
 						'shortpw'  => __( 'Very Weak', 'user-registration' ),

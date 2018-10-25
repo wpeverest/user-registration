@@ -12,7 +12,7 @@ jQuery(function ( $ ) {
 			var $this = this;
 			$(document.body).on('keyup change', 'input[name="user_pass"]', function () {
 
-				var enable_strength_password = $(this).closest('form').attr('data-enable-strength-password');
+				var enable_strength_password  = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
 					return;
 				}
@@ -39,12 +39,15 @@ jQuery(function ( $ ) {
 		 * @param {Object} field
 		 */
 		includeMeter: function ( wrapper, field ) {
+
+			var minimum_password_strength = wrapper.attr('data-minimum-password-strength');
+
 			var meter = wrapper.find('.user-registration-password-strength');
 			if ( '' === field.val() ) {
 				meter.remove();
 				$(document.body).trigger('ur-password-strength-removed');
 			} else if ( 0 === meter.length ) {
-				field.after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + ur_password_strength_meter_params.min_password_strength + '"></div>');
+				field.after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>');
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
