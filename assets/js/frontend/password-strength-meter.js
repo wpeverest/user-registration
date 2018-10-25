@@ -18,6 +18,7 @@ jQuery(function ( $ ) {
 				}
 
 				$this.strengthMeter($(this));
+
 			});
 		},
 		/**

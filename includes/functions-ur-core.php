@@ -524,7 +524,7 @@ function ur_get_registered_form_fields() {
 
 /**
  * General settings for each fields
- * @param string $id id for each field 
+ * @param string $id id for each field
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
@@ -626,7 +626,7 @@ function ur_load_form_field_class( $class_key ) {
 }
 
 /**
- * List of all roles 
+ * List of all roles
  * @return array $all_roles
  */
 function ur_get_default_admin_roles() {
@@ -701,6 +701,22 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_minimum_password_strength',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array(
+					'weak' 	  => __( 'Weak', 'user-registration' ),
+					'medium'  => __( 'Medium', 'user-registration' ),
+					'strong'  => __( 'Strong', 'user-registration' ),
+				),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', 'strong' ),
 			),
 			array(
 				'type'              => 'text',
@@ -1097,7 +1113,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 /**
  * Get link for back button used on email settings.
- * @param  string $label 
+ * @param  string $label
  * @param  string $url ]
  */
 function ur_back_link( $label, $url ) {
