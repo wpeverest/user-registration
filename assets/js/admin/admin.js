@@ -74,6 +74,28 @@ jQuery(function ( $ ) {
 		fields_panel.find('form#ur-field-settings').hide();
 	});
 
+	/**
+	 * Hide/Show minimum password strength field on the basis of enable strong password value.
+	 */
+	var minimum_password_strength_wrapper_field = $('#general-settings').find('#user_registration_form_setting_minimum_password_strength_field');
+	var strong_password_field  					= $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field select#user_registration_form_setting_enable_strong_password');
+	var enable_strong_password 					= strong_password_field.val();
+
+	if( 'yes' === enable_strong_password ) {
+		minimum_password_strength_wrapper_field.show();
+	} else {
+		minimum_password_strength_wrapper_field.hide();
+	}
+
+	$(strong_password_field).change(function () {
+
+		if( 'yes' === $(this).val() ) {
+			minimum_password_strength_wrapper_field.show('slow');
+		} else {
+			minimum_password_strength_wrapper_field.hide('slow');
+		}
+	});
+
 	// Tooltips
 	$(document.body).on('init_tooltips', function () {
 		var tiptip_args = {
