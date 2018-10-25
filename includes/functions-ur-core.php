@@ -711,6 +711,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'options'           => array(
+					'0'	 => __( 'Very Weak', 'user-registration' ),
 					'1'  => __( 'Weak', 'user-registration' ),
 					'2'  => __( 'Medium', 'user-registration' ),
 					'3'  => __( 'Strong', 'user-registration' ),
