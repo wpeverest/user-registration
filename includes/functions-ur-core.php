@@ -677,7 +677,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 		'setting_data' => array(
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Default user role', 'user-registration' ),
+				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_default_user_role',
@@ -689,7 +689,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Enable strong password', 'user-registration' ),
+				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_strong_password',
@@ -721,7 +721,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Form submit button label', 'user-registration' ),
+				'label'             => __( 'Form Submit Button Label', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_form_submit_label',
@@ -732,7 +732,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -747,7 +747,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Template', 'user-registration' ),
+				'label'             => __( 'Form Template', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_template',
