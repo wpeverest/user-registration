@@ -10,7 +10,7 @@ jQuery(function ( $ ) {
 		 */
 		init: function () {
 			var $this = this;
-			$(document.body).on('keyup change', 'input[name="user_confirm_password"], input[name="password_2"]', function () {
+			$(document.body).on('keyup change', 'input[name="user_pass"], input[name="password_2"]', function () {
 
 				var enable_strength_password = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
