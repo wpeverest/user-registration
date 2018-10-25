@@ -286,8 +286,26 @@ class UR_Emailer {
 	 */
 	public static function status_change_email( $email, $username, $status ) {
 
-		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+		$name_value   = array();
+		$user         = get_user_by( 'email', $email );
+		$user_id      = isset( $user->ID ) ? $user->ID : 0;
+
+		$to_replace   = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
+
+		$user_meta_fields = ur_get_registered_user_meta_fields();
+
+		foreach( $user_meta_fields as $field ) {
+			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
+		}
+
+		// Add the field name and values from $name_value to the replacement arrays.
+		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
+
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 		if ( $status == 0 ) {
