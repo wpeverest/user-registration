@@ -130,7 +130,7 @@
 	user_registration.init();
 
 	var ursL10n = user_registration_params.ursL10n;
-	
+
 	$.fn.ur_form_submission = function () {
 
 		// traverse all nodes
@@ -430,7 +430,9 @@
 		 $('form.register').ur_form_submission();
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
-			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr();
+			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr( {
+				disableMobile: true
+			} );
 		}
 	});
 
