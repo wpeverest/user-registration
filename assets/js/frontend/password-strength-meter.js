@@ -14,11 +14,10 @@ jQuery(function ( $ ) {
 
 				var enable_strength_password = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
-
 					return;
 				}
-				$this.strengthMeter($(this));
 
+				$this.strengthMeter($(this));
 			});
 		},
 		/**
@@ -26,18 +25,12 @@ jQuery(function ( $ ) {
 		 */
 		strengthMeter: function ( self ) {
 			var wrapper = self.closest('form'),
-				// submit     = $( 'button[type="submit"]', wrapper ),
 				field = $(self, wrapper);
-			// strength   = 1;
-			// fieldValue = field.val();
+
 			ur_password_strength_meter.includeMeter(wrapper, field);
 			ur_password_strength_meter.checkPasswordStrength(wrapper, field);
-			// if ( fieldValue.length > 0 && strength < ur_password_strength_meter.min_password_strength ) {
-			// 	submit.attr( 'disabled', 'disabled' ).addClass( 'disabled' );
-			// } else {
-			// 	submit.removeAttr( 'disabled', 'disabled' ).removeClass( 'disabled' );
-			// }
 		},
+
 		/**
 		 * Include meter HTML.
 		 *
