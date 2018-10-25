@@ -333,10 +333,10 @@ class UR_Frontend_Scripts {
 					'min_password_strength' => 3,
 					'i18n_password_error'   => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
 					'pwsL10n'               => array(
-						'shortpw'  => __( 'Too short password', 'user-registration' ),
-						'bad'      => __( 'Bad password', 'user-registration' ),
-						'good'     => __( 'Good password', 'user-registration' ),
-						'strong'   => __( 'Strong password', 'user-registration' ),
+						'shortpw'  => __( 'Very Weak', 'user-registration' ),
+						'bad'      => __( 'Weak', 'user-registration' ),
+						'good'     => __( 'Medium', 'user-registration' ),
+						'strong'   => __( 'Strong', 'user-registration' ),
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
