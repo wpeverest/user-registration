@@ -402,7 +402,8 @@ class UR_Emailer {
 			$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
 			$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
 
-			if( is_array( $value ) ) {
+			if( is_serialized( $value ) ) {
+				$value = unserialize( $value );
 				$value = implode( ",", $value );
 			}
 
