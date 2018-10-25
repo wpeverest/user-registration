@@ -339,7 +339,7 @@ class UR_Frontend_Scripts {
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , esc_attr( wp_get_password_hint() ) ),
+					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
 		}
