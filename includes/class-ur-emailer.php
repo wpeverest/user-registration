@@ -286,7 +286,8 @@ class UR_Emailer {
 	 */
 	public static function status_change_email( $email, $username, $status ) {
 
-		self::status_change_emails_smart_tags( $email );
+		// Get name value pair to replace smart tag.
+		$name_value   = self::status_change_emails_smart_tags( $email );
 
 		$to_replace   = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
@@ -397,12 +398,15 @@ class UR_Emailer {
 		$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
 
 		foreach( $user_extra_fields as $extra_field ) {
-			$key   = isset( $extra_field->meta_key ) ? $extra_field->meta_key : '';
+			// Get meta key remove user_registration_ from the beginning
+			$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
 			$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
 
 			if( is_array( $value ) ) {
 				$value = implode( ",", $value );
 			}
+
+			$name_value[ $key ] = $value;
 		}
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
