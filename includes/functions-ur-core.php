@@ -1143,6 +1143,30 @@ function ur_get_meta_key_label( $form_id ) {
 }
 
 /**
+ * Get all user registration fields of the user by querying to database.
+ * @param  int 		$user_id 	User ID.
+ * @return array	$name_value Meta key => value pair.
+ */
+function ur_get_user_extra_fields( $user_id ) {
+
+	$name_value = array();
+	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+	foreach( $user_extra_fields as $extra_field ) {
+
+		// Get meta key remove user_registration_ from the beginning
+		$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
+		$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
+			if( is_serialized( $value ) ) {
+			$value = unserialize( $value );
+			$value = implode( ",", $value );
+		}
+			$name_value[ $key ] = $value;
+	}
+
+	return $name_value;
+}
+
+/**
  * Get link for back button used on email settings.
  * @param  string $label
  * @param  string $url ]

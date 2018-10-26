@@ -66,6 +66,20 @@ class UR_Admin_Export_Users {
 			'user_id'	=> __( 'User ID', 'user-registration' )
 		);
 
+		$columns = ur_get_meta_key_label( $form_id );
+
+		$exclude_columns = apply_filters( 'user_registration_exclude_export_columns', array(
+			'user_pass',
+			'user_confirm_password',
+		) );
+
+		foreach( $exclude_columns as $exclude_column ) {
+			unset( $columns[ $exclude_column ]);
+		}
+
+		$columns = array_merge( $user_id_column, $columns );
+		$columns = array_merge( $columns, $default_columns );
+
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 

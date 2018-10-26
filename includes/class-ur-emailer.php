@@ -387,7 +387,7 @@ class UR_Emailer {
 		global $wpdb;
 		$name_value   = array();
 		$user         = get_user_by( 'email', $email );
-		$user_id      = isset( $user->ID ) ? $user->ID : 0;
+		$user_id      = isset( $user->ID ) ? absint( $user->ID ) : 0;
 
 		$user_meta_fields = ur_get_registered_user_meta_fields();
 
@@ -396,20 +396,9 @@ class UR_Emailer {
 			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
 		}
 
-		$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+		$user_extra_fiels = ur_get_user_extra_fields( $user_id );
 
-		foreach( $user_extra_fields as $extra_field ) {
-			// Get meta key remove user_registration_ from the beginning
-			$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
-			$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
-
-			if( is_serialized( $value ) ) {
-				$value = unserialize( $value );
-				$value = implode( ",", $value );
-			}
-
-			$name_value[ $key ] = $value;
-		}
+		$name_value = array_merge( $name_value, $user_extra_fields );
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
