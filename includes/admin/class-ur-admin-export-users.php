@@ -64,7 +64,7 @@ class UR_Admin_Export_Users {
   	 	}
 
 		$columns = $this->generate_columns( $form_id );
-		$rows 	 = $this->generate_rows( $form_id );
+		$rows 	 = $this->generate_rows( $users );
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
@@ -91,7 +91,6 @@ class UR_Admin_Export_Users {
 	/**
 	 * Set the export headers.
 	 *
-	 * @since 1.5.0
 	 * @param string $file_name File name.
 	 */
 	private function send_headers( $file_name = '' ) {
@@ -166,10 +165,10 @@ class UR_Admin_Export_Users {
 
 	/**
 	 * Generate rows for CSV export
-	 * @param  int 		$form_id Form ID.
+	 * @param  obj 		$users 	 Users Data
 	 * @return array 	$rows	 CSV export rows.
 	 */
-	public function generate_rows( $form_id ) {
+	public function generate_rows( $users ) {
 
   	 	$rows = array();
   	 	foreach( $users as $user ) {

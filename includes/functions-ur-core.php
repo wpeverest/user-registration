@@ -1115,6 +1115,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 /**
  * Get meta key label pair by form id
  * @param  int   $form_id Form ID.
+ * @since  1.5.0
  * @return array $key_label
  */
 function ur_get_meta_key_label( $form_id ) {
@@ -1145,6 +1146,7 @@ function ur_get_meta_key_label( $form_id ) {
 /**
  * Get all user registration fields of the user by querying to database.
  * @param  int 		$user_id 	User ID.
+ * @since  1.5.0
  * @return array	$name_value Meta key => value pair.
  */
 function ur_get_user_extra_fields( $user_id ) {
