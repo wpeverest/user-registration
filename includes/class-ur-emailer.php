@@ -105,15 +105,21 @@ class UR_Emailer {
 				continue;
 			}
 
-			if( isset( $field_meta->extra_params['field_key'] ) && $field_meta->extra_params['field_key'] === 'privacy_policy') {
+			// Donot include privacy policy value
+			if( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'privacy_policy') {
 				continue;
+			}
+
+			// Process for file upload
+			if( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'file') {
+				$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value  ) : '';
 			}
 
 			$label = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
 			$value = isset( $form_data->value ) ? $form_data->value : '';
 
 			if( $field_meta === 'user_pass') {
-				$value = __('Chosen Password', 'user-registration');
+				$value = __( 'Chosen Password', 'user-registration' );
 			}
 
 			if ( is_array( $value ) ) {
