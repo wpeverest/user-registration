@@ -91,7 +91,7 @@ class UR_Admin_Export_Users {
 	/**
 	 * Set the export headers.
 	 *
-	 * @since 1.2.5
+	 * @since 1.5.0
 	 * @param string $file_name File name.
 	 */
 	private function send_headers( $file_name = '' ) {

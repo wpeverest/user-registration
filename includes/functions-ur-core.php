@@ -1113,6 +1113,36 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 }
 
 /**
+ * Get meta key label pair by form id
+ * @param  int   $form_id Form ID.
+ * @return array $key_label
+ */
+function ur_get_meta_key_label( $form_id ) {
+
+	$key_label			= array();
+	$post               = get_post( $form_id );
+
+	if( get_post_type( $post ) !== 'user_registration' ) {
+		return $key_label;
+	}
+
+	$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+	$post_content_array = json_decode( $post_content );
+
+	foreach ( $post_content_array as $post_content_row ) {
+		foreach ( $post_content_row as $post_content_grid ) {
+			foreach ( $post_content_grid as $field ) {
+				if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+					$key_label[ $field->general_setting->field_name ] =  $field->general_setting->label;
+				}
+			}
+		}
+	}
+
+	return $key_label;
+}
+
+/**
  * Get link for back button used on email settings.
  * @param  string $label
  * @param  string $url ]
