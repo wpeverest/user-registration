@@ -25,6 +25,9 @@ class UR_Admin_Export_Users {
 
 		// Check for non empty $_POST.
 		if ( ! empty( $_POST ) && isset( $_POST['user_registration_export_users'] ) ) {
+			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
+				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+			}
 		}
 	}
 
