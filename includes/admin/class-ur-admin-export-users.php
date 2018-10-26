@@ -84,9 +84,14 @@ class UR_Admin_Export_Users {
     		'ur_form_id'     => $form_id,
 		));
 
-		if( count( $users ) > 0 ) {
+		if( count( $users ) === 0 ) {
   	 	 	echo '<div id="message" class="updated inline notice notice-error"><p><strong>'. __( 'No users found with this form id.', 'user-registration' ) .'</strong></p></div>';
   	 	 	return;
+  	 	}
+
+  	 	$rows = array();
+  	 	foreach( $users as $user ) {
+  	 		$rows[] = isset( $user->data->ID ) ? ur_get_user_extra_fields( $user->data->ID ) : array();
   	 	}
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );

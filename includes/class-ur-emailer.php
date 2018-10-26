@@ -383,8 +383,6 @@ class UR_Emailer {
 	 * @return array smart tag key value pair.
 	 */
 	public static function status_change_emails_smart_tags( $email ) {
-
-		global $wpdb;
 		$name_value   = array();
 		$user         = get_user_by( 'email', $email );
 		$user_id      = isset( $user->ID ) ? absint( $user->ID ) : 0;

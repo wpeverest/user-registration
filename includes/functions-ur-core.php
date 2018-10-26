@@ -1149,6 +1149,7 @@ function ur_get_meta_key_label( $form_id ) {
  */
 function ur_get_user_extra_fields( $user_id ) {
 
+	global $wpdb;
 	$name_value = array();
 	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
 	foreach( $user_extra_fields as $extra_field ) {
