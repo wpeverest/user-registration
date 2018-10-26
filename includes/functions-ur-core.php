@@ -1139,7 +1139,7 @@ function ur_get_meta_key_label( $form_id ) {
 		}
 	}
 
-	return $key_label;
+	return apply_filters( 'user_registration_meta_key_label', $key_label, $form_id );
 }
 
 /**
@@ -1163,7 +1163,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$name_value[ $key ] = $value;
 	}
 
-	return $name_value;
+	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
 }
 
 /**
