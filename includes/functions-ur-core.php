@@ -524,7 +524,7 @@ function ur_get_registered_form_fields() {
 
 /**
  * General settings for each fields
- * @param string $id id for each field 
+ * @param string $id id for each field
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
@@ -626,7 +626,7 @@ function ur_load_form_field_class( $class_key ) {
 }
 
 /**
- * List of all roles 
+ * List of all roles
  * @return array $all_roles
  */
 function ur_get_default_admin_roles() {
@@ -677,7 +677,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 		'setting_data' => array(
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Default user role', 'user-registration' ),
+				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_default_user_role',
@@ -689,7 +689,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Enable strong password', 'user-registration' ),
+				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_strong_password',
@@ -703,8 +703,25 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
 			),
 			array(
+				'type'              => 'select',
+				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_minimum_password_strength',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array(
+					'0'	 => __( 'Very Weak', 'user-registration' ),
+					'1'  => __( 'Weak', 'user-registration' ),
+					'2'  => __( 'Medium', 'user-registration' ),
+					'3'  => __( 'Strong', 'user-registration' ),
+				),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
+			),
+			array(
 				'type'              => 'text',
-				'label'             => __( 'Form submit button label', 'user-registration' ),
+				'label'             => __( 'Form Submit Button Label', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_form_submit_label',
@@ -715,7 +732,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -730,7 +747,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Template', 'user-registration' ),
+				'label'             => __( 'Form Template', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_template',
@@ -1097,7 +1114,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 /**
  * Get link for back button used on email settings.
- * @param  string $label 
+ * @param  string $label
  * @param  string $url ]
  */
 function ur_back_link( $label, $url ) {

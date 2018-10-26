@@ -49,7 +49,7 @@ if ( 'Bordered' === $form_template ) {
 ?>
 	<div class='ur-frontend-form <?php echo $template_class .' '. $custom_class; ?>' id='ur-frontend-form'>
 		<form method='post' class='register'
-		      data-enable-strength-password="<?php echo $enable_strong_password ?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
+		      data-enable-strength-password="<?php echo $enable_strong_password ?>" data-minimum-password-strength="<?php echo $minimum_password_strength;?>" <?php echo apply_filters( 'user_registration_form_params', '' ) ?>>
 
 			<?php
 				foreach ( $form_data_array as $data ) {
