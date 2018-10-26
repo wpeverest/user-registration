@@ -30,7 +30,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
-			add_action( 'admin_menu', array( $this, 'import_export_menu'), 62 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
@@ -292,7 +291,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add menu item.
+		 * Add settings menu item.
 		 */
 		public function settings_menu() {
 			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array(
@@ -302,7 +301,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add menu item.
+		 * Add status menu item.
 		 */
 		public function status_menu() {
 			add_submenu_page( 'user-registration', __( 'User Registration Status', 'user-registration' ), __( 'Status', 'user-registration' ), 'manage_user_registration', 'user-registration-status', array(
@@ -312,17 +311,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add Import Export menu.
-		 */
-		public function import_export_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration Import Export', 'user-registration' ), __( 'Import/Export', 'user-registration' ), 'manage_user_registration', 'user-registration-import-export', array(
-				$this,
-				'import_export_page'
-			) );
-		}
-
-		/**
-		 * Add menu items.
+		 * Add new registration menu items.
 		 */
 		public function add_registration_menu() {
 			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array(
@@ -420,13 +409,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function addons_page() {
 			UR_Admin_Addons::output();
-		}
-
-		/**
-		 * Init the import/export page.
-		 */
-		public function import_export_page() {
-			UR_Admin_Import_Export::output();
 		}
 
 		/**
