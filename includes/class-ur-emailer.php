@@ -286,8 +286,19 @@ class UR_Emailer {
 	 */
 	public static function status_change_email( $email, $username, $status ) {
 
-		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+		// Get name value pair to replace smart tag.
+		$name_value   = self::status_change_emails_smart_tags( $email );
+
+		$to_replace   = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
+
+		// Add the field name and values from $name_value to the replacement arrays.
+		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
+
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 		if ( $status == 0 ) {
@@ -364,6 +375,42 @@ class UR_Emailer {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Process smart tags for status change emails.
+	 * @return array smart tag key value pair.
+	 */
+	public static function status_change_emails_smart_tags( $email ) {
+
+		global $wpdb;
+		$name_value   = array();
+		$user         = get_user_by( 'email', $email );
+		$user_id      = isset( $user->ID ) ? $user->ID : 0;
+
+		$user_meta_fields = ur_get_registered_user_meta_fields();
+
+		// Use name_value for smart tag to replace
+		foreach( $user_meta_fields as $field ) {
+			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
+		}
+
+		$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+
+		foreach( $user_extra_fields as $extra_field ) {
+			// Get meta key remove user_registration_ from the beginning
+			$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
+			$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
+
+			if( is_serialized( $value ) ) {
+				$value = unserialize( $value );
+				$value = implode( ",", $value );
+			}
+
+			$name_value[ $key ] = $value;
+		}
+
+		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 }
 
