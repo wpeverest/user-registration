@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Admin_Import_Export Class.
+ * UR_Admin_Export_Users Class.
  */
-class UR_Admin_Import_Export {
+class UR_Admin_Export_Users {
 
 	/**
 	 * Outputs Import/Export Page
@@ -23,6 +23,6 @@ class UR_Admin_Import_Export {
 	 */
 	public static function output() {
 		$all_forms = ur_get_all_user_registration_form();
-		include_once( dirname( __FILE__ ) . '/views/html-admin-page-import-export.php' );
+		include_once( dirname( __FILE__ ) . '/views/html-admin-page-export-users.php' );
 	}
 }

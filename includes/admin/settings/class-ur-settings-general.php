@@ -424,7 +424,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_login_options_settings();
 			} elseif( $current_section === 'export-users') {
 				$settings = array();
-				UR_Admin_Import_Export::output();
+				UR_Admin_Export_Users::output();
 			}
 
 			UR_Admin_Settings::output_fields( $settings );
