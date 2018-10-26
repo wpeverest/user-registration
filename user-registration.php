@@ -186,6 +186,7 @@ final class UserRegistration {
 		include_once( UR_ABSPATH . 'includes/class-ur-ajax.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-query.php' );
 		include_once( UR_ABSPATH . 'includes/class-ur-email-confirmation.php' );
+		include_once( UR_ABSPATH . 'includes/class-ur-privacy.php' );
 
 		/**
 		 * Config classes.

@@ -156,7 +156,8 @@ class UR_Shortcodes {
 		}
 
 		$is_field_exists = false;
-		$enable_strong_password = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$enable_strong_password 	= ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$minimum_password_strength  = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 		// Enqueue script.
 		wp_enqueue_style( 'flatpickr' );
@@ -166,17 +167,18 @@ class UR_Shortcodes {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 			wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 		}
-		
+
 		$recaptcha_enabled  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
 		$recaptcha_node 	= ur_get_recaptcha_node( $recaptcha_enabled, 'register' );
-		
+
 		include_once( UR_ABSPATH . 'includes/frontend/class-ur-frontend.php' );
 		ur_get_template( 'form-registration.php', array(
-				'form_data_array'        => $form_data_array,
-				'is_field_exists'        => $is_field_exists,
-				'form_id'                => $form_id,
-				'enable_strong_password' => $enable_strong_password,
-				'recaptcha_node'         => $recaptcha_node,
+				'form_data_array'        	=> $form_data_array,
+				'is_field_exists'        	=> $is_field_exists,
+				'form_id'                	=> $form_id,
+				'enable_strong_password' 	=> $enable_strong_password,
+				'minimum_password_strength'	=> $minimum_password_strength,
+				'recaptcha_node'         	=> $recaptcha_node,
 			)
 		);
 	}

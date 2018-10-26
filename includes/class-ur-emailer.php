@@ -98,6 +98,7 @@ class UR_Emailer {
 		$attachments = apply_filters('user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$data_html = '';
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
+		$name_value = array();
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach( $valid_form_data as $field_meta => $form_data ) {
@@ -105,32 +106,32 @@ class UR_Emailer {
 				continue;
 			}
 
-			if( isset( $field_meta->extra_params['field_key'] ) && $field_meta->extra_params['field_key'] === 'privacy_policy') {
+			// Donot include privacy policy value
+			if( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'privacy_policy') {
 				continue;
 			}
 
-			$label = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
-			$value = isset( $form_data->value ) ? $form_data->value : '';
-
-			if( $field_meta === 'user_pass') {
-				$value = __('Chosen Password', 'user-registration');
+			// Process for file upload
+			if( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'file') {
+				$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value  ) : '';
 			}
 
+			$label 		= isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
+			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
+			$value 		= isset( $form_data->value ) ? $form_data->value : '';
+
+			if( $field_meta === 'user_pass') {
+				$value = __( 'Chosen Password', 'user-registration' );
+			}
+
+			// Check if value contains array.
 			if ( is_array( $value ) ) {
 				$value = implode( ',', $value );
 			}
 
 			$data_html .= $label . ' : ' . $value . '<br/>';
-		}
 
-		$name_value = array();
-
-		foreach( $valid_form_data as $form_data ) {
-			if( isset( $form_data->value ) && is_array( $form_data->value ) ) {
-				$form_data->value = implode( ",", $form_data->value );
-			}
-
-			$name_value[ $form_data->field_name ] = isset( $form_data->value ) ? $form_data->value : '';
+			$name_value[ $field_name ] = $value;
 		}
 
 		// Smart tag process for extra fields.
@@ -286,8 +287,19 @@ class UR_Emailer {
 	 */
 	public static function status_change_email( $email, $username, $status ) {
 
-		$to_replace = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
+		// Get name value pair to replace smart tag.
+		$name_value   = self::status_change_emails_smart_tags( $email );
+
+		$to_replace   = array( "{{username}}", "{{email}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
+
+		// Add the field name and values from $name_value to the replacement arrays.
+		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
+
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 		if ( $status == 0 ) {
@@ -364,6 +376,42 @@ class UR_Emailer {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Process smart tags for status change emails.
+	 * @return array smart tag key value pair.
+	 */
+	public static function status_change_emails_smart_tags( $email ) {
+
+		global $wpdb;
+		$name_value   = array();
+		$user         = get_user_by( 'email', $email );
+		$user_id      = isset( $user->ID ) ? $user->ID : 0;
+
+		$user_meta_fields = ur_get_registered_user_meta_fields();
+
+		// Use name_value for smart tag to replace
+		foreach( $user_meta_fields as $field ) {
+			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
+		}
+
+		$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+
+		foreach( $user_extra_fields as $extra_field ) {
+			// Get meta key remove user_registration_ from the beginning
+			$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
+			$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
+
+			if( is_serialized( $value ) ) {
+				$value = unserialize( $value );
+				$value = implode( ",", $value );
+			}
+
+			$name_value[ $key ] = $value;
+		}
+
+		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 }
 
