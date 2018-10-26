@@ -20,21 +20,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	                        <?php _e( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ); ?>
 	                    </p>
 
-	                        <form action="admin-post.php?action=user_registration_export_user_entries" method="post">
-	                            <p>
-	                                <select name="export_users" class="forms-list">
-	                           		    <?php
-	                           		     	foreach( $all_forms as $form_id => $form ) {
+                        <p>
+                            <select name="export_users" class="forms-list">
+                       		    <?php
+                       		     	foreach( $all_forms as $form_id => $form ) {
+                            	        echo '<option value ="'. esc_attr( $form_id ) .'">'. esc_html( $form ).'</option>';
+                            		}
+                            	?>
+                            </select>
+                        </p>
 
-		                            	        echo '<option value ="'. esc_attr( $form_id ) .'">'. esc_html( $form ).'</option>';
-	                                		}
-	                                	?>
-	                                </select>
-	                            </p>
+                        <input type="submit" class="button button-primary" name="user_registration_export_users" value="<?php _e( 'Export Users', 'user-registration' ) ?>">
 
-	                            <?php wp_nonce_field( 'user-registration-export-users' ); ?>
-	                            <input type="submit" class="button button-primary" name="user-registration_export_users" value="<?php _e( 'Export Users', 'user-registration' ) ?>">
-	                        </form>
 	                </div>
 	            </div><!-- .postbox -->
 
