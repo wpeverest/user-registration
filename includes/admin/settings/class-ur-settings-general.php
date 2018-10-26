@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
-		 * Get settings
+		 * Get General settings settings
 		 *
 		 * @return array
 		 */
@@ -190,6 +190,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Settings for frontend messages customization.
+		 * @return array
+		 */
 		public function get_frontend_messages_settings() {
 
 			$settings = apply_filters(
@@ -434,7 +438,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			global $current_section;
 			$settings = $this->get_settings();
 
-			if( $current_section === '') {
+			if( $current_section === '' ) {
 				$settings = $this->get_settings();
 
 			} elseif ( $current_section === 'frontend-messages' ) {
