@@ -10,8 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="ur-export-users-page">
 	<div class="nav-tab-content">
 	    <div class="nav-tab-inside">
-	        <h3><?php _e( 'Export Users', 'user-registration' ); ?></h3>
-
 			 	<div class="postbox">
 	                <h3 class="hndle"><?php _e( 'Export Users With Extra Fields', 'user-registration' ); ?></h3>
 

@@ -25,7 +25,6 @@ class UR_Admin_Export_Users {
 
 		// Check for non empty $_POST.
 		if ( ! empty( $_POST ) && isset( $_POST['user_registration_export_users'] ) ) {
-
 		}
 	}
 
