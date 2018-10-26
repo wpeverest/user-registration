@@ -9,9 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div class="wrap user-registration">
-	<?php if ( 'general' !== $current_tab && 'export-users' !== $current_section ) : ?>
 	<form method="<?php echo esc_attr( apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' ) ); ?>" id="mainform" action="" enctype="multipart/form-data">
-	<?php endif; ?>
 		<nav class="nav-tab-wrapper ur-nav-tab-wrapper">
 			<?php
 			foreach ( $tabs as $name => $label ) {
@@ -30,7 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			do_action( 'user_registration_settings_' . $current_tab );
 			do_action( 'user_registration_settings_tabs_' . $current_tab ); // @deprecated hook
 		?>
-	<?php if ( 'general' !== $current_tab && 'export-users' !== $current_section ) : ?>
 		<p class="submit">
 			<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
 				<input name="save" class="button-primary" type="submit" value="<?php echo apply_filters('user-registration-setting-save-label', esc_attr('Save Changes', 'user-registration' )); ?>" />
@@ -39,5 +36,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php wp_nonce_field( 'user-registration-settings' ); ?>
 		</p>
 	</form>
-	<?php endif;?>
 </div>
