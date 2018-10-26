@@ -98,6 +98,7 @@ class UR_Emailer {
 		$attachments = apply_filters('user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$data_html = '';
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
+		$name_value = array();
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach( $valid_form_data as $field_meta => $form_data ) {
@@ -115,28 +116,22 @@ class UR_Emailer {
 				$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value  ) : '';
 			}
 
-			$label = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
-			$value = isset( $form_data->value ) ? $form_data->value : '';
+			$label 		= isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
+			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
+			$value 		= isset( $form_data->value ) ? $form_data->value : '';
 
 			if( $field_meta === 'user_pass') {
 				$value = __( 'Chosen Password', 'user-registration' );
 			}
 
+			// Check if value contains array.
 			if ( is_array( $value ) ) {
 				$value = implode( ',', $value );
 			}
 
 			$data_html .= $label . ' : ' . $value . '<br/>';
-		}
 
-		$name_value = array();
-
-		foreach( $valid_form_data as $form_data ) {
-			if( isset( $form_data->value ) && is_array( $form_data->value ) ) {
-				$form_data->value = implode( ",", $form_data->value );
-			}
-
-			$name_value[ $form_data->field_name ] = isset( $form_data->value ) ? $form_data->value : '';
+			$name_value[ $field_name ] = $value;
 		}
 
 		// Smart tag process for extra fields.
