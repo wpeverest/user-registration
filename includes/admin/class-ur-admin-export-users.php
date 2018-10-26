@@ -65,6 +65,67 @@ class UR_Admin_Export_Users {
 		$user_id_column = array(
 			'user_id'	=> __( 'User ID', 'user-registration' )
 		);
+
+		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
+		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
+
+ 		// Set the CSV headers.
+		$this->send_headers( $file_name );
+ 		$handle = fopen( "php://output", 'w' );
+
+ 		// Handle UTF-8 chars conversion for CSV.
+		fprintf( $handle, chr(0xEF).chr(0xBB).chr(0xBF) );
+
+ 		// Put the column headers.
+		fputcsv( $handle, array_values( $columns ) );
+
+ 		// Put the entry values.
+		foreach ( $rows as $row ) {
+			fputcsv( $handle, $row );
+		}
+
+ 		fclose( $handle );
+		exit;
+	}
+
+	/**
+	 * Set the export headers.
+	 *
+	 * @since 1.2.5
+	 * @param string $file_name File name.
+	 */
+	private function send_headers( $file_name = '' ) {
+
+		if ( function_exists( 'gc_enable' ) ) {
+			gc_enable(); // phpcs:ignore PHPCompatibility.PHP.NewFunctions.gc_enableFound
+		}
+
+		if ( function_exists( 'apache_setenv' ) ) {
+			@apache_setenv( 'no-gzip', 1 ); // @codingStandardsIgnoreLine
+		}
+
+		@ini_set( 'zlib.output_compression', 'Off' ); // @codingStandardsIgnoreLine
+		@ini_set( 'output_buffering', 'Off' ); // @codingStandardsIgnoreLine
+		@ini_set( 'output_handler', '' ); // @codingStandardsIgnoreLine
+
+		ignore_user_abort( true );
+
+		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+			@set_time_limit( 0 );
+		}
+
+	    $now = gmdate("D, d M Y H:i:s");
+	    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+	    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+	    header("Last-Modified: {$now} GMT");
+
+		header( "Content-Type: application/force-download" );
+		header( "Content-Type: application/octet-stream" );
+		header( "Content-Type: application/download" );
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $file_name );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
 	}
 }
 
