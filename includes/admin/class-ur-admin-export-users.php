@@ -54,32 +54,6 @@ class UR_Admin_Export_Users {
 			return;
 		}
 
-		// Default Columns.
-		$default_columns = apply_filters( 'user_registration_csv_exporter_default_columns', array(
-			'user_role'     	  => __( 'User Device', 'user-registration' ),
-			'date_created'    	  => __( 'Date Created', 'user-registration' ),
-			'date_created_gmt'    => __( 'Date Created GMT', 'user-registration' ),
-		) );
-
-		// User ID Column.
-		$user_id_column = array(
-			'user_id'	=> __( 'User ID', 'user-registration' )
-		);
-
-		$columns = ur_get_meta_key_label( $form_id );
-
-		$exclude_columns = apply_filters( 'user_registration_exclude_export_columns', array(
-			'user_pass',
-			'user_confirm_password',
-		) );
-
-		foreach( $exclude_columns as $exclude_column ) {
-			unset( $columns[ $exclude_column ]);
-		}
-
-		$columns = array_merge( $user_id_column, $columns );
-		$columns = array_merge( $columns, $default_columns );
-
 		$users = get_users( array(
     		'ur_form_id'     => $form_id,
 		));
@@ -89,10 +63,8 @@ class UR_Admin_Export_Users {
   	 	 	return;
   	 	}
 
-  	 	$rows = array();
-  	 	foreach( $users as $user ) {
-  	 		$rows[] = isset( $user->data->ID ) ? ur_get_user_extra_fields( $user->data->ID ) : array();
-  	 	}
+		$columns = $this->generate_columns( $form_id );
+		$rows 	 = $this->generate_rows( $form_id );
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
@@ -154,6 +126,57 @@ class UR_Admin_Export_Users {
 		header( 'Content-Disposition: attachment; filename=' . $file_name );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
+	}
+
+	/**
+	 * Generate Columns for CSV export.
+	 * @param  int 		$form_id  Form ID.
+	 * @return array    $columns  CSV Export Columns.
+	 */
+	public function generate_columns( $form_id ) {
+
+		// Default Columns.
+		$default_columns = apply_filters( 'user_registration_csv_export_default_columns', array(
+			'user_role'     	  => __( 'User Device', 'user-registration' ),
+			'date_created'    	  => __( 'Date Created', 'user-registration' ),
+			'date_created_gmt'    => __( 'Date Created GMT', 'user-registration' ),
+		) );
+
+		// User ID Column.
+		$user_id_column = array(
+			'user_id'	=> __( 'User ID', 'user-registration' )
+		);
+
+		$columns = ur_get_meta_key_label( $form_id );
+
+		$exclude_columns = apply_filters( 'user_registration_csv_export_exclude_columns', array(
+			'user_pass',
+			'user_confirm_password',
+		) );
+
+		foreach( $exclude_columns as $exclude_column ) {
+			unset( $columns[ $exclude_column ]);
+		}
+
+		$columns = array_merge( $user_id_column, $columns );
+		$columns = array_merge( $columns, $default_columns );
+
+		return apply_filters( 'user_registration_csv_export_columns', $columns );
+	}
+
+	/**
+	 * Generate rows for CSV export
+	 * @param  int 		$form_id Form ID.
+	 * @return array 	$rows	 CSV export rows.
+	 */
+	public function generate_rows( $form_id ) {
+
+  	 	$rows = array();
+  	 	foreach( $users as $user ) {
+  	 		$rows[] = isset( $user->data->ID ) ? ur_get_user_extra_fields( $user->data->ID ) : array();
+  	 	}
+
+		return apply_filters( 'user_registration_csv_export_rows', $rows, $form_id );
 	}
 }
 
