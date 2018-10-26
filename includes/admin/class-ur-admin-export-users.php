@@ -80,6 +80,15 @@ class UR_Admin_Export_Users {
 		$columns = array_merge( $user_id_column, $columns );
 		$columns = array_merge( $columns, $default_columns );
 
+		$users = get_users( array(
+    		'ur_form_id'     => $form_id,
+		));
+
+		if( count( $users ) > 0 ) {
+  	 	 	echo '<div id="message" class="updated inline notice notice-error"><p><strong>'. __( 'No users found with this form id.', 'user-registration' ) .'</strong></p></div>';
+  	 	 	return;
+  	 	}
+
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
