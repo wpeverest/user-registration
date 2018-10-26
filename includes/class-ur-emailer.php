@@ -380,6 +380,8 @@ class UR_Emailer {
 
 	/**
 	 * Process smart tags for status change emails.
+	 * @param  string User Email.
+	 * @since  1.5.0
 	 * @return array smart tag key value pair.
 	 */
 	public static function status_change_emails_smart_tags( $email ) {
