@@ -44,7 +44,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				''                  => __( 'General Options', 'user-registration' ),
 				'login-options'		=> __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
-				'import-export'		=> __( 'Import Export', 'user-registration' ),
+				'export-users'		=> __( 'Export Users', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -422,7 +422,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_frontend_messages_settings();
 			} elseif( $current_section === 'login-options' ) {
 				$settings = $this->get_login_options_settings();
-			} elseif( $current_section === 'import-export') {
+			} elseif( $current_section === 'export-users') {
 				$settings = array();
 				UR_Admin_Import_Export::output();
 			}
@@ -445,7 +445,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_frontend_messages_settings();
 			} elseif( $current_section === 'login-options' ) {
 				$settings = $this->get_login_options_settings();
-			} elseif( $current_section === 'import-export' ) {
+			} elseif( $current_section === 'export-users' ) {
 				$settings = array();
 			}
 
