@@ -69,23 +69,35 @@ class UR_Admin_Export_Users {
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
- 		// Set the CSV headers.
-		$this->send_headers( $file_name );
- 		$handle = fopen( "php://output", 'w' );
+        if ( ob_get_contents() ) {
+            ob_clean();
+        }
 
- 		// Handle UTF-8 chars conversion for CSV.
-		fprintf( $handle, chr(0xEF).chr(0xBB).chr(0xBF) );
+		 // force download
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
 
- 		// Put the column headers.
-		fputcsv( $handle, array_values( $columns ) );
+        // disposition / encoding on response body
+        header("Content-Disposition: attachment;filename={$file_name}");
+        header("Content-Transfer-Encoding: binary");
 
- 		// Put the entry values.
-		foreach ( $rows as $row ) {
-			fputcsv( $handle, $row );
-		}
+        $handle = fopen("php://output", 'w');
 
- 		fclose( $handle );
-		exit;
+        //handle UTF-8 chars conversion for CSV
+        fprintf( $handle, chr(0xEF).chr(0xBB).chr(0xBF) );
+
+        // put the column headers
+        fputcsv( $handle, array_values( $columns ) );
+
+        // put the row values
+        foreach ( $rows as $row ) {
+            fputcsv( $handle, $row );
+        }
+
+        fclose( $handle );
+
+        exit;
 	}
 
 	/**
