@@ -51,7 +51,7 @@ class UR_Frontend_Form_Handler {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$userdata = array(
 				'user_login' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
-				'user_pass' => self::$valid_form_data['user_pass']->value,
+				'user_pass' => wp_slash( self::$valid_form_data['user_pass']->value ),
 				'user_email' => self::$valid_form_data['user_email']->value,
 				'display_name' => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
 				'user_url' => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
@@ -136,9 +136,9 @@ class UR_Frontend_Form_Handler {
 
 	/**
 	 * Validation from each field's class validation() method.
-	 * Sanitization from get_sanitize_value(). 
-	 * @param  array  $form_field_data 
-	 * @param  array  $form_data  Form data to validate                      
+	 * Sanitization from get_sanitize_value().
+	 * @param  array  $form_field_data
+	 * @param  array  $form_data  Form data to validate
 	 */
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
