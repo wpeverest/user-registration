@@ -325,7 +325,7 @@ class UR_Email_Confirmation {
 		do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 		if( $email_status === '0' ) {
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verifiy your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">'. __( 'Resend Verification Link', 'user-registration' ). '</a>' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="?ur_resend_id='. $this->crypt_the_string( $user->ID, 'e' ) .'&ur_resend_token=true">'. __( 'Resend Verification Link', 'user-registration' ). '</a>' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
