@@ -163,6 +163,10 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
+		if( $current_tab === 'general' && $current_section === 'export-users' ) {
+			$GLOBALS['hide_save_button'] = true;
+		}
+
 		include( dirname( __FILE__ ) . '/views/html-admin-settings.php' );
 	}
 

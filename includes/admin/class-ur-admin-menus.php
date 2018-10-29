@@ -291,7 +291,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add menu item.
+		 * Add settings menu item.
 		 */
 		public function settings_menu() {
 			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array(
@@ -301,7 +301,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add menu item.
+		 * Add status menu item.
 		 */
 		public function status_menu() {
 			add_submenu_page( 'user-registration', __( 'User Registration Status', 'user-registration' ), __( 'Status', 'user-registration' ), 'manage_user_registration', 'user-registration-status', array(
@@ -311,7 +311,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add menu items.
+		 * Add new registration menu items.
 		 */
 		public function add_registration_menu() {
 			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array(
@@ -398,7 +398,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Init the settings page.
+		 * Init the status page.
 		 */
 		public function status_page() {
 			UR_Admin_Status::output();

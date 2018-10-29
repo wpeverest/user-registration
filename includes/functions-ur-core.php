@@ -1113,6 +1113,63 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 }
 
 /**
+ * Get meta key label pair by form id
+ * @param  int   $form_id Form ID.
+ * @since  1.5.0
+ * @return array $key_label
+ */
+function ur_get_meta_key_label( $form_id ) {
+
+	$key_label			= array();
+	$post               = get_post( $form_id );
+
+	if( get_post_type( $post ) !== 'user_registration' ) {
+		return $key_label;
+	}
+
+	$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+	$post_content_array = json_decode( $post_content );
+
+	foreach ( $post_content_array as $post_content_row ) {
+		foreach ( $post_content_row as $post_content_grid ) {
+			foreach ( $post_content_grid as $field ) {
+				if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+					$key_label[ $field->general_setting->field_name ] =  $field->general_setting->label;
+				}
+			}
+		}
+	}
+
+	return apply_filters( 'user_registration_meta_key_label', $key_label, $form_id );
+}
+
+/**
+ * Get all user registration fields of the user by querying to database.
+ * @param  int 		$user_id 	User ID.
+ * @since  1.5.0
+ * @return array	$name_value Meta key => value pair.
+ */
+function ur_get_user_extra_fields( $user_id ) {
+
+	global $wpdb;
+	$name_value = array();
+	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+	foreach( $user_extra_fields as $extra_field ) {
+
+		// Get meta key remove user_registration_ from the beginning
+		$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
+		$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
+			if( is_serialized( $value ) ) {
+			$value = unserialize( $value );
+			$value = implode( ",", $value );
+		}
+			$name_value[ $key ] = $value;
+	}
+
+	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
+}
+
+/**
  * Get link for back button used on email settings.
  * @param  string $label
  * @param  string $url ]
