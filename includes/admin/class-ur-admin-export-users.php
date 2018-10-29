@@ -63,7 +63,7 @@ class UR_Admin_Export_Users {
   	 	 	return;
   	 	}
 
-		$columns = $this->generate_column( $form_id );
+		$columns = $this->generate_columns( $form_id );
 		$rows 	 = $this->generate_rows( $users, $form_id );
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
@@ -101,50 +101,11 @@ class UR_Admin_Export_Users {
 	}
 
 	/**
-	 * Set the export headers.
-	 *
-	 * @param string $file_name File name.
-	 */
-	private function send_headers( $file_name = '' ) {
-
-		if ( function_exists( 'gc_enable' ) ) {
-			gc_enable(); // phpcs:ignore PHPCompatibility.PHP.NewFunctions.gc_enableFound
-		}
-
-		if ( function_exists( 'apache_setenv' ) ) {
-			@apache_setenv( 'no-gzip', 1 ); // @codingStandardsIgnoreLine
-		}
-
-		@ini_set( 'zlib.output_compression', 'Off' ); // @codingStandardsIgnoreLine
-		@ini_set( 'output_buffering', 'Off' ); // @codingStandardsIgnoreLine
-		@ini_set( 'output_handler', '' ); // @codingStandardsIgnoreLine
-
-		ignore_user_abort( true );
-
-		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			@set_time_limit( 0 );
-		}
-
-	    $now = gmdate("D, d M Y H:i:s");
-	    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-	    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-	    header("Last-Modified: {$now} GMT");
-
-		header( "Content-Type: application/force-download" );
-		header( "Content-Type: application/octet-stream" );
-		header( "Content-Type: application/download" );
-		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . $file_name );
-		header( 'Pragma: no-cache' );
-		header( 'Expires: 0' );
-	}
-
-	/**
 	 * Generate Column for CSV export.
 	 * @param  int 		$form_id  Form ID.
 	 * @return array    $columns  CSV Export Columns.
 	 */
-	public function generate_column( $form_id ) {
+	public function generate_columns( $form_id ) {
 
 		// Default Columns.
 		$default_columns = apply_filters( 'user_registration_csv_export_default_columns', array(
@@ -201,7 +162,7 @@ class UR_Admin_Export_Users {
   	 		$user_extra_row     = ur_get_user_extra_fields( $user->data->ID );
 
   	 		foreach( $user_extra_row as $user_extra_data ) {
-  	 			if( ! isset( $this->generate_column( $form_id )[ $user_extra_data ] ) ) {
+  	 			if( ! isset( $this->generate_columns( $form_id )[ $user_extra_data ] ) ) {
 
   	 				// Remove the rows value that are not in columns.
   	 				unset( $user_extra_row[ $user_extra_data ] );
@@ -213,7 +174,7 @@ class UR_Admin_Export_Users {
 
   	 		// Get user table data that are on column.
   	 		foreach( $user_table_data as $data ) {
-  	 			if( isset( $this->generate_column( $form_id )[ $data ] ) ) {
+  	 			if( isset( $this->generate_columns( $form_id )[ $data ] ) ) {
   	 				$user_table_data_row = array_merge( $user_table_data_row, array( $data => $user->$data ) );
   	 			}
   	 		}
@@ -223,7 +184,7 @@ class UR_Admin_Export_Users {
 
   	 		// Get user meta table data that are on column.
   	 		foreach( $user_meta_data as $meta_data ) {
-  	 			if( isset( $this->generate_column( $form_id )[ $meta_data ] ) ) {
+  	 			if( isset( $this->generate_columns( $form_id )[ $meta_data ] ) ) {
   	 				$user_meta_data_row = array_merge( $user_meta_data_row, array( $meta_data => get_user_meta( $user->data->ID, $meta_data, true ) ) );
   	 			}
   	 		}
@@ -240,6 +201,12 @@ class UR_Admin_Export_Users {
 
   	 		$user_row = array_merge( $user_id_row, $user_extra_row );
 			$user_row = array_merge( $user_row, $user_default_row );
+
+			/**
+			 * Reorder rows according to the values in column.
+			 * @see https://stackoverflow.com/a/44774818/9520912
+			 */
+			$user_row = array_merge( array_fill_keys ( array_keys( $this->generate_columns( $form_id ) ), '' ), $user_row );
 
 			$rows[] = $user_row;
   	 	}
