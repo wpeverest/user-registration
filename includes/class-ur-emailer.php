@@ -81,7 +81,7 @@ class UR_Emailer {
 	public static function ur_get_header() {
 		$header = "From: ". self::ur_sender_name()." <".self::ur_sender_email().">\r\n";
 		$header .= "Reply-To: ".self::ur_sender_email()."\r\n";
-		$header .= "Content-Type: text/html\r\n; charset=UTF-8";
+		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
 
 		return $header;
 	}
