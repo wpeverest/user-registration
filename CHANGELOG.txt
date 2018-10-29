@@ -1,3 +1,13 @@
+= 1.5.0 - 29/10/2018 =
+* Feature - CSV Export of user data
+* Feature - Customizable minimum password strength
+* Add - Privacy policy text
+* Add - Smart tags for status change emails
+* Fix - Passwords including characters such as apostrophe (')
+* Fix - Email header including line break
+* Fix - Load FlatPickr on mobile devices too
+* Fix - File link to the email using smart tag
+
 = 1.4.9 - 11/10/2018 =
 * Fix - Escape attributes on conditional rules
 

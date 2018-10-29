@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -107,6 +107,16 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.5.0 - 29/10/2018 =
+* Feature - CSV Export of user data
+* Feature - Customizable minimum password strength
+* Add - Privacy policy text
+* Add - Smart tags for status change emails
+* Fix - Passwords including characters such as apostrophe (')
+* Fix - Email header including line break
+* Fix - Load FlatPickr on mobile devices too
+* Fix - File link to the email using smart tag
 
 = 1.4.9 - 11/10/2018 =
 * Fix - Escape attributes on conditional rules
