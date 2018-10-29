@@ -64,7 +64,8 @@ class UR_Admin_Export_Users {
   	 	}
 
 		$columns = $this->generate_columns( $form_id );
-		$rows 	 = $this->generate_rows( $users );
+
+		$rows 	 = $this->generate_rows( $users, $form_id );
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
 		$file_name = $form_name . "-" . current_time( 'Y-m-d_H:i:s' ) . '.csv';
@@ -136,9 +137,9 @@ class UR_Admin_Export_Users {
 
 		// Default Columns.
 		$default_columns = apply_filters( 'user_registration_csv_export_default_columns', array(
-			'user_role'     	  => __( 'User Device', 'user-registration' ),
-			'date_created'    	  => __( 'Date Created', 'user-registration' ),
-			'date_created_gmt'    => __( 'Date Created GMT', 'user-registration' ),
+			'user_role'     	  => __( 'User Role', 'user-registration' ),
+			'date_created'    	  => __( 'User Registered', 'user-registration' ),
+			'date_created_gmt'    => __( 'User Registered GMT', 'user-registration' ),
 		) );
 
 		// User ID Column.
@@ -168,14 +169,39 @@ class UR_Admin_Export_Users {
 	 * @param  obj 		$users 	 Users Data
 	 * @return array 	$rows	 CSV export rows.
 	 */
-	public function generate_rows( $users ) {
+	public function generate_rows( $users, $form_id ) {
 
   	 	$rows = array();
+
   	 	foreach( $users as $user ) {
-  	 		$rows[] = isset( $user->data->ID ) ? ur_get_user_extra_fields( $user->data->ID ) : array();
+
+  	 		if( ! isset( $user->data->ID ) ) {
+  	 			continue;
+  	 		}
+
+  	 		$user_form_id = get_user_meta( $user->data->ID, 'ur_form_id', true );
+
+  	 		// If the user is not submitted by selected registration form.
+  	 		if( $user_form_id !== $form_id ) {
+  	 			continue;
+  	 		}
+
+  	 		$user_id_row        = array( 'user_id' => $user->data->ID );
+  	 		$user_extra_row     = ur_get_user_extra_fields( $user->data->ID );
+
+  	 		$user_default_row  = array(
+  	 			'user_role' 		=> is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles,
+  	 			'date_created'		=> $user->data->user_registered,
+  	 			'date_created_gmt'	=> get_gmt_from_date( $user->data->user_registered ),
+  	 		);
+
+  	 		$user_row = array_merge( $user_id_row, $user_extra_row );
+			$user_row = array_merge( $user_row, $user_default_row );
+
+			$rows[] = $user_row;
   	 	}
 
-		return apply_filters( 'user_registration_csv_export_rows', $rows, $form_id );
+		return apply_filters( 'user_registration_csv_export_rows', $rows, $users );
 	}
 }
 
