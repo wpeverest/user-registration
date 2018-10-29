@@ -63,8 +63,7 @@ class UR_Admin_Export_Users {
   	 	 	return;
   	 	}
 
-		$columns = $this->generate_columns( $form_id );
-
+		$columns = $this->generate_column( $form_id );
 		$rows 	 = $this->generate_rows( $users, $form_id );
 
 		$form_name = strtolower( str_replace( " ", "-", get_the_title( $form_id ) ) );
@@ -129,11 +128,11 @@ class UR_Admin_Export_Users {
 	}
 
 	/**
-	 * Generate Columns for CSV export.
+	 * Generate Column for CSV export.
 	 * @param  int 		$form_id  Form ID.
 	 * @return array    $columns  CSV Export Columns.
 	 */
-	public function generate_columns( $form_id ) {
+	public function generate_column( $form_id ) {
 
 		// Default Columns.
 		$default_columns = apply_filters( 'user_registration_csv_export_default_columns', array(
@@ -189,6 +188,28 @@ class UR_Admin_Export_Users {
   	 		$user_id_row        = array( 'user_id' => $user->data->ID );
   	 		$user_extra_row     = ur_get_user_extra_fields( $user->data->ID );
 
+  	 		$user_table_data     = ur_get_user_table_fields();
+  	 		$user_table_data_row = array();
+
+  	 		foreach( $user_table_data as $data ) {
+  	 			if( isset( $this->generate_column( $form_id )[ $data ] ) ) {
+  	 				$user_table_data_row = array_merge( $user_table_data_row, array( $data => $user->$data ) );
+  	 			}
+  	 		}
+
+  	 		$user_meta_data 	= ur_get_registered_user_meta_fields();
+  	 		$user_meta_data_row = array();
+
+  	 		foreach( $user_meta_data as $meta_data ) {
+  	 			if( isset( $this->generate_column( $form_id )[ $meta_data ] ) ) {
+  	 				$user_meta_data_row = array( $meta_data => get_user_meta( $user->data->ID, $meta_data, true ) );
+  	 			}
+  	 		}
+
+  	 		$user_extra_row = array_merge( $user_extra_row, $user_table_data_row );
+  	 		$user_extra_row = array_merge( $user_extra_row, $user_meta_data_row );
+
+  	 		// Get user default row.
   	 		$user_default_row  = array(
   	 			'user_role' 		=> is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles,
   	 			'date_created'		=> $user->data->user_registered,
