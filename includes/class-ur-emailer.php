@@ -396,7 +396,7 @@ class UR_Emailer {
 			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
 		}
 
-		$user_extra_fiels = ur_get_user_extra_fields( $user_id );
+		$user_extra_fields = ur_get_user_extra_fields( $user_id );
 
 		$name_value = array_merge( $name_value, $user_extra_fields );
 
