@@ -108,7 +108,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.0 - 29/10/2018 =
+= 1.5.0 - 30/10/2018 =
 * Feature - CSV Export of user data
 * Feature - Customizable minimum password strength
 * Add - Privacy policy text
@@ -193,8 +193,3 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Deprecate - Functions my_simple_crypt() and getToken()
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
-
-== Upgrade Notice ==
-
-= 1.3.0 =
-1.3.0 is a major release. Make a full site backup and run the database updater immediately after the upgrade.
