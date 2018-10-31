@@ -323,6 +323,7 @@ function ur_admin_form_settings( $form_id = 0 ) {
 		user_registration_form_field( $args['id'], $args );
 	}
 
+	do_action( 'user_registration_after_form_settings', $form_id, $arguments );
 }
 
 /**
