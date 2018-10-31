@@ -18,11 +18,11 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
  * UR_Settings_Email_Confirmation Class.
  */
 class UR_Settings_Email_Confirmation{
-	
+
 	public function __construct() {
 		$this->id             = 'email_confirmation';
 		$this->title          = __( 'Email Confirmation', 'user-registration' );
-		$this->description    = __( 'Email sent to the a new when email confirmation to register option is choosen', 'user-registration' );
+		$this->description    = __( 'Email sent to the a user with a verification link when email confirmation to register option is choosen', 'user-registration' );
 	}
 
 		/**
@@ -75,7 +75,7 @@ class UR_Settings_Email_Confirmation{
 		}
 
 	public function ur_get_email_confirmation() {
-	
+
 		$message = apply_filters( 'user_registration_get_email_confirmation', sprintf( __(
 				'Hi {{username}},
 
