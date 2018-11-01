@@ -49,6 +49,7 @@ class UR_Emailer {
 
 	/**
 	 * Remove filters after the email is sent.
+	 * @since 1.4.6
 	 */
 	public static function ur_send_email_after() {
 		remove_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );

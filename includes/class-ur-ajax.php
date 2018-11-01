@@ -61,8 +61,8 @@ class UR_AJAX {
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
 
 		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		$nonce = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
-		$flag = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$nonce 	 = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
+		$flag 	 = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 
 		if ( $flag != true || is_wp_error( $flag ) ) {
 			wp_send_json_error( array(
@@ -86,9 +86,9 @@ class UR_AJAX {
 			if ( ! current_user_can( $current_user_capability ) ) {
 				global $wp;
 
-				$user_ID = get_current_user_id();
-				$user = get_user_by( 'ID', $user_ID );
-				$current_url = home_url( add_query_arg( array(), $wp->request ) );
+				$user_ID      = get_current_user_id();
+				$user         = get_user_by( 'ID', $user_ID );
+				$current_url  = home_url( add_query_arg( array(), $wp->request ) );
 				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
 
 				wp_send_json_error( array(
@@ -143,7 +143,7 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Form save form backend
+	 * Form save from backend
 	 * @return void
 	 */
 	public static function form_save_action() {

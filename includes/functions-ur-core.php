@@ -600,6 +600,7 @@ function ur_get_general_settings( $id ) {
 	if( in_array( $strip_id, $exclude_placeholder ) ) {
 		unset( $general_settings['placeholder'] );
 	}
+
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 
@@ -662,10 +663,12 @@ function ur_get_random_number() {
 }
 
 /**
- * Form settings
- * @param $form_id
+ * General Form settings
+ * @param int $form_id  Form ID.
  *
  * @since 1.0.1
+ *
+ * @return array Form settings.
  */
 function ur_admin_form_settings_fields( $form_id ) {
 
@@ -784,22 +787,23 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 /**
  * User Login Option
- * @return mixed
+ * @return array
  */
 function ur_login_option() {
 
 	return apply_filters( 'user_registration_login_options', array(
-			'default'        => __( 'Manual login after registration', 'user-registration' ),
-			'email_confirmation' => __('Email confirmation to login', 'user-registration'),
-			'auto_login'     => __( 'Auto login after registration', 'user-registration' ),
-			'admin_approval' => __( 'Admin approval after registration', 'user-registration' )
+			'default'        		=> __( 'Manual login after registration', 'user-registration' ),
+			'email_confirmation' 	=> __('Email confirmation to login', 'user-registration'),
+			'auto_login'     		=> __( 'Auto login after registration', 'user-registration' ),
+			'admin_approval' 		=> __( 'Admin approval after registration', 'user-registration' )
 		)
 	);
 }
 
 /**
- * @param      $post_id
- * @param      $meta_key
+ * Get Post meta value by meta key.
+ * @param      $post_id    Post ID.
+ * @param      $meta_key   Meta Key.
  * @param null $default
  *
  * @since 1.0.1
@@ -818,8 +822,9 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 }
 
 /**
- * @param $form_id
- * @param $meta_key
+ * Get general form settings by meta key (settings id).
+ * @param $form_id    Form ID.
+ * @param $meta_key   Meta Key.
  *
  * @since 1.0.1
  */
@@ -859,6 +864,7 @@ function ur_get_user_approval_status( $user_id ) {
 }
 
 /**
+ * Get form data by key.
  * @param $form_data
  */
 function ur_get_form_data_by_key( $form_data, $key = null ) {
@@ -1154,12 +1160,14 @@ function ur_get_user_extra_fields( $user_id ) {
 	global $wpdb;
 	$name_value = array();
 	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = ". $user_id ." ;" );
+
 	foreach( $user_extra_fields as $extra_field ) {
 
 		// Get meta key remove user_registration_ from the beginning
 		$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
 		$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
-			if( is_serialized( $value ) ) {
+
+		if( is_serialized( $value ) ) {
 			$value = unserialize( $value );
 			$value = implode( ",", $value );
 		}

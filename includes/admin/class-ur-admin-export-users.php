@@ -73,24 +73,24 @@ class UR_Admin_Export_Users {
             ob_clean();
         }
 
-		 // force download
+		 // Force download
         header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
 
-        // disposition / encoding on response body
+        // Disposition / Encoding on response body
         header("Content-Disposition: attachment;filename={$file_name}");
         header("Content-Transfer-Encoding: binary");
 
         $handle = fopen("php://output", 'w');
 
-        //handle UTF-8 chars conversion for CSV
+        // Handle UTF-8 chars conversion for CSV
         fprintf( $handle, chr(0xEF).chr(0xBB).chr(0xBF) );
 
-        // put the column headers
+        // Put the column headers
         fputcsv( $handle, array_values( $columns ) );
 
-        // put the row values
+        // Put the row values
         foreach ( $rows as $row ) {
             fputcsv( $handle, $row );
         }

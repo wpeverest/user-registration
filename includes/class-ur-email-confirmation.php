@@ -3,7 +3,7 @@
  * User Registration Email Confirmation.
  *
  * @class    UR_Email_Confirmation
- * @version  1.0.0
+ * @since    1.1.5
  * @package  UserRegistration/Classes
  * @category Class
  * @author   WPEverest
