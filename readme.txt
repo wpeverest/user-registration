@@ -45,6 +45,7 @@ Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Email confirmation to register
 * Enable/Disable Strong Password
 * Default User Role Selection Option
+* User data export in CSV
 * Well Documented
 * Translation ready
 
