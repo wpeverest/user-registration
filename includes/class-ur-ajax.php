@@ -65,10 +65,11 @@ class UR_AJAX {
 		$captcaha_response = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] :  '';
 		$flag 	           = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$secret_key		   = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcaha_response ) ) {
-				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
+				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcaha_response );
 				$data  = json_decode( wp_remote_retrieve_body( $data ) );
 
 				if ( empty( $data->success ) ) {
