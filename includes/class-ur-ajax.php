@@ -60,9 +60,28 @@ class UR_AJAX {
 
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
 
-		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		$nonce 	 = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
-		$flag 	 = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$nonce 	           = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
+		$captcaha_response = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] :  '';
+		$flag 	           = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+
+		if( 'yes' === $recaptcha_enabled ) {
+			if ( ! empty( $captcaha_response ) ) {
+				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
+				$data  = json_decode( wp_remote_retrieve_body( $data ) );
+
+				if ( empty( $data->success ) ) {
+					wp_send_json_error( array(
+						'message' => __( 'Invalid site secret on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+					) );
+						}
+			} else {
+				wp_send_json_error( array(
+					'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+				) );
+			}
+		}
 
 		if ( $flag != true || is_wp_error( $flag ) ) {
 			wp_send_json_error( array(

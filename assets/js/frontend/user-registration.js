@@ -339,7 +339,7 @@
 							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
 								var captchaResponse = $this.find('#g-recaptcha-response').val();
 
-								if ( 0 === captchResponse.length ) {
+								if ( 0 === captchaResponse.length ) {
 
 									form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
 
