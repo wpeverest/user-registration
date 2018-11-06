@@ -321,10 +321,13 @@
 							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
 						}
 
+						var captchaResponse = $this.find('#g-recaptcha-response').val();
+
 						var data = {
 							action: 'user_registration_user_form_submit',
 							security: user_registration_params.user_registration_form_data_save,
 							form_data: form_data,
+							captchaResponse: captchaResponse,
 							form_id: form_id,
 							ur_frontend_form_nonce: form_nonce
 						};
@@ -334,7 +337,7 @@
 						if ( 'undefined' !== typeof (ur_google_recaptcha_code) ) {
 
 							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
-								var captchResponse = $this.find('#g-recaptcha-response').val();
+								var captchaResponse = $this.find('#g-recaptcha-response').val();
 
 								if ( 0 === captchResponse.length ) {
 
