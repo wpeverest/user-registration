@@ -271,7 +271,7 @@ class UR_Form_Handler {
 						$data  = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
-							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
+							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' .  __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
 					} else {
 						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );

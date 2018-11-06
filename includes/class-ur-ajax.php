@@ -73,7 +73,7 @@ class UR_AJAX {
 
 				if ( empty( $data->success ) ) {
 					wp_send_json_error( array(
-						'message' => __( 'Invalid site secret on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+						'message' => __( 'Errors on google reCaptcha. Contact your site administrator.', 'user-registration' ),
 					) );
 						}
 			} else {
