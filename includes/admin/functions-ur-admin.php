@@ -504,7 +504,7 @@ function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
  */
 function ur_save_conditional_settings( $settings, $form_id = 0 ) {
 	$conditional_settings = ur_conditional_logic_settings( $form_id );
-	$settings 		      = array_merge( $settings, $zapier_setting );
+	$settings 		      = array_merge( $settings, $conditional_settings );
 
 	return $settings;
 }
