@@ -1178,6 +1178,21 @@ function ur_get_user_extra_fields( $user_id ) {
 }
 
 /**
+ * Conditional logic settings. Proceed if the following matches.
+ * @param  string $context 	id
+ * @return string
+ */
+function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
+
+	echo '<div id="user-registration-conditional-settings-'. $context .'" >';
+	echo __( 'Condional Logic', 'user-registration' );
+
+		echo '<input data-id="user_registration_enable_conditional-logic'. $context .'" type="checkbox" class="input-text input-text " name="user_registration_enable_conditional-logic'. $context .'" id="user_registration_enable_conditional-logic'. $context .'" placeholder="" value="" '. selected() .'>';
+
+	echo '</div>';
+}
+
+/**
  * Get link for back button used on email settings.
  * @param  string $label
  * @param  string $url ]
