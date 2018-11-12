@@ -412,87 +412,92 @@ function ur_format_setting_data( $setting_data ) {
 }
 
 /**
- * Render conditional logic settings. Proceed if the following matches.
+ * Render/Return conditional logic settings. Proceed if the following matches.
  * @param  string $context 	id
  * @return string
  * @since  1.5.1
  */
-function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
+function ur_conditional_logic_settings( $form_id, $context = 'general', $return = false ) {
 
-	echo '<div id="user-registration-conditional-settings-'. $context .'" >';
-	echo __( 'Condional Logic', 'user-registration' );
 
-		$enable_conditional_logic =
-			array(
-				'type'              => 'checkbox',
-				'label'             => __( 'Enable Conditional Logic' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_enable_conditional_logic_'.$context,
-				'class'             => array( 'ur-enhanced-select' ),
-				'custom_attributes' => array(),
-				'options'			=> array(
-						'yes'  => __( 'Yes', 'user-registration' ),
-						'no'   => __( 'No', 'user-registration' )
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_conditional_logic_'.$context, 'yes' ),
-			);
+	$enable_conditional_logic =
+		array(
+			'type'              => 'checkbox',
+			'label'             => __( 'Enable Conditional Logic' ),
+			'description'       => '',
+			'required'          => false,
+			'id'                => 'user_registration_enable_conditional_logic_'.$context,
+			'class'             => array( 'ur-enhanced-select' ),
+			'custom_attributes' => array(),
+			'options'			=> array(
+					'yes'  => __( 'Yes', 'user-registration' ),
+					'no'   => __( 'No', 'user-registration' )
+			),
+			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_conditional_logic_'.$context, 'yes' ),
+		);
+
+
+	$conditions = array(
+		array(
+			'type'              => 'select',
+			'label'             => __( '' ),
+			'description'       => '',
+			'required'          => false,
+			'id'                => 'user_registration_conditional_logic_input_'.$context,
+			'class'             => array( 'ur-enhanced-select' ),
+			'custom_attributes' => array(),
+			'options'			=> array(
+					'yes'  => __( 'Yes', 'user-registration' ),
+					'no'   => __( 'No', 'user-registration' )
+			),
+			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_input_'.$context ),
+		),
+
+		array(
+			'type'              => 'select',
+			'label'             => __( '' ),
+			'description'       => '',
+			'required'          => false,
+			'id'                => 'user_registration_conditional_logic_condition_'.$context,
+			'class'             => array( 'ur-enhanced-select' ),
+			'custom_attributes' => array(),
+			'options'			=> array(
+					'is'  => __( 'Is', 'user-registration' ),
+					'is_not'   => __( 'Is Not', 'user-registration' )
+			),
+			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_condition_'.$context, 'is' ),
+		),
+
+		array(
+			'type'              => 'text',
+			'label'             => __( '' ),
+			'description'       => '',
+			'required'          => false,
+			'id'                => 'user_registration_conditional_logic_value_'.$context,
+			'class'             => array( 'ur-enhanced-select' ),
+			'custom_attributes' => array(),
+			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_value_'.$context, '' ),
+		),
+	);
+
+	if( $return === false ) {
+
+		echo '<div id="user-registration-conditional-settings-'. $context .'" >';
+		echo __( 'Condional Logic', 'user-registration' );
+
 
 		user_registration_form_field( $enable_conditional_logic['id'], $enable_conditional_logic );
 
-	echo __( 'Send if:', 'user-registration' );
-
-		$conditions = array(
-			array(
-				'type'              => 'select',
-				'label'             => __( '' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_conditional_logic_input_'.$context,
-				'class'             => array( 'ur-enhanced-select' ),
-				'custom_attributes' => array(),
-				'options'			=> array(
-						'yes'  => __( 'Yes', 'user-registration' ),
-						'no'   => __( 'No', 'user-registration' )
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_input_'.$context ),
-			),
-
-			array(
-				'type'              => 'select',
-				'label'             => __( '' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_conditional_logic_condition_'.$context,
-				'class'             => array( 'ur-enhanced-select' ),
-				'custom_attributes' => array(),
-				'options'			=> array(
-						'is'  => __( 'Is', 'user-registration' ),
-						'is_not'   => __( 'Is Not', 'user-registration' )
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_condition_'.$context, 'is' ),
-			),
-
-			array(
-				'type'              => 'text',
-				'label'             => __( '' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_conditional_logic_value_'.$context,
-				'class'             => array( 'ur-enhanced-select' ),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_value_'.$context, '' ),
-			),
-		);
-
+		echo __( 'Send if:', 'user-registration' );
 		foreach( $conditions as $condition ) {
 			user_registration_form_field( $condition['id'], $condition );
 		}
 
-	echo '</div>';
+		echo '</div>';
+	} elseif( $return === true ) {
 
-	$conditions[] = $enable_conditional_logic;
-
-	return $conditions;
+		$conditions[] = $enable_conditional_logic;
+		return $conditions;
+	}
 }
 
