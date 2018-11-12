@@ -485,19 +485,19 @@ function ur_conditional_logic_settings( $form_id, $context = 'general', $return 
 		echo '<div id="user-registration-conditional-settings-'. $context .'" >';
 		echo __( 'Condional Logic', 'user-registration' );
 
-
-		user_registration_form_field( $enable_conditional_logic['id'], $enable_conditional_logic );
+			user_registration_form_field( $enable_conditional_logic['id'], $enable_conditional_logic );
 
 		echo __( 'Send if:', 'user-registration' );
-		foreach( $conditions as $condition ) {
-			user_registration_form_field( $condition['id'], $condition );
-		}
+
+			foreach( $conditions as $condition ) {
+				user_registration_form_field( $condition['id'], $condition );
+			}
 
 		echo '</div>';
+
 	} elseif( $return === true ) {
 
 		$conditions[] = $enable_conditional_logic;
 		return $conditions;
 	}
 }
-
