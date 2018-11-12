@@ -411,7 +411,13 @@
 											}
 										}
 									} else if( type === 'error') {
-										message.append('<li>' + response.data.message + '</li>');
+										if ( typeof response.data.message === 'object' ) {
+											$.each(response.data.message, function ( index, value ) {
+												message.append('<li>' +  value + '</li>');
+											});
+										} else {
+											message.append('<li>' + response.data.message + '</li>');
+										}
 									}
 								} catch ( e ) {
 									message.append('<li>' + e.message + '</li>');
