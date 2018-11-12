@@ -64,7 +64,7 @@ class UR_AJAX {
 		$nonce 	           = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
 		$captcaha_response = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] :  '';
 		$flag 	           = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$secret_key		   = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if( 'yes' === $recaptcha_enabled ) {
