@@ -365,7 +365,9 @@
 
 								var message = $('<ul class=""/>');
 								var type = 'error';
+
 								try {
+
 									var response = $.parseJSON(ajax_response.responseText);
 									if ( typeof response.success !== 'undefined' && response.success === true && typeof response.data.paypal_redirect !== 'undefined') {
 										window.location = response.data.paypal_redirect;
@@ -378,6 +380,7 @@
 											$('<li/>').text(this).appendTo(message);
 										});
 									}
+
 									if ( type === 'message' ) {
 
 										$('.user-registration-password-hint').remove();
@@ -395,6 +398,7 @@
 										else {
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										}
+
 										$this[ 0 ].reset();
 										jQuery( '#billing_country' ).trigger( 'change' );
 										jQuery( '#shipping_country' ).trigger( 'change' );
@@ -409,12 +413,13 @@
 												location.reload();
 											}
 										}
+									} else if( type === 'error') {
+										message.append('<li>' + response.data.message + '</li>');
 									}
 								} catch ( e ) {
-									//message.addClass(type);
 									message.append('<li>' + e.message + '</li>');
 								}
-								//message.addClass(type);
+
 								form.show_message(message, type, $this);
 
 								$(document).trigger("user_registration_frontend_after_ajax_complete", [ ajax_response.responseText, type, $this ]);
