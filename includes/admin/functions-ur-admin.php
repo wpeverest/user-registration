@@ -419,9 +419,7 @@ function ur_format_setting_data( $setting_data ) {
  */
 function ur_conditional_logic_settings( $form_id, $context = 'general', $return = false ) {
 
-
-	$enable_conditional_logic =
-		array(
+	$enable_conditional_logic = array(
 			'type'              => 'checkbox',
 			'label'             => __( 'Enable Conditional Logic' ),
 			'description'       => '',
@@ -435,7 +433,6 @@ function ur_conditional_logic_settings( $form_id, $context = 'general', $return 
 			),
 			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_conditional_logic_'.$context, 'yes' ),
 		);
-
 
 	$conditions = array(
 		array(
