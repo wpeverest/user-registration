@@ -481,7 +481,7 @@ function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
 				'id'                => 'user_registration_conditional_logic_value_'.$context,
 				'class'             => array( 'ur-enhanced-select' ),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_condition_'.$context, '' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_value_'.$context, '' ),
 			),
 		);
 
@@ -496,17 +496,3 @@ function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
 	return $conditions;
 }
 
-/**
- * Save settings for conditional logic
- * @param  array 	$settings Form Settings
- * @param  integer  $form_id  Form ID.
- * @return array    All form settings along with conditional settings.
- */
-function ur_save_conditional_settings( $settings, $form_id = 0 ) {
-	$conditional_settings = ur_conditional_logic_settings( $form_id );
-	$settings 		      = array_merge( $settings, $conditional_settings );
-
-	return $settings;
-}
-
-add_filter( 'user_registration_form_settings_save', 'ur_save_conditional_settings', 10, 2 );
