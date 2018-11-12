@@ -412,14 +412,12 @@ function ur_format_setting_data( $setting_data ) {
 }
 
 /**
- * Conditional logic settings. Proceed if the following matches.
+ * Render conditional logic settings. Proceed if the following matches.
  * @param  string $context 	id
  * @return string
  * @since  1.5.1
  */
 function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
-
-	$is_condition_enabled =	ur_get_single_post_meta( $form_id, 'user_registration_enable_conditional_logic_'. $context, '' );
 
 	echo '<div id="user-registration-conditional-settings-'. $context .'" >';
 	echo __( 'Condional Logic', 'user-registration' );
@@ -493,5 +491,22 @@ function ur_conditional_logic_settings( $form_id, $context = 'general' ) {
 
 	echo '</div>';
 
-	return array_merge( $conditions, $enable_conditional_logic );
+	$conditions[] = $enable_conditional_logic;
+
+	return $conditions;
 }
+
+/**
+ * Save settings for conditional logic
+ * @param  array 	$settings Form Settings
+ * @param  integer  $form_id  Form ID.
+ * @return array    All form settings along with conditional settings.
+ */
+function ur_save_conditional_settings( $settings, $form_id = 0 ) {
+	$conditional_settings = ur_conditional_logic_settings( $form_id );
+	$settings 		      = array_merge( $settings, $zapier_setting );
+
+	return $settings;
+}
+
+add_filter( 'user_registration_form_settings_save', 'ur_save_conditional_settings', 10, 2 );
