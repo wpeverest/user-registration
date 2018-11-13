@@ -76,6 +76,15 @@ jQuery(function ( $ ) {
 				conditional_block.each( function ( index, value ) {
 					var input = $(this).find('[id^="user_registration_conditional_logic_input_"]').find('[id^="user_registration_conditional_logic_input_"]');
 
+					$('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function() {
+					 	var field_label = $(this).find('.ur-label label').text();
+					 	var field_key = $(this).find('.ur-field').attr('data-field-key');
+
+					 	//strip certain fields
+						if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
+							return;
+						}
+					});
 				});
 			}
 		}
