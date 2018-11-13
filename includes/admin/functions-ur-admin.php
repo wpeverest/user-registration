@@ -443,9 +443,7 @@ function ur_conditional_logic_settings( $form_id, $context = 'general', $return 
 			'id'                => 'user_registration_conditional_logic_input_'.$context,
 			'class'             => array( 'ur-enhanced-select' ),
 			'custom_attributes' => array(),
-			'options'			=> array(
-					''  => __( '-- Select --', 'user-registration' ),
-			),
+			'options'			=> ur_get_meta_key_label( $form_id ),
 			'default'           => ur_get_single_post_meta( $form_id, 'user_registration_conditional_logic_input_'.$context ),
 		),
 

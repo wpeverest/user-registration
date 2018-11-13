@@ -69,11 +69,12 @@ jQuery(function ( $ ) {
 		 * @since       1.5.1
 		 */
 		populate_conditional_settings_fields();
+
 		function populate_conditional_settings_fields() {
 			var conditional_block = $( 'form#ur-field-settings #ur-field-all-settings div[id^="user-registration-conditional-settings-"]');
 
 			if( conditional_block !== 'undefined' && conditional_block.length > 0 ) {
-				conditional_block.each( function ( index, value ) {
+				conditional_block.each( function () {
 					var input = $(this).find('[id^="user_registration_conditional_logic_input_"]').find('[id^="user_registration_conditional_logic_input_"]');
 
 					$('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function() {
@@ -84,6 +85,25 @@ jQuery(function ( $ ) {
 						if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
 							return;
 						}
+
+						var general_setting =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+
+		 				general_setting.each( function() {
+
+		 					var field_name = jQuery(this).find("[data-field='field_name']").val();
+
+		 					if( typeof field_name !== 'undefined') {
+
+		 						var options = input.find('option');
+
+		 						options.each( function() {
+		 							console.log( $(this).val());
+									if( $(this).val() !== field_name ) {
+				 						// input.append('<option value='+ field_name +'>'+ field_label +'</option>');
+		 							}
+		 						});
+							}
+						});
 					});
 				});
 			}
