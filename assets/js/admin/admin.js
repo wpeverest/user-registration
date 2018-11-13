@@ -73,7 +73,7 @@ jQuery(function ( $ ) {
 		function populate_conditional_settings_fields() {
 			var conditional_block = $( 'form#ur-field-settings #ur-field-all-settings div[id^="user-registration-conditional-settings-"]');
 
-			if( conditional_block !== 'undefined' && conditional_block.length > 0 ) {
+			if( typeof conditional_block !== 'undefined' && conditional_block.length > 0 ) {
 				conditional_block.each( function () {
 					var input = $(this).find('[id^="user_registration_conditional_logic_input_"]').find('[id^="user_registration_conditional_logic_input_"]');
 
@@ -94,14 +94,19 @@ jQuery(function ( $ ) {
 
 		 					if( typeof field_name !== 'undefined') {
 
-		 						var options = input.find('option');
+		 						// Find all options value already on dowpdown lists.
+		 						var options     = input.find('option');
+		 						var all_options = [];
 
+		 						// Gather all values into all_options array.
 		 						options.each( function() {
-		 							console.log( $(this).val());
-									if( $(this).val() !== field_name ) {
-				 						// input.append('<option value='+ field_name +'>'+ field_label +'</option>');
-		 							}
+									all_options.push( $(this).val() );
 		 						});
+
+		 						// Append only form fields that are not in all_options array.
+								if( $.inArray( field_name, all_options ) === -1 ) {
+				 					input.append('<option value='+ field_name +'>'+ field_label +'</option>');
+								}
 							}
 						});
 					});
