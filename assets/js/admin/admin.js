@@ -10,6 +10,7 @@ jQuery(function ( $ ) {
 	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
 
 	$( selector ).on( 'click', function() {
+
 		var fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
@@ -61,6 +62,15 @@ jQuery(function ( $ ) {
 				fields_panel.find('form #ur-field-all-settings').find('#'+appending_id).show();
 			});
 		});
+
+		/**
+		 * Populates the fields in the form to the dropdown on conditional settings.
+		 * Appends select box or input depending on field selected.
+		 */
+		populate_conditional_settings_fields();
+		function populate_conditional_settings_fields() {
+			$( 'form#ur-field-settings #ur-field-all-settings').find('#user-registration-conditional-settings-*').length;
+		}
 	});
 
 	/**
