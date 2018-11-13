@@ -66,10 +66,18 @@ jQuery(function ( $ ) {
 		/**
 		 * Populates the fields in the form to the dropdown on conditional settings.
 		 * Appends select box or input depending on field selected.
+		 * @since       1.5.1
 		 */
 		populate_conditional_settings_fields();
 		function populate_conditional_settings_fields() {
-			$( 'form#ur-field-settings #ur-field-all-settings').find('#user-registration-conditional-settings-*').length;
+			var conditional_block = $( 'form#ur-field-settings #ur-field-all-settings div[id^="user-registration-conditional-settings-"]');
+
+			if( conditional_block !== 'undefined' && conditional_block.length > 0 ) {
+				conditional_block.each( function ( index, value ) {
+					var input = $(this).find('[id^="user_registration_conditional_logic_input_"]').find('[id^="user_registration_conditional_logic_input_"]');
+
+				});
+			}
 		}
 	});
 
