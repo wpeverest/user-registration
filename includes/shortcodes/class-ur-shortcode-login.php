@@ -53,9 +53,7 @@ class UR_Shortcode_Login {
 			} else {
 				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
 			}
-		}
-		else
-		{
+		} else {
 			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) );
 		}
 	}

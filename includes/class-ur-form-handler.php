@@ -324,7 +324,7 @@ class UR_Form_Handler {
 						$redirect = get_home_url();
 					}
 
-					wp_redirect( wp_validate_redirect( apply_filters( 'user_registration_login_redirect', $redirect, $user ),  $redirect ? $redirect : ur_get_page_permalink( 'myaccount' ) ) );
+					wp_redirect( wp_validate_redirect( apply_filters( 'user_registration_login_redirect', $redirect, $user ),  $redirect ) );
 					exit;
 				}
 			}

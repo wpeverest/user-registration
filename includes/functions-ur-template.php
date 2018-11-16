@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action( 'template_redirect', 'ur_template_redirect' );
-// add_action( 'template_redirect', 'ur_login_template_redirect' );
+add_action( 'template_redirect', 'ur_login_template_redirect' );
 
 /**
  * Redirect after logout.
