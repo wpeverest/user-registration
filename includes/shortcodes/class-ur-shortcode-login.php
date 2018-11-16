@@ -51,7 +51,7 @@ class UR_Shortcode_Login {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node ) );
+				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
 			}
 		}
 		else

@@ -59,7 +59,7 @@ if ( 'bordered' === $form_template ) {
 						<input class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
 					</p>
 
-					<?php 
+					<?php
 						if( ! empty( $recaptcha_node ) ) {
 							echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> '. $recaptcha_node .'</div>';
 						}
@@ -70,7 +70,7 @@ if ( 'bordered' === $form_template ) {
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<input type="submit" class="user-registration-Button button" name="login" value="<?php esc_attr_e( 'Login', 'user-registration' ); ?>" />
-						<input type="hidden" name="redirect" value="<?php the_permalink() ?>" />
+						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? $redirect : the_permalink(); ?>" />
 
 						<?php
 							$remember_me_enabled = get_option( 'user_registration_login_options_remember_me', 'yes' );
@@ -88,7 +88,7 @@ if ( 'bordered' === $form_template ) {
 					<?php
 						$lost_password_enabled = get_option( 'user_registration_login_options_lost_password', 'yes' );
 
-						if( 'yes' === $lost_password_enabled ) {						
+						if( 'yes' === $lost_password_enabled ) {
 							?>
 								<p class="user-registration-LostPassword lost_password">
 									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?', 'user-registration' ); ?></a>
@@ -103,17 +103,17 @@ if ( 'bordered' === $form_template ) {
 						if ( ! empty( $url_options ) ) {
 							echo '<p class="user-registration-register register">';
 							$label = get_option('user_registration_general_setting_registration_label');
-							
+
 							if ( ! empty( $label ) ) {
-								?><a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>			
+								?><a href="<?php echo get_option('user_registration_general_setting_registration_url_options');?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
 									</a>
 								<?php
-							} else {	
+							} else {
 								update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
 								?>
-									<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' );?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>	
+									<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' );?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
 									</a>
-								<?php	
+								<?php
 							}
 							echo '</p>';
 						}
