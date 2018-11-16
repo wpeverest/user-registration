@@ -54,6 +54,11 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
+	// Don't  change default url if admin side login form.
+	if ( $GLOBALS['pagenow'] === 'wp-login.php' ) {
+		return $default_url;
+    }
+
 	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 	$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
