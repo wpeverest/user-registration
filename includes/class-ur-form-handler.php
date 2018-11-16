@@ -271,19 +271,19 @@ class UR_Form_Handler {
 						$data  = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
-							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' .  __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) );
+							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' .  __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
+						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
 					}
 				}
 
 				if ( $validation_error->get_error_code() ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . $validation_error->get_error_message() );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
 				}
 
 				if ( empty( $username ) ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Username is required.', 'user-registration' ) );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Username is required.', 'user-registration' ) );
 				}
 
 				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -292,7 +292,7 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'A user could not be found with this email address.', 'user-registration' ) );
+						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'A user could not be found with this email address.', 'user-registration' ) );
 					}
 				} else {
 					$creds['user_login'] = $username;

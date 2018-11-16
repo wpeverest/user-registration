@@ -30,11 +30,11 @@ function ur_login_error_message( $error ) {
     $pos2 = strpos( $error, 'Invalid' );
 
     // Its the correct username with incorrect password.
-	if ( is_int( $pos ) && isset( $_POST['redirect'] ) && isset( $_POST['username'] ) ) {
-        $error = sprintf( __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
-    } // It's invalid username. 
-    elseif( is_int( $pos2 ) && isset( $_POST['redirect'] ) && isset( $_POST['username'] ) ) {
-    	$error = sprintf( __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". $_POST['redirect'] . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {
+        $error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". the_permalink() . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+    } // It's invalid username.
+    elseif( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
+    	$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". the_permanlink() . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     }
 
     return $error;
@@ -48,7 +48,7 @@ function ur_login_error_message( $error ) {
  * @return string
  */
 function ur_lostpassword_url( $default_url = '' ) {
-	
+
 	// Don't redirect to the user registration endpoint on global network admin lost passwords.
 	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( $_GET['redirect_to'], network_admin_url() ) ) {
 		return $default_url;
@@ -95,7 +95,7 @@ function ur_get_account_menu_items() {
 	}
 
 	$profile = user_registration_form_data( $user_id, $form_id );
-	
+
 	if ( count( $profile ) < 1 ) {
 		unset($items['edit-profile']);
 	}
