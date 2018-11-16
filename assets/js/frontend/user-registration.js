@@ -293,6 +293,15 @@
 
 					$('form.register').on('submit', function ( event ) {
 
+						// Validator messages.
+						$.extend( $.validator.messages, {
+							required: user_registration_params.message_required_fields,
+							url: user_registration_params.message_url_fields,
+							email: user_registration_params.message_email_fields,
+							number: user_registration_params.message_number_fields,
+							confirmpassword: user_registration_params.message_confirm_password_fields,
+						});
+
 						if( ! $this.valid() ) {
 							return;
 						}
