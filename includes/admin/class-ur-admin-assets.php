@@ -210,7 +210,8 @@ class UR_Admin_Assets {
 	public static function get_i18n_admin_data() {
 
 		$i18n = array(
-
+			'i18n_user_email'										 => _x( 'User Email', 'user-registration admin', 'user-registration' ),
+			'i18n_user_password'									 => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete'                       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_need_to_select'                   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there'                 => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
@@ -225,7 +226,7 @@ class UR_Admin_Assets {
 			'i18n_empty_field_label'                                 => _x( 'Empty field label.', 'user registration admin', 'user-registration' ),
 			'i18n_invald_field_name'                                 => _x( 'Invalid field name. Please do not use space, empty or special character, you can use underscore.', 'user registration admin', 'user-registration' ),
 			'i18n_multiple_field_key'                                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_field_is_required'                    => _x( 'At least one field is required, field ', 'user registration admin', 'user-registration' ),
+			'i18n_field_is_required'                    			 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
 			'i18n_drag_your_first_item_here'                         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
 
 		);

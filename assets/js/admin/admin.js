@@ -610,9 +610,17 @@ jQuery(function ( $ ) {
 			}
 		}
 		for ( var required_index = 0; required_index < required_fields.length; required_index++ ) {
+
 			if ( $('.ur-selected-inputs').find('.ur-field[data-field-key="' + required_fields[ required_index ] + '"]').length === 0 ) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_at_least_one_field_is_required + required_fields[ required_index ];
+
+				if( required_index === 0 ) {
+					var field = i18n_admin.i18n_user_email;
+				} else if( required_index === 1 ) {
+					var field = i18n_admin.i18n_user_password;
+				}
+
+				response.message =  field + ' ' + i18n_admin.i18n_field_is_required;
 				break;
 			}
 		}
