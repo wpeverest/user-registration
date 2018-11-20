@@ -22,16 +22,7 @@ class UR_Admin_Export_Users {
 	 */
 	public function __construct() {
 
-		// Check for non empty $_POST.
-		if ( ! empty( $_POST ) && isset( $_POST['user_registration_export_users'] ) ) {
-			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
-				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
-			} else {
-
-				$form_id = isset( $_POST['export_users'] ) ? $_POST['export_users'] : 0;
-				$this->export_csv( $form_id );
-			}
-		}
+		add_action( 'admin_init', array( $this, 'export_csv' ) );
 	}
 
 	/**
@@ -48,6 +39,18 @@ class UR_Admin_Export_Users {
 	 * @return void
 	 */
 	public function export_csv( $form_id ) {
+
+		// Check for non empty $_POST.
+		if( ! isset( $_POST['user_registration_export_users'] ) ) {
+			return;
+		}
+
+		// Nonce check.
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
+			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		}
+
+		$form_id = isset( $_POST['export_users'] ) ? $_POST['export_users'] : 0;
 
 		// Return if form id is not set and current user doesnot have export capability.
 		if( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
