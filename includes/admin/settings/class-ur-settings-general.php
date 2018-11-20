@@ -103,17 +103,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'options'  => $all_roles_except_admin,
 					),
 					array(
-						'title'    => __( 'My account page', 'user-registration' ),
-						'desc'     => sprintf( __( 'Page contents: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
-						'id'       => 'user_registration_myaccount_page_id',
-						'type'     => 'single_select_page',
-						'default'  => '',
-						'class'    => 'ur-enhanced-select-nostd',
-						'css'      => 'min-width:350px;',
-						'desc_tip' => true,
-						'display'  => 'none'
-					),
-					array(
 						'type' => 'sectionend',
 						'id'   => 'general_options',
 					),
@@ -122,6 +111,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'title' => __( 'My account Section', 'user-registration' ),
 						'type'  => 'title',
 						'id'    => 'my_account_options',
+					),
+					array(
+						'title'    => __( 'My account page', 'user-registration' ),
+						'desc'     => sprintf( __( 'Page contents: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
+						'id'       => 'user_registration_myaccount_page_id',
+						'type'     => 'single_select_page',
+						'default'  => '',
+						'class'    => 'ur-enhanced-select-nostd',
+						'css'      => 'min-width:350px;',
+						'desc_tip' => true,
 					),
 					array(
 						'title'    => __( 'Layout', 'user-registration' ),
