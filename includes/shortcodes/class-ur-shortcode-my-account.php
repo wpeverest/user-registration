@@ -43,11 +43,11 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_style( 'flatpickr' );
 		wp_enqueue_script( 'user-registration' );
 
-
 		if ( ! is_user_logged_in() ) {
 
 			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 			$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+			$redirect_url      = isset( $atts['redirect_url']) ? trim( $atts['redirect_url'] ) : '';
 
 			$message = apply_filters( 'user_registration_my_account_message', '' );
 
@@ -63,7 +63,7 @@ class UR_Shortcode_My_Account {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				self::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node ) );
+				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
 			}
 		} else {
 			// Start output buffer since the html may need discarding for BW compatibility
@@ -248,7 +248,7 @@ class UR_Shortcode_My_Account {
 		$key = get_password_reset_key( $user_data );
 
 		// Send email notification
-		if( UR_Emailer::lost_password_email( $user_login, $user_data, $key) == false ) {	
+		if( UR_Emailer::lost_password_email( $user_login, $user_data, $key) == false ) {
 			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
 			return false;
 		}
