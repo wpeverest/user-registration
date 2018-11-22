@@ -56,6 +56,7 @@ function ur_login_template_redirect() {
 
 		if ( ! empty( $redirect_url ) ) {
 			wp_redirect( $redirect_url );
+			exit();
 		}
 	}
 }
