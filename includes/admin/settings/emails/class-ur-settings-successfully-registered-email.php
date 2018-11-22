@@ -19,7 +19,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
  */
 class UR_Settings_Successfully_Registered_Email{
 
-	
+
 	public function __construct() {
 		$this->id             = 'successfully_registered_email';
 		$this->title          = __( 'Successfully Registered Email', 'user-registration' );
@@ -45,7 +45,7 @@ class UR_Settings_Successfully_Registered_Email{
 				),
 				array(
 					'title'    => __( 'Enable this email', 'user-registration' ),
-					'desc'     => __( 'Enable this email sent after successful user registration.', 'user-registration' ),
+					'desc'     => __( 'Enable this email sent to the user after successful user registration.', 'user-registration' ),
 					'id'       => 'user_registration_enable_successfully_registered_email',
 					'default'  => 'yes',
 					'type'     => 'checkbox',
@@ -80,7 +80,7 @@ class UR_Settings_Successfully_Registered_Email{
 	}
 
 	public function ur_get_successfully_registered_email() {
-		
+
 		$message = apply_filters( 'user_registration_get_successfully_registered_email', sprintf( __(
 
 			'Hi {{username}},

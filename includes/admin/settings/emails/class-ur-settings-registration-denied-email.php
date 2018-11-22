@@ -19,7 +19,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
  */
 class UR_Settings_Registration_Denied_Email{
 
-	
+
 	public function __construct() {
 		$this->id             = 'registration_denied_email';
 		$this->title          = __( 'Registration Denied Email', 'user-registration' );
@@ -45,7 +45,7 @@ class UR_Settings_Registration_Denied_Email{
 					),
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
-						'desc'     => __( 'Enable this email sent to admin after successfull user registration.', 'user-registration' ),
+						'desc'     => __( 'Enable this email sent to the user notifying the registration is denied by the admin.', 'user-registration' ),
 						'id'       => 'user_registration_enable_registration_denied_email',
 						'default'  => 'yes',
 						'type'     => 'checkbox',
@@ -81,16 +81,16 @@ class UR_Settings_Registration_Denied_Email{
 		}
 
 	public function ur_get_registration_denied_email() {
-		
-		$message = apply_filters( 'user_registration_get_registration_denied_email', sprintf( __( 
+
+		$message = apply_filters( 'user_registration_get_registration_denied_email', sprintf( __(
 				'Hi {{username}},
 
 				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
- 				
+
  				Unfortunately your registration is denied. Sorry for the inconvenience.
- 				
+
  				Thank You!', 'user-registration' ) ) );
-		
+
 		return $message;
 	}
 }

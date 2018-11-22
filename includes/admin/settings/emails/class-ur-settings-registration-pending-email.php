@@ -44,7 +44,7 @@ class UR_Settings_Registration_Pending_Email{
 				),
 				array(
 					'title'    => __( 'Enable this email', 'user-registration' ),
-					'desc'     => __( 'Enable this email sent to admin after successfull user registration.', 'user-registration' ),
+					'desc'     => __( 'Enable this email sent to the user notifying the registration is pending.', 'user-registration' ),
 					'id'       => 'user_registration_enable_registration_pending_email',
 					'default'  => 'yes',
 					'type'     => 'checkbox',
@@ -83,7 +83,7 @@ class UR_Settings_Registration_Pending_Email{
 	}
 
 	public function ur_get_registration_pending_email() {
-	
+
 		$message = apply_filters( 'user_registration_get_registration_pending_email', sprintf( __(
 
 			'Hi {{username}},
