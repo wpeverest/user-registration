@@ -109,6 +109,18 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.5.1 - xx/11/2018 =
+* Fix - Redirect after login issue on page builders and widgets
+* Fix - Server side validation for google reCaptcha
+* Fix - Empty error messages if exists form backend validation
+* Fix - Multiple occurrence of similar message after form submission
+* Fix - Required field naming readability on backend form submit
+* Fix - Translated error message issue on form submit
+* Fix - CSV export issue due to already sent headers
+* Tweak - Display (previously hidden) Option to insert myaccount page on settings 
+* Tweak - Remove applied filter to change lost password url on admin side
+* Tweak - Redirect option form myaccount shortcode too.
+
 = 1.5.0 - 30/10/2018 =
 * Feature - CSV Export of user data
 * Feature - Customizable minimum password strength
@@ -181,16 +193,5 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Translation ready texts
 * Fix - Lost password url
 * Add - Scroll bar for overflow form fields
-
-= 1.4.0 - 12/06/2018 =
-* Refactor - Form fields
-* Remove - Repeated settings from global
-* Feature - Custom validation error messages
-* Feature - Cutomizable/multiple admin emails
-* Feature - Custom class for registration form
-* Feature - Smart tags to email every form field filled
-* Feature - Display email status column in users tab for email confirmation
-* Fix - Display reCaptcha node only if enabled
-* Deprecate - Functions my_simple_crypt() and getToken()
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
