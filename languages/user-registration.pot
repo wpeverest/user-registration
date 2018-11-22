@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.5.0\n"
+"Project-Id-Version: User Registration 1.5.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-11-22 06:11:21+00:00\n"
+"POT-Creation-Date: 2018-11-22 08:34:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -541,7 +541,7 @@ msgid "Endpoint for the \"My account &rarr; Edit profile\" page."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:159
-#: includes/class-ur-query.php:73 includes/functions-ur-account.php:90
+#: includes/class-ur-query.php:73 includes/functions-ur-account.php:88
 msgid "Change Password"
 msgstr ""
 
@@ -1336,7 +1336,7 @@ msgid "Log out of this account."
 msgstr ""
 
 #: includes/class-ur-ajax.php:115 includes/class-ur-shortcodes.php:121
-#: includes/functions-ur-account.php:91
+#: includes/functions-ur-account.php:89
 msgid "Logout"
 msgstr ""
 
@@ -1379,8 +1379,8 @@ msgstr ""
 #: includes/class-ur-form-handler.php:286
 #: includes/class-ur-form-handler.php:295
 #: includes/class-ur-user-approval.php:179
-#: includes/class-ur-user-approval.php:184 includes/functions-ur-account.php:34
-#: includes/functions-ur-account.php:37
+#: includes/class-ur-user-approval.php:184 includes/functions-ur-account.php:32
+#: includes/functions-ur-account.php:35
 msgid "ERROR:"
 msgstr ""
 
@@ -1828,7 +1828,7 @@ msgid ""
 "Privacy Policy</a> for more details."
 msgstr ""
 
-#: includes/class-ur-query.php:76 includes/functions-ur-account.php:89
+#: includes/class-ur-query.php:76 includes/functions-ur-account.php:87
 msgid "Profile Details"
 msgstr ""
 
@@ -3044,19 +3044,19 @@ msgstr ""
 msgid "Password and confirm password not matched"
 msgstr ""
 
-#: includes/functions-ur-account.php:34
+#: includes/functions-ur-account.php:32
 msgid "The password you entered for username %1s is incorrect. %2s"
 msgstr ""
 
-#: includes/functions-ur-account.php:34 includes/functions-ur-account.php:37
+#: includes/functions-ur-account.php:32 includes/functions-ur-account.php:35
 msgid "Lost Your Password?"
 msgstr ""
 
-#: includes/functions-ur-account.php:37
+#: includes/functions-ur-account.php:35
 msgid "Invalid username. %1s"
 msgstr ""
 
-#: includes/functions-ur-account.php:88
+#: includes/functions-ur-account.php:86
 msgid "Dashboard"
 msgstr ""
 

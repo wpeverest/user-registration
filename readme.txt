@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -119,7 +119,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - CSV export issue due to already sent headers
 * Tweak - Display (previously hidden) Option to insert myaccount page on settings 
 * Tweak - Remove applied filter to change lost password url on admin side
-* Tweak - Redirect option form myaccount shortcode too.
+* Tweak - Redirect option from myaccount shortcode too.
 
 = 1.5.0 - 30/10/2018 =
 * Feature - CSV Export of user data
