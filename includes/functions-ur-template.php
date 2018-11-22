@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'template_redirect', 'ur_template_redirect' );
 add_action( 'template_redirect', 'ur_login_template_redirect' );
+add_action( 'template_redirect', 'ur_registration_template_redirect' );
 
 /**
  * Redirect after logout.
@@ -56,6 +57,29 @@ function ur_login_template_redirect() {
 		if ( ! empty( $redirect_url ) ) {
 			wp_redirect( $redirect_url );
 		}
+	}
+}
+
+/**
+ * Redirects the logged in user to the option set in settings if registration page is selected.
+ * Donot redirect for admins.
+ * @return void
+ * @since  1.5.2
+ */
+function ur_registration_template_redirect() {
+
+	// Return if the user is not logged in.
+	if( is_user_logged_in() === false ) {
+		return;
+	}
+
+	$current_user = wp_get_current_user();
+
+	// Donot redirect for admins.
+	if( in_array( 'administrator', wp_get_current_user()->roles) ) {
+		return;
+	} else {
+
 	}
 }
 
