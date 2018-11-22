@@ -69,7 +69,7 @@ class UR_AJAX {
 
 		if( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
-				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcaha_response );
+				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 				$data  = json_decode( wp_remote_retrieve_body( $data ) );
 
 				if ( empty( $data->success ) ) {
