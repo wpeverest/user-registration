@@ -23,18 +23,16 @@ function ur_login_error_message( $error ) {
 		return $error;
 	}
 
-    // Check if the error contains incorrect string.
-    $pos = strpos( $error, 'incorrect' );
-
-    // Check if the error contains Invalid string.
-    $pos2 = strpos( $error, 'Invalid' );
+    $pos  = strpos( $error, 'incorrect' );     // Check if the error contains incorrect string.
+    $pos2 = strpos( $error, 'Invalid' );       // Check if the error contains Invalid string.
 
     // Its the correct username with incorrect password.
 	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {
-        $error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". the_permalink() . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+
+        $error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". esc_url( wp_lostpassword_url() ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     } // It's invalid username.
     elseif( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
-    	$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". the_permanlink() . get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
+		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". esc_url( wp_lostpassword_url() ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
     }
 
     return $error;
