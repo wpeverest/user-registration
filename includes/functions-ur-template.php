@@ -86,8 +86,9 @@ function ur_registration_template_redirect() {
 		$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
 		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
+
 			$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
-			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect, $current_user );
+			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
 			if( ! empty( $redirect_url ) ) {
 				wp_safe_redirect( $redirect_url );
