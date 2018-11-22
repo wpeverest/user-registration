@@ -80,6 +80,18 @@ function ur_registration_template_redirect() {
 		return;
 	} else {
 
+		global $post;
+
+		$post_content = isset( $post->post_content ) ? $post->post_content : '';
+
+		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
+			$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
+
+			if( ! empty( $redirect_url ) ) {
+				wp_safe_redirect( $redirect_url );
+				exit();
+			}
+		}
 	}
 }
 
