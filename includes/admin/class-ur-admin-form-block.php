@@ -21,11 +21,9 @@ class UR_Form_Block {
 	 */
 	public function enqueue_block_editor_assets() {
 
-		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
 		wp_register_script(
 	        'user-registration-block-editor',
-	        UR()->plugin_url() . '/assets/js/admin/form-block' . $suffix . '.js',
+	        UR()->plugin_url() . '/assets/js/admin/form-block.build.js',
 	        array( 'wp-blocks', 'wp-element' )
 		);
 
