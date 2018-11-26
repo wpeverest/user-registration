@@ -70,26 +70,88 @@
 "use strict";
 
 
-/* global wp */
+/* global ur_form_block_data, wp */
 
 var createElement = wp.element.createElement;
 var registerBlockType = wp.blocks.registerBlockType;
+var InspectorControls = wp.editor.InspectorControls;
+var _wp$components = wp.components,
+    SelectControl = _wp$components.SelectControl,
+    ToggleControl = _wp$components.ToggleControl,
+    PanelBody = _wp$components.PanelBody,
+    ServerSideRender = _wp$components.ServerSideRender,
+    Placeholder = _wp$components.Placeholder;
+
 
 var UserRegistrationIcon = createElement('svg', { width: 20, height: 20, viewBox: '0 0 20 20', className: 'dashicon' }, createElement('path', { fill: 'currentColor', d: 'M4.5 0v3H0v17h20V0H4.5zM9 19H1V4h8v15zm10 0h-9V3H5.5V1H19v18zM6.5 6h-4V5h4v1zm1 2v1h-5V8h5zm-5 3h3v1h-3v-1z' }));
 
 registerBlockType('user-registration/form-selector', {
-    title: 'User Registration',
+	title: ur_form_block_data.i18n.title,
+	icon: UserRegistrationIcon,
+	category: 'widgets',
+	attributes: {
+		formId: {
+			type: 'string'
+		}
+	},
+	edit: function edit(props) {
+		var _props$attributes$for = props.attributes.formId,
+		    formId = _props$attributes$for === undefined ? '' : _props$attributes$for,
+		    setAttributes = props.setAttributes;
 
-    icon: UserRegistrationIcon,
-
-    category: 'widgets',
-
-    edit: function edit() {
-        return 'Shortcode Here.';
-    },
-    save: function save() {
-        return 'Shortcode Contents Here.';
-    }
+		var formOptions = Object.keys(ur_form_block_data.forms).map(function (index) {
+			return { value: Number(index), label: ur_form_block_data.forms[index] };
+		});
+		var jsx = void 0;
+		formOptions.unshift({ value: '', label: ur_form_block_data.i18n.form_select });
+		function selectForm(value) {
+			setAttributes({ formId: value });
+		}
+		jsx = [wp.element.createElement(
+			InspectorControls,
+			{ key: 'ur-gutenberg-form-selector-inspector-controls' },
+			wp.element.createElement(
+				PanelBody,
+				{ title: ur_form_block_data.i18n.form_settings },
+				wp.element.createElement(SelectControl, {
+					label: ur_form_block_data.i18n.form_selected,
+					value: formId,
+					options: formOptions,
+					onChange: selectForm
+				})
+			)
+		)];
+		if (formId) {
+			jsx.push(wp.element.createElement(ServerSideRender, {
+				key: 'ur-gutenberg-form-selector-server-side-renderer',
+				block: 'everest-forms/form-selector',
+				attributes: props.attributes
+			}));
+		} else {
+			jsx.push(wp.element.createElement(
+				Placeholder,
+				{
+					key: 'ur-gutenberg-form-selector-wrap',
+					className: 'ur-gutenberg-form-selector-wrap' },
+				wp.element.createElement('img', { src: ur_form_block_data.logo_url }),
+				wp.element.createElement(
+					'h2',
+					null,
+					ur_form_block_data.i18n.title
+				),
+				wp.element.createElement(SelectControl, {
+					key: 'ur-gutenberg-form-selector-select-control',
+					value: formId,
+					options: formOptions,
+					onChange: selectForm
+				})
+			));
+		}
+		return jsx;
+	},
+	save: function save() {
+		return null;
+	}
 });
 
 /***/ })
