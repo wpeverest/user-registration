@@ -46,8 +46,18 @@ class UR_Form_Block {
 				),
 			),
 			'editor_script'   => 'user-registration-block-editor',
-			'render_callback' => array( $this, 'get_form_html' ),
+			'render_callback' => array( $this, 'render_callback' ),
 		) );
+	}
+
+	/**
+	 * Render Callback for the block. This is what is output
+	 * in the preview within Gutenberg
+	 *
+	 * @param $block
+	 */
+	function render_callback( $block ) {
+
 	}
 }
 
