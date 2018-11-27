@@ -110,6 +110,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 == Changelog ==
 
 = 1.5.1 - xx/11/2018 =
+* Add - Gutenberg form selection block
 * Fix - Redirect after login issue on page builders and widgets
 * Fix - Server side validation for google reCaptcha
 * Fix - Empty error messages if exists form backend validation
