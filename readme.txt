@@ -109,8 +109,10 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.1 - xx/11/2018 =
+= 1.5.1 - 27/11/2018 =
 * Add - Gutenberg form selection block
+* Add - Redirect option on registration page for logged in users
+* Add - Hooks for form custom class and before user registration form
 * Fix - Redirect after login issue on page builders and widgets
 * Fix - Server side validation for google reCaptcha
 * Fix - Empty error messages if exists form backend validation
@@ -120,7 +122,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - CSV export issue due to already sent headers
 * Tweak - Display (previously hidden) Option to insert myaccount page on settings 
 * Tweak - Remove applied filter to change lost password url on admin side
-* Tweak - Redirect option from myaccount shortcode too.
+* Tweak - Redirect option from myaccount shortcode too
 
 = 1.5.0 - 30/10/2018 =
 * Feature - CSV Export of user data
