@@ -17,6 +17,16 @@ class UR_Form_Block {
 
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
+	}
+
+	public function enqueue_block_assets() {
+		wp_register_style(
+			'user-registration-block-editor',
+			UR()->plugin_url() . '/assets/css/user-registration.css',
+			array( 'wp-edit-blocks' ),
+			UR_VERSION
+		);
 	}
 
 	/**
@@ -63,6 +73,7 @@ class UR_Form_Block {
 				),
 			),
 			'editor_script'   => 'user-registration-block-editor',
+			'editor_style'    => 'user-registration-block-editor',
 			'render_callback' => array( $this, 'render_callback' ),
 		) );
 	}
