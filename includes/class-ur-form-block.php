@@ -10,6 +10,11 @@ class UR_Form_Block {
 	 * Constructor
 	 */
 	public function __construct() {
+
+		if( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 	}
@@ -78,13 +83,9 @@ class UR_Form_Block {
 
 		$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'];
 
-		ob_start();
-
-		UR_Shortcodes::form( array(
+		return UR_Shortcodes::form( array(
 			'id' => $form_id,
 		) );
-
-		return ob_get_clean();
 	}
 }
 
