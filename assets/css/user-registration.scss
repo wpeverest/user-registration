@@ -587,6 +587,19 @@ span.description {
     font-size: 12px;
 }
 
+.edit-post-visual-editor {
+	.ur-gutenberg-form-selector-wrap,
+	.user-registration-gutenberg-form-selector-wrap {
+		h2 {
+			width: 100%;
+			margin-bottom: 0.5em;
+		}
+ 		.components-base-control {
+			width: 100%;
+		}
+	}
+}
+
 .ur-frontend-form.ur-gutenberg-editor form button[type=submit] {
 	cursor: not-allowed;
 }
