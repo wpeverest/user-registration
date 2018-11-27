@@ -65,7 +65,7 @@ function ur_login_template_redirect() {
  * Redirects the logged in user to the option set in settings if registration page is selected.
  * Donot redirect for admins.
  * @return void
- * @since  1.5.2
+ * @since  1.5.1
  */
 function ur_registration_template_redirect() {
 
@@ -91,7 +91,7 @@ function ur_registration_template_redirect() {
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
 			if( ! empty( $redirect_url ) ) {
-				wp_safe_redirect( $redirect_url );
+				wp_redirect( $redirect_url );
 				exit();
 			}
 		}
