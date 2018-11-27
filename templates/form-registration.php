@@ -46,6 +46,13 @@ if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 }
 
+$custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class );
+
+/**
+ * @since 1.5.1
+ */
+do_action( 'user_registration_before_registration_form' );
+
 ?>
 	<div class='ur-frontend-form <?php echo $template_class .' '. $custom_class; ?>' id='ur-frontend-form'>
 		<form method='post' class='register'

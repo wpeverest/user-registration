@@ -94,6 +94,12 @@ class UR_Form_Block {
 
 		$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'];
 
+		if( $is_gb_editor ) {
+			add_filter( 'user_registration_form_custom_class', function( $class ) {
+				return $class .' ur-gutenberg-editor';
+			});
+		}
+
 		return UR_Shortcodes::form( array(
 			'id' => $form_id,
 		) );
