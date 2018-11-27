@@ -24,6 +24,7 @@ class UR_Email_Confirmation {
 		if( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
 			return;
 		}
+
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
