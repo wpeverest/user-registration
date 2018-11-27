@@ -80,7 +80,7 @@ class UR_Form_Block {
 
 		ob_start();
 
-		UR_Shortcodes::render_form( array(
+		UR_Shortcodes::form( array(
 			'id' => $form_id,
 		) );
 
