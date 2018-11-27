@@ -98,6 +98,14 @@ class UR_Form_Block {
 			add_filter( 'user_registration_form_custom_class', function( $class ) {
 				return $class .' ur-gutenberg-editor';
 			});
+
+			add_action( 'user_registration_before_registration_form', function() {
+				echo '<fieldset disabled>';
+			});
+
+			add_action( 'user_registration_form_registration', function() {
+				echo '</fieldset>';
+			});
 		}
 
 		return UR_Shortcodes::form( array(
