@@ -1,4 +1,4 @@
-=== User Registration - Custom Registration Form, Login and User Profile for WordPress ===
+=== User Registration - Custom Registration Form, Login And User Profile For WordPress ===
 Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
@@ -8,7 +8,7 @@ Stable tag: 1.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Drag and Drop user registration and login form builder
+Drag and drop user registration and login form builder
 
 == Description ==
 
@@ -20,9 +20,9 @@ View [All features](https://wpeverest.com/wordpress-plugins/user-registration/?u
 
 View [Demo](http://demo.wpeverest.com/user-registration/)
 
-Get [free support](https://wpeverest.com/support-forum/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
+Get [Free Support](https://wpeverest.com/support-forum/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
 
-Check [documentation](http://docs.wpeverest.com/docs/user-registration/)
+Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 
 = User Registration Plugin in action: =
 
