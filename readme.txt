@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -108,6 +108,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.5.2 - 28/11/2018 =
+* Fix - Remove cursor not allowed CSS for flat template
 
 = 1.5.1 - 27/11/2018 =
 * Add - Gutenberg form selection block
