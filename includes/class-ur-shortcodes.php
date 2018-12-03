@@ -160,8 +160,14 @@ class UR_Shortcodes {
 		$minimum_password_strength  = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 		// Enqueue script.
-		wp_enqueue_style( 'flatpickr' );
 		wp_enqueue_script( 'user-registration' );
+
+		$has_date = ur_has_date_field( $form_id );
+
+		if( true === $has_date ) {
+			wp_enqueue_style( 'flatpickr' );
+			wp_enqueue_script( 'flatpickr' );
+		}
 
 		if ( 'yes' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );

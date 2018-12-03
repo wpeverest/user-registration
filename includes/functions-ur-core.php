@@ -1208,6 +1208,15 @@ function ur_is_json( $str ) {
 }
 
 /**
+ * Checks if the form contains a date field or not.
+ * @param  int $form_id 	Form ID
+ * @return boolean
+ */
+function ur_has_date_field( $form_id ) {
+
+}
+
+/**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */
