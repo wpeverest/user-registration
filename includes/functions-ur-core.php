@@ -1208,6 +1208,39 @@ function ur_is_json( $str ) {
 }
 
 /**
+ * Checks if the form contains a date field or not.
+ * @param  int $form_id 	Form ID
+ * @since  1.5.3
+ * @return boolean
+ */
+function ur_has_date_field( $form_id ) {
+
+	$post = get_post( $form_id );
+
+	if( $post ) {
+
+		if( $post->post_type !== 'user_registration' ) {
+			return false;
+		}
+
+		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+		$post_content_array = json_decode( $post_content );
+
+		foreach ( $post_content_array as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( $field->field_key === 'date' ) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */

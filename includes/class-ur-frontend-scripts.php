@@ -191,7 +191,7 @@ class UR_Frontend_Scripts {
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery' , 'flatpickr','ur-jquery-validate', 'ur-inputmask' ),
+				'deps'    => array( 'jquery','ur-jquery-validate', 'ur-inputmask' ),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(

@@ -39,10 +39,6 @@ class UR_Shortcode_My_Account {
 
 		global $wp, $post;
 
-		// Enqueue script.
-		wp_enqueue_style( 'flatpickr' );
-		wp_enqueue_script( 'user-registration' );
-
 		if ( ! is_user_logged_in() ) {
 
 			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
@@ -66,6 +62,22 @@ class UR_Shortcode_My_Account {
 				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
 			}
 		} else {
+
+			// Enqueue script.
+			wp_enqueue_script( 'user-registration' );
+			$user_id  = get_current_user_id();
+			$form_id  = get_usermeta( $user_id, 'ur_form_id', true );
+
+			if( ! empty( $form_id ) ) {
+
+				$has_date = ur_has_date_field( $form_id );
+
+				if( true === $has_date ) {
+					wp_enqueue_style( 'flatpickr' );
+					wp_enqueue_script( 'flatpickr' );
+				}
+			}
+
 			// Start output buffer since the html may need discarding for BW compatibility
 			ob_start();
 
