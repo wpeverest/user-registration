@@ -1214,6 +1214,29 @@ function ur_is_json( $str ) {
  */
 function ur_has_date_field( $form_id ) {
 
+	$post = get_post( $form_id );
+
+	if( $post ) {
+
+		if( $post->post_type !== 'user_registration' ) {
+			return false;
+		}
+
+		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+		$post_content_array = json_decode( $post_content );
+
+		foreach ( $post_content_array as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( $field->field_key === 'date' ) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 /**
