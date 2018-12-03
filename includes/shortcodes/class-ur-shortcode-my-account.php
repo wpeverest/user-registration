@@ -66,7 +66,7 @@ class UR_Shortcode_My_Account {
 			// Enqueue script.
 			wp_enqueue_script( 'user-registration' );
 			$user_id  = get_current_user_id();
-			$form_id  = get_usermeta( $user_id, 'ur_form_id', true );
+			$form_id  = get_user_meta( $user_id, 'ur_form_id', true );
 
 			if( ! empty( $form_id ) ) {
 
