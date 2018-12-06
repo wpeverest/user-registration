@@ -1230,7 +1230,7 @@ function ur_has_date_field( $form_id ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					if( $field->field_key === 'date' ) {
+					if( isset( $field->field_key ) && $field->field_key === 'date' ) {
 						return true;
 					}
 				}
