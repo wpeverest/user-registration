@@ -45,7 +45,7 @@ function ur_login_template_redirect() {
 
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
-	if ( has_shortcode( $post_content, 'user_registration_login' ) && is_user_logged_in() ) {
+	if ( ( has_shortcode( $post_content, 'user_registration_login' ) || has_shortcode( $post_content, 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 
 		$attributes = shortcode_parse_atts( $matches[3] );
