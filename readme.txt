@@ -111,7 +111,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 = 1.5.3 - 07/12/2018 =
 * Tweak - Conditionally load flatpickr if only form has date field.
-* Fix   - Load block editor CSS with proper hook
+* Fix   - Enqueque CSS on block editor
 
 = 1.5.2 - 28/11/2018 =
 * Fix - Remove cursor not allowed CSS for flat template
