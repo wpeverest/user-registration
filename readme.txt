@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -109,6 +109,10 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.5.3 - 07/12/2018 =
+* Tweak - Conditionally load flatpickr if only form has date field.
+* Fix   - Load block editor CSS with proper hook
+
 = 1.5.2 - 28/11/2018 =
 * Fix - Remove cursor not allowed CSS for flat template
 
@@ -183,21 +187,5 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Add - Deactivation feedback notice
 * Change - Date picker to flatpickr
 * Add - Email attachement filter
-
-= 1.4.2 - 11/07/2018 =
-* Feature - Gravatar on user profile
-* Feature - Layout(vertical/horizontal) on user account
-* Feature - Verify/Unverify user by admin in email confirmation
-* Refactor - Change account details tab to change password
-* Add - Necessary changes required for conditional logic
-* Fix - Broken resend verification email link
-* Fix - Exclude placeholder for unnecessary fields
-* Fix - Single checkbox update issue from admin profile
-
-= 1.4.1 - 20/06/2018 =
-* Fix - Privacy policy field issue
-* Fix - Translation ready texts
-* Fix - Lost password url
-* Add - Scroll bar for overflow form fields
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
