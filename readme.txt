@@ -1,5 +1,5 @@
 === User Registration - Custom Registration Form, Login And User Profile For WordPress ===
-Contributors: WPEverest
+Contributors: WPEverest, sanzeeb3
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.4
@@ -109,7 +109,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.3 - 07/12/2018 =
+= 1.5.3 - 10/12/2018 =
 * Tweak - Conditionally load flatpickr if only form has date field.
 * Fix   - Enqueque CSS on block editor
 
