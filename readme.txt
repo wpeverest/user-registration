@@ -2,7 +2,7 @@
 Contributors: WPEverest, sanzeeb3
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
-Requires PHP: 5.4
+Requires PHP: 5.3
 Tested up to: 5.0
 Stable tag: 1.5.3
 License: GPLv3
@@ -127,7 +127,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Required field naming readability on backend form submit
 * Fix - Translated error message issue on form submit
 * Fix - CSV export issue due to already sent headers
-* Tweak - Display (previously hidden) Option to insert myaccount page on settings 
+* Tweak - Display (previously hidden) Option to insert myaccount page on settings
 * Tweak - Remove applied filter to change lost password url on admin side
 * Tweak - Redirect option from myaccount shortcode too
 

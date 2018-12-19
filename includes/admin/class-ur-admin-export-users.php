@@ -165,7 +165,9 @@ class UR_Admin_Export_Users {
   	 		$user_extra_row     = ur_get_user_extra_fields( $user->data->ID );
 
   	 		foreach( $user_extra_row as $user_extra_data ) {
-  	 			if( ! isset( $this->generate_columns( $form_id )[ $user_extra_data ] ) ) {
+				$columns = $this->generate_columns( $form_id );
+
+  	 			if( ! isset( $columns[ $user_extra_data ] ) ) {
 
   	 				// Remove the rows value that are not in columns.
   	 				unset( $user_extra_row[ $user_extra_data ] );
@@ -177,7 +179,9 @@ class UR_Admin_Export_Users {
 
   	 		// Get user table data that are on column.
   	 		foreach( $user_table_data as $data ) {
-  	 			if( isset( $this->generate_columns( $form_id )[ $data ] ) ) {
+				$columns = $this->generate_columns( $form_id );
+
+  	 			if( isset( $columns[ $data ] ) ) {
   	 				$user_table_data_row = array_merge( $user_table_data_row, array( $data => $user->$data ) );
   	 			}
   	 		}
@@ -187,7 +191,9 @@ class UR_Admin_Export_Users {
 
   	 		// Get user meta table data that are on column.
   	 		foreach( $user_meta_data as $meta_data ) {
-  	 			if( isset( $this->generate_columns( $form_id )[ $meta_data ] ) ) {
+				$columns = $this->generate_columns( $form_id );
+
+				if( isset( $columns[ $meta_data ] ) ) {
   	 				$user_meta_data_row = array_merge( $user_meta_data_row, array( $meta_data => get_user_meta( $user->data->ID, $meta_data, true ) ) );
   	 			}
   	 		}
