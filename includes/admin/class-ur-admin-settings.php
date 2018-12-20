@@ -146,9 +146,14 @@ class UR_Admin_Settings {
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( $_GET['tab'] );
 		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( $_REQUEST['section'] );
 
-		// Save settings if data has been posted
-		if ( ! empty( $_POST ) ) {
-			self::save();
+		$flag = apply_filters( 'user_registration_settings_save_action', true );
+
+		if( $flag ) {
+
+			// Save settings if data has been posted
+			if ( ! empty( $_POST ) ) {
+				self::save();
+			}
 		}
 
 		// Add any posted messages
