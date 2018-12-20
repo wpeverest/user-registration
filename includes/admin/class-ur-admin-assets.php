@@ -45,6 +45,7 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
 		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+
 		// Add RTL support for admin styles
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
 		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
