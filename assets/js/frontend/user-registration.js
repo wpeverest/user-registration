@@ -447,7 +447,7 @@
 	};
 
 	$(function () {
-		 $('form.register').ur_form_submission();
+		$('form.register').ur_form_submission();
 		var date_selector = $('.ur-frontend-form  input[type="date"]');
 		if ( date_selector.length > 0 ) {
 			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr( {
