@@ -370,7 +370,6 @@ class UR_Emailer {
 		$message = $message->ur_get_reset_password_email();
 		$message = get_option( 'user_registration_reset_password_email', $message );
 
-		
 		$to_replace   = array( "{{username}}", "{{key}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $key, get_bloginfo(), get_home_url() );
 
@@ -405,11 +404,13 @@ class UR_Emailer {
 		$user_id      = isset( $user->ID ) ? absint( $user->ID ) : 0;
 
 		$user_fields = ur_get_user_table_fields();
+
 		foreach($user_fields as $field ) {
 			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
 		}
 
 		$user_meta_fields = ur_get_registered_user_meta_fields();
+
 		// Use name_value for smart tag to replace
 		foreach( $user_meta_fields as $field ) {
 			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
