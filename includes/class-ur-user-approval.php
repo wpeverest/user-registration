@@ -251,7 +251,7 @@ class UR_User_Approval {
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
 		if ( ! $user_manager->is_approved() ) {
-			$error_message = __( 'Your account is still awaiting admin approval. Reset Password is not allowed.' );
+			$error_message = __( 'Your account is still awaiting admin approval. Reset Password is not allowed.', 'user-registration' );
 			$result = new WP_Error( 'user_not_approved', $error_message );
 		}
 
