@@ -361,13 +361,27 @@ class UR_Emailer {
 			return false;
 		}
 
+		// Get name value pair to replace smart tag.
+		$name_value   = self::status_change_emails_smart_tags( $email );
+
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 		$subject = get_option( 'user_registration_reset_password_email_subject',  __('Password Reset Email: {{blog_info}}', 'user-registration') );
 		$message = new UR_Settings_Reset_Password_Email();
 		$message = $message->ur_get_reset_password_email();
 		$message = get_option( 'user_registration_reset_password_email', $message );
-		$to_replace = array( "{{username}}", "{{key}}", "{{blog_info}}", "{{home_url}}" );
+
+		
+		$to_replace   = array( "{{username}}", "{{key}}", "{{blog_info}}", "{{home_url}}" );
 		$replace_with = array( $username, $key, get_bloginfo(), get_home_url() );
+
+		// Add the field name and values from $name_value to the replacement arrays.
+		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		// Surround every key with {{ and }}.
+		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
+
+		// $message = json_encode($to_replace);
 		$message = str_replace( $to_replace, $replace_with, $message );
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
@@ -390,16 +404,19 @@ class UR_Emailer {
 		$user         = get_user_by( 'email', $email );
 		$user_id      = isset( $user->ID ) ? absint( $user->ID ) : 0;
 
-		$user_meta_fields = ur_get_registered_user_meta_fields();
+		$user_fields = ur_get_user_table_fields();
+		foreach($user_fields as $field ) {
+			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
+		}
 
+		$user_meta_fields = ur_get_registered_user_meta_fields();
 		// Use name_value for smart tag to replace
 		foreach( $user_meta_fields as $field ) {
 			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
 		}
 
 		$user_extra_fields = ur_get_user_extra_fields( $user_id );
-
-		$name_value = array_merge( $name_value, $user_extra_fields );
+		$name_value        = array_merge( $name_value, $user_extra_fields );
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
