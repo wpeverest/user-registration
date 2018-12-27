@@ -380,7 +380,6 @@ class UR_Emailer {
 		// Surround every key with {{ and }}.
 		array_walk( $to_replace, function( &$value, $key ) { $value = '{{'.trim( $value, '{}').'}}'; } );
 
-		// $message = json_encode($to_replace);
 		$message = str_replace( $to_replace, $replace_with, $message );
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
