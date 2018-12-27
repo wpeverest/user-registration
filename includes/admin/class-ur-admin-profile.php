@@ -392,17 +392,17 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 								$field_index            = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
-									'label'       => __( $field_label, 'user-registration' ),
-									'description' => __( $field_description, 'user-registration' ),
-									'type'		  => __( $field_key, 'user-registration' ),
+									'label'       => $field_label,
+									'description' => $field_description,
+									'type'		  => $field_key,
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
 								$field_index           = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
-									'label'       => __( $field_label, 'user-registration' ),
-									'description' => __( $field_description, 'user-registration' ),
-									'type'		  => __( $field_key, 'user-registration' ),
+									'label'       => $field_label,
+									'description' => $field_description,
+									'type'		  => $field_key,
 								);
 							}
 							switch ( $field_key ) {
