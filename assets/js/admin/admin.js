@@ -963,4 +963,13 @@ jQuery(function ( $ ) {
 		return parseInt(value, 0);
 	}
 
+	setTimeout( function(){
+		var date_selector = $('#profile-page form#your-profile  input[type="date"]');
+		if ( date_selector.length > 0 ) {
+			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr( {
+				disableMobile: true
+			} );
+		}
+	}, 2 );
+
 }(jQuery, window.user_registration_admin_data));

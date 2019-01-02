@@ -60,6 +60,11 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
 		}
+
+		// Enqueue flatpickr on user profile screen.
+		if ( 'user-edit' === $screen_id ) {
+			wp_enqueue_style( 'flatpickr' );
+		}
 	}
 
 	/**
@@ -156,6 +161,11 @@ class UR_Admin_Assets {
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+		}
+
+		// Enqueue flatpickr on user profile screen.
+		if ( 'user-edit' === $screen_id ) {
+			wp_enqueue_script( 'flatpickr' );
 		}
 
 		// Plugins page.

@@ -207,6 +207,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										      rows="5"
 										      cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
+								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+									<input type="date" name="<?php echo esc_attr( $key ); ?>"
+											       id="<?php echo esc_attr( $key ); ?>"
+											       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+											       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												<?php echo esc_attr( $attribute_string ); ?>
+											/>
+
 								<?php else  :
 
 									if ( ! empty( $field['type'] ) ) {
@@ -271,7 +279,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$value = $_POST[ $key ];
 							if( is_array( $_POST[ $key ] ) ) {
 								$value = array_map( 'sanitize_text_field', $value );
-							} 
+							}
 							update_user_meta( $user_id, $key, $value );
 						}
 						else {
@@ -378,22 +386,23 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label_array = explode( '_', $field->general_setting->field_name );
 							$field_label = join( ' ', array_map( 'ucwords', $field_label_array ) );
 						}
-
 						if ( $field_name != '' ) {
 							$field_index = '';
 
 							if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 								$field_index            = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
-									'label'       => __( $field_label, 'user-registration' ),
-									'description' => __( $field_description, 'user-registration' ),
+									'label'       => $field_label,
+									'description' => $field_description,
+									'type'		  => $field_key,
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
 								$field_index           = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
-									'label'       => __( $field_label, 'user-registration' ),
-									'description' => __( $field_description, 'user-registration' ),
+									'label'       => $field_label,
+									'description' => $field_description,
+									'type'		  => $field_key,
 								);
 							}
 							switch ( $field_key ) {
