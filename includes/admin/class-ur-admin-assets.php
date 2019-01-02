@@ -44,7 +44,7 @@ class UR_Admin_Assets {
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
-		wp_enqueue_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
 
 		// Add RTL support for admin styles
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
@@ -59,6 +59,11 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'user-registration-admin' );
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
+		}
+
+		// Enqueue flatpickr on user profile screen.
+		if ( 'user-edit' === $screen_id ) {
+			wp_enqueue_style( 'flatpickr' );
 		}
 	}
 
@@ -102,7 +107,7 @@ class UR_Admin_Assets {
 			'jquery',
 			'selectWoo',
 		), UR_VERSION );
-		wp_enqueue_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
+		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
 
 		wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
 		wp_enqueue_script( 'user-registration-form-modal-js' );
@@ -153,6 +158,11 @@ class UR_Admin_Assets {
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+		}
+
+		// Enqueue flatpickr on user profile screen.
+		if ( 'user-edit' === $screen_id ) {
+			wp_enqueue_script( 'flatpickr' );
 		}
 
 		// Plugins page.

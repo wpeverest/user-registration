@@ -279,7 +279,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$value = $_POST[ $key ];
 							if( is_array( $_POST[ $key ] ) ) {
 								$value = array_map( 'sanitize_text_field', $value );
-							} 
+							}
 							update_user_meta( $user_id, $key, $value );
 						}
 						else {
