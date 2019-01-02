@@ -52,7 +52,7 @@ class UR_Admin_Assets {
 
 		// Sitewide menu CSS
 		wp_enqueue_style( 'user-registration-menu' );
-		wp_enqueue_style('user-registration-form-modal-css');
+		wp_enqueue_style( 'user-registration-form-modal-css' );
 
 		// Admin styles for UR pages only
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
@@ -104,7 +104,10 @@ class UR_Admin_Assets {
 		), UR_VERSION );
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
 
-		wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
+		if ( 'user-registration_page_add-new-registration' === $screen_id ) {
+			wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
+		}
+
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 
 		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(
