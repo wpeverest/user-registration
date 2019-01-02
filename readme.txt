@@ -111,8 +111,14 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.4 - xx/xx/2018 =
-*
+= 1.5.4 - 02/01/2018 =
+* Fix - Smart tag for reset password email
+* Fix - Date field in user profile
+* Tweak - Message for lost password while awaiting admin approval
+* Dev - Filter to override success/failure response
+* Dev - Filter to override user role
+* Dev - Filter to update settings on settings page
+
 
 = 1.5.3 - 10/12/2018 =
 * Tweak - Conditionally load flatpickr if only form has date field.
@@ -187,10 +193,5 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Reset WooCommerce state value
 * Fix - Allow target attribute in description to add link
 
-= 1.4.3 - 31/07/2018 =
-* Feature - Copy form shortcode
-* Add - Deactivation feedback notice
-* Change - Date picker to flatpickr
-* Add - Email attachement filter
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).

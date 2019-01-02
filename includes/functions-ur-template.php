@@ -386,7 +386,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		}
 
 		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value );
-
 		if ( $args['return'] ) {
 			return $field;
 		} else {

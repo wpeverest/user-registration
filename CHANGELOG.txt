@@ -1,3 +1,11 @@
+= 1.5.4 - 02/01/2018 =
+* Fix - Smart tag for reset password email
+* Fix - Date field in user profile
+* Tweak - Message for lost password while awaiting admin approval
+* Dev - Filter to override success/failure response
+* Dev - Filter to override user role
+* Dev - Filter to update settings on settings page
+
 = 1.5.3 - 07/12/2018 =
 * Tweak - Conditionally load flatpickr if only form has date field.
 * Fix   - Load block editor CSS with proper hook
