@@ -62,7 +62,7 @@ class UR_Admin_Assets {
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
 			wp_enqueue_style( 'flatpickr' );
 		}
 	}
@@ -164,7 +164,7 @@ class UR_Admin_Assets {
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
 		}
 
