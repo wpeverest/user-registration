@@ -43,6 +43,8 @@ class UR_Frontend_Form_Handler {
 		self::match_password( $form_data );
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
+		
+		self::confirm_email( $form_data, $form_field_data );
 
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
@@ -309,6 +311,42 @@ class UR_Frontend_Form_Handler {
 				array_push( self::$response_array, __( 'Empty confirm password', 'user-registration' ) );
 			} elseif ( strcasecmp( $confirm_password, $password ) != 0 ) {
 				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
+			}
+		}
+		return $form_data;
+	}
+
+	/**
+	 * Match Secondary email and confirm email
+	 * @param  obj &$form_data Form data submitted
+	 * @return obj $form_data
+	 */
+	private static function confirm_email( &$form_data, $form_field_data ) {
+		$email       			= '';
+		$secondary_email     	= '';
+		$check_confirm_email 	= false;
+
+		foreach( $form_field_data as $field_data ) {
+			if( 'email' === $field_data->field_key && 'yes' == $field_data->advance_setting->confirm_email){
+				$check_confirm_email = true;
+				break;
+			}
+		}
+
+		if ( $check_confirm_email ) {
+
+			foreach ( $form_data as $index => $single_data ) {
+				if ( 'email' === $single_data->field_type && 'user_email' !== $single_data->field_name ) {
+					$secondary_email = $single_data->value;
+					unset( $form_data[$index] );
+				}
+				if ( 'user_email' == $single_data->field_name ) {
+					$email = $single_data->value;
+				}
+			}
+
+			if ( strcasecmp( $secondary_email, $email ) != 0 ) {
+				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched', 'user-registration' ) ) );
 			}
 		}
 		return $form_data;

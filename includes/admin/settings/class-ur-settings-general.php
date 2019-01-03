@@ -298,6 +298,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Confirm Email', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on Confim Email.', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_confirm_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Email and confirm email not matched.', 'user-registration' ),
+					),
+
+					array(
 						'title'    => __( 'Google reCaptcha', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on google recaptcha.', 'user-registration' ),
 						'id'       => 'user_registration_form_submission_error_message_recaptcha',
