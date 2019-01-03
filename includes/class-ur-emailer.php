@@ -356,7 +356,7 @@ class UR_Emailer {
 
 		$user 		= get_user_by( 'login', $user_login );
 		$email 		= isset( $user->data->user_email ) ? $user->data->user_email : '';
-		$Username 	= isset( $user->data->user_login ) ? $user->data->user_login : '';
+		$username 	= isset( $user->data->user_login ) ? $user->data->user_login : '';
 
 		if( empty( $email ) || empty( $username ) ) {
 			return false;
