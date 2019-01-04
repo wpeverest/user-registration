@@ -66,8 +66,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 								<div id="ur-tab-registered-fields" class="ur-tab-content">
 									<h2><?php echo __( 'Default User Fields', 'user-registration' ) ?></h2>
+									<hr/>
 									<?php $this->get_registered_user_form_fields(); ?>
 									<h2><?php echo __( 'Extra Fields', 'user-registration' ) ?></h2>
+									<hr/>
 									<?php $this->get_registered_other_form_fields(); ?>
 									<?php do_action( 'user_registration_extra_fields' );?>
 								</div>
