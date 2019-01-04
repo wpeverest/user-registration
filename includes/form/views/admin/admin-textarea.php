@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="textarea">
-		<textarea id="ur-input-type-textarea"></textarea>
+		<textarea id="ur-input-type-textarea" disabled></textarea>
 	</div>
 
 	<?php

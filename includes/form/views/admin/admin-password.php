@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="password">
-		<input type="password" id="ur-input-type-password"/>
+		<input type="password" id="ur-input-type-password" disabled/>
 	</div>
 
 	<?php

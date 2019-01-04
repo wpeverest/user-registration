@@ -19,11 +19,11 @@ $choices = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', 
 	<div class="ur-field" data-field-key="checkbox">
 		<?php
 			if( count( $choices ) < 1 ) {
-				echo "<input type = 'checkbox'  value='1'/>";
+				echo "<input type = 'checkbox'  value='1' disabled/>";
 			}
 
 			foreach ( $choices as $choice ) {
-				echo "<input type = 'checkbox'  value='" . esc_attr( trim( $choice ) ) . "'/>" . esc_html( trim( $choice ) ) . '<br>';
+				echo "<input type = 'checkbox'  value='" . esc_attr( trim( $choice ) ) . "' disabled/>" . esc_html( trim( $choice ) ) . '<br>';
 			}
 		?>
 

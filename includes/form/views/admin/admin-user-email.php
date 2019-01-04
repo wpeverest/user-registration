@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="user_email">
-		<input type="email" id="ur-input-type-user-email" placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>"/>
+		<input type="email" id="ur-input-type-user-email" placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>" disabled/>
 	</div>
 
 	<?php
