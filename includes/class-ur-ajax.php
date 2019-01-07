@@ -71,7 +71,7 @@ class UR_AJAX {
 
 		if( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
-				if( $recaptcha_version == 'v3' ){
+				if( $recaptcha_version == 'v3' ) {
 					$args  = array(
 						'body'	=>	array(
 							'secret'	=> $secret_key_v3,
@@ -80,7 +80,7 @@ class UR_AJAX {
 					);
 					$data  = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', $args);
 					$data  = json_decode( wp_remote_retrieve_body( $data ) );
-				}else{
+				} else {
 					$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data  = json_decode( wp_remote_retrieve_body( $data ) );
 				}

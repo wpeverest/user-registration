@@ -49,7 +49,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 						'id'    => 'integration_options',
 					),
 					array(
-						'title'    => __( 'reCaptcha', 'user-registration' ),
+						'title'    => __( 'Version', 'user-registration' ),
 						'desc'     => sprintf( __('Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),						
 						'id'       => 'user_registration_integration_setting_recaptcha_version',
 						'default'  => 'v2',
@@ -60,7 +60,6 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 							'v2'	=> 'reCaptcha v2',
 							'v3'	=> 'reCaptcha v3',
 						)
-
 					),
 					array(
 						'title'    => __( 'Site Key(v2)', 'user-registration' ),

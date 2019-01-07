@@ -269,7 +269,7 @@ class UR_Form_Handler {
 
 				if( 'yes' === $recaptcha_enabled ) {
 					if ( ! empty( $recaptcha_value ) ) {
-						if( $recaptcha_version == 'v3' ){
+						if( $recaptcha_version == 'v3' ) {
 							$args  = array(
 								'body'	=>	array(
 									'secret'	=> $secret_key_v3,
@@ -279,7 +279,7 @@ class UR_Form_Handler {
 							$data  = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', $args);
 							$data  = json_decode( wp_remote_retrieve_body( $data ) );
 							echo '<pre>'; print_r( $data ); echo '</pre>';
-						}else{
+						} else {
 							$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 							$data  = json_decode( wp_remote_retrieve_body( $data ) );
 						}

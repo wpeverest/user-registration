@@ -1087,10 +1087,10 @@ function ur_get_user_login_option() {
 function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	$recaptcha_version		= get_option( 'user_registration_integration_setting_recaptcha_version' );
-	if( $recaptcha_version == 'v3' ){
+	if( $recaptcha_version == 'v3' ) {
 		$recaptcha_site_key 	= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 		$recaptcha_site_secret  = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
-	}else{
+	} else {
 		$recaptcha_site_key 	= get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 		$recaptcha_site_secret  = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 	}
@@ -1100,7 +1100,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 	if ( 'yes' == $recaptcha_enabled && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if( 0 === $rc_counter ) {
-			if( $recaptcha_version == 'v3' ){
+			if( $recaptcha_version == 'v3' ) {
 				wp_enqueue_script( 'ur-google-recaptcha-v3' );
 				wp_localize_script( 'ur-google-recaptcha-v3', 'ur_google_recaptcha_code', array(
 					'site_key' 			=> $recaptcha_site_key,
@@ -1108,7 +1108,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 					'is_captcha_enable' => true,
 					'version'			=> 'v3',
 				) );
-			}else{
+			} else {
 				wp_enqueue_script( 'ur-google-recaptcha' );
 				wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
 					'site_key' 			=> $recaptcha_site_key,
@@ -1119,15 +1119,15 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 			}
 		    $rc_counter++;
 		}
-		if( $recaptcha_version == 'v3' ){
+		if( $recaptcha_version == 'v3' ) {
 			if( $context === 'login' ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
-			} elseif ( $context === 'register' ){
+			} elseif ( $context === 'register' ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
 			} else {
 				$recaptcha_node = '';
 			}
-		}else{
+		} else {
 			if( $context === 'login' ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 

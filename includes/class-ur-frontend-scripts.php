@@ -209,13 +209,11 @@ class UR_Frontend_Scripts {
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
 				'version' => '2.0.0',
-
 			),
 			'ur-google-recaptcha-v3'        => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?render='.$recaptcha_site_key,
 				'deps'    => array(),
 				'version' => '3.0.0',
-
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
