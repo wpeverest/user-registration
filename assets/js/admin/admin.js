@@ -2,14 +2,14 @@
  * UserRegistration Admin JS
  * global i18n_admin
  */
-jQuery(function ( $ ) {
+jQuery(function ($) {
 
 	/**
 	 * Append form settings to fileds section.
 	 */
 	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
 
-	$( selector ).on( 'click', function() {
+	$(selector).on('click', function () {
 		var fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
@@ -20,7 +20,7 @@ jQuery(function ( $ ) {
 		var form_settings = form_settings_section.find('form');
 
 		// Append form settings to fields panel.
-		form_settings.appendTo( fields_panel );
+		form_settings.appendTo(fields_panel);
 
 		// Show only the form settings in fields panel.
 		fields_panel.find('form#ur-field-settings').show();
@@ -34,31 +34,31 @@ jQuery(function ( $ ) {
 		// Show general settings.
 		fields_panel.find('form #ur-field-all-settings #general-settings').show();
 
-		fields_panel_section.each( function( index, value ) {
+		fields_panel_section.each(function (index, value) {
 
-			var appending_text = $( value ).find( 'h3' ).text();
-			var appending_id 	= $( value ).attr('id');
+			var appending_text = $(value).find('h3').text();
+			var appending_id = $(value).attr('id');
 
 			// Append the title and div now under form settings.
-			if( form_settings_section.find('#'+appending_id).length === 0 ) {
-				form_settings_section.append('<div id="'+ appending_id +'">'+appending_text+'</div>');
+			if (form_settings_section.find('#' + appending_id).length === 0) {
+				form_settings_section.append('<div id="' + appending_id + '">' + appending_text + '</div>');
 			}
 
 			// Add active class to general settings and form-settings-tab for all settings.
-			form_settings_section.find('#general-settings').addClass( 'active' );
-			form_settings_section.find('#'+appending_id ).addClass('form-settings-tab');
+			form_settings_section.find('#general-settings').addClass('active');
+			form_settings_section.find('#' + appending_id).addClass('form-settings-tab');
 
-			$( form_settings_section.find('#'+appending_id ) ).on('click',function() {
+			$(form_settings_section.find('#' + appending_id)).on('click', function () {
 
 				// Remove all active classes initially.
-				$( this ).parent().find('.active').removeClass('active');
+				$(this).parent().find('.active').removeClass('active');
 
 				// Add active class on clicked tab.
-				$( this ).addClass('active');
+				$(this).addClass('active');
 
 				// Hide other settings and show respective id's settings.
 				fields_panel.find('form #ur-field-all-settings').children().hide();
-				fields_panel.find('form #ur-field-all-settings').find('#'+appending_id).show();
+				fields_panel.find('form #ur-field-all-settings').find('#' + appending_id).show();
 			});
 		});
 	});
@@ -68,7 +68,7 @@ jQuery(function ( $ ) {
 	 */
 	var fields = $('.ur-tab-lists').find('li').first(); // Fields tab.
 
-	$( fields ).on( 'click', function() {
+	$(fields).on('click', function () {
 		fields_panel = $('.ur-selected-inputs');
 		fields_panel.children().show();
 		fields_panel.find('form#ur-field-settings').hide();
@@ -78,10 +78,10 @@ jQuery(function ( $ ) {
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
 	 */
 	var minimum_password_strength_wrapper_field = $('#general-settings').find('#user_registration_form_setting_minimum_password_strength_field');
-	var strong_password_field  					= $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field select#user_registration_form_setting_enable_strong_password');
-	var enable_strong_password 					= strong_password_field.val();
+	var strong_password_field = $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field select#user_registration_form_setting_enable_strong_password');
+	var enable_strong_password = strong_password_field.val();
 
-	if( 'yes' === enable_strong_password ) {
+	if ('yes' === enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
@@ -89,7 +89,7 @@ jQuery(function ( $ ) {
 
 	$(strong_password_field).change(function () {
 
-		if( 'yes' === $(this).val() ) {
+		if ('yes' === $(this).val()) {
 			minimum_password_strength_wrapper_field.show('slow');
 		} else {
 			minimum_password_strength_wrapper_field.hide('slow');
@@ -111,32 +111,32 @@ jQuery(function ( $ ) {
 			$(this).closest('a, th').attr('data-tip', $(this).data('tip')).tipTip(tiptip_args).css('cursor', 'help');
 		});
 	}).trigger('init_tooltips');
-	$('body').on('keypress', '#ur-form-name', function ( e ) {
-		if ( 13 === e.which ) {
+	$('body').on('keypress', '#ur-form-name', function (e) {
+		if (13 === e.which) {
 			$('#save_form_footer').eq(0).trigger('click');
 		}
 	});
 });
 
-(function ( $, user_registration_admin_data ) {
+(function ($, user_registration_admin_data) {
 	var i18n_admin = user_registration_admin_data.i18n_admin;
 	$(function () {
 		var user_profile_modal = {
 			init: function () {
 				$(document.body).on('click', '.column-data_link a', this.add_item).on('ur_backbone_modal_loaded', this.backbone.init).on('ur_backbone_modal_response', this.backbone.response);
 			},
-			add_item: function ( e ) {
+			add_item: function (e) {
 				e.preventDefault();
 				$(this).URBackboneModal({ template: 'test-demo' });
 				return false;
 			},
 			backbone: {
-				init: function ( e, target ) {
-					if ( 'test-demo' === target ) {
+				init: function (e, target) {
+					if ('test-demo' === target) {
 					}
 				},
-				response: function ( e, target ) {
-					if ( 'test-demo' === target ) {
+				response: function (e, target) {
+					if ('test-demo' === target) {
 					}
 				}
 			}
@@ -179,20 +179,20 @@ jQuery(function ( $ ) {
 						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle"></button>');
 						events.render_draggable_sortable();
 						builder.manage_empty_grid();
-						if ( user_registration_admin_data.is_edit_form === '1' ) {
+						if (user_registration_admin_data.is_edit_form === '1') {
 							$('.ur-single-row').eq($('.ur-single-row').length - 1).remove();
 						}
-						if ( user_registration_admin_data.is_edit_form !== '1' ) {
+						if (user_registration_admin_data.is_edit_form !== '1') {
 
 							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).find('.user-registration-dragged-me').remove();
 							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).append(user_registration_admin_data.required_form_html);
 						}
 						manage_draggable_users_fields();
 					},
-					get_grid_lists: function ( number_of_grid ) {
+					get_grid_lists: function (number_of_grid) {
 						var grid_lists = $('<div class="ur-grid-lists"/>');
 						var total_width = 0;
-						for ( var i = 1; i <= number_of_grid; i++ ) {
+						for (var i = 1; i <= number_of_grid; i++) {
 							var grid_list_item = $('<div ur-grid-id=\'' + i + '\' class=\'ur-grid-list-item\'></div>');
 							var width = Math.floor(100 / number_of_grid) - number_of_grid;
 							total_width += width;
@@ -206,7 +206,7 @@ jQuery(function ( $ ) {
 						grid_lists.find('.ur-grid-list-item').eq('0').css({});
 						return grid_lists;
 					},
-					populate_dropped_node: function ( container, form_field_id ) {
+					populate_dropped_node: function (container, form_field_id) {
 						var data = {
 							action: 'user_registration_user_input_dropped',
 							security: user_registration_admin_data.user_input_dropped,
@@ -223,9 +223,9 @@ jQuery(function ( $ ) {
 								container.html('<small class="spinner is-active"></small>');
 								container.addClass('ur-item-dragged');
 							},
-							complete: function ( response ) {
+							complete: function (response) {
 								builder.manage_empty_grid();
-								if ( response.responseJSON.success === true ) {
+								if (response.responseJSON.success === true) {
 									var template = $(template_text.replace('(content)', response.responseJSON.data.template));
 									template.removeClass('ajax_added');
 									template.removeClass('ur-item-dragged');
@@ -236,8 +236,8 @@ jQuery(function ( $ ) {
 								}
 								manage_draggable_users_fields();
 
-								var populated_item = template.closest('.ur-selected-item ').find( "[data-field='field_name']").val();
-								manage_conditional_field_options( populated_item );
+								var populated_item = template.closest('.ur-selected-item ').find("[data-field='field_name']").val();
+								manage_conditional_field_options(populated_item);
 
 							}
 						});
@@ -249,7 +249,7 @@ jQuery(function ( $ ) {
 						main_containner.find('.user-registration-dragged-me').remove();
 						$.each(main_containner.find('.ur-grid-list-item'), function () {
 							var $this = $(this);
-							if ( $(this).find('.ur-selected-item').length === 0 ) {
+							if ($(this).find('.ur-selected-item').length === 0) {
 								$this.append(drag_me.clone());
 							}
 						});
@@ -282,17 +282,17 @@ jQuery(function ( $ ) {
 					register_remove_row: function () {
 						var $this = this;
 						$('body').on('click', '.ur-remove-row', function () {
-							if ( $('.ur-selected-inputs').find('.ur-single-row').length > 1 ) {
+							if ($('.ur-selected-inputs').find('.ur-single-row').length > 1) {
 								var confirm = window.confirm(i18n_admin.i18n_are_you_sure_want_to_delete);
-								if ( confirm ) {
+								if (confirm) {
 									var btn = $(this).prev();
 									var new_btn;
-									if ( btn.hasClass('ur-add-new-row') ) {
+									if (btn.hasClass('ur-add-new-row')) {
 										new_btn = btn.clone();
 									} else {
 										new_btn = $(this).clone().attr('class', 'dashicons-minus ur-remove-row');
 									}
-									if ( new_btn.hasClass('ur-add-new-row') ) {
+									if (new_btn.hasClass('ur-add-new-row')) {
 										$(this).closest('.ur-single-row').prev().find('.ur-remove-row').before(new_btn);
 									}
 									$(this).closest('.ur-single-row').remove();
@@ -308,7 +308,7 @@ jQuery(function ( $ ) {
 						$('body').on('click', '.ur-single-row .ur-nav-right', function () {
 							var $this_single_row = $(this).closest('.ur-single-row');
 							var grid_id = $(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid');
-							if ( grid_id >= loaded_params.number_of_grid_list ) {
+							if (grid_id >= loaded_params.number_of_grid_list) {
 								return;
 							}
 							grid_id = ur_parse_int(grid_id) + 1;
@@ -330,7 +330,7 @@ jQuery(function ( $ ) {
 						$('body').on('click', '.ur-single-row .ur-nav-left', function () {
 							var $this_single_row = $(this).closest('.ur-single-row');
 							var grid_id = $(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid');
-							if ( grid_id <= 1 ) {
+							if (grid_id <= 1) {
 								return;
 							}
 							grid_id = ur_parse_int(grid_id) - 1;
@@ -384,21 +384,21 @@ jQuery(function ( $ ) {
 							revert: 'invalid',
 							// start: function (event, ui) {
 							// },
-							stop: function ( event, ui ) {
-								if ( $(ui.helper).closest('.ur-grid-list-item').length === 0 ) {
+							stop: function (event, ui) {
+								if ($(ui.helper).closest('.ur-grid-list-item').length === 0) {
 									return;
 								}
 								var data_field_id = $.trim($(ui.helper).attr('data-field-id').replace('user_registration_', ''));
 								var length_of_required = $('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_id + '"]').length;
 								var only_one_field_index = $.makeArray(user_registration_admin_data.form_one_time_draggable_fields);
-								if ( length_of_required > 0 && $.inArray(data_field_id, only_one_field_index) >= 0 ) {
+								if (length_of_required > 0 && $.inArray(data_field_id, only_one_field_index) >= 0) {
 									show_message(i18n_admin.i18n_user_required_field_already_there);
 									$(ui.helper).remove();
 									return;
 								}
 								var clone = $(ui.helper);
 								var form_field_id = $(clone).attr('data-field-id');
-								if ( typeof form_field_id !== 'undefined' ) {
+								if (typeof form_field_id !== 'undefined') {
 									var this_clone = $(ui.helper).closest('.ur-grid-list-item').find('li[data-field-id="' + $(this).attr('data-field-id') + '"]');
 									builder.populate_dropped_node(this_clone, form_field_id);
 								}
@@ -408,14 +408,14 @@ jQuery(function ( $ ) {
 					remove_selected_item: function () {
 						var $this = this;
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function () {
-							var removed_item = $(this).closest('.ur-selected-item ').find( "[data-field='field_name']").val();
+							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val();
 							$(this).closest('.ur-selected-item ').remove();
 							$this.check_grid();
 							builder.manage_empty_grid();
 							manage_draggable_users_fields();
 
 							//remove item from conditional logic options
-							jQuery('[class*="urcl-settings-rules_field_"] option[value="'+ removed_item + '"]').remove();
+							jQuery('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
 
 						});
 					},
@@ -424,7 +424,7 @@ jQuery(function ( $ ) {
 							var data_field_key = $(this).closest('.ur-selected-item ').find('.ur-field').attr('data-field-key');
 							var selected_node = $('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_key + '"]');
 							var length_of_required = selected_node.length;
-							if ( length_of_required > 0 && $.inArray(data_field_key, user_registration_admin_data.form_one_time_draggable_fields) > -1 ) {
+							if (length_of_required > 0 && $.inArray(data_field_key, user_registration_admin_data.form_one_time_draggable_fields) > -1) {
 								show_message(i18n_admin.i18n_user_required_field_already_there_could_not_clone);
 								return;
 							}
@@ -432,14 +432,14 @@ jQuery(function ( $ ) {
 							var label_node = clone.find('input[data-field="field_name"]');
 							var regex = /\d+/g;
 							var matches = label_node.val().match(regex);
-							var find_string = matches.length > 0 ? matches[ matches.length - 1 ] : '';
+							var find_string = matches.length > 0 ? matches[matches.length - 1] : '';
 							var label_string = label_node.val().replace(find_string, '');
 							clone.find('input[data-field="field_name"]').attr('value', label_string + new Date().getTime());
 							$(this).closest('.ur-grid-list-item').append(clone);
 						});
 					},
 					check_grid: function () {
-						$('.ur-tabs').tabs({ disabled: [ 1 ] });
+						$('.ur-tabs').tabs({ disabled: [1] });
 						$('.ur-tabs').find('a').eq(0).trigger('click');
 					}
 				};
@@ -454,7 +454,7 @@ jQuery(function ( $ ) {
 		});
 		$('.ur-tabs').tabs();
 		$('.ur-tabs').find('a').eq(0).trigger('click');
-		$('.ur-tabs').tabs({ disabled: [ 1 ] });
+		$('.ur-tabs').tabs({ disabled: [1] });
 		$('body').on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
 			$('.ur-selected-item').removeClass('ur-item-active');
@@ -462,7 +462,7 @@ jQuery(function ( $ ) {
 			render_advance_setting($(this));
 			init_events();
 		});
-		function render_advance_setting ( selected_obj ) {
+		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
 			var general_setting = selected_obj.find('.ur-general-setting-block').clone();
 			var form = $('<form id=\'ur-setting-form\'/>');
@@ -473,7 +473,7 @@ jQuery(function ( $ ) {
 			//$('#ur-tab-field-options').append(advance_setting);
 			$('#ur-tab-field-options').find('.ur-advance-setting-block').show();
 			$('#ur-tab-field-options').find('.ur-general-setting-block').show();
-			if ( $('.ur-item-active').length === 1 ) {
+			if ($('.ur-item-active').length === 1) {
 				$('.ur-tabs').tabs('enable', 1);
 				$('.ur-tabs').find('a').eq(1).trigger('click');
 			}
@@ -481,7 +481,7 @@ jQuery(function ( $ ) {
 
 		$('.ur_save_form_action_button').on('click', function () {
 			var validation_response = get_validation_status();
-			if ( validation_response.validation_status === false ) {
+			if (validation_response.validation_status === false) {
 				show_message(validation_response.message);
 				return;
 			}
@@ -489,7 +489,7 @@ jQuery(function ( $ ) {
 			var ur_form_id = $('#ur_form_id').val();
 			var ur_form_id_localization = user_registration_admin_data.post_id;
 
-			if ( ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0) ) {
+			if (ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0)) {
 				ur_form_id = 0;
 			}
 
@@ -514,9 +514,9 @@ jQuery(function ( $ ) {
 					$('.ur_save_form_action_button').closest('.publishing-action').append(spinner);
 					$('.ur-notices').remove();
 				},
-				complete: function ( response ) {
+				complete: function (response) {
 					$('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').remove();
-					if ( response.responseJSON.success === true ) {
+					if (response.responseJSON.success === true) {
 						var success_message = i18n_admin.i18n_form_successfully_saved;
 						show_message(success_message, 'success');
 						var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
@@ -530,9 +530,9 @@ jQuery(function ( $ ) {
 		});
 
 	});
-	function show_message ( message, type ) {
+	function show_message(message, type) {
 		var message_string;
-		if ( type === 'success' ) {
+		if (type === 'success') {
 			message_string = '<div class="updated ur-notices" style="border-color: green;"><p><strong>' + i18n_admin.i18n_success + '! </strong>' + message + '</p></div>';
 		} else {
 			message_string = '<div class="updated ur-notices" style="border-color: red;"><p><strong>' + i18n_admin.i18n_error + '!!! </strong>' + message + '</p></div>';
@@ -545,24 +545,24 @@ jQuery(function ( $ ) {
 		}, 600);
 	}
 
-	function get_validation_status () {
+	function get_validation_status() {
 		var only_one_field_index = $.makeArray(user_registration_admin_data.form_one_time_draggable_fields);
 		var required_fields = $.makeArray(user_registration_admin_data.form_required_fields);
 		var response = {
 			validation_status: true,
 			message: ''
 		};
-		if ( $('.ur-selected-item').length === 0 ) {
+		if ($('.ur-selected-item').length === 0) {
 			response.validation_status = false;
 			response.message = i18n_admin.i18n_at_least_one_field_need_to_select;
 			return response;
 		}
-		if ( $('#ur-form-name').val() === '' ) {
+		if ($('#ur-form-name').val() === '') {
 			response.validation_status = false;
 			response.message = i18n_admin.i18n_empty_form_name;
 			return response;
 		}
-		if ( $('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').length > 0 ) {
+		if ($('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').length > 0) {
 			response.validation_status = false;
 			response.message = i18n_admin.i18n_previous_save_action_ongoing;
 			return response;
@@ -574,20 +574,20 @@ jQuery(function ( $ ) {
 			try {
 				var field_value = $field.val();
 				var length = $('.ur-selected-inputs .ur-general-setting-block').find('input[data-field="field_name"][value="' + field_value + '"]').length;
-				if ( length > 1 ) {
+				if (length > 1) {
 					throw i18n_admin.i18n_duplicate_field_name;
 				}
-				if ( $field.closest('.ur-general-setting-block').find('input[data-field="label"]').val() === '' ) {
+				if ($field.closest('.ur-general-setting-block').find('input[data-field="label"]').val() === '') {
 					$field = $field.closest('.ur-general-setting-block').find('input[data-field="label"]');
 					throw i18n_admin.i18n_empty_field_label;
 				}
 				var field_regex = /[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/gm;
 				var regex_result = field_value.match(field_regex);
-				if ( regex_result !== null && regex_result.length === 1 && regex_result[ 0 ] === field_value ) {
+				if (regex_result !== null && regex_result.length === 1 && regex_result[0] === field_value) {
 				} else {
 					throw i18n_admin.i18n_invald_field_name;
 				}
-			} catch ( err ) {
+			} catch (err) {
 				response.validation_status = false;
 				response.message = err.message === undefined ? err : err.message;
 				$field.closest('.ur-selected-item').trigger('click');
@@ -598,36 +598,36 @@ jQuery(function ( $ ) {
 				}, 2000);
 				need_to_break = true;  //console.log('User registration console ' + $field.closest('.ur-selected-item').find('.ur-label label').text());
 			}
-			if ( need_to_break ) {
+			if (need_to_break) {
 				return false;
 			}
 		});
-		for ( var single_field = 0; single_field < only_one_field_index.length; single_field++ ) {
-			if ( $('.ur-selected-inputs').find('.ur-field[data-field-key="' + only_one_field_index[ single_field ] + '"]').length > 1 ) {
+		for (var single_field = 0; single_field < only_one_field_index.length; single_field++) {
+			if ($('.ur-selected-inputs').find('.ur-field[data-field-key="' + only_one_field_index[single_field] + '"]').length > 1) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_multiple_field_key + only_one_field_index[ single_field ];
+				response.message = i18n_admin.i18n_multiple_field_key + only_one_field_index[single_field];
 				break;
 			}
 		}
-		for ( var required_index = 0; required_index < required_fields.length; required_index++ ) {
+		for (var required_index = 0; required_index < required_fields.length; required_index++) {
 
-			if ( $('.ur-selected-inputs').find('.ur-field[data-field-key="' + required_fields[ required_index ] + '"]').length === 0 ) {
+			if ($('.ur-selected-inputs').find('.ur-field[data-field-key="' + required_fields[required_index] + '"]').length === 0) {
 				response.validation_status = false;
 
-				if( required_index === 0 ) {
+				if (required_index === 0) {
 					var field = i18n_admin.i18n_user_email;
-				} else if( required_index === 1 ) {
+				} else if (required_index === 1) {
 					var field = i18n_admin.i18n_user_password;
 				}
 
-				response.message =  field + ' ' + i18n_admin.i18n_field_is_required;
+				response.message = field + ' ' + i18n_admin.i18n_field_is_required;
 				break;
 			}
 		}
 		return response;
 	}
 
-	function get_form_data () {
+	function get_form_data() {
 		var form_data = [];
 		var single_row = $('.ur-selected-inputs .ur-single-row');
 		$.each(single_row, function () {
@@ -643,7 +643,7 @@ jQuery(function ( $ ) {
 		return form_data;
 	}
 
-	function get_grid_wise_data ( $grid_item ) {
+	function get_grid_wise_data($grid_item) {
 		var all_field_item = $grid_item.find('.ur-selected-item');
 		var all_field_data = [];
 		$.each(all_field_item, function () {
@@ -659,28 +659,28 @@ jQuery(function ( $ ) {
 		return all_field_data;
 	}
 
-	function get_field_general_setting ( $single_item ) {
+	function get_field_general_setting($single_item) {
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
 		$.each(general_setting_field, function () {
-			general_setting_data[ $(this).attr('data-field') ] = get_ur_data($(this));
+			general_setting_data[$(this).attr('data-field')] = get_ur_data($(this));
 		});
 		return general_setting_data;
 	}
 
-	function get_field_advance_setting ( $single_item ) {
+	function get_field_advance_setting($single_item) {
 		var advance_setting_field = $single_item.find('.ur-advance-setting-block').find('.ur_advance_setting');
 		var advance_setting_data = {};
 		$.each(advance_setting_field, function () {
-			advance_setting_data[ $(this).attr('data-advance-field') ] = get_ur_data($(this));
+			advance_setting_data[$(this).attr('data-advance-field')] = get_ur_data($(this));
 		});
 		return advance_setting_data;
 	}
 
-	function get_ur_data ( $this_node ) {
+	function get_ur_data($this_node) {
 		var node_type = $this_node.get(0).tagName.toLowerCase();
 		var value = '';
-		switch ( node_type ) {
+		switch (node_type) {
 			case 'input':
 				value = $this_node.val();
 				break;
@@ -695,11 +695,11 @@ jQuery(function ( $ ) {
 		return value;
 	}
 
-	function init_events () {
+	function init_events() {
 		var general_setting = $('.ur-general-setting-field');
 		$.each(general_setting, function () {
 			var $this_obj = $(this);
-			switch ( $this_obj.attr('data-field') ) {
+			switch ($this_obj.attr('data-field')) {
 				case 'label':
 					$this_obj.on('keyup', function () {
 						trigger_general_setting_label($(this));
@@ -739,7 +739,7 @@ jQuery(function ( $ ) {
 			var $this_node = $(this);
 			var node_type = $this_node.get(0).tagName.toLowerCase();
 			var event = 'change';
-			switch ( node_type ) {
+			switch (node_type) {
 				case 'input':
 					event = 'keyup';
 					break;
@@ -761,11 +761,11 @@ jQuery(function ( $ ) {
 		});
 	}
 
-	function trigger_advance_setting ( $this_node, node_type ) {
+	function trigger_advance_setting($this_node, node_type) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var this_node_id = $this_node.attr('data-id');
-		var hidden_node = wrapper.find('.ur-advance-setting-block').find('[data-id="'+this_node_id+'"]');
- 		switch ( node_type ) {
+		var hidden_node = wrapper.find('.ur-advance-setting-block').find('[data-id="' + this_node_id + '"]');
+		switch (node_type) {
 			case 'input':
 				hidden_node.val($this_node.val());
 				break;
@@ -779,10 +779,10 @@ jQuery(function ( $ ) {
 		}
 	}
 
-	function  render_text_area (value) {
+	function render_text_area(value) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
-		var field_type  = wrapper.find('.ur-field');
-		switch ( field_type.attr('data-field-key') ) {
+		var field_type = wrapper.find('.ur-field');
+		switch (field_type.attr('data-field-key')) {
 			case 'select':
 				render_select_box(value);
 				break;
@@ -794,49 +794,49 @@ jQuery(function ( $ ) {
 				break;
 		}
 	}
-	function render_check_box ( value ) {
+	function render_check_box(value) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var checkbox = wrapper.find('.ur-field');
 		checkbox.html('');
 		var array_value = value.split(',');
-		for ( var i = 0; i < array_value.length; i++ ) {
-			if ( array_value[ i ] !== '' ) {
-				checkbox.append('<label><input value="' + array_value[ i ].trim() + '" type="checkbox">' + array_value[ i ].trim() +'</label>' );
+		for (var i = 0; i < array_value.length; i++) {
+			if (array_value[i] !== '') {
+				checkbox.append('<label><input value="' + array_value[i].trim() + '" type="checkbox">' + array_value[i].trim() + '</label>');
 			}
 		}
 	}
-	function render_radio ( value ) {
+	function render_radio(value) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var radio = wrapper.find('.ur-field');
 		radio.html('');
 		var array_value = value.split(',');
-		for ( var i = 0; i < array_value.length; i++ ) {
-			if ( array_value[ i ] !== '' ) {
-				radio.append('<label><input value="' + array_value[ i ].trim() + '" type="radio">' + array_value[ i ].trim() +'</label>' );
+		for (var i = 0; i < array_value.length; i++) {
+			if (array_value[i] !== '') {
+				radio.append('<label><input value="' + array_value[i].trim() + '" type="radio">' + array_value[i].trim() + '</label>');
 			}
 		}
 	}
-	function render_select_box ( value ) {
+	function render_select_box(value) {
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var select = wrapper.find('.ur-field').find('select');
 		select.html('');
 		var array_value = value.split(',');
-		for ( var i = 0; i < array_value.length; i++ ) {
-			if ( array_value[ i ] !== '' ) {
-				select.append('<option value=\'' + array_value[ i ] + '\'>' + array_value[ i ].trim() + '</option>');
+		for (var i = 0; i < array_value.length; i++) {
+			if (array_value[i] !== '') {
+				select.append('<option value=\'' + array_value[i] + '\'>' + array_value[i].trim() + '</option>');
 			}
 		}
 	}
 
-	function trigger_general_setting_field_name ( $label ) {
+	function trigger_general_setting_field_name($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
 	}
 
-	function trigger_general_setting_label ( $label ) {
+	function trigger_general_setting_label($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').text($label.val());
 
@@ -845,43 +845,43 @@ jQuery(function ( $ ) {
 
 	}
 
-	function trigger_general_setting_description ( $label ) {
+	function trigger_general_setting_description($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-field').find('textarea').attr('description', $label.val());
 		wrapper.find('.ur-general-setting-block').find('textarea[data-field="' + $label.attr('data-field') + '"]').val($label.val());
 	}
 
-	function trigger_general_setting_placeholder ( $label ) {
+	function trigger_general_setting_placeholder($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').val($label.val());
 	}
 
-	function trigger_general_setting_required ( $label ) {
+	function trigger_general_setting_required($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').find('span').remove();
-		if ( $label.val() === 'yes' ) {
+		if ($label.val() === 'yes') {
 			wrapper.find('.ur-label').find('label').append('<span style="color:red">*</span>');
 		}
 		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
 	}
 
-	function trigger_general_setting_hide_label ( $label ) {
+	function trigger_general_setting_hide_label($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').find('span').remove();
 		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
 	}
 
-	function manage_required_fields () {
+	function manage_required_fields() {
 		var required_fields = user_registration_admin_data.form_required_fields;
 
 		var selected_inputs = $('.ur-selected-inputs');
 
-		if ( $.isArray(required_fields) ) {
+		if ($.isArray(required_fields)) {
 
-			for ( var i = 0; i < required_fields.length; i++ ) {
+			for (var i = 0; i < required_fields.length; i++) {
 
-				var field_node = selected_inputs.find('.ur-field[data-field-key="' + required_fields[ i ] + '"]');
+				var field_node = selected_inputs.find('.ur-field[data-field-key="' + required_fields[i] + '"]');
 
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').val('yes').trigger('change');
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').find('option[value="yes"]').attr('selected', 'selected');
@@ -896,7 +896,7 @@ jQuery(function ( $ ) {
 		label_node.append('<span style="color:red">*</span>');
 	}
 
-	function manage_draggable_users_fields () {
+	function manage_draggable_users_fields() {
 
 		var single_draggable_fields = user_registration_admin_data.form_one_time_draggable_fields;
 
@@ -908,9 +908,9 @@ jQuery(function ( $ ) {
 
 			var data_field_id = $(this).attr('data-field-id').replace('user_registration_', '');
 
-			if ( $.inArray(data_field_id, single_draggable_fields) >= 0 ) {
+			if ($.inArray(data_field_id, single_draggable_fields) >= 0) {
 
-				if ( $('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_id + '"]').length > 0 ) {
+				if ($('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_id + '"]').length > 0) {
 
 
 					$this.draggable('disable');
@@ -923,53 +923,63 @@ jQuery(function ( $ ) {
 		});
 	}
 
-	function manage_conditional_field_options( populated_item ) {
+	function manage_conditional_field_options(populated_item) {
 
-		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each( function(){
-		 	var field_label = jQuery(this).find('.ur-label label').text();
-		 	var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
+		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each(function () {
+			var field_label = jQuery(this).find('.ur-label label').text();
+			var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
 
-		 	//strip certain fields
-			if( 'section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key ) {
+			//strip certain fields
+			if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
 				return;
 			}
 
-		 	var general_setting =  jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-		 	general_setting.each( function() {
-		 		var field_name = jQuery(this).find("[data-field='field_name']").val();
-		 		if( typeof field_name !== 'undefined') {
+			var general_setting = jQuery(this).find('.ur-general-setting-block .ur-general-setting');
+			general_setting.each(function () {
+				var field_name = jQuery(this).find("[data-field='field_name']").val();
+				if (typeof field_name !== 'undefined') {
 
-		 			//check if option exist in the given select
-		 			var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +field_name+ "']").length > 0;
-		 			if (! select_value == true ) {
-		 				jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="'+ field_name +'" data-type="' + field_key + '">'+field_label+' </option>');
-		 				if( field_name == populated_item ) {
-		 					jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="'+ populated_item + '"]').remove();
-		 				}
-		 			} else {
-		 				jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="'+ field_name +'" data-type="'+ field_key + '">'+field_label+' </option>');
-		 			}
-		 		}
-		 	});
+					//check if option exist in the given select
+					var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
+					if (!select_value == true) {
+						jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						if (field_name == populated_item) {
+							jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
+						}
+					} else {
+						jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					}
+				}
+			});
 		});
-		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass( 'empty-fields');
+		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
 	}
 
-	function ur_math_ceil ( value ) {
+	function ur_math_ceil(value) {
 		return Math.ceil(value, 0);
 	}
 
-	function ur_parse_int ( value ) {
+	function ur_parse_int(value) {
 		return parseInt(value, 0);
 	}
 
-	setTimeout( function(){
+	setTimeout(function () {
 		var date_selector = $('#profile-page form#your-profile  input[type="date"]');
-		if ( date_selector.length > 0 ) {
-			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr( {
+		if (date_selector.length > 0) {
+			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr({
 				disableMobile: true
-			} );
+			});
 		}
-	}, 2 );
+	}, 2);
+
+	$(document).on('click', '#ur-tab-registered-fields h2', function () {
+		if ($(this).hasClass('closed')) {
+			$(this).removeClass('closed');
+		} else {
+			$(this).addClass('closed');
+		}
+		var field_list = $(this).find(' ~ .ur-registered-list')[0];
+		$(field_list).slideToggle();
+	});
 
 }(jQuery, window.user_registration_admin_data));

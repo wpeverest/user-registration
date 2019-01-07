@@ -1301,3 +1301,30 @@ img.tips {
 #profile-page form#your-profile .flatpickr-input[readonly]{
 	background-color:#fff
 }
+
+#ur-tab-registered-fields {
+	h2{
+		cursor: pointer;
+		&:hover, &:focus{
+			// box-shadow: 0 0 20px rgba(0,0,0,.2);
+
+		}
+		&:before {
+			content: '\f142';
+			cursor: pointer;
+			display: block;
+			font: 400 20px/1 Dashicons;
+			line-height: .5!important;
+			padding: 4px;
+			position: relative;
+			right: 0;
+			top: 0;
+			float: right;
+		}
+		&.closed{
+			&:before {
+				content: '\f140'!important;
+			}
+		}
+	}
+}
