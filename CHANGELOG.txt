@@ -1,3 +1,8 @@
+= 1.5.5 - 07/01/2018 =
+* Fix - Data display for input fields on users profile
+* Tweak - Disable input fields on builder panel
+* Tweak - Beautify accordion on fields section
+
 = 1.5.4 - 02/01/2018 =
 * Fix - Smart tag for reset password email
 * Fix - Date field in user profile
@@ -24,7 +29,7 @@
 * Fix - Required field naming readability on backend form submit
 * Fix - Translated error message issue on form submit
 * Fix - CSV export issue due to already sent headers
-* Tweak - Display (previously hidden) Option to insert myaccount page on settings 
+* Tweak - Display (previously hidden) Option to insert myaccount page on settings
 * Tweak - Remove applied filter to change lost password url on admin side
 * Tweak - Redirect option from myaccount shortcode too
 
@@ -140,7 +145,7 @@
 * Fix - Console errors in the backend
 
 = 1.2.3 - 06/04/2018 =
-* Fix - undefined index error in frontend 
+* Fix - undefined index error in frontend
 
 = 1.2.2 - 06/04/2018 =
 * Feature - Registration without username option
@@ -212,21 +217,21 @@
 * Feature - Redirect URL
 * Feature - Number and date field added
 * Feature -  logger added
-* Feature - Formwise template 
+* Feature - Formwise template
 * Fix - Frontend form javascript validation issue fixed
 * Fix - My account tab issue fixed
 * Deprecated -  Administrator from prevent dashboard access
 * Added some filter and action hooks
 
 = 1.0.4 - 31/08/2017 =
-* Admin approval after registration feature  
-* Added new filter and action hooks for addon 
+* Admin approval after registration feature
+* Added new filter and action hooks for addon
 * Fixed frontpage registration form issue
 * Anyone can register issue fixed
 
 = 1.0.3 - 21/08/2017 =
-* Form duplicate option 
-* Auto login after registration feature 
+* Form duplicate option
+* Auto login after registration feature
 * Added some filter for addon
 
 = 1.0.2 - 04/08/2017 =

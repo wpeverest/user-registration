@@ -1,14 +1,14 @@
-# Copyright (C) 2018 WPEverest
+# Copyright (C) 2019 WPEverest
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.5.3\n"
+"Project-Id-Version: User Registration 1.5.5\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2018-12-07 09:29:18+00:00\n"
+"POT-Creation-Date: 2019-01-07 05:19:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n1.0.1\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "Advance Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:126
+#: includes/admin/class-ur-admin-assets.php:136
 msgid "Could not install."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:193
+#: includes/admin/class-ur-admin-assets.php:208
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:193
+#: includes/admin/class-ur-admin-assets.php:208
 #: includes/admin/class-ur-admin-registrations-table-list.php:112
 msgid "Trash"
 msgstr ""
@@ -292,7 +292,7 @@ msgstr ""
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:537
+#: includes/admin/class-ur-admin-settings.php:543
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -795,11 +795,11 @@ msgstr ""
 msgid "Get site key from google %1$s reCaptcha %2$s."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:62
+#: includes/admin/settings/class-ur-settings-integration.php:63
 msgid "Secret Key"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:63
+#: includes/admin/settings/class-ur-settings-integration.php:64
 msgid "Get secret key from google %1$s reCaptcha %2$s."
 msgstr ""
 
@@ -868,7 +868,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:68
-#: includes/class-ur-emailer.php:256
+#: includes/class-ur-emailer.php:257
 msgid "A New User Registered"
 msgstr ""
 
@@ -926,7 +926,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:59
-#: includes/class-ur-emailer.php:197
+#: includes/class-ur-emailer.php:198
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -954,7 +954,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
-#: includes/class-ur-emailer.php:185
+#: includes/class-ur-emailer.php:186
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:59
-#: includes/class-ur-emailer.php:334
+#: includes/class-ur-emailer.php:335
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1019,7 +1019,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:59
-#: includes/class-ur-emailer.php:211 includes/class-ur-emailer.php:321
+#: includes/class-ur-emailer.php:212 includes/class-ur-emailer.php:322
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -1049,7 +1049,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:59
-#: includes/class-ur-emailer.php:308
+#: includes/class-ur-emailer.php:309
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -1081,7 +1081,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:57
-#: includes/class-ur-emailer.php:365
+#: includes/class-ur-emailer.php:369
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -1115,7 +1115,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:59
-#: includes/class-ur-emailer.php:223
+#: includes/class-ur-emailer.php:224
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -1202,7 +1202,7 @@ msgstr ""
 msgid "Default User Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:70
+#: includes/admin/views/html-admin-page-forms.php:71
 msgid "Extra Fields"
 msgstr ""
 
@@ -1400,7 +1400,7 @@ msgid ""
 "email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:125
+#: includes/class-ur-emailer.php:126
 msgid "Chosen Password"
 msgstr ""
 
@@ -1854,6 +1854,12 @@ msgstr ""
 
 #: includes/class-ur-user-approval.php:184
 msgid "Your account has been denied."
+msgstr ""
+
+#: includes/class-ur-user-approval.php:254
+msgid ""
+"Your account is still awaiting admin approval. Reset Password is not "
+"allowed."
 msgstr ""
 
 #: includes/form/class-ur-form-field-checkbox.php:35
@@ -3040,23 +3046,23 @@ msgstr ""
 msgid "Default Value"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:90
+#: includes/frontend/class-ur-frontend-form-handler.php:96
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:148
+#: includes/frontend/class-ur-frontend-form-handler.php:154
 msgid "Duplicate field key in form, please contact site administrator."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:154
+#: includes/frontend/class-ur-frontend-form-handler.php:160
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:301
+#: includes/frontend/class-ur-frontend-form-handler.php:309
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:303
+#: includes/frontend/class-ur-frontend-form-handler.php:311
 msgid "Password and confirm password not matched"
 msgstr ""
 
@@ -3312,144 +3318,144 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:109
+#: includes/admin/class-ur-admin-assets.php:119
 msgctxt "enhanced select"
 msgid "No matches found"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:110
+#: includes/admin/class-ur-admin-assets.php:120
 msgctxt "enhanced select"
 msgid "Loading failed"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:111
+#: includes/admin/class-ur-admin-assets.php:121
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:112
+#: includes/admin/class-ur-admin-assets.php:122
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:113
+#: includes/admin/class-ur-admin-assets.php:123
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:114
+#: includes/admin/class-ur-admin-assets.php:124
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:115
+#: includes/admin/class-ur-admin-assets.php:125
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:116
+#: includes/admin/class-ur-admin-assets.php:126
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:117
+#: includes/admin/class-ur-admin-assets.php:127
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:118
+#: includes/admin/class-ur-admin-assets.php:128
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:213
+#: includes/admin/class-ur-admin-assets.php:228
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:214
+#: includes/admin/class-ur-admin-assets.php:229
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:215
+#: includes/admin/class-ur-admin-assets.php:230
 msgctxt "user registration admin"
 msgid "Are you sure want to delete?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:216
+#: includes/admin/class-ur-admin-assets.php:231
 msgctxt "user registration admin"
 msgid "At least one row needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:217
+#: includes/admin/class-ur-admin-assets.php:232
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:218
+#: includes/admin/class-ur-admin-assets.php:233
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:219
+#: includes/admin/class-ur-admin-assets.php:234
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:220
+#: includes/admin/class-ur-admin-assets.php:235
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:221
+#: includes/admin/class-ur-admin-assets.php:236
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:222
+#: includes/admin/class-ur-admin-assets.php:237
 msgctxt "user registration admin"
 msgid "At least one field needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:223
+#: includes/admin/class-ur-admin-assets.php:238
 msgctxt "user registration admin"
 msgid "Empty form name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:224
+#: includes/admin/class-ur-admin-assets.php:239
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:225
+#: includes/admin/class-ur-admin-assets.php:240
 msgctxt "user registration admin"
 msgid "Duplicate field name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:226
+#: includes/admin/class-ur-admin-assets.php:241
 msgctxt "user registration admin"
 msgid "Empty field label."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:227
+#: includes/admin/class-ur-admin-assets.php:242
 msgctxt "user registration admin"
 msgid ""
 "Invalid field name. Please do not use space, empty or special character, "
 "you can use underscore."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:228
+#: includes/admin/class-ur-admin-assets.php:243
 msgctxt "user registration admin"
 msgid "Multiple field key "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:229
+#: includes/admin/class-ur-admin-assets.php:244
 msgctxt "user registration admin"
 msgid "field is required."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:230
+#: includes/admin/class-ur-admin-assets.php:245
 msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
