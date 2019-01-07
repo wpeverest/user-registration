@@ -1103,25 +1103,27 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 			if( $recaptcha_version == 'v3' ){
 				wp_enqueue_script( 'ur-google-recaptcha-v3' );
 				wp_localize_script( 'ur-google-recaptcha-v3', 'ur_google_recaptcha_code', array(
-					'site_key' => $recaptcha_site_key,
-					'site_secret' => $recaptcha_site_secret,
+					'site_key' 			=> $recaptcha_site_key,
+					'site_secret' 		=> $recaptcha_site_secret,
 					'is_captcha_enable' => true,
+					'version'			=> 'v3',
 				) );
 			}else{
 				wp_enqueue_script( 'ur-google-recaptcha' );
 				wp_localize_script( 'ur-google-recaptcha', 'ur_google_recaptcha_code', array(
-					'site_key' => $recaptcha_site_key,
-					'site_secret' => $recaptcha_site_secret,
+					'site_key' 			=> $recaptcha_site_key,
+					'site_secret' 		=> $recaptcha_site_secret,
 					'is_captcha_enable' => true,
+					'version'			=> 'v2',
 				) );
 			}
 		    $rc_counter++;
 		}
 		if( $recaptcha_version == 'v3' ){
 			if( $context === 'login' ) {
-				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3"></div>';
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
 			} elseif ( $context === 'register' ){
-				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3"></div>';
+				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
 			} else {
 				$recaptcha_node = '';
 			}

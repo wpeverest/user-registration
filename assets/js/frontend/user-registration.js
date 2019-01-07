@@ -354,7 +354,11 @@
 
 									return;
 								}
-								grecaptcha.reset();
+								if (ur_google_recaptcha_code.version == 'v3') {
+									request_recaptcha_token();
+								} else {
+									grecaptcha.reset();
+								}
 							}
 						}
 
@@ -457,23 +461,7 @@
 	});
 
 	$(function () {
-		var node_recaptcha_register = jQuery('.ur-frontend-form').find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
-		if (node_recaptcha_register !== 0) {
-			grecaptcha.ready(function () {
-				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
-					alert(token);
-				});
-			});
-		}
-
-		var node_recaptcha_login = jQuery('.ur-frontend-form').find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
-		if (node_recaptcha_login !== 0) {
-			grecaptcha.ready(function () {
-				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
-					alert(token);
-				});
-			});
-		}
+		request_recaptcha_token();
 	});
 }(jQuery));
 
@@ -497,6 +485,25 @@ var onloadURCallback = function () {
 			'sitekey': ur_google_recaptcha_code.site_key,
 			'theme': 'light',
 			'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
+		});
+	}
+};
+
+function request_recaptcha_token() {
+	var node_recaptcha_register = jQuery('.ur-frontend-form').find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
+	if (node_recaptcha_register !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
+				jQuery('form.register').find('#g-recaptcha-response').text(token);
+			});
+		});
+	}
+	var node_recaptcha_login = jQuery('.ur-frontend-form').find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
+	if (node_recaptcha_login !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
+				jQuery('form.login').find('#g-recaptcha-response').text(token);
+			});
 		});
 	}
 };
