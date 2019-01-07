@@ -394,7 +394,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$fields[ $field_index ] = array(
 									'label'       => $field_label,
 									'description' => $field_description,
-									'type'		  => $field_key,
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
@@ -402,7 +401,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$fields[ $field_index ] = array(
 									'label'       => $field_label,
 									'description' => $field_description,
-									'type'		  => $field_key,
 								);
 							}
 							switch ( $field_key ) {
@@ -446,14 +444,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'mailchimp':
 								case 'checkbox':
 									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
-
 									$choices_data = explode( ",", $choices_data );
+									$fields[ $field_index ]['choices'] 	= $choices_data;
+									$fields[ $field_index ]['type']  	= 'checkbox';
+									$fields[ $field_index ]['class'] 	= '';
+									break;
 
-									$fields[ $field_index ]['choices'] = $choices_data;
-
-									$fields[ $field_index ]['type']  = 'checkbox';
-									$fields[ $field_index ]['class'] = '';
-
+								case 'date':
+									$fields[ $field_index ]['type'] = 'date';
 									break;
 
 								case 'privacy_policy':
