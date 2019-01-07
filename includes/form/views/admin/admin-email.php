@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="email">
-		<input type="email" id="ur-input-type-email"/>
+		<input type="email" id="ur-input-type-email" disabled/>
 	</div>
 
 	<?php

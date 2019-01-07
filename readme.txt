@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,6 +111,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.5.5 - 07/01/2018 =
+* Fix - Data display for input fields on users profile
+* Tweak - Disable input fields on builder panel
+* Tweak - Beautify accordion on fields section
+
 = 1.5.4 - 02/01/2018 =
 * Fix - Smart tag for reset password email
 * Fix - Date field in user profile
@@ -151,47 +156,5 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Email header including line break
 * Fix - Load FlatPickr on mobile devices too
 * Fix - File link to the email using smart tag
-
-= 1.4.9 - 11/10/2018 =
-* Fix - Escape attributes on conditional rules
-
-= 1.4.8 - 09/10/2018 =
-* Fix - Default reCaptcha checked on login settings
-* Fix - Deactivation notice on certain conditions
-* Fix - Multiselect support on form settings
-* Tweak - Formwise settings save format
-
-= 1.4.7 - 20/09/2018 =
-* Feature - Google reCaptcha on login form
-* Feature - Templates for login form
-* Feature - Enable/Disable remember me and lost password
-* Add - Filter to process smart tags
-* Tweak - Move login related settings from general to login options
-
-
-= 1.4.6 - 31/08/2018 =
-* Fix - Remove filter to avoid plugin conflict while sending emails
-* Fix - Load assests correctly
-* Fix - Remove backend required valiation if the field is hidden by condition
-
-= 1.4.5 - 20/08/2018 =
-* Fix - Load user registration assets on login page.
-* Tweak - Form settings UI
-* Tweak - Hide other admin notices on builder panel
-
-= 1.4.4 - 10/08/2018 =
-* Add - Hook to filter form settings
-* Add - Hook to filter success params after registration
-* Add - Action hook after user extra information on admin profile
-* Add - Input mask saving option
-* Fix - Conditionally load assets only on user registration pages
-* Fix - Fatal error while resending token
-* Fix - Tooltip on checkboxes
-* Fix - Error message during form submission
-* Fix - Send emails depending on different login options
-* Fix - Privacy Policy on profile details tab
-* Fix - Reset WooCommerce state value
-* Fix - Allow target attribute in description to add link
-
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
