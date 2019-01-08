@@ -1087,7 +1087,7 @@ function ur_get_user_login_option() {
 function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	$recaptcha_version		= get_option( 'user_registration_integration_setting_recaptcha_version' );
-	$recaptcha_site_key 	= 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+	$recaptcha_site_key 	= 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 	$recaptcha_site_secret  = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 	static $rc_counter = 0;
@@ -1101,13 +1101,21 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				'site_key' 			=> $recaptcha_site_key,
 				'site_secret' 		=> $recaptcha_site_secret,
 				'is_captcha_enable' => true,
-				'version'			=> 'v3',
+				'version'			=> $recaptcha_version,
 			) );
 
 		    $rc_counter++;
 		}
 
-		if( $recaptcha_version !== 'v3' ) {
+		if( $recaptcha_version == 'v3' ) {
+			if( $context === 'login' ) {
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
+			} elseif ( $context === 'register' ) {
+				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
+			} else {
+				$recaptcha_node = '';
+			}
+		} else {
 
 			if( $context === 'login' ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';

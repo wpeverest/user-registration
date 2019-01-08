@@ -275,9 +275,9 @@ class UR_Form_Handler {
 						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
 							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' .  __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
-						} else {
-							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
-						}
+					} else {
+						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
+					}
 				}
 
 				if ( $validation_error->get_error_code() ) {

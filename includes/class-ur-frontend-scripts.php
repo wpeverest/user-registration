@@ -172,9 +172,9 @@ class UR_Frontend_Scripts {
 	 * Register all UR scripts.
 	 */
 	private static function register_scripts() {
-		$suffix           		= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix					= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$recaptcha_site_key_v3 	= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
-		$register_scripts = array(
+		$register_scripts 		= array(
 			'ur-inputmask'       => array(
 				'src'     => self::get_asset_url( 'assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
