@@ -66,30 +66,19 @@ class UR_AJAX {
 		$flag 	           = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
-		$secret_key		   = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-		$secret_key_v3	   = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		$secret_key		   = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
-				if( $recaptcha_version == 'v3' ) {
-					$args  = array(
-						'body'	=>	array(
-							'secret'	=> $secret_key_v3,
-							'response'	=> $captcha_response,
-						),
-					);
-					$data  = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', $args);
-					$data  = json_decode( wp_remote_retrieve_body( $data ) );
-				} else {
-					$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data  = json_decode( wp_remote_retrieve_body( $data ) );
-				}
 
-				if ( empty( $data->success ) && apply_filters( 'user_registration_google_recaptcha_v3_threshold', 0.5 ) < $data->score ) {
+				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+				$data  = json_decode( wp_remote_retrieve_body( $data ) );
+
+				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) {
 					wp_send_json_error( array(
 						'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
 					) );
-						}
+				}
 			} else {
 				wp_send_json_error( array(
 					'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
