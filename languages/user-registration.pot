@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.5.5\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-01-07 07:03:19+00:00\n"
+"POT-Creation-Date: 2019-01-08 09:02:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -579,7 +579,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:215
-#: includes/class-ur-frontend-scripts.php:322
+#: includes/class-ur-frontend-scripts.php:327
 msgid "User successfully registered."
 msgstr ""
 
@@ -595,7 +595,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:225
-#: includes/class-ur-frontend-scripts.php:324
+#: includes/class-ur-frontend-scripts.php:329
 msgid ""
 "User registered. Verify your email by clicking on the link sent to your "
 "email."
@@ -613,7 +613,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:235
-#: includes/class-ur-frontend-scripts.php:323
+#: includes/class-ur-frontend-scripts.php:328
 msgid "User registered. Wait until admin approves your registration."
 msgstr ""
 
@@ -631,7 +631,7 @@ msgid "Enter the error message in form submission on required fields."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:257
-#: includes/class-ur-frontend-scripts.php:316
+#: includes/class-ur-frontend-scripts.php:321
 msgid "This field is required."
 msgstr ""
 
@@ -640,7 +640,7 @@ msgid "Enter the error message in form submission on Email."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:267
-#: includes/class-ur-frontend-scripts.php:317
+#: includes/class-ur-frontend-scripts.php:322
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -653,7 +653,7 @@ msgid "Enter the error message in form submission on website/URL."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:277
-#: includes/class-ur-frontend-scripts.php:318
+#: includes/class-ur-frontend-scripts.php:323
 msgid "Please enter a valid URL."
 msgstr ""
 
@@ -668,7 +668,7 @@ msgid "Enter the error message in form submission on Number."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:287
-#: includes/class-ur-frontend-scripts.php:319
+#: includes/class-ur-frontend-scripts.php:324
 msgid "Please enter a valid number."
 msgstr ""
 
@@ -682,7 +682,7 @@ msgid "Enter the error message in form submission on Confim Password."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:297
-#: includes/class-ur-frontend-scripts.php:320
+#: includes/class-ur-frontend-scripts.php:325
 msgid "Password and confirm password not matched."
 msgstr ""
 
@@ -695,8 +695,8 @@ msgid "Enter the error message in form submission on google recaptcha."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:307
-#: includes/class-ur-ajax.php:82 includes/class-ur-form-handler.php:277
-#: includes/class-ur-frontend-scripts.php:325
+#: includes/class-ur-ajax.php:84 includes/class-ur-form-handler.php:279
+#: includes/class-ur-frontend-scripts.php:330
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -788,19 +788,37 @@ msgid "Google reCaptcha Integation"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:52
-msgid "Site Key"
+msgid "Version"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:53
+msgid "Select the google reCaptcha version"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-integration.php:65
+msgid "Site Key (v2)"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-integration.php:66
+#: includes/admin/settings/class-ur-settings-integration.php:87
 msgid "Get site key from google %1$s reCaptcha %2$s."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:63
-msgid "Secret Key"
+#: includes/admin/settings/class-ur-settings-integration.php:76
+msgid "Secret Key (v2)"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:64
+#: includes/admin/settings/class-ur-settings-integration.php:77
+#: includes/admin/settings/class-ur-settings-integration.php:98
 msgid "Get secret key from google %1$s reCaptcha %2$s."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-integration.php:86
+msgid "Site Key (v3)"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-integration.php:97
+msgid "Secret Key (v3)"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
@@ -1315,36 +1333,36 @@ msgstr ""
 msgid "Taking a while? Click here to run it now."
 msgstr ""
 
-#: includes/class-ur-ajax.php:77 includes/class-ur-form-handler.php:274
+#: includes/class-ur-ajax.php:79 includes/class-ur-form-handler.php:276
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:89
+#: includes/class-ur-ajax.php:91
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:99 includes/class-ur-shortcodes.php:107
+#: includes/class-ur-ajax.php:101 includes/class-ur-shortcodes.php:107
 msgid "Only administrators can add new users."
 msgstr ""
 
-#: includes/class-ur-ajax.php:115 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:117 includes/class-ur-shortcodes.php:121
 msgid "You are currently logged in as %1s. %2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:115 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:117 includes/class-ur-shortcodes.php:121
 msgid "Log out of this account."
 msgstr ""
 
-#: includes/class-ur-ajax.php:115 includes/class-ur-shortcodes.php:121
+#: includes/class-ur-ajax.php:117 includes/class-ur-shortcodes.php:121
 #: includes/functions-ur-account.php:89
 msgid "Logout"
 msgstr ""
 
-#: includes/class-ur-ajax.php:176 includes/class-ur-ajax.php:182
+#: includes/class-ur-ajax.php:178 includes/class-ur-ajax.php:184
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:197
+#: includes/class-ur-ajax.php:199
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
@@ -1373,11 +1391,11 @@ msgid "User doesnot exist!"
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:329
-#: includes/class-ur-form-handler.php:274
-#: includes/class-ur-form-handler.php:277
-#: includes/class-ur-form-handler.php:282
-#: includes/class-ur-form-handler.php:286
-#: includes/class-ur-form-handler.php:295
+#: includes/class-ur-form-handler.php:276
+#: includes/class-ur-form-handler.php:279
+#: includes/class-ur-form-handler.php:284
+#: includes/class-ur-form-handler.php:288
+#: includes/class-ur-form-handler.php:297
 #: includes/class-ur-user-approval.php:179
 #: includes/class-ur-user-approval.php:184 includes/functions-ur-account.php:32
 #: includes/functions-ur-account.php:35
@@ -1456,51 +1474,51 @@ msgstr ""
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:286
+#: includes/class-ur-form-handler.php:288
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:295
+#: includes/class-ur-form-handler.php:297
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:385
+#: includes/class-ur-form-handler.php:387
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:389
+#: includes/class-ur-form-handler.php:391
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:333
+#: includes/class-ur-frontend-scripts.php:338
 msgid "Please enter a stronger password."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:335
+#: includes/class-ur-frontend-scripts.php:340
 #: includes/functions-ur-core.php:717
 msgid "Very Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:336
+#: includes/class-ur-frontend-scripts.php:341
 #: includes/functions-ur-core.php:718
 msgid "Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:337
+#: includes/class-ur-frontend-scripts.php:342
 #: includes/functions-ur-core.php:719
 msgid "Medium"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:338
+#: includes/class-ur-frontend-scripts.php:343
 #: includes/functions-ur-core.php:720
 msgid "Strong"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:339
+#: includes/class-ur-frontend-scripts.php:344
 msgid "Password with confirm password not matched."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:342
+#: includes/class-ur-frontend-scripts.php:347
 msgid ""
 "Hint: To make password stronger, use upper and lower case letters, numbers, "
 "and symbols like ! \" ? $ % ^ & )."

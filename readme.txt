@@ -35,7 +35,7 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Multiple Column Design
 * Multiple Form template designs
 * Shortcode Support
-* Google Recaptcha Support
+* Google reCaptcha Support (v2 and v3)
 * Email notifications
 * Email Customizers
 * Form Duplicate Option
@@ -111,7 +111,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.5 - 07/01/2018 =
+= 1.5.5 - 08/01/2018 =
+* Feature - Google reCaptcha v3 support
 * Fix - Data display for input fields on users profile
 * Tweak - Disable input fields on builder panel
 * Tweak - Beautify accordion on fields section
