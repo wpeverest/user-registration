@@ -84,8 +84,8 @@ class UR_AJAX {
 					$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data  = json_decode( wp_remote_retrieve_body( $data ) );
 				}
-				
-				if ( empty( $data->success ) && apply_filter( 'user_registration_google_recaptcha_v3_threshold', 0.5 ) < $data->score ) {
+
+				if ( empty( $data->success ) && apply_filters( 'user_registration_google_recaptcha_v3_threshold', 0.5 ) < $data->score ) {
 					wp_send_json_error( array(
 						'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
 					) );
