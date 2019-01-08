@@ -173,7 +173,7 @@ class UR_Frontend_Scripts {
 	 */
 	private static function register_scripts() {
 		$suffix           		= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$recaptcha_site_key 	= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+		$recaptcha_site_key_v3 	= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 		$register_scripts = array(
 			'ur-inputmask'       => array(
 				'src'     => self::get_asset_url( 'assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
@@ -211,7 +211,7 @@ class UR_Frontend_Scripts {
 				'version' => '2.0.0',
 			),
 			'ur-google-recaptcha-v3'        => array(
-				'src'     => 'https://www.google.com/recaptcha/api.js?render='.$recaptcha_site_key,
+				'src'     => 'https://www.google.com/recaptcha/api.js?render='.$recaptcha_site_key_v3,
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
