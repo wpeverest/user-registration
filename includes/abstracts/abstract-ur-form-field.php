@@ -73,7 +73,6 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-
 		$this->form_id = $form_id;
 
 		$form_data = (array) $data['general_setting'];
@@ -141,6 +140,11 @@ abstract class UR_Form_Field {
 					$form_data['choices'][ $choice ] = $choice;
 				}
 			}
+		}
+
+		if( 'privacy_policy' == $field_key ) {
+			$form_data['required'] = true;
+			$form_data['custom_attributes']['required'] = 'required';
 		}
 
 		$filter_data = array(
