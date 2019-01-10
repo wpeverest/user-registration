@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -19,12 +19,14 @@ class UR_Plugin_Updates {
 
 	/**
 	 * This is the header used by extensions to show requirements.
+	 *
 	 * @var string
 	 */
 	const VERSION_REQUIRED_HEADER = 'UR requires at least';
 
 	/**
 	 * This is the header used by extensions to show testing.
+	 *
 	 * @var string
 	 */
 	const VERSION_TESTED_HEADER = 'UR tested up to';

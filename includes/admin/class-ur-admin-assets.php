@@ -12,7 +12,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -40,7 +40,7 @@ class UR_Admin_Assets {
 
 		// Register admin styles
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
-		wp_register_style ( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
@@ -77,64 +77,87 @@ class UR_Admin_Assets {
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Register Scripts
-		wp_register_script( 'user-registration-admin', UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js', array(
-			'jquery',
-			'selectWoo',
-			'jquery-blockui',
-			'jquery-tiptip',
-			'jquery-ui-sortable',
-			'jquery-ui-widget',
-			'jquery-ui-core',
-			'jquery-ui-tabs',
-			'jquery-ui-draggable',
-			'jquery-ui-droppable',
-			'jquery-tiptip',
-			'ur-backbone-modal',
-			'ur-enhanced-select',
+		wp_register_script(
+			'user-registration-admin',
+			UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js',
+			array(
+				'jquery',
+				'selectWoo',
+				'jquery-blockui',
+				'jquery-tiptip',
+				'jquery-ui-sortable',
+				'jquery-ui-widget',
+				'jquery-ui-core',
+				'jquery-ui-tabs',
+				'jquery-ui-draggable',
+				'jquery-ui-droppable',
+				'jquery-tiptip',
+				'ur-backbone-modal',
+				'ur-enhanced-select',
 
-		), UR_VERSION );
+			),
+			UR_VERSION
+		);
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', UR()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
-		wp_register_script( 'ur-backbone-modal', UR()->plugin_url() . '/assets/js/admin/backbone-modal' . $suffix . '.js', array(
-			'underscore',
-			'backbone',
-			'wp-util',
-		), UR_VERSION );
+		wp_register_script(
+			'ur-backbone-modal',
+			UR()->plugin_url() . '/assets/js/admin/backbone-modal' . $suffix . '.js',
+			array(
+				'underscore',
+				'backbone',
+				'wp-util',
+			),
+			UR_VERSION
+		);
 
-		wp_register_script ( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
+		wp_register_script( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
-		wp_register_script( 'ur-enhanced-select', UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js', array(
-			'jquery',
-			'selectWoo',
-		), UR_VERSION );
+		wp_register_script(
+			'ur-enhanced-select',
+			UR()->plugin_url() . '/assets/js/admin/enhanced-select' . $suffix . '.js',
+			array(
+				'jquery',
+				'selectWoo',
+			),
+			UR_VERSION
+		);
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
 
 		if ( 'user-registration_page_add-new-registration' === $screen_id ) {
-			wp_enqueue_script( 'ur-copy' ,  UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
+			wp_enqueue_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
 		}
 
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 
-		wp_localize_script( 'ur-enhanced-select', 'ur_enhanced_select_params', array(
-			'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'user-registration' ),
-			'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'user-registration' ),
-			'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'user-registration' ),
-			'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'user-registration' ),
-			'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'user-registration' ),
-			'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'user-registration' ),
-			'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'user-registration' ),
-			'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'user-registration' ),
-			'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'user-registration' ),
-			'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'user-registration' ),
-		) );
+		wp_localize_script(
+			'ur-enhanced-select',
+			'ur_enhanced_select_params',
+			array(
+				'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'user-registration' ),
+				'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'user-registration' ),
+				'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'user-registration' ),
+				'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'user-registration' ),
+				'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'user-registration' ),
+				'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'user-registration' ),
+				'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'user-registration' ),
+				'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'user-registration' ),
+				'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'user-registration' ),
+				'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'user-registration' ),
+			)
+		);
 
 		if ( 'user-registration_page_user-registration-modules' === $screen_id ) {
 			wp_enqueue_style( 'user-registration-modules' );
 			wp_enqueue_script( 'user-registration-modules-script' );
-			wp_localize_script( 'user-registration-modules-script', 'user_registration_module_params', array(
-				'ajax_url'                => admin_url( 'admin-ajax.php' ),
-				'error_could_not_install' => __( 'Could not install.', 'user-registration' )
-			));
+			wp_localize_script(
+				'user-registration-modules-script',
+				'user_registration_module_params',
+				array(
+					'ajax_url'                => admin_url( 'admin-ajax.php' ),
+					'error_could_not_install' => __( 'Could not install.', 'user-registration' ),
+				)
+			);
 		}
 
 		// UserRegistration admin pages
@@ -225,24 +248,24 @@ class UR_Admin_Assets {
 	public static function get_i18n_admin_data() {
 
 		$i18n = array(
-			'i18n_user_email'										 => _x( 'User Email', 'user-registration admin', 'user-registration' ),
-			'i18n_user_password'									 => _x( 'User Password', 'user-registration admin', 'user-registration' ),
-			'i18n_are_you_sure_want_to_delete'                       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_row_need_to_select'                   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_user_required_field_already_there'                 => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
+			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
+			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete'       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_row_need_to_select'   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_user_required_field_already_there' => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
-			'i18n_form_successfully_saved'                           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
-			'i18n_success'                                           => _x( 'Success', 'user registration admin', 'user-registration' ),
-			'i18n_error'                                             => _x( 'Error', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_field_need_to_select'                 => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_empty_form_name'                                   => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
-			'i18n_previous_save_action_ongoing'                      => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
-			'i18n_duplicate_field_name'                              => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
-			'i18n_empty_field_label'                                 => _x( 'Empty field label.', 'user registration admin', 'user-registration' ),
-			'i18n_invald_field_name'                                 => _x( 'Invalid field name. Please do not use space, empty or special character, you can use underscore.', 'user registration admin', 'user-registration' ),
-			'i18n_multiple_field_key'                                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
-			'i18n_field_is_required'                    			 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
-			'i18n_drag_your_first_item_here'                         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
+			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
+			'i18n_success'                           => _x( 'Success', 'user registration admin', 'user-registration' ),
+			'i18n_error'                             => _x( 'Error', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_field_need_to_select' => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_empty_form_name'                   => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
+			'i18n_previous_save_action_ongoing'      => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
+			'i18n_duplicate_field_name'              => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
+			'i18n_empty_field_label'                 => _x( 'Empty field label.', 'user registration admin', 'user-registration' ),
+			'i18n_invald_field_name'                 => _x( 'Invalid field name. Please do not use space, empty or special character, you can use underscore.', 'user registration admin', 'user-registration' ),
+			'i18n_multiple_field_key'                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
+			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
+			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
 
 		);
 

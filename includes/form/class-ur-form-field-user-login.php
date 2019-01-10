@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -29,15 +29,15 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_user_login';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_user_login';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
-			'label' => __( 'Username','user-registration' ),
-			'icon' => 'dashicons dashicons-id',
+			'label' => __( 'Username', 'user-registration' ),
+			'icon'  => 'dashicons dashicons-id',
 		);
 
 		$this->field_defaults = array(
-			'default_label' => __( 'Username','user-registration' ),
+			'default_label' => __( 'Username', 'user-registration' ),
 		);
 	}
 
@@ -51,17 +51,23 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 		$username = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( username_exists( $username ) ) {
-			add_filter( $filter_hook, function ( $msg ) {
-				return __( 'Username already exists.', 'user-registration' );
-			} );
+			add_filter(
+				$filter_hook,
+				function ( $msg ) {
+					return __( 'Username already exists.', 'user-registration' );
+				}
+			);
 		}
 
 		$status = validate_username( $username );
 
 		if ( ! $status ) {
-			add_filter( $filter_hook, function ( $msg ) {
-				return __( 'Invalid username ! ', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) {
+					return __( 'Invalid username ! ', 'user-registration' );
+				}
+			);
 		}
 	}
 }

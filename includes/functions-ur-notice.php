@@ -143,10 +143,12 @@ function ur_print_notices() {
 	foreach ( $notice_types as $notice_type ) {
 		if ( ur_notice_count( $notice_type ) > 0 ) {
 
-
-			ur_get_template( "notices/{$notice_type}.php", array(
-				'messages' => array_filter( $all_notices[ $notice_type ] ),
-			) );
+			ur_get_template(
+				"notices/{$notice_type}.php",
+				array(
+					'messages' => array_filter( $all_notices[ $notice_type ] ),
+				)
+			);
 		}
 	}
 
@@ -166,9 +168,12 @@ function ur_print_notice( $message, $notice_type = 'success' ) {
 		$message = apply_filters( 'user_registration_add_message', $message );
 	}
 
-	ur_get_template( "notices/{$notice_type}.php", array(
-		'messages' => array( apply_filters( 'user_registration_add_' . $notice_type, $message ) ),
-	) );
+	ur_get_template(
+		"notices/{$notice_type}.php",
+		array(
+			'messages' => array( apply_filters( 'user_registration_add_' . $notice_type, $message ) ),
+		)
+	);
 }
 
 /**

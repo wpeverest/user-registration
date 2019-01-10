@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -21,7 +21,7 @@ class UR_Admin_Status {
 	 * Handles output of the reports page in admin.
 	 */
 	public static function output() {
-		include_once( dirname( __FILE__ ) . '/views/html-admin-page-status.php' );
+		include_once dirname( __FILE__ ) . '/views/html-admin-page-status.php';
 	}
 
 
@@ -51,12 +51,13 @@ class UR_Admin_Status {
 
 		$handle = ! empty( $viewed_log ) ? self::get_log_file_handle( $viewed_log ) : '';
 
-		include_once( 'views/html-admin-page-status-logs.php' );
+		include_once 'views/html-admin-page-status-logs.php';
 	}
 
 
 	/**
 	 * Retrieve metadata from a file. Based on WP Core's get_file_data function.
+	 *
 	 * @since  2.1.1
 	 *
 	 * @param  string $file Path to the file
@@ -117,7 +118,7 @@ class UR_Admin_Status {
 
 			foreach ( $files as $key => $value ) {
 
-				if ( ! in_array( $value, array( ".", ".." ) ) ) {
+				if ( ! in_array( $value, array( '.', '..' ) ) ) {
 
 					if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
 						$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
@@ -137,6 +138,7 @@ class UR_Admin_Status {
 
 	/**
 	 * Scan the log files.
+	 *
 	 * @return array
 	 */
 	public static function scan_log_files() {

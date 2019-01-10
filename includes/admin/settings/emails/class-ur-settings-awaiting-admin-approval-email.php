@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
@@ -19,7 +19,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
  */
 class UR_Settings_Awaiting_Admin_Approval_Email{
 
-	
+
 	public function __construct() {
 		$this->id             = 'awaiting_admin_approval_email';
 		$this->title          = __( 'Awaiting Admin Approval', 'user-registration' );
@@ -81,12 +81,12 @@ class UR_Settings_Awaiting_Admin_Approval_Email{
 	}
 
 	public function ur_get_awaiting_admin_approval_email() {
-		
+
 		$message = apply_filters( 'user_registration_get_awaiting_admin_approval_email',  sprintf( __(
 				'Hi {{username}},
 
  				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
- 				 
+
  				Please wait until the site admin approves your registration. You will be notified after it is approved.
 
  				Thank You!', 'user-registration' ) ) );

@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -104,7 +105,14 @@ class UR_Logger implements UR_Logger_Interface {
 	 */
 	public function add( $handle, $message, $level = UR_Log_Levels::NOTICE ) {
 		$message = apply_filters( 'user_registration_logger_add_message', $message, $handle );
-		$this->log( $level, $message, array( 'source' => $handle, '_legacy' => true ) );
+		$this->log(
+			$level,
+			$message,
+			array(
+				'source'  => $handle,
+				'_legacy' => true,
+			)
+		);
 
 		return true;
 	}

@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -51,7 +51,7 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Include admin template for each form fields
-	 * @param  array  $admin_data 
+	 * @param  array  $admin_data
 	 */
 	public function get_admin_template( $admin_data = array() ) {
 
@@ -85,7 +85,7 @@ abstract class UR_Form_Field {
 
 		if( isset( $data['general_setting']->required ) ) {
 
-			if ( in_array( $field_key, ur_get_required_fields() ) 
+			if ( in_array( $field_key, ur_get_required_fields() )
 				|| 'yes' === $data['general_setting']->required ) {
 
 				$form_data['required'] = true;
@@ -217,7 +217,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'radio':
-					if ( isset( $setting_value['options'] ) 
+					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
@@ -236,7 +236,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'select':
-					if ( isset( $setting_value['options'] ) 
+					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
 						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '">';

@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -29,14 +29,14 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_user_pass';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_user_pass';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Password ', 'user-registration' ),
-			'icon' => 'dashicons dashicons-lock',
+			'icon'  => 'dashicons dashicons-lock',
 		);
 
-		$this->field_defaults           = array(
+		$this->field_defaults = array(
 			'default_label' => __( 'User Password', 'user-registration' ),
 		);
 	}
@@ -51,9 +51,12 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		$password = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( empty( $password ) ) {
-			add_filter( $filter_hook, function ( $msg ) {
-				return __( 'Empty password.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) {
+					return __( 'Empty password.', 'user-registration' );
+				}
+			);
 		}
 	}
 

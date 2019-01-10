@@ -55,28 +55,31 @@ class UR_Frontend_Scripts {
 	 * @return array
 	 */
 	public static function get_styles() {
-		return apply_filters( 'user_registration_enqueue_styles', array(
-			'user-registration-general'     => array(
-				'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
-				'deps'    => '',
-				'version' => UR_VERSION,
-				'media'   => 'all',
-				'has_rtl' => true,
-			),
-			'user-registration-smallscreen' => array(
-				'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
-				'deps'    => '',
-				'version' => UR_VERSION,
-				'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
-				'has_rtl' => true,
-			),
-			'user-registration-my-account-layout' => array(
-				'src'		=> self::get_asset_url( 'assets/css/my-account-layout.css' ),
-				'deps'		=> '',
-				'version' 	=> UR_VERSION,
-				'media'		=> 'all',
+		return apply_filters(
+			'user_registration_enqueue_styles',
+			array(
+				'user-registration-general'           => array(
+					'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
+					'deps'    => '',
+					'version' => UR_VERSION,
+					'media'   => 'all',
+					'has_rtl' => true,
+				),
+				'user-registration-smallscreen'       => array(
+					'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
+					'deps'    => '',
+					'version' => UR_VERSION,
+					'media'   => 'only screen and (max-width: ' . apply_filters( 'user_registration_style_smallscreen_breakpoint', $breakpoint = '768px' ) . ')',
+					'has_rtl' => true,
+				),
+				'user-registration-my-account-layout' => array(
+					'src'     => self::get_asset_url( 'assets/css/my-account-layout.css' ),
+					'deps'    => '',
+					'version' => UR_VERSION,
+					'media'   => 'all',
+				),
 			)
-		) );
+		);
 	}
 
 	/**
@@ -172,27 +175,27 @@ class UR_Frontend_Scripts {
 	 * Register all UR scripts.
 	 */
 	private static function register_scripts() {
-		$suffix					= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$recaptcha_site_key_v3 	= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
-		$register_scripts 		= array(
-			'ur-inputmask'       => array(
+		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$recaptcha_site_key_v3 = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+		$register_scripts      = array(
+			'ur-inputmask'               => array(
 				'src'     => self::get_asset_url( 'assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => '4.0.0-beta.58',
 			),
-			'flatpickr' => array(
+			'flatpickr'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => '1.17.0',
 			),
-			'ur-jquery-validate' => array(
+			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => '1.15.1',
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
-				'deps'    => array( 'jquery','ur-jquery-validate', 'ur-inputmask' ),
+				'deps'    => array( 'jquery', 'ur-jquery-validate', 'ur-inputmask' ),
 				'version' => UR_VERSION,
 			),
 			'ur-lost-password'           => array(
@@ -210,8 +213,8 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '2.0.0',
 			),
-			'ur-google-recaptcha-v3'        => array(
-				'src'     => 'https://www.google.com/recaptcha/api.js?render='.$recaptcha_site_key_v3,
+			'ur-google-recaptcha-v3'     => array(
+				'src'     => 'https://www.google.com/recaptcha/api.js?render=' . $recaptcha_site_key_v3,
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
@@ -226,21 +229,21 @@ class UR_Frontend_Scripts {
 	 */
 	private static function register_styles() {
 		$register_styles = array(
-			'jquery-ui-css'     => array(
+			'jquery-ui-css' => array(
 				'src'     => self::get_asset_url( 'assets/css/jquery-ui/jquery-ui.css' ),
 				'deps'    => '',
 				'version' => '1.12.1',
 				'media'   => 'all',
 				'has_rtl' => false,
 			),
-			'flatpickr' => array(
+			'flatpickr'     => array(
 				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
 				'deps'    => array(),
 				'version' => '4.5.1',
-				'media'	  => 'all',
+				'media'   => 'all',
 				'has_rtl' => false,
 			),
-			'select2' => array(
+			'select2'       => array(
 				'src'     => self::get_asset_url( 'assets/css/select2.css' ),
 				'deps'    => array(),
 				'version' => UR_VERSION,
@@ -311,32 +314,32 @@ class UR_Frontend_Scripts {
 	private static function get_script_data( $handle ) {
 
 		switch ( $handle ) {
-			case 'user-registration' :
+			case 'user-registration':
 				return array(
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
 					'redirect_url'                     => get_option( 'user_registration_general_setting_redirect_options' ),
-					'login_option'					   => get_option( 'user_registration_general_setting_login_options' ),
+					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
-					'message_url_fields'			   => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration') ),
-					'message_number_fields'			   => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.','user-registration' ) ),
+					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),
+					'message_number_fields'            => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.', 'user-registration' ) ),
 					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
 					'ursL10n'                          => array(
-						'user_successfully_saved' 	=> get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
-						'user_under_approval' 		=> get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
-						'user_email_pending' 		=> get_option('user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
-						'captcha_error'             => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
+						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
+						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
+						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
 					),
 				);
 			break;
 
-			case 'ur-password-strength-meter' :
+			case 'ur-password-strength-meter':
 				return array(
-					'home_url'              => home_url(),
-					'i18n_password_error'   => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
-					'pwsL10n'               => array(
+					'home_url'            => home_url(),
+					'i18n_password_error' => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
+					'pwsL10n'             => array(
 						'shortpw'  => __( 'Very Weak', 'user-registration' ),
 						'bad'      => __( 'Weak', 'user-registration' ),
 						'good'     => __( 'Medium', 'user-registration' ),
@@ -344,7 +347,7 @@ class UR_Frontend_Scripts {
 						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'    => apply_filters( 'user_registration_strong_password_message' , __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
 		}

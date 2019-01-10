@@ -39,8 +39,10 @@ class UR_Post_Types {
 
 		do_action( 'user_registration_register_post_type' );
 
-		register_post_type( 'user_registration',
-			apply_filters( 'user_registration_post_type',
+		register_post_type(
+			'user_registration',
+			apply_filters(
+				'user_registration_post_type',
 				array(
 					'labels'              => array(
 						'name'               => __( 'Registrations', 'user-registration' ),

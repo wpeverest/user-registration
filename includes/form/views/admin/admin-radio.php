@@ -4,7 +4,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : array();
@@ -13,18 +13,18 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 <div class="ur-input-type-select ur-admin-template">
 
 	<div class="ur-label">
-		<label><?php echo esc_html($this->get_general_setting_data( 'label' )); ?></label>
+		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
 
 	<div class="ur-field" data-field-key="radio">
 			<?php
-				if( count( $options ) < 1 ) {
-					echo "<input type = 'radio'  value='1' disabled/>";
-				}
+			if ( count( $options ) < 1 ) {
+				echo "<input type = 'radio'  value='1' disabled/>";
+			}
 
-				foreach ( $options as $option ) {
-					echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' disabled/>" . esc_html( trim( $option ) ) . '<br>';
-				}
+			foreach ( $options as $option ) {
+				echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' disabled/>" . esc_html( trim( $option ) ) . '<br>';
+			}
 			?>
 	</div>
 

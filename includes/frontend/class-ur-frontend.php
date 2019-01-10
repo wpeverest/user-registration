@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -35,8 +35,8 @@ class UR_Frontend {
 	}
 
 	public function includes() {
-		include_once( UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php' );
- 	}
+		include_once UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php';
+	}
 
 	/**
 	 * Includes any classes we need within admin.
@@ -45,17 +45,18 @@ class UR_Frontend {
 
 		$class_name = ur_load_form_field_class( $field_object->field_key );
 
-		if( class_exists( $class_name ) ) {
-			$instance = $class_name::get_instance();
+		if ( class_exists( $class_name ) ) {
+			$instance                   = $class_name::get_instance();
 			$setting['general_setting'] = $field_object->general_setting;
 			$setting['advance_setting'] = $field_object->advance_setting;
-			$field_type = ur_get_field_type( $field_object->field_key );
+			$field_type                 = ur_get_field_type( $field_object->field_key );
 			$instance->frontend_includes( $setting, $form_id, $field_type, $field_object->field_key );
 		}
 	}
 
 	/**
 	 * My Account layouts(vertical/horizontal) by adding class.
+	 *
 	 * @param $attributes
 	 * @since  1.4.2
 	 * @return  $attributes
@@ -63,7 +64,7 @@ class UR_Frontend {
 	public function user_registration_my_account_layout( $attributes ) {
 
 		if ( is_user_logged_in() ) {
-			$layout            = get_option( 'user_registration_my_account_layout', 'horizontal' );
+			$layout              = get_option( 'user_registration_my_account_layout', 'horizontal' );
 			$attributes['class'] = $attributes['class'] . ' ' . $layout;
 		}
 		return $attributes;

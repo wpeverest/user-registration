@@ -23,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<p><?php
+<p>
+<?php
 	/* translators: 1: user display name 2: logout url */
 	printf(
 		__( 'Hello %1$s (not %1$s? <a href="%2$s">Sign out</a>)', 'user-registration' ),
@@ -31,15 +32,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 		esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) )
 	);
 
-?></p>
+	?>
+	</p>
 
-<p><?php
+<p>
+<?php
 	/* translators: 1 profile details url, 2: change password url */
 	printf(
-		__( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url('edit-profile') ),
+		__( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ),
+		esc_url( ur_get_endpoint_url( 'edit-profile' ) ),
 		esc_url( ur_get_endpoint_url( 'edit-password' ) )
 	);
-?></p>
+	?>
+	</p>
 
 <?php
 	/**

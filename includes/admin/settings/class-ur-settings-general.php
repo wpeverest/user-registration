@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Settings_General' ) ) :
@@ -42,9 +42,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_sections() {
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
-				'login-options'		=> __( 'Login Options', 'user-registration' ),
+				'login-options'     => __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
-				'export-users'		=> __( 'Export Users', 'user-registration' ),
+				'export-users'      => __( 'Export Users', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -61,10 +61,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			$all_roles_except_admin = $all_roles;
 
-			unset($all_roles_except_admin['administrator']);
+			unset( $all_roles_except_admin['administrator'] );
 
 			$settings = apply_filters(
-				'user_registration_general_settings', array(
+				'user_registration_general_settings',
+				array(
 
 					array(
 						'title' => __( 'General Options', 'user-registration' ),
@@ -72,7 +73,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'  => '',
 						'id'    => 'general_options',
 					),
-          			array(
+					array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
@@ -132,9 +133,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 						'options'  => array(
-										'horizontal' => __( 'Horizontal', 'user-registration' ) ,
-										'vertical' => __( 'Vertical', 'user-registration' )
-									),
+							'horizontal' => __( 'Horizontal', 'user-registration' ),
+							'vertical'   => __( 'Vertical', 'user-registration' ),
+						),
 					),
 					array(
 						'type' => 'sectionend',
@@ -143,8 +144,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					array(
 						'title' => __( '', 'user-registration' ),
 						'type'  => 'title',
-						'desc'  => '<strong>'. __( 'Endpoints: ','user-registration' ). '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
-						'css'      => 'min-width: 250px;',
+						'desc'  => '<strong>' . __( 'Endpoints: ', 'user-registration' ) . '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
+						'css'   => 'min-width: 250px;',
 						'id'    => 'account_endpoint_options',
 					),
 					array(
@@ -191,12 +192,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 		/**
 		 * Settings for frontend messages customization.
+		 *
 		 * @return array
 		 */
 		public function get_frontend_messages_settings() {
 
 			$settings = apply_filters(
-				'user_registration_frontend_messages_settings', array(
+				'user_registration_frontend_messages_settings',
+				array(
 
 					array(
 						'title' => __( 'Success Messages', 'user-registration' ),
@@ -212,7 +215,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __( 'User successfully registered.','user-registration' ),
+						'default'  => __( 'User successfully registered.', 'user-registration' ),
 					),
 
 					array(
@@ -222,7 +225,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __( 'User registered. Verify your email by clicking on the link sent to your email.','user-registration' ),
+						'default'  => __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ),
 					),
 
 					array(
@@ -232,7 +235,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'textarea',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px; min-height: 100px;',
-						'default'  => __( 'User registered. Wait until admin approves your registration.','user-registration' ),
+						'default'  => __( 'User registered. Wait until admin approves your registration.', 'user-registration' ),
 					),
 
 					array(
@@ -314,16 +317,18 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
-			return apply_filters( 'user_registration_get_frontend_messages_settings_'. $this->id, $settings );
+			return apply_filters( 'user_registration_get_frontend_messages_settings_' . $this->id, $settings );
 		}
 
 		/**
 		 * Get settings for login form
+		 *
 		 * @return array
 		 */
 		public function get_login_options_settings() {
 			$settings = apply_filters(
-				'user_registration_login_options_settings', array(
+				'user_registration_login_options_settings',
+				array(
 
 					array(
 						'title' => __( 'Login Options', 'user-registration' ),
@@ -341,11 +346,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => 'default',
 						'options'  => array(
-							'default'  		=> __( 'Default', 'user-registration' ),
-							'bordered' 		=> __( 'Bordered', 'user-registration' ),
-							'flat'     		=> __( 'Flat', 'user-registration' ),
-							'rounded'  		=> __( 'Rounded', 'user-registration' ),
-							'rounded_edge'	=> __( 'Rounded Edge', 'user-registration' ),
+							'default'      => __( 'Default', 'user-registration' ),
+							'bordered'     => __( 'Bordered', 'user-registration' ),
+							'flat'         => __( 'Flat', 'user-registration' ),
+							'rounded'      => __( 'Rounded', 'user-registration' ),
+							'rounded_edge' => __( 'Rounded Edge', 'user-registration' ),
 						),
 					),
 
@@ -395,7 +400,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => __( 'Not a member yet? Register now.','user-registration' )
+						'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
 					),
 
 					array(
@@ -405,7 +410,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
-			return apply_filters( 'user_registration_get_login_options_settings_'. $this->id, $settings );
+			return apply_filters( 'user_registration_get_login_options_settings_' . $this->id, $settings );
 		}
 
 		/**
@@ -414,14 +419,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function output() {
 
 			global $current_section;
-			if( $current_section === '') {
+			if ( $current_section === '' ) {
 				$settings = $this->get_settings();
 
 			} elseif ( $current_section === 'frontend-messages' ) {
 				$settings = $this->get_frontend_messages_settings();
-			} elseif( $current_section === 'login-options' ) {
+			} elseif ( $current_section === 'login-options' ) {
 				$settings = $this->get_login_options_settings();
-			} elseif( $current_section === 'export-users') {
+			} elseif ( $current_section === 'export-users' ) {
 				$settings = array();
 				UR_Admin_Export_Users::output();
 			}
@@ -437,14 +442,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			global $current_section;
 			$settings = $this->get_settings();
 
-			if( $current_section === '' ) {
+			if ( $current_section === '' ) {
 				$settings = $this->get_settings();
 
 			} elseif ( $current_section === 'frontend-messages' ) {
 				$settings = $this->get_frontend_messages_settings();
-			} elseif( $current_section === 'login-options' ) {
+			} elseif ( $current_section === 'login-options' ) {
 				$settings = $this->get_login_options_settings();
-			} elseif( $current_section === 'export-users' ) {
+			} elseif ( $current_section === 'export-users' ) {
 				$settings = array();
 			}
 

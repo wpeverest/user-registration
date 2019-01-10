@@ -7,11 +7,11 @@
  * @author      WPEverest
  * @category    Admin
  * @package     User Registration/Admin
- * @since    	1.1.4
+ * @since       1.1.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 $reason_deactivation_url = 'https://wpeverest.com/deactivation/user-registration/';

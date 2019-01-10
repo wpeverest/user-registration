@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
@@ -18,7 +18,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
  * UR_Settings_Admin_Email Class.
  */
 class UR_Settings_Admin_Email{
-	
+
 	public function __construct() {
 		$this->id             = 'admin_email';
 		$this->title          = __( 'Admin Email', 'user-registration' );
@@ -88,8 +88,8 @@ class UR_Settings_Admin_Email{
 		return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 	}
 	public function ur_get_admin_email() {
-	
-		$message = apply_filters( 'user_registration_admin_email_message', sprintf( __( 
+
+		$message = apply_filters( 'user_registration_admin_email_message', sprintf( __(
 			'Hi Admin,
 
 			A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>.

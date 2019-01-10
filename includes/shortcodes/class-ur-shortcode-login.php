@@ -12,7 +12,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -38,10 +38,10 @@ class UR_Shortcode_Login {
 	public static function output( $atts ) {
 		global $wp, $post;
 
-		$redirect_url      = isset( $atts['redirect_url']) ? trim( $atts['redirect_url'] ) : '';
+		$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 
-		if( 'yes' === $recaptcha_enabled ) {
+		if ( 'yes' === $recaptcha_enabled ) {
 			wp_enqueue_script( 'user-registration' );
 		}
 
@@ -51,10 +51,16 @@ class UR_Shortcode_Login {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
+				ur_get_template(
+					'myaccount/form-login.php',
+					array(
+						'recaptcha_node' => $recaptcha_node,
+						'redirect'       => $redirect_url,
+					)
+				);
 			}
 		} else {
-			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ),  ur_logout_url() ) );
+			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) );
 		}
 	}
 }

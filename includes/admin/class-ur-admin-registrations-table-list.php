@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
@@ -21,11 +21,13 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	 * Initialize the registration table list.
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'registration',
-			'plural'   => 'registrations',
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'registration',
+				'plural'   => 'registrations',
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -143,9 +145,14 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$user_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_login;
 
 		if ( current_user_can( 'edit_user' ) ) {
-			return '<a href="' . esc_url( add_query_arg( array(
-					'user_id' => $user->ID,
-				), admin_url( 'user-edit.php' ) ) ) . '">' . esc_html( $user_name ) . '</a>';
+			return '<a href="' . esc_url(
+				add_query_arg(
+					array(
+						'user_id' => $user->ID,
+					),
+					admin_url( 'user-edit.php' )
+				)
+			) . '">' . esc_html( $user_name ) . '</a>';
 		}
 
 		return esc_html( $user_name );
@@ -166,17 +173,22 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 			return;
 		}
 
-		$t_time = mysql2date( __( 'Y/m/d g:i:s A', 'user-registration' ),
-			$post->post_date, true );
+		$t_time = mysql2date(
+			__( 'Y/m/d g:i:s A', 'user-registration' ),
+			$post->post_date,
+			true
+		);
 		$m_time = $post->post_date;
 		$time   = mysql2date( 'G', $post->post_date )
-		          - get_option( 'gmt_offset' ) * 3600;
+				  - get_option( 'gmt_offset' ) * 3600;
 
 		$time_diff = time() - $time;
 
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
 			$h_time = sprintf(
-				__( '%s ago', 'user-registration' ), human_time_diff( $time ) );
+				__( '%s ago', 'user-registration' ),
+				human_time_diff( $time )
+			);
 		} else {
 			$h_time = mysql2date( __( 'Y/m/d', 'user-registration' ), $m_time );
 		}
@@ -194,7 +206,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	 */
 	private function get_status_label( $status_name, $status ) {
 		switch ( $status_name ) {
-			case 'publish' :
+			case 'publish':
 				/* translators: %s: count */
 				$label = array(
 					'singular' => __( 'Published <span class="count">(%s)</span>', 'user-registration' ),
@@ -203,7 +215,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 					'domain'   => 'user-registration',
 				);
 				break;
-			case 'draft' :
+			case 'draft':
 				/* translators: %s: count */
 				$label = array(
 					'singular' => __( 'Draft <span class="count">(%s)</span>', 'user-registration' ),
@@ -212,7 +224,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 					'domain'   => 'user-registration',
 				);
 				break;
-			case 'pending' :
+			case 'pending':
 				/* translators: %s: count */
 				$label = array(
 					'singular' => __( 'Pending <span class="count">(%s)</span>', 'user-registration' ),
@@ -243,9 +255,11 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 
 		// Subtract post types that are not included in the admin all list.
 		foreach (
-			get_post_stati( array(
-				'show_in_admin_all_list' => false,
-			) ) as $state
+			get_post_stati(
+				array(
+					'show_in_admin_all_list' => false,
+				)
+			) as $state
 		) {
 			$total_posts -= $num_posts->$state;
 		}
@@ -255,22 +269,28 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$status_links['all'] = "<a href='admin.php?page=user-registration'$class>" . sprintf( _nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_posts, 'posts', 'user-registration' ), number_format_i18n( $total_posts ) ) . '</a>';
 
 		foreach (
-			get_post_stati( array(
-				'show_in_admin_status_list' => true,
-			), 'objects' ) as $status
+			get_post_stati(
+				array(
+					'show_in_admin_status_list' => true,
+				),
+				'objects'
+			) as $status
 		) {
 			$class       = '';
 			$status_name = $status->name;
 
-			if ( ! in_array( $status_name, array(
-				'publish',
-				'draft',
-				'pending',
-				'trash',
-				'future',
-				'private',
-				'auto-draft'
-			) )
+			if ( ! in_array(
+				$status_name,
+				array(
+					'publish',
+					'draft',
+					'pending',
+					'trash',
+					'future',
+					'private',
+					'auto-draft',
+				)
+			)
 			) {
 				continue;
 			}
@@ -351,10 +371,12 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$this->items   = $registrations->posts;
 
 		// Set the pagination
-		$this->set_pagination_args( array(
-			'total_items' => $registrations->found_posts,
-			'per_page'    => $per_page,
-			'total_pages' => $registrations->max_num_pages,
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $registrations->found_posts,
+				'per_page'    => $per_page,
+				'total_pages' => $registrations->max_num_pages,
+			)
+		);
 	}
 }

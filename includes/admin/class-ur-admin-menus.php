@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
@@ -60,8 +60,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$this->empty_trash();
 				}
 
-				$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-				$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
+				$action  = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+				$nonce   = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
 				$form_id = isset( $_GET['form'] ) && is_numeric( $_GET['form'] ) ? $_GET['form'] : '';
 
 				if ( ! empty( $action ) && ! empty( $nonce ) && ! empty( $form_id ) ) {
@@ -152,7 +152,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'post_title'     => __( 'Copy of ', 'user-registration' ) . $post->post_title,
 					'post_type'      => $post->post_type,
 					'to_ping'        => $post->to_ping,
-					'menu_order'     => $post->menu_order
+					'menu_order'     => $post->menu_order,
 				);
 
 				/*
@@ -176,7 +176,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$meta_value      = addslashes( $meta_info->meta_value );
 						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
 					}
-					$sql_query .= implode( " UNION ALL ", $sql_query_sel );
+					$sql_query .= implode( ' UNION ALL ', $sql_query_sel );
 					$wpdb->query( $sql_query );
 				}
 
@@ -196,7 +196,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$meta_value      = addslashes( $meta_info->meta_value );
 						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
 					}
-					$sql_query .= implode( " UNION ALL ", $sql_query_sel );
+					$sql_query .= implode( ' UNION ALL ', $sql_query_sel );
 					$wpdb->query( $sql_query );
 				}
 
@@ -219,16 +219,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$registrations = array_map( 'absint', (array) $_REQUEST['registration'] );
 
 			switch ( $_REQUEST['action'] ) {
-				case 'trash' :
+				case 'trash':
 					$this->bulk_trash( $registrations );
 					break;
-				case 'untrash' :
+				case 'untrash':
 					$this->bulk_untrash( $registrations );
 					break;
-				case 'delete' :
+				case 'delete':
 					$this->bulk_trash( $registrations, true );
 					break;
-				default :
+				default:
 					break;
 			}
 		}
@@ -245,13 +245,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				wp_die( __( 'You do not have permissions to delete forms!', 'user-registration' ) );
 			}
 
-			$registration = get_posts( array(
-				'post_type'           => 'user_registration',
-				'ignore_sticky_posts' => true,
-				'nopaging'            => true,
-				'post_status'         => 'trash',
-				'fields'              => 'ids',
-			) );
+			$registration = get_posts(
+				array(
+					'post_type'           => 'user_registration',
+					'ignore_sticky_posts' => true,
+					'nopaging'            => true,
+					'post_status'         => 'trash',
+					'fields'              => 'ids',
+				)
+			);
 
 			foreach ( $registration as $webhook_id ) {
 				wp_delete_post( $webhook_id, true );
@@ -283,10 +285,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
 
 				// Add screen option.
-				add_screen_option( 'per_page', array(
-					'default' => 20,
-					'option'  => 'user_registration_per_page',
-				) );
+				add_screen_option(
+					'per_page',
+					array(
+						'default' => 20,
+						'option'  => 'user_registration_per_page',
+					)
+				);
 			}
 		}
 
@@ -294,40 +299,68 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add settings menu item.
 		 */
 		public function settings_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration settings', 'user-registration' ), __( 'Settings', 'user-registration' ), 'manage_user_registration', 'user-registration-settings', array(
-				$this,
-				'settings_page'
-			) );
+			add_submenu_page(
+				'user-registration',
+				__( 'User Registration settings', 'user-registration' ),
+				__( 'Settings', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-settings',
+				array(
+					$this,
+					'settings_page',
+				)
+			);
 		}
 
 		/**
 		 * Add status menu item.
 		 */
 		public function status_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration Status', 'user-registration' ), __( 'Status', 'user-registration' ), 'manage_user_registration', 'user-registration-status', array(
-				$this,
-				'status_page'
-			) );
+			add_submenu_page(
+				'user-registration',
+				__( 'User Registration Status', 'user-registration' ),
+				__( 'Status', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-status',
+				array(
+					$this,
+					'status_page',
+				)
+			);
 		}
 
 		/**
 		 * Add new registration menu items.
 		 */
 		public function add_registration_menu() {
-			add_submenu_page( 'user-registration', __( 'Add New', 'user-registration' ), __( 'Add New', 'user-registration' ), 'manage_user_registration', 'add-new-registration', array(
-				$this,
-				'add_registration_page'
-			) );
+			add_submenu_page(
+				'user-registration',
+				__( 'Add New', 'user-registration' ),
+				__( 'Add New', 'user-registration' ),
+				'manage_user_registration',
+				'add-new-registration',
+				array(
+					$this,
+					'add_registration_page',
+				)
+			);
 		}
 
 		/**
 		 * Addons menu item.
 		 */
 		public function addons_menu() {
-			add_submenu_page( 'user-registration', __( 'User Registration extensions', 'user-registration' ), __( 'Extensions', 'user-registration' ), 'manage_user_registration', 'user-registration-addons', array(
-				$this,
-				'addons_page'
-			) );
+			add_submenu_page(
+				'user-registration',
+				__( 'User Registration extensions', 'user-registration' ),
+				__( 'Extensions', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-addons',
+				array(
+					$this,
+					'addons_page',
+				)
+			);
 		}
 
 		/**
@@ -386,7 +419,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			// Forms view
-			include_once( dirname( __FILE__ ) . '/views/html-admin-page-forms.php' );
+			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 		}
 
 
@@ -417,10 +450,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
 		 */
 		public function add_nav_menu_meta_boxes() {
-			add_meta_box( 'user_registration_endpoints_nav_link', __( 'User Registration endpoints', 'user-registration' ), array(
-				$this,
-				'nav_menu_links'
-			), 'nav-menus', 'side', 'low' );
+			add_meta_box(
+				'user_registration_endpoints_nav_link',
+				__( 'User Registration endpoints', 'user-registration' ),
+				array(
+					$this,
+					'nav_menu_links',
+				),
+				'nav-menus',
+				'side',
+				'low'
+			);
 		}
 
 		/**
@@ -451,19 +491,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
-									       name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-									       value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
+										   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+										   value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
 								</label>
 								<input type="hidden" class="menu-item-type"
-								       name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
 								<input type="hidden" class="menu-item-title"
-								       name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-								       value="<?php echo esc_html( $value ); ?>"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+									   value="<?php echo esc_html( $value ); ?>"/>
 								<input type="hidden" class="menu-item-url"
-								       name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-								       value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+									   value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
 								<input type="hidden" class="menu-item-classes"
-								       name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
 							</li>
 							<?php
 							$i --;
@@ -478,8 +518,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</span>
 					<span class="add-to-menu">
 					<input type="submit" class="button-secondary submit-add-to-menu right"
-					       value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
-					       name="add-post-type-menu-item" id="submit-posttype-user-registration-endpoints">
+						   value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
+						   name="add-post-type-menu-item" id="submit-posttype-user-registration-endpoints">
 					<span class="spinner"></span>
 					</span>
 				</p>
@@ -501,8 +541,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				if ( json_last_error() != JSON_ERROR_NONE ) {
 					throw new Exception( '' );
 				}
-			}
-			catch ( Exception $e ) {
+			} catch ( Exception $e ) {
 				$form_data_array = array();
 			}
 
@@ -582,7 +621,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			/* Backward Compat since 1.4.0 */
 			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
-			if( class_exists( $class_name_old ) ) {
+			if ( class_exists( $class_name_old ) ) {
 				echo $class_name_old::get_instance()->get_admin_template( $single_field );
 			}
 			/* Backward compat end */

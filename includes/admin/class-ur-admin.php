@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -37,13 +37,13 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-		include_once( dirname( __FILE__ ) . '/functions-ur-admin.php' );
-		include_once( dirname( __FILE__ ) . '/class-ur-admin-notices.php' );
-		include_once( dirname( __FILE__ ) . '/class-ur-admin-menus.php' );
-		include_once( dirname( __FILE__ ) . '/class-ur-admin-export-users.php' );
-		include_once( dirname( __FILE__ ) . '/class-ur-admin-form-modal.php' );
+		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
 
-		include_once( UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php' );
+		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 	}
 
 	/**
@@ -55,12 +55,12 @@ class UR_Admin {
 		}
 
 		switch ( $screen->id ) {
-			case 'users' :
-			case 'user' :
-			case 'profile' :
-			case 'user-edit' :
-				include( 'class-ur-admin-profile.php' );
-			break;
+			case 'users':
+			case 'user':
+			case 'profile':
+			case 'user-edit':
+				include 'class-ur-admin-profile.php';
+				break;
 		}
 	}
 
@@ -113,17 +113,19 @@ class UR_Admin {
 			// Change the footer text
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = sprintf(
-				/* translators: 1: WooCommerce 2:: five stars */
+					/* translators: 1: WooCommerce 2:: five stars */
 					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
 					'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 				);
-				ur_enqueue_js( "
+				ur_enqueue_js(
+					"
 				jQuery( 'a.ur-rating-link' ).click( function() {
 						jQuery.post( '" . UR()->ajax_url() . "', { action: 'user_registration_rated' } );
 						jQuery( this ).parent().text( jQuery( this ).data( 'rated' ) );
 					});
-				" );
+				"
+				);
 			} else {
 				$footer_text = __( 'Thank you for using User Registration.', 'user-registration' );
 			}

@@ -27,7 +27,7 @@ do_action( 'user_registration_before_change_password_form' );
 	<form class="user-registration-EditAccountForm edit-password" action="" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<?php 
+				<?php
 					ur_do_deprecated_action( 'user_registration_edit_account_form_start', array(), '1.4.2', 'user_registration_change_password_form_start' );
 					do_action( 'user_registration_change_password_form_start' );
 				?>
@@ -49,7 +49,7 @@ do_action( 'user_registration_before_change_password_form' );
 				</fieldset>
 				<div class="clear"></div>
 
-				<?php 
+				<?php
 					ur_do_deprecated_action( 'user_registration_edit_account_form', array(), '1.4.2', 'user_registration_change_password_form' );
 					do_action( 'user_registration_change_password_form' );
 				?>
@@ -60,7 +60,7 @@ do_action( 'user_registration_before_change_password_form' );
 					<input type="hidden" name="action" value="save_change_password" />
 				</p>
 
-				<?php 
+				<?php
 					ur_do_deprecated_action( 'user_registration_edit_account_form_end', array(), '1.4.2', 'user_registration_change_password_form_end' );
 					do_action( 'user_registration_change_password_form_end' );
 				?>
@@ -69,7 +69,7 @@ do_action( 'user_registration_before_change_password_form' );
 	</form>
 </div>
 
-<?php 
+<?php
 	ur_do_deprecated_action( 'user_registration_after_edit_account_form', array(), '1.4.1', 'user_registration_after_change_password_form' );
-	do_action( 'user_registration_after_edit_account_form' ); 
+	do_action( 'user_registration_after_edit_account_form' );
 ?>
