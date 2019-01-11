@@ -14,17 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="major-publishing-actions wp-clearfix">
 						<label class="ur-form-name-label"
 							   for="ur-form-name"><?php esc_html_e( 'Form Name', 'user-registration' ); ?></label>
+								<?php $form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : ''; ?>
 						<input name="ur-form-name" id="ur-form-name" type="text"
-							   class="ur-form-name regular-text menu-item-textbox" value="
-								<?php
-								if ( isset( $post_data[0] ) ) {
-
-									echo $post_data[0]->post_title;
-
-								}
-
-								?>
-						">
+							   class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
 						<?php
 						if ( isset( $post_data[0] ) ) {
 
