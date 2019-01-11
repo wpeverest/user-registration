@@ -1,3 +1,7 @@
+= 1.5.6 - 11/01/2018 =
+* Fix - Authenticated XSS
+* Fix - Smart tag bug on resend confirmation email
+
 = 1.5.5 - 07/01/2018 =
 * Fix - Data display for input fields on users profile
 * Tweak - Disable input fields on builder panel

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,6 +111,10 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.5.6 - 11/01/2018 =
+* Fix - Authenticated XSS
+* Fix - Smart tag bug on resend confirmation email
+
 = 1.5.5 - 08/01/2018 =
 * Feature - Google reCaptcha v3 support
 * Fix - Data display for input fields on users profile
@@ -124,7 +128,6 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Dev - Filter to override success/failure response
 * Dev - Filter to override user role
 * Dev - Filter to update settings on settings page
-
 
 = 1.5.3 - 10/12/2018 =
 * Tweak - Conditionally load flatpickr if only form has date field.
