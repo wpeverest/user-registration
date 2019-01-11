@@ -95,8 +95,6 @@ class UR_Email_Confirmation {
 
 		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify' ) ) && ! isset( $_GET['new_role'] ) ) {
 
-			check_admin_referer( 'ur_user_change_email_status' );
-
 			$redirect = admin_url( 'users.php' );
 			$status   = $action;
 			$user_id  = absint( $_GET['user'] );
@@ -207,7 +205,11 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true' ) {
+		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
+
+			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
+				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration-invite-codes' ) );
+			}
 
 			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
 			$user_id = absint( $user_id );
@@ -237,10 +239,11 @@ class UR_Email_Confirmation {
 
 			$output     = str_split( $_GET['ur_token'], 50 );
 			$user_id    = $this->crypt_the_string( $output[1], 'd' );
+			$user_id    = absint( $user_id );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
 			// Check if the token matches the token value stored in db.
-			if ( $user_token == $_GET['ur_token'] ) {
+			if ( $user_token === $_GET['ur_token'] ) {
 				$user_reg_successful = true;
 
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
@@ -255,7 +258,6 @@ class UR_Email_Confirmation {
 		}
 
 		do_action( 'user_registration_check_token_complete', $user_id, $user_reg_successful );
-
 	}
 
 	/**
@@ -339,8 +341,12 @@ class UR_Email_Confirmation {
 
 		do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
+		$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+		$url = substr( $url, 0, strpos( $url, '?' ) );
+		$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+
 		if ( $email_status === '0' ) {
-			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="?ur_resend_id=' . $this->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . $url . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
 
 			return new WP_Error( 'user_email_not_verified', $message );
 		}
