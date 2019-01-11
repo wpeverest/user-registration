@@ -95,6 +95,8 @@ class UR_Email_Confirmation {
 
 		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify' ) ) && ! isset( $_GET['new_role'] ) ) {
 
+			check_admin_referer( 'ur_user_change_email_status' );
+
 			$redirect = admin_url( 'users.php' );
 			$status   = $action;
 			$user_id  = absint( $_GET['user'] );
