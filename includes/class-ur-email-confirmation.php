@@ -210,7 +210,7 @@ class UR_Email_Confirmation {
 		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
 
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
-				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration-invite-codes' ) );
+				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
 			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
