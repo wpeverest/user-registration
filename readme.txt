@@ -112,7 +112,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 == Changelog ==
 
 = 1.5.6 - 11/01/2018 =
-* Fix - Authenticated XSS
+* Fix - Authenticated XSS. Thanks wpvulndb.com for nofifying.
 * Fix - Smart tag bug on resend confirmation email
 
 = 1.5.5 - 08/01/2018 =
