@@ -217,8 +217,9 @@ class UR_Email_Confirmation {
 				$this->set_email_status( array(), '', $user_id );
 
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
+				$name_value  = ur_get_user_extra_fields( $user_id );
 
-				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', array(), $attachments );
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments );
 
 				add_filter( 'login_message', array( $this, 'custom_resend_email_token_message' ) );
 				add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_resend_email_token_message' ) );
