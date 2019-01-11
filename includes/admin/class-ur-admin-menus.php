@@ -404,7 +404,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Init the add registration page.
 		 */
 		public function add_registration_page() {
-			$post_id   = isset( $_GET['edit-registration'] ) ? $_GET['edit-registration'] : 0;
+			$post_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
 			$args      = array(
 				'post_type'   => 'user_registration',
 				'post_status' => 'publish',

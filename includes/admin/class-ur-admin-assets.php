@@ -175,7 +175,7 @@ class UR_Admin_Assets {
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
 				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false,
-				'post_id'                        => isset( $_GET['edit-registration'] ) ? $_GET['edit-registration'] : 0,
+				'post_id'                        => isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0,
 				'admin_url'                      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
