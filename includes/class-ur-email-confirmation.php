@@ -210,6 +210,7 @@ class UR_Email_Confirmation {
 		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] == 'true' ) {
 
 			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
+			$user_id = absint( $user_id );
 			$user    = get_user_by( 'id', $user_id );
 
 			if ( $user ) {
