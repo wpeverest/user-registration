@@ -365,7 +365,7 @@
 						$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
 
 						$.ajax({
-							url: 'http://i.test/wp-content/plugins/user-registration/includes/request.php',
+							url: user_registration_params.ur_ajax_url,
 							data: data,
 							type: 'POST',
 							async: true,

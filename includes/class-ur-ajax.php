@@ -42,6 +42,7 @@ class UR_AJAX {
 			'rated'               => false,
 		);
 
+		add_action( 'user_registration_ajax_nopriv_frontend_form_submit', array( __CLASS__, 'frontend_form_submit' ) );
 		add_action( 'user_registration_ajax_frontend_form_submit', array( __CLASS__, 'frontend_form_submit' ) );
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
