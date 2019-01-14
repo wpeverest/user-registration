@@ -31,7 +31,7 @@ $action = esc_attr( trim( $_POST['action'] ) );
 
 // A bit of security.
 $allowed_actions = array(
-	'user_form_submit',
+	'frontend_form_submit',
 );
 
 if ( in_array( $action, $allowed_actions ) ) {

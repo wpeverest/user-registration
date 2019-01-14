@@ -333,7 +333,7 @@
 						var captchaResponse = $this.find('#g-recaptcha-response').val();
 
 						var data = {
-							action: 'i.test/wp-content/plugins/user-registration/includes/request.php',
+							action: 'frontend_form_submit',
 							security: user_registration_params.user_registration_form_data_save,
 							form_data: form_data,
 							captchaResponse: captchaResponse,
@@ -365,7 +365,7 @@
 						$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
 
 						$.ajax({
-							url: user_registration_params.ajax_url,
+							url: 'http://i.test/wp-content/plugins/user-registration/includes/request.php',
 							data: data,
 							type: 'POST',
 							async: true,

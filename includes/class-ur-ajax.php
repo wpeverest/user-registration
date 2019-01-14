@@ -42,7 +42,7 @@ class UR_AJAX {
 			'rated'               => false,
 		);
 
-		add_action( 'user_registration_ajax_nopriv_user_form_submit', array( __CLASS__, 'user_form_submit' ) );
+		add_action( 'user_registration_ajax_frontend_form_submit', array( __CLASS__, 'frontend_form_submit' ) );
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -58,14 +58,14 @@ class UR_AJAX {
 	 *
 	 * @return void
 	 */
-	public static function user_form_submit() {
+	public static function frontend_form_submit() {
 
 		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
 
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
 		$captcha_response  = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] : '';
-		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id - ' . $form_id );
+		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
@@ -73,7 +73,7 @@ class UR_AJAX {
 		if ( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 
-				$data = wp_remote_get( 'https:// www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 				$data = json_decode( wp_remote_retrieve_body( $data ) );
 
 				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
