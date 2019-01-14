@@ -38,7 +38,7 @@ class UR_AJAX {
 		$ajax_events = array(
 			'user_input_dropped'  => true,
 			'form_save_action'    => true,
-			'user_form_submit'    => true,
+			// 'user_form_submit'    => true,
 			'deactivation_notice' => false,
 			'rated'               => false,
 		);
@@ -64,7 +64,7 @@ class UR_AJAX {
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
 		$captcha_response  = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] : '';
-		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id - ' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
@@ -72,7 +72,7 @@ class UR_AJAX {
 		if ( 'yes' === $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 
-				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+				$data = wp_remote_get( 'https:// www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 				$data = json_decode( wp_remote_retrieve_body( $data ) );
 
 				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
@@ -193,8 +193,8 @@ class UR_AJAX {
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 
 			} elseif ( ! isset( $_POST['data']['form_data'] )
-				|| ( isset( $_POST['data']['form_data'] )
-				&& gettype( $_POST['data']['form_data'] ) != 'string' ) ) {
+			|| ( isset( $_POST['data']['form_data'] )
+			&& gettype( $_POST['data']['form_data'] ) != 'string' ) ) {
 
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
@@ -296,7 +296,7 @@ class UR_AJAX {
 				return true;
 			}
 
-		endif;
+			endif;
 
 		return false;
 	}
