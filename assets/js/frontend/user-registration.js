@@ -333,7 +333,7 @@
 						var captchaResponse = $this.find('#g-recaptcha-response').val();
 
 						var data = {
-							action: 'user_registration_user_form_submit',
+							action: 'i.test/wp-content/plugins/user-registration/includes/request.php',
 							security: user_registration_params.user_registration_form_data_save,
 							form_data: form_data,
 							captchaResponse: captchaResponse,

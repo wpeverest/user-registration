@@ -14,8 +14,10 @@ if ( ! isset( $_POST['action'] ) ) {
 	die( '-1' );
 }
 
-// Include wp-load.php
-require_once '../../../../../wp-load.php';
+// Include wp-load.php.
+// @TODO:: Needs better approah.
+$root = dirname( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) );
+require_once $root . '/' . 'wp-load.php';
 
 // Typical headers.
 header( 'Content-Type: text/html' );

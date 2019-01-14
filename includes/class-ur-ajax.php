@@ -38,10 +38,11 @@ class UR_AJAX {
 		$ajax_events = array(
 			'user_input_dropped'  => true,
 			'form_save_action'    => true,
-			// 'user_form_submit'    => true,
 			'deactivation_notice' => false,
 			'rated'               => false,
 		);
+
+		add_action( 'user_registration_ajax_nopriv_user_form_submit', array( __CLASS__, 'user_form_submit' ) );
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
