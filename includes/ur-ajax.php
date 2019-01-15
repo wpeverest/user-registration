@@ -27,18 +27,18 @@ send_nosniff_header();
 header( 'Cache-Control: no-cache' );
 header( 'Pragma: no-cache' );
 
-$action = esc_attr( trim( $_POST['action'] ) );
+$ur_action = esc_attr( trim( $_POST['action'] ) );
 
 // A bit of security.
 $allowed_actions = array(
 	'frontend_form_submit',
 );
 
-if ( in_array( $action, $allowed_actions ) ) {
+if ( in_array( $ur_action, $allowed_actions ) ) {
 	if ( is_user_logged_in() ) {
-		do_action( 'user_registration_ajax_' . $action );
+		do_action( 'user_registration_ajax_' . $ur_action );
 	} else {
-		do_action( 'user_registration_ajax_nopriv_' . $action );
+		do_action( 'user_registration_ajax_nopriv_' . $ur_action );
 	}
 } else {
 	die( '-1' );
