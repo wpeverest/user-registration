@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -166,7 +166,7 @@ class UR_Admin_Notices {
 			return;
 		}
 
- 		foreach ( array( 'user_admin_notices', 'admin_notices', 'all_admin_notices' ) as $wp_notice ) {
+		foreach ( array( 'user_admin_notices', 'admin_notices', 'all_admin_notices' ) as $wp_notice ) {
 			if ( ! empty( $wp_filter[ $wp_notice ]->callbacks ) && is_array( $wp_filter[ $wp_notice ]->callbacks ) ) {
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
@@ -200,7 +200,7 @@ class UR_Admin_Notices {
 					$notice_html = get_option( 'user_registration_admin_notice_' . $notice );
 
 					if ( $notice_html ) {
-						include( 'views/html-notice-custom.php' );
+						include 'views/html-notice-custom.php';
 					}
 				}
 			}
@@ -216,12 +216,12 @@ class UR_Admin_Notices {
 			$updater = new UR_Background_Updater();
 
 			if ( $updater->is_updating() || ! empty( $_GET['do_update_user_registration'] ) ) {
-				include( 'views/html-notice-updating.php' );
+				include 'views/html-notice-updating.php';
 			} else {
-				include( 'views/html-notice-update.php' );
+				include 'views/html-notice-update.php';
 			}
 		} else {
-			include( 'views/html-notice-updated.php' );
+			include 'views/html-notice-updated.php';
 		}
 	}
 
@@ -229,7 +229,7 @@ class UR_Admin_Notices {
 	 * If we have just installed, show a message with the install pages button.
 	 */
 	public static function install_notice() {
-		include( 'views/html-notice-install.php' );
+		include 'views/html-notice-install.php';
 	}
 
 	/**
@@ -239,7 +239,7 @@ class UR_Admin_Notices {
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {
-			include( 'views/html-notice-registration.php' );
+			include 'views/html-notice-registration.php';
 		} else {
 			self::remove_notice( 'register' );
 		}

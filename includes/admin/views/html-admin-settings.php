@@ -4,7 +4,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 ?>
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<p class="submit">
 			<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
-				<input name="save" class="button-primary" type="submit" value="<?php echo apply_filters('user-registration-setting-save-label', esc_attr('Save Changes', 'user-registration' )); ?>" />
+				<input name="save" class="button-primary" type="submit" value="<?php echo apply_filters( 'user-registration-setting-save-label', esc_attr( 'Save Changes', 'user-registration' ) ); ?>" />
 			<?php endif; ?>
 			<input type="hidden" name="subtab" id="last_tab" />
 			<?php wp_nonce_field( 'user-registration-settings' ); ?>

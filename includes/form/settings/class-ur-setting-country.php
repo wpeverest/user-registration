@@ -1,6 +1,7 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -30,14 +31,14 @@ class UR_Setting_Country extends UR_Field_Settings {
 
 		$fields = array(
 			'custom_class' => array(
-				'label' => __( 'Custom Class','user-registration' ),
-				'data-id' => $this->field_id . '_custom_class',
-				'name' => $this->field_id . '[custom_class]',
-				'class' => $this->default_class . ' ur-settings-custom-class',
-				'type' => 'text',
-				'required' => false,
-				'default' => '',
-				'placeholder' => __( 'Custom Class' ,'user-registration' ),
+				'label'       => __( 'Custom Class', 'user-registration' ),
+				'data-id'     => $this->field_id . '_custom_class',
+				'name'        => $this->field_id . '[custom_class]',
+				'class'       => $this->default_class . ' ur-settings-custom-class',
+				'type'        => 'text',
+				'required'    => false,
+				'default'     => '',
+				'placeholder' => __( 'Custom Class', 'user-registration' ),
 			),
 		);
 

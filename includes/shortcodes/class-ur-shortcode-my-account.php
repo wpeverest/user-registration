@@ -12,7 +12,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -44,8 +44,8 @@ class UR_Shortcode_My_Account {
 
 			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 			$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
-			$redirect_url      = isset( $atts['redirect_url']) ? trim( $atts['redirect_url'] ) : '';
-			$message = apply_filters( 'user_registration_my_account_message', '' );
+			$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
+			$message           = apply_filters( 'user_registration_my_account_message', '' );
 
 			if ( ! empty( $message ) ) {
 				ur_add_notice( $message );
@@ -59,19 +59,25 @@ class UR_Shortcode_My_Account {
 			if ( isset( $wp->query_vars['lost-password'] ) ) {
 				self::lost_password();
 			} else {
-				ur_get_template( 'myaccount/form-login.php', array( 'recaptcha_node' => $recaptcha_node, 'redirect' => $redirect_url ) );
+				ur_get_template(
+					'myaccount/form-login.php',
+					array(
+						'recaptcha_node' => $recaptcha_node,
+						'redirect'       => $redirect_url,
+					)
+				);
 			}
 		} else {
 
 			// Enqueue script.
-			$user_id  = get_current_user_id();
-			$form_id  = get_user_meta( $user_id, 'ur_form_id', true );
+			$user_id = get_current_user_id();
+			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-			if( ! empty( $form_id ) ) {
+			if ( ! empty( $form_id ) ) {
 
 				$has_date = ur_has_date_field( $form_id );
 
-				if( true === $has_date ) {
+				if ( true === $has_date ) {
 					wp_enqueue_style( 'flatpickr' );
 					wp_enqueue_script( 'flatpickr' );
 				}
@@ -87,7 +93,7 @@ class UR_Shortcode_My_Account {
 			do_action( 'before-user-registration-my-account-shortcode' );
 
 			// Collect notices before output
-			include_once( UR_ABSPATH . 'includes/functions-ur-notice.php' );
+			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 			$notices = ur_get_notices();
 
 			// Output the new account page
@@ -104,9 +110,12 @@ class UR_Shortcode_My_Account {
 	 * @param array $atts
 	 */
 	private static function my_account( $atts ) {
-		ur_get_template( 'myaccount/my-account.php', array(
-			'current_user' => get_user_by( 'id', get_current_user_id() ),
-		) );
+		ur_get_template(
+			'myaccount/my-account.php',
+			array(
+				'current_user' => get_user_by( 'id', get_current_user_id() ),
+			)
+		);
 	}
 
 	/**
@@ -114,51 +123,57 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function edit_profile() {
 
-		$user_id=get_current_user_id();
-		$form_id_array=get_user_meta($user_id,'ur_form_id');
-		$form_id=0;
+		$user_id       = get_current_user_id();
+		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
+		$form_id       = 0;
 
-		if( isset($form_id_array[0]) ){
+		if ( isset( $form_id_array[0] ) ) {
 			$form_id = $form_id_array[0];
 		}
 
- 		$profile = user_registration_form_data( $user_id, $form_id );
-		$user_data_obj = get_userdata($user_id);
-		$user_data = $user_data_obj->data;
+		$profile       = user_registration_form_data( $user_id, $form_id );
+		$user_data_obj = get_userdata( $user_id );
+		$user_data     = $user_data_obj->data;
 
-		if( count( $profile ) < 1 ) {
+		if ( count( $profile ) < 1 ) {
 			return;
 		}
 
 		// Prepare values
 		foreach ( $profile as $key => $field ) {
-			$value = get_user_meta( get_current_user_id(), $key, true );
+			$value                    = get_user_meta( get_current_user_id(), $key, true );
 			$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-			$new_key=str_replace('user_registration_','',$key);
+			$new_key                  = str_replace( 'user_registration_', '', $key );
 
-			if(in_array($new_key,ur_get_registered_user_meta_fields())){
-				$value = get_user_meta( get_current_user_id(), (str_replace('user_','',$new_key)), true );
+			if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+				$value                    = get_user_meta( get_current_user_id(), ( str_replace( 'user_', '', $new_key ) ), true );
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-			}elseif(isset($user_data->$new_key) && in_array($new_key,ur_get_user_table_fields())){
- 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
+			} elseif ( isset( $user_data->$new_key ) && in_array( $new_key, ur_get_user_table_fields() ) ) {
+				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
 
-			}else if(isset($user_data->display_name) && $key==='user_registration_display_name'){
+			} elseif ( isset( $user_data->display_name ) && $key === 'user_registration_display_name' ) {
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 			}
 		}
 
-		ur_get_template( 'myaccount/form-edit-profile.php', array(
-			'profile' => apply_filters( 'user_registration_profile_to_edit', $profile ),
-		) );
+		ur_get_template(
+			'myaccount/form-edit-profile.php',
+			array(
+				'profile' => apply_filters( 'user_registration_profile_to_edit', $profile ),
+			)
+		);
 	}
 
 	/**
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
-		ur_get_template( 'myaccount/form-edit-password.php', array(
-			'user' => get_user_by( 'id', get_current_user_id() ),
-		) );
+		ur_get_template(
+			'myaccount/form-edit-password.php',
+			array(
+				'user' => get_user_by( 'id', get_current_user_id() ),
+			)
+		);
 	}
 
 	/**
@@ -171,20 +186,23 @@ class UR_Shortcode_My_Account {
 		if ( ! empty( $_GET['reset-link-sent'] ) ) {
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
-		/**
-		 * Process reset key / login from email confirmation link
-		 */
+			/**
+			 * Process reset key / login from email confirmation link
+			 */
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
-				$user = self::check_password_reset_key( $rp_key, $rp_login );
+				$user                      = self::check_password_reset_key( $rp_key, $rp_login );
 
 				// reset key / login is correct, display reset password form with hidden key / login values
 				if ( is_object( $user ) ) {
-					return ur_get_template( 'myaccount/form-reset-password.php', array(
-						'key'   => $rp_key,
-						'login' => $rp_login,
-					) );
+					return ur_get_template(
+						'myaccount/form-reset-password.php',
+						array(
+							'key'   => $rp_key,
+							'login' => $rp_login,
+						)
+					);
 				} else {
 					self::set_reset_password_cookie();
 				}
@@ -192,9 +210,12 @@ class UR_Shortcode_My_Account {
 		}
 
 		// Show lost password form by default
-		ur_get_template( 'myaccount/form-lost-password.php', array(
-			'form' => 'lost_password',
-		) );
+		ur_get_template(
+			'myaccount/form-lost-password.php',
+			array(
+				'form' => 'lost_password',
+			)
+		);
 	}
 
 	/**
@@ -259,7 +280,7 @@ class UR_Shortcode_My_Account {
 		$key = get_password_reset_key( $user_data );
 
 		// Send email notification
-		if( UR_Emailer::lost_password_email( $user_login, $user_data, $key) == false ) {
+		if ( UR_Emailer::lost_password_email( $user_login, $user_data, $key ) == false ) {
 			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
 			return false;
 		}

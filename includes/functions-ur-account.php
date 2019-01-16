@@ -23,19 +23,19 @@ function ur_login_error_message( $error ) {
 		return $error;
 	}
 
-    $pos  = strpos( $error, 'incorrect' );     // Check if the error contains incorrect string.
-    $pos2 = strpos( $error, 'Invalid' );       // Check if the error contains Invalid string.
+	$pos  = strpos( $error, 'incorrect' );     // Check if the error contains incorrect string.
+	$pos2 = strpos( $error, 'Invalid' );       // Check if the error contains Invalid string.
 
-    // Its the correct username with incorrect password.
+	// Its the correct username with incorrect password.
 	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {
 
-        $error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1s is incorrect. %2s' , 'user-registration' ),  $_POST['username'], "<a href='". esc_url( wp_lostpassword_url() ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
-    } // It's invalid username.
-    elseif( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s' , 'user-registration' ),  "<a href='". esc_url( wp_lostpassword_url() ) ."'>".__('Lost Your Password?','user-registration').'</a>' );
-    }
+		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $_POST['username'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
+	} // It's invalid username.
+	elseif ( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
+		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s', 'user-registration' ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
+	}
 
-    return $error;
+	return $error;
 }
 
 /**
@@ -55,7 +55,7 @@ function ur_lostpassword_url( $default_url = '' ) {
 	// Don't  change default url if admin side login form.
 	if ( $GLOBALS['pagenow'] === 'wp-login.php' ) {
 		return $default_url;
-    }
+	}
 
 	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
@@ -77,21 +77,21 @@ add_filter( 'lostpassword_url', 'ur_lostpassword_url', 20, 1 );
  */
 function ur_get_account_menu_items() {
 	$endpoints = array(
-		'edit-profile' => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
+		'edit-profile'  => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
 		'edit-password' => get_option( 'user_registration_myaccount_change_password_endpoint', 'edit-password' ),
-		'user-logout'  => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
+		'user-logout'   => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
 	);
 
 	$items = array(
-		'dashboard'    => __( 'Dashboard', 'user-registration' ),
-		'edit-profile' => __( 'Profile Details', 'user-registration' ),
+		'dashboard'     => __( 'Dashboard', 'user-registration' ),
+		'edit-profile'  => __( 'Profile Details', 'user-registration' ),
 		'edit-password' => __( 'Change Password', 'user-registration' ),
-		'user-logout'  => __( 'Logout', 'user-registration' ),
+		'user-logout'   => __( 'Logout', 'user-registration' ),
 	);
 
-	$user_id = get_current_user_id();
+	$user_id       = get_current_user_id();
 	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
-	$form_id = 0;
+	$form_id       = 0;
 
 	if ( isset( $form_id_array[0] ) ) {
 		$form_id = $form_id_array[0];
@@ -100,7 +100,7 @@ function ur_get_account_menu_items() {
 	$profile = user_registration_form_data( $user_id, $form_id );
 
 	if ( count( $profile ) < 1 ) {
-		unset($items['edit-profile']);
+		unset( $items['edit-profile'] );
 	}
 
 	// Remove missing endpoints.

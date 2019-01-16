@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -21,12 +21,13 @@ class UR_Updater_Key_API {
 
 	/**
 	 * Attempt to activate a plugin license.
+	 *
 	 * @return string JSON response
 	 */
 	public static function activate( $api_params ) {
 		$defaults = array(
 			'url'        => home_url(),
-			'edd_action' => 'activate_license'
+			'edd_action' => 'activate_license',
 		);
 
 		$api_params = wp_parse_args( $defaults, $api_params );
@@ -43,11 +44,21 @@ class UR_Updater_Key_API {
 
 		// Make sure there are no errors.
 		if ( is_wp_error( $response ) ) {
-			return json_encode( array( 'error_code' => $response->get_error_code(), 'error' => $response->get_error_message() ) );
+			return json_encode(
+				array(
+					'error_code' => $response->get_error_code(),
+					'error'      => $response->get_error_message(),
+				)
+			);
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) != 200 ) {
-			return json_encode( array( 'error_code' => wp_remote_retrieve_response_code( $response ), 'error' => 'Error code: ' . wp_remote_retrieve_response_code( $response ) ) );
+			return json_encode(
+				array(
+					'error_code' => wp_remote_retrieve_response_code( $response ),
+					'error'      => 'Error code: ' . wp_remote_retrieve_response_code( $response ),
+				)
+			);
 		}
 
 		// Tell WordPress to look for updates.

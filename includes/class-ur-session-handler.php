@@ -116,7 +116,7 @@ class UR_Session_Handler extends UR_Session {
 
 			return get_current_user_id();
 		} else {
-			require_once( ABSPATH . 'wp-includes/class-phpass.php' );
+			require_once ABSPATH . 'wp-includes/class-phpass.php';
 			$hasher = new PasswordHash( 8, false );
 			return md5( $hasher->get_random_bytes( 32 ) );
 		}
@@ -156,6 +156,7 @@ class UR_Session_Handler extends UR_Session {
 
 	/**
 	 * Get prefix for use with wp_cache_set. Allows all cache in a group to be invalidated at once.
+	 *
 	 * @param  string $group
 	 * @return string
 	 */
@@ -173,6 +174,7 @@ class UR_Session_Handler extends UR_Session {
 
 	/**
 	 * Increment group cache prefix (invalidates cache).
+	 *
 	 * @param string $group
 	 */
 	public function incr_cache_prefix( $group = UR_SESSION_CACHE_GROUP ) {
@@ -190,8 +192,8 @@ class UR_Session_Handler extends UR_Session {
 			$wpdb->replace(
 				$this->_table,
 				array(
-					'session_key' => $this->_customer_id,
-					'session_value' => maybe_serialize( $this->_data ),
+					'session_key'    => $this->_customer_id,
+					'session_value'  => maybe_serialize( $this->_data ),
 					'session_expiry' => $this->_session_expiration,
 				),
 				array(
@@ -317,7 +319,7 @@ class UR_Session_Handler extends UR_Session {
 				'session_key' => $customer_id,
 			),
 			array(
-				'%d'
+				'%d',
 			)
 		);
 	}

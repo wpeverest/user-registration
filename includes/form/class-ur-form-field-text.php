@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -29,15 +29,15 @@ class UR_Form_Field_Text extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_text';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_text';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Input Field', 'user-registration' ),
-			'icon' => 'dashicons dashicons-format-aside',
+			'icon'  => 'dashicons dashicons-format-aside',
 		);
 
 		$this->field_defaults = array(
-			'default_label' => __( 'Input Field', 'user-registration' ),
+			'default_label'      => __( 'Input Field', 'user-registration' ),
 			'default_field_name' => 'input_box_' . ur_get_random_number(),
 		);
 	}
@@ -51,14 +51,17 @@ class UR_Form_Field_Text extends UR_Form_Field {
 
 		$is_condition_enabled = isset( $single_form_field->advance_setting->enable_conditional_logic ) ? $single_form_field->advance_setting->enable_conditional_logic : '0';
 
-		$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
+		$required    = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
 		$field_label = isset( $form_data->label ) ? $form_data->label : '';
-		$value = isset( $form_data->value ) ? $form_data->value : '';
+		$value       = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( $is_condition_enabled !== '1' && 'yes' == $required && empty( $value ) ) {
-			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
-				return __( $field_label . ' is required.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $field_label ) {
+					return __( $field_label . ' is required.', 'user-registration' );
+				}
+			);
 		}
 	}
 }

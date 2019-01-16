@@ -1,6 +1,7 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -27,14 +28,14 @@ class UR_Setting_Password extends UR_Field_Settings {
 	public function register_fields() {
 		$fields = array(
 			'size' => array(
-				'label' => __( 'Password Size','user-registration' ),
-				'data-id' => $this->field_id . '_size',
-				'name' => $this->field_id . '[size]',
-				'class' => $this->default_class . ' ur-settings-size',
-				'type' => 'text',
-				'required' => false,
-				'default' => '5',
-				'placeholder' => __( 'Password Size' ,'user-registration' ),
+				'label'       => __( 'Password Size', 'user-registration' ),
+				'data-id'     => $this->field_id . '_size',
+				'name'        => $this->field_id . '[size]',
+				'class'       => $this->default_class . ' ur-settings-size',
+				'type'        => 'text',
+				'required'    => false,
+				'default'     => '5',
+				'placeholder' => __( 'Password Size', 'user-registration' ),
 			),
 		);
 		$this->render_html( $fields );

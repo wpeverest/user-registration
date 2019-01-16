@@ -57,7 +57,7 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 20 );
  */
 function ur_get_page_id( $page ) {
 
-	if( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+	if ( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
 		$page = get_the_ID();
 	} else {
 		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );

@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -41,7 +41,7 @@ class UR_Admin_Addons {
 				if ( empty( $sections_id ) ) {
 					continue;
 				}
-				$addon_sections[ $sections_id ]           = new stdClass;
+				$addon_sections[ $sections_id ]           = new stdClass();
 				$addon_sections[ $sections_id ]->title    = ur_clean( $section->title );
 				$addon_sections[ $sections_id ]->endpoint = ur_clean( $section->endpoint );
 			}
@@ -102,6 +102,6 @@ class UR_Admin_Addons {
 		$theme           = wp_get_theme();
 		$section_keys    = array_keys( $sections );
 		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : current( $section_keys );
-		include_once( dirname( __FILE__ ) . '/views/html-admin-page-addons.php' );
+		include_once dirname( __FILE__ ) . '/views/html-admin-page-addons.php';
 	}
 }

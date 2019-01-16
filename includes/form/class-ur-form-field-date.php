@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -31,15 +31,15 @@ class UR_Form_Field_Date extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_date';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_date';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Date', 'user-registration' ),
-			'icon' => 'dashicons dashicons-calendar',
+			'icon'  => 'dashicons dashicons-calendar',
 		);
 
 		$this->field_defaults = array(
-			'default_label' => __( 'Date', 'user-registration' ),
+			'default_label'      => __( 'Date', 'user-registration' ),
 			'default_field_name' => 'date_box_' . ur_get_random_number(),
 		);
 	}
@@ -52,32 +52,39 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$is_condition_enabled = isset( $single_form_field->advance_setting->enable_conditional_logic ) ? $single_form_field->advance_setting->enable_conditional_logic : '0';
-		$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
-		$field_label = isset( $form_data->label ) ? $form_data->label : '';
-		$value = isset( $form_data->value ) ? $form_data->value : '';
+		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
+		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
+		$value                = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( $is_condition_enabled !== '1' && 'yes' == $required && empty( $value ) ) {
-			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
-				return __( $field_label . ' is required.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $field_label ) {
+					return __( $field_label . ' is required.', 'user-registration' );
+				}
+			);
 		}
 
 		if ( ! $this->is_valid_date( $value ) && ! empty( $value ) ) {
-			add_filter( $filter_hook, function ( $msg ) use ( $field_label ) {
-				return __( $field_label . ' must be valid date.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $field_label ) {
+					return __( $field_label . ' must be valid date.', 'user-registration' );
+				}
+			);
 		}
 	}
 
 	/**
 	 * Checks for valid date
+	 *
 	 * @param string $date_string
 	 */
 	private function is_valid_date( $date_string ) {
 
 		$date = date_parse( $date_string );
 
-		if ( $date["error_count"] == 0 && checkdate( $date["month"], $date["day"], $date["year"] ) ) {
+		if ( $date['error_count'] == 0 && checkdate( $date['month'], $date['day'], $date['year'] ) ) {
 			return true;
 		}
 

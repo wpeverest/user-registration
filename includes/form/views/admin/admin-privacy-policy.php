@@ -4,7 +4,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 ?>
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="ur-field" data-field-key="privacy_policy">
-		<input type="checkbox" id="ur-input-type-privacy-policy" placeholder="<?php echo esc_attr($this->get_general_setting_data( 'placeholder' )); ?>" disabled/>
+		<input type="checkbox" id="ur-input-type-privacy-policy" placeholder="<?php echo esc_attr( $this->get_general_setting_data( 'placeholder' ) ); ?>" disabled/>
 
 	</div>
 
@@ -23,4 +23,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 		UR_Form_Field_Privacy_Policy::get_instance()->get_setting();
 	?>
 </div>
-

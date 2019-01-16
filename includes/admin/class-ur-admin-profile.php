@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
@@ -36,23 +36,27 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 		/**
 		 * Get User extra fields from usermeta and integrate with form
+		 *
 		 * @param  $user_id
 		 * @return array Fields to display which are filtered through user_registration_profile_meta_fields before being returned
 		 */
 		public function get_user_meta_by_form_fields( $user_id ) {
 
-			$show_fields = array();
-			$form_id     = $this->get_user_meta( $user_id, 'ur_form_id' );
+			$show_fields       = array();
+			$form_id           = $this->get_user_meta( $user_id, 'ur_form_id' );
 			$all_meta_for_user = $this->get_user_meta_by_prefix( $user_id, 'user_registration_' );
-			$form_fields = $this->get_form_fields( $all_meta_for_user, $form_id );
+			$form_fields       = $this->get_form_fields( $all_meta_for_user, $form_id );
 
 			if ( ! empty( $form_fields ) ) {
-				$show_fields = apply_filters( 'user_registration_profile_meta_fields', array(
-					'user_registration' => array(
-						'title'  => sprintf( __( 'User Extra Information %s', 'user-registration' ), '' ),
-						'fields' => $form_fields,
-					),
-				) );
+				$show_fields = apply_filters(
+					'user_registration_profile_meta_fields',
+					array(
+						'user_registration' => array(
+							'title'  => sprintf( __( 'User Extra Information %s', 'user-registration' ), '' ),
+							'fields' => $form_fields,
+						),
+					)
+				);
 			}
 			return $show_fields;
 		}
@@ -82,20 +86,20 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				<h2><?php echo $fieldset['title']; ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
 					<?php
-					$profile_field_type       = array(
+					$profile_field_type = array(
 						'select',
 						'country',
 						'checkbox',
 						'button',
 						'textarea',
-						'radio'
+						'radio',
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
 
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
+						$field['label']       = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
-						$attribute_string = '';
+						$attribute_string     = '';
 
 						foreach ( $attributes as $name => $value ) {
 							if ( is_bool( $value ) ) {
@@ -108,7 +112,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						}
 
 						$field_label = $field['label'];
-						$field_type = isset( $field['type'] ) ? $field['type'] : '';
+						$field_type  = isset( $field['type'] ) ? $field['type'] : '';
 
 						if ( ! in_array( $field_type, $profile_field_type ) ) {
 							$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
@@ -126,38 +130,40 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							<td>
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
-									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
+											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
-										foreach ( $field['options'] as $option_key => $option_value ) : ?>
-											<option value="<?php echo esc_attr( trim ( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim ( $option_value ) ); ?></option>
+										foreach ( $field['options'] as $option_key => $option_value ) :
+											?>
+											<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'country' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
-									        class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
+											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
-										foreach ( $field['options'] as $option_key => $option_value ) : ?>
+										foreach ( $field['options'] as $option_key => $option_value ) :
+											?>
 											<option
-												value="<?php echo esc_attr( trim ( $option_key ) ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( trim ( $option_value ) ); ?></option>
+												value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
 									<?php
 									$db_value = get_user_meta( $user->ID, $key, true );
-									if( is_array( $field['options'] ) ) {
-										foreach( $field['options'] as $option_key => $option_value ) {
+									if ( is_array( $field['options'] ) ) {
+										foreach ( $field['options'] as $option_key => $option_value ) {
 											?>
 											<label><input type="radio"
-											                name="<?php echo esc_attr( $key ); ?>"
-											                id="<?php echo esc_attr( $key ); ?>"
-											                value="<?php echo esc_attr( trim ( $option_key ) ); ?>"
-											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, trim( $option_value ), true ); ?>  ><?php echo trim ( $option_value ); ?>
+															name="<?php echo esc_attr( $key ); ?>"
+															id="<?php echo esc_attr( $key ); ?>"
+															value="<?php echo esc_attr( trim( $option_key ) ); ?>"
+															class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, trim( $option_value ), true ); ?>  ><?php echo trim( $option_value ); ?>
 											</label><br/>
 											<?php
 										}
@@ -171,58 +177,68 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									if ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
-											?><label><input type="checkbox"
-											                name="<?php echo esc_attr( $key ); ?>[]"
-											                id="<?php echo esc_attr( $key ); ?>"
-											                value="<?php echo esc_attr( trim( $choice ) ); ?>"
-											                class="<?php echo esc_attr( $field['class'] ); ?>" <?php if (is_array( $value ) && in_array( trim( $choice ), $value ) ) {
-												echo 'checked="checked"';
-											}elseif( $value == $choice ) {
-												echo 'checked="checked"';
-											} ?> ><?php echo trim( $choice ); ?></label><br/>
+											?>
+											<label><input type="checkbox"
+															name="<?php echo esc_attr( $key ); ?>[]"
+															id="<?php echo esc_attr( $key ); ?>"
+															value="<?php echo esc_attr( trim( $choice ) ); ?>"
+															class="<?php echo esc_attr( $field['class'] ); ?>" 
+																			  <?php
+																				if ( is_array( $value ) && in_array( trim( $choice ), $value ) ) {
+																					echo 'checked="checked"';
+																				} elseif ( $value == $choice ) {
+																					echo 'checked="checked"';
+																				}
+																				?>
+											 ><?php echo trim( $choice ); ?></label><br/>
 											<?php
 										}
 									} else {
 										?>
 										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
-										       id="<?php echo esc_attr( $key ); ?>" value="1"
-										       class="<?php echo esc_attr( $field['class'] ); ?>" <?php if ( $value == '1' ) {
-											echo 'checked="checked"';
-										} ?> >
+											   id="<?php echo esc_attr( $key ); ?>" value="1"
+											   class="<?php echo esc_attr( $field['class'] ); ?>" 
+																 <?php
+																	if ( $value == '1' ) {
+																		echo 'checked="checked"';
+																	}
+																	?>
+										 >
 										<?php
 									}
-								?>
+									?>
 								<?php elseif ( ! empty( $field['type'] ) && 'button' === $field['type'] ) : ?>
 									<button id="<?php echo esc_attr( $key ); ?>"
-									        class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
+											class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
 								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
 									<input checked type="checkbox" disabled="disabled"/>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
-									          id="<?php echo esc_attr( $key ); ?>"
+											  id="<?php echo esc_attr( $key ); ?>"
 
-									          class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+											  class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 										<?php echo esc_attr( $attribute_string ); ?>
-										      rows="5"
-										      cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
+											  rows="5"
+											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
-											       id="<?php echo esc_attr( $key ); ?>"
-											       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-											       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												   id="<?php echo esc_attr( $key ); ?>"
+												   value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-								<?php else  :
+									<?php
+								else :
 
 									if ( ! empty( $field['type'] ) ) {
 										$data = array(
-											'key'              => $key,
-											'value'            => $this->get_user_meta( $user->ID, $key ),
+											'key'   => $key,
+											'value' => $this->get_user_meta( $user->ID, $key ),
 											'attribute_string' => $attribute_string,
-											'field'            => $field
+											'field' => $field,
 
 										);
 										do_action( 'user_registration_profile_field_' . $field['type'], $data );
@@ -233,15 +249,16 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										if ( empty( $extra_params ) ) {
 											?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
-											       id="<?php echo esc_attr( $key ); ?>"
-											       value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-											       class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												   id="<?php echo esc_attr( $key ); ?>"
+												   value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-										<?php }
-
-									} endif; ?>
+											<?php
+										}
+									} endif;
+								?>
 								<br/>
 							</td>
 						</tr>
@@ -277,12 +294,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
 						if ( isset( $_POST[ $key ] ) ) {
 							$value = $_POST[ $key ];
-							if( is_array( $_POST[ $key ] ) ) {
+							if ( is_array( $_POST[ $key ] ) ) {
 								$value = array_map( 'sanitize_text_field', $value );
 							}
 							update_user_meta( $user_id, $key, $value );
-						}
-						else {
+						} else {
 							update_user_meta( $user_id, $key, '' );
 						}
 					} elseif ( isset( $_POST[ $key ] ) ) {
@@ -294,6 +310,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 		/**
 		 * Get user meta for a given key, with fallbacks to core user info for pre-existing fields.
+		 *
 		 * @param int    $user_id User ID of the user being edited
 		 * @param string $key  key for user meta field
 		 *
@@ -321,7 +338,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 */
 		protected function get_user_meta_by_prefix( $user_id, $key_prefix ) {
 
-			$values = get_user_meta( $user_id );
+			$values        = get_user_meta( $user_id );
 			$return_values = array();
 
 			if ( gettype( $values ) != 'array' ) {
@@ -351,21 +368,22 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 		/**
 		 * Get all the registration form fields
+		 *
 		 * @param $all_meta_value
-		 * @param int $form_id
+		 * @param int            $form_id
 		 */
 		protected function get_form_fields( $all_meta_value, $form_id ) {
 
-			$post_id   = $form_id;
-			$args      = array(
+			$post_id = $form_id;
+			$args    = array(
 				'post_type'   => 'user_registration',
 				'post_status' => 'publish',
 				'post__in'    => array( $post_id ),
 			);
 
-			$post_data = get_posts( $args );
-			$post_content = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
-			$fields = array();
+			$post_data          = get_posts( $args );
+			$post_content       = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
+			$fields             = array();
 			$post_content_array = json_decode( $post_content );
 
 			if ( gettype( $post_content_array ) != 'array' ) {
@@ -377,14 +395,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			foreach ( $post_content_array as $post_content_row ) {
 				foreach ( $post_content_row as $post_content_grid ) {
 					foreach ( $post_content_grid as $field ) {
-						$field_name = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
-						$field_label = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+						$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+						$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 						$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
-						$field_key = isset( $field->field_key ) ? $field->field_key : '';
+						$field_key         = isset( $field->field_key ) ? $field->field_key : '';
 
 						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
 							$field_label_array = explode( '_', $field->general_setting->field_name );
-							$field_label = join( ' ', array_map( 'ucwords', $field_label_array ) );
+							$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
 						}
 						if ( $field_name != '' ) {
 							$field_index = '';
@@ -397,7 +415,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
-								$field_index           = 'user_registration_' . $field_name;
+								$field_index            = 'user_registration_' . $field_name;
 								$fields[ $field_index ] = array(
 									'label'       => $field_label,
 									'description' => $field_description,
@@ -430,24 +448,24 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'country':
-									$country = ur_load_form_field_class( $field_key );
+									$country                           = ur_load_form_field_class( $field_key );
 									$fields[ $field_index ]['options'] = $country::get_instance()->get_country();
-									$fields[ $field_index ]['type'] = 'country';
-									$fields[ $field_index ]['class'] = '';
+									$fields[ $field_index ]['type']    = 'country';
+									$fields[ $field_index ]['class']   = '';
 									break;
 
 								case 'textarea':
-									$fields[ $field_index ]['type'] = 'textarea';
+									$fields[ $field_index ]['type']  = 'textarea';
 									$fields[ $field_index ]['class'] = '';
 									break;
 
 								case 'mailchimp':
 								case 'checkbox':
-									$choices_data = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
-									$choices_data = explode( ",", $choices_data );
-									$fields[ $field_index ]['choices'] 	= $choices_data;
-									$fields[ $field_index ]['type']  	= 'checkbox';
-									$fields[ $field_index ]['class'] 	= '';
+									$choices_data                      = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
+									$choices_data                      = explode( ',', $choices_data );
+									$fields[ $field_index ]['choices'] = $choices_data;
+									$fields[ $field_index ]['type']    = 'checkbox';
+									$fields[ $field_index ]['class']   = '';
 									break;
 
 								case 'date':
@@ -455,14 +473,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'privacy_policy':
-									$fields[ $field_index ]['type']  = 'privacy_policy';
+									$fields[ $field_index ]['type'] = 'privacy_policy';
 									break;
 							}
 						}// End switch().
 						$filter_data         = array(
 							'fields'     => $fields,
 							'field'      => $field,
-							'field_name' => $field_name
+							'field_name' => $field_name,
 						);
 						$filtered_data_array = apply_filters( 'user_registration_profile_field_filter_' . $field_key, $filter_data );
 						if ( isset( $filtered_data_array['fields'] ) ) {

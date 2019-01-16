@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -29,15 +29,15 @@ class UR_Form_Field_User_Confirm_Password extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_user_confirm_password';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_user_confirm_password';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
-			'label' => __( 'Confirm Password ','user-registration' ),
-			'icon' => 'dashicons dashicons-lock',
+			'label' => __( 'Confirm Password ', 'user-registration' ),
+			'icon'  => 'dashicons dashicons-lock',
 		);
 
-		$this->field_defaults           = array(
-			'default_label' => __( 'Confirm Password','user-registration' ),
+		$this->field_defaults = array(
+			'default_label' => __( 'Confirm Password', 'user-registration' ),
 		);
 	}
 

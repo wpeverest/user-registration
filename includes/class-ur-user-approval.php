@@ -27,30 +27,34 @@ class UR_User_Approval {
 			return;
 		}
 		// -------------------- ACTIONS & FILTERS --------------------
-
 		// Additional checks
 		add_action( 'after_setup_theme', array( $this, 'check_status_on_page' ) );
 
-		//Handle user Sign in
+		// Handle user Sign in
 		add_action( 'user_register', array( $this, 'send_request_notification_to_admin' ) );
 		add_action( 'user_register', array( $this, 'set_user_status' ) );
 		add_filter( 'wp_login_errors', array( $this, 'registration_completed_message' ) );
 
-		//Handle user Sign on
+		// Handle user Sign on
 		add_action( 'wp_login', array( $this, 'track_first_login' ), 10, 2 );
 		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ) );
 
-		//Handle Lost Password Page
+		// Handle Lost Password Page
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 
-		//When the approval status of an user change
-		add_action( 'ur_user_status_updated', array(
-			$this,
-			'send_notification_to_user_about_status_changing'
-		), 10, 3 );
+		// When the approval status of an user change
+		add_action(
+			'ur_user_status_updated',
+			array(
+				$this,
+				'send_notification_to_user_about_status_changing',
+			),
+			10,
+			3
+		);
 		add_action( 'ur_user_user_denied', array( $this, 'disconnect_user_session' ) );
 
-		//Try to hide the not approved users from any theme or plugin request in frontend
+		// Try to hide the not approved users from any theme or plugin request in frontend
 		add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
 
 		do_action( 'ur_user_construct' );
@@ -103,7 +107,7 @@ class UR_User_Approval {
 
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
-		//Avoid to send multiple times the same email
+		// Avoid to send multiple times the same email
 		if ( $status == $user_manager->get_user_status() ) {
 			return;
 		}
@@ -125,7 +129,7 @@ class UR_User_Approval {
 	 */
 	public function send_request_notification_to_admin( $user_id ) {
 
-		//If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin
+		// If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin
 		if ( $this->is_admin_creation_process() ) {
 			return;
 		}
@@ -147,7 +151,7 @@ class UR_User_Approval {
 
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
-		//The user have to be not alerted on status creation, it will be always pending or approved
+		// The user have to be not alerted on status creation, it will be always pending or approved
 		$alert_user = false;
 
 		$user_manager->save_status( $status, $alert_user );
@@ -252,7 +256,7 @@ class UR_User_Approval {
 
 		if ( ! $user_manager->is_approved() ) {
 			$error_message = __( 'Your account is still awaiting admin approval. Reset Password is not allowed.', 'user-registration' );
-			$result = new WP_Error( 'user_not_approved', $error_message );
+			$result        = new WP_Error( 'user_not_approved', $error_message );
 		}
 
 		return $result;
@@ -267,7 +271,7 @@ class UR_User_Approval {
 	 */
 	public function hide_not_approved_users_in_frontend( $query ) {
 
-		//If this is not a frontend page, then do nothing
+		// If this is not a frontend page, then do nothing
 		if ( is_admin() ) {
 			return;
 		}
@@ -276,18 +280,18 @@ class UR_User_Approval {
 			return;
 		}
 
-		//Otherwise display only approved users
+		// Otherwise display only approved users
 		$meta_query = array(
 			'relation' => 'OR',
 			array(
 				'key'     => 'ur_user_status',
 				'compare' => 'NOT EXISTS', // works!
-				'value'   => '' // This is ignored, but is necessary...
+				'value'   => '', // This is ignored, but is necessary...
 			),
 			array(
 				'key'   => 'ur_user_status',
-				'value' => UR_Admin_User_Manager::APPROVED
-			)
+				'value' => UR_Admin_User_Manager::APPROVED,
+			),
 		);
 
 		$meta_query = apply_filters( 'ur_user_hide_not_approved_users_in_frontend', $meta_query, $query );

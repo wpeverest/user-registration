@@ -54,36 +54,35 @@ function ur_update_120_db_version() {
  * Update usermeta.
  */
 function ur_update_125_usermeta() {
-	
+
 	$users = get_users( array( 'fields' => array( 'ID' ) ) );
-	
-	foreach( $users as $user_id ) {
 
-		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_first_name' ) ) {
-			$first_name = get_user_meta ( $user_id->ID, 'user_registration_user_first_name', true );
-			update_user_meta ( $user_id->ID, 'first_name', $first_name );
-			delete_user_meta( $user_id->ID, 'user_registration_user_first_name');
-		}
+	foreach ( $users as $user_id ) {
 
-		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_last_name' ) ) {
-			$last_name = get_user_meta ( $user_id->ID, 'user_registration_user_last_name', true );
-			update_user_meta ( $user_id->ID, 'last_name', $last_name );
-			delete_user_meta( $user_id->ID, 'user_registration_user_last_name');
-		}
-		
-		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_description' ) ) {
-			$description = get_user_meta ( $user_id->ID, 'user_registration_user_description', true );
-			update_user_meta ( $user_id->ID, 'description', $description );
-			delete_user_meta( $user_id->ID, 'user_registration_user_description');
+		if ( metadata_exists( 'user', $user_id->ID, 'user_registration_user_first_name' ) ) {
+			$first_name = get_user_meta( $user_id->ID, 'user_registration_user_first_name', true );
+			update_user_meta( $user_id->ID, 'first_name', $first_name );
+			delete_user_meta( $user_id->ID, 'user_registration_user_first_name' );
 		}
 
-		if( metadata_exists( 'user', $user_id->ID, 'user_registration_user_nickname' ) ) {
-			$nickname = get_user_meta ( $user_id->ID, 'user_registration_user_nickname', true );
-			update_user_meta ( $user_id->ID, 'nickname', $nickname );
-			delete_user_meta( $user_id->ID, 'user_registration_user_nickname');
+		if ( metadata_exists( 'user', $user_id->ID, 'user_registration_user_last_name' ) ) {
+			$last_name = get_user_meta( $user_id->ID, 'user_registration_user_last_name', true );
+			update_user_meta( $user_id->ID, 'last_name', $last_name );
+			delete_user_meta( $user_id->ID, 'user_registration_user_last_name' );
 		}
-	
-    }
+
+		if ( metadata_exists( 'user', $user_id->ID, 'user_registration_user_description' ) ) {
+			$description = get_user_meta( $user_id->ID, 'user_registration_user_description', true );
+			update_user_meta( $user_id->ID, 'description', $description );
+			delete_user_meta( $user_id->ID, 'user_registration_user_description' );
+		}
+
+		if ( metadata_exists( 'user', $user_id->ID, 'user_registration_user_nickname' ) ) {
+			$nickname = get_user_meta( $user_id->ID, 'user_registration_user_nickname', true );
+			update_user_meta( $user_id->ID, 'nickname', $nickname );
+			delete_user_meta( $user_id->ID, 'user_registration_user_nickname' );
+		}
+	}
 }
 /**
  * Update DB Version.
@@ -104,7 +103,7 @@ function ur_update_130_db_version() {
  */
 function ur_update_130_post() {
 	$posts = get_posts( 'post_type=user_registration' );
-	foreach( $posts as $post ) {
+	foreach ( $posts as $post ) {
 		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
 		$post_content_array = json_decode( $post_content );
 
@@ -112,8 +111,8 @@ function ur_update_130_post() {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 
-					if( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
-						switch( $field->field_key ) {
+					if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
+						switch ( $field->field_key ) {
 							case 'user_username':
 								$field->general_setting->field_name = $field->field_key = 'user_login';
 								break;
@@ -139,25 +138,25 @@ function ur_update_130_post() {
 					}
 				}
 			}
-			$post_content = json_encode( $post_content_array ); 
-			$post->post_content = $post_content;				
+			$post_content       = json_encode( $post_content_array );
+			$post->post_content = $post_content;
 		}
 		wp_update_post( $post );
 	}
 
 	$mailchimp_settings = get_option( 'urmc_mailchimp_settings' );
 
-	 if( $mailchimp_settings && is_array( $mailchimp_settings ) ) {
-	 
-		if( isset( $mailchimp_settings['data'] ) && is_array( $mailchimp_settings['data'] ) ) {
+	if ( $mailchimp_settings && is_array( $mailchimp_settings ) ) {
 
-	 		foreach( $mailchimp_settings['data'] as $id =>  $mailchimp_data ) {
-	 			
-				if( isset( $mailchimp_data['fields'] ) ) {
-				
-					foreach( $mailchimp_data['fields'] as $key => $field ) {
+		if ( isset( $mailchimp_settings['data'] ) && is_array( $mailchimp_settings['data'] ) ) {
 
-						switch( $field ) {
+			foreach ( $mailchimp_settings['data'] as $id => $mailchimp_data ) {
+
+				if ( isset( $mailchimp_data['fields'] ) ) {
+
+					foreach ( $mailchimp_data['fields'] as $key => $field ) {
+
+						switch ( $field ) {
 							case 'user_username':
 								$mailchimp_data['fields'][ $key ] = 'user_login';
 								break;
@@ -180,10 +179,10 @@ function ur_update_130_post() {
 								break;
 						}
 					}
-	 			}
-	 			$mailchimp_settings['data'][ $id ] =  $mailchimp_data ;
-	 		}
-	 	}
+				}
+				$mailchimp_settings['data'][ $id ] = $mailchimp_data;
+			}
+		}
 		update_option( 'urmc_mailchimp_settings', $mailchimp_settings );
 	}
 }
@@ -205,7 +204,7 @@ function ur_update_140_option() {
 		'user_registration_general_setting_form_submit_label',
 	);
 
-	foreach( $unused_options as $unused_option ) {
+	foreach ( $unused_options as $unused_option ) {
 		delete_option( $unused_option );
 	}
 }

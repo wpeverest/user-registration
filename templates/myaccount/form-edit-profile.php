@@ -27,9 +27,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<?php $image = get_avatar_url( get_current_user_id(), $args = NULL );?>
-					<img alt="profile-picture" src="<?php echo $image;?>"><br/>
-					<span><i>You can change your profile picture on <a href="https://en.gravatar.com/"><?php _e( 'Gravatar','user-registration' );?></a></i></span>
+					<?php $image = get_avatar_url( get_current_user_id(), $args = null ); ?>
+					<img alt="profile-picture" src="<?php echo $image; ?>"><br/>
+					<span><i>You can change your profile picture on <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
 

@@ -9,22 +9,22 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 
-/**
- * UR_Settings_Registration_Denied_Email Class.
- */
-class UR_Settings_Registration_Denied_Email{
+	/**
+	 * UR_Settings_Registration_Denied_Email Class.
+	 */
+	class UR_Settings_Registration_Denied_Email {
 
 
-	public function __construct() {
-		$this->id             = 'registration_denied_email';
-		$this->title          = __( 'Registration Denied Email', 'user-registration' );
-		$this->description    = __( 'Email sent to the user notifying the registration is denied by the admin', 'user-registration' );
-	}
+		public function __construct() {
+			$this->id          = 'registration_denied_email';
+			$this->title       = __( 'Registration Denied Email', 'user-registration' );
+			$this->description = __( 'Email sent to the user notifying the registration is denied by the admin', 'user-registration' );
+		}
 
 		/**
 		 * Get settings
@@ -33,15 +33,16 @@ class UR_Settings_Registration_Denied_Email{
 		 */
 		public function get_settings() {
 
-		?><h2><?php echo esc_html__('Registration Denied Email','user-registration'); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
+			?><h2><?php echo esc_html__( 'Registration Denied Email', 'user-registration' ); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
 
-		<?php
+			<?php
 			$settings = apply_filters(
-				'user_registration_registration_denied_email', array(
+				'user_registration_registration_denied_email',
+				array(
 					array(
-						'type'  => 'title',
-						'desc'  => '',
-						'id'    => 'registration_denied_email',
+						'type' => 'title',
+						'desc' => '',
+						'id'   => 'registration_denied_email',
 					),
 					array(
 						'title'    => __( 'Enable this email', 'user-registration' ),
@@ -55,8 +56,8 @@ class UR_Settings_Registration_Denied_Email{
 						'title'    => __( 'Email Subject', 'user-registration' ),
 						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 						'id'       => 'user_registration_registration_denied_email_subject',
-		 				'type'     => 'text',
-		 				'default'  => __('Sorry! Registration denied on {{blog_info}}', 'user-registration'),
+						'type'     => 'text',
+						'default'  => __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 					),
@@ -64,8 +65,8 @@ class UR_Settings_Registration_Denied_Email{
 						'title'    => __( 'Email Content', 'user-registration' ),
 						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
 						'id'       => 'user_registration_registration_denied_email',
-		 				'type'     => 'tinymce',
-		 				'default'  => $this->ur_get_registration_denied_email(),
+						'type'     => 'tinymce',
+						'default'  => $this->ur_get_registration_denied_email(),
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
 					),
@@ -80,20 +81,27 @@ class UR_Settings_Registration_Denied_Email{
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
-	public function ur_get_registration_denied_email() {
+		public function ur_get_registration_denied_email() {
 
-		$message = apply_filters( 'user_registration_get_registration_denied_email', sprintf( __(
-				'Hi {{username}},
+			$message = apply_filters(
+				'user_registration_get_registration_denied_email',
+				sprintf(
+					__(
+						'Hi {{username}},
 
 				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
 
  				Unfortunately your registration is denied. Sorry for the inconvenience.
 
- 				Thank You!', 'user-registration' ) ) );
+ 				Thank You!',
+						'user-registration'
+					)
+				)
+			);
 
-		return $message;
+			return $message;
+		}
 	}
-}
 endif;
 
 return new UR_Settings_Registration_Denied_Email();

@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -21,9 +21,9 @@ abstract class UR_Form_Field {
 	 * @since 1.0.0
 	 * @var int
 	 */
-	protected $id = 0;
-	protected $field_defaults = array();
-	protected $admin_data = array();
+	protected $id                       = 0;
+	protected $field_defaults           = array();
+	protected $admin_data               = array();
 	protected $registered_fields_config = array();
 
 	/**
@@ -34,7 +34,7 @@ abstract class UR_Form_Field {
 	 */
 	protected $form_id = 0;
 
-	public abstract function get_registered_admin_fields();
+	abstract public function get_registered_admin_fields();
 
 	public function get_general_setting_data( $key ) {
 
@@ -51,7 +51,8 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Include admin template for each form fields
-	 * @param  array  $admin_data 
+	 *
+	 * @param  array $admin_data
 	 */
 	public function get_admin_template( $admin_data = array() ) {
 
@@ -59,9 +60,9 @@ abstract class UR_Form_Field {
 
 		$this->admin_data = $admin_data;
 
-		$template_path = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
+		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
-		include( $admin_template_path );
+		include $admin_template_path;
 
 		$this->admin_data = array();
 
@@ -75,19 +76,19 @@ abstract class UR_Form_Field {
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
 		$this->form_id = $form_id;
 
-		$form_data = (array) $data['general_setting'];
+		$form_data         = (array) $data['general_setting'];
 		$form_data['type'] = $field_type;
 
-		if( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
+		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
 			unset( $form_data['label'] );
 		}
 
-		if( isset( $data['general_setting']->required ) ) {
+		if ( isset( $data['general_setting']->required ) ) {
 
-			if ( in_array( $field_key, ur_get_required_fields() ) 
+			if ( in_array( $field_key, ur_get_required_fields() )
 				|| 'yes' === $data['general_setting']->required ) {
 
-				$form_data['required'] = true;
+				$form_data['required']                      = true;
 				$form_data['custom_attributes']['required'] = 'required';
 			}
 		}
@@ -132,7 +133,7 @@ abstract class UR_Form_Field {
 			}
 		}
 
-		if( 'checkbox' == $field_key) {
+		if ( 'checkbox' == $field_key ) {
 			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
 
 			if ( is_array( $choices ) ) {
@@ -150,7 +151,7 @@ abstract class UR_Form_Field {
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
 
-		if( isset( $data['general_setting']->field_name ) ) {
+		if ( isset( $data['general_setting']->field_name ) ) {
 			user_registration_form_field( $data['general_setting']->field_name, $form_data );
 		}
 
@@ -161,25 +162,28 @@ abstract class UR_Form_Field {
 	 */
 	public function get_field_advance_settings() {
 
-		$file_name = str_replace( 'user_registration_', '', $this->id );
-		$file_path = UR_FORM_PATH . 'settings' . UR_DS . 'class-ur-setting-' . strtolower( $file_name ) . '.php';
+		$file_name  = str_replace( 'user_registration_', '', $this->id );
+		$file_path  = UR_FORM_PATH . 'settings' . UR_DS . 'class-ur-setting-' . strtolower( $file_name ) . '.php';
 		$class_name = 'UR_Setting_' . ucwords( $file_name );
 
 		if ( ! class_exists( $class_name ) ) {
-			$file_path_array = apply_filters( 'user_registration_' . strtolower( $file_name ) . '_advance_class', array(
+			$file_path_array = apply_filters(
+				'user_registration_' . strtolower( $file_name ) . '_advance_class',
+				array(
 
-				'file_name' => strtolower( $file_name ),
-				'file_path' => $file_path
-			) );
+					'file_name' => strtolower( $file_name ),
+					'file_path' => $file_path,
+				)
+			);
 			$file_path       = isset( $file_path_array['file_path'] ) ? $file_path_array['file_path'] : $file_path;
 
 			if ( file_exists( $file_path ) ) {
-				$advance_setting_instance = include_once( $file_path );
+				$advance_setting_instance = include_once $file_path;
 				return $advance_setting_instance->output( $this->admin_data );
 			}
 		} else {
 
-			$instance = new $class_name;
+			$instance = new $class_name();
 			return $instance->output( $this->admin_data );
 		}
 
@@ -192,19 +196,19 @@ abstract class UR_Form_Field {
 	 */
 	public function get_field_general_settings() {
 
-		$general_settings = ur_get_general_settings( $this->id );
+		$general_settings     = ur_get_general_settings( $this->id );
 		$general_setting_html = '';
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
-			$general_setting_wrapper = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . str_replace(" ", "-", strtolower( $setting_value['label']) ) . '">';
+			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . str_replace( ' ', '-', strtolower( $setting_value['label'] ) ) . '">';
 			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . '</label>';
-			$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
-			$strip_prefix = substr( $this->id, 18 );
+			$sub_string_key           = substr( $this->id, strlen( 'user_registration_' ), 5 );
+			$strip_prefix             = substr( $this->id, 18 );
 
 			switch ( $setting_value['type'] ) {
 				case 'text':
-					$extra_attribute = in_array( $strip_prefix, ur_get_fields_without_prefix() )  && 'field_name' == $setting_key ? "disabled='disabled'" : '';
-					$value = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
+					$extra_attribute          = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
+					$value                    = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
 					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
 					if ( true == $setting_value['required'] ) {
@@ -215,7 +219,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'radio':
-					if ( isset( $setting_value['options'] ) 
+					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
@@ -234,13 +238,13 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'select':
-					if ( isset( $setting_value['options'] ) 
+					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
 						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '">';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
-							$selected = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
+							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
 							$general_setting_wrapper .= '<option ' . $selected . " value='" . $option_key . "'>" . $option_value . '</option>';
 						}
 
@@ -249,7 +253,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'textarea':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "'. esc_attr( $setting_value['placeholder'] ) .'" ';
+					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "' . esc_attr( $setting_value['placeholder'] ) . '" ';
 
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required >';
@@ -274,11 +278,10 @@ abstract class UR_Form_Field {
 					break;
 
 				default:
-
 			}// End switch().
 
 			$general_setting_wrapper .= '</div>';
-			$general_setting_html .= $general_setting_wrapper;
+			$general_setting_html    .= $general_setting_wrapper;
 
 		}// End foreach().
 
@@ -287,20 +290,21 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Display Setting for each fields in options tab
+	 *
 	 * @return void
 	 */
 	public function get_setting() {
 
 		$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
-		$strip_prefix = substr( $this->id, 18 );
-		$class  = 'ur-general-setting-'.$strip_prefix;
+		$strip_prefix   = substr( $this->id, 18 );
+		$class          = 'ur-general-setting-' . $strip_prefix;
 
-		echo "<div class='ur-general-setting-block " . esc_attr( $class ) ."'>";
+		echo "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
 		echo '<h2>' . __( 'General Settings', 'user-registration' ) . '</h2>';
 		echo $this->get_field_general_settings();
 		echo '</div>';
 
-		$advance_settings = $this->get_field_advance_settings( );
+		$advance_settings = $this->get_field_advance_settings();
 
 		if ( '' != $advance_settings ) {
 			echo "<div class='ur-advance-setting-block'>";
@@ -311,5 +315,5 @@ abstract class UR_Form_Field {
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
 	}
 
-	public abstract function validation( $single_form_field, $form_data, $filter_hook, $form_id );
+	abstract public function validation( $single_form_field, $form_data, $filter_hook, $form_id );
 }

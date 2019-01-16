@@ -37,7 +37,7 @@ class UR_Install {
 		'1.4.2' => array(
 			'ur_update_142_db_version',
 			'ur_update_142_option',
-		)
+		),
 	);
 
 	/**
@@ -222,12 +222,12 @@ class UR_Install {
 	 * @return array
 	 */
 	public static function get_db_update_callbacks() {
-		$updates = self::$db_updates;
+		$updates            = self::$db_updates;
 		$current_db_version = get_option( 'user_registration_db_version' );
 
-		$db_needs_update = array( '1.2.2','1.2.3','1.2.4' );
+		$db_needs_update = array( '1.2.2', '1.2.3', '1.2.4' );
 
-		if( in_array( $current_db_version, $db_needs_update ) ) {
+		if ( in_array( $current_db_version, $db_needs_update ) ) {
 			$updates['1.2.5'] = array(
 				'ur_update_125_usermeta',
 				'ur_update_125_db_version',
@@ -274,7 +274,8 @@ class UR_Install {
 		include_once dirname( __FILE__ ) . '/admin/functions-ur-admin.php';
 
 		$pages = apply_filters(
-			'user_registration_create_pages', array(
+			'user_registration_create_pages',
+			array(
 				'myaccount' => array(
 					'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
 					'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
@@ -303,7 +304,7 @@ class UR_Install {
 	 */
 	private static function create_options() {
 		// Include settings so that we can run through defaults.
-		include_once( dirname( __FILE__ ) . '/admin/class-ur-admin-settings.php' );
+		include_once dirname( __FILE__ ) . '/admin/class-ur-admin-settings.php';
 
 		$settings = UR_Admin_Settings::get_settings_pages();
 
@@ -334,14 +335,16 @@ class UR_Install {
 			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
 
 			// Insert default form :)
-			$default_post_id = wp_insert_post( array(
-				'post_type'      => 'user_registration',
-				'post_title'     => __( 'Default form', 'user-registration' ),
-				'post_content'   => $post_content,
-				'post_status'    => 'publish',
-				'comment_status' => 'closed',
-				'ping_status'    => 'closed',
-			) );
+			$default_post_id = wp_insert_post(
+				array(
+					'post_type'      => 'user_registration',
+					'post_title'     => __( 'Default form', 'user-registration' ),
+					'post_content'   => $post_content,
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				)
+			);
 
 			update_option( 'user_registration_default_form_page_id', $default_post_id );
 		}
@@ -366,7 +369,7 @@ class UR_Install {
 			$collate = $wpdb->get_charset_collate();
 		}
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		$sql = "
 CREATE TABLE {$wpdb->prefix}user_registration_sessions (
@@ -453,7 +456,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		$capabilities = array();
 
 		$capabilities['core'] = array(
-			'manage_user_registration'
+			'manage_user_registration',
 		);
 
 		$capability_types = array( 'user_registration' );

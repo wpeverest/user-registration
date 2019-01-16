@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -79,14 +79,14 @@ class UR_Admin_User_Manager {
 
 		$action_label = '';
 
-		switch ($status) {
-		    case UR_Admin_User_Manager::APPROVED:
-		        $action_label = 'approved';
-		        break;
+		switch ( $status ) {
+			case self::APPROVED:
+				$action_label = 'approved';
+				break;
 
-		    case UR_Admin_User_Manager::DENIED:
-		        $action_label = 'denied';
-		        break;
+			case self::DENIED:
+				$action_label = 'denied';
+				break;
 		}
 
 		if ( ! empty( $action_label ) ) {
@@ -95,7 +95,7 @@ class UR_Admin_User_Manager {
 
 		$this->user_status = $status;
 
-		if( is_super_admin( $this->user->ID ) ){
+		if ( is_super_admin( $this->user->ID ) ) {
 			return;
 		}
 
@@ -131,22 +131,22 @@ class UR_Admin_User_Manager {
 	 */
 	public function get_user_status( $exact_value = false ) {
 
-		//If the status is already get from the db and the requested status is not the exact value then provide the old one
+		// If the status is already get from the db and the requested status is not the exact value then provide the old one
 		if ( ! is_null( $this->user_status ) && ! $exact_value ) {
 			return $this->user_status;
 		}
 
 		$user_status = get_user_meta( $this->user->ID, 'ur_user_status', true );
 
-		//If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
+		// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
 		if ( $exact_value ) {
 			return $user_status;
 		}
 
-		//If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
+		// If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
 		$user_status = ( $user_status == '' || $user_status == array() ) ? self::APPROVED : $user_status;
 
-		//If the value requested is not the exact value, than store it in the object
+		// If the value requested is not the exact value, than store it in the object
 		$this->user_status = $user_status;
 
 		return $user_status;
@@ -194,14 +194,14 @@ class UR_Admin_User_Manager {
 	public function reset_password() {
 		$password = '';
 
-		//If the password reset has been programmatically removed, don't reset
+		// If the password reset has been programmatically removed, don't reset
 		$avoid_password_reset = apply_filters( 'ur_avoid_password_reset', false );
 		if ( $avoid_password_reset ) {
 			return $password;
 		}
 
-		//If the first_access_flag is equal to "" it means that user has registered when the plugin was not active, then don't reset
-		//If the first_access_flag is equal to 1 it means that user has has already loggedin at least one time, then don't reset
+		// If the first_access_flag is equal to "" it means that user has registered when the plugin was not active, then don't reset
+		// If the first_access_flag is equal to 1 it means that user has has already loggedin at least one time, then don't reset
 		$first_access_flag = $this->get_first_access_flag();
 		if ( $first_access_flag == 1 ) {
 			return $password;
@@ -252,17 +252,17 @@ class UR_Admin_User_Manager {
 	 */
 	public function can_change_status_of( $user_id ) {
 
-		//The instanced user is not able to update statuses at all
+		// The instanced user is not able to update statuses at all
 		if ( ! $this->is_allowed_to_change_users_status() ) {
 			return false;
 		}
 
-		//The instanced user is the same user who the status have to be changed
+		// The instanced user is the same user who the status have to be changed
 		if ( $this->user->ID == $user_id ) {
 			return false;
 		}
 
-		//If the changer user has the capability "edit_users" but not "manage_options" (isn't an admin),
+		// If the changer user has the capability "edit_users" but not "manage_options" (isn't an admin),
 		// then allow to edit the status of another user only if him hasn't capability "manage_options" (isn't an admin)
 		if ( ! user_can( $this->user, 'manage_options' ) && user_can( $user_id, 'manage_options' ) ) {
 			return false;

@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -29,15 +29,15 @@ class UR_Form_Field_User_Email extends UR_Form_Field {
 
 	public function __construct() {
 
-		$this->id = 'user_registration_user_email';
-		$this->form_id = 1;
+		$this->id                       = 'user_registration_user_email';
+		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
-			'label' => __( 'Email ' ,'user-registration' ),
-			'icon' => 'dashicons dashicons-email-alt',
+			'label' => __( 'Email ', 'user-registration' ),
+			'icon'  => 'dashicons dashicons-email-alt',
 		);
 
 		$this->field_defaults = array(
-			'default_label' => __( 'User Email','user-registration' ),
+			'default_label' => __( 'User Email', 'user-registration' ),
 		);
 	}
 
@@ -49,19 +49,25 @@ class UR_Form_Field_User_Email extends UR_Form_Field {
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
-		$email = isset( $form_data->value ) ? $form_data->value : '';
+		$email  = isset( $form_data->value ) ? $form_data->value : '';
 		$status = is_email( $email );
 
 		if ( ! $status ) {
-			add_filter( $filter_hook, function ( $msg ) {
-				return __( 'Invalid email address.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) {
+					return __( 'Invalid email address.', 'user-registration' );
+				}
+			);
 		}
 
 		if ( email_exists( $email ) ) {
-			add_filter( $filter_hook, function ( $msg ) {
-				return __( 'Email already exists.', 'user-registration' );
-			});
+			add_filter(
+				$filter_hook,
+				function ( $msg ) {
+					return __( 'Email already exists.', 'user-registration' );
+				}
+			);
 		}
 	}
 }

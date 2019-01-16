@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -30,7 +30,7 @@ class UR_Admin_Settings {
 	 *
 	 * @var array
 	 */
-	private static $errors   = array();
+	private static $errors = array();
 
 	/**
 	 * Update messages.
@@ -47,11 +47,11 @@ class UR_Admin_Settings {
 		if ( empty( self::$settings ) ) {
 			$settings = array();
 
-			include_once( dirname( __FILE__ ) . '/settings/class-ur-settings-page.php' );
+			include_once dirname( __FILE__ ) . '/settings/class-ur-settings-page.php';
 
-			$settings[] = include( 'settings/class-ur-settings-general.php' );
- 	        $settings[] = include( 'settings/class-ur-settings-integration.php' );
- 	        $settings[] = include( 'settings/class-ur-settings-email.php' );
+			$settings[] = include 'settings/class-ur-settings-general.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-email.php';
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
@@ -76,7 +76,7 @@ class UR_Admin_Settings {
 
 		$flag = apply_filters( 'show_user_registration_setting_message', true );
 
-		if( $flag ) {
+		if ( $flag ) {
 			self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
 		}
 
@@ -135,9 +135,13 @@ class UR_Admin_Settings {
 
 		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris' ), UR_VERSION, true );
 
-		wp_localize_script( 'user-registration-settings', 'user_registration_settings_params', array(
-			'i18n_nav_warning' => __( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-		) );
+		wp_localize_script(
+			'user-registration-settings',
+			'user_registration_settings_params',
+			array(
+				'i18n_nav_warning' => __( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+			)
+		);
 
 		// Include settings pages
 		self::get_settings_pages();
@@ -148,7 +152,7 @@ class UR_Admin_Settings {
 
 		$flag = apply_filters( 'user_registration_settings_save_action', true );
 
-		if( $flag ) {
+		if ( $flag ) {
 
 			// Save settings if data has been posted
 			if ( ! empty( $_POST ) ) {
@@ -168,11 +172,11 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		if( $current_tab === 'general' && $current_section === 'export-users' ) {
+		if ( $current_tab === 'general' && $current_section === 'export-users' ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
-		include( dirname( __FILE__ ) . '/views/html-admin-settings.php' );
+		include dirname( __FILE__ ) . '/views/html-admin-settings.php';
 	}
 
 	/**
@@ -300,7 +304,7 @@ class UR_Admin_Settings {
 				case 'text':
 				case 'email':
 				case 'number':
-				case 'password' :
+				case 'password':
 				case 'date':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
@@ -309,7 +313,7 @@ class UR_Admin_Settings {
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
 							<input
 								name="<?php echo esc_attr( $value['id'] ); ?>"
 								id="<?php echo esc_attr( $value['id'] ); ?>"
@@ -321,19 +325,21 @@ class UR_Admin_Settings {
 								<?php echo implode( ' ', $custom_attributes ); ?>
 								/> <?php echo $description; ?>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Color picker.
-				case 'color' :
+				case 'color':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">&lrm;
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">&lrm;
 							<span class="colorpickpreview" style="background: <?php echo esc_attr( $option_value ); ?>"></span>
 							<input
 								name="<?php echo esc_attr( $value['id'] ); ?>"
@@ -348,20 +354,21 @@ class UR_Admin_Settings {
 								/>&lrm; <?php echo $description; ?>
 								<div id="colorPickerDiv_<?php echo esc_attr( $value['id'] ); ?>" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Textarea
 				case 'textarea':
-
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
 							<?php echo $description; ?>
 
 							<textarea
@@ -371,23 +378,24 @@ class UR_Admin_Settings {
 								class="<?php echo esc_attr( $value['class'] ); ?>"
 								placeholder="<?php echo esc_attr( $value['placeholder'] ); ?>"
 								<?php echo implode( ' ', $custom_attributes ); ?>
-								><?php echo esc_textarea( $option_value );  ?></textarea>
+								><?php echo esc_textarea( $option_value ); ?></textarea>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Select boxes
-				case 'select' :
-				case 'multiselect' :
-
+				case 'select':
+				case 'multiselect':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
 							<select
 								name="<?php echo esc_attr( $value['id'] ); ?><?php echo ( 'multiselect' === $value['type'] ) ? '[]' : ''; ?>"
 								id="<?php echo esc_attr( $value['id'] ); ?>"
@@ -399,34 +407,37 @@ class UR_Admin_Settings {
 								<?php
 								foreach ( $value['options'] as $key => $val ) {
 									?>
-									<option value="<?php echo esc_attr( $key ); ?>" <?php
+									<option value="<?php echo esc_attr( $key ); ?>" 
+															  <?php
 
-									if ( is_array( $option_value ) ) {
-										selected( in_array( $key, $option_value ), true );
-									} else {
-										selected( $option_value, $key );
-									}
+																if ( is_array( $option_value ) ) {
+																	selected( in_array( $key, $option_value ), true );
+																} else {
+																	selected( $option_value, $key );
+																}
 
-										?>><?php echo $val ?></option>
+																?>
+										><?php echo $val; ?></option>
 										<?php
 								}
 								?>
 							</select> <?php echo $description; ?>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Radio inputs
-				case 'radio' :
-
+				case 'radio':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
 							<fieldset>
 								<?php echo $description; ?>
 								<ul>
@@ -442,7 +453,7 @@ class UR_Admin_Settings {
 										class="<?php echo esc_attr( $value['class'] ); ?>"
 										<?php echo implode( ' ', $custom_attributes ); ?>
 										<?php checked( $key, $option_value ); ?>
-										/> <?php echo $val ?></label>
+										/> <?php echo $val; ?></label>
 									</li>
 									<?php
 								}
@@ -450,12 +461,12 @@ class UR_Admin_Settings {
 								</ul>
 							</fieldset>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Checkbox input
-				case 'checkbox' :
-
+				case 'checkbox':
 					$option_value    = self::get_option( $value['id'], $value['default'] );
 					$visbility_class = array();
 
@@ -477,7 +488,12 @@ class UR_Admin_Settings {
 
 					if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
 						?>
-							<tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) );   echo ' ' .esc_attr( $value['row_class'] ); ?>">
+							<tr valign="top" class="
+							<?php
+							echo esc_attr( implode( ' ', $visbility_class ) );
+							echo ' ' . esc_attr( $value['row_class'] );
+							?>
+							">
 								<th scope="row" class="titledesc">
 									<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 									<?php echo $tooltip_html; ?>
@@ -492,7 +508,7 @@ class UR_Admin_Settings {
 					}
 
 					?>
-						<label for="<?php echo $value['id'] ?>">
+						<label for="<?php echo $value['id']; ?>">
 							<input
 								name="<?php echo esc_attr( $value['id'] ); ?>"
 								id="<?php echo esc_attr( $value['id'] ); ?>"
@@ -501,12 +517,12 @@ class UR_Admin_Settings {
 								value="1"
 								<?php checked( $option_value, 'yes' ); ?>
 								<?php echo implode( ' ', $custom_attributes ); ?>
-							/> <?php echo $description ?>
+							/> <?php echo $description; ?>
 						</label>
 					<?php
 
 					if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
-									?>
+						?>
 									</fieldset>
 								</td>
 							</tr>
@@ -519,8 +535,7 @@ class UR_Admin_Settings {
 					break;
 
 				// Single page selects
-				case 'single_select_page' :
-
+				case 'single_select_page':
 					$args = array(
 						'name'             => $value['id'],
 						'id'               => $value['id'],
@@ -536,44 +551,46 @@ class UR_Admin_Settings {
 						$args = wp_parse_args( $value['args'], $args );
 					}
 
-
-					?><tr valign="top" class="single_select_page <?php echo esc_attr( $value['row_class'] ); ?>" <?php echo isset($value['display']) && $value['display']==='none' ? 'style="display:none"':''  ?>>
-						<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tooltip_html; ?></th>
+					?>
+					<tr valign="top" class="single_select_page <?php echo esc_attr( $value['row_class'] ); ?>" <?php echo isset( $value['display'] ) && $value['display'] === 'none' ? 'style="display:none"' : ''; ?>>
+						<th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ); ?> <?php echo $tooltip_html; ?></th>
 						<td class="forminp">
 							<?php echo str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				case 'tinymce':
-
 					$settings = array(
-						'name' => esc_attr($value['id']),
-						'id' =>  esc_attr( $value['id'] ),
-						'style' => esc_attr( $value['css'] ),
-						'default' => esc_attr($value['default']),
-						'class'=> esc_attr( $value['class'] ),
-						'quicktags'     => array( 'buttons' => 'em,strong,link' ),
-						'tinymce'       => array(
+						'name'       => esc_attr( $value['id'] ),
+						'id'         => esc_attr( $value['id'] ),
+						'style'      => esc_attr( $value['css'] ),
+						'default'    => esc_attr( $value['default'] ),
+						'class'      => esc_attr( $value['class'] ),
+						'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+						'tinymce'    => array(
 							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 							'theme_advanced_buttons2' => '',
 						),
-						'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+						'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 					);
 
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
 							<?php echo $description; ?>
 
-							<?php wp_editor($option_value, $value['id'], $settings);?>
+							<?php wp_editor( $option_value, $value['id'], $settings ); ?>
 						</td>
-					</tr><?php
+					</tr>
+					<?php
 					break;
 
 				// Default: run an action
@@ -603,7 +620,7 @@ class UR_Admin_Settings {
 			$description  = $value['desc'];
 			$tooltip_html = $value['desc_tip'];
 		} elseif ( ! empty( $value['desc'] ) ) {
-			$description  = $value['desc'];
+			$description = $value['desc'];
 		}
 
 		if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
@@ -650,7 +667,7 @@ class UR_Admin_Settings {
 			// Get posted value.
 			if ( strstr( $option['id'], '[' ) ) {
 				parse_str( $option['id'], $option_name_array );
-				$option_name  = current( array_keys( $option_name_array ) );
+				$option_name = current( array_keys( $option_name_array ) );
 
 				$setting_name = key( $option_name_array[ $option_name ] );
 				$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null;
@@ -663,13 +680,13 @@ class UR_Admin_Settings {
 			// Format the value based on option type.
 			switch ( $option['type'] ) {
 
-				case 'checkbox' :
+				case 'checkbox':
 					$value = '1' === $raw_value || 'yes' === $raw_value ? 'yes' : 'no';
 					break;
-				case 'textarea' :
+				case 'textarea':
 					$value = wp_kses_post( trim( $raw_value ) );
 					break;
-				case 'multiselect' :
+				case 'multiselect':
 					$value = array_filter( array_map( 'ur_clean', (array) $raw_value ) );
 					break;
 				case 'select':
@@ -683,9 +700,9 @@ class UR_Admin_Settings {
 					break;
 				case 'tinymce':
 					$value = wpautop( $raw_value );
-				break;
+					break;
 
-				default :
+				default:
 					$value = ur_clean( $raw_value );
 					break;
 			}

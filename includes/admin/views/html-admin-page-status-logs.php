@@ -4,14 +4,14 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
 ?>
 <?php if ( $logs ) : ?>
 	<div id="log-viewer-select" style="
 	padding: 10px 0 8px;
-    line-height: 28px;">
+	line-height: 28px;">
 		<div class="alignleft">
 			<h2>
 				<?php echo esc_html( $viewed_log ); ?>
@@ -39,9 +39,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="clear"></div>
 	</div>
 	<div id="log-viewer" style="    background: #fff;
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
-    padding: 5px 20px;">
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0,0,0,.04);
+	padding: 5px 20px;">
 		<pre><?php echo esc_html( file_get_contents( UR_LOG_DIR . $viewed_log ) ); ?></pre>
 	</div>
 <?php else : ?>

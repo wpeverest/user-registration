@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
-	include_once( dirname( __FILE__ ) . '/libraries/wp-async-request.php' );
+	include_once dirname( __FILE__ ) . '/libraries/wp-async-request.php';
 }
 
 if ( ! class_exists( 'WP_Background_Process', false ) ) {
-	include_once( dirname( __FILE__ ) . '/libraries/wp-background-process.php' );
+	include_once dirname( __FILE__ ) . '/libraries/wp-background-process.php';
 }
 
 /**
@@ -98,7 +98,7 @@ class UR_Background_Updater extends WP_Background_Process {
 			define( 'UR_UPDATING', true );
 		}
 
-		include_once( 'functions-ur-update.php' );
+		include_once 'functions-ur-update.php';
 
 		if ( is_callable( $callback ) ) {
 			call_user_func( $callback );
