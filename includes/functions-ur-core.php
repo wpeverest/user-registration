@@ -629,14 +629,13 @@ function ur_get_general_settings( $id ) {
 		unset( $general_settings['placeholder'] );
 	}
 
-	if( $strip_id == 'privacy_policy' ) {
-		unset( $general_settings['required'] );
+	if ( $strip_id == 'privacy_policy' ) {
 		$general_settings['required'] = array(
 			'type'        => 'hidden',
 			'label'       => '',
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
-			'default'	  => 'yes'
+			'default'     => 'yes',
 		);
 	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
