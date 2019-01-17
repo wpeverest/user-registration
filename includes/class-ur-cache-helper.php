@@ -20,19 +20,20 @@ class UR_Cache_Helper {
 	 */
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
-		add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
-		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_w3tc_cache ' ) );
+		// add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
+		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_w3tc_cache' ) );
 	}
 
 	/**
 	 * Prevent caching on certain pages
 	 */
-	public static function prevent_caching() {
+	public static function prevent_caching( $id ) {
+
 		if ( ! is_blog_installed() ) {
 			return;
 		}
 
-		$page_ids = array_filter( ur_get_page_id( 'myaccount' ) );
+		$page_ids = array_filter( array( ur_get_page_id( 'myaccount' ), $id ) );
 
 		if ( is_page( $page_ids ) ) {
 			self::set_nocache_constants();
@@ -41,11 +42,12 @@ class UR_Cache_Helper {
 	}
 
 	/**
-	 * Flush already set cache.
+	 * Flush already set cache on registration page.
 	 */
-	public function flush_w3tc_cache() {
+	public static function flush_w3tc_cache() {
 		if ( function_exists( 'w3tc_pgcache_flush' ) ) {
-			w3tc_pgcache_flush();
+			$page_id = get_the_ID();
+			w3tc_pgcache_flush_post( $page_id );
 		}
 	}
 
