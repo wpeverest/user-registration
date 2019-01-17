@@ -20,19 +20,22 @@ class UR_Cache_Helper {
 	 */
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
-		// add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
+		add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_w3tc_cache' ) );
+		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wpsuper_cache' ) );
+		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
 	}
 
 	/**
 	 * Prevent caching on certain pages
 	 */
-	public static function prevent_caching( $id ) {
+	public static function prevent_caching( $id = '' ) {
 
 		if ( ! is_blog_installed() ) {
 			return;
 		}
 
+		$id       = is_integer( $id ) ? $id : -1;
 		$page_ids = array_filter( array( ur_get_page_id( 'myaccount' ), $id ) );
 
 		if ( is_page( $page_ids ) ) {
@@ -42,12 +45,33 @@ class UR_Cache_Helper {
 	}
 
 	/**
-	 * Flush already set cache on registration page.
+	 * Flush already set cache by w3total cache plugin on registration page.
 	 */
 	public static function flush_w3tc_cache() {
 		if ( function_exists( 'w3tc_pgcache_flush' ) ) {
-			$page_id = get_the_ID();
-			w3tc_pgcache_flush_post( $page_id );
+			$post_id = get_the_ID();
+			w3tc_pgcache_flush_post( $post_id );
+		}
+	}
+
+	/**
+	 * Flush already set cache by wp super cache plugin on registration page.
+	 */
+	public function flush_wpsuper_cache() {
+		if ( function_exitts( 'wpsc_delete_post_cache' ) ) {
+			$post_id = get_the_ID();
+			wpsc_delete_post_cache( $post_id );
+		}
+	}
+
+
+	/**
+	 * Flush already set cache by wp rocket cache plugin on registration page.
+	 */
+	public function flush_wprocket_cache() {
+		if ( function_exitts( 'rocket_clean_post' ) ) {
+			$post_id = get_the_ID();
+			rocket_clean_post( $post_id );
 		}
 	}
 
