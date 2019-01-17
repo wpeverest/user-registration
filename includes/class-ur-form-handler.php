@@ -25,6 +25,7 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
+		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 	}
 
 	/**
@@ -407,6 +408,46 @@ class UR_Form_Handler {
 
 				wp_redirect( add_query_arg( 'password-reset', 'true', ur_get_page_permalink( 'myaccount' ) ) );
 				exit;
+			}
+		}
+	}
+
+	/**
+	 * Handle Export Personal data confirmation request.
+	 */
+	public static function export_confirmation_request() {
+		if ( isset( $_REQUEST['action'] ) && 'confirmaction' === $_REQUEST['action'] ) {
+			if ( ! isset( $_GET['request_id'] ) ) {
+				return;
+			}
+
+			$request_id = (int) $_GET['request_id'];
+
+			if ( isset( $_GET['confirm_key'] ) ) {
+				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) );
+				$result = wp_validate_user_request_key( $request_id, $key );
+			} else {
+				$result = new WP_Error( 'invalid_key', __( 'Invalid Key' ) );
+			}
+
+			if ( is_wp_error( $result ) ) {
+				ur_add_notice( $result->get_error_message(), 'error' );
+				ur_print_notices();
+				return;
+			}
+
+			do_action( 'user_request_action_confirmed', $request_id );
+
+			$request = wp_get_user_request_data( $request_id );
+
+			if ( $request && in_array( $request->action_name, _wp_privacy_action_request_types(), true ) ) {
+				if ( 'export_personal_data' === $request->action_name ) {
+					$message = apply_filters( 'user_registration_export_personal_data_confirmation_message', __( 'Thanks for confirming your export request.', 'user-registration' ) );
+				} elseif ( 'remove_personal_data' === $request->action_name ) {
+					$message = apply_filters( 'user_registration_remove_personal_data_confirmation_message', __( 'Thanks for confirming your erasure request.', 'user-registration' ) );
+				}
+				ur_add_notice( $message, 'success' );
+				ur_print_notices();
 			}
 		}
 	}
