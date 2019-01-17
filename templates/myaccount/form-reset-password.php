@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ur_print_notices(); ?>
 
 <div class="ur-frontend-form login" id="ur-frontend-form">
-	<form method="post" class="user-registration-ResetPassword lost_reset_password">
+<form method="post" class="user-registration-ResetPassword lost_reset_password" data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<p><?php echo apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ); ?></p>
