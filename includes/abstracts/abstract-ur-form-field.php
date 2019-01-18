@@ -263,17 +263,16 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'hidden':
-					$value = isset( $setting_value['default'] )?$setting_value['default']:'';
-					if( !empty( $value) ) {
-						$extra_attribute = in_array( $strip_prefix, ur_get_fields_without_prefix() )  && 'field_name' == $setting_key ? "disabled='disabled'" : '';
-						
+					$value = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
+					if ( ! empty( $value ) ) {
+
 						$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
 						if ( true == $setting_value['required'] ) {
 							$general_setting_wrapper .= ' required ';
 						}
 
-						$general_setting_wrapper .= $extra_attribute . ' />';
+						$general_setting_wrapper .= '/>';
 					}
 					break;
 

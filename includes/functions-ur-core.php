@@ -636,6 +636,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
 			'default'     => 'yes',
+			'required'    => true,
 		);
 	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
