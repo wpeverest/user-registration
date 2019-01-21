@@ -41,10 +41,15 @@ class UR_Setting_Radio extends UR_Field_Settings {
 				'data-id'     => $this->field_id . '_options',
 				'name'        => $this->field_id . '[options]',
 				'class'       => $this->default_class . ' ur-settings-options',
-				'type'        => 'textarea',
+				'type'        => 'radio',
+				'options'     => array(
+					'First Choice'  => __( 'First Choice', 'user-registration' ),
+					'Second Choice' => __( 'Second Choice', 'user-registration' ),
+					'Third Choice'  => __( 'Third Choice', 'user-registration' ),
+				),
 				'required'    => false,
 				'default'     => '',
-				'placeholder' => __( "Please input your text here to create the radio choices list like:\nOption 1,\nOption 2,\nOption 3", 'user-registration' ),
+				'placeholder' => '',
 			),
 		);
 		$this->render_html( $fields );

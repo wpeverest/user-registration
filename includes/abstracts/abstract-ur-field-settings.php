@@ -98,6 +98,18 @@ abstract class UR_Field_Settings {
 					$this->fields_html .= '>' . esc_html( $value ) . '</textarea>';
 					break;
 
+				case 'radio':
+					$field_options = isset( $field['options'] ) ? $field['options'] : array();
+					foreach ( $field_options as  $option ) {
+						$this->fields_html .= '<input data-advance-field="' . esc_attr( $field_key ) . '" value="' . esc_attr( $option ) . '" class="' . esc_attr( $field['class'] ) . '" type="radio" name="' . esc_attr( $field['name'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr( $field['placeholder'] ) . '"';
+
+						if ( true == $field['required'] ) {
+							$this->fields_html .= ' required ';
+						}
+
+						$this->fields_html .= ' />'. esc_attr( $option ) .'<br/>';
+					}
+					break;
 				default:
 			}
 
