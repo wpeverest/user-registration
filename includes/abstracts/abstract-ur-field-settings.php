@@ -99,23 +99,27 @@ abstract class UR_Field_Settings {
 					break;
 
 				case 'radio':
-					$field_options = isset( $field['options'] ) ? $field['options'] : array();
-
-					if( isset( $value ) ) {
+					if ( ! empty( $value ) ) {
 						$options = explode( ',', trim( $value ) );
 					} else {
-						$options = $field_options['options'];
+						$options = isset( $field['options'] ) ? $field['options'] : array();
 					}
 
 					foreach ( $options as  $option ) {
+						$this->fields_html .= '<div class="">';
 						$this->fields_html .= '<input data-advance-field="' . esc_attr( $field_key ) . '" value="' . esc_attr( $option ) . '" class="' . esc_attr( $field['class'] ) . '" type="radio" name="' . esc_attr( $field['name'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr( $field['placeholder'] ) . '"';
 
-						if ( true == $field['required'] ) {
+						if ( true === $field['required'] ) {
 							$this->fields_html .= ' required ';
 						}
 
-						$this->fields_html .= ' />'. esc_attr( trim( $option ) ) .'<br/>';
+						$this->fields_html .= '' . checked( $option, 1 ) . ' />';
+						$this->fields_html .= '<input data-advance-field"' . esc_attr( $field_key ) . '" value="' . esc_attr( trim( $option ) ) . '"/>';
+						$this->fields_html .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+						$this->fields_html .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+						$this->fields_html .= '</div>';
 					}
+
 					break;
 				default:
 			}
