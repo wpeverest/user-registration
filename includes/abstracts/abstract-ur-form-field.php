@@ -219,6 +219,8 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'radio':
+					echo '<pre>' . print_r( $this->admin_data, true ) . '</pre>';
+
 					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
