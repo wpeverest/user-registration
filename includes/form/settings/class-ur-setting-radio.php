@@ -36,21 +36,6 @@ class UR_Setting_Radio extends UR_Field_Settings {
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 
 			),
-			'options'      => array(
-				'label'       => __( 'Options ', 'user-registration' ),
-				'data-id'     => $this->field_id . '_options',
-				'name'        => $this->field_id . '[options]',
-				'class'       => $this->default_class . ' ur-settings-options',
-				'type'        => 'radio',
-				'options'     => array(
-					'First Choice'  => __( 'First Choice', 'user-registration' ),
-					'Second Choice' => __( 'Second Choice', 'user-registration' ),
-					'Third Choice'  => __( 'Third Choice', 'user-registration' ),
-				),
-				'required'    => false,
-				'default'     => '',
-				'placeholder' => '',
-			),
 		);
 		$this->render_html( $fields );
 	}

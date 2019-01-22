@@ -47,7 +47,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'data-id'     => $this->field_id . '_choices',
 				'name'        => $this->field_id . '[choices]',
 				'class'       => $this->default_class . ' ur-settings-choices',
-				'type'        => 'options',
+				'type'        => 'checkbox',
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( "Please input your text here to create the checkbox list like:\nCheckbox 1,\nCheckbox 2,\nCheckbox 3", 'user-registration' ),
