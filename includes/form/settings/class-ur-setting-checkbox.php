@@ -28,7 +28,6 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 	}
 
 	public function register_fields() {
-
 		$fields = array(
 
 			'custom_class' => array(

@@ -629,7 +629,24 @@ function ur_get_general_settings( $id ) {
 		unset( $general_settings['placeholder'] );
 	}
 
-	if ( $strip_id == 'privacy_policy' ) {
+	$choices_fields = array( 'radio' );
+
+	if ( in_array( $strip_id, $choices_fields ) ) {
+		$general_settings['options'] = array(
+			'type'        => 'radio',
+			'label'       => __( 'Options', 'user-registration' ),
+			'name'        => 'ur_general_setting[options]',
+			'placeholder' => '',
+			'required'    => true,
+			'options'     => array(
+				'First Choice'  => __( 'First Choice', 'user-registration' ),
+				'Second Choice' => __( 'Second Choice', 'user-registration' ),
+				'Third Choice'  => __( 'Third Choice', 'user-registration' ),
+			),
+		);
+	}
+
+	if ( $strip_id === 'privacy_policy' ) {
 		$general_settings['required'] = array(
 			'type'        => 'hidden',
 			'label'       => '',

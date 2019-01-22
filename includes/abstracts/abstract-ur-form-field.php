@@ -299,7 +299,7 @@ abstract class UR_Form_Field {
 		$class          = 'ur-general-setting-' . $strip_prefix;
 
 		echo "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		echo '<h2>' . __( 'General Settings', 'user-registration' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2>';
 		echo $this->get_field_general_settings();
 		echo '</div>';
 
@@ -311,6 +311,7 @@ abstract class UR_Form_Field {
 			echo $advance_settings;
 			echo '</div>';
 		}
+
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
 	}
 
