@@ -220,7 +220,11 @@ abstract class UR_Form_Field {
 
 				case 'radio':
 					$default_options = isset( $setting_value['options'] ) ? $setting_value['options'] : array();
-					$raw_options     = ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $default_options;
+					$stored_options  = ! empty( $this->get_general_setting_data( 'options' ) ) ? $this->get_general_setting_data( 'options' ) : $default_options;
+
+					// Compatibility for older version. Get string value from options in advanced settings.
+					$raw_options     = ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $stored_options;
+					$default_value   = ! empty( $this->get_general_setting_data( 'default_value' ) ) ? $this->get_general_setting_data( 'default_value' ) : '';
 
 					if ( ! is_array( $raw_options ) ) {
 						// Compatibility code for older version. modified @since 1.5.7.
@@ -232,14 +236,14 @@ abstract class UR_Form_Field {
 
 					foreach ( $options as  $option ) {
 						$general_setting_wrapper .= '<div class="">';
-						$general_setting_wrapper .='<input value="' . $option . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="radio" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+						$general_setting_wrapper .='<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="radio" name="' . $setting_value['name'] . '_value" ';
 
 						if ( true == $setting_value['required'] ) {
 							$general_setting_wrapper .= ' required ';
 						}
 
-						$general_setting_wrapper .= '' . checked( $option, 1 ) . ' />';
-						$general_setting_wrapper .= '<input value="' . $option . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '">';
+						$general_setting_wrapper .= '' . checked( $option, $default_value, false ) . ' />';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
 
 						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
