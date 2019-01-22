@@ -707,6 +707,7 @@ jQuery(function ($) {
 					break;
 				case 'field_name':
 				case 'input_mask':
+				case 'options':
 					$this_obj.on('change', function () {
 						trigger_general_setting_field_name($(this));
 					});
