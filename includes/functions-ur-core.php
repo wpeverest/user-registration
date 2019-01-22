@@ -639,9 +639,9 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'options'     => array(
-				'First Choice'  => __( 'First Choice', 'user-registration' ),
-				'Second Choice' => __( 'Second Choice', 'user-registration' ),
-				'Third Choice'  => __( 'Third Choice', 'user-registration' ),
+				__( 'First Choice', 'user-registration' ),
+				__( 'Second Choice', 'user-registration' ),
+				__( 'Third Choice', 'user-registration' ),
 			),
 		);
 	}
