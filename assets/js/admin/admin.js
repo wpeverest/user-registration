@@ -485,6 +485,7 @@ jQuery(function ($) {
 				show_message(validation_response.message);
 				return;
 			}
+
 			var form_data = get_form_data();
 			var ur_form_id = $('#ur_form_id').val();
 			var ur_form_id_localization = user_registration_admin_data.post_id;
@@ -638,6 +639,7 @@ jQuery(function ($) {
 				var grid_wise_data = get_grid_wise_data(grid_item);
 				single_row_data.push(grid_wise_data);
 			});
+
 			form_data.push(single_row_data);
 		});
 		return form_data;
@@ -654,17 +656,28 @@ jQuery(function ($) {
 				general_setting: get_field_general_setting($this_item),
 				advance_setting: get_field_advance_setting($this_item)
 			};
+
 			all_field_data.push(single_field_data);
 		});
 		return all_field_data;
 	}
 
 	function get_field_general_setting($single_item) {
+
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
+
+		var values = [];
 		$.each(general_setting_field, function () {
-			general_setting_data[$(this).attr('data-field')] = get_ur_data($(this));
+			if( 'options' === $(this).attr('data-field') ) {
+				general_setting_data[$(this).attr('data-field')] = values.push( get_ur_data($(this) ) );
+				general_setting_data[$(this).attr('data-field')] = values;
+			} else {
+				general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
+			}
 		});
+
+
 		return general_setting_data;
 	}
 
@@ -707,9 +720,14 @@ jQuery(function ($) {
 					break;
 				case 'field_name':
 				case 'input_mask':
-				case 'options':
+				case 'default_value':
 					$this_obj.on('change', function () {
 						trigger_general_setting_field_name($(this));
+					});
+				break;
+				case 'options':
+					$this_obj.on('change', function () {
+						trigger_general_setting_options($(this));
 					});
 					break;
 				case 'placeholder':
@@ -836,6 +854,23 @@ jQuery(function ($) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
 	}
+
+	function trigger_general_setting_options($label) {
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		var index = undefined;
+		$label.closest('.ur-general-setting-options').find('[data-field="options"]').each( function( i, el ) {
+			if( $label.is($(el))) {
+				index = i;
+			}
+		} );
+		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').each( function( i, el ) {
+			if( i == index ){
+				$(el).attr('value', $label.val());
+			}
+		} );
+	}
+
+
 
 	function trigger_general_setting_label($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
