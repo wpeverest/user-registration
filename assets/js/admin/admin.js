@@ -726,7 +726,8 @@ jQuery(function ($) {
 					});
 				break;
 				case 'options':
-					$this_obj.on('change', function () {
+					$this_obj.on('keyup', function () {
+						render_radio( $(this).val() );
 						trigger_general_setting_options($(this));
 					});
 					break;

@@ -7,7 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : array();
+$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+$stored_options  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $default_options;
+
+// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+$options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $stored_options;
 
 ?>
 <div class="ur-input-type-select ur-admin-template">
