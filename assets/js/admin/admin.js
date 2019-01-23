@@ -670,8 +670,8 @@ jQuery(function ($) {
 		var values = [];
 		$.each(general_setting_field, function () {
 			if( 'options' === $(this).attr('data-field') ) {
-				general_setting_data[$(this).attr('data-field')] = values.push( get_ur_data($(this) ) );
-				general_setting_data[$(this).attr('data-field')] = values;
+				general_setting_data['options'] = values.push( get_ur_data($(this) ) );
+				general_setting_data['options'] = values;
 			} else {
 				general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
 			}
@@ -869,8 +869,6 @@ jQuery(function ($) {
 			}
 		} );
 	}
-
-
 
 	function trigger_general_setting_label($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');

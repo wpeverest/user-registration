@@ -315,7 +315,7 @@ class UR_AJAX {
 
 			} else {
 
-				if ( $key == 'field_name' ) {
+				if ( $key === 'field_name' ) {
 					$regex_status = self::is_regex_pass( $value );
 
 					if ( ! $regex_status || in_array( $value, self::$field_key_aray ) ) {
