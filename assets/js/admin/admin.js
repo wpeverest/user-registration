@@ -1049,4 +1049,12 @@ jQuery(function ($) {
 		$(field_list).slideToggle();
 	});
 
+
+	$(document).on('click', '.ur-options-list .add', function( e ) {
+		e.preventDefault();
+		var $this 		 = $(this),
+			cloned_input = $this.parent('li');
+
+		$('#ur-setting-form').find('.ur-general-setting-block .ur-options-list').append(cloned_input);
+	});
 }(jQuery, window.user_registration_admin_data));

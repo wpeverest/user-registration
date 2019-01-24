@@ -670,7 +670,7 @@ function ur_get_general_settings( $id ) {
  * @param  array $new_items  New items to insert inbetween
  * @param  string $after     Index to insert after
  *
- * @return array 			Ordered array of items.
+ * @return array 			 Ordered array of items.
  */
 function ur_insert_after_helper( $items, $new_items, $after ) {
 
