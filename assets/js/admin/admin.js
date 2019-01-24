@@ -727,7 +727,7 @@ jQuery(function ($) {
 				break;
 				case 'options':
 					$this_obj.on('keyup', function () {
-						render_radio( $(this).val() );
+						render_radio( $this_obj );
 						trigger_general_setting_options($(this));
 					});
 					break;
@@ -826,7 +826,8 @@ jQuery(function ($) {
 			}
 		}
 	}
-	function render_radio(value) {
+	function render_radio(this_obj) {
+		console.log( this_obj.parent() );
 		value = $.trim(value);
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var radio = wrapper.find('.ur-field');
