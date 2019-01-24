@@ -23,11 +23,11 @@ $options = isset( $this->admin_data->advance_setting->options ) ? explode( ',', 
 	<div class="ur-field" data-field-key="radio">
 			<?php
 			if ( count( $options ) < 1 ) {
-				echo "<input type = 'radio'  value='1' disabled/>";
+				echo "<label><input type = 'radio'  value='1' disabled/></label>";
 			}
 
 			foreach ( $options as $option ) {
-				echo "<input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' disabled/>" . esc_html( trim( $option ) ) . '<br>';
+				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
 			}
 			?>
 	</div>

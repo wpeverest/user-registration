@@ -727,7 +727,7 @@ jQuery(function ($) {
 				break;
 				case 'options':
 					$this_obj.on('keyup', function () {
-						render_radio( $this_obj );
+						render_radio( $(this) );
 						trigger_general_setting_options($(this));
 					});
 					break;
@@ -826,16 +826,24 @@ jQuery(function ($) {
 			}
 		}
 	}
-	function render_radio(this_obj) {
-		console.log( this_obj.parent() );
-		value = $.trim(value);
+	function render_radio(this_node) {
+		var li_elements = this_node.closest('ul').find('li');
+
+		var	array_value = [];
+
+		li_elements.each( function( index, element) {
+			var value = $( element ).find('input.ur-type-radio-label').val();
+			value = $.trim(value);
+			array_value.push(value);
+		});
+
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var radio = wrapper.find('.ur-field');
 		radio.html('');
-		var array_value = value.split(',');
+
 		for (var i = 0; i < array_value.length; i++) {
 			if (array_value[i] !== '') {
-				radio.append('<label><input value="' + array_value[i].trim() + '" type="radio">' + array_value[i].trim() + '</label>');
+				radio.append('<label><input value="' + array_value[i].trim() + '" type="radio" disabled>' + array_value[i].trim() + '</label>');
 			}
 		}
 	}
