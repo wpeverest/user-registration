@@ -557,6 +557,11 @@
 	*:focus {
 		outline: 0;
 	}
+
+	a {
+		text-decoration: none;
+	}
+
 	.ur-registered-inputs {
 		width: 35%;
 		background-color: $color_gray_ten;
@@ -981,6 +986,44 @@
 	.ur-general-setting label {
 		display: block;
 	}
+
+	.ur-options-list {
+		li {
+			display: flex;
+			align-items: center;
+
+			input {
+				margin-right: 10px;
+			}
+
+			.add, .remove {
+				background: $white;
+				border: 1px solid $color_gray_six;
+				color: $color_gray_two;
+				display: flex;
+				flex: 1 0 35px;
+				align-items: center;
+				justify-content: center;
+				height: 35px;
+				position: relative;
+
+				&:hover {
+					background: $primary_color;
+					border-color: $primary_color;
+					color: $white;
+				}
+
+				i {
+					line-height: 22px;
+				}
+			}
+
+			.add {
+				margin-right: 10px;
+			}
+		}
+	}
+
 }
 
 #sortable {
