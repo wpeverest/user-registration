@@ -234,8 +234,9 @@ abstract class UR_Form_Field {
 						$options = $raw_options;
 					}
 
+					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					foreach ( $options as  $option ) {
-						$general_setting_wrapper .= '<div class="">';
+						$general_setting_wrapper .= '<li>';
 						$general_setting_wrapper .='<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="radio" name="' . $setting_value['name'] . '_value" ';
 
 						if ( true == $setting_value['required'] ) {
@@ -247,8 +248,10 @@ abstract class UR_Form_Field {
 
 						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
-						$general_setting_wrapper .= '</div>';
+						$general_setting_wrapper .= '</li>';
+
 					}
+						$general_setting_wrapper .= '</ul>';
 					break;
 
 				case 'select':
