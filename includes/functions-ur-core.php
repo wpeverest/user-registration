@@ -632,7 +632,8 @@ function ur_get_general_settings( $id ) {
 	$choices_fields = array( 'radio' );
 
 	if ( in_array( $strip_id, $choices_fields ) ) {
-		$general_settings['options'] = array(
+
+		$settings['options'] = array(
 			'type'        => 'radio',
 			'label'       => __( 'Options', 'user-registration' ),
 			'name'        => 'ur_general_setting[options]',
@@ -644,6 +645,8 @@ function ur_get_general_settings( $id ) {
 				__( 'Third Choice', 'user-registration' ),
 			),
 		);
+
+		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
 
 	if ( $strip_id === 'privacy_policy' ) {
@@ -657,6 +660,29 @@ function ur_get_general_settings( $id ) {
 		);
 	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
+}
+
+/**
+ * Insert in between the indexes in multidimensional array.
+ *
+ * @since  1.5.7
+ * @param  array $items      An array of items
+ * @param  array $new_items  New items to insert inbetween
+ * @param  string $after     Index to insert after
+ *
+ * @return array 			Ordered array of items.
+ */
+function ur_insert_after_helper( $items, $new_items, $after ) {
+
+	// Search for the item position and +1 since is after the selected item key.
+	$position = array_search( $after, array_keys( $items ) ) + 1;
+
+	// Insert the new item.
+	$return_items = array_slice( $items, 0, $position, true );
+	$return_items += $new_items;
+	$return_items += array_slice( $items, $position, count( $items ) - $position, true );
+
+    return $return_items;
 }
 
 /**
