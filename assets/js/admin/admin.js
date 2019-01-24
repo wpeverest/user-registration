@@ -722,7 +722,9 @@ jQuery(function ($) {
 				case 'input_mask':
 				case 'default_value':
 					$this_obj.on('change', function () {
-						render_radio( $(this) );
+						if ( 'default_value' === $this_obj.attr('data-field') ) {
+							render_radio( $(this) );
+						}
 						trigger_general_setting_field_name($(this));
 					});
 				break;
@@ -868,6 +870,7 @@ jQuery(function ($) {
 	}
 
 	function trigger_general_setting_options($label) {
+
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var index = undefined;
 		$label.closest('.ur-general-setting-options').find('[data-field="options"]').each( function( i, el ) {
@@ -878,6 +881,10 @@ jQuery(function ($) {
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').each( function( i, el ) {
 			if( i == index ){
 				$(el).attr('value', $label.val());
+			}
+
+			if( $label.closest('li').find('[data-field="default_value"]').is(":checked") ) {
+				$(el).closest('li').find('[data-field="default_value"]').val( $label.val() );
 			}
 		} );
 	}
