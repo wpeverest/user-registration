@@ -80,7 +80,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			}
 
 			$show_fields = $this->get_user_meta_by_form_fields( $user->ID );
-
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
@@ -182,7 +181,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 															name="<?php echo esc_attr( $key ); ?>[]"
 															id="<?php echo esc_attr( $key ); ?>"
 															value="<?php echo esc_attr( trim( $choice ) ); ?>"
-															class="<?php echo esc_attr( $field['class'] ); ?>" 
+															class="<?php echo esc_attr( $field['class'] ); ?>"
 																			  <?php
 																				if ( is_array( $value ) && in_array( trim( $choice ), $value ) ) {
 																					echo 'checked="checked"';
@@ -197,7 +196,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										?>
 										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
 											   id="<?php echo esc_attr( $key ); ?>" value="1"
-											   class="<?php echo esc_attr( $field['class'] ); ?>" 
+											   class="<?php echo esc_attr( $field['class'] ); ?>"
 																 <?php
 																	if ( $value == '1' ) {
 																		echo 'checked="checked"';
@@ -436,7 +435,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'radio':
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$options = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+
+									// Backward compatibility. Modified since 1.5.7.
+									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : $options;
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {
