@@ -831,13 +831,17 @@ jQuery(function ($) {
 	}
 	function render_radio(this_node) {
 		var li_elements = this_node.closest('ul').find('li');
-
+		var checked_index = undefined;
 		var	array_value = [];
 
 		li_elements.each( function( index, element) {
 			var value = $( element ).find('input.ur-type-radio-label').val();
 			value = $.trim(value);
 			radio = $( element ).find('input.ur-type-radio-value').is( ':checked' );
+			// Set checked elements index value
+			if( radio === true) {
+				checked_index = index;
+			}
 			array_value.push({value:value, radio:radio });
 		});
 
@@ -850,6 +854,16 @@ jQuery(function ($) {
 				radio.append('<label><input value="' + array_value[i].value.trim() + '" type="radio" ' + ( (array_value[i].radio)? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
+
+		// Loop through options in active fields general setting hidden div.
+		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
+			var radio_input = $(element).find( '[data-field="default_value"]' );
+			if( index === checked_index ){
+				radio_input.attr( 'checked', 'checked' );
+			}else{
+				radio_input.removeAttr( 'checked' );
+			}
+		} );
 	}
 	function render_select_box(value) {
 		value = $.trim(value);
