@@ -722,6 +722,7 @@ jQuery(function ($) {
 				case 'input_mask':
 				case 'default_value':
 					$this_obj.on('change', function () {
+						render_radio( $(this) );
 						trigger_general_setting_field_name($(this));
 					});
 				break;
@@ -834,7 +835,8 @@ jQuery(function ($) {
 		li_elements.each( function( index, element) {
 			var value = $( element ).find('input.ur-type-radio-label').val();
 			value = $.trim(value);
-			array_value.push(value);
+			radio = $( element ).find('input.ur-type-radio-value').is( ':checked' );
+			array_value.push({value:value, radio:radio });
 		});
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
@@ -843,7 +845,7 @@ jQuery(function ($) {
 
 		for (var i = 0; i < array_value.length; i++) {
 			if (array_value[i] !== '') {
-				radio.append('<label><input value="' + array_value[i].trim() + '" type="radio" disabled>' + array_value[i].trim() + '</label>');
+				radio.append('<label><input value="' + array_value[i].value.trim() + '" type="radio" ' + ( (array_value[i].radio)? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
 	}
