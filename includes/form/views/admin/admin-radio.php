@@ -34,7 +34,7 @@ $default_value = isset( $this->admin_data->general_setting->default_value ) ? $t
 	</div>
 
 	<?php
-	  UR_Form_Field_Radio::get_instance()->get_setting();
+		UR_Form_Field_Radio::get_instance()->get_setting();
 	?>
 </div>
 
