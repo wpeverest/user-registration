@@ -1053,12 +1053,16 @@ jQuery(function ($) {
 
 		e.preventDefault();
 		var $this 		    = $(this),
-			cloning_element = $this.parent('li').clone();
+			$wrapper        = $( '.ur-selected-item.ur-item-active' ),
+			this_index = $this.parent('li').index(),
+			cloning_element = $this.parent('li').clone(true, true);
 
 		cloning_element.find('input[data-field="options"]').val('');
 		cloning_element.find('input[data-field="default_value"]').removeAttr('checked');
 
-		$('#ur-setting-form .ur-general-setting-block .ur-options-list').append( cloning_element );
+		$this.parent('li').after( cloning_element );
+		$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).after( cloning_element.clone(true, true) );
 
+		render_radio( $this );
 	});
 }(jQuery, window.user_registration_admin_data));
