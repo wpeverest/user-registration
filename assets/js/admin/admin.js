@@ -730,7 +730,7 @@ jQuery(function ($) {
 				break;
 				case 'options':
 					$this_obj.on('keyup', function () {
-						render_radio( $(this) );
+						render_radio( $this_obj );
 						trigger_general_setting_options($(this));
 					});
 					break;
@@ -1049,12 +1049,16 @@ jQuery(function ($) {
 		$(field_list).slideToggle();
 	});
 
-
 	$(document).on('click', '.ur-options-list .add', function( e ) {
-		e.preventDefault();
-		var $this 		 = $(this),
-			cloned_input = $this.parent('li');
 
-		$('#ur-setting-form').find('.ur-general-setting-block .ur-options-list').append(cloned_input);
+		e.preventDefault();
+		var $this 		    = $(this),
+			cloning_element = $this.parent('li').clone();
+
+		cloning_element.find('input[data-field="options"]').val('');
+		cloning_element.find('input[data-field="default_value"]').removeAttr('checked');
+
+		$('#ur-setting-form .ur-general-setting-block .ur-options-list').append( cloning_element );
+
 	});
 }(jQuery, window.user_registration_admin_data));
