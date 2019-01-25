@@ -292,18 +292,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select':
+				$default_value = isset( $args['default'] ) ? $args['default'] : '';	// Backward compatibility. Modified since 1.5.7
+				$value    = ! empty( $value ) ? $value : $args['default_value'];
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as $option_key => $option_text ) {
+					foreach ( $args['options'] as  $option_text ) {
 
-						if ( '' === $option_key ) {
+						if ( '' === $option_text ) {
 							// If we have a blank option, select2 needs a placeholder
 							if ( empty( $args['placeholder'] ) ) {
 								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						$options .= '<option value="' . esc_attr( trim( $option_text ) ) . '" ' . selected( $value, trim( $option_text ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
 					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
@@ -350,11 +352,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value    = ! empty( $value ) ? $value : $args['default_value'];
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as $option_key => $option_text ) {
+					foreach ( $args['options'] as $option_text ) {
 
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_text ), false ) . ' />' . wp_kses(
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_text ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_text ), false ) . ' />' . wp_kses(
 							trim( $option_text ),
 							array(
 								'a'    => array(
@@ -438,6 +440,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+					$options 		   = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
 					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
@@ -455,7 +458,14 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'radio':
 							case 'select':
-								$extra_params['options'] = explode( ',', $field->advance_setting->options );
+								$advanced_options = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+
+								if( ! empty( $advance_options ) ) {
+									$extra_params['options']  = explode( ',', $advance_options );
+								} else {
+									$extra_params['options'] = $options;
+								}
+
 								foreach ( $extra_params['options'] as $key => $value ) {
 									$extra_params['options'][ $value ] = $value;
 									unset( $extra_params['options'][ $key ] );
