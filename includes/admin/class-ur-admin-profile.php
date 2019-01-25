@@ -423,7 +423,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							switch ( $field_key ) {
 
 								case 'select':
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$options 	 = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+
+									// Backward compatibility. Modified since 1.5.7.
+									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : $options;
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {

@@ -629,7 +629,7 @@ function ur_get_general_settings( $id ) {
 		unset( $general_settings['placeholder'] );
 	}
 
-	$choices_fields = array( 'radio' );
+	$choices_fields = array( 'radio', 'select' );
 
 	if ( in_array( $strip_id, $choices_fields ) ) {
 
