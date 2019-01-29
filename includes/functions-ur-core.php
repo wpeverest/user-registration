@@ -634,7 +634,7 @@ function ur_get_general_settings( $id ) {
 	if ( in_array( $strip_id, $choices_fields ) ) {
 
 		$settings['options'] = array(
-			'type'        => 'checkbox',
+			'type'        => $strip_id === 'checkbox' ? 'checkbox' : 'radio',
 			'label'       => __( 'Options', 'user-registration' ),
 			'name'        => 'ur_general_setting[options]',
 			'placeholder' => '',
