@@ -988,14 +988,10 @@ jQuery(function ($) {
 			if ($.inArray(data_field_id, single_draggable_fields) >= 0) {
 
 				if ($('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_id + '"]').length > 0) {
-
-
 					$this.draggable('disable');
 				} else {
-
 					$this.draggable('enable');
 				}
-
 			}
 		});
 	}
@@ -1088,11 +1084,16 @@ jQuery(function ($) {
 			this_index 		= $this.parent('li').index();
 
 		if( $parent_ul.find('li').length > 1 ) {
+			if( $this.siblings('input[data-field="default_value"]').is(':checked') ) {
+				$wrapper.find( '.ur-general-setting-options .ur-options-list input[data-field="default_value"]' ).val('');
+			}
+
 			$this.parent('li').remove();
 			$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).remove();
-			$wrapper.find( '.ur-general-setting-options .ur-options-list input[data-field="default_value"]' ).val('');
 
-			render_radio( $any_siblings );
+			if ( $any_siblings.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+				render_radio( $any_siblings );
+			}
 		}
 	});
 }(jQuery, window.user_registration_admin_data));
