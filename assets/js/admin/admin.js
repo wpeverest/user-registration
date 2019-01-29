@@ -721,15 +721,24 @@ jQuery(function ($) {
 				case 'input_mask':
 				case 'default_value':
 					$this_obj.on('change', function () {
+
 						if ( 'default_value' === $this_obj.attr('data-field') ) {
-							render_radio( $(this) );
+							if( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-select') ) {
+								render_select_box( $(this) );
+							} else if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+								render_radio( $(this) );
+							}
 						}
+
 						trigger_general_setting_field_name($(this));
 					});
 				break;
 				case 'options':
 					$this_obj.on('keyup', function () {
-						render_radio( $this_obj );
+						if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+							render_radio( $(this) );
+						}
+
 						trigger_general_setting_options($(this));
 					});
 					break;
@@ -828,6 +837,7 @@ jQuery(function ($) {
 			}
 		}
 	}
+
 	function render_radio(this_node) {
 		var li_elements = this_node.closest('ul').find('li');
 		var checked_index = undefined;
@@ -864,17 +874,13 @@ jQuery(function ($) {
 			}
 		} );
 	}
-	function render_select_box(value) {
-		value = $.trim(value);
+
+	function render_select_box(this_node) {
+		value = $.trim( this_node.val() );
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var select = wrapper.find('.ur-field').find('select');
 		select.html('');
-		var array_value = value.split(',');
-		for (var i = 0; i < array_value.length; i++) {
-			if (array_value[i] !== '') {
-				select.append('<option value=\'' + array_value[i] + '\'>' + array_value[i].trim() + '</option>');
-			}
-		}
+		select.append('<option value=\'' + value + '\'>' + value + '</option>');
 	}
 
 	function trigger_general_setting_field_name($label) {
@@ -1063,7 +1069,9 @@ jQuery(function ($) {
 		$this.parent('li').after( cloning_element );
 		$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).after( cloning_element.clone(true, true) );
 
-		render_radio( $this );
+		if ( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+			render_radio( $this );
+		}
 	});
 
 	$(document).on('click', '.ur-options-list .remove', function( e ) {
@@ -1079,7 +1087,10 @@ jQuery(function ($) {
 			$this.parent('li').remove();
 			$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).remove();
 			$wrapper.find( '.ur-general-setting-options .ur-options-list input[data-field="default_value"]' ).val('');
-			render_radio( $any_siblings );
+
+			if ( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+				render_radio( $any_siblings );
+			}
 		}
 	});
 }(jQuery, window.user_registration_admin_data));

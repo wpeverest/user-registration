@@ -13,7 +13,7 @@ $stored_options  = isset( $this->admin_data->general_setting->options ) ? $this-
 // Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
 $options       = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $stored_options;
 $default_value = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : '';
-echo '<pre>'; print_r( $default_value ); echo '</pre>';
+
 ?>
 <div class="ur-input-type-select ur-admin-template">
 
