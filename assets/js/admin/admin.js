@@ -666,13 +666,23 @@ jQuery(function ($) {
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
 
-		var values = [];
+		var option_values  = [];
+		var default_values = [];
 		$.each(general_setting_field, function () {
+
+			var is_checkbox = $(this).closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox');
+
 			if( 'options' === $(this).attr('data-field') ) {
-				general_setting_data['options'] = values.push( get_ur_data($(this) ) );
-				general_setting_data['options'] = values;
+				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );
+				general_setting_data['options'] = option_values;
 			} else {
-				general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
+
+				if( 'default_value' === $(this).attr('data-field') && is_checkbox === true ) {
+					general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
+					general_setting_data['default_value'] = default_values;
+				} else {
+					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
+				}
 			}
 		});
 
