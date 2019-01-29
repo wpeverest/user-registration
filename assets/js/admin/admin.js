@@ -735,7 +735,11 @@ jQuery(function ($) {
 				break;
 				case 'options':
 					$this_obj.on('keyup', function () {
-						if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+
+						if( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-select') && $this_obj.siblings('input[data-field="default_value"]').is(':checked') ) {
+							render_select_box( $(this) );
+						} else
+						 if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
 							render_radio( $(this) );
 						}
 
@@ -1088,9 +1092,7 @@ jQuery(function ($) {
 			$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).remove();
 			$wrapper.find( '.ur-general-setting-options .ur-options-list input[data-field="default_value"]' ).val('');
 
-			if ( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
-				render_radio( $any_siblings );
-			}
+			render_radio( $any_siblings );
 		}
 	});
 }(jQuery, window.user_registration_admin_data));
