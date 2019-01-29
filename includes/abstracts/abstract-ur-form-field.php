@@ -271,7 +271,7 @@ abstract class UR_Form_Field {
 					// Compatibility for older version. Get string value from options in advanced settings.
 					$raw_options   	= ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $stored_options;
 					$default_values = $this->get_general_setting_data( 'default_value' );
-					$default_values = ! empty( $default_value ) ? $default_value : array();
+					$default_values = ! empty( $default_values ) ? $default_values : array();
 					$default_values = array_map( 'trim', $default_values );
 
 					if ( ! is_array( $raw_options ) ) {
