@@ -629,12 +629,12 @@ function ur_get_general_settings( $id ) {
 		unset( $general_settings['placeholder'] );
 	}
 
-	$choices_fields = array( 'radio', 'select' );
+	$choices_fields = array( 'radio', 'select', 'checkbox' );
 
 	if ( in_array( $strip_id, $choices_fields ) ) {
 
 		$settings['options'] = array(
-			'type'        => 'radio',
+			'type'        => 'checkbox',
 			'label'       => __( 'Options', 'user-registration' ),
 			'name'        => 'ur_general_setting[options]',
 			'placeholder' => '',

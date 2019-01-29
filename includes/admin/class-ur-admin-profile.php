@@ -466,8 +466,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'mailchimp':
 								case 'checkbox':
-									$choices_data                      = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
-									$choices_data                      = explode( ',', $choices_data );
+									$choices = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+									$choices_data                      = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : $choices;
+
+									// Backward compatibility. Modified since 1.5.7.
+									if( ! is_array( $choices_data ) ) {
+										$choices_data                  = explode( ',', $choices_data );
+									}
+
 									$fields[ $field_index ]['choices'] = $choices_data;
 									$fields[ $field_index ]['type']    = 'checkbox';
 									$fields[ $field_index ]['class']   = '';

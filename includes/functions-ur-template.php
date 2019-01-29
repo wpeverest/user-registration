@@ -231,16 +231,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox':
-				$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default   = $args['default'];
 
-				if ( isset( $args['choices'] ) && array_filter( $args['choices'] ) ) {
+				$field_key 		= isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value 	= isset( $args['default'] ) ? $args['default'] : '';	// Backward compatibility. Modified since 1.5.7
+				$default 	 	= ! empty( $value ) ? $value : $args['default_value'];
+				$options 		= isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+
+				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
 						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
 					}
 
-					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+					$choices = isset( $options ) ? $options : array();
 
 					$field  = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 					$field .= $args['label'] . $required . '</label>';
@@ -348,7 +351,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
-				$default_value = isset( $args['default'] ) ? $args['default'] : '';				// Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default'] ) ? $args['default'] : '';	// Backward compatibility. Modified since 1.5.7
 				$value    = ! empty( $value ) ? $value : $args['default_value'];
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
@@ -472,10 +475,18 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								}
 								break;
 							case 'checkbox':
-								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
-								foreach ( $extra_params['choices'] as $key => $value ) {
-									$extra_params['choices'][ $value ] = $value;
-									unset( $extra_params['choices'][ $key ] );
+
+								$advanced_options = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+
+								if( ! empty( $advance_options ) ) {
+									$extra_params['options'] = explode( ',', $field->advance_setting->choices );
+								} else {
+									$extra_params['options'] = $options;
+								}
+
+								foreach ( $extra_params['options'] as $key => $value ) {
+									$extra_params['options'][ $value ] = $value;
+									unset( $extra_params['options'][ $key ] );
 								}
 								break;
 							case 'country':

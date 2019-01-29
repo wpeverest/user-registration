@@ -7,7 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$choices = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : array();
+$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+$stored_options  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $default_options;
+
+// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+$options      	 = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $stored_options;
+$default_values  = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : array();
 ?>
 
 <div class="ur-input-type-checkbox ur-admin-template">
@@ -18,12 +23,15 @@ $choices = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', 
 
 	<div class="ur-field" data-field-key="checkbox">
 		<?php
-		if ( count( $choices ) < 1 ) {
+		if ( count( $options ) < 1 ) {
 			echo "<input type = 'checkbox'  value='1' disabled/>";
 		}
 
-		foreach ( $choices as $choice ) {
-			echo "<input type = 'checkbox'  value='" . esc_attr( trim( $choice ) ) . "' disabled/>" . esc_html( trim( $choice ) ) . '<br>';
+		foreach ( $options as $option ) {
+
+			$checked = in_array( $option, $default_values ) ? 'checked' : '';
+
+			echo "<input type = 'checkbox'  value='" . esc_attr( trim( $option ) ) . "' ". $checked ." disabled/>" . esc_html( trim( $option ) ) . '<br>';
 		}
 		?>
 

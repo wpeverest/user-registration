@@ -262,6 +262,57 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '</ul>';
 					break;
 
+				case 'checkbox':
+
+					$default_options = isset( $setting_value['options'] ) ? $setting_value['options'] : array();
+					$stored_options  = $this->get_general_setting_data( 'options' );
+					$stored_options  = ! empty( $stored_options ) ? $stored_options : $default_options;
+
+					// Compatibility for older version. Get string value from options in advanced settings.
+					$raw_options   	= ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $stored_options;
+					$default_values = $this->get_general_setting_data( 'default_value' );
+					$default_values = ! empty( $default_value ) ? $default_value : array();
+					$default_values = array_map( 'trim', $default_values );
+
+					if ( ! is_array( $raw_options ) ) {
+						// Compatibility code for older version. modified @since 1.5.7.
+						$options = explode( ',', trim( $raw_options ) );
+						$options = array_map( 'trim', $options );
+					} else {
+						$options = $raw_options;
+					}
+
+					$general_setting_wrapper .= '<ul class="ur-options-list">';
+					$unique = uniqid();
+
+					foreach ( $options as  $option ) {
+
+						$general_setting_wrapper .= '<li>';
+						$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+						</div>';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="checkbox" name="' . $unique . '_value" ';
+
+						if ( true == $setting_value['required'] ) {
+							$general_setting_wrapper .= ' required ';
+						}
+
+						if( in_array( $option, $default_values ) ) {
+							$general_setting_wrapper .= 'checked ="checked" />';
+						} else {
+							$general_setting_wrapper .= '/>';
+						}
+
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+
+						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+						$general_setting_wrapper .= '</li>';
+
+					}
+						$general_setting_wrapper .= '</ul>';
+					break;
+
 				case 'select':
 					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
