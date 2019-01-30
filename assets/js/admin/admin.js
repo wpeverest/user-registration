@@ -904,9 +904,14 @@ jQuery(function ($) {
 	function render_select_box(this_node) {
 		value = $.trim( this_node.val() );
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		var checked_index = this_node.closest('li').index();
 		var select = wrapper.find('.ur-field').find('select');
+
 		select.html('');
 		select.append('<option value=\'' + value + '\'>' + value + '</option>');
+
+		wrapper.find('.ur-general-setting-options li input[data-field="default_value"]').removeAttr( 'checked' );
+		wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
 	}
 
 	function trigger_general_setting_field_name($label) {
