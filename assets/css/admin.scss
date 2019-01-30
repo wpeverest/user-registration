@@ -996,6 +996,11 @@
 			display: flex;
 			align-items: center;
 
+			.editor-block-mover__control-drag-handle {
+				margin-right: 10px;
+				cursor: grab;
+			}
+
 			input {
 				margin-right: 10px;
 			}
