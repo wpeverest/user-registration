@@ -477,6 +477,9 @@ jQuery(function ($) {
 				$('.ur-tabs').tabs('enable', 1);
 				$('.ur-tabs').find('a').eq(1).trigger('click');
 			}
+			$('.ur-options-list').sortable({
+				containment: '.ur-general-setting-options',
+			});
 		}
 
 		$('.ur_save_form_action_button').on('click', function () {
@@ -1106,4 +1109,18 @@ jQuery(function ($) {
 			}
 		}
 	});
+
+	$( document ).on('sortstop', '.ur-options-list', function( event, ui ) {
+		render_radio( $(this) );
+		ur_clone_options( $(this) );
+	});
+
+	function ur_clone_options( $this_obj ) {
+		var cloning_options = $this_obj.clone( true, true );
+		var wrapper 		= $('.ur-selected-item.ur-item-active');
+		var cloning_element 	= wrapper.find( '.ur-general-setting-options .ur-options-list');
+		cloning_element.html('');
+		cloning_element.replaceWith(cloning_options);
+	}
+
 }(jQuery, window.user_registration_admin_data));
