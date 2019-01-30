@@ -680,9 +680,17 @@ jQuery(function ($) {
 				general_setting_data['options'] = option_values;
 			} else {
 
-				if( 'default_value' === $(this).attr('data-field') && is_checkbox === true ) {
-					general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
-					general_setting_data['default_value'] = default_values;
+				if( 'default_value' === $(this).attr('data-field') ) {
+
+					if( is_checkbox === true && $(this).is(":checked") ) {
+						general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
+						general_setting_data['default_value'] = default_values;
+					} else {
+						if( $(this).is(":checked") ) {
+							general_setting_data['default_value'] = get_ur_data($(this) );
+						}
+					}
+
 				} else {
 					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
 				}
@@ -732,6 +740,9 @@ jQuery(function ($) {
 					break;
 				case 'field_name':
 				case 'input_mask':
+					$this_obj.on('change', function () {
+						trigger_general_setting_field_name($(this));
+					});
 				case 'default_value':
 					$this_obj.on('change', function () {
 
@@ -742,8 +753,6 @@ jQuery(function ($) {
 								render_radio( $(this) );
 							}
 						}
-
-						trigger_general_setting_field_name($(this));
 					});
 				break;
 				case 'options':
@@ -908,22 +917,10 @@ jQuery(function ($) {
 	function trigger_general_setting_options($label) {
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
-		var index = undefined;
-		$label.closest('.ur-general-setting-options').find('[data-field="options"]').each( function( i, el ) {
-			if( $label.is($(el))) {
-				index = i;
-			}
-		} );
-		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').each( function( i, el ) {
-			if( i == index ){
-				$(el).attr('value', $label.val());
-				$label.closest('li').find('[data-field="default_value"]').val( $label.val() );
-			}
-
-			if( $label.closest('li').find('[data-field="default_value"]').is(":checked") ) {
-				$(el).closest('li').find('[data-field="default_value"]').val( $label.val() );
-			}
-		} );
+		var index = $label.closest('li').index();
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).attr( 'value', $label.val() );
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="default_value"]' ).val( $label.val() );
+		$label.closest('li').find('[data-field="default_value"]').val( $label.val() );
 	}
 
 	function trigger_general_setting_label($label) {
@@ -976,9 +973,7 @@ jQuery(function ($) {
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').val('yes').trigger('change');
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').find('option[value="yes"]').attr('selected', 'selected');
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').attr('disabled', 'disabled');
-
 			}
-
 		}
 
 		var label_node = selected_inputs.find('select[data-field="required"]').find('option[selected="selected"][value="yes"]').closest('.ur-selected-item').find('.ur-label').find('label');
@@ -1097,9 +1092,6 @@ jQuery(function ($) {
 			this_index 		= $this.parent('li').index();
 
 		if( $parent_ul.find('li').length > 1 ) {
-			if( $this.siblings('input[data-field="default_value"]').is(':checked') ) {
-				$wrapper.find( '.ur-general-setting-options .ur-options-list input[data-field="default_value"]' ).val('');
-			}
 
 			$this.parent('li').remove();
 			$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).remove();
