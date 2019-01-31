@@ -24,14 +24,14 @@ $default_values  = isset( $this->admin_data->general_setting->default_value ) ? 
 	<div class="ur-field" data-field-key="checkbox">
 		<?php
 		if ( count( $options ) < 1 ) {
-			echo "<input type = 'checkbox'  value='1' disabled/>";
+			echo "<label><input type = 'checkbox'  value='1' disabled/></label>";
 		}
 
 		foreach ( $options as $option ) {
 
 			$checked = in_array( $option, $default_values ) ? 'checked' : '';
 
-			echo "<input type = 'checkbox'  value='" . esc_attr( trim( $option ) ) . "' ". $checked ." disabled/>" . esc_html( trim( $option ) ) . '<br>';
+			echo "<label><input type = 'checkbox'  value='" . esc_attr( trim( $option ) ) . "' ". $checked ." disabled/>" . esc_html( trim( $option ) ) . '</label>';
 		}
 		?>
 
