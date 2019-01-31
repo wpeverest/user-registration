@@ -233,8 +233,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'checkbox':
 
 				$field_key 		= isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default_value 	= isset( $args['default'] ) ? $args['default'] : '';	// Backward compatibility. Modified since 1.5.7
-				$default 	 	= ! empty( $value ) ? $value : $args['default_value'];
+				$default_value 	= isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+				$default 	 	= ! empty( $value ) ? $value : $default_value;
 				$options 		= isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 				if ( isset( $options ) && array_filter( $options ) ) {
