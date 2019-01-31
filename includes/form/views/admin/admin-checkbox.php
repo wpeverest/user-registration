@@ -7,12 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
-$stored_options  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $default_options;
-
 // Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
-$options      	 = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $stored_options;
-$default_values  = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : array();
+$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+$old_options         = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+$options  			 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+$default_values  	 = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : array();
+$options 			 = array_map( 'trim', $options );
 ?>
 
 <div class="ur-input-type-checkbox ur-admin-template">

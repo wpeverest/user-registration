@@ -423,10 +423,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							switch ( $field_key ) {
 
 								case 'select':
-									$options 	 = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
-
 									// Backward compatibility. Modified since 1.5.7.
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : $options;
+									$options        = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$option_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$option_data    = array_map( 'trim', $option_data );
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {
@@ -438,10 +438,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'radio':
-									$options = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
-
 									// Backward compatibility. Modified since 1.5.7.
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : $options;
+									$options        = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$option_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$option_data    = array_map( 'trim', $option_data );
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {
@@ -466,13 +466,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'mailchimp':
 								case 'checkbox':
-									$choices = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
-									$choices_data                      = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : $choices;
-
 									// Backward compatibility. Modified since 1.5.7.
-									if( ! is_array( $choices_data ) ) {
-										$choices_data                  = explode( ',', $choices_data );
-									}
+									$options        = isset( $field->advance_setting->choices ) ? explode( ',', $field->advance_setting->choices ) : array();
+									$choices_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$choices_data   = array_map( 'trim', $choices_data );
 
 									$fields[ $field_index ]['choices'] = $choices_data;
 									$fields[ $field_index ]['type']    = 'checkbox';

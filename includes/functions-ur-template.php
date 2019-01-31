@@ -461,38 +461,34 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'radio':
 							case 'select':
-								$advanced_options = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
-
-								if( ! empty( $advance_options ) ) {
-									$extra_params['options']  = explode( ',', $advance_options );
-								} else {
-									$extra_params['options'] = $options;
-								}
+								$advanced_options 		 = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+								$advanced_options  		 = explode( ',', $advanced_options );
+								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
 								foreach ( $extra_params['options'] as $key => $value ) {
 									$extra_params['options'][ $value ] = $value;
 									unset( $extra_params['options'][ $key ] );
 								}
 								break;
+
 							case 'checkbox':
-
-								$advanced_options = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
-
-								if( ! empty( $advance_options ) ) {
-									$extra_params['options'] = explode( ',', $field->advance_setting->choices );
-								} else {
-									$extra_params['options'] = $options;
-								}
+								$advanced_options 		 = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+								$advanced_options 		 = explode( ',', $advanced_options );
+								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
 								foreach ( $extra_params['options'] as $key => $value ) {
 									$extra_params['options'][ $value ] = $value;
 									unset( $extra_params['options'][ $key ] );
 								}
 								break;
+
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
 								$extra_params['options'] = $class_name::get_instance()->get_country();
 								break;
+
 							default:
 								break;
 						}

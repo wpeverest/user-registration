@@ -219,22 +219,14 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'radio':
-					$default_options = isset( $setting_value['options'] ) ? $setting_value['options'] : array();
-					$stored_options  = $this->get_general_setting_data( 'options' );
-					$stored_options  = ! empty( $stored_options ) ? $stored_options : $default_options;
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$old_options         = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $default_options;
+					$options    		 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+					$options 			 = array_map( 'trim', $options );
 
-					// Compatibility for older version. Get string value from options in advanced settings.
-					$raw_options   = ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $stored_options;
 					$default_value = $this->get_general_setting_data( 'default_value' );
 					$default_value = ! empty( $default_value ) ? $default_value : '';
-
-					if ( ! is_array( $raw_options ) ) {
-						// Compatibility code for older version. modified @since 1.5.7.
-						$options = explode( ',', trim( $raw_options ) );
-						$options = array_map( 'trim', $options );
-					} else {
-						$options = $raw_options;
-					}
 
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					$unique = uniqid();
@@ -264,23 +256,15 @@ abstract class UR_Form_Field {
 
 				case 'checkbox':
 
-					$default_options = isset( $setting_value['options'] ) ? $setting_value['options'] : array();
-					$stored_options  = $this->get_general_setting_data( 'options' );
-					$stored_options  = ! empty( $stored_options ) ? $stored_options : $default_options;
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$old_options         = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+					$options    		 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+					$options 			 = array_map( 'trim', $options );
 
-					// Compatibility for older version. Get string value from options in advanced settings.
-					$raw_options   	= ! empty( $this->admin_data->advance_setting->options ) ? $this->admin_data->advance_setting->options : $stored_options;
 					$default_values = $this->get_general_setting_data( 'default_value' );
 					$default_values = ! empty( $default_values ) ? $default_values : array();
 					$default_values = array_map( 'trim', $default_values );
-
-					if ( ! is_array( $raw_options ) ) {
-						// Compatibility code for older version. modified @since 1.5.7.
-						$options = explode( ',', trim( $raw_options ) );
-						$options = array_map( 'trim', $options );
-					} else {
-						$options = $raw_options;
-					}
 
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					$unique = uniqid();
