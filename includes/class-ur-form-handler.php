@@ -427,7 +427,7 @@ class UR_Form_Handler {
 				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) );
 				$result = wp_validate_user_request_key( $request_id, $key );
 			} else {
-				$result = new WP_Error( 'invalid_key', __( 'Invalid Key' ) );
+				$result = new WP_Error( 'invalid_key', __( 'Invalid Key', 'user-registration' ) );
 			}
 
 			if ( is_wp_error( $result ) ) {
