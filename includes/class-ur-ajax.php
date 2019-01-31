@@ -201,6 +201,8 @@ class UR_AJAX {
 
 			$post_data = json_decode( stripslashes( $_POST['data']['form_data'] ) );
 
+			$post_data = self::ur_add_to_advanced_settings( $post_data ); // Backward compatibility method. Since @1.5.7.
+
 			self::sweep_array( $post_data );
 
 			if ( isset( self::$failed_key_value['value'] ) && self::$failed_key_value['value'] != '' ) {
@@ -367,6 +369,44 @@ class UR_AJAX {
 		}
 		update_option( 'user_registration_admin_footer_text_rated', 1 );
 		wp_die();
+	}
+
+	/**
+	 * Migrate the choices/options from the general settings to advanced settings.
+	 *
+	 * Backward compatibility code. Modified @since 1.5.7.
+	 *
+	 * @param  array 	$post_data All fields data.
+	 * @return array    Modified fields data.
+	 */
+	private static function ur_add_to_advanced_settings( $post_data ) {
+
+		$modifiying_keys = array('radio', 'select', 'checkbox' );
+
+		foreach ( $post_data as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( isset( $field->field_key ) ) {
+						if( ! in_array( $field->field_key, $modifiying_keys ) ) {
+							continue;
+						}
+
+						if( isset( $field->general_setting->options ) ) {
+
+							$options = implode( ',', $field->general_setting->options );
+
+							if( 'checkbox' === $field->field_key ) {
+								$field->advance_setting->choices = $options;
+							} else {
+								$field->advance_setting->options = $options;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $post_data;
 	}
 }
 
