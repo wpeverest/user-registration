@@ -157,6 +157,10 @@ class UR_Shortcodes {
 	 * @since 1.0.1 Recaptcha only
 	 */
 	private static function render_form( $form_id ) {
+
+		$page_id = get_the_ID();
+		UR_Cache_Helper::prevent_caching( $page_id );
+
 		$args = array(
 			'post_type'   => 'user_registration',
 			'post_status' => 'publish',
