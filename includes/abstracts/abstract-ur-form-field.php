@@ -165,7 +165,7 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Inlcude advance settings file if exists
-
+	*/
 	public function get_field_advance_settings() {
 
 		$file_name  = str_replace( 'user_registration_', '', $this->id );
