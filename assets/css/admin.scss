@@ -992,6 +992,7 @@
 	}
 
 	.ur-options-list {
+
 		li {
 			display: flex;
 			align-items: center;
@@ -1031,8 +1032,16 @@
 				margin-right: 10px;
 			}
 		}
-	}
 
+		.ui-sortable-handle {
+
+			&.ui-sortable-placeholder {
+				border: 1px dashed $primary_dark;
+				background-color: $primary_light;
+				visibility: visible !important;
+			}
+		}
+	}
 }
 
 #sortable {
