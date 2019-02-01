@@ -109,39 +109,45 @@ abstract class UR_Form_Field {
 
 		$form_data['custom_attributes']['data-label'] = $data['general_setting']->label;
 
-		if ( 'country' == $field_key ) {
+		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 		}
 
-		if ( 'select' == $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+		/**  Redundant codes. **/
+			if ( 'select' === $field_key ) {
+				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
-			if ( is_array( $option_data ) ) {
-				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;
+				if ( is_array( $option_data ) ) {
+					foreach ( $option_data as $index_data => $option ) {
+						$form_data['options'][ $index_data ] = $option;
+					}
 				}
 			}
-		}
 
-		if ( 'radio' == $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+			if ( 'radio' === $field_key ) {
+				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
-			if ( is_array( $option_data ) ) {
-				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;
+				if ( is_array( $option_data ) ) {
+					foreach ( $option_data as $index_data => $option ) {
+						$form_data['options'][ $index_data ] = $option;
+					}
 				}
 			}
-		}
 
-		if ( 'checkbox' == $field_key ) {
-			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
+			if ( 'checkbox' === $field_key ) {
+				$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 
-			if ( is_array( $choices ) ) {
-				foreach ( $choices as $index_data => $choice ) {
-					$form_data['choices'][ $choice ] = $choice;
+				if ( is_array( $choices ) ) {
+					foreach ( $choices as $index_data => $choice ) {
+						$form_data['choices'][ $index_data ] = $choice;
+					}
 				}
 			}
-		}
+		/** Redundant Codes End. **/
+
 		$filter_data = array(
 			'form_data' => $form_data,
 			'data'      => $data,
@@ -159,7 +165,7 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Inlcude advance settings file if exists
-	 */
+
 	public function get_field_advance_settings() {
 
 		$file_name  = str_replace( 'user_registration_', '', $this->id );

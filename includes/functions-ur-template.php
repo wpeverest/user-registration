@@ -351,6 +351,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
+
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
 				$value    = ! empty( $value ) ? $value : $default_value;
 				$label_id = current( array_keys( $args['options'] ) );
