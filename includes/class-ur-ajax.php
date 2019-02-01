@@ -381,7 +381,7 @@ class UR_AJAX {
 	 */
 	private static function ur_add_to_advanced_settings( $post_data ) {
 
-		$modifiying_keys = array('radio', 'select', 'checkbox' );
+		$modifiying_keys = array( 'radio', 'select', 'checkbox' );
 
 		foreach ( $post_data as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
