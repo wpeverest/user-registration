@@ -132,7 +132,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
-										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+										$selected = get_user_meta( $user->ID, $key, true );
 										foreach ( $field['options'] as $option_key => $option_value ) :
 											?>
 											<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
