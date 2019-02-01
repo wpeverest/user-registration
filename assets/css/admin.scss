@@ -1034,6 +1034,15 @@
 		}
 
 		.ui-sortable-handle {
+			padding: 5px;
+			border: 1px solid transparent;
+
+			&:active{
+				background: $color_gray_eight;
+				border: 1px solid $primary_color;
+				padding: 5px;
+				box-shadow: 0 0 20px rgba(0,0,0,.2);
+			}
 
 			&.ui-sortable-placeholder {
 				border: 1px dashed $primary_dark;
