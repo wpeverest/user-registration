@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.5.6\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-01-31 09:37:48+00:00\n"
+"POT-Creation-Date: 2019-02-01 08:54:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,12 +13,12 @@ msgstr ""
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: includes/abstracts/abstract-ur-form-field.php:362
+#: includes/abstracts/abstract-ur-form-field.php:368
 #: includes/admin/functions-ur-admin.php:327
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:370
+#: includes/abstracts/abstract-ur-form-field.php:376
 msgid "Advance Settings"
 msgstr ""
 
@@ -1366,6 +1366,13 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:216
 msgid "Could not save form. Invalid field name. Please check all field name"
+msgstr ""
+
+#: includes/class-ur-cache-helper.php:105
+msgid ""
+"In order for <strong>database caching</strong> to work with User "
+"Registration you must add %1$s to the \"Ignored Query Strings\" option in "
+"<a href=\"%2$s\">W3 Total Cache settings</a>."
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:157
