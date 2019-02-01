@@ -57,19 +57,18 @@ class UR_Cache_Helper {
 	/**
 	 * Flush already set cache by wp super cache plugin on registration page.
 	 */
-	public function flush_wpsuper_cache() {
-		if ( function_exitts( 'wpsc_delete_post_cache' ) ) {
+	public static function flush_wpsuper_cache() {
+		if ( function_exists( 'wpsc_delete_post_cache' ) ) {
 			$post_id = get_the_ID();
 			wpsc_delete_post_cache( $post_id );
 		}
 	}
 
-
 	/**
 	 * Flush already set cache by wp rocket cache plugin on registration page.
 	 */
-	public function flush_wprocket_cache() {
-		if ( function_exitts( 'rocket_clean_post' ) ) {
+	public static function flush_wprocket_cache() {
+		if ( function_exists( 'rocket_clean_post' ) ) {
 			$post_id = get_the_ID();
 			rocket_clean_post( $post_id );
 		}
