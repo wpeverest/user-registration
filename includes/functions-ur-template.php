@@ -250,7 +250,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $args['description'] ) {
 						$field .= '<span class="description">' . $args['description'] . '</span>';
 					}
+
 					$checkbox_start = 0;
+
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
