@@ -254,14 +254,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
-						if ( is_array( $default ) && in_array( trim( $choice ), $default ) ) {
+						if ( is_array( $default ) && in_array( trim( $choice_index ), $default ) ) {
 							$value = 'checked="checked"';
-						} elseif ( $default === $choice ) {
+						} elseif ( $default === $choice_index ) {
 							$value = 'checked="checked"';
 						}
 
 						$field .= '<label>';
-						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice ) . '"' . $value . ' /> ';
+						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . $value . ' /> ';
 						$field .= trim( $choice ) . ' </label>';
 						$checkbox_start++;
 					}
@@ -299,7 +299,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value    = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as  $option_text ) {
+					foreach ( $args['options'] as $key => $option_text ) {
 
 						if ( '' === $option_text ) {
 							// If we have a blank option, select2 needs a placeholder
@@ -308,7 +308,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$options .= '<option value="' . esc_attr( trim( $option_text ) ) . '" ' . selected( $value, trim( $option_text ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						$options .= '<option value="' . esc_attr( trim( $key ) ) . '" ' . selected( $value, trim( $key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
 					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
@@ -356,11 +356,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value    = ! empty( $value ) ? $value : $default_value;
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as $option_text ) {
+					foreach ( $args['options'] as $option_index => $option_text ) {
 
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_text ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_text ), false ) . ' />' . wp_kses(
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_index ), false ) . ' />' . wp_kses(
 							trim( $option_text ),
 							array(
 								'a'    => array(

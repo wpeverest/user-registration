@@ -118,9 +118,11 @@ abstract class UR_Form_Field {
 				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
 				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
+				$options = array();
 				if ( is_array( $option_data ) ) {
 					foreach ( $option_data as $index_data => $option ) {
-						$form_data['options'][ $index_data ] = $option;
+						$options[ $option ] = $option;
+						$form_data['options'] = $options;
 					}
 				}
 			}
@@ -129,9 +131,11 @@ abstract class UR_Form_Field {
 				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
 				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
+				$options = array();
 				if ( is_array( $option_data ) ) {
 					foreach ( $option_data as $index_data => $option ) {
-						$form_data['options'][ $index_data ] = $option;
+						$options[ $option ] = $option;
+						$form_data['options'] = $options;
 					}
 				}
 			}
@@ -140,9 +144,11 @@ abstract class UR_Form_Field {
 				$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7
 				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 
+				$choices = array();
 				if ( is_array( $choices ) ) {
 					foreach ( $choices as $index_data => $choice ) {
-						$form_data['choices'][ $index_data ] = $choice;
+						$choices[ $choice ] = $choice;
+						$form_data['choices'] = $choices;
 					}
 				}
 			}
