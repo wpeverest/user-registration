@@ -298,18 +298,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'select':
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+
 				$value    = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
+												// If we have a blank option, select2 needs a placeholder
+					if ( ! empty( $args['placeholder'] ) ) {
+						$options .= '<option value="" >'. esc_html( $args['placeholder'] ) .'</option>';
+					}
+
+					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
 
-						if ( '' === $option_text ) {
-							// If we have a blank option, select2 needs a placeholder
-							if ( empty( $args['placeholder'] ) ) {
-								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
-							}
-							$custom_attributes[] = 'data-allow_clear="true"';
-						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
@@ -446,6 +446,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+					$placeholder 	   = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
 					$options 		   = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
 					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
@@ -500,17 +501,19 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => __( $field_label, 'user-registration' ),
-								'description' => __( $field_description, 'user-registration' ),
+								'label'       => $field_label,
+								'description' => $field_description,
 								'type'        => $field_type,
+								'placeholder' => $placeholder,
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
 						} elseif ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => __( $field_label, 'user-registration' ),
-								'description' => __( $field_description, 'user-registration' ),
+								'label'       => $field_label,
+								'description' => $field_description,
 								'type'        => $field_type,
+								'placeholder' => $placeholder,
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);

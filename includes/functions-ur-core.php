@@ -618,7 +618,6 @@ function ur_get_general_settings( $id ) {
 			'date',
 			'privacy_policy',
 			'radio',
-			'select',
 			'file',
 			'mailchimp',
 		)
