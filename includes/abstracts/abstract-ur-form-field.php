@@ -272,6 +272,7 @@ abstract class UR_Form_Field {
 					$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
 					$old_options         = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options    		 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+
 					$options 			 = array_map( 'trim', $options );
 
 					$default_values = $this->get_general_setting_data( 'default_value' );

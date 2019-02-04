@@ -301,7 +301,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value    = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as $key => $option_text ) {
+					foreach ( $args['options'] as $option_key => $option_text ) {
 
 						if ( '' === $option_text ) {
 							// If we have a blank option, select2 needs a placeholder
@@ -310,7 +310,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							}
 							$custom_attributes[] = 'data-allow_clear="true"';
 						}
-						$options .= '<option value="' . esc_attr( trim( $key ) ) . '" ' . selected( $value, trim( $key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
 					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
