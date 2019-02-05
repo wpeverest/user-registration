@@ -62,7 +62,11 @@ jQuery(function ( $ ) {
 			var meter = wrapper.find('.user-registration-password-strength');
 			var hint = wrapper.find('.user-registration-password-hint');
 			var hint_html = '<small class="user-registration-password-hint">' + ur_password_strength_meter_params.i18n_password_hint + '</small>';
-			var strength = wp.passwordStrength.meter(field.val(), wp.passwordStrength.userInputBlacklist());
+			var blacklistArray = wp.passwordStrength.userInputBlacklist();
+			blacklistArray.push( wrapper.find('input[data-id="user_email"]').val() ); // Add email address in blacklist.
+			blacklistArray.push( wrapper.find('input[data-id="user_login"]').val() ); // Add username in blacklist.
+
+			var strength = wp.passwordStrength.meter(field.val(), blacklistArray);
 			var error = '';
 			// Reset
 			meter.removeClass('short bad good strong');
