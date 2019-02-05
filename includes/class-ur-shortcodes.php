@@ -186,6 +186,8 @@ class UR_Shortcodes {
 		// Enqueue script.
 		wp_enqueue_script( 'user-registration' );
 
+		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
+
 		$has_date = ur_has_date_field( $form_id );
 
 		if ( true === $has_date ) {
