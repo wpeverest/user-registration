@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.5.6\n"
+"Project-Id-Version: User Registration 1.5.7\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-02-01 08:54:15+00:00\n"
+"POT-Creation-Date: 2019-02-05 05:28:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,12 +13,12 @@ msgstr ""
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: includes/abstracts/abstract-ur-form-field.php:368
+#: includes/abstracts/abstract-ur-form-field.php:375
 #: includes/admin/functions-ur-admin.php:327
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:376
+#: includes/abstracts/abstract-ur-form-field.php:383
 msgid "Advance Settings"
 msgstr ""
 
@@ -570,7 +570,7 @@ msgid "Success Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:212
-#: includes/functions-ur-core.php:882
+#: includes/functions-ur-core.php:880
 msgid "Manual login after registration"
 msgstr ""
 
@@ -586,7 +586,7 @@ msgid "User successfully registered."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:222
-#: includes/functions-ur-core.php:883
+#: includes/functions-ur-core.php:881
 msgid "Email confirmation to login"
 msgstr ""
 
@@ -604,7 +604,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:232
-#: includes/functions-ur-core.php:885
+#: includes/functions-ur-core.php:883
 msgid "Admin approval after registration"
 msgstr ""
 
@@ -703,7 +703,7 @@ msgid "Captcha code error, please try again."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:341
-#: includes/functions-ur-core.php:837
+#: includes/functions-ur-core.php:835
 msgid "Form Template"
 msgstr ""
 
@@ -712,27 +712,27 @@ msgid "Choose the login form template."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:349
-#: includes/functions-ur-core.php:844
+#: includes/functions-ur-core.php:842
 msgid "Default"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:350
-#: includes/functions-ur-core.php:845
+#: includes/functions-ur-core.php:843
 msgid "Bordered"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:351
-#: includes/functions-ur-core.php:846
+#: includes/functions-ur-core.php:844
 msgid "Flat"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:352
-#: includes/functions-ur-core.php:847
+#: includes/functions-ur-core.php:845
 msgid "Rounded"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:353
-#: includes/functions-ur-core.php:848
+#: includes/functions-ur-core.php:846
 msgid "Rounded Edge"
 msgstr ""
 
@@ -1516,22 +1516,22 @@ msgid "Please enter a stronger password."
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:343
-#: includes/functions-ur-core.php:801
+#: includes/functions-ur-core.php:799
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:344
-#: includes/functions-ur-core.php:802
+#: includes/functions-ur-core.php:800
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:345
-#: includes/functions-ur-core.php:803
+#: includes/functions-ur-core.php:801
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:346
-#: includes/functions-ur-core.php:804
+#: includes/functions-ur-core.php:802
 msgid "Strong"
 msgstr ""
 
@@ -1909,21 +1909,21 @@ msgstr ""
 #: includes/form/class-ur-form-field-checkbox.php:43
 #: includes/form/class-ur-form-field-radio.php:46
 #: includes/form/class-ur-form-field-select.php:43
-#: includes/functions-ur-core.php:643
+#: includes/functions-ur-core.php:641
 msgid "First Choice"
 msgstr ""
 
 #: includes/form/class-ur-form-field-checkbox.php:44
 #: includes/form/class-ur-form-field-radio.php:47
 #: includes/form/class-ur-form-field-select.php:44
-#: includes/functions-ur-core.php:644
+#: includes/functions-ur-core.php:642
 msgid "Second Choice"
 msgstr ""
 
 #: includes/form/class-ur-form-field-checkbox.php:45
 #: includes/form/class-ur-form-field-radio.php:48
 #: includes/form/class-ur-form-field-select.php:45
-#: includes/functions-ur-core.php:645
+#: includes/functions-ur-core.php:643
 msgid "Third Choice"
 msgstr ""
 
@@ -3126,12 +3126,12 @@ msgid "Placeholder"
 msgstr ""
 
 #: includes/functions-ur-core.php:596 includes/functions-ur-core.php:607
-#: includes/functions-ur-core.php:787 includes/functions-ur-core.php:830
+#: includes/functions-ur-core.php:785 includes/functions-ur-core.php:828
 msgid "No"
 msgstr ""
 
 #: includes/functions-ur-core.php:597 includes/functions-ur-core.php:608
-#: includes/functions-ur-core.php:786 includes/functions-ur-core.php:829
+#: includes/functions-ur-core.php:784 includes/functions-ur-core.php:827
 msgid "Yes"
 msgstr ""
 
@@ -3139,49 +3139,49 @@ msgstr ""
 msgid "Hide Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:638
+#: includes/functions-ur-core.php:636
 msgid "Options"
 msgstr ""
 
-#: includes/functions-ur-core.php:767
+#: includes/functions-ur-core.php:765
 msgid "Default User Role"
 msgstr ""
 
-#: includes/functions-ur-core.php:779
+#: includes/functions-ur-core.php:777
 msgid "Enable Strong Password"
 msgstr ""
 
-#: includes/functions-ur-core.php:794
+#: includes/functions-ur-core.php:792
 msgid "Minimum Password Strength"
 msgstr ""
 
-#: includes/functions-ur-core.php:811
+#: includes/functions-ur-core.php:809
 msgid "Form Submit Button Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:822
+#: includes/functions-ur-core.php:820
 msgid "Enable %1$s %2$s reCaptcha %3$s Support"
 msgstr ""
 
-#: includes/functions-ur-core.php:855
+#: includes/functions-ur-core.php:853
 msgid "Custom CSS class"
 msgstr ""
 
-#: includes/functions-ur-core.php:884
+#: includes/functions-ur-core.php:882
 msgid "Auto login after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:1066
+#: includes/functions-ur-core.php:1064
 msgid ""
 "The class <code>%s</code> provided by user_registration_logging_class "
 "filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
-#: includes/functions-ur-core.php:1167
+#: includes/functions-ur-core.php:1165
 msgid "Disable emails"
 msgstr ""
 
-#: includes/functions-ur-core.php:1168
+#: includes/functions-ur-core.php:1166
 msgid "Disable all emails sent after registration."
 msgstr ""
 
@@ -3196,8 +3196,7 @@ msgstr ""
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:307
-#: includes/functions-ur-template.php:335
+#: includes/functions-ur-template.php:337
 msgid "Choose an option"
 msgstr ""
 
