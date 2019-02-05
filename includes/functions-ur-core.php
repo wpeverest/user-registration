@@ -614,7 +614,6 @@ function ur_get_general_settings( $id ) {
 		'user_registration_exclude_placeholder',
 		array(
 			'checkbox',
-			'country',
 			'date',
 			'privacy_policy',
 			'radio',
