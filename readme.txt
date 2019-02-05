@@ -114,6 +114,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 = 1.5.7 - 02/05/2018 =
 * Refactor - Options for select, checkbox and radio field.
 * Add - Placeholder for select and country field.
+* Add - Cache helper class for flushing cache on user registration form.
 * Fix - Confirmaction of export/erase personal data from custom login form.
 * Fix - Privacy policy made required by default.
 * Fix - Formatting of form title display.
