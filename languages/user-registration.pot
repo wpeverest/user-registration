@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.5.7\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-02-05 05:28:29+00:00\n"
+"POT-Creation-Date: 2019-02-05 07:13:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3073,24 +3073,30 @@ msgstr ""
 msgid "Default Value"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:99
+#: includes/frontend/class-ur-frontend-form-handler.php:101
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:163
+#: includes/frontend/class-ur-frontend-form-handler.php:165
 msgid "Duplicate field key in form, please contact site administrator."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:169
+#: includes/frontend/class-ur-frontend-form-handler.php:171
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:327
+#: includes/frontend/class-ur-frontend-form-handler.php:329
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:329
+#: includes/frontend/class-ur-frontend-form-handler.php:331
 msgid "Password and confirm password not matched"
+msgstr ""
+
+#: includes/frontend/class-ur-frontend-form-handler.php:362
+msgid ""
+"<label>Week Password!</label><br />Hint: To make password stronger, use "
+"upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
 #: includes/functions-ur-account.php:32
