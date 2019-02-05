@@ -117,6 +117,8 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Fix - Confirmaction of export/erase personal data from custom login form.
 * Fix - Privacy policy made required by default.
 * Fix - Formatting of form title display.
+* Fix - Validate for same email as password.
+* Dev - Action hook for enqueuing scripts.
 
 = 1.5.6 - 11/01/2018 =
 * Fix - Authenticated XSS. Thanks wpvulndb.com for nofifying.
