@@ -31,9 +31,6 @@ function ur_add_dashboard_widget() {
 function ur_status_widget() {
 
 	$user_report  = ur_get_user_report();
-	$current_time = current_time( 'Y-m-d' );
-
-	echo $current_time;
 
 	ur_get_template(
 		'dashboard-widget.php',
@@ -50,6 +47,27 @@ function ur_status_widget() {
  */
 function ur_get_user_report() {
 
+	$current_date = current_time( 'Y-m-d' );
+	$users 		  = get_users();
+	$today_users  = 0;
+	$last_week    = 0;
+	$last_month   = 0;
+
+	foreach( $users as $user ) {
+		$user_registered = date( 'Y-m-d', strtotime( $user->data->user_registered ) );
+
+		if( $user_registered === $current_date ) {
+			$today_users++;
+		}
+	}
+
+	$report = array(
+		'today'	 		=> $today_users,
+		'last_week'		=> $last_week,
+		'last_month'	=> $last_month,
+	);
+
+	return $report;
 }
 
 /**
