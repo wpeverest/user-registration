@@ -12,6 +12,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+add_action( 'wp_dashboard_setup', 'ur_add_dashboard_widget' );
+
+/**
+ * Register the user registration user activity dashboard widget.
+ *
+ * @since 1.5.8
+ */
+function ur_add_dashboard_widget() {
+	wp_add_dashboard_widget( 'user_registration_dashboard_status', __( 'User Registration Activity', 'user-registration' ), 'ur_status_widget' );
+}
+
+/**
+ * Content to the user_registration_dashboard_status widget.
+ *
+ * @since 1.5.8
+ */
+function ur_status_widget() {
+
+	$user_report  = ur_get_user_report();
+	$current_time = current_time( 'Y-m-d' );
+
+	echo $current_time;
+
+	ur_get_template(
+		'dashboard-widget.php',
+		array(
+			'user' => get_user_by( 'id', get_current_user_id() ),
+		)
+	);
+}
+
+/**
+ * Report for the user registration activity.
+ *
+ * @return array
+ */
+function ur_get_user_report() {
+
+}
+
 /**
  * Get all UserRegistration screen ids.
  *
