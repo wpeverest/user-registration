@@ -10,6 +10,10 @@ jQuery(function ($) {
 		};
 
 		$.post( ur_widget_params.ajax_url, data, function( response ) {
+			$('.ur-today-users').html('').html( response.today_users );
+			$('.ur-last-week-users').html('').html( response.today_users );
+			$('.ur-last-month-users').html('').html( response.today_users );
+			$('.ur-total-users').html('').html( response.today_users );
 
 		}).fail( function( xhr ) {
 			window.console.log( xhr.responseText );

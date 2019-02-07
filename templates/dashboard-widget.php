@@ -46,21 +46,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<li>
 						<?php echo __( 'Last Week', 'user-registration' ); ?>
-						<div class="ur-today-users">
+						<div class="ur-last-week-users">
 							<?php echo $user_report['last_week_users']; ?>
 						</div>
 					</li>
 
 					<li>
 						<?php echo __( 'Last Month', 'user-registration' ); ?>
-						<div class="ur-today-users">
+						<div class="ur-last-month-users">
 							<?php echo $user_report['last_month_users']; ?>
 						</div>
 					</li>
 
 					<li>
 						<?php echo __( 'Total', 'user-registration' ); ?>
-						<div class="ur-today-users">
+						<div class="ur-total-users">
 							<?php echo $user_report['total_users']; ?>
 						</div>
 					</li>
