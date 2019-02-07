@@ -36,6 +36,7 @@ function ur_status_widget() {
 		'ur_widget_params',
 		array(
 			'ajax_url'           => admin_url( 'admin-ajax.php' ),
+			'loading'			 => __( 'loading...', 'user-registration' ),
 			'widget_nonce' 		 => wp_create_nonce( 'dashboard-widget' ),
 		)
 	);

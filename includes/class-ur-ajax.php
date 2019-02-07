@@ -291,7 +291,7 @@ class UR_AJAX {
 	 */
 	public function dashboard_widget() {
 
-		// check_ajax_referer( 'dashboard-widget', 'security' );
+		check_ajax_referer( 'dashboard-widget', 'security' );
 
 		$form_id 	 = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
 		$user_report = ur_get_user_report( $form_id );
