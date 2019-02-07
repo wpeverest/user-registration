@@ -30,12 +30,25 @@ function ur_add_dashboard_widget() {
  */
 function ur_status_widget() {
 
-	$user_report  = ur_get_user_report();
+	wp_enqueue_script( 'user-registration-dashboard-widget-js' );
+	wp_localize_script(
+		'user-registration-dashboard-widget-js',
+		'ur_widget_params',
+		array(
+			'ajax_url'           => admin_url( 'admin-ajax.php' ),
+			'widget_nonce' 		 => wp_create_nonce( 'dashboard-widget' ),
+		)
+	);
+
+	$forms        = ur_get_all_user_registration_form();
+	$form_id 	  = key( $forms );
+	$user_report  = ur_get_user_report( $form_id );
 
 	ur_get_template(
 		'dashboard-widget.php',
 		array(
-			'user' => get_user_by( 'id', get_current_user_id() ),
+			'user_report' => $user_report,
+			'forms'		  => $forms,
 		)
 	);
 }
@@ -45,26 +58,53 @@ function ur_status_widget() {
  *
  * @return array
  */
-function ur_get_user_report() {
+function ur_get_user_report( $form_id ) {
 
-	$current_date = current_time( 'Y-m-d' );
-	$users 		  = get_users();
-	$today_users  = 0;
-	$last_week    = 0;
-	$last_month   = 0;
+	$current_date 		= current_time( 'Y-m-d' );
+	$users 		  		= get_users();
+	$total_users		= 0;
+	$today_users  		= 0;
+	$last_week_users    = 0;
+	$last_month_users   = 0;
 
 	foreach( $users as $user ) {
 		$user_registered = date( 'Y-m-d', strtotime( $user->data->user_registered ) );
+		$user_form       = get_user_meta( $user->ID, 'ur_form_id', true );
 
-		if( $user_registered === $current_date ) {
-			$today_users++;
+		if( ( int ) $form_id === ( int ) $user_form ) {
+
+			// Count today users.
+			if( $user_registered === $current_date ) {
+				$today_users++;
+			}
+
+			// Get last week date.
+			$last_week = strtotime( 'now' ) - WEEK_IN_SECONDS;
+			$last_week = date( 'Y-m-d', $last_week );
+
+			// Get last month date.
+			$last_month = strtotime( 'now' ) - MONTH_IN_SECONDS;
+			$last_month = date( 'Y-m-d', $last_month );
+
+			// Get last week users count.
+			if( $user_registered > $last_week ) {
+				$last_week_users++;
+			}
+
+			// Get last month users count.
+			if( $user_registered > $last_month ) {
+				$last_month_users++;
+			}
+
+			$total_users++; // Total users of selected form.
 		}
 	}
 
 	$report = array(
-		'today'	 		=> $today_users,
-		'last_week'		=> $last_week,
-		'last_month'	=> $last_month,
+		'total_users'			=> $total_users,
+		'today_users'	 		=> $today_users,
+		'last_week_users'		=> $last_week_users,
+		'last_month_users'		=> $last_month_users,
 	);
 
 	return $report;
