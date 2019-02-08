@@ -419,3 +419,33 @@ function ur_format_setting_data( $setting_data ) {
 
 	return $settings;
 }
+
+/**
+ * Check for plugin activation time and minimum of 20 users.
+ *
+ * @since 1.5.8
+ *
+ * @return bool
+ */
+function check_activation_time_and_users() {
+
+    $users 			   = get_users();
+    $count 			   = 0;
+
+    // Plugin Activation Time.
+	$activation_time   = get_option( 'user_registration_installed' );
+
+    foreach( $users as $user ) {
+    	$form_id = get_user_meta( $user->ID, 'ur_form_id', true );
+
+    	if ( ! empty( $form_id ) ) {
+    		$count++; 	// Count the users using user registration form.
+    	}
+    }
+
+    if ( ( time() - $activation_time < 1728000 ) && $count < 5 ) {
+        return false;
+    }
+
+    return true;
+}

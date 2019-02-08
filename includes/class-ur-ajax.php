@@ -41,6 +41,7 @@ class UR_AJAX {
 			'user_form_submit'    => true,
 			'deactivation_notice' => false,
 			'rated'               => false,
+			'dismiss_review_notice' => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -408,6 +409,20 @@ class UR_AJAX {
 
 		return $post_data;
 	}
+
+	/**
+    * Dismiss review notice
+    *
+    * @since  1.5.8
+    *
+    * @return void
+    **/
+   public function dismiss_review_notice() {
+
+        if ( ! empty( $_POST['dismissed'] ) ) {
+            update_option( 'ur_review_notice_dismissed', 'yes' );
+        }
+    }
 }
 
 UR_AJAX::init();
