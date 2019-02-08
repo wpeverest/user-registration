@@ -159,7 +159,6 @@ class UR_Shortcodes {
 	private static function render_form( $form_id ) {
 
 		$page_id = get_the_ID();
-		UR_Cache_Helper::prevent_caching( $page_id );
 
 		$args = array(
 			'post_type'   => 'user_registration',

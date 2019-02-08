@@ -20,28 +20,9 @@ class UR_Cache_Helper {
 	 */
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
-		add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_w3tc_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wpsuper_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
-	}
-
-	/**
-	 * Prevent caching on certain pages
-	 */
-	public static function prevent_caching( $id = '' ) {
-
-		if ( ! is_blog_installed() ) {
-			return;
-		}
-
-		$id       = is_integer( $id ) ? $id : -1;
-		$page_ids = array_filter( array( ur_get_page_id( 'myaccount' ), $id ) );
-
-		if ( is_page( $page_ids ) ) {
-			self::set_nocache_constants();
-			nocache_headers();
-		}
 	}
 
 	/**

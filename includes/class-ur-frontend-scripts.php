@@ -55,6 +55,7 @@ class UR_Frontend_Scripts {
 	 * @return array
 	 */
 	public static function get_styles() {
+
 		return apply_filters(
 			'user_registration_enqueue_styles',
 			array(
