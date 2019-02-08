@@ -139,7 +139,15 @@ class UR_Admin_Assets {
 
 		$enqueue_review = check_activation_time_and_users();
 		if( $enqueue_review === true ) {
-			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/review'. $suffix .'.js', array(), UR_VERSION );
+			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review'. $suffix .'.js', array(), UR_VERSION );
+			wp_localize_script(
+				'ur-review',
+				'ur_review_params',
+				array(
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'review_nonce' 		 => wp_create_nonce( 'review-nonce' ),
+				)
+			);
 		}
 
 

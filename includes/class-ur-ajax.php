@@ -36,12 +36,12 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'user_input_dropped'  => true,
-			'form_save_action'    => true,
-			'user_form_submit'    => true,
-			'deactivation_notice' => false,
-			'rated'               => false,
-			'dismiss_review_notice' => true,
+			'user_input_dropped'  	=> true,
+			'form_save_action'    	=> true,
+			'user_form_submit'   	=> true,
+			'deactivation_notice' 	=> false,
+			'rated'               	=> false,
+			'dismiss_review_notice' => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -418,6 +418,8 @@ class UR_AJAX {
     * @return void
     **/
    public function dismiss_review_notice() {
+
+		check_admin_referer( 'review-nonce', 'security' );
 
         if ( ! empty( $_POST['dismissed'] ) ) {
             update_option( 'ur_review_notice_dismissed', 'yes' );
