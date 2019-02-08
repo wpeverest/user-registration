@@ -26,6 +26,7 @@ class UR_Admin {
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+		add_action( 'admin_notices' , array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
@@ -132,6 +133,33 @@ class UR_Admin {
 		}
 
 		return $footer_text;
+	}
+
+	/**
+	 * Review notice on header.
+	 *
+	 * @since  1.5.8
+	 * @return void
+	 */
+	public function review_notice() {
+
+        // Show only to Admins
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Plugin Activation Time.
+	    $activation_time   = get_option( 'user_registration_installed' );
+	    $notice_dismissed  = get_option( 'ur_review_notice_dismissed', 'no' );
+
+	    if ( 'yes' == $notice_dismissed ) {
+            return;
+        }
+
+        // Returnn if activation time is less than 20 days and if 10 number of users are not registered using user registration form.
+        if ( (time() - $activation_time < 1728000 ) && $total_users < 50 ) {
+            return;
+        }
 	}
 }
 
