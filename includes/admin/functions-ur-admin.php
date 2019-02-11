@@ -443,9 +443,9 @@ function check_activation_time_and_users() {
     	}
     }
 
-    if ( ( time() - $activation_time < 1728000 ) && $count < 5 ) {
-        return false;
+    if ( ( time() - $activation_time > 1728000 ) && $count > 5 ) {
+        return true;
     }
 
-    return true;
+    return false;
 }
