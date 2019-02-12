@@ -429,23 +429,23 @@ function ur_format_setting_data( $setting_data ) {
  */
 function check_activation_time_and_users() {
 
-    $users 			   = get_users();
-    $count 			   = 0;
+	$users = get_users();
+	$count = 0;
 
-    // Plugin Activation Time.
-	$activation_time   = get_option( 'user_registration_installed' );
+	// Plugin Activation Time.
+	$activation_time = get_option( 'user_registration_installed' );
 
-    foreach( $users as $user ) {
-    	$form_id = get_user_meta( $user->ID, 'ur_form_id', true );
+	foreach ( $users as $user ) {
+		$form_id = get_user_meta( $user->ID, 'ur_form_id', true );
 
-    	if ( ! empty( $form_id ) ) {
-    		$count++; 	// Count the users using user registration form.
-    	}
-    }
+		if ( ! empty( $form_id ) ) {
+			$count++;   // Count the users using user registration form.
+		}
+	}
 
-    if ( ( time() - $activation_time > 1728000 ) && $count > 5 ) {
-        return true;
-    }
+	if ( ( time() - $activation_time > 1728000 ) && $count > 5 ) {
+		return true;
+	}
 
-    return false;
+	return true;
 }
