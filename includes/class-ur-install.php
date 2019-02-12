@@ -209,15 +209,15 @@ class UR_Install {
 	}
 
 	/**
-	 * May be add installation date in seconds. Donot insert on every update.
+	 * May be add installation date. Donot insert on every update.
 	 *
 	 * @since 1.5.8
 	 */
 	private static function maybe_add_installation_date() {
 
-		$installed_time = get_option( 'user_registration_installed' );
+		$installed_date = get_option( 'user_registration_installed' );
 
-		if( ! empty( $installed_time ) ) {
+		if( empty( $installed_date ) ) {
 			update_option( 'user_registration_installed', current_time( 'Y-m-d' ) );
 		}
 	}
