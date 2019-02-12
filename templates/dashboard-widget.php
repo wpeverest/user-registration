@@ -2,7 +2,6 @@
 /**
  * Dashboard widget for user activity.
  *
- *
  * This template can be overridden by copying it to yourtheme/user-registration/dashboard-widget.php.
  *
  * HOWEVER, on occasion UserRegistration will need to update template files and you
@@ -23,20 +22,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 	<div class="ur-dashboard-widget">
-		<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png';?>">
+		<div class="ur-logo-wrap">
+			<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>">
+			<div class="ur-plugin-info">
+				User registration
+				<span class="ur-version">v1.2.4</span>
+			</div>
+		</div>
 		<div class="ur-dashboard-widget-forms">
 			<select id="ur-dashboard-widget-forms" class="components-select-control__input">
-				<?php foreach( $forms as $form_id => $form_label ) {
-						echo '<option value="'. $form_id .'">'. esc_html( $form_label ).'</option>';
-					}
+				<?php
+				foreach ( $forms as $form_id => $form_label ) {
+						echo '<option value="' . $form_id . '">' . esc_html( $form_label ) . '</option>';
+				}
 				?>
 			</select>
 		</div>
 	</div>
 	<div class="ur-dashboard-widget-statictics">
-		<?php
-			?>
-				<ul>
+						<ul>
 					<li>
 						<?php echo __( 'Today', 'user-registration' ); ?>
 						<div class="ur-today-users">
@@ -65,9 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</div>
 					</li>
 				</ul>
-			<?php
-		?>
-	</div>
+				</div>
 
 <?php
 	/**
