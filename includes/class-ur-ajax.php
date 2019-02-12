@@ -41,6 +41,7 @@ class UR_AJAX {
 			'user_form_submit'    => true,
 			'deactivation_notice' => false,
 			'rated'               => false,
+			'dashboard_widget'	  => false
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -281,6 +282,21 @@ class UR_AJAX {
 
 		$content = ob_get_clean();
 		wp_send_json( $content ); // WPCS: XSS OK.
+	}
+
+	/**
+	 * Dashboard Widget data.
+	 *
+	 * @since 1.5.8
+	 */
+	public function dashboard_widget() {
+
+		check_ajax_referer( 'dashboard-widget', 'security' );
+
+		$form_id 	 = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
+		$user_report = ur_get_user_report( $form_id );
+
+		wp_send_json( $user_report ); // WPCS: XSS OK.
 	}
 
 	/**
