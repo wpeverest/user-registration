@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-logo-wrap">
 			<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>">
 			<div class="ur-plugin-info">
-				User registration
-				<span class="ur-version">v1.2.4</span>
+				<?php echo __( 'User registration', 'user-registration' );?>
+				<span class="ur-version"><?php echo __('Current Version:', 'user-registration' ) . UR_VERSION;?></span>
 			</div>
 		</div>
 		<div class="ur-dashboard-widget-forms">
@@ -40,37 +40,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 	<div class="ur-dashboard-widget-statictics">
-						<ul>
-					<li>
-						<?php echo __( 'Today', 'user-registration' ); ?>
-						<div class="ur-today-users">
-							<?php echo $user_report['today_users']; ?>
-						</div>
-					</li>
-
-					<li>
-						<?php echo __( 'Last Week', 'user-registration' ); ?>
-						<div class="ur-last-week-users">
-							<?php echo $user_report['last_week_users']; ?>
-						</div>
-					</li>
-
-					<li>
-						<?php echo __( 'Last Month', 'user-registration' ); ?>
-						<div class="ur-last-month-users">
-							<?php echo $user_report['last_month_users']; ?>
-						</div>
-					</li>
-
-					<li>
-						<?php echo __( 'Total', 'user-registration' ); ?>
-						<div class="ur-total-users">
-							<?php echo $user_report['total_users']; ?>
-						</div>
-					</li>
-				</ul>
+		<ul>
+			<li>
+				<?php echo __( 'Today', 'user-registration' ); ?>
+				<div class="ur-today-users">
+					<?php echo $user_report['today_users']; ?>
 				</div>
+			</li>
 
+			<li>
+				<?php echo __( 'Last Week', 'user-registration' ); ?>
+				<div class="ur-last-week-users">
+					<?php echo $user_report['last_week_users']; ?>
+				</div>
+			</li>
+
+			<li>
+				<?php echo __( 'Last Month', 'user-registration' ); ?>
+				<div class="ur-last-month-users">
+					<?php echo $user_report['last_month_users']; ?>
+				</div>
+			</li>
+
+			<li>
+				<?php echo __( 'Total', 'user-registration' ); ?>
+				<div class="ur-total-users">
+					<?php echo $user_report['total_users']; ?>
+				</div>
+			</li>
+		</ul>
+	</div>
 <?php
 	/**
 	 * Dashboard Widget.
