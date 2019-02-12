@@ -55,7 +55,7 @@ class UR_Admin_Assets {
 		wp_enqueue_style( 'user-registration-menu' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
-		$enqueue_review = check_activation_time_and_users();
+		$enqueue_review = ur_check_activation_date();
 
 		if( $enqueue_review === true ) {
 			wp_enqueue_style( 'ur-review' );
@@ -137,7 +137,8 @@ class UR_Admin_Assets {
 
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 
-		$enqueue_review = check_activation_time_and_users();
+		$enqueue_review = ur_check_activation_date();
+
 		if( $enqueue_review === true ) {
 			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review'. $suffix .'.js', array(), UR_VERSION );
 			wp_localize_script(

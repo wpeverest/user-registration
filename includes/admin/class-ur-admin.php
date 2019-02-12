@@ -154,8 +154,8 @@ class UR_Admin {
 			return;
 		}
 
-		// Return if activation time is less than 20 days and if 5 number of users are registered using user registration form.
-		if ( check_activation_time_and_users() === false ) {
+		// Return if activation date is less than 30 days.
+		if ( ur_check_activation_date() === false ) {
 			return;
 		}
 
@@ -167,10 +167,10 @@ class UR_Admin {
 				<div class="user-registration-review-text">
 
 						<h3><?php _e( 'Enjoying <strong>User Registration</strong>?', 'user-registration' ); ?></h3>
-						<p><?php _e( 'We appreciate your review on <a href="https://wordpress.org/support/plugin/user-registration/reviews/#new-post" target="_blank"><strong>WordPress.org</strong></a>?', 'user-registration' ); ?></p>
+						<p><?php _e( 'Looks like you have been using user registration for a while. Would you do us some favour and leave a review on <a href="https://wordpress.org/support/plugin/user-registration/reviews/#new-post" target="_blank"><strong>WordPress.org</strong></a>?', 'user-registration' ); ?></p>
 
 					<ul class="user-registration-review-ul">
-						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Okay you deserve it!', 'user-registration' ); ?></a></li>
+						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
 						<li><a class="button button-secondary" href="#" class="notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php _e( 'I already did!', 'user-registration' ); ?></a></li>
 						<li><a class="button button-link" href="#" class="notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php _e( 'Never show again', 'user-registration' ); ?></a></li>
 					 </ul>

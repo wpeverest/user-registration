@@ -421,31 +421,24 @@ function ur_format_setting_data( $setting_data ) {
 }
 
 /**
- * Check for plugin activation time and minimum of 20 users.
+ * Check for plugin activation date.
+ *
+ * True if user registration has been installed 30 days ago.
  *
  * @since 1.5.8
  *
  * @return bool
  */
-function check_activation_time_and_users() {
-
-	$users = get_users();
-	$count = 0;
+function ur_check_activation_date() {
 
 	// Plugin Activation Time.
-	$activation_time = get_option( 'user_registration_installed' );
+	$activation_date = get_option( 'user_registration_installed' );
+	$last_month 	 = strtotime( 'now' ) - MONTH_IN_SECONDS;
+	$last_month 	 = date( 'Y-m-d', $last_month );
 
-	foreach ( $users as $user ) {
-		$form_id = get_user_meta( $user->ID, 'ur_form_id', true );
-
-		if ( ! empty( $form_id ) ) {
-			$count++;   // Count the users using user registration form.
-		}
-	}
-
-	if ( ( time() - $activation_time > 1728000 ) && $count > 5 ) {
+	if ( $activation_date < $last_month ) {
 		return true;
 	}
 
-	return true;
+	return false;
 }
