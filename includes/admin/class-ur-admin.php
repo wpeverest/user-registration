@@ -26,7 +26,7 @@ class UR_Admin {
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-		add_action( 'admin_notices' , array( $this, 'review_notice' ) );
+		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
@@ -143,40 +143,40 @@ class UR_Admin {
 	 */
 	public function review_notice() {
 
-        // Show only to Admins
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
+		// Show only to Admins
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
-	    $notice_dismissed  = get_option( 'ur_review_notice_dismissed', 'no' );
+		$notice_dismissed = get_option( 'ur_review_notice_dismissed', 'no' );
 
-	    if ( 'yes' == $notice_dismissed ) {
-            return;
-        }
+		if ( 'yes' == $notice_dismissed ) {
+			return;
+		}
 
-        // Return if activation time is less than 20 days and if 5 number of users are registered using user registration form.
-       	if( check_activation_time_and_users() === false ) {
-       		return;
-       	}
+		// Return if activation time is less than 20 days and if 5 number of users are registered using user registration form.
+		if ( check_activation_time_and_users() === false ) {
+			return;
+		}
 
-        ?>
-            <div id="user-registration-review-notice" class="user-registration-review-notice">
-                <div class="user-registration-review-thumbnail">
-                    <img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png';?>" alt="">
-                </div>
-                <div class="user-registration-review-text">
+		?>
+			<div id="user-registration-review-notice" class="notice notice-info user-registration-review-notice">
+				<div class="user-registration-review-thumbnail">
+					<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>" alt="">
+				</div>
+				<div class="user-registration-review-text">
 
-                        <h3><?php _e( 'Enjoying <strong>User Registration</strong>?', 'user-registration' ) ?></h3>
-                        <p><?php _e( 'We appreciate your review on <a href="https://wordpress.org/support/plugin/user-registration/reviews/#new-post" target="_blank"><strong>WordPress.org</strong></a>?', 'user-registration' ) ?></p>
+						<h3><?php _e( 'Enjoying <strong>User Registration</strong>?', 'user-registration' ); ?></h3>
+						<p><?php _e( 'We appreciate your review on <a href="https://wordpress.org/support/plugin/user-registration/reviews/#new-post" target="_blank"><strong>WordPress.org</strong></a>?', 'user-registration' ); ?></p>
 
-                    <ul class="user-registration-review-ul">
-                        <li><a href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Okay you deserve it!', 'user-registration' ) ?></a></li>
-                        <li><a href="#" class="notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php _e( 'I already did!', 'user-registration' ) ?></a></li>
-                        <li><a href="#" class="notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php _e( 'Never show again', 'user-registration' ) ?></a></li>
-                     </ul>
-                </div>
-            </div>
-        <?php
+					<ul class="user-registration-review-ul">
+						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Okay you deserve it!', 'user-registration' ); ?></a></li>
+						<li><a class="button button-secondary" href="#" class="notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php _e( 'I already did!', 'user-registration' ); ?></a></li>
+						<li><a class="button button-link" href="#" class="notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php _e( 'Never show again', 'user-registration' ); ?></a></li>
+					 </ul>
+				</div>
+			</div>
+		<?php
 	}
 }
 

@@ -3,9 +3,6 @@
 	&.user-registration-review-notice {
 		padding: 15px 15px 15px 0;
 		background-color: #fff;
-		border-radius: 3px;
-		margin: 20px 20px 0 0;
-		border-left: 4px solid transparent;
 	}
 
 	.notice-dismiss{
@@ -24,7 +21,6 @@
 		border-right: 4px solid transparent;
 
 		img {
-			width: 60px;
 			vertical-align: middle;
 		}
 	}
@@ -33,15 +29,15 @@
 		overflow: hidden;
 
 		h3 {
-			font-size: 24px;
-			margin: 0 0 5px;
+			font-size: 20px;
+			margin: 0 0 15px;
 			font-weight: 400;
 			line-height: 1.3;
 		}
 
 		p {
 			font-size: 13px;
-			margin: 0 0 5px;
+			margin: 0 0 15px;
 		}
 	}
 
@@ -55,15 +51,12 @@
 
 			a {
 				display: inline-block;
-				color: #82C776;
 				text-decoration: none;
-				padding-left: 26px;
 				position: relative;
 
 				span {
-					position: absolute;
-					left: 0;
-					top: -2px;
+					margin-top: 3px;
+					margin-right: 5px;
 				}
 			}
 		}
