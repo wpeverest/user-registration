@@ -535,8 +535,10 @@ function ur_check_activation_date() {
 	$last_month 	 = strtotime( 'now' ) - MONTH_IN_SECONDS;
 	$last_month 	 = date( 'Y-m-d', $last_month );
 
-	if ( $activation_date < $last_month ) {
-		return true;
+	if( ! empty( $activation_date ) ) {
+		if ( $activation_date < $last_month ) {
+			return true;
+		}
 	}
 
 	return false;
