@@ -518,3 +518,26 @@ function ur_format_setting_data( $setting_data ) {
 
 	return $settings;
 }
+
+/**
+ * Check for plugin activation date.
+ *
+ * True if user registration has been installed 30 days ago.
+ *
+ * @since 1.5.8
+ *
+ * @return bool
+ */
+function ur_check_activation_date() {
+
+	// Plugin Activation Time.
+	$activation_date = get_option( 'user_registration_activated' );
+	$last_month 	 = strtotime( 'now' ) - MONTH_IN_SECONDS;
+	$last_month 	 = date( 'Y-m-d', $last_month );
+
+	if ( $activation_date < $last_month ) {
+		return true;
+	}
+
+	return false;
+}

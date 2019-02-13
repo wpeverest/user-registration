@@ -45,7 +45,10 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
 		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+
 		wp_register_style( 'user-registration-dashboard-widget', UR()->plugin_url() . '/assets/css/dashboard.css', UR_VERSION );
+
+		wp_register_style( 'ur-review', UR()->plugin_url() . '/assets/css/review.css', array(), UR_VERSION );
 
 		// Add RTL support for admin styles
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
@@ -54,6 +57,12 @@ class UR_Admin_Assets {
 		// Sitewide menu CSS
 		wp_enqueue_style( 'user-registration-menu' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
+
+		$enqueue_review = ur_check_activation_date();
+
+		if( $enqueue_review === true ) {
+			wp_enqueue_style( 'ur-review' );
+		}
 
 		// Admin styles for UR pages only
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
@@ -137,6 +146,21 @@ class UR_Admin_Assets {
 		}
 
 		wp_enqueue_script( 'user-registration-form-modal-js' );
+
+		$enqueue_review = ur_check_activation_date();
+
+		if( $enqueue_review === true ) {
+			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review'. $suffix .'.js', array(), UR_VERSION );
+			wp_localize_script(
+				'ur-review',
+				'ur_review_params',
+				array(
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'review_nonce' 		 => wp_create_nonce( 'review-nonce' ),
+				)
+			);
+		}
+
 
 		wp_localize_script(
 			'ur-enhanced-select',
