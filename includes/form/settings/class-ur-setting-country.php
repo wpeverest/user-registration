@@ -40,6 +40,17 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 			),
+			'default_value' => array(
+				'label'       => __( 'Default Value', 'user-registration' ),
+				'data-id'     => $this->field_id . '_default_value',
+				'name'        => $this->field_id . '[default_value]',
+				'class'       => $this->default_class . ' ur-settings-default-value',
+				'type'        => 'text',
+				'required'    => false,
+				'default'     => '',
+				'placeholder' => __( 'Default Value', 'user-registration' ),
+
+			),
 		);
 
 		$this->render_html( $fields );
