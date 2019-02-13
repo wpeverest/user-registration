@@ -434,7 +434,7 @@ class UR_AJAX {
     *
     * @return void
     **/
-   public function dismiss_review_notice() {
+   public static function dismiss_review_notice() {
 
 		check_admin_referer( 'review-nonce', 'security' );
 
