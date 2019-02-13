@@ -219,6 +219,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
+			'ur-my-account'              => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),
+				'deps'    => array( 'jquery', 'user-registration' ),
+				'version' => UR_VERSION,
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );
