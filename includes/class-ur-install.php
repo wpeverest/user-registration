@@ -215,10 +215,10 @@ class UR_Install {
 	 */
 	private static function maybe_add_installation_date() {
 
-		$installed_date = get_option( 'user_registration_installed' );
+		$installed_date = get_option( 'user_registration_activated' );
 
 		if( empty( $installed_date ) ) {
-			update_option( 'user_registration_installed', current_time( 'Y-m-d' ) );
+			update_option( 'user_registration_activated', current_time( 'Y-m-d' ) );
 		}
 	}
 

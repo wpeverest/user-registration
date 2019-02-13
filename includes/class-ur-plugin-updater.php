@@ -224,6 +224,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Ran on plugin-deactivation.
 	 */
 	public function plugin_deactivation() {
+		delete_option( 'user_registration_activated' );
 		$this->deactivate_license();
 	}
 

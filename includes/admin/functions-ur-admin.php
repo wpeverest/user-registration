@@ -432,7 +432,7 @@ function ur_format_setting_data( $setting_data ) {
 function ur_check_activation_date() {
 
 	// Plugin Activation Time.
-	$activation_date = get_option( 'user_registration_installed' );
+	$activation_date = get_option( 'user_registration_activated' );
 	$last_month 	 = strtotime( 'now' ) - MONTH_IN_SECONDS;
 	$last_month 	 = date( 'Y-m-d', $last_month );
 
