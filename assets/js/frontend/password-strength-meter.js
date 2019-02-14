@@ -10,7 +10,7 @@ jQuery(function ( $ ) {
 		 */
 		init: function () {
 			var $this = this;
-			$(document.body).on('keyup change', 'input[name="user_pass"]', function () {
+			$(document.body).on('keyup change', 'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"]', function () {
 
 				var enable_strength_password  = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
@@ -62,17 +62,27 @@ jQuery(function ( $ ) {
 			var meter = wrapper.find('.user-registration-password-strength');
 			var hint = wrapper.find('.user-registration-password-hint');
 			var hint_html = '<small class="user-registration-password-hint">' + ur_password_strength_meter_params.i18n_password_hint + '</small>';
+			var submit_button = wrapper.find( 'input[type="submit"].user-registration-Button' );
+			var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
+
 			var blacklistArray = wp.passwordStrength.userInputBlacklist();
 			blacklistArray.push( wrapper.find('input[data-id="user_email"]').val() ); // Add email address in blacklist.
 			blacklistArray.push( wrapper.find('input[data-id="user_login"]').val() ); // Add username in blacklist.
 
 			var strength = wp.passwordStrength.meter(field.val(), blacklistArray);
+
 			var error = '';
 			// Reset
 			meter.removeClass('short bad good strong');
 			hint.remove();
 
 			wrapper.find('.user-registration-password-strength').attr('data-current-strength', strength);
+
+			if( strength >= minimum_password_strength ) {
+				submit_button.removeAttr('disabled');
+			}else{
+				submit_button.attr('disabled', 'disabled');
+			}
 
 			switch ( strength ) {
 				case 0:
