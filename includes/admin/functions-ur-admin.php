@@ -20,6 +20,11 @@ add_action( 'wp_dashboard_setup', 'ur_add_dashboard_widget' );
  * @since 1.5.8
  */
 function ur_add_dashboard_widget() {
+
+	if( ! current_user_can( 'manage_user_registration' ) ) {
+		return;
+	}
+
 	wp_add_dashboard_widget( 'user_registration_dashboard_status', __( 'User Registration Activity', 'user-registration' ), 'ur_status_widget' );
 }
 
