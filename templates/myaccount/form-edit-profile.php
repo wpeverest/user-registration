@@ -41,7 +41,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 					<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>"><br/>
 
 					<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
-					<input type="hidden" name="gravatar-image" value="<?php echo $gravatar_image; ?>" />
+					<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 
 					<button class="button profile-pic-remove" style="<?php echo ( $profile_image !== $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
 					<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>

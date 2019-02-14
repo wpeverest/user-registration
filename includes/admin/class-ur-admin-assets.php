@@ -60,7 +60,7 @@ class UR_Admin_Assets {
 
 		$enqueue_review = ur_check_activation_date();
 
-		if( $enqueue_review === true ) {
+		if ( $enqueue_review === true ) {
 			wp_enqueue_style( 'ur-review' );
 		}
 
@@ -140,6 +140,7 @@ class UR_Admin_Assets {
 		);
 
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
+		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
 
 		if ( 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
@@ -149,18 +150,17 @@ class UR_Admin_Assets {
 
 		$enqueue_review = ur_check_activation_date();
 
-		if( $enqueue_review === true ) {
-			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review'. $suffix .'.js', array(), UR_VERSION );
+		if ( $enqueue_review === true ) {
+			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review' . $suffix . '.js', array(), UR_VERSION );
 			wp_localize_script(
 				'ur-review',
 				'ur_review_params',
 				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'review_nonce' 		 => wp_create_nonce( 'review-nonce' ),
+					'ajax_url'     => admin_url( 'admin-ajax.php' ),
+					'review_nonce' => wp_create_nonce( 'review-nonce' ),
 				)
 			);
 		}
-
 
 		wp_localize_script(
 			'ur-enhanced-select',
@@ -221,6 +221,8 @@ class UR_Admin_Assets {
 		// Enqueue flatpickr on user profile screen.
 		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
+			wp_enqueue_media();
+			wp_enqueue_script( 'ur-my-account' );
 		}
 
 		// Plugins page.

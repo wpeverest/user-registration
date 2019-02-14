@@ -1,10 +1,10 @@
 jQuery(function ( $ ) {
 	$('.profile-pic-upload').on('click', function (e) {
 		e.preventDefault();
-		var preview      = $( this ).closest('.user-registration-profile-fields').find( 'img.profile-preview' ),
+		var preview      = $( this ).closest('form').find( 'img.profile-preview' ),
 			image = wp.media( {multiple: false} ).open(),
-			input_hidden = $( this ).closest('.user-registration-profile-fields').find( 'input[name="profile-pic-id"]' ),
-			remove_button = $( this ).closest('.user-registration-profile-fields').find( 'button.profile-pic-remove' );
+			input_hidden = $( this ).closest('form').find( 'input[name="profile-pic-id"]' ),
+			remove_button = $( this ).closest('form').find( 'button.profile-pic-remove' );
 
 		image.on( 'select', function () {
 			// This will return the selected image from the Media Uploader, the result is an object.
@@ -33,11 +33,11 @@ jQuery(function ( $ ) {
 
 	$('.profile-pic-remove').on('click', function (e) {
 		e.preventDefault();
-		var input_hidden = $( this ).closest('.user-registration-profile-fields').find( 'input[name="profile-pic-id"]' ),
-			gravatar_input_hidden = $( this ).closest('.user-registration-profile-fields').find( 'input[name="gravatar-image"]' ),
-			preview      = $( this ).closest('.user-registration-profile-fields').find( 'img.profile-preview' );
+		var input_hidden = $( this ).closest('form').find( 'input[name="profile-pic-id"]' ),
+			profile_default_input_hidden = $( this ).closest('form').find( 'input[name="profile-default-image"]' ),
+			preview      = $( this ).closest('form').find( 'img.profile-preview' );
 		input_hidden.val('');
-		preview.attr('src', gravatar_input_hidden.val());
+		preview.attr('src', profile_default_input_hidden.val());
 		$(this).hide();
 	});
 });
