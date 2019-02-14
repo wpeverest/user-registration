@@ -311,6 +311,11 @@
 							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
 							var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
 							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
+
+								$('html, body').animate({
+      								scrollTop: $this.find('.user-registration-password-strength').siblings('label').offset().top - 50
+    							});
+
 								return false;
 							}
 						}
