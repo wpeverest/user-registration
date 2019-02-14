@@ -62,6 +62,8 @@ jQuery(function ( $ ) {
 			var meter = wrapper.find('.user-registration-password-strength');
 			var hint = wrapper.find('.user-registration-password-hint');
 			var hint_html = '<small class="user-registration-password-hint">' + ur_password_strength_meter_params.i18n_password_hint + '</small>';
+			var submit_button = wrapper.find( 'input[type="submit"].user-registration-Button' );
+			var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
 			var strength = wp.passwordStrength.meter(field.val(), wp.passwordStrength.userInputBlacklist());
 			var error = '';
 			// Reset
@@ -69,6 +71,12 @@ jQuery(function ( $ ) {
 			hint.remove();
 
 			wrapper.find('.user-registration-password-strength').attr('data-current-strength', strength);
+
+			if( strength >= minimum_password_strength ) {
+				submit_button.removeAttr('disabled');
+			}else{
+				submit_button.attr('disabled', 'disabled');
+			}
 
 			switch ( strength ) {
 				case 0:
