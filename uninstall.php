@@ -38,6 +38,9 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' ===
 	// Delete usermeta.
 	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%';" );
 
+	// Delete form id and confirm key.
+	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key IN ( 'ur_form_id', 'ur_confirm_email', 'ur_confirm_email_token' ) " );
+
 	// Clear any cached data that has been removed.
 	wp_cache_flush();
 }
