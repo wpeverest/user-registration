@@ -104,6 +104,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'options'  => $all_roles_except_admin,
 					),
 					array(
+						'title'    => __( 'Uninstall Option', 'user-registration' ),
+						'desc'     => __( 'Heads Up! Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
+						'id'       => 'user_registration_general_setting_uninstall_option',
+						'type'     => 'checkbox',
+						'desc_tip' => 'All user registration forms, pages and users data will be unrecoverable.',
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+					array(
 						'type' => 'sectionend',
 						'id'   => 'general_options',
 					),
