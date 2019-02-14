@@ -36,11 +36,14 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
+
 			'user_input_dropped'  => true,
 			'form_save_action'    => true,
 			'user_form_submit'    => true,
 			'deactivation_notice' => false,
 			'rated'               => false,
+			'dashboard_widget'	  => false,
+			'dismiss_review_notice' => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -201,6 +204,8 @@ class UR_AJAX {
 
 			$post_data = json_decode( stripslashes( $_POST['data']['form_data'] ) );
 
+			$post_data = self::ur_add_to_advanced_settings( $post_data ); // Backward compatibility method. Since @1.5.7.
+
 			self::sweep_array( $post_data );
 
 			if ( isset( self::$failed_key_value['value'] ) && self::$failed_key_value['value'] != '' ) {
@@ -282,6 +287,21 @@ class UR_AJAX {
 	}
 
 	/**
+	 * Dashboard Widget data.
+	 *
+	 * @since 1.5.8
+	 */
+	public function dashboard_widget() {
+
+		check_ajax_referer( 'dashboard-widget', 'security' );
+
+		$form_id 	 = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
+		$user_report = ur_get_user_report( $form_id );
+
+		wp_send_json( $user_report ); // WPCS: XSS OK.
+	}
+
+	/**
 	 * Checks if the string passes the regex
 	 *
 	 * @param  string $value
@@ -315,7 +335,7 @@ class UR_AJAX {
 
 			} else {
 
-				if ( $key == 'field_name' ) {
+				if ( $key === 'field_name' ) {
 					$regex_status = self::is_regex_pass( $value );
 
 					if ( ! $regex_status || in_array( $value, self::$field_key_aray ) ) {
@@ -368,6 +388,60 @@ class UR_AJAX {
 		update_option( 'user_registration_admin_footer_text_rated', 1 );
 		wp_die();
 	}
+
+	/**
+	 * Migrate the choices/options from the general settings to advanced settings.
+	 *
+	 * Backward compatibility code. Modified @since 1.5.7.
+	 *
+	 * @param  array 	$post_data All fields data.
+	 * @return array    Modified fields data.
+	 */
+	private static function ur_add_to_advanced_settings( $post_data ) {
+
+		$modifiying_keys = array( 'radio', 'select', 'checkbox' );
+
+		foreach ( $post_data as $post_content_row ) {
+			foreach ( $post_content_row as $post_content_grid ) {
+				foreach ( $post_content_grid as $field ) {
+					if( isset( $field->field_key ) ) {
+						if( ! in_array( $field->field_key, $modifiying_keys ) ) {
+							continue;
+						}
+
+						if( isset( $field->general_setting->options ) ) {
+
+							$options = implode( ',', $field->general_setting->options );
+
+							if( 'checkbox' === $field->field_key ) {
+								$field->advance_setting->choices = $options;
+							} else {
+								$field->advance_setting->options = $options;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $post_data;
+	}
+
+	/**
+    * Dismiss review notice
+    *
+    * @since  1.5.8
+    *
+    * @return void
+    **/
+   public static function dismiss_review_notice() {
+
+		check_admin_referer( 'review-nonce', 'security' );
+
+        if ( ! empty( $_POST['dismissed'] ) ) {
+            update_option( 'ur_review_notice_dismissed', 'yes' );
+        }
+    }
 }
 
 UR_AJAX::init();

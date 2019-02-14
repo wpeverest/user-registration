@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -110,6 +110,16 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.5.7 - 02/05/2018 =
+* Refactor - Options for select, checkbox and radio field.
+* Add - Placeholder for select and country field.
+* Add - Cache helper class for flushing cache on user registration form.
+* Fix - Confirmaction of export/erase personal data from custom login form.
+* Fix - Privacy policy made required by default.
+* Fix - Formatting of form title display.
+* Fix - Validate for same email as password.
+* Dev - Action hook for enqueuing scripts.
 
 = 1.5.6 - 11/01/2018 =
 * Fix - Authenticated XSS. Thanks wpvulndb.com for nofifying.

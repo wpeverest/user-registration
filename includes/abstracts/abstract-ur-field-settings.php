@@ -97,7 +97,6 @@ abstract class UR_Field_Settings {
 
 					$this->fields_html .= '>' . esc_html( $value ) . '</textarea>';
 					break;
-
 				default:
 			}
 

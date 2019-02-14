@@ -231,34 +231,39 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox':
-				$field_key = isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default   = $args['default'];
 
-				if ( isset( $args['choices'] ) && array_filter( $args['choices'] ) ) {
+				$field_key 		= isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value 	= isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+				$default 	 	= ! empty( $value ) ? $value : $default_value;
+				$options 		= isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+
+				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
 						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
 					}
 
-					$choices = isset( $args['choices'] ) ? $args['choices'] : array();
+					$choices = isset( $options ) ? $options : array();
 
 					$field  = '<label class="checkbox ' . implode( ' ', $custom_attributes ) . '">';
 					$field .= $args['label'] . $required . '</label>';
 					if ( $args['description'] ) {
 						$field .= '<span class="description">' . $args['description'] . '</span>';
 					}
+
 					$checkbox_start = 0;
+
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
-						if ( is_array( $default ) && in_array( trim( $choice ), $default ) ) {
+						if ( is_array( $default ) && in_array( trim( $choice_index ), $default ) ) {
 							$value = 'checked="checked"';
-						} elseif ( $default === $choice ) {
+						} elseif ( $default === $choice_index ) {
 							$value = 'checked="checked"';
 						}
 
 						$field .= '<label>';
-						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice ) . '"' . $value . ' /> ';
+						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . $value . ' /> ';
 						$field .= trim( $choice ) . ' </label>';
 						$checkbox_start++;
 					}
@@ -292,17 +297,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+
+				$value    = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
+												// If we have a blank option, select2 needs a placeholder
+					if ( ! empty( $args['placeholder'] ) ) {
+						$options .= '<option value="" selected disabled>'. esc_html( $args['placeholder'] ) .'</option>';
+					}
+
+					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
 
-						if ( '' === $option_key ) {
-							// If we have a blank option, select2 needs a placeholder
-							if ( empty( $args['placeholder'] ) ) {
-								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
-							}
-							$custom_attributes[] = 'data-allow_clear="true"';
-						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
@@ -346,13 +353,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
+
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+				$value    = ! empty( $value ) ? $value : $default_value;
 				$label_id = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
-					foreach ( $args['options'] as $option_key => $option_text ) {
+					foreach ( $args['options'] as $option_index => $option_text ) {
 
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio">';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_key ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_key ), false ) . ' />' . wp_kses(
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_index ), false ) . ' />' . wp_kses(
 							trim( $option_text ),
 							array(
 								'a'    => array(
@@ -436,6 +446,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+					$placeholder 	   = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+					$options 		   = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
 					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
@@ -453,23 +465,34 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'radio':
 							case 'select':
-								$extra_params['options'] = explode( ',', $field->advance_setting->options );
+								$advanced_options 		 = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+								$advanced_options  		 = explode( ',', $advanced_options );
+								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
 								foreach ( $extra_params['options'] as $key => $value ) {
 									$extra_params['options'][ $value ] = $value;
 									unset( $extra_params['options'][ $key ] );
 								}
 								break;
+
 							case 'checkbox':
-								$extra_params['choices'] = explode( ',', $field->advance_setting->choices );
-								foreach ( $extra_params['choices'] as $key => $value ) {
-									$extra_params['choices'][ $value ] = $value;
-									unset( $extra_params['choices'][ $key ] );
+								$advanced_options 		 = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+								$advanced_options 		 = explode( ',', $advanced_options );
+								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+								foreach ( $extra_params['options'] as $key => $value ) {
+									$extra_params['options'][ $value ] = $value;
+									unset( $extra_params['options'][ $key ] );
 								}
 								break;
+
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
 								$extra_params['options'] = $class_name::get_instance()->get_country();
 								break;
+
 							default:
 								break;
 						}
@@ -478,17 +501,19 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => __( $field_label, 'user-registration' ),
-								'description' => __( $field_description, 'user-registration' ),
+								'label'       => $field_label,
+								'description' => $field_description,
 								'type'        => $field_type,
+								'placeholder' => $placeholder,
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
 						} elseif ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => __( $field_label, 'user-registration' ),
-								'description' => __( $field_description, 'user-registration' ),
+								'label'       => $field_label,
+								'description' => $field_description,
 								'type'        => $field_type,
+								'placeholder' => $placeholder,
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);

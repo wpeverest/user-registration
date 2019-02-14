@@ -49,6 +49,8 @@ class UR_Frontend_Form_Handler {
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
 
+		self::validate_password_data( $form_field_data, $form_data );
+
 		self::$response_array = apply_filters( 'user_registration_response_array', self::$response_array, $form_data, $form_id );
 
 		if ( count( self::$response_array ) == 0 ) {
@@ -330,6 +332,35 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 		return $form_data;
+	}
+
+	/**
+	 * Validate password to check if match username or email address.
+	 *
+	 * @param  array $form_field_data Form field data.
+	 * @param  array $form_data  Form data to validate.
+	 */
+	private static function validate_password_data( $form_field_data = array(), $form_data = array() ) {
+		$email_value    = '';
+		$username_value = '';
+		$password_value = '';
+
+		// Find email, username and password value.
+		foreach ( $form_data as $data ) {
+			if ( 'user_email' === $data->extra_params['field_key'] ) {
+				$email_value = strtolower( $data->value );
+			}
+			if ( 'user_login' === $data->extra_params['field_key'] ) {
+				$username_value = strtolower( $data->value );
+			}
+			if ( 'user_pass' === $data->extra_params['field_key'] ) {
+				$password_value = strtolower( $data->value );
+			}
+		}
+
+		if ( $password_value === $email_value || $password_value === $username_value ) {
+			array_push( self::$response_array, __( '<label>Week Password!</label><br />Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) );
+		}
 	}
 }
 

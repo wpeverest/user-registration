@@ -55,6 +55,7 @@ class UR_Frontend_Scripts {
 	 * @return array
 	 */
 	public static function get_styles() {
+
 		return apply_filters(
 			'user_registration_enqueue_styles',
 			array(
@@ -217,6 +218,11 @@ class UR_Frontend_Scripts {
 				'src'     => 'https://www.google.com/recaptcha/api.js?render=' . $recaptcha_site_key_v3,
 				'deps'    => array(),
 				'version' => '3.0.0',
+			),
+			'ur-my-account'              => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),
+				'deps'    => array( 'jquery', 'user-registration' ),
+				'version' => UR_VERSION,
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {

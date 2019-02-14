@@ -39,6 +39,11 @@ class UR_Form_Field_Select extends UR_Form_Field {
 		$this->field_defaults = array(
 			'default_label'      => __( 'Select', 'user-registration' ),
 			'default_field_name' => 'select_' . ur_get_random_number(),
+			'default_options'    => array(
+				__( 'First Choice', 'user-registration' ),
+				__( 'Second Choice', 'user-registration' ),
+				__( 'Third Choice', 'user-registration' ),
+			),
 		);
 	}
 

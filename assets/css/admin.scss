@@ -34,6 +34,8 @@
 
 	.products {
 		overflow: hidden;
+		display: flex;
+	    flex-wrap: wrap;
 
 		li {
 			margin: 0 1% 1% 0 !important;
@@ -557,6 +559,15 @@
 	*:focus {
 		outline: 0;
 	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.ur-field {
+		line-height: 2;
+	}
+
 	.ur-registered-inputs {
 		width: 35%;
 		background-color: $color_gray_ten;
@@ -980,6 +991,67 @@
 	.ur-advance-setting label,
 	.ur-general-setting label {
 		display: block;
+	}
+
+	.ur-options-list {
+
+		li {
+			display: flex;
+			align-items: center;
+
+			.editor-block-mover__control-drag-handle {
+				margin-right: 10px;
+				cursor: grab;
+			}
+
+			input {
+				margin-right: 10px;
+			}
+
+			.add, .remove {
+				background: $white;
+				border: 1px solid $color_gray_six;
+				color: $color_gray_two;
+				display: flex;
+				flex: 1 0 35px;
+				align-items: center;
+				justify-content: center;
+				height: 35px;
+				position: relative;
+
+				&:hover {
+					background: $primary_color;
+					border-color: $primary_color;
+					color: $white;
+				}
+
+				i {
+					line-height: 22px;
+				}
+			}
+
+			.add {
+				margin-right: 10px;
+			}
+		}
+
+		.ui-sortable-handle {
+			padding: 5px;
+			border: 1px solid transparent;
+
+			&:active{
+				background: $color_gray_eight;
+				border: 1px solid $primary_color;
+				padding: 5px;
+				box-shadow: 0 0 20px rgba(0,0,0,.2);
+			}
+
+			&.ui-sortable-placeholder {
+				border: 1px dashed $primary_dark;
+				background-color: $primary_light;
+				visibility: visible !important;
+			}
+		}
 	}
 }
 

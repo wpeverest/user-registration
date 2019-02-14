@@ -477,6 +477,9 @@ jQuery(function ($) {
 				$('.ur-tabs').tabs('enable', 1);
 				$('.ur-tabs').find('a').eq(1).trigger('click');
 			}
+			$('.ur-options-list').sortable({
+				containment: '.ur-general-setting-options',
+			});
 		}
 
 		$('.ur_save_form_action_button').on('click', function () {
@@ -485,10 +488,10 @@ jQuery(function ($) {
 				show_message(validation_response.message);
 				return;
 			}
+
 			var form_data = get_form_data();
 			var ur_form_id = $('#ur_form_id').val();
 			var ur_form_id_localization = user_registration_admin_data.post_id;
-
 			if (ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0)) {
 				ur_form_id = 0;
 			}
@@ -638,6 +641,7 @@ jQuery(function ($) {
 				var grid_wise_data = get_grid_wise_data(grid_item);
 				single_row_data.push(grid_wise_data);
 			});
+
 			form_data.push(single_row_data);
 		});
 		return form_data;
@@ -654,17 +658,46 @@ jQuery(function ($) {
 				general_setting: get_field_general_setting($this_item),
 				advance_setting: get_field_advance_setting($this_item)
 			};
+
 			all_field_data.push(single_field_data);
 		});
 		return all_field_data;
 	}
 
 	function get_field_general_setting($single_item) {
+
 		var general_setting_field = $single_item.find('.ur-general-setting-block').find('.ur-general-setting-field');
 		var general_setting_data = {};
+
+		var option_values  = [];
+		var default_values = [];
 		$.each(general_setting_field, function () {
-			general_setting_data[$(this).attr('data-field')] = get_ur_data($(this));
+
+			var is_checkbox = $(this).closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox');
+
+			if( 'options' === $(this).attr('data-field') ) {
+				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );
+				general_setting_data['options'] = option_values;
+			} else {
+
+				if( 'default_value' === $(this).attr('data-field') ) {
+
+					if( is_checkbox === true ) {
+						if( $(this).is(":checked") ) {
+							general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
+							general_setting_data['default_value'] = default_values;
+						}
+					} else if( $(this).is(":checked") ) {
+							general_setting_data['default_value'] = get_ur_data($(this) );
+					}
+
+				} else {
+					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
+				}
+			}
 		});
+
+
 		return general_setting_data;
 	}
 
@@ -709,6 +742,33 @@ jQuery(function ($) {
 				case 'input_mask':
 					$this_obj.on('change', function () {
 						trigger_general_setting_field_name($(this));
+					});
+				case 'default_value':
+					$this_obj.on('change', function () {
+
+						if ( 'default_value' === $this_obj.attr('data-field') ) {
+							if( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-select') ) {
+								render_select_box( $(this) );
+							} else if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+								render_radio( $(this) );
+							} else if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox') ) {
+								render_check_box( $(this) );
+							}
+						}
+					});
+				break;
+				case 'options':
+					$this_obj.on('keyup', function () {
+
+						if( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-select') && $this_obj.siblings('input[data-field="default_value"]').is(':checked') ) {
+							render_select_box( $(this) );
+						} else if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+							render_radio( $(this) );
+						} else if ( $this_obj.closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox') ) {
+							render_check_box( $(this) );
+						}
+
+						trigger_general_setting_options($(this));
 					});
 					break;
 				case 'placeholder':
@@ -794,46 +854,98 @@ jQuery(function ($) {
 				break;
 		}
 	}
-	function render_check_box(value) {
-		value = $.trim(value);
+	function render_check_box(this_node) {
+
+		var array_value = [];
+		var li_elements = this_node.closest('ul').find('li');
+		var checked_index = this_node.closest('li').index();
+
+		li_elements.each( function( index, element) {
+			var value 	 = $( element ).find('input.ur-type-checkbox-label').val();
+				value 	 = $.trim(value);
+				checkbox = $( element ).find('input.ur-type-checkbox-value').is( ':checked' );
+				array_value.push( {value:value, checkbox:checkbox });
+		});
+
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var checkbox = wrapper.find('.ur-field');
 		checkbox.html('');
-		var array_value = value.split(',');
+
 		for (var i = 0; i < array_value.length; i++) {
 			if (array_value[i] !== '') {
-				checkbox.append('<label><input value="' + array_value[i].trim() + '" type="checkbox">' + array_value[i].trim() + '</label>');
+				checkbox.append('<label><input value="' + array_value[i].value.trim() + '" type="checkbox" ' + ( (array_value[i].checkbox) ? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
+
+		if( this_node.is( ':checked' ) ) {
+			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
+		} else {
+			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
+		}
 	}
-	function render_radio(value) {
-		value = $.trim(value);
+
+	function render_radio(this_node) {
+		var li_elements = this_node.closest('ul').find('li');
+		var checked_index = undefined;
+		var	array_value = [];
+
+		li_elements.each( function( index, element) {
+			var value = $( element ).find('input.ur-type-radio-label').val();
+			value = $.trim(value);
+			radio = $( element ).find('input.ur-type-radio-value').is( ':checked' );
+			// Set checked elements index value
+			if( radio === true) {
+				checked_index = index;
+			}
+			array_value.push({value:value, radio:radio });
+		});
+
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var radio = wrapper.find('.ur-field');
 		radio.html('');
-		var array_value = value.split(',');
+
 		for (var i = 0; i < array_value.length; i++) {
 			if (array_value[i] !== '') {
-				radio.append('<label><input value="' + array_value[i].trim() + '" type="radio">' + array_value[i].trim() + '</label>');
+				radio.append('<label><input value="' + array_value[i].value.trim() + '" type="radio" ' + ( (array_value[i].radio)? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
+
+		// Loop through options in active fields general setting hidden div.
+		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
+			var radio_input = $(element).find( '[data-field="default_value"]' );
+			if( index === checked_index ){
+				radio_input.attr( 'checked', 'checked' );
+			}else{
+				radio_input.removeAttr( 'checked' );
+			}
+		} );
 	}
-	function render_select_box(value) {
-		value = $.trim(value);
+
+	function render_select_box(this_node) {
+		value = $.trim( this_node.val() );
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		var checked_index = this_node.closest('li').index();
 		var select = wrapper.find('.ur-field').find('select');
+
 		select.html('');
-		var array_value = value.split(',');
-		for (var i = 0; i < array_value.length; i++) {
-			if (array_value[i] !== '') {
-				select.append('<option value=\'' + array_value[i] + '\'>' + array_value[i].trim() + '</option>');
-			}
-		}
+		select.append('<option value=\'' + value + '\'>' + value + '</option>');
+
+		wrapper.find('.ur-general-setting-options li input[data-field="default_value"]').removeAttr( 'checked' );
+		wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
 	}
 
 	function trigger_general_setting_field_name($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+	}
+
+	function trigger_general_setting_options($label) {
+
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		var index = $label.closest('li').index();
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).attr( 'value', $label.val() );
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="default_value"]' ).val( $label.val() );
+		$label.closest('li').find('[data-field="default_value"]').val( $label.val() );
 	}
 
 	function trigger_general_setting_label($label) {
@@ -886,9 +998,7 @@ jQuery(function ($) {
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').val('yes').trigger('change');
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').find('option[value="yes"]').attr('selected', 'selected');
 				field_node.closest('.ur-selected-item').find('select[data-field="required"]').attr('disabled', 'disabled');
-
 			}
-
 		}
 
 		var label_node = selected_inputs.find('select[data-field="required"]').find('option[selected="selected"][value="yes"]').closest('.ur-selected-item').find('.ur-label').find('label');
@@ -911,14 +1021,10 @@ jQuery(function ($) {
 			if ($.inArray(data_field_id, single_draggable_fields) >= 0) {
 
 				if ($('.ur-selected-inputs').find('.ur-field[data-field-key="' + data_field_id + '"]').length > 0) {
-
-
 					$this.draggable('disable');
 				} else {
-
 					$this.draggable('enable');
 				}
-
 			}
 		});
 	}
@@ -981,5 +1087,66 @@ jQuery(function ($) {
 		var field_list = $(this).find(' ~ .ur-registered-list')[0];
 		$(field_list).slideToggle();
 	});
+
+	$(document).on('click', '.ur-options-list .add', function( e ) {
+
+		e.preventDefault();
+		var $this 		    = $(this),
+			$wrapper        = $( '.ur-selected-item.ur-item-active' ),
+			this_index = $this.parent('li').index(),
+			cloning_element = $this.parent('li').clone(true, true);
+
+		cloning_element.find('input[data-field="options"]').val('');
+		cloning_element.find('input[data-field="default_value"]').removeAttr('checked');
+
+		$this.parent('li').after( cloning_element );
+		$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).after( cloning_element.clone(true, true) );
+
+		if ( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+			render_radio( $this );
+		} else if( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox') ) {
+			render_check_box( $this );
+		}
+	});
+
+	$(document).on('click', '.ur-options-list .remove', function( e ) {
+
+		e.preventDefault();
+		var $this 		    = $(this),
+			$parent_ul      = $(this).closest('ul');
+			$any_siblings   = $parent_ul.find('li');
+			$wrapper        = $( '.ur-selected-item.ur-item-active' ),
+			this_index 		= $this.parent('li').index();
+
+		if( $parent_ul.find('li').length > 1 ) {
+
+			$this.parent('li').remove();
+			$wrapper.find( '.ur-general-setting-options .ur-options-list > li:nth( ' + this_index + ' )' ).remove();
+
+			if ( $any_siblings.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+				render_radio( $any_siblings );
+			} else if( $any_siblings.closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox') ) {
+				render_check_box( $any_siblings );
+			}
+		}
+	});
+
+	$( document ).on('sortstop', '.ur-options-list', function( event, ui ) {
+		var $this = $( this );
+		ur_clone_options( $this );
+		if ( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-radio') ) {
+			render_radio( $this );
+		} else if( $this.closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox') ) {
+			render_check_box( $this );
+		}
+	});
+
+	function ur_clone_options( $this_obj ) {
+		var cloning_options = $this_obj.clone( true, true );
+		var wrapper 		= $('.ur-selected-item.ur-item-active');
+		var cloning_element 	= wrapper.find( '.ur-general-setting-options .ur-options-list');
+		cloning_element.html('');
+		cloning_element.replaceWith(cloning_options);
+	}
 
 }(jQuery, window.user_registration_admin_data));

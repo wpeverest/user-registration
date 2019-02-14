@@ -80,7 +80,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			}
 
 			$show_fields = $this->get_user_meta_by_form_fields( $user->ID );
-
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
@@ -133,7 +132,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
 										<?php
-										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+										$selected = get_user_meta( $user->ID, $key, true );
 										foreach ( $field['options'] as $option_key => $option_value ) :
 											?>
 											<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
@@ -182,7 +181,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 															name="<?php echo esc_attr( $key ); ?>[]"
 															id="<?php echo esc_attr( $key ); ?>"
 															value="<?php echo esc_attr( trim( $choice ) ); ?>"
-															class="<?php echo esc_attr( $field['class'] ); ?>" 
+															class="<?php echo esc_attr( $field['class'] ); ?>"
 																			  <?php
 																				if ( is_array( $value ) && in_array( trim( $choice ), $value ) ) {
 																					echo 'checked="checked"';
@@ -197,7 +196,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										?>
 										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
 											   id="<?php echo esc_attr( $key ); ?>" value="1"
-											   class="<?php echo esc_attr( $field['class'] ); ?>" 
+											   class="<?php echo esc_attr( $field['class'] ); ?>"
 																 <?php
 																	if ( $value == '1' ) {
 																		echo 'checked="checked"';
@@ -424,7 +423,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							switch ( $field_key ) {
 
 								case 'select':
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									// Backward compatibility. Modified since 1.5.7.
+									$options        = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$option_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$option_data    = array_map( 'trim', $option_data );
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {
@@ -436,7 +438,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'radio':
-									$option_data = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									// Backward compatibility. Modified since 1.5.7.
+									$options        = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
+									$option_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$option_data    = array_map( 'trim', $option_data );
 
 									if ( is_array( $option_data ) && $field_index != '' ) {
 										foreach ( $option_data as $index_data => $option ) {
@@ -461,8 +466,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'mailchimp':
 								case 'checkbox':
-									$choices_data                      = isset( $field->advance_setting->choices ) ? ( $field->advance_setting->choices ) : '';
-									$choices_data                      = explode( ',', $choices_data );
+									// Backward compatibility. Modified since 1.5.7.
+									$options        = isset( $field->advance_setting->choices ) ? explode( ',', $field->advance_setting->choices ) : array();
+									$choices_data 	= isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
+									$choices_data   = array_map( 'trim', $choices_data );
+
 									$fields[ $field_index ]['choices'] = $choices_data;
 									$fields[ $field_index ]['type']    = 'checkbox';
 									$fields[ $field_index ]['class']   = '';

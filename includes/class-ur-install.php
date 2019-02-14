@@ -128,6 +128,7 @@ class UR_Install {
 		self::maybe_enable_setup_wizard();
 		self::update_ur_version();
 		self::maybe_update_db_version();
+		self::maybe_add_installation_date();
 
 		delete_transient( 'ur_installing' );
 
@@ -204,6 +205,20 @@ class UR_Install {
 			}
 		} else {
 			self::update_db_version();
+		}
+	}
+
+	/**
+	 * May be add installation date. Donot insert on every update.
+	 *
+	 * @since 1.5.8
+	 */
+	private static function maybe_add_installation_date() {
+
+		$installed_date = get_option( 'user_registration_activated' );
+
+		if( empty( $installed_date ) ) {
+			update_option( 'user_registration_activated', current_time( 'Y-m-d' ) );
 		}
 	}
 

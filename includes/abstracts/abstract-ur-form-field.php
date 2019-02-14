@@ -109,39 +109,51 @@ abstract class UR_Form_Field {
 
 		$form_data['custom_attributes']['data-label'] = $data['general_setting']->label;
 
-		if ( 'country' == $field_key ) {
+		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 		}
 
-		if ( 'select' == $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+		/**  Redundant codes. **/
+			if ( 'select' === $field_key ) {
+				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
-			if ( is_array( $option_data ) ) {
-				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;
+				$options = array();
+				if ( is_array( $option_data ) ) {
+					foreach ( $option_data as $index_data => $option ) {
+						$options[ $option ] = $option;
+						$form_data['options'] = $options;
+					}
 				}
 			}
-		}
 
-		if ( 'radio' == $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array();
+			if ( 'radio' === $field_key ) {
+				$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
-			if ( is_array( $option_data ) ) {
-				foreach ( $option_data as $index_data => $option ) {
-					$form_data['options'][ $option ] = $option;
+				$options = array();
+				if ( is_array( $option_data ) ) {
+					foreach ( $option_data as $index_data => $option ) {
+						$options[ $option ] = $option;
+						$form_data['options'] = $options;
+					}
 				}
 			}
-		}
 
-		if ( 'checkbox' == $field_key ) {
-			$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array();
+			if ( 'checkbox' === $field_key ) {
+				$choices = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7
+				$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 
-			if ( is_array( $choices ) ) {
-				foreach ( $choices as $index_data => $choice ) {
-					$form_data['choices'][ $choice ] = $choice;
+				$options = array();
+				if ( is_array( $option_data ) ) {
+					foreach ( $option_data as $index_data => $option ) {
+						$options[ $option ] = $option;
+						$form_data['options'] = $options;
+					}
 				}
 			}
-		}
+		/** Redundant Codes End. **/
+
 		$filter_data = array(
 			'form_data' => $form_data,
 			'data'      => $data,
@@ -159,7 +171,7 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Inlcude advance settings file if exists
-	 */
+	*/
 	public function get_field_advance_settings() {
 
 		$file_name  = str_replace( 'user_registration_', '', $this->id );
@@ -219,22 +231,83 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'radio':
-					if ( isset( $setting_value['options'] )
-						&& gettype( $setting_value['options'] ) == 'array' ) {
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$old_options         = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $default_options;
+					$options    		 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+					$options 			 = array_map( 'trim', $options );
 
-						foreach ( $setting_value['options'] as $option_key => $option_value ) {
-							$general_setting_wrapper .= '<span>' . $option_value . '</span><input data-field="' . $setting_key . '"  value="' . $option_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="radio" name="' . $setting_value['name'] . '" id="' . $setting_value['id'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
-							$general_setting_wrapper .= ' />';
-						}
-					} else {
-						$general_setting_wrapper .= '<input data-field="' . $setting_key . '"  class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="radio" name="' . $setting_value['name'] . '"   placeholder="' . $setting_value['placeholder'] . '"';
+					$default_value = $this->get_general_setting_data( 'default_value' );
+					$default_value = ! empty( $default_value ) ? $default_value : '';
+
+					$general_setting_wrapper .= '<ul class="ur-options-list">';
+					$unique = uniqid();
+
+					foreach ( $options as  $option ) {
+
+						$general_setting_wrapper .= '<li>';
+						$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+						</div>';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="radio" name="' . $unique . '_value" ';
 
 						if ( true == $setting_value['required'] ) {
 							$general_setting_wrapper .= ' required ';
 						}
 
-						$general_setting_wrapper .= ' />';
+						$general_setting_wrapper .= '' . checked( $option, $default_value, false ) . ' />';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+
+						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+						$general_setting_wrapper .= '</li>';
+
 					}
+						$general_setting_wrapper .= '</ul>';
+					break;
+
+				case 'checkbox':
+
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$old_options         = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+					$options    		 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+
+					$options 			 = array_map( 'trim', $options );
+
+					$default_values = $this->get_general_setting_data( 'default_value' );
+					$default_values = ! empty( $default_values ) ? $default_values : array();
+					$default_values = array_map( 'trim', $default_values );
+
+					$general_setting_wrapper .= '<ul class="ur-options-list">';
+					$unique = uniqid();
+
+					foreach ( $options as  $option ) {
+
+						$general_setting_wrapper .= '<li>';
+						$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+						</div>';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="checkbox" name="' . $unique . '_value" ';
+
+						if ( true == $setting_value['required'] ) {
+							$general_setting_wrapper .= ' required ';
+						}
+
+						if( in_array( $option, $default_values ) ) {
+							$general_setting_wrapper .= 'checked ="checked" />';
+						} else {
+							$general_setting_wrapper .= '/>';
+						}
+
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+
+						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+						$general_setting_wrapper .= '</li>';
+
+					}
+						$general_setting_wrapper .= '</ul>';
 					break;
 
 				case 'select':
@@ -263,17 +336,16 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'hidden':
-					$value = isset( $setting_value['default'] )?$setting_value['default']:'';
-					if( !empty( $value) ) {
-						$extra_attribute = in_array( $strip_prefix, ur_get_fields_without_prefix() )  && 'field_name' == $setting_key ? "disabled='disabled'" : '';
-						
+					$value = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
+					if ( ! empty( $value ) ) {
+
 						$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
 						if ( true == $setting_value['required'] ) {
 							$general_setting_wrapper .= ' required ';
 						}
 
-						$general_setting_wrapper .= $extra_attribute . ' />';
+						$general_setting_wrapper .= '/>';
 					}
 					break;
 
@@ -300,7 +372,7 @@ abstract class UR_Form_Field {
 		$class          = 'ur-general-setting-' . $strip_prefix;
 
 		echo "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		echo '<h2>' . __( 'General Settings', 'user-registration' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2>';
 		echo $this->get_field_general_settings();
 		echo '</div>';
 
@@ -312,6 +384,7 @@ abstract class UR_Form_Field {
 			echo $advance_settings;
 			echo '</div>';
 		}
+
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
 	}
 

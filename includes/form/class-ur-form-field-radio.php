@@ -42,6 +42,11 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 		$this->field_defaults = array(
 			'default_label'      => __( 'Radio', 'user-registration' ),
 			'default_field_name' => 'radio_' . ur_get_random_number(),
+			'default_options'    => array(
+				__( 'First Choice', 'user-registration' ),
+				__( 'Second Choice', 'user-registration' ),
+				__( 'Third Choice', 'user-registration' ),
+			),
 		);
 	}
 
