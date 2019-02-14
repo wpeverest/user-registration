@@ -47,7 +47,6 @@ class UR_Form_Handler {
 	 * @return mixed
 	 */
 	public static function save_profile_details() {
-
 		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
@@ -60,6 +59,11 @@ class UR_Form_Handler {
 
 		if ( $user_id <= 0 ) {
 			return;
+		}
+
+		if ( isset( $_POST['profile-pic-id'] ) ) {
+			$picture_id = absint( $_POST['profile-pic-id'] );
+			update_user_meta( $user_id, 'profile_pic_id', $picture_id );
 		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );

@@ -39,6 +39,8 @@ class UR_Shortcode_My_Account {
 
 		global $wp, $post;
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_media();
+		wp_enqueue_script( 'ur-my-account' );
 
 		if ( ! is_user_logged_in() ) {
 
