@@ -90,8 +90,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
 
 					if ( $profile_picture_id ) {
-						$profile_image = wp_get_attachment_thumb_url( $profile_picture_id );
-						$image         = $profile_image;
+						$image = wp_get_attachment_thumb_url( $profile_picture_id );
 					} else {
 						$image = $default_image;
 					}
@@ -101,12 +100,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							<label for=""><?php echo __( 'Profile Picture', 'user-registration' ); ?></label>
 						</th>
 						<td>
-							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>"><br/>
+							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" width="96px" height="96px" /><br/>
 
 							<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
 							<input type="hidden" name="profile-default-image" value="<?php echo $default_image; ?>" />
 
-							<button class="button profile-pic-remove" style="<?php echo ( $profile_image !== $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
+							<button class="button profile-pic-remove" style="<?php echo ( $default_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
 							<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>
 						</td>
 					</tr>
