@@ -120,6 +120,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 * Add     - Admin notice to leave review on wp.org
 * Add     - Scroll to error message due to minimum password strength.
 * Remove  - Caching prevention after header sent. Should've been as earlier as wp hook.
+* Fix	  - Minimum password strength bug
 
 = 1.5.7 - 02/05/2018 =
 * Refactor - Options for select, checkbox and radio field.
