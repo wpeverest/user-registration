@@ -24,7 +24,7 @@ ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), 
 do_action( 'user_registration_before_change_password_form' );
 ?>
 <div class="ur-frontend-form login" id="ur-frontend-form">
-	<form class="user-registration-EditAccountForm edit-password" action="" method="post">
+	<form class="user-registration-EditAccountForm edit-password" action="" method="post" data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" >
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<?php

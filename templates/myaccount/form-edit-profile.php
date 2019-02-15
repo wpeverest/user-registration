@@ -2,7 +2,7 @@
 /**
  * Edit account form
  *
- * This template can be overridden by copying it to yourtheme/user-registration/myaccount/form-edit-password.php.
+ * This template can be overridden by copying it to yourtheme/user-registration/myaccount/form-edit-profile.php.
  *
  * HOWEVER, on occasion UserRegistration will need to update template files and you
  * (the theme developer) will need to copy the new files to your theme to
