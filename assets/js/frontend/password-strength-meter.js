@@ -94,12 +94,10 @@ jQuery(function ( $ ) {
 					meter.after(hint_html);
 					break;
 				case 2:
-					meter.addClass('bad').html(pwsL10n.bad);
+					meter.addClass('good').html(pwsL10n.good);
 					meter.after(hint_html);
 					break;
 				case 3:
-					meter.addClass('good').html(pwsL10n.good);
-					break;
 				case 4:
 					meter.addClass('strong').html(pwsL10n.strong);
 					break;
