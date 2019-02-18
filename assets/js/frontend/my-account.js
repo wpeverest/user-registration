@@ -1,8 +1,19 @@
 jQuery(function ( $ ) {
 	$('.profile-pic-upload').on('click', function (e) {
 		e.preventDefault();
+		wp.media.controller.Library.prototype.defaults.contentUserSetting = false;
+		wp.media.controller.Library.prototype.defaults.router = false;
+		wp.media.controller.Library.prototype.defaults.searchable = true;
+		wp.media.controller.Library.prototype.defaults.sortable = false;
+
 		var preview      = $( this ).closest('form').find( 'img.profile-preview' ),
-			image = wp.media( {multiple: false} ).open(),
+			image = wp.media({
+                title: "Upload Profile Picture",
+                button: {
+                    text: "Select Image"
+                },
+                multiple: false
+            }).open(),
 			input_hidden = $( this ).closest('form').find( 'input[name="profile-pic-id"]' ),
 			remove_button = $( this ).closest('form').find( 'button.profile-pic-remove' );
 

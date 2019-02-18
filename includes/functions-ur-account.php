@@ -16,10 +16,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter( 'login_errors', 'ur_login_error_message' );
 add_filter( 'get_avatar', 'replace_gravatar_image', 10, 6 );
+add_filter( 'ajax_query_attachments_args', 'wpb_show_current_user_attachments' );
+add_action( 'admin_init', 'allow_all_user_uploads' );
+
+// Limit media library access
+function wpb_show_current_user_attachments( $query ) {
+	$user_id = get_current_user_id();
+	if ( $user_id && ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'edit_others_posts' ) ) {
+		$query['author'] = $user_id;
+	}
+	return $query;
+}
+
+function allow_all_user_uploads() {
+	global $wp_roles;
+	foreach ( $wp_roles->roles as $role => $role_data ) {
+		$user_role = get_role( $role );
+		$user_role->add_cap( 'upload_files' );
+	}
+}
 
 // Modify error message on invalid username or password.
 function ur_login_error_message( $error ) {
-	// Don't change login error messages on admin site.
+	// Don't change login error messages on admin site .
 	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
 		return $error;
 	}
