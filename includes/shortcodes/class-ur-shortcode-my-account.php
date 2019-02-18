@@ -170,10 +170,21 @@ class UR_Shortcode_My_Account {
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
+		$user_id 				   = get_current_user_id();
+		$form_id                   = get_user_meta( $user_id, 'ur_form_id', true );
+		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+
+		if ( 'yes' === $enable_strong_password ) {
+			wp_enqueue_script( 'ur-password-strength-meter' );
+		}
+
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(
 				'user' => get_user_by( 'id', get_current_user_id() ),
+				'enable_strong_password'    => $enable_strong_password,
+				'minimum_password_strength' => $minimum_password_strength,
 			)
 		);
 	}
@@ -201,8 +212,8 @@ class UR_Shortcode_My_Account {
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 				if ( 'yes' === $enable_strong_password ) {
+
 					// Enqueue script.
-					// wp_enqueue_script( 'user-registration' );
 					wp_enqueue_script( 'ur-password-strength-meter' );
 					wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 				}

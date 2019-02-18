@@ -5,13 +5,13 @@ jQuery(function ( $ ) {
 	 * Password Strength Meter class.
 	 */
 	var ur_password_strength_meter = {
+
 		/**
 		 * Initialize strength meter actions.
 		 */
 		init: function () {
 			var $this = this;
-			$(document.body).on('keyup change', 'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"]', function () {
-
+			$(document.body).on('keyup change', 'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"], input[name="password_1"].user-registration-Input--password', function () {
 				var enable_strength_password  = $(this).closest('form').attr('data-enable-strength-password');
 				if ( 'no' === enable_strength_password ) {
 					return;
@@ -94,12 +94,10 @@ jQuery(function ( $ ) {
 					meter.after(hint_html);
 					break;
 				case 2:
-					meter.addClass('bad').html(pwsL10n.bad);
+					meter.addClass('good').html(pwsL10n.good);
 					meter.after(hint_html);
 					break;
 				case 3:
-					meter.addClass('good').html(pwsL10n.good);
-					break;
 				case 4:
 					meter.addClass('strong').html(pwsL10n.strong);
 					break;

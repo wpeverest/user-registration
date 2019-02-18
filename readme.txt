@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -110,6 +110,17 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.5.8 - 02/15/2018 =
+* Feature - Custom profile picture upload on account profile and admin profile.
+* Feature - Dashboard widget for users activity.
+* Feature - Default value for country field.
+* Feature - Option to delete user registration data on plugin deletion.
+* Feature - Password strenght meter on lost password and change password form.
+* Add     - Admin notice to leave review on wp.org
+* Add     - Scroll to error message due to minimum password strength.
+* Remove  - Caching prevention after header sent. Should've been as earlier as wp hook.
+* Fix	  - Minimum password strength bug
 
 = 1.5.7 - 02/05/2018 =
 * Refactor - Options for select, checkbox and radio field.
