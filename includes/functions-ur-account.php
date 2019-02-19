@@ -16,11 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter( 'login_errors', 'ur_login_error_message' );
 add_filter( 'get_avatar', 'replace_gravatar_image', 10, 6 );
-add_filter( 'ajax_query_attachments_args', 'wpb_show_current_user_attachments' );
-add_action( 'admin_init', 'allow_all_user_uploads' );
+add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
+add_action( 'admin_init', 'ur_allow_all_user_uploads' );
 
-// Limit media library access
-function wpb_show_current_user_attachments( $query ) {
+/**
+ * Limit media library access to own uploads
+ *
+ * @since 1.5.8
+ *
+ * @param  array $query
+ *
+ * @return array
+ */
+function ur_show_current_user_attachments( $query ) {
 	$user_id = get_current_user_id();
 	if ( $user_id && ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'edit_others_posts' ) ) {
 		$query['author'] = $user_id;
@@ -28,7 +36,14 @@ function wpb_show_current_user_attachments( $query ) {
 	return $query;
 }
 
-function allow_all_user_uploads() {
+/**
+ * Allow uploads to all users
+ *
+ * @since 1.5.8
+ *
+ * @global $wp_roles
+ */
+function ur_allow_all_user_uploads() {
 	global $wp_roles;
 	foreach ( $wp_roles->roles as $role => $role_data ) {
 		$user_role = get_role( $role );
