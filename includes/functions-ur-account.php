@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_filter( 'login_errors', 'ur_login_error_message' );
-add_filter( 'get_avatar', 'replace_gravatar_image', 10, 6 );
+add_filter( 'get_avatar', 'ur_replace_gravatar_image', 10, 6 );
 add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
 add_action( 'admin_init', 'ur_allow_all_user_uploads' );
 
@@ -205,7 +205,7 @@ function ur_get_account_endpoint_url( $endpoint ) {
  * @param [type] $alt
  * @param array  $args
  */
-function replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt, $args = array() ) {
+function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt, $args = array() ) {
 	// Process the user identifier.
 	$user = false;
 	if ( is_numeric( $id_or_email ) ) {
