@@ -8,9 +8,9 @@ jQuery(function ( $ ) {
 
 		var preview      = $( this ).closest('form').find( 'img.profile-preview' ),
 			image = wp.media({
-                title: "Upload Profile Picture",
+                title: ur_my_account_params.upload_image,
                 button: {
-                    text: "Select Image"
+                    text: ur_my_account_params.select_image
                 },
                 multiple: false
             }).open(),

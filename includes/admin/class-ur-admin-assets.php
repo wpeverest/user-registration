@@ -141,6 +141,11 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
+		wp_localize_script( 'ur-my-account', 'ur_my_account_params', array(
+				'upload_image' => __( 'Upload Profile Picture', 'user-registration' ),
+				'select_image' => __( 'Select Image', 'user-registration' )
+			)
+		);
 
 		if ( 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
