@@ -30,9 +30,11 @@ add_action( 'admin_init', 'ur_allow_all_user_uploads' );
  */
 function ur_show_current_user_attachments( $query ) {
 	$user_id = get_current_user_id();
-	if ( $user_id && ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'upload_files' ) ) {
+
+	if ( $user_id && ! current_user_can( 'edit_theme_options' ) ) {
 		$query['author'] = $user_id;
 	}
+
 	return $query;
 }
 

@@ -1,10 +1,13 @@
 jQuery(function ( $ ) {
 	$('.profile-pic-upload').on('click', function (e) {
 		e.preventDefault();
-		wp.media.controller.Library.prototype.defaults.contentUserSetting = false;
-		wp.media.controller.Library.prototype.defaults.router = false;
-		wp.media.controller.Library.prototype.defaults.searchable = true;
-		wp.media.controller.Library.prototype.defaults.sortable = false;
+
+		if( ! ur_my_account_params.current_user_can ) {
+			wp.media.controller.Library.prototype.defaults.contentUserSetting = false;
+			wp.media.controller.Library.prototype.defaults.router = false;
+			wp.media.controller.Library.prototype.defaults.searchable = true;
+			wp.media.controller.Library.prototype.defaults.sortable = false;
+		}
 
 		var preview      = $( this ).closest('form').find( 'img.profile-preview' ),
 			image = wp.media({
