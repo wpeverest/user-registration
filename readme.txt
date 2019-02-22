@@ -111,12 +111,12 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.8 - 02/15/2018 =
+= 1.5.8 - 02/22/2019 =
 * Feature - Custom profile picture upload on account profile and admin profile.
 * Feature - Dashboard widget for users activity.
 * Feature - Default value for country field.
 * Feature - Option to delete user registration data on plugin deletion.
-* Feature - Password strenght meter on lost password and change password form.
+* Feature - Password strength meter on lost password and change password form.
 * Add     - Admin notice to leave review on wp.org
 * Add     - Scroll to error message due to minimum password strength.
 * Remove  - Caching prevention after header sent. Should've been as earlier as wp hook.
