@@ -21,10 +21,10 @@ abstract class UR_Form_Field {
 	 * @since 1.0.0
 	 * @var int
 	 */
-	protected $id                       = 0;
-	protected $field_defaults           = array();
-	protected $admin_data               = array();
-	protected $registered_fields_config = array();
+	public $id                       = 0;
+	public $field_defaults           = array();
+	public $admin_data               = array();
+	public $registered_fields_config = array();
 
 	/**
 	 * Form ID for this object.
@@ -349,7 +349,7 @@ abstract class UR_Form_Field {
 					break;
 
 				default:
-					do_action( 'user_registration_form_field_general_setting_' . $setting_value['type'], $setting_key, $setting_value );
+					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
 
 			$general_setting_wrapper .= '</div>';
