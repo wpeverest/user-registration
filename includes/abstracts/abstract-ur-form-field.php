@@ -349,7 +349,7 @@ abstract class UR_Form_Field {
 					break;
 
 				default:
-					do_action( 'user_registration_form_field_general_setting_' . $setting_value['type'], $general_settings );
+					do_action( 'user_registration_form_field_general_setting_' . $setting_value['type'], $setting_key, $setting_value );
 			}// End switch().
 
 			$general_setting_wrapper .= '</div>';
