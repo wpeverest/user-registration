@@ -99,6 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div><!-- /#post-body -->
 				<div id="nav-menu-footer">
+					<?php do_action( 'user_registration_form_builder_footer' );?>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
 							<input type="button" name="save_form" id="save_form_footer"
