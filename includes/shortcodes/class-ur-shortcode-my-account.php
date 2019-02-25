@@ -44,7 +44,7 @@ class UR_Shortcode_My_Account {
 		wp_localize_script( 'ur-my-account', 'ur_my_account_params', array(
 				'upload_image' 		=> __( 'Upload Profile Picture', 'user-registration' ),
 				'select_image'	 	=> __( 'Select Image', 'user-registration' ),
-				'current_user_can'	=>	current_user_can( 'edit_theme_options' )
+				'current_user_can'	=>	current_user_can( 'edit_others_posts' )
 			)
 		);
 
