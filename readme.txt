@@ -111,7 +111,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
-= 1.5.8 - 02/22/2019 =
+= 1.5.8 - 02/26/2019 =
 * Feature - Custom profile picture upload on account profile and admin profile.
 * Feature - Dashboard widget for users activity.
 * Feature - Default value for country field.
