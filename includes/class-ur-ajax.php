@@ -291,7 +291,7 @@ class UR_AJAX {
 	 *
 	 * @since 1.5.8
 	 */
-	public function dashboard_widget() {
+	public static function dashboard_widget() {
 
 		check_ajax_referer( 'dashboard-widget', 'security' );
 
