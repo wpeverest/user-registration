@@ -52,10 +52,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li class="ur-no-pointer"><a href="#ur-tab-field-options"
 																 class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 									</li>
+
+									<?php do_action( 'user_registration_form_bulder_tabs' ); // TODO:: Needs refactor. Move after field-settings and sort.
+									?>
+
 									<li><a href="#ur-tab-field-settings"
 										   class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
 									</li>
-									<?php do_action( 'user_registration_form_bulder_tabs' );?>
 								</ul>
 								<div style="clear:both"></div>
 
