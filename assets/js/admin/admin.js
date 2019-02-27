@@ -7,9 +7,7 @@ jQuery(function ($) {
 	/**
 	 * Append form settings to fileds section.
 	 */
-	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
-
-	$(selector).on('click', function () {
+	$(document).on('click', '.ur-tab-lists li[aria-controls="ur-tab-field-settings"]', function () {
 		var fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
