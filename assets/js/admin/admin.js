@@ -496,6 +496,11 @@ jQuery(function ($) {
 
 			var form_setting_data = $('#ur-field-settings').serializeArray();
 
+			/** TODO:: Hanlde from multistep forms add-on if possible. */
+				var multistep_page_setting = $('#ur-multi-step-page-settings').serializeArray();
+				var form_setting_data	   = form_setting_data.concat( multistep_page_setting );
+			/** End Multistep form code. */
+
 			var data = {
 				action: 'user_registration_form_save_action',
 				security: user_registration_admin_data.ur_form_save,
