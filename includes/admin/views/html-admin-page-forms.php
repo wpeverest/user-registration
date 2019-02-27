@@ -55,6 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="#ur-tab-field-settings"
 										   class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
 									</li>
+									<?php do_action( 'user_registration_form_bulder_tabs' );?>
 								</ul>
 								<div style="clear:both"></div>
 
@@ -80,11 +81,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 													<?php ur_admin_form_settings( $form_id ); ?>
 												</div>
 											<?php
-											do_action( 'user_registration_after_form_settings', $form_id );
+												do_action( 'user_registration_after_form_settings', $form_id );
 											?>
 									</form>
-
 								</div>
+
+								<?php do_action( 'user_registration_form_bulder_content', $form_id ) ; ?>
 							</nav>
 						</div>
 						<?php
