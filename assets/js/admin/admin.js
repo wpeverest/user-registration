@@ -175,6 +175,8 @@ jQuery(function ($) {
 						$this.append(single_row);
 						$this.find('.ur-add-new-row').remove();
 						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle"></button>');
+						var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
+						$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
 						events.render_draggable_sortable();
 						builder.manage_empty_grid();
 						if (user_registration_admin_data.is_edit_form === '1') {
