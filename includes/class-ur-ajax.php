@@ -253,6 +253,8 @@ class UR_AJAX {
 				ur_update_form_settings( $post_data_setting, $post_id );
 			}
 
+			do_action( 'user_registration_after_form_settings_save', $_POST['data'] );
+
 			wp_send_json_success(
 				array(
 					'data'    => $post_data,

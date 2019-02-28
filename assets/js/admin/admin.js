@@ -498,7 +498,6 @@ jQuery(function ($) {
 
 			/** TODO:: Hanlde from multistep forms add-on if possible. */
 				var multistep_page_setting = $('#ur-multi-step-page-settings').serializeArray();
-				var form_setting_data	   = form_setting_data.concat( multistep_page_setting );
 			/** End Multistep form code. */
 
 			var data = {
@@ -508,7 +507,8 @@ jQuery(function ($) {
 					form_data: JSON.stringify(form_data),
 					form_name: $('#ur-form-name').val(),
 					form_id: ur_form_id,
-					form_setting_data: form_setting_data
+					form_setting_data: form_setting_data,
+					multistep_page_setting: multistep_page_setting,
 				}
 			};
 			$.ajax({
