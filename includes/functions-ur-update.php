@@ -252,6 +252,6 @@ function ur_update_1581_meta_key() {
 
 	// Change ur_ prefix to user_registration_ for review notice skipped option.
 	$value = get_option( 'ur_review_notice_dismissed' );
-	update_option( 'user_registration_notice_dismissed', $value );
+	update_option( 'user_registration_review_notice_dismissed', $value );
 	delete_option( 'ur_review_notice_dismissed' );
 }
