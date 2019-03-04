@@ -38,6 +38,10 @@ class UR_Install {
 			'ur_update_142_db_version',
 			'ur_update_142_option',
 		),
+		'1.5.8.1' => array(
+			'ur_update_1581_db_version',
+			'ur_update_1581_meta_key',
+		)
 	);
 
 	/**

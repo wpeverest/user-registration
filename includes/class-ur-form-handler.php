@@ -63,7 +63,7 @@ class UR_Form_Handler {
 
 		if ( isset( $_POST['profile-pic-id'] ) ) {
 			$picture_id = absint( $_POST['profile-pic-id'] );
-			update_user_meta( $user_id, 'profile_pic_id', $picture_id );
+			update_user_meta( $user_id, 'user_registration_profile_pic_id', $picture_id );
 		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );

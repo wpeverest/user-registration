@@ -87,7 +87,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 					<?php
 					$default_image      = plugins_url( '/assets/images/default_profile.png', UR_PLUGIN_FILE );
-					$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
+					$profile_picture_id = get_user_meta( $user->ID, 'user_registration_profile_pic_id', true );
 
 					if ( $profile_picture_id ) {
 						$image = wp_get_attachment_thumb_url( $profile_picture_id );
@@ -314,7 +314,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			if ( isset( $_POST['profile-pic-id'] ) ) {
 				$picture_id = absint( $_POST['profile-pic-id'] );
-				update_user_meta( $user_id, 'profile_pic_id', $picture_id );
+				update_user_meta( $user_id, 'user_registration_profile_pic_id', $picture_id );
 			}
 
 			$save_fields = $this->get_user_meta_by_form_fields( $user_id );

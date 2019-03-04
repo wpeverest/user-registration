@@ -231,7 +231,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		return $avatar;
 	}
 
-	$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
+	$profile_picture_id = get_user_meta( $user->ID, 'user_registration_profile_pic_id', true );
 	$class              = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
 	if ( ! $args['found_avatar'] || $args['force_default'] ) {

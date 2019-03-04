@@ -224,3 +224,28 @@ function ur_update_142_option() {
 	update_option( 'user_registration_myaccount_change_password_endpoint', $value );
 	delete_option( 'user_registration_myaccount_edit_account_endpoint' );
 }
+
+/**
+ * Update DB Version.
+ */
+function ur_update_1581_db_version() {
+	UR_Install::update_db_version( '1.5.8.1' );
+}
+
+/**
+ * Replace user meta key profile_pic_id to user_registration_profile_pic_id.
+ *
+ * @since 1.4.8.1
+ *
+ * @return void.
+ */
+function ur_update_1581_meta_key() {
+	$users = get_users( array(
+		'meta_key'	 => 'profile_pic_id',
+	) );
+
+	foreach( $users as $user ) {
+		$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
+		update_user_meta( $user->ID, 'user_registration_profile_pic_id', $profile_picture_id );
+	}
+}
