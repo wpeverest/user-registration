@@ -439,7 +439,7 @@ class UR_AJAX {
 		check_admin_referer( 'review-nonce', 'security' );
 
         if ( ! empty( $_POST['dismissed'] ) ) {
-            update_option( 'ur_review_notice_dismissed', 'yes' );
+            update_option( 'user_registration_review_notice_dismissed', 'yes' );
         }
     }
 }

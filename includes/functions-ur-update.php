@@ -249,4 +249,9 @@ function ur_update_1581_meta_key() {
 		update_user_meta( $user->ID, 'user_registration_profile_pic_id', $profile_picture_id );
 		delete_user_meta( $user->ID, 'profile_pic_id' );
 	}
+
+	// Change ur_ prefix to user_registration_ for review notice skipped option.
+	$value = get_option( 'ur_review_notice_dismissed' );
+	update_option( 'user_registration_notice_dismissed', $value );
+	delete_option( 'ur_review_notice_dismissed' );
 }

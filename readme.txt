@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.8
+Stable tag: 1.5.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -110,6 +110,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+
+= 1.5.8.1 - 03/04/2019 =
+* Fix - Update user meta profile_pic_id and prefix change on review notice
 
 = 1.5.8 - 02/26/2019 =
 * Feature - Custom profile picture upload on account profile and admin profile.
