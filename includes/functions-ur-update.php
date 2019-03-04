@@ -247,5 +247,6 @@ function ur_update_1581_meta_key() {
 	foreach( $users as $user ) {
 		$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
 		update_user_meta( $user->ID, 'user_registration_profile_pic_id', $profile_picture_id );
+		delete_user_meta( $user->ID, 'profile_pic_id' );
 	}
 }
