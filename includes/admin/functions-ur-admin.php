@@ -67,7 +67,9 @@ function ur_status_widget() {
 function ur_get_user_report( $form_id ) {
 
 	$current_date 		= current_time( 'Y-m-d' );
-	$users 		  		= get_users();
+	$users 				= get_users( array(
+							'meta_key'	 => 'ur_form_id',
+						) );
 	$total_users		= 0;
 	$today_users  		= 0;
 	$last_week_users    = 0;
