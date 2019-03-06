@@ -48,7 +48,7 @@ function ur_status_widget() {
 
 	$forms 		  = get_transient( 'user_registration_forms' );
 
-	if( false === $forms ) {
+	if( false === $forms && apply_filters( 'user_registration_allow_caching_forms', true ) ) {
 		$forms        = ur_get_all_user_registration_form();
 		set_transient( 'user_registration_forms', $forms, 86400 );	// Cache forms for better performance.
 	}
@@ -57,7 +57,7 @@ function ur_status_widget() {
 
 	$user_report  = get_transient( 'user_registration_user_activity_report' );
 
-	if( false === $user_report ) {
+	if( false === $user_report && apply_filters( 'user_registration_allow_caching_user_report', true ) ) {
 		$user_report  = ur_get_user_report( $form_id );
 		set_transient( 'user_registration_user_activity_report', $user_report, 86400 );	// Cache report for better performance.
 	}
