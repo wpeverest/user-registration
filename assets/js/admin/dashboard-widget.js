@@ -1,8 +1,8 @@
 jQuery(function ($) {
 
 	$( document.body ).ready( function( e ) {
-		ur_loading_texts();
-		$('#ur-dashboard-widget-forms').append('<option>'+ur_widget_params.loading+'</option');
+		$('.ur-today-users, .ur-last-week-users, .ur-last-month-users, .ur-total-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
+		$('#ur-dashboard-widget-forms').html('').append('<option>'+ur_widget_params.loading+'</option');
 
 		var data = {
 			action: 'user_registration_dashboard_widget',
@@ -23,8 +23,8 @@ jQuery(function ($) {
 			window.console.log( xhr.responseText );
 		});
 
-		$( '#ur-dashboard-widget-forms' ).on('change', function(){
-			ur_loading_texts();
+		$( '#ur-dashboard-widget-forms' ).on('change', function() {
+			$('.ur-today-users, .ur-last-week-users, .ur-last-month-users, .ur-total-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
 
 			var form_id = $(this).val();
 			data.form_id = form_id;
@@ -41,11 +41,4 @@ jQuery(function ($) {
 			});
 		});
 	});
-
-	function ur_loading_texts() {
-		$('.ur-today-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
-		$('.ur-last-week-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
-		$('.ur-last-month-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
-		$('.ur-total-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
-	}
 });
