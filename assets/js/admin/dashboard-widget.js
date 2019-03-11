@@ -2,6 +2,7 @@ jQuery(function ($) {
 
 	$( document.body ).ready( function( e ) {
 		ur_loading_texts();
+		$('#ur-dashboard-widget-forms').append('<option>'+ur_widget_params.loading+'</option');
 
 		var data = {
 			action: 'user_registration_dashboard_widget',
@@ -11,6 +12,7 @@ jQuery(function ($) {
 		$.post( ur_widget_params.ajax_url, data, function( response ) {
 			var forms = response.forms;
 
+			$('#ur-dashboard-widget-forms').html('');
 			$.each( forms, function( form_id, form_name ) {
 				$('#ur-dashboard-widget-forms').append('<option value="'+ form_id +'">' + form_name + '</option');
 			});
