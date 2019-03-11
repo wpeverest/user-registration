@@ -89,7 +89,7 @@ function ur_get_user_report( $form_id ) {
 							'meta_key'	 => 'ur_form_id',
 						) );
 	$total_users		= 0;
-	$today_users  		= 0;
+	$yesterday_users	= 0;
 	$last_week_users    = 0;
 	$last_month_users   = 0;
 
@@ -101,8 +101,12 @@ function ur_get_user_report( $form_id ) {
 
 			// Count today users.
 			if( $user_registered === $current_date ) {
-				$today_users++;
+				$yesterday_users++;
 			}
+
+			// Get yesterday's date.
+			$yesterday = strtotime( 'now' ) - DAY_IN_SECONDS;
+			$yesterday = date( 'Y-m-d', $yesterday );
 
 			// Get last week date.
 			$last_week = strtotime( 'now' ) - WEEK_IN_SECONDS;
@@ -111,6 +115,11 @@ function ur_get_user_report( $form_id ) {
 			// Get last month date.
 			$last_month = strtotime( 'now' ) - MONTH_IN_SECONDS;
 			$last_month = date( 'Y-m-d', $last_month );
+
+			// Get yesterday users count.
+			if( $user_registered > $yesterday ) {
+				$yesterday_users++;
+			}
 
 			// Get last week users count.
 			if( $user_registered > $last_week ) {
@@ -128,7 +137,7 @@ function ur_get_user_report( $form_id ) {
 
 	$report = array(
 		'total_users'			=> $total_users,
-		'today_users'	 		=> $today_users,
+		'yesterday_users' 		=> $yesterday_users,
 		'last_week_users'		=> $last_week_users,
 		'last_month_users'		=> $last_month_users,
 	);

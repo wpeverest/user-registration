@@ -42,9 +42,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="ur-dashboard-widget-statictics">
 		<ul>
 			<li>
-				<?php echo __( 'Today', 'user-registration' ); ?>
-				<div class="ur-today-users">
-					<?php echo $user_report['today_users']; ?>
+				<?php echo __( 'Yesterday', 'user-registration' ); ?>
+				<div class="ur-yesterday-users">
+					<?php echo $user_report['yesterday_users']; ?>
 				</div>
 			</li>
 

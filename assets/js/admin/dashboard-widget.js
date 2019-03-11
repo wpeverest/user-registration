@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
 	$( '#ur-dashboard-widget-forms' ).on( 'change', function( e ) {
-			$('.ur-today-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
+			$('.ur-yesterday-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
 			$('.ur-last-week-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
 			$('.ur-last-month-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
 			$('.ur-total-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
@@ -14,7 +14,8 @@ jQuery(function ($) {
 		};
 
 		$.post( ur_widget_params.ajax_url, data, function( response ) {
-			$('.ur-today-users').html('').html( response.today_users );
+			console.log( response );
+			$('.ur-yesterday-users').html('').html( response.yesterday_users );
 			$('.ur-last-week-users').html('').html( response.last_week_users );
 			$('.ur-last-month-users').html('').html( response.last_month_users );
 			$('.ur-total-users').html('').html( response.total_users );
