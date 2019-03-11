@@ -31,7 +31,7 @@ jQuery(function ($) {
 
 			$.post( ur_widget_params.ajax_url, data, function( response ) {
 
-				$('.ur-yesterday-users').html('').html( response.user_report.yesterday_users );
+				$('.ur-today-users').html('').html( response.user_report.today_users );
 				$('.ur-last-week-users').html('').html( response.user_report.last_week_users );
 				$('.ur-last-month-users').html('').html( response.user_report.last_month_users );
 				$('.ur-total-users').html('').html( response.user_report.total_users );
@@ -43,7 +43,7 @@ jQuery(function ($) {
 	});
 
 	function ur_loading_texts() {
-		$('.ur-yesterday-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
+		$('.ur-today-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
 		$('.ur-last-week-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
 		$('.ur-last-month-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );
 		$('.ur-total-users').html('').html( '<i>'+ur_widget_params.loading+'</i>' );

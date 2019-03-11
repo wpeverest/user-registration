@@ -37,8 +37,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="ur-dashboard-widget-statictics">
 		<ul>
 			<li>
-				<?php echo __( 'Yesterday', 'user-registration' ); ?>
-				<div class="ur-yesterday-users">
+				<?php echo __( 'Today', 'user-registration' ); ?>
+				<div class="ur-today-users">
 				</div>
 			</li>
 
