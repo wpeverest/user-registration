@@ -31,11 +31,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div class="ur-dashboard-widget-forms">
 			<select id="ur-dashboard-widget-forms" class="components-select-control__input">
-				<?php
-				foreach ( $forms as $form_id => $form_label ) {
-						echo '<option value="' . $form_id . '">' . esc_html( $form_label ) . '</option>';
-				}
-				?>
 			</select>
 		</div>
 	</div>
@@ -44,28 +39,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<li>
 				<?php echo __( 'Today', 'user-registration' ); ?>
 				<div class="ur-today-users">
-					<?php echo $user_report['today_users']; ?>
 				</div>
 			</li>
 
 			<li>
 				<?php echo __( 'Last Week', 'user-registration' ); ?>
 				<div class="ur-last-week-users">
-					<?php echo $user_report['last_week_users']; ?>
 				</div>
 			</li>
 
 			<li>
 				<?php echo __( 'Last Month', 'user-registration' ); ?>
 				<div class="ur-last-month-users">
-					<?php echo $user_report['last_month_users']; ?>
 				</div>
 			</li>
 
 			<li>
 				<?php echo __( 'Total', 'user-registration' ); ?>
 				<div class="ur-total-users">
-					<?php echo $user_report['total_users']; ?>
 				</div>
 			</li>
 		</ul>

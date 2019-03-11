@@ -46,17 +46,7 @@ function ur_status_widget() {
 		)
 	);
 
-	$forms        = ur_get_all_user_registration_form();
-	$form_id 	  = key( $forms );
-	$user_report  = ur_get_user_report( $form_id );
-
-	ur_get_template(
-		'dashboard-widget.php',
-		array(
-			'user_report' => $user_report,
-			'forms'		  => $forms,
-		)
-	);
+	ur_get_template( 'dashboard-widget.php' );
 }
 
 /**
@@ -71,7 +61,7 @@ function ur_get_user_report( $form_id ) {
 							'meta_key'	 => 'ur_form_id',
 						) );
 	$total_users		= 0;
-	$today_users  		= 0;
+	$today_users	= 0;
 	$last_week_users    = 0;
 	$last_month_users   = 0;
 
@@ -110,7 +100,7 @@ function ur_get_user_report( $form_id ) {
 
 	$report = array(
 		'total_users'			=> $total_users,
-		'today_users'	 		=> $today_users,
+		'today_users' 		=> $today_users,
 		'last_week_users'		=> $last_week_users,
 		'last_month_users'		=> $last_month_users,
 	);
