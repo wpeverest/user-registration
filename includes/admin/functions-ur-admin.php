@@ -46,35 +46,7 @@ function ur_status_widget() {
 		)
 	);
 
-	$forms 		  = get_transient( 'user_registration_forms' );
-
-	if ( false === $forms ) {
-		$forms        = ur_get_all_user_registration_form();
-
-		if ( apply_filters( 'user_registration_allow_caching_forms', true ) ) {
-			set_transient( 'user_registration_forms', $forms, 86400 );	// Cache forms for better performance.
-		}
-	}
-
-	$form_id 	  = key( $forms );
-
-	$user_report  = get_transient( 'user_registration_user_activity_report' );
-
-	if( false === $user_report ) {
-		$user_report  = ur_get_user_report( $form_id );
-
-		if( apply_filters( 'user_registration_allow_caching_user_report', true ) ) {
-			set_transient( 'user_registration_user_activity_report', $user_report, 86400 );	// Cache report for better performance.
-		}
-	}
-
-	ur_get_template(
-		'dashboard-widget.php',
-		array(
-			'user_report' => $user_report,
-			'forms'		  => $forms,
-		)
-	);
+	ur_get_template( 'dashboard-widget.php' );
 }
 
 /**

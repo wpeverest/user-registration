@@ -296,9 +296,14 @@ class UR_AJAX {
 		check_ajax_referer( 'dashboard-widget', 'security' );
 
 		$form_id 	 = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
-		$user_report = ur_get_user_report( $form_id );
 
-		wp_send_json( $user_report ); // WPCS: XSS OK.
+		$user_report = $form_id ? ur_get_user_report( $form_id ) : array();
+		$forms 		 = ! $form_id ? ur_get_all_user_registration_form() : array();
+
+		wp_send_json( array(
+			'user_report' => $user_report,
+			'forms'		  => $forms )
+		); // WPCS: XSS OK.
 	}
 
 	/**
