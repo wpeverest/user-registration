@@ -1370,6 +1370,54 @@ function ur_has_date_field( $form_id ) {
 }
 
 /**
+ * Get attributes from the shortcode content.
+ *
+ * @param  $content 	Shortcode content.
+ * @return array        Array of attributes within the shortcode.
+ *
+ * @since  1.6.0
+ *
+ */
+function ur_get_shortcode_attr( $content ) {
+	$pattern = get_shortcode_regex();
+
+	$keys = array();
+    $result = array();
+
+    if( preg_match_all( '/'. $pattern .'/s', $content, $matches ) ) {
+
+	    foreach( $matches[0] as $key => $value) {
+
+	        // $matches[3] return the shortcode attribute as string.
+	        // replace space with '&' for parse_str() function.
+	        $get = str_replace(" ", "&" , $matches[3][$key] );
+	        parse_str( $get, $output );
+
+	        // Get all shortcode attribute keys.
+	        $keys = array_unique( array_merge( $keys, array_keys( $output ) ) );
+	        $result[] = $output;
+	    }
+
+	    if( $keys && $result ) {
+
+	        // Loop the result array and add the missing shortcode attribute key
+	        foreach ( $result as $key => $value ) {
+
+	            // Loop the shortcode attribute key
+	            foreach ( $keys as $attr_key ) {
+	                $result[ $key ][ $attr_key ] = isset( $result[ $key ][ $attr_key ] ) ? $result[ $key ][ $attr_key ] : NULL;
+	            }
+
+	            // Sort the array key.
+	            ksort( $result[ $key ]);
+	        }
+	    }
+    }
+
+    return $result;
+}
+
+/**
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */
