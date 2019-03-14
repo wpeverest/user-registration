@@ -85,14 +85,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'options'  => ur_login_option(),
 					),
 					array(
-						'title'    => __( 'Redirect URL', 'user-registration' ),
-						'desc'     => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_redirect_options',
-						'type'     => 'text',
-						'desc_tip' => true,
-						'css'      => 'min-width: 350px;',
-					),
-					array(
 						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
 						'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_disabled_user_roles',
