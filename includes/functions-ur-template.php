@@ -71,9 +71,9 @@ function ur_login_template_redirect() {
 function ur_registration_template_redirect() {
 
 	// Return if the user is not logged in.
-	// if ( is_user_logged_in() === false ) {
-	// 	return;
-	// }
+	if ( is_user_logged_in() === false ) {
+		return;
+	}
 
 	$current_user = wp_get_current_user();
 
@@ -91,7 +91,6 @@ function ur_registration_template_redirect() {
 			$attributes   = ur_get_shortcode_attr( $post_content );
 			$form_id 	  = isset( $attributes[0]['id'] ) ? absint( $attributes[0]['id'] ) : 0;
 			$redirect_ur  = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', '' );
-			$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
 			if ( ! empty( $redirect_url ) ) {
