@@ -194,24 +194,28 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur  = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';
-		$pass1     = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
-		$pass2     = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
-		$save_pass = true;
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';
+		$pass1                   = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
+		$pass2                   = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
+		$save_pass               = true;
+		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
-		if ( ( ! empty( $pass_cur ) || empty( $pass_cur ) ) && empty( $pass1 ) && empty( $pass2 ) ) {
+		if ( empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
 			ur_add_notice( __( 'Please fill out all password fields.', 'user-registration' ), 'error' );
 			$save_pass = false;
-		} elseif ( ! empty( $pass1 ) && empty( $pass_cur ) ) {
+		} elseif ( ! $bypass_current_password && empty( $pass_cur ) ) {
 			ur_add_notice( __( 'Please enter your current password.', 'user-registration' ), 'error' );
 			$save_pass = false;
-		} elseif ( ! empty( $pass1 ) && empty( $pass2 ) ) {
+		} elseif ( empty( $pass1 ) ) {
+			ur_add_notice( __( 'Please enter your new password.', 'user-registration' ), 'error' );
+			$save_pass = false;
+		} elseif ( empty( $pass2 ) ) {
 			ur_add_notice( __( 'Please re-enter your password.', 'user-registration' ), 'error' );
 			$save_pass = false;
-		} elseif ( ( ! empty( $pass1 ) || ! empty( $pass2 ) ) && $pass1 !== $pass2 ) {
+		} elseif ( $pass1 !== $pass2 ) {
 			ur_add_notice( __( 'New passwords do not match.', 'user-registration' ), 'error' );
 			$save_pass = false;
-		} elseif ( ! empty( $pass1 ) && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
+		} elseif ( ! $bypass_current_password && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
 			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
 			$save_pass = false;
 		}
@@ -232,6 +236,8 @@ class UR_Form_Handler {
 		if ( ur_notice_count( 'error' ) === 0 ) {
 
 			wp_update_user( $user );
+
+			update_user_meta( $user->ID, 'user_registration_social_connect_bypass_current_password', false );
 
 			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 
