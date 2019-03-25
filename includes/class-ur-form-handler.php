@@ -237,8 +237,6 @@ class UR_Form_Handler {
 
 			wp_update_user( $user );
 
-			update_user_meta( $user->ID, 'user_registration_social_connect_bypass_current_password', false );
-
 			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 
 			do_action( 'user_registration_save_account_details', $user->ID );
