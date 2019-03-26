@@ -34,10 +34,12 @@ do_action( 'user_registration_before_change_password_form' );
 					<fieldset>
 					<legend><?php _e( 'Password change', 'user-registration' ); ?></legend>
 
+					<?php if ( apply_filters( 'user_registration_change_password_current_password_display', true ) ) { ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<label for="password_current"><?php _e( 'Current password', 'user-registration' ); ?></label>
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
 					</p>
+					<?php } ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?></label>
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" />
