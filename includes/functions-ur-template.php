@@ -231,11 +231,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox':
-
-				$field_key 		= isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default_value 	= isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
-				$default 	 	= ! empty( $value ) ? $value : $default_value;
-				$options 		= isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$field_key     = isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
+				$default       = ! empty( $value ) ? $value : $default_value;
+				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 				if ( isset( $options ) && array_filter( $options ) ) {
 
@@ -297,14 +296,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select':
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
 
-				$value    = ! empty( $value ) ? $value : $default_value;
+				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
 												// If we have a blank option, select2 needs a placeholder
 					if ( ! empty( $args['placeholder'] ) ) {
-						$options .= '<option value="" selected disabled>'. esc_html( $args['placeholder'] ) .'</option>';
+						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
@@ -353,10 +352,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
-
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
-				$value    = ! empty( $value ) ? $value : $default_value;
-				$label_id = current( array_keys( $args['options'] ) );
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
+				$value         = ! empty( $value ) ? $value : $default_value;
+				$label_id      = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
@@ -440,18 +438,21 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 			$all_meta_value_keys = array_keys( $all_meta_value );
 		}
 
+		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id );
+
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
-					$placeholder 	   = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
-					$options 		   = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+					$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+					$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
 					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
 					$required          = 'yes' == $required ? true : false;
+					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -465,8 +466,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'radio':
 							case 'select':
-								$advanced_options 		 = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
-								$advanced_options  		 = explode( ',', $advanced_options );
+								$advanced_options        = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+								$advanced_options        = explode( ',', $advanced_options );
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
@@ -477,8 +478,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 
 							case 'checkbox':
-								$advanced_options 		 = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
-								$advanced_options 		 = explode( ',', $advanced_options );
+								$advanced_options        = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+								$advanced_options        = explode( ',', $advanced_options );
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
@@ -517,6 +518,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
+						}
+
+						if ( count( $custom_attributes ) > 0 ) {
+							$extra_params['custom_attributes'] = $custom_attributes;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
