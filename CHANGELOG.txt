@@ -1,3 +1,12 @@
+= 1.5.9 - 03/26/2019 =
+* Fix - Profile picture not displaying in My account page.
+* Tweak - Dashboard Widget data fetch through Ajax request.
+* Dev - Filter hook added to hide current password in edit profile page.
+* Dev - Filter hook added to bypass current password validation and check in form handler.
+
+= 1.5.8.1 - 03/04/2019 =
+* Fix - Update user meta profile_pic_id and prefix change on review notice
+
 = 1.5.8 - 02/15/2018 =
 * Feature - Custom profile picture upload on account profile and admin profile.
 * Feature - Dashboard widget for users activity.

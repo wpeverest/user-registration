@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.5.8\n"
+"Project-Id-Version: User Registration 1.5.9\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-02-25 05:30:12+00:00\n"
+"POT-Creation-Date: 2019-03-28 06:37:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: includes/abstracts/abstract-ur-form-field.php:375
-#: includes/admin/functions-ur-admin.php:431
+#: includes/admin/functions-ur-admin.php:423
 msgid "General Settings"
 msgstr ""
 
@@ -123,7 +123,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:305
-#: includes/class-ur-install.php:626
+#: includes/class-ur-install.php:630
 msgid "Settings"
 msgstr ""
 
@@ -199,12 +199,12 @@ msgid "Profile Picture"
 msgstr ""
 
 #: includes/admin/class-ur-admin-profile.php:108
-#: templates/myaccount/form-edit-profile.php:45
+#: templates/myaccount/form-edit-profile.php:44
 msgid "Remove"
 msgstr ""
 
 #: includes/admin/class-ur-admin-profile.php:109
-#: templates/myaccount/form-edit-profile.php:46
+#: templates/myaccount/form-edit-profile.php:45
 msgid "Upload Image"
 msgstr ""
 
@@ -441,12 +441,12 @@ msgstr ""
 msgid "loading..."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:155
-#: includes/admin/functions-ur-admin.php:218
+#: includes/admin/functions-ur-admin.php:147
+#: includes/admin/functions-ur-admin.php:210
 msgid "User Extra Information"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:238
+#: includes/admin/functions-ur-admin.php:230
 msgid "WordPress User Extra Information"
 msgstr ""
 
@@ -982,14 +982,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:96
 msgid ""
-"Hi Admin,\n"
-"\n"
+"Hi Admin,\r\n"
+"\r\n"
 "\t\t\tA new user {{username}} - {{email}} has successfully registered to "
-"your site <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"your site <a href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tPlease review the user role and details at '<b>Users</b>' menu in "
-"your WP dashboard.\n"
-"\n"
+"your WP dashboard.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1018,13 +1018,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
-" \t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+" \t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tPlease wait until the site admin approves your registration. You "
-"will be notified after it is approved.\n"
-"\n"
+"will be notified after it is approved.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1046,13 +1047,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:83
 msgid ""
-"Hi {{username}},\n"
-"\n"
-" \t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+" \t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tPlease click on this verification link "
-"{{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.\n"
-"\n"
+"{{home_url}}/wp-login.php?ur_token={{email_token}} to confirm "
+"registration.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1078,14 +1081,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  "
-"has been approved.\n"
-"\n"
+"has been approved.\r\n"
+"\r\n"
 "\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account details "
-"and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\t\tThank You!"
 msgstr ""
 
@@ -1111,13 +1115,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
-"\t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+"\t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tUnfortunately your registration is denied. Sorry for the "
-"inconvenience.\n"
-"\n"
+"inconvenience.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1141,15 +1146,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:91
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has "
-"been changed to pending.\n"
-"\n"
-"\t\t\tSorry for the inconvenience.\n"
-"\n"
-"\t\t\tYou will be notified after it is approved.\n"
-"\n"
+"been changed to pending.\r\n"
+"\r\n"
+"\t\t\tSorry for the inconvenience.\r\n"
+"\r\n"
+"\t\t\tYou will be notified after it is approved.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1173,17 +1178,17 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:86
 msgid ""
-"Someone has requested a password reset for the following account:\n"
-"\n"
-"\t\t\tSiteName: {{blog_info}}\n"
-"\t\t\tUsername: {{username}}\n"
-"\n"
+"Someone has requested a password reset for the following account:\r\n"
+"\r\n"
+"\t\t\tSiteName: {{blog_info}}\r\n"
+"\t\t\tUsername: {{username}}\r\n"
+"\r\n"
 "\t\t\tIf this was a mistake, just ignore this email and nothing will "
-"happen.\n"
-"\n"
-"\t\t\tTo reset your password, visit the following address:\n"
-"\t\t\t{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}\n"
-"\n"
+"happen.\r\n"
+"\r\n"
+"\t\t\tTo reset your password, visit the following address:\r\n"
+"\t\t\t{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1207,14 +1212,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:88
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\tYou have successfully completed user registration on <a "
-"href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tPlease visit '<b>My Account</b>' page to edit your account details "
-"and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1306,6 +1312,10 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-status.php:12
 msgid "Logs"
+msgstr ""
+
+#: includes/admin/views/html-admin-settings.php:33
+msgid "Save Changes"
 msgstr ""
 
 #: includes/admin/views/html-license-form.php:18
@@ -1611,27 +1621,27 @@ msgid ""
 "and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:356
+#: includes/class-ur-install.php:360
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:626
+#: includes/class-ur-install.php:630
 msgid "View User Registration settings"
 msgstr ""
 
-#: includes/class-ur-install.php:642
+#: includes/class-ur-install.php:646
 msgid "View User Registration documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:642
+#: includes/class-ur-install.php:646
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:643
+#: includes/class-ur-install.php:647
 msgid "Visit free customer support"
 msgstr ""
 
-#: includes/class-ur-install.php:643
+#: includes/class-ur-install.php:647
 msgid "Free support"
 msgstr ""
 
@@ -3319,19 +3329,19 @@ msgstr ""
 msgid "Current Version:"
 msgstr ""
 
-#: templates/dashboard-widget.php:45
+#: templates/dashboard-widget.php:40
 msgid "Today"
 msgstr ""
 
-#: templates/dashboard-widget.php:52
+#: templates/dashboard-widget.php:46
 msgid "Last Week"
 msgstr ""
 
-#: templates/dashboard-widget.php:59
+#: templates/dashboard-widget.php:52
 msgid "Last Month"
 msgstr ""
 
-#: templates/dashboard-widget.php:66
+#: templates/dashboard-widget.php:58
 msgid "Total"
 msgstr ""
 
@@ -3365,15 +3375,15 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:59
-#: templates/myaccount/form-edit-profile.php:59
+#: templates/myaccount/form-edit-profile.php:58
 msgid "Save changes"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:48
+#: templates/myaccount/form-edit-profile.php:47
 msgid "You can change your profile picture on"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:48
+#: templates/myaccount/form-edit-profile.php:47
 msgid "Gravatar"
 msgstr ""
 
@@ -3620,22 +3630,22 @@ msgctxt "The action on users list page"
 msgid "Unverify"
 msgstr ""
 
-#: includes/class-ur-install.php:295
+#: includes/class-ur-install.php:299
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:304
+#: includes/class-ur-install.php:308
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:296
+#: includes/class-ur-install.php:300
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:305
+#: includes/class-ur-install.php:309
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
