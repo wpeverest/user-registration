@@ -1,5 +1,5 @@
 === User Registration - Custom Registration Form, Login And User Profile For WordPress ===
-Contributors: WPEverest, sanzeeb3
+Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
@@ -113,8 +113,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 = 1.6.0 - XX-XX-2019 =
 
-
-= 1.5.9 - 03/26/2019 =
+= 1.5.9 - 03/28/2019 =
 * Fix - Profile picture not displaying in My account page.
 * Tweak - Dashboard Widget data fetch through Ajax request.
 * Dev - Filter hook added to hide current password in edit profile page.
