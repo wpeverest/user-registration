@@ -1,4 +1,4 @@
-= 1.5.9 - 03/26/2019 =
+= 1.5.9 - 03/28/2019 =
 * Fix - Profile picture not displaying in My account page.
 * Tweak - Dashboard Widget data fetch through Ajax request.
 * Dev - Filter hook added to hide current password in edit profile page.
