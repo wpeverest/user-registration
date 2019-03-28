@@ -111,6 +111,9 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.6.0 - XX-XX-2019 =
+
+
 = 1.5.9 - 03/26/2019 =
 * Fix - Profile picture not displaying in My account page.
 * Tweak - Dashboard Widget data fetch through Ajax request.
