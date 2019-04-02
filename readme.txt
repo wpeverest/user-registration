@@ -111,6 +111,11 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 
+= 1.5.10 - 04/02/2019 =
+* Dev - Filter hook to modify form fields.
+* Dev - Filter hook to be used in new setting type.
+* Tweak - Bypass validation for read-only fields.
+
 = 1.5.9 - 03/28/2019 =
 * Fix - Profile picture not displaying in My account page.
 * Tweak - Dashboard Widget data fetch through Ajax request.

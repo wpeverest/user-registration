@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.5.9\n"
+"Project-Id-Version: User Registration 1.5.10\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-03-28 06:37:46+00:00\n"
+"POT-Creation-Date: 2019-04-02 10:49:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -763,7 +763,7 @@ msgid "Enter the error message in form submission on google recaptcha."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:319
-#: includes/class-ur-ajax.php:91 includes/class-ur-form-handler.php:280
+#: includes/class-ur-ajax.php:91 includes/class-ur-form-handler.php:291
 #: includes/class-ur-frontend-scripts.php:339
 msgid "Captcha code error, please try again."
 msgstr ""
@@ -1411,7 +1411,7 @@ msgstr ""
 msgid "Taking a while? Click here to run it now."
 msgstr ""
 
-#: includes/class-ur-ajax.php:84 includes/class-ur-form-handler.php:277
+#: includes/class-ur-ajax.php:84 includes/class-ur-form-handler.php:288
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -1476,11 +1476,11 @@ msgid "User doesnot exist!"
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:351
-#: includes/class-ur-form-handler.php:277
-#: includes/class-ur-form-handler.php:280
-#: includes/class-ur-form-handler.php:285
-#: includes/class-ur-form-handler.php:289
-#: includes/class-ur-form-handler.php:298
+#: includes/class-ur-form-handler.php:288
+#: includes/class-ur-form-handler.php:291
+#: includes/class-ur-form-handler.php:296
+#: includes/class-ur-form-handler.php:300
+#: includes/class-ur-form-handler.php:309
 #: includes/class-ur-user-approval.php:183
 #: includes/class-ur-user-approval.php:188 includes/functions-ur-account.php:69
 #: includes/functions-ur-account.php:72
@@ -1523,67 +1523,71 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:101
+#: includes/class-ur-form-handler.php:108
 msgid "%s is a required field."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:114
+#: includes/class-ur-form-handler.php:121
 msgid "%s is not a valid email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:157
+#: includes/class-ur-form-handler.php:164
 msgid "User profile updated successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:203
+#: includes/class-ur-form-handler.php:211
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:206
+#: includes/class-ur-form-handler.php:214
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:209
+#: includes/class-ur-form-handler.php:217
+msgid "Please enter your new password."
+msgstr ""
+
+#: includes/class-ur-form-handler.php:220
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:212
+#: includes/class-ur-form-handler.php:223
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:215
+#: includes/class-ur-form-handler.php:226
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:236
+#: includes/class-ur-form-handler.php:247
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:289
+#: includes/class-ur-form-handler.php:300
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:298
+#: includes/class-ur-form-handler.php:309
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:395
+#: includes/class-ur-form-handler.php:406
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:399
+#: includes/class-ur-form-handler.php:410
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:434
+#: includes/class-ur-form-handler.php:445
 msgid "Invalid Key"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:449
+#: includes/class-ur-form-handler.php:460
 msgid "Thanks for confirming your export request."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:451
+#: includes/class-ur-form-handler.php:462
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
@@ -3280,7 +3284,7 @@ msgstr ""
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:337
+#: includes/functions-ur-template.php:336
 msgid "Choose an option"
 msgstr ""
 
@@ -3361,20 +3365,20 @@ msgstr ""
 msgid "Password change"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:38
+#: templates/myaccount/form-edit-password.php:39
 msgid "Current password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:42
+#: templates/myaccount/form-edit-password.php:44
 #: templates/myaccount/form-reset-password.php:32
 msgid "New password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:46
+#: templates/myaccount/form-edit-password.php:48
 msgid "Confirm new password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:59
+#: templates/myaccount/form-edit-password.php:61
 #: templates/myaccount/form-edit-profile.php:58
 msgid "Save changes"
 msgstr ""
