@@ -96,8 +96,15 @@ class UR_Form_Handler {
 			// Hook to allow modification of value.
 			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $_POST[ $key ] );
 
+			$disabled = false;
+			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
+				if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
+					$disabled = true;
+				}
+			}
+
 			// Validation: Required fields.
-			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) ) {
+			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
