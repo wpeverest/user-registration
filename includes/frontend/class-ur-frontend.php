@@ -22,6 +22,7 @@ class UR_Frontend {
 
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
 	}
 
@@ -68,6 +69,17 @@ class UR_Frontend {
 			$attributes['class'] = $attributes['class'] . ' ' . $layout;
 		}
 		return $attributes;
+	}
+
+	/**
+	 * Prevents Core Login page.
+	 *
+	 * @since 1.6.0
+	 */
+	public function prevent_core_login_page() {
+		if ( 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+		}
 	}
 }
 
