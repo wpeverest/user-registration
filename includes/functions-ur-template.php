@@ -75,7 +75,8 @@ function ur_registration_template_redirect() {
 		return;
 	}
 
-	$current_user = wp_get_current_user();
+	$current_user    = wp_get_current_user();
+	$current_user_id = $current_user->ID;
 
 	// Donot redirect for admins.
 	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
