@@ -267,10 +267,26 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
+		 * Returns a base64 URL for the SVG for use in the menu.
+		 *
+		 * @param  bool $base64 Whether or not to return base64-encoded SVG.
+		 * @return string
+		 */
+		private function get_icon_svg( $base64 = true ) {
+			$svg = '';
+
+			if ( $base64 ) {
+				return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+			}
+
+			return $svg;
+		}
+
+		/**
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 'dashicons-universal-access-alt', '55.8' );
+			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 		}
