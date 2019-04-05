@@ -413,6 +413,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Prevent Core Login', 'user-registration' ),
+						'desc'     => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_prevent_core_login',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+
+					array(
 						'type' => 'sectionend',
 						'id'   => 'login_options_settings',
 					),
