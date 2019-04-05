@@ -37,12 +37,12 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 
-			'user_input_dropped'  => true,
-			'form_save_action'    => true,
-			'user_form_submit'    => true,
-			'deactivation_notice' => false,
-			'rated'               => false,
-			'dashboard_widget'	  => false,
+			'user_input_dropped'    => true,
+			'form_save_action'      => true,
+			'user_form_submit'      => true,
+			'deactivation_notice'   => false,
+			'rated'                 => false,
+			'dashboard_widget'      => false,
 			'dismiss_review_notice' => false,
 		);
 
@@ -246,12 +246,16 @@ class UR_AJAX {
 				$post_data['ID'] = $form_id;
 			}
 
+			remove_filter( 'content_save_pre', 'wp_targeted_link_rel' );
+
 			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
 				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
 				ur_update_form_settings( $post_data_setting, $post_id );
 			}
+
+			add_filter( 'content_save_pre', 'wp_targeted_link_rel' );
 
 			wp_send_json_success(
 				array(
@@ -295,14 +299,16 @@ class UR_AJAX {
 
 		check_ajax_referer( 'dashboard-widget', 'security' );
 
-		$form_id 	 = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
+		$form_id = isset( $_POST['form_id'] ) ? $_POST['form_id'] : 0;
 
 		$user_report = $form_id ? ur_get_user_report( $form_id ) : array();
-		$forms 		 = ! $form_id ? ur_get_all_user_registration_form() : array();
+		$forms       = ! $form_id ? ur_get_all_user_registration_form() : array();
 
-		wp_send_json( array(
-			'user_report' => $user_report,
-			'forms'		  => $forms )
+		wp_send_json(
+			array(
+				'user_report' => $user_report,
+				'forms'       => $forms,
+			)
 		); // WPCS: XSS OK.
 	}
 
@@ -399,7 +405,7 @@ class UR_AJAX {
 	 *
 	 * Backward compatibility code. Modified @since 1.5.7.
 	 *
-	 * @param  array 	$post_data All fields data.
+	 * @param  array $post_data All fields data.
 	 * @return array    Modified fields data.
 	 */
 	private static function ur_add_to_advanced_settings( $post_data ) {
@@ -409,16 +415,16 @@ class UR_AJAX {
 		foreach ( $post_data as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					if( isset( $field->field_key ) ) {
-						if( ! in_array( $field->field_key, $modifiying_keys ) ) {
+					if ( isset( $field->field_key ) ) {
+						if ( ! in_array( $field->field_key, $modifiying_keys ) ) {
 							continue;
 						}
 
-						if( isset( $field->general_setting->options ) ) {
+						if ( isset( $field->general_setting->options ) ) {
 
 							$options = implode( ',', $field->general_setting->options );
 
-							if( 'checkbox' === $field->field_key ) {
+							if ( 'checkbox' === $field->field_key ) {
 								$field->advance_setting->choices = $options;
 							} else {
 								$field->advance_setting->options = $options;
@@ -433,20 +439,20 @@ class UR_AJAX {
 	}
 
 	/**
-    * Dismiss review notice
-    *
-    * @since  1.5.8
-    *
-    * @return void
-    **/
-   public static function dismiss_review_notice() {
+	 * Dismiss review notice
+	 *
+	 * @since  1.5.8
+	 *
+	 * @return void
+	 **/
+	public static function dismiss_review_notice() {
 
 		check_admin_referer( 'review-nonce', 'security' );
 
-        if ( ! empty( $_POST['dismissed'] ) ) {
-            update_option( 'user_registration_review_notice_dismissed', 'yes' );
-        }
-    }
+		if ( ! empty( $_POST['dismissed'] ) ) {
+			update_option( 'user_registration_review_notice_dismissed', 'yes' );
+		}
+	}
 }
 
 UR_AJAX::init();
