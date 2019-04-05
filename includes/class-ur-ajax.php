@@ -246,13 +246,16 @@ class UR_AJAX {
 				$post_data['ID'] = $form_id;
 			}
 
-			remove_all_filters( 'content_save_pre' );
+			remove_filter( 'content_save_pre', 'wp_targeted_link_rel' );
+
 			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
 				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
 				ur_update_form_settings( $post_data_setting, $post_id );
 			}
+
+			add_filter( 'content_save_pre', 'wp_targeted_link_rel' );
 
 			wp_send_json_success(
 				array(
