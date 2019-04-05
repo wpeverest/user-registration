@@ -82,15 +82,13 @@ class UR_Admin {
 				$option_roles = array();
 			}
 
-			foreach ( $user_roles as $role ) {
-				if ( ! in_array( $role, $option_roles ) ) {
-					return;
-				}
-			}
+			if ( ! in_array( 'administrator', $user_roles, true ) ) {
+				$result = array_intersect( $user_roles, $option_roles );
 
-			if ( apply_filters( 'user_registration_prevent_admin_access', true ) ) {
-				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
-				exit;
+				if ( count( $result ) > 0 && apply_filters( 'user_registration_prevent_admin_access', true ) ) {
+					wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+					exit;
+				}
 			}
 		}
 	}
