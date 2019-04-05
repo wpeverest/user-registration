@@ -394,16 +394,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
-						'title'    => __( 'Prevent Core Login page', 'user-registration' ),
-						'desc'     => __( 'Check to enable prevent core login or registration page.', 'user-registration' ),
-						'id'       => 'user_registration_login_options_prevent_core_login',
-						'type'     => 'checkbox',
-						'desc_tip' => true,
-						'css'      => 'min-width: 350px;',
-						'default'  => 'no',
-					),
-
-					array(
 						'title'    => __( 'Registration URL', 'user-registration' ),
 						'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_url_options',
@@ -420,6 +410,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Prevent Core Login', 'user-registration' ),
+						'desc'     => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_prevent_core_login',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
 					),
 
 					array(
