@@ -457,6 +457,8 @@
 }
 
 #user-registration {
+	background-color: $white;
+
 	&.user-registration,
 	*{
 		box-sizing: border-box;
@@ -482,37 +484,23 @@
 				padding: 0;
 				margin:0;
 				display: inline-block;
-				border-left: 1px solid $white;
-				border-top: 1px solid $white;
-				border-right: 1px solid $white;
 				position:relative;
 				box-shadow: 0 0 0 rgba(0,0,0,0);
 
 				a {
-					color: $color_gray_two;
 					padding: 10px 15px;
 					display: block;
-					font-weight: 600;
-					font-size: 15px;
+					font-weight: 400;
+					font-size: 14px;
 					font-family: 'sans-serif';
 					text-decoration: none;
 					box-shadow: 0 0 0 rgba(0,0,0,0);
 				}
 
 				&.is-active {
-					background-color: $color_gray_eleven;
-					border-left: 1px solid $color_gray_six;
-					border-top: 1px solid $color_gray_six;
-					border-right: 1px solid $color_gray_six;
 
-					&:before {
-						position: absolute;
-						bottom: -1px;
-						left: 0;
-						content: " ";
-						width: 100%;
-						height: 1px;
-						background-color: $color_gray_eleven;
+					a {
+						font-weight: 600;
 					}
 				}
 			}
@@ -520,9 +508,7 @@
 	}
 
 	.user-registration-MyAccount-content {
-		background: $color_gray_eleven;
-		padding: 15px 20px;
-		border: 1px solid $color_gray_six;
+		padding: 30px;
 
 		.ur-form-grid{
 			padding: 0;
@@ -532,6 +518,56 @@
 
 		.ur-frontend-form {
 			border: none;
+		}
+
+		h2 {
+			font-size: 28px;
+			font-weight: 400;
+		}
+
+		.user-registration-profile-header {
+
+			.user-registration-img-container {
+				width: 100px;
+			}
+
+			.img-tips {
+				font-size: 12px;
+				color: $color-gray-lighter;
+				margin-bottom: 0;
+			}
+
+			h3 {
+				font-size: 22px;
+				font-weight: 400;
+				margin-bottom: 5px;
+			}
+
+			header {
+
+				p,
+				.button-group {
+					 margin-bottom: 10px;
+				}
+
+				.profile-pic-remove {
+					margin-right: 10px;
+				}
+			}
+
+			.user-registration-nick-name {
+				color: $color_gray_lighter;
+			}
+		}
+
+		.user-registration-EditProfileForm {
+
+			.user-registration-profile-header {
+
+				.user-registration-img-container {
+					width: auto;
+				}
+			}
 		}
 	}
 }

@@ -234,7 +234,7 @@
 	right: 0;
 	bottom: 0;
 	min-height: 360px;
-	background-color: $black;
+	background-color: $gray_base;
 	opacity: 0.7;
 	z-index: 99900;
 }
@@ -288,7 +288,7 @@
 			&:focus {
 				background-color: $color_gray_six;
 				border-color: #ccc;
-				color: $black;
+				color: $gray_base;
 			}
 
 			&:focus {

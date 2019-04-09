@@ -1,52 +1,54 @@
+@import 'colors';
+
 #user-registration {
+
     &.vertical {
         display: flex;
         flex-wrap: wrap;
-        
+
         .user-registration-error, .user-registration-message {
             float:none;
             width: 100%;
         }
-        
+
         .user-registration-MyAccount-navigation {
+			background: $color_gray_light_skin;
             width: 20%;
-            
+
             ul {
                 flex-direction: column;
                 flex-wrap: nowrap;
-                
+
                 .user-registration-MyAccount-navigation-link {
-                    border-left: 1px solid #ddd;
-                    border-top: 1px solid #ddd;
-                    border-bottom: none transparent;
-                    border-right: none transparent;
-                    
-                    &:last-child {
-                        border-bottom: 1px solid #ddd;
-                    }
-                    
+
                     &.is-active {
-                        border-right: none transparent;
-                        
-                        &::before {
-                            bottom: auto;
-                            right: -1px;
-                            width: 1px;
-                            height: 100%;
-                            left: auto;
-                            top: auto;
-                        }
-                    }
-                    
-                    a {
-                        padding: 15px 20px;
+
+                        a {
+							background: $color_gray_lighten;
+							border-left: 4px solid $primary_color;
+						}
                     }
                 }
             }
-        } 
-        
+        }
+
         .user-registration-MyAccount-content {
-            width: 80%;
+			width: 80%;
+
+			h2 {
+				margin-bottom: 30px;
+			}
+
+			.user-registration-profile-header {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				margin-bottom: 25px;
+
+				.user-registration-img-container {
+					margin-right: 20px;
+				}
+			}
         }
     }
 }
@@ -56,7 +58,7 @@
             .user-registration-MyAccount-navigation {
                 width: 30%;
             }
-            
+
             .user-registration-MyAccount-content {
                 width: 70%;
             }
@@ -69,18 +71,18 @@
         &.vertical {
             .user-registration-MyAccount-navigation {
                 width: 100%;
-                
+
                 ul {
                     .user-registration-MyAccount-navigation-link {
                         border-right:1px solid #ddd;
-                        
+
                         &:last-child {
                             border-bottom: none transparent;
                         }
-                        
+
                         &.is-active {
                             border-right: 1px solid #ddd;
-                            
+
                             &::before {
                                 display: none;
                             }
@@ -92,7 +94,7 @@
                     }
                 }
             }
-            
+
             .user-registration-MyAccount-content {
                 width: 100%;
             }
