@@ -40,7 +40,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							}
 							?>
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
-							<p class="img-tips"><?php _e( 'Max size: 500KB', 'user-registration' ); ?></p>
+							<p class="user-registration-tips"><?php _e( 'Max size: 500KB', 'user-registration' ); ?></p>
 						</div>
 						<header>
 							<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
