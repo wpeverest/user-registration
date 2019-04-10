@@ -129,20 +129,8 @@
                 width: 100%;
 
                 ul {
+
                     .user-registration-MyAccount-navigation-link {
-                        border-right:1px solid #ddd;
-
-                        &:last-child {
-                            border-bottom: none transparent;
-                        }
-
-                        &.is-active {
-                            border-right: 1px solid #ddd;
-
-                            &::before {
-                                display: none;
-                            }
-                        }
 
                         a {
                             padding: 15px 20px;
@@ -154,6 +142,10 @@
             .user-registration-MyAccount-content {
                 width: 100%;
             }
-        }
+		}
+
+		.user-registration-MyAccount-content {
+			padding: 15px;
+		}
     }
 }

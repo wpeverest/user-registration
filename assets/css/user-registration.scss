@@ -26,6 +26,7 @@
 .user-registration-error,
 .user-registration-info {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	margin: 0 0 2em;
 	padding: 1.25em 2em;
