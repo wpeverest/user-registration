@@ -664,11 +664,11 @@ function ur_get_general_settings( $id ) {
  * Insert in between the indexes in multidimensional array.
  *
  * @since  1.5.7
- * @param  array $items      An array of items
- * @param  array $new_items  New items to insert inbetween
+ * @param  array  $items      An array of items
+ * @param  array  $new_items  New items to insert inbetween
  * @param  string $after     Index to insert after
  *
- * @return array 			 Ordered array of items.
+ * @return array             Ordered array of items.
  */
 function ur_insert_after_helper( $items, $new_items, $after ) {
 
@@ -676,11 +676,11 @@ function ur_insert_after_helper( $items, $new_items, $after ) {
 	$position = array_search( $after, array_keys( $items ) ) + 1;
 
 	// Insert the new item.
-	$return_items = array_slice( $items, 0, $position, true );
+	$return_items  = array_slice( $items, 0, $position, true );
 	$return_items += $new_items;
 	$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
-    return $return_items;
+	return $return_items;
 }
 
 /**
@@ -1138,11 +1138,13 @@ function check_username( $username ) {
  *
  * @return array $all_forms form id as key and form title as value.
  */
-function ur_get_all_user_registration_form() {
+function ur_get_all_user_registration_form( $post_count = -1 ) {
 
 	$args = array(
-		'post_type' => 'user_registration',
-		'status'    => 'publish',
+		'post_type'   => 'user_registration',
+		'status'      => 'publish',
+		'numberposts' => $post_count,
+		'order'       => 'ASC',
 	);
 
 	$posts_array = get_posts( $args );
