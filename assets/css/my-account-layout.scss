@@ -35,22 +35,78 @@
         .user-registration-MyAccount-content {
 			width: 80%;
 
-			h2 {
-				margin-bottom: 30px;
-			}
-
 			.user-registration-profile-header {
 				display: flex;
 				flex-wrap: wrap;
 				align-items: center;
-				margin-bottom: 25px;
 
 				.user-registration-img-container {
 					margin-right: 20px;
 				}
 			}
         }
-    }
+	}
+
+	&.horizontal {
+		box-shadow: 0 2px 20px transparentize($gray-base, 0.9);
+
+		.user-registration-message,
+		.user-registration-error,
+		.user-registration-info {
+			margin-bottom: 0;
+		}
+
+		.user-registration-MyAccount-navigation {
+
+			ul {
+				justify-content: center;
+				border-bottom: 1px solid $color_gray_lighten;
+
+				.user-registration-MyAccount-navigation-link {
+
+					a {
+						padding: 15px 20px;
+					}
+
+					&.is-active {
+
+						a {
+							background-color: $color_gray_lighten;
+						}
+					}
+				}
+			}
+		}
+
+		.user-registration-MyAccount-content {
+			text-align: center;
+
+			.user-registration-profile-header {
+
+				.user-registration-img-container {
+					margin: 0 auto;
+					margin-bottom: 15px;
+
+					img {
+						border-radius: 50%;
+					}
+				}
+			}
+
+			.edit-profile,
+			.edit-password {
+				text-align: left;
+			}
+
+			.edit-profile {
+
+				.user-registration-profile-header,
+				h2 {
+					text-align: center;
+				}
+			}
+		}
+	}
 }
 @media screen and (max-width: 980px) {
     #user-registration {

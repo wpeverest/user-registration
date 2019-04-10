@@ -25,9 +25,10 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	padding: 1.5em 2em 1.5em 3.5em;
+	display: flex;
+	align-items: center;
 	margin: 0 0 2em;
-	position: relative;
+	padding: 1.25em 2em;
 	background-color: lighten($secondary, 5%);
 	color: $secondarytext;
 	border-top: 3px solid $primary;
@@ -40,14 +41,10 @@
 	font-size: 14px;
 
 	&::before {
-		font-family: 'Dashicons';
 		content: '\f348';
-		display: inline-block;
-		position: absolute;
-		top: 1em;
-		left: 0.9em;
-		font-size: 18px;
-		line-height: 1.5;
+		font-family: 'Dashicons';
+		font-size: 24px;
+		margin-right: 0.875rem;
 	}
 
 	ul {
@@ -458,9 +455,10 @@
 
 #user-registration {
 	background-color: $white;
+	margin: 30px 0;
 
 	&.user-registration,
-	*{
+	* {
 		box-sizing: border-box;
 	}
 
@@ -516,6 +514,10 @@
 	.user-registration-MyAccount-content {
 		padding: 30px;
 
+		h2 {
+			margin-bottom: 30px;
+		}
+
 		.ur-form-grid{
 			padding: 0;
 			border: 0 none;
@@ -526,12 +528,14 @@
 			border: none;
 		}
 
-		h2 {
+		h2,
+		.edit-password legend {
 			font-size: 28px;
 			font-weight: 400;
 		}
 
 		.user-registration-profile-header {
+			margin-bottom: 25px;
 
 			.user-registration-img-container {
 				width: 100px;

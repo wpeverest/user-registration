@@ -41,10 +41,13 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_media();
 		wp_enqueue_script( 'ur-my-account' );
-		wp_localize_script( 'ur-my-account', 'ur_my_account_params', array(
-				'upload_image' 		=> __( 'Upload Profile Picture', 'user-registration' ),
-				'select_image'	 	=> __( 'Select Image', 'user-registration' ),
-				'current_user_can'	=>	current_user_can( 'edit_others_posts' )
+		wp_localize_script(
+			'ur-my-account',
+			'ur_my_account_params',
+			array(
+				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
+				'select_image'     => __( 'Select Image', 'user-registration' ),
+				'current_user_can' => current_user_can( 'edit_others_posts' ),
 			)
 		);
 
@@ -95,7 +98,7 @@ class UR_Shortcode_My_Account {
 			ob_start();
 
 			if ( isset( $wp->query_vars['user-logout'] ) ) {
-				ur_add_notice( sprintf( __( 'Are you sure you want to log out? <a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
+				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
 			}
 
 			do_action( 'before-user-registration-my-account-shortcode' );
@@ -176,7 +179,7 @@ class UR_Shortcode_My_Account {
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
-		$user_id 				   = get_current_user_id();
+		$user_id                   = get_current_user_id();
 		$form_id                   = get_user_meta( $user_id, 'ur_form_id', true );
 		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
@@ -188,7 +191,7 @@ class UR_Shortcode_My_Account {
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(
-				'user' => get_user_by( 'id', get_current_user_id() ),
+				'user'                      => get_user_by( 'id', get_current_user_id() ),
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
 			)
