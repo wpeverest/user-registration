@@ -192,8 +192,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
 
-		if ( $args['maxlength'] ) {
-			$args['custom_attributes']['maxlength'] = absint( $args['maxlength'] );
+		if ( $args['size'] ) {
+			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {
