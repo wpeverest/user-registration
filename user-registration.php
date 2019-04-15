@@ -226,6 +226,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-form-handler.php';                   // Form Handlers
 			include_once UR_ABSPATH . 'includes/class-ur-frontend-scripts.php';               // Frontend Scripts
 			include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
+			include_once UR_ABSPATH . 'includes/class-ur-preview.php';
 		}
 
 		/**
