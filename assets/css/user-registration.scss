@@ -524,8 +524,11 @@
 		padding: 15px 20px;
 		border: 1px solid $color_gray_six;
 
+		.user-registration-profile-fields__field-wrapper{
+			margin: 0 -10px;
+		}
+
 		.ur-form-grid{
-			padding: 0;
 			border: 0 none;
 			background: transparent;
 		}

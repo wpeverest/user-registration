@@ -41,10 +41,13 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_media();
 		wp_enqueue_script( 'ur-my-account' );
-		wp_localize_script( 'ur-my-account', 'ur_my_account_params', array(
-				'upload_image' 		=> __( 'Upload Profile Picture', 'user-registration' ),
-				'select_image'	 	=> __( 'Select Image', 'user-registration' ),
-				'current_user_can'	=>	current_user_can( 'edit_others_posts' )
+		wp_localize_script(
+			'ur-my-account',
+			'ur_my_account_params',
+			array(
+				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
+				'select_image'     => __( 'Select Image', 'user-registration' ),
+				'current_user_can' => current_user_can( 'edit_others_posts' ),
 			)
 		);
 
@@ -131,17 +134,30 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function edit_profile() {
 
-		$user_id       = get_current_user_id();
-		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
-		$form_id       = 0;
+		$user_id = get_current_user_id();
+		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-		if ( isset( $form_id_array[0] ) ) {
-			$form_id = $form_id_array[0];
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		$user_data = get_userdata( $user_id );
+		$user_data = $user_data->data;
+
+		$args = array(
+			'post_type'   => 'user_registration',
+			'post_status' => 'publish',
+			'post__in'    => array( $form_id ),
+		);
+
+		$form_data = get_posts( $args );
+
+		if ( isset( $form_data[0] ) ) {
+			$form_data = $form_data[0]->post_content;
 		}
+		$form_data_array = json_decode( $form_data );
 
-		$profile       = user_registration_form_data( $user_id, $form_id );
-		$user_data_obj = get_userdata( $user_id );
-		$user_data     = $user_data_obj->data;
+		if ( gettype( $form_data_array ) != 'array' ) {
+			$form_data_array = array();
+		}
 
 		if ( count( $profile ) < 1 ) {
 			return;
@@ -168,6 +184,7 @@ class UR_Shortcode_My_Account {
 			'myaccount/form-edit-profile.php',
 			array(
 				'profile' => apply_filters( 'user_registration_profile_to_edit', $profile ),
+				'form_data_array' => $form_data_array,
 			)
 		);
 	}
@@ -176,7 +193,7 @@ class UR_Shortcode_My_Account {
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
-		$user_id 				   = get_current_user_id();
+		$user_id                   = get_current_user_id();
 		$form_id                   = get_user_meta( $user_id, 'ur_form_id', true );
 		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
@@ -188,7 +205,7 @@ class UR_Shortcode_My_Account {
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(
-				'user' => get_user_by( 'id', get_current_user_id() ),
+				'user'                      => get_user_by( 'id', get_current_user_id() ),
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
 			)
