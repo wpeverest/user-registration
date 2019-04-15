@@ -53,8 +53,12 @@ class UR_Preview {
 		$form_id   = absint( $_GET['form_id'] );
 		$form_data = get_post( $form_id );
 
-		/* translators: %s - Form name. */
-		return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( $form_data->post_title ) );
+		if ( in_the_loop() ) {
+			/* translators: %s - Form name. */
+			return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( $form_data->post_title ) );
+		}
+
+		return $title;
 	}
 
 	public function form_preview_content( $content ) {
