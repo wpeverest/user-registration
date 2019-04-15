@@ -1,6 +1,6 @@
 <?php
 /**
- * Privacy/GDPR related functionality which ties into WordPress functionality.
+ * Form Preview.
  *
  * @package UserRegistration\Classes
  * @version 1.6.0
