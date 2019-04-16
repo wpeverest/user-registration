@@ -21,7 +21,7 @@ class UR_Preview {
 	 * Constructor
 	 */
 	public function __construct() {
-		if ( isset( $_GET['ur_preview'] ) ) {
+		if ( is_user_logged_in() && ! is_admin() && isset( $_GET['ur_preview'] ) ) {
 			add_filter( 'template_include', array( __CLASS__, 'template_include' ) );
 			add_action( 'template_redirect', array( $this, 'handle_preview' ) );
 		}
@@ -37,6 +37,10 @@ class UR_Preview {
 	}
 
 	public function handle_preview() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		if ( isset( $_GET['form_id'] ) ) {
 			add_filter( 'the_title', array( $this, 'form_preview_title' ) );
 			add_filter( 'the_content', array( $this, 'form_preview_content' ) );
