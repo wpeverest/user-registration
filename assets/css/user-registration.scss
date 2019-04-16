@@ -262,6 +262,29 @@
 		}
 	}
 
+	.password-input-group {
+		display: block;
+		position: relative;
+
+		.password_preview {
+			position: absolute;
+			top: 50%;
+			right: 15px;
+			transform: translateY(-50%);
+
+			&.dashicons {
+
+				&.dashicons-hidden {
+					opacity: 0.6;
+
+					&:hover {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+
 	&.ur-frontend-form--bordered {
 		form {
 			.ur-form-row {
