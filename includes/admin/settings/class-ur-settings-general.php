@@ -374,6 +374,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Enable hide/show password', 'user-registration' ),
+						'desc'     => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
+						'id'       => 'user_registration_login_option_hide_show_password',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+
+					array(
 						'title'    => __( 'Enable lost password', 'user-registration' ),
 						'desc'     => __( 'Check to enable/disable lost password.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_lost_password',
