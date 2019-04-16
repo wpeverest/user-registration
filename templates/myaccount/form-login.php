@@ -61,7 +61,7 @@ if ( 'bordered' === $form_template ) {
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 							?>
-						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="Show password"></a>
+						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
 							<?php
 						}
 						?>

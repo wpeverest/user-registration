@@ -478,12 +478,12 @@
 				case 'show':
 					$password_field.attr( 'type', 'text' );
 					$(this).removeClass( 'dashicons-hidden' ).addClass( 'dashicons-visibility' );
-					$(this).attr( 'title', 'Hide password' );
+					$(this).attr( 'title', ursL10n.hide_password_title );
 					break;
 				case'hide':
 					$password_field.attr( 'type', 'password' );
 					$(this).removeClass( 'dashicons-visibility' ).addClass( 'dashicons-hidden' );
-					$(this).attr( 'title', 'Show password' );
+					$(this).attr( 'title', ursL10n.show_password_title );
 					break;
 			}
 		}
