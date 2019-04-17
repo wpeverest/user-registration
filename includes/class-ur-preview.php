@@ -36,6 +36,9 @@ class UR_Preview {
 		return locate_template( array( 'page.php', 'single.php', 'index.php' ) );
 	}
 
+	/**
+	 * Handles the preview of form.
+	 */
 	public function handle_preview() {
 		if ( ! is_user_logged_in() ) {
 			return;
@@ -65,6 +68,12 @@ class UR_Preview {
 		return $title;
 	}
 
+	/**
+	 * Displays content of form preview.
+	 *
+	 * @param string $content Page/Post content.
+	 * @return string
+	 */
 	public function form_preview_content( $content ) {
 		$form_id = absint( $_GET['form_id'] );
 
