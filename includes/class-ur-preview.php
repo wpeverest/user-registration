@@ -21,6 +21,10 @@ class UR_Preview {
 	 * Constructor
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'init' ) );
+	}
+
+	public function init() {
 		if ( is_user_logged_in() && ! is_admin() && isset( $_GET['ur_preview'] ) ) {
 			add_filter( 'template_include', array( __CLASS__, 'template_include' ) );
 			add_action( 'template_redirect', array( $this, 'handle_preview' ) );
