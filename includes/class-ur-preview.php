@@ -21,13 +21,29 @@ class UR_Preview {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'plugins_loaded', array( $this, 'init' ) );
 	}
 
+	/**
+	 * Init hook function.
+	 */
 	public function init() {
 		if ( is_user_logged_in() && ! is_admin() && isset( $_GET['ur_preview'] ) ) {
-			add_filter( 'template_include', array( __CLASS__, 'template_include' ) );
+			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+			add_filter( 'template_include', array( $this, 'template_include' ) );
 			add_action( 'template_redirect', array( $this, 'handle_preview' ) );
+		}
+	}
+
+	/**
+	 * Hook into pre_get_posts to limit posts.
+	 *
+	 * @param WP_Query $q Query instance.
+	 */
+	public function pre_get_posts( $q ) {
+		// Limit one post to query.
+		if ( $q->is_main_query() ) {
+			$q->set( 'posts_per_page', 1 );
 		}
 	}
 
@@ -36,8 +52,8 @@ class UR_Preview {
 	 *
 	 * @return string
 	 */
-	public static function template_include() {
-		return locate_template( array( 'page.php', 'single.php', 'index.php' ) );
+	public function template_include() {
+		return locate_template( array( 'page.php', 'single.php' ) );
 	}
 
 	/**
