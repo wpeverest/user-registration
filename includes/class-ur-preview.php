@@ -21,7 +21,7 @@ class UR_Preview {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ) );
 	}
 
 	/**
