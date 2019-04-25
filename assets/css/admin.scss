@@ -350,7 +350,18 @@
 	}
 
 	.subsubsub {
-		margin: -8px 0 0;
+		background: #e5e5e5;
+		float: none;
+
+		a {
+			display: block;
+			padding: 7px 10px;
+
+			&.current {
+				color: #fff;
+				background: #475BB2;
+			}
+		}
 	}
 
 	textarea[disabled="disabled"] {
