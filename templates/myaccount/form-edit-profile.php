@@ -70,11 +70,26 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 								foreach ( $grid_data as $grid_data_key => $single_item ) {
 									if ( $found_field ) {
+										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										?>
 										<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
 											<?php
-												$field = $profile[ $key ];
-												user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
+											$field           = $profile[ $key ];
+											$readonly_fields = ur_readonly_profile_details_fields();
+											if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
+												$field['custom_attributes'] = array(
+													'readonly' => 'readonly',
+													// 'disabled' => 'disabled',
+												);
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+													$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+												}
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+													$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+													$field['input_class'][]              = 'user-registration-help-tip';
+												}
+											}
+											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
 											?>
 										</div>
 									<?php } ?>

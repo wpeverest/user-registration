@@ -224,6 +224,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'user-registration' ),
 				'version' => UR_VERSION,
 			),
+			'jquery-tiptip'              => array(
+				'src'     => self::get_asset_url( 'assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => '1.3.0',
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );

@@ -7,6 +7,7 @@
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
+			this.init_tiptip();
 
 			// Inline validation
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
@@ -15,6 +16,16 @@
 			if (typeof $.fn.inputmask !== 'undefined') {
 				$('.ur-masked-input').inputmask();
 			}
+		},
+		init_tiptip: function () {
+			var tiptip_args = {
+				'attribute': 'title',
+				'fadeIn': 50,
+				'fadeOut': 50,
+				'delay': 200,
+				'keepAlive': true,
+			};
+			$('.user-registration-help-tip').tipTip(tiptip_args);
 		},
 		load_validation: function () {
 			if (typeof $.fn.validate === 'undefined') {
