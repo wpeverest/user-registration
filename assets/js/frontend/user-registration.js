@@ -18,13 +18,15 @@
 			}
 		},
 		init_tiptip: function () {
-			var tiptip_args = {
-				'attribute': 'title',
-				'fadeIn': 50,
-				'fadeOut': 50,
-				'delay': 200,
-			};
-			$('.user-registration-help-tip').tipTip(tiptip_args);
+			if( typeof tipTip !== 'undefined' ) {
+				var tiptip_args = {
+					'attribute': 'title',
+					'fadeIn': 50,
+					'fadeOut': 50,
+					'delay': 200,
+				};
+				$('.user-registration-help-tip').tipTip(tiptip_args);
+			}
 		},
 		load_validation: function () {
 			if (typeof $.fn.validate === 'undefined') {
