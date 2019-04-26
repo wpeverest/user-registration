@@ -209,6 +209,12 @@
 					outline: 0;
 				}
 
+				input[readonly],
+				select[readonly],
+				textarea[readonly] {
+					cursor: auto;
+				}
+
 				legend,
 				label {
 					display: block;
@@ -235,15 +241,11 @@
 		input[type="submit"],
 		button[type="submit"] {
 			float: right;
-			padding: 10px 20px;
-			line-height: 1em;
 			text-align: center;
 			word-break: break-word;
 			white-space: normal;
 			border: none;
 			cursor: pointer;
-			-webkit-transition: 0.9s all ease-out;
-			-o-transition: 0.9s all ease-out;
 			transition: 0.9s all ease-out;
 		}
 
