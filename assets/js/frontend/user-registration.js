@@ -23,7 +23,6 @@
 				'fadeIn': 50,
 				'fadeOut': 50,
 				'delay': 200,
-				'keepAlive': true,
 			};
 			$('.user-registration-help-tip').tipTip(tiptip_args);
 		},
