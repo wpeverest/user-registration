@@ -34,6 +34,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-min',
 				'type'        => 'number',
 				'required'    => false,
+				'default'     => '',
 				'placeholder' => __( 'Min Value', 'user-registration' ),
 			),
 			'max'          => array(
@@ -43,6 +44,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-max',
 				'type'        => 'number',
 				'required'    => false,
+				'default'     => '',
 				'placeholder' => __( 'Max Value', 'user-registration' ),
 			),
 			'step'         => array(
