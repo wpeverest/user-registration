@@ -434,6 +434,33 @@ function ur_exclude_profile_details_fields() {
 }
 
 /**
+ * Get readonly fields in profile tab
+ *
+ * @return array
+ */
+function ur_readonly_profile_details_fields() {
+	return apply_filters(
+		'user_registration_readonly_profile_fields',
+		array(
+			'user_login'            => array(
+				'message' => __( 'Username can not be changed.', 'user-registration' ),
+			),
+			'user_pass'             => array(
+				'value'   => 'password',
+				'message' => __( 'Passowrd can not be changed.', 'user-registration' ),
+			),
+			'user_confirm_password' => array(
+				'value'   => 'password',
+				'message' => __( 'Confirm password can not be changed.', 'user-registration' ),
+			),
+			'user_confirm_email'    => array(
+				'message' => __( 'Confirm email can not be changed.', 'user-registration' ),
+			),
+		)
+	);
+}
+
+/**
  * @deprecated 1.4.1
  * @return void
  */

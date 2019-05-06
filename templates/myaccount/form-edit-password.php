@@ -31,8 +31,8 @@ do_action( 'user_registration_before_change_password_form' );
 					ur_do_deprecated_action( 'user_registration_edit_account_form_start', array(), '1.4.2', 'user_registration_change_password_form_start' );
 					do_action( 'user_registration_change_password_form_start' );
 				?>
-					<fieldset>
-					<legend><?php _e( 'Password change', 'user-registration' ); ?></legend>
+				<fieldset>
+					<legend><?php _e( 'Change Password', 'user-registration' ); ?></legend>
 
 					<?php if ( apply_filters( 'user_registration_change_password_current_password_display', true ) ) { ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">

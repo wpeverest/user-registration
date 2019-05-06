@@ -33,22 +33,14 @@
 			}
 		}
 	}
-	
+
 }
 
 @media screen and (max-width: 600px) {
 	#user-registration .user-registration-MyAccount-navigation ul {
 		display: block;
-		.user-registration-MyAccount-navigation-link{
+		.user-registration-MyAccount-navigation-link {
 			display: block;
-			&.is-active{
-				border-top: 1px solid $color_gray_eleven;
-				border-left: 1px solid $color_gray_eleven;
-				border-right: 1px solid $color_gray_eleven;
-				&:before{
-					display: none;
-				}
-			}
 		}
 	}
 }

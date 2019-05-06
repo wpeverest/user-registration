@@ -25,9 +25,11 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	padding: 1.5em 2em 1.5em 3.5em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	margin: 0 0 2em;
-	position: relative;
+	padding: 1.25em 2em;
 	background-color: lighten($secondary, 5%);
 	color: $secondarytext;
 	border-top: 3px solid $primary;
@@ -40,14 +42,10 @@
 	font-size: 14px;
 
 	&::before {
-		font-family: 'Dashicons';
 		content: '\f348';
-		display: inline-block;
-		position: absolute;
-		top: 1em;
-		left: 0.9em;
-		font-size: 18px;
-		line-height: 1.5;
+		font-family: 'Dashicons';
+		font-size: 24px;
+		margin-right: 0.875rem;
 	}
 
 	ul {
@@ -209,6 +207,12 @@
 					outline: 0;
 				}
 
+				input[readonly],
+				select[readonly],
+				textarea[readonly] {
+					cursor: auto;
+				}
+
 				legend,
 				label {
 					display: block;
@@ -266,14 +270,12 @@
 		button[type="submit"] {
 			float: right;
 			padding: 10px 20px;
-			line-height: 1em;
+			line-height: 1.5;
 			text-align: center;
 			word-break: break-word;
 			white-space: normal;
 			border: none;
 			cursor: pointer;
-			-webkit-transition: 0.9s all ease-out;
-			-o-transition: 0.9s all ease-out;
 			transition: 0.9s all ease-out;
 		}
 
@@ -515,13 +517,22 @@
 }
 
 #user-registration {
+	background-color: $white;
+	margin: 30px 0;
+
 	&.user-registration,
-	*{
+	* {
 		box-sizing: border-box;
 	}
 
 	p {
 		color: #333333;
+	}
+
+	.user-registration-tips {
+		font-size: 12px;
+		color: $color-gray-lighter;
+		margin-bottom: 0;
 	}
 
 	.user-registration-MyAccount-navigation {
@@ -540,37 +551,23 @@
 				padding: 0;
 				margin:0;
 				display: inline-block;
-				border-left: 1px solid $white;
-				border-top: 1px solid $white;
-				border-right: 1px solid $white;
 				position:relative;
 				box-shadow: 0 0 0 rgba(0,0,0,0);
 
 				a {
-					color: $color_gray_two;
 					padding: 10px 15px;
 					display: block;
-					font-weight: 600;
-					font-size: 15px;
+					font-weight: 400;
+					font-size: 14px;
 					font-family: 'sans-serif';
 					text-decoration: none;
 					box-shadow: 0 0 0 rgba(0,0,0,0);
 				}
 
 				&.is-active {
-					background-color: $color_gray_eleven;
-					border-left: 1px solid $color_gray_six;
-					border-top: 1px solid $color_gray_six;
-					border-right: 1px solid $color_gray_six;
 
-					&:before {
-						position: absolute;
-						bottom: -1px;
-						left: 0;
-						content: " ";
-						width: 100%;
-						height: 1px;
-						background-color: $color_gray_eleven;
+					a {
+						font-weight: 600;
 					}
 				}
 			}
@@ -578,18 +575,69 @@
 	}
 
 	.user-registration-MyAccount-content {
-		background: $color_gray_eleven;
-		padding: 15px 20px;
-		border: 1px solid $color_gray_six;
+		padding: 30px;
+
+		h2 {
+			margin-bottom: 30px;
+		}
+
+		.user-registration-profile-fields__field-wrapper{
+			margin: 0 -10px;
+		}
 
 		.ur-form-grid{
-			padding: 0;
 			border: 0 none;
 			background: transparent;
 		}
 
 		.ur-frontend-form {
 			border: none;
+		}
+
+		h2,
+		.edit-password legend {
+			font-size: 28px;
+			font-weight: 400;
+		}
+
+		.user-registration-profile-header {
+			margin-bottom: 25px;
+
+			.user-registration-img-container {
+				width: 100px;
+			}
+
+			h3 {
+				font-size: 22px;
+				font-weight: 400;
+				margin-bottom: 5px;
+			}
+
+			header {
+
+				p,
+				.button-group {
+					 margin-bottom: 10px;
+				}
+
+				.profile-pic-remove {
+					margin-right: 10px;
+				}
+			}
+
+			.user-registration-nick-name {
+				color: $color_gray_lighter;
+			}
+		}
+
+		.user-registration-EditProfileForm {
+
+			.user-registration-profile-header {
+
+				.user-registration-img-container {
+					width: auto;
+				}
+			}
 		}
 	}
 }
@@ -663,4 +711,82 @@ span.description {
 }
 .ur-frontend-form.ur-gutenberg-editor form .ur-form-row .ur-form-grid input {
 	cursor: not-allowed;
+}
+
+/* TipTip CSS - Version 1.2 */
+
+#tiptip_holder {
+	display: none;
+	z-index: 8675309;
+	position: absolute;
+	top: 0;
+	/*rtl:ignore*/
+	left: 0;
+
+	&.tip_top {
+		padding-bottom: 5px;
+
+		#tiptip_arrow_inner {
+			margin-top: -7px;
+			margin-left: -6px;
+			border-top-color: $border_color;
+		}
+	}
+
+	&.tip_bottom {
+		padding-top: 5px;
+
+		#tiptip_arrow_inner {
+			margin-top: -5px;
+			margin-left: -6px;
+			border-bottom-color: $border_color;
+		}
+	}
+
+	&.tip_right {
+		padding-left: 5px;
+
+		#tiptip_arrow_inner {
+			margin-top: -6px;
+			margin-left: -5px;
+			border-right-color: $border_color;
+		}
+	}
+
+	&.tip_left {
+		padding-right: 5px;
+
+		#tiptip_arrow_inner {
+			margin-top: -6px;
+			margin-left: -7px;
+			border-left-color: $border_color;
+		}
+	}
+}
+
+#tiptip_content,
+.ur_error_tip {
+	color: $white;
+	font-size: 0.8em;
+	max-width: 150px;
+	background: $border_color;
+	text-align: center;
+	border-radius: 3px;
+	padding: 0.618em 1em;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+	code {
+		padding: 1px;
+		background: #888;
+	}
+}
+
+#tiptip_arrow,
+#tiptip_arrow_inner {
+	position: absolute;
+	border-color: transparent;
+	border-style: solid;
+	border-width: 6px;
+	height: 0;
+	width: 0;
 }

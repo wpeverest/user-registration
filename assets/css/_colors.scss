@@ -1,6 +1,7 @@
-$primary_color: #3498DB;
+$primary_color: #475BB2;
 $primary_dark: darken($primary_color, 10% ); // #217dbb
 $primary_light: lighten($primary_color, 40%); // #e1f0fa
+
 $white: #ffffff;
 $color_gray_eleven: darken($white, 1% ); // #fcfcfc
 $color_gray_ten: darken($white, 2.5% ); // #f9f9f9
@@ -8,13 +9,15 @@ $color_gray_nine: darken($white, 2.6% ); // #f8f8f8
 $color_gray_eight: darken($white, 5% ); //#f2f2f2
 $color_gray_seven: darken($white, 9% ); // #e8e8e8
 $color_gray_six: darken($white, 13.5% ); // #dddddd
-$black: #000000;
-$color_gray_one: lighten($black, 25%); // #404040
-$color_gray_two: lighten($black, 40%); // #666666
-$color_gray_three: lighten($black, 45%); // #737373
-$color_gray_four:  lighten($black, 47%); // #787878
-$color_gray_five: lighten($black, 69.5%); // #b1b1b1
+
+$gray_base: #1f2026;
+$color_gray_one: lighten($gray_base, 25%); // #404040
+$color_gray_two: lighten($gray_base, 40%); // #666666
+$color_gray_three: lighten($gray_base, 45%); // #737373
+$color_gray_four:  lighten($gray_base, 47%); // #787878
+$color_gray_five: lighten($gray_base, 69.5%); // #b1b1b1
 $color_sortable_background: #f7f7f7;
+
 $color_danger: #d82223;
 $border_color: #333333;
 $label_color:  #69717A;
@@ -22,4 +25,11 @@ $input_background_color: #f8f9fa;
 $flat_background: #F6F7F9;
 $rounded-color: #CED4DA;
 $round-button: #006AFF;
+
+$color_gray_base: #1a1f33; //hsl(228, 32%, 15%)
+$color_gray: adjust-color($color_gray-base, $saturation: -7%, $lightness: +15% ); //#393e60
+$color_gray_light: adjust-color($color_gray-base, $saturation: -21%, $lightness: +25% ); //#5b5d71
+$color_gray_lighter: adjust-color($color_gray-base, $saturation: -23%, $lightness: +55% ); //#5b5d71
+$color_gray_lighten : adjust-color($color_gray-base, $saturation: -16%, $lightness: +77% ); //#5b5d71
+$color_gray_light_skin : adjust-color($color_gray-base, $saturation: -10%, $lightness: +82% ); //#5b5d71
 
