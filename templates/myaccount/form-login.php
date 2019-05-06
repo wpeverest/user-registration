@@ -54,9 +54,18 @@ if ( 'bordered' === $form_template ) {
 						<label for="username"><?php _e( 'Username or email address', 'user-registration' ); ?> <span class="required">*</span></label>
 						<input type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( $_POST['username'] ) : ''; ?>" />
 					</p>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) ? ' hide_show_password' : ''; ?>">
 						<label for="password"><?php _e( 'Password', 'user-registration' ); ?> <span class="required">*</span></label>
+						<span class="password-input-group">
 						<input class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
+						<?php
+						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+							?>
+						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
+							<?php
+						}
+						?>
+						</span>
 					</p>
 
 					<?php

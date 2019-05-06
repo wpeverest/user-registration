@@ -79,6 +79,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes.
 
+* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -87,13 +89,17 @@ User Registration can be easily extended with some premium addons.
 
 == Frequently Asked Questions ==
 
-= What is the plugin license? =
+= Do I need to have coding skills to use the User Registration Plugin? =
 
-* This plugin is released under a GPL license.
+No, you don't need any coding skills. One can simply drag and drop fields, arrange them and use built-in shortcodes to display the form.
 
 = Does the plugin work with any WordPress themes?
 
 Yes, the plugin is designed to work with any themes that have been coded following WordPress guidelines.
+
+= How can I access registered users data?
+
+All the users registered via the registration forms and their data can be accessed from the Users menu in the WordPress Dashboard.
 
 == Screenshots ==
 

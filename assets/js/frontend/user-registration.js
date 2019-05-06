@@ -468,6 +468,27 @@
 	$(function () {
 		request_recaptcha_token();
 	});
+
+	$( document ).on( 'click', '.password_preview', function( e ) {
+		e.preventDefault();
+		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
+		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
+		if( $password_field.length > 0 ) {
+			switch( current_task ) {
+				case 'show':
+					$password_field.attr( 'type', 'text' );
+					$(this).removeClass( 'dashicons-hidden' ).addClass( 'dashicons-visibility' );
+					$(this).attr( 'title', ursL10n.hide_password_title );
+					break;
+				case'hide':
+					$password_field.attr( 'type', 'password' );
+					$(this).removeClass( 'dashicons-visibility' ).addClass( 'dashicons-hidden' );
+					$(this).attr( 'title', ursL10n.show_password_title );
+					break;
+			}
+		}
+	} );
+
 }(jQuery));
 
 var google_recaptcha_user_registration;
