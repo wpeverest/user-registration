@@ -325,6 +325,7 @@ function ur_get_field_type( $field_key ) {
 		switch ( $field_key ) {
 
 			case 'user_email':
+			case 'user_confirm_email':
 			case 'email':
 				$field_type = 'email';
 				break;
@@ -498,6 +499,7 @@ function ur_get_user_field_only() {
 		'user_registration_user_form_fields',
 		array(
 			'user_email',
+			'user_confirm_email',
 			'user_pass',
 			'user_confirm_password',
 			'user_login',
@@ -551,6 +553,7 @@ function ur_get_registered_form_fields() {
 		'user_registration_registered_form_fields',
 		array(
 			'user_email',
+			'user_confirm_email',
 			'user_pass',
 			'user_confirm_password',
 			'user_login',
