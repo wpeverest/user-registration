@@ -41,6 +41,10 @@ class UR_Install {
 		'1.5.8.1' => array(
 			'ur_update_1581_db_version',
 			'ur_update_1581_meta_key',
+		),
+		'1.6.0' => array(
+			'ur_update_160_db_version',
+			'ur_update_160_option_migrate',
 		)
 	);
 

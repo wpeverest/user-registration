@@ -233,6 +233,13 @@ function ur_update_1581_db_version() {
 }
 
 /**
+ * Update DB Version.
+ */
+function ur_update_160_db_version() {
+	UR_Install::update_db_version( '1.6.0' );
+}
+
+/**
  * Replace user meta key profile_pic_id to user_registration_profile_pic_id.
  *
  * @since 1.4.8.1
@@ -254,4 +261,27 @@ function ur_update_1581_meta_key() {
 	$value = get_option( 'ur_review_notice_dismissed' );
 	update_option( 'user_registration_review_notice_dismissed', $value );
 	delete_option( 'ur_review_notice_dismissed' );
+}
+
+/**
+ * Migrate the redirect option from global settings to form-wise settings.
+ *
+ * @since  1.6.0
+ *
+ * @return void.
+ */
+function ur_update_160_option_migrate() {
+	$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
+
+	// Get all posts with user_registration post type.
+	$posts     = get_posts( 'post_type=user_registration' );
+
+	foreach ( $posts as $post ) {
+
+		// Update global setting to all user registration posts meta.
+		update_post_meta( $post->ID, 'user_registration_form_setting_redirect_options', $redirect_url );
+	}
+
+	// TODO:: Delete unused option in later updater running user registration version. Donot delete right now for backward compatibility; for redirection to work even if user don't run the updater.
+	// delete_option( 'user_registration_general_setting_redirect_options' );
 }
