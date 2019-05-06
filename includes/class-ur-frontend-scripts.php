@@ -342,6 +342,8 @@ class UR_Frontend_Scripts {
 						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
 						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+						'hide_password_title'     => __( 'Hide Password', 'user-registration' ),
+						'show_password_title'     => __( 'Show Password', 'user-registration' ),
 					),
 				);
 			break;

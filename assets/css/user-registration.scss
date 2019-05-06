@@ -233,6 +233,36 @@
 					resize: none;
 					padding: 5px 20px;
 				}
+
+				.hide_show_password {
+
+					input[type="password"] {
+						padding-right: 50px;
+					}
+
+					.password-input-group {
+						display: block;
+						position: relative;
+
+						.password_preview {
+							position: absolute;
+							top: 50%;
+							right: 15px;
+							transform: translateY(-50%);
+
+							&.dashicons {
+
+								&.dashicons-hidden {
+									opacity: 0.6;
+
+									&:hover {
+										opacity: 1;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -296,6 +326,13 @@
 
 					textarea {
 						height: 100px;
+					}
+
+					.hide_show_password {
+
+						input[type="password"] {
+							padding-right: 50px;
+						}
 					}
 				}
 			}
@@ -361,6 +398,13 @@
 					textarea {
 						height: 100px;
 					}
+
+					.hide_show_password {
+
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
 				}
 			}
 		}
@@ -402,6 +446,13 @@
 					textarea {
 						height: 100px;
 					}
+
+					.hide_show_password {
+
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
 				}
 			}
 			input[type="submit"],
@@ -431,6 +482,13 @@
 						textarea,
 						select {
 							border-radius: 2px;
+						}
+
+						.hide_show_password {
+
+							input[type="password"] {
+								padding-right: 50px;
+							}
 						}
 
 						button[type="button"]{
