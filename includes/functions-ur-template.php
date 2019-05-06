@@ -165,7 +165,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'label'             => '',
 			'description'       => '',
 			'placeholder'       => '',
-			'maxlength'         => false,
+			'size'              => false,
+			'min'               => false,
+			'max'               => false,
 			'required'          => false,
 			'autocomplete'      => false,
 			'id'                => $key,
@@ -198,8 +200,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
 
-		if ( $args['maxlength'] ) {
-			$args['custom_attributes']['maxlength'] = absint( $args['maxlength'] );
+		if ( $args['size'] ) {
+			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
+		}
+
+		if ( $args['min'] ) {
+			$args['custom_attributes']['min'] = absint( $args['min'] );
+		}
+
+		if ( $args['max'] ) {
+			$args['custom_attributes']['max'] = absint( $args['max'] );
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {
