@@ -234,7 +234,7 @@
 	right: 0;
 	bottom: 0;
 	min-height: 360px;
-	background-color: $black;
+	background-color: $gray_base;
 	opacity: 0.7;
 	z-index: 99900;
 }
@@ -288,7 +288,7 @@
 			&:focus {
 				background-color: $color_gray_six;
 				border-color: #ccc;
-				color: $black;
+				color: $gray_base;
 			}
 
 			&:focus {
@@ -584,7 +584,7 @@
 				border-radius: 0;
 				margin: 0;
 				display: flex;
-				border-bottom: 2px solid #217dbb;
+				border-bottom: 2px solid $primary_dark;
 				border-top: 0 none;
 				border-right: 0 none;
 				border-left: 0 none;
@@ -1366,7 +1366,7 @@ img.tips {
 }
 
 .form-settings-tab.active {
-    background: #217dbb;
+    background: $primary_color;
     color: white;
 }
 
