@@ -79,6 +79,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes.
 
+* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Hide/show user registration fields on registration form and account profile or make fields read-only.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -110,6 +112,7 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 11. Shortcode
 
 == Changelog ==
+= 1.6.0 - xx/xx/2019 =
 
 = 1.5.10 - 04/05/2019 =
 * Feature - Prevent Core Login and Registration page.
