@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package  UserRegistration/Form/Settings
  * @category Abstract Class
  * @author   WPEverest
+ * @since 1.6.0
  */
 class UR_Setting_User_confirm_email extends UR_Field_Settings {
 

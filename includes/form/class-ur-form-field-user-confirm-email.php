@@ -3,6 +3,9 @@
  * UR_Form_Field_User_Confirm_Email.
  *
  * @package  UserRegistration/Form
+ * @category Admin
+ * @author   WPEverest
+ * @since 1.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
