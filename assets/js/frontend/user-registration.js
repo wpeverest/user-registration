@@ -380,6 +380,7 @@
 							complete: function (ajax_response) {
 
 								$this.find('.ur-submit-button').find('span').removeClass('ur-front-spinner');
+								var redirect_url = $this.find('input[name="ur-redirect-url"]').val();
 
 								var message = $('<ul class=""/>');
 								var type = 'error';
@@ -418,9 +419,9 @@
 										jQuery('#billing_country').trigger('change');
 										jQuery('#shipping_country').trigger('change');
 
-										if (user_registration_params.redirect_url !== '') {
+										if ( 'undefined' !== typeof redirect_url && redirect_url !== '') {
 											window.setTimeout(function () {
-												window.location = user_registration_params.redirect_url;
+												window.location = redirect_url;
 											}, 1000);
 										} else {
 
