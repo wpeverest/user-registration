@@ -98,7 +98,7 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 	function is_ur_lost_password_page() {
 		global $wp;
 
-		return ( is_ur_account_page() && isset( $wp->query_vars['lost-password'] ) );
+		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) );
 	}
 }
 
@@ -835,14 +835,14 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
 			),
 			array(
-				'type'     			=> 'text',
-				'label'    			=> __( 'Redirect URL', 'user-registration' ),
-				'description'     	=> __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
-				'id'       			=> 'user_registration_form_setting_redirect_options',
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),	// Getting redirect options from global settings for backward compatibility.
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
 			),
 			array(
 				'type'              => 'text',
@@ -1404,49 +1404,48 @@ function ur_has_date_field( $form_id ) {
 /**
  * Get attributes from the shortcode content.
  *
- * @param  $content 	Shortcode content.
+ * @param  $content     Shortcode content.
  * @return array        Array of attributes within the shortcode.
  *
  * @since  1.6.0
- *
  */
 function ur_get_shortcode_attr( $content ) {
 	$pattern = get_shortcode_regex();
 
-	$keys = array();
-    $result = array();
+	$keys   = array();
+	$result = array();
 
-    if( preg_match_all( '/'. $pattern .'/s', $content, $matches ) ) {
+	if ( preg_match_all( '/' . $pattern . '/s', $content, $matches ) ) {
 
-	    foreach( $matches[0] as $key => $value) {
+		foreach ( $matches[0] as $key => $value ) {
 
-	        // $matches[3] return the shortcode attribute as string.
-	        // replace space with '&' for parse_str() function.
-	        $get = str_replace(" ", "&" , $matches[3][$key] );
-	        parse_str( $get, $output );
+			// $matches[3] return the shortcode attribute as string.
+			// replace space with '&' for parse_str() function.
+			$get = str_replace( ' ', '&', $matches[3][ $key ] );
+			parse_str( $get, $output );
 
-	        // Get all shortcode attribute keys.
-	        $keys = array_unique( array_merge( $keys, array_keys( $output ) ) );
-	        $result[] = $output;
-	    }
+			// Get all shortcode attribute keys.
+			$keys     = array_unique( array_merge( $keys, array_keys( $output ) ) );
+			$result[] = $output;
+		}
 
-	    if( $keys && $result ) {
+		if ( $keys && $result ) {
 
-	        // Loop the result array and add the missing shortcode attribute key
-	        foreach ( $result as $key => $value ) {
+			// Loop the result array and add the missing shortcode attribute key
+			foreach ( $result as $key => $value ) {
 
-	            // Loop the shortcode attribute key
-	            foreach ( $keys as $attr_key ) {
-	                $result[ $key ][ $attr_key ] = isset( $result[ $key ][ $attr_key ] ) ? $result[ $key ][ $attr_key ] : NULL;
-	            }
+				// Loop the shortcode attribute key
+				foreach ( $keys as $attr_key ) {
+					$result[ $key ][ $attr_key ] = isset( $result[ $key ][ $attr_key ] ) ? $result[ $key ][ $attr_key ] : null;
+				}
 
-	            // Sort the array key.
-	            ksort( $result[ $key ]);
-	        }
-	    }
-    }
+				// Sort the array key.
+				ksort( $result[ $key ] );
+			}
+		}
+	}
 
-    return $result;
+	return $result;
 }
 
 /**

@@ -500,7 +500,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			// Include missing lost password.
-			$endpoints['lost-password'] = __( 'Lost password', 'user-registration' );
+			$endpoints['ur-lost-password'] = __( 'Lost password', 'user-registration' );
 
 			$endpoints = apply_filters( 'user_registration_custom_nav_menu_items', $endpoints );
 
