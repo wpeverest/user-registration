@@ -25,9 +25,11 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	padding: 1.5em 2em 1.5em 3.5em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	margin: 0 0 2em;
-	position: relative;
+	padding: 1.25em 2em;
 	background-color: lighten($secondary, 5%);
 	color: $secondarytext;
 	border-top: 3px solid $primary;
@@ -40,14 +42,10 @@
 	font-size: 14px;
 
 	&::before {
-		font-family: 'Dashicons';
 		content: '\f348';
-		display: inline-block;
-		position: absolute;
-		top: 1em;
-		left: 0.9em;
-		font-size: 18px;
-		line-height: 1.5;
+		font-family: 'Dashicons';
+		font-size: 24px;
+		margin-right: 0.875rem;
 	}
 
 	ul {
@@ -241,6 +239,8 @@
 		input[type="submit"],
 		button[type="submit"] {
 			float: right;
+			padding: 10px 20px;
+			line-height: 1.5;
 			text-align: center;
 			word-break: break-word;
 			white-space: normal;
@@ -459,13 +459,22 @@
 }
 
 #user-registration {
+	background-color: $white;
+	margin: 30px 0;
+
 	&.user-registration,
-	*{
+	* {
 		box-sizing: border-box;
 	}
 
 	p {
 		color: #333333;
+	}
+
+	.user-registration-tips {
+		font-size: 12px;
+		color: $color-gray-lighter;
+		margin-bottom: 0;
 	}
 
 	.user-registration-MyAccount-navigation {
@@ -484,37 +493,23 @@
 				padding: 0;
 				margin:0;
 				display: inline-block;
-				border-left: 1px solid $white;
-				border-top: 1px solid $white;
-				border-right: 1px solid $white;
 				position:relative;
 				box-shadow: 0 0 0 rgba(0,0,0,0);
 
 				a {
-					color: $color_gray_two;
 					padding: 10px 15px;
 					display: block;
-					font-weight: 600;
-					font-size: 15px;
+					font-weight: 400;
+					font-size: 14px;
 					font-family: 'sans-serif';
 					text-decoration: none;
 					box-shadow: 0 0 0 rgba(0,0,0,0);
 				}
 
 				&.is-active {
-					background-color: $color_gray_eleven;
-					border-left: 1px solid $color_gray_six;
-					border-top: 1px solid $color_gray_six;
-					border-right: 1px solid $color_gray_six;
 
-					&:before {
-						position: absolute;
-						bottom: -1px;
-						left: 0;
-						content: " ";
-						width: 100%;
-						height: 1px;
-						background-color: $color_gray_eleven;
+					a {
+						font-weight: 600;
 					}
 				}
 			}
@@ -522,9 +517,11 @@
 	}
 
 	.user-registration-MyAccount-content {
-		background: $color_gray_eleven;
-		padding: 15px 20px;
-		border: 1px solid $color_gray_six;
+		padding: 30px;
+
+		h2 {
+			margin-bottom: 30px;
+		}
 
 		.user-registration-profile-fields__field-wrapper{
 			margin: 0 -10px;
@@ -537,6 +534,52 @@
 
 		.ur-frontend-form {
 			border: none;
+		}
+
+		h2,
+		.edit-password legend {
+			font-size: 28px;
+			font-weight: 400;
+		}
+
+		.user-registration-profile-header {
+			margin-bottom: 25px;
+
+			.user-registration-img-container {
+				width: 100px;
+			}
+
+			h3 {
+				font-size: 22px;
+				font-weight: 400;
+				margin-bottom: 5px;
+			}
+
+			header {
+
+				p,
+				.button-group {
+					 margin-bottom: 10px;
+				}
+
+				.profile-pic-remove {
+					margin-right: 10px;
+				}
+			}
+
+			.user-registration-nick-name {
+				color: $color_gray_lighter;
+			}
+		}
+
+		.user-registration-EditProfileForm {
+
+			.user-registration-profile-header {
+
+				.user-registration-img-container {
+					width: auto;
+				}
+			}
 		}
 	}
 }

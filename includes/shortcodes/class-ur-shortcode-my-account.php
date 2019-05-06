@@ -99,7 +99,7 @@ class UR_Shortcode_My_Account {
 			ob_start();
 
 			if ( isset( $wp->query_vars['user-logout'] ) ) {
-				ur_add_notice( sprintf( __( 'Are you sure you want to log out? <a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
+				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
 			}
 
 			do_action( 'before-user-registration-my-account-shortcode' );
