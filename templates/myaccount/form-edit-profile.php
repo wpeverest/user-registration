@@ -60,24 +60,53 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<div class='ur-form-row'>
 							<?php
 							$width = floor( 100 / count( $data ) ) - count( $data );
+
 							foreach ( $data as $grid_key => $grid_data ) {
-								?>
-								<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>" style="width:<?php echo $width; ?>%;">
+								$found_field = false;
+
+								foreach ( $grid_data as $grid_data_key => $single_item ) {
+									$key = 'user_registration_' . $single_item->general_setting->field_name;
+									if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
+										$found_field = true;
+									}
+								}
+								if ( $found_field ) {
+									?>
+									<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>" style="width:<?php echo $width; ?>%;">
 									<?php
-									foreach ( $grid_data as $grid_data_key => $single_item ) {
+								}
+
+								foreach ( $grid_data as $grid_data_key => $single_item ) {
+									if ( $found_field ) {
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
-										if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
+										?>
+										<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+											<?php
+											$field           = $profile[ $key ];
+											$readonly_fields = ur_readonly_profile_details_fields();
+											if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
+												$field['custom_attributes'] = array(
+													'readonly' => 'readonly',
+													// 'disabled' => 'disabled',
+												);
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+													$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+												}
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+													$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+													$field['input_class'][]              = 'user-registration-help-tip';
+												}
+											}
+											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
 											?>
-											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
-												<?php
-													$field = $profile[ $key ];
-													user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
-												?>
-											</div>
-										<?php } ?>
+										</div>
 									<?php } ?>
-								</div>
 								<?php } ?>
+
+								<?php if ( $found_field ) { ?>
+									</div>
+								<?php } ?>
+							<?php } ?>
 							</div>
 						<?php } ?>
 

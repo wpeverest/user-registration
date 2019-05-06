@@ -38,6 +38,7 @@ class UR_Shortcode_My_Account {
 	public static function output( $atts ) {
 
 		global $wp, $post;
+		wp_enqueue_script( 'jquery-tiptip' );
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_media();
 		wp_enqueue_script( 'ur-my-account' );
@@ -137,6 +138,7 @@ class UR_Shortcode_My_Account {
 		$user_id = get_current_user_id();
 		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
+		add_filter( 'user_registration_user_profile_field_only', 'ur_get_registered_form_fields' );
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		$user_data = get_userdata( $user_id );
@@ -183,7 +185,7 @@ class UR_Shortcode_My_Account {
 		ur_get_template(
 			'myaccount/form-edit-profile.php',
 			array(
-				'profile' => apply_filters( 'user_registration_profile_to_edit', $profile ),
+				'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
 				'form_data_array' => $form_data_array,
 			)
 		);
