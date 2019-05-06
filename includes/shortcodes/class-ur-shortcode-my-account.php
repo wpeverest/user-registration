@@ -68,7 +68,7 @@ class UR_Shortcode_My_Account {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
 			}
 
-			if ( isset( $wp->query_vars['lost-password'] ) ) {
+			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				self::lost_password();
 			} else {
 				ur_get_template(
