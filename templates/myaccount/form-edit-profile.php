@@ -40,7 +40,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							}
 							?>
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
-							<p class="user-registration-tips"><?php _e( 'Max size: 500KB', 'user-registration' ); ?></p>
+							<?php
+								$max_size = wp_max_upload_size();
+								$max_size = size_format( $max_size );
+							?>
+							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
 						</div>
 						<header>
 							<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
