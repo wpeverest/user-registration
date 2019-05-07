@@ -29,10 +29,30 @@ class UR_Preview {
 	 */
 	public function init() {
 		if ( is_user_logged_in() && ! is_admin() && isset( $_GET['ur_preview'] ) ) {
+			add_filter( 'edit_post_link', array( $this, 'edit_form_link' ) );
 			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 			add_filter( 'template_include', array( $this, 'template_include' ) );
 			add_action( 'template_redirect', array( $this, 'handle_preview' ) );
 		}
+	}
+
+	/**
+	 * Change edit link of preview page.
+	 *
+	 * @param string $link Link.
+	 */
+	public function edit_form_link( $link ) {
+		$form_id       = absint( $_GET['form_id'] );
+		$edit_form_url = add_query_arg(
+			array(
+				'page'              => 'add-new-registration',
+				'edit-registration' => $form_id,
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$link = '<a class="post-edit-link" href="' . $edit_form_url . '">Edit Form</a>';
+		return $link;
 	}
 
 	/**
