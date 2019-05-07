@@ -23,17 +23,55 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<p>
-<?php
-	/* translators: 1: user display name 2: logout url */
+<h2>
+	<?php
 	printf(
-		__( 'Hello %1$s (not %1$s? <a href="%2$s">Sign out</a>)', 'user-registration' ),
-		'<strong>' . esc_html( $current_user->display_name ) . '</strong>',
-		esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) )
+		__( 'Welcome, %1$s', 'user-registration' ),
+		esc_html( $current_user->display_name )
 	);
-
 	?>
-	</p>
+</h2>
+
+<div class="user-registration-profile-header">
+	<div class="user-registration-img-container">
+		<?php
+			$gravatar_image     = get_avatar_url( get_current_user_id(), $args = null );
+			$profile_picture_id = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_id', true );
+		if ( $profile_picture_id ) {
+			$image = wp_get_attachment_thumb_url( $profile_picture_id );
+		} else {
+			$image = $gravatar_image;
+		}
+		?>
+		<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
+	</div>
+	<header>
+		<?php
+		$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
+		$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
+		$full_name  = $first_name . ' ' . $last_name;
+		if ( empty( $first_name ) && empty( $last_name ) ) {
+			$full_name = $current_user->display_name;
+		}
+		?>
+		<h3>
+		<?php
+		printf(
+			__( '%1$s', 'user-registration' ),
+			esc_html( $full_name )
+		);
+		?>
+			</h3>
+		<span class="user-registration-nick-name">
+			<?php
+				printf(
+					__( '@%1$s', 'user-registration' ),
+					esc_html( $current_user->display_name )
+				);
+				?>
+		</span>
+	</header>
+</div>
 
 <p>
 <?php
@@ -44,7 +82,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 		esc_url( ur_get_endpoint_url( 'edit-password' ) )
 	);
 	?>
-	</p>
+</p>
+
+<p>
+	<?php
+		/* translators: 1: user display name 2: logout url */
+		printf(
+			__( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ),
+			'<strong>' . esc_html( $current_user->display_name ) . '</strong>',
+			esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) )
+		);
+		?>
+</p>
 
 <?php
 	/**

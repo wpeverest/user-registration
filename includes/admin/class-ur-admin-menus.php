@@ -267,10 +267,26 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
+		 * Returns a base64 URL for the SVG for use in the menu.
+		 *
+		 * @param  bool $base64 Whether or not to return base64-encoded SVG.
+		 * @return string
+		 */
+		private function get_icon_svg( $base64 = true ) {
+			$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#82878c" d="M27.58 4a27.9 27.9 0 0 0-5.17 4 27 27 0 0 0-4.09 5.08 33.06 33.06 0 0 1 2 4.65A23.78 23.78 0 0 1 24 12.15V18a8 8 0 0 1-5.89 7.72l-.21.05a27 27 0 0 0-1.9-8.16A27.9 27.9 0 0 0 9.59 8a27.9 27.9 0 0 0-5.17-4L4 3.77V18a12 12 0 0 0 9.93 11.82h.14a11.72 11.72 0 0 0 3.86 0h.14A12 12 0 0 0 28 18V3.77zM8 18v-5.85a23.86 23.86 0 0 1 5.89 13.57A8 8 0 0 1 8 18zm8-16a3 3 0 1 0 3 3 3 3 0 0 0-3-3z"/></svg>';
+
+			if ( $base64 ) {
+				return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+			}
+
+			return $svg;
+		}
+
+		/**
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 'dashicons-universal-access-alt', '55.8' );
+			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 		}
@@ -418,6 +434,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$save_label = __( 'Update form', 'user-registration' );
 			}
 
+			$preview_link = add_query_arg(
+				array(
+					'ur_preview' => 'true',
+					'form_id'    => $post_id,
+				),
+				home_url()
+			);
+
 			// Forms view
 			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 		}
@@ -476,7 +500,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			// Include missing lost password.
-			$endpoints['lost-password'] = __( 'Lost password', 'user-registration' );
+			$endpoints['ur-lost-password'] = __( 'Lost password', 'user-registration' );
 
 			$endpoints = apply_filters( 'user_registration_custom_nav_menu_items', $endpoints );
 

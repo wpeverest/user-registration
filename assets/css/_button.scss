@@ -1,3 +1,15 @@
+.wp-core-ui .button-primary {
+	background: $primary_color;
+	border-color: $primary_color;
+	box-shadow: 0 1px 0 $primary_color;
+
+	&:hover {
+		background: $primary_dark;
+		border-color: $primary_dark;
+		box-shadow: $primary_dark;
+	}
+}
+
 .ur-registered-item.ui-draggable-dragging {
 	padding: 10px 10px;
 	line-height: 20px;

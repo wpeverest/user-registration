@@ -35,6 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 						?>
 						<div class="publishing-action">
+							<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
 							<input type="button" name="save_form" id="save_form_footer"
 								   class="button button-primary button-large menu-form ur_save_form_action_button"
 								   value="<?php echo $save_label; ?> ">

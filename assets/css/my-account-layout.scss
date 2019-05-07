@@ -1,54 +1,112 @@
+@import 'colors';
+
 #user-registration {
+
     &.vertical {
         display: flex;
         flex-wrap: wrap;
-        
+
         .user-registration-error, .user-registration-message {
             float:none;
             width: 100%;
         }
-        
+
         .user-registration-MyAccount-navigation {
+			background: $color_gray_light_skin;
             width: 20%;
-            
+
             ul {
                 flex-direction: column;
                 flex-wrap: nowrap;
-                
+
                 .user-registration-MyAccount-navigation-link {
-                    border-left: 1px solid #ddd;
-                    border-top: 1px solid #ddd;
-                    border-bottom: none transparent;
-                    border-right: none transparent;
-                    
-                    &:last-child {
-                        border-bottom: 1px solid #ddd;
-                    }
-                    
+
                     &.is-active {
-                        border-right: none transparent;
-                        
-                        &::before {
-                            bottom: auto;
-                            right: -1px;
-                            width: 1px;
-                            height: 100%;
-                            left: auto;
-                            top: auto;
-                        }
-                    }
-                    
-                    a {
-                        padding: 15px 20px;
+
+                        a {
+							background: $color_gray_lighten;
+							border-left: 4px solid $primary_color;
+						}
                     }
                 }
             }
-        } 
-        
-        .user-registration-MyAccount-content {
-            width: 80%;
         }
-    }
+
+        .user-registration-MyAccount-content {
+			width: 80%;
+
+			.user-registration-profile-header {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+
+				.user-registration-img-container {
+					margin-right: 20px;
+				}
+			}
+        }
+	}
+
+	&.horizontal {
+		box-shadow: 0 2px 20px transparentize($gray-base, 0.9);
+
+		.user-registration-message,
+		.user-registration-error,
+		.user-registration-info {
+			margin-bottom: 0;
+		}
+
+		.user-registration-MyAccount-navigation {
+
+			ul {
+				justify-content: center;
+				border-bottom: 1px solid $color_gray_lighten;
+
+				.user-registration-MyAccount-navigation-link {
+
+					a {
+						padding: 15px 20px;
+					}
+
+					&.is-active {
+
+						a {
+							background-color: $color_gray_lighten;
+						}
+					}
+				}
+			}
+		}
+
+		.user-registration-MyAccount-content {
+			text-align: center;
+
+			.user-registration-profile-header {
+
+				.user-registration-img-container {
+					margin: 0 auto;
+					margin-bottom: 15px;
+
+					img {
+						border-radius: 50%;
+					}
+				}
+			}
+
+			.edit-profile,
+			.edit-password {
+				text-align: left;
+			}
+
+			.edit-profile {
+
+				.user-registration-profile-header,
+				h2 {
+					text-align: center;
+				}
+			}
+		}
+	}
 }
 @media screen and (max-width: 980px) {
     #user-registration {
@@ -56,7 +114,7 @@
             .user-registration-MyAccount-navigation {
                 width: 30%;
             }
-            
+
             .user-registration-MyAccount-content {
                 width: 70%;
             }
@@ -69,22 +127,10 @@
         &.vertical {
             .user-registration-MyAccount-navigation {
                 width: 100%;
-                
+
                 ul {
+
                     .user-registration-MyAccount-navigation-link {
-                        border-right:1px solid #ddd;
-                        
-                        &:last-child {
-                            border-bottom: none transparent;
-                        }
-                        
-                        &.is-active {
-                            border-right: 1px solid #ddd;
-                            
-                            &::before {
-                                display: none;
-                            }
-                        }
 
                         a {
                             padding: 15px 20px;
@@ -92,10 +138,14 @@
                     }
                 }
             }
-            
+
             .user-registration-MyAccount-content {
                 width: 100%;
             }
-        }
+		}
+
+		.user-registration-MyAccount-content {
+			padding: 15px;
+		}
     }
 }

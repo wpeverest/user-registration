@@ -62,7 +62,7 @@ function ur_login_template_redirect() {
 }
 
 /**
- * Redirects the logged in user to the option set in settings if registration page is selected.
+ * Redirects the logged in user to the option set in form settings if registration page is selected.
  * Donot redirect for admins.
  *
  * @return void
@@ -75,7 +75,8 @@ function ur_registration_template_redirect() {
 		return;
 	}
 
-	$current_user = wp_get_current_user();
+	$current_user    = wp_get_current_user();
+	$current_user_id = $current_user->ID;
 
 	// Donot redirect for admins.
 	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
@@ -88,7 +89,12 @@ function ur_registration_template_redirect() {
 
 		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
 
-			$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
+			$attributes = ur_get_shortcode_attr( $post_content );
+			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
+
+			preg_match_all( '!\d+!', $form_id, $form_id );
+
+			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
 			if ( ! empty( $redirect_url ) ) {
@@ -159,7 +165,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'label'             => '',
 			'description'       => '',
 			'placeholder'       => '',
-			'maxlength'         => false,
+			'size'              => false,
+			'min'               => false,
+			'max'               => false,
 			'required'          => false,
 			'autocomplete'      => false,
 			'id'                => $key,
@@ -192,8 +200,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
 
-		if ( $args['maxlength'] ) {
-			$args['custom_attributes']['maxlength'] = absint( $args['maxlength'] );
+		if ( $args['size'] ) {
+			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
+		}
+
+		if ( $args['min'] ) {
+			$args['custom_attributes']['min'] = absint( $args['min'] );
+		}
+
+		if ( $args['max'] ) {
+			$args['custom_attributes']['max'] = absint( $args['max'] );
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {

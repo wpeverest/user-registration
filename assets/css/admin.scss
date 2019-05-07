@@ -234,7 +234,7 @@
 	right: 0;
 	bottom: 0;
 	min-height: 360px;
-	background-color: $black;
+	background-color: $gray_base;
 	opacity: 0.7;
 	z-index: 99900;
 }
@@ -288,7 +288,7 @@
 			&:focus {
 				background-color: $color_gray_six;
 				border-color: #ccc;
-				color: $black;
+				color: $gray_base;
 			}
 
 			&:focus {
@@ -350,7 +350,18 @@
 	}
 
 	.subsubsub {
-		margin: -8px 0 0;
+		background: #e5e5e5;
+		float: none;
+
+		a {
+			display: block;
+			padding: 7px 10px;
+
+			&.current {
+				color: #fff;
+				background: #475BB2;
+			}
+		}
 	}
 
 	textarea[disabled="disabled"] {
@@ -584,7 +595,7 @@
 				border-radius: 0;
 				margin: 0;
 				display: flex;
-				border-bottom: 2px solid #217dbb;
+				border-bottom: 2px solid $primary_dark;
 				border-top: 0 none;
 				border-right: 0 none;
 				border-left: 0 none;
@@ -993,6 +1004,34 @@
 		display: block;
 	}
 
+	.add, .remove {
+		background: $white;
+		border: 1px solid $color_gray_six;
+		color: $color_gray_two;
+		cursor: pointer;
+		display: flex;
+		flex: 1 0 35px;
+		align-items: center;
+		justify-content: center;
+		height: 35px;
+		max-width: 35px;
+		position: relative;
+
+		&:hover {
+			background: $primary_color;
+			border-color: $primary_color;
+			color: $white;
+		}
+
+		.dashicons {
+			line-height: 22px;
+		}
+	}
+
+	.add {
+		margin-right: 10px;
+	}
+
 	.ur-options-list {
 
 		li {
@@ -1006,28 +1045,6 @@
 
 			input {
 				margin-right: 10px;
-			}
-
-			.add, .remove {
-				background: $white;
-				border: 1px solid $color_gray_six;
-				color: $color_gray_two;
-				display: flex;
-				flex: 1 0 35px;
-				align-items: center;
-				justify-content: center;
-				height: 35px;
-				position: relative;
-
-				&:hover {
-					background: $primary_color;
-					border-color: $primary_color;
-					color: $white;
-				}
-
-				i {
-					line-height: 22px;
-				}
 			}
 
 			.add {
@@ -1053,6 +1070,22 @@
 			}
 		}
 	}
+
+	.urcl-rules {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 15px;
+
+		> div {
+			margin-right: 10px;
+		}
+
+		.urcl-field,
+		.urcl-value {
+			max-width: 32%;
+			flex: 1 0 32%;
+		}
+	}
 }
 
 #sortable {
@@ -1060,9 +1093,48 @@
 }
 
 @media screen and (max-width: 1400px) {
-	.ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content .ur-registered-list .ur-registered-item {
-		font-size: 12px;
+
+	.ur-registered-from {
+
+		.ur-registered-inputs {
+
+			.ur-tabs .ur-tab-content {
+
+				.ur-registered-list {
+
+					.ur-registered-item {
+						font-size: 12px;
+					}
+				}
+			}
+		}
+
+		.urcl-rules {
+
+			.urcl-field {
+				max-width: 61%;
+				flex: 1 0 60%;
+				margin-bottom: 5px;
+			}
+
+			.urcl-value {
+				order: 4;
+				max-width: 87%;
+				flex: 1 0 86%;
+			}
+
+			.add {
+				order: 3;
+				margin-right: 0;
+			}
+
+			.remove {
+				order: 5;
+			}
+		}
 	}
+
+
 }
 
 @media screen and (max-width: 960px) {
@@ -1366,7 +1438,7 @@ img.tips {
 }
 
 .form-settings-tab.active {
-    background: #217dbb;
+    background: $primary_color;
     color: white;
 }
 

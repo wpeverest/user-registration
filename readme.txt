@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.10
+Stable tag: 1.6.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -79,7 +79,11 @@ User Registration can be easily extended with some premium addons.
 
 * [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes.
 
+<<<<<<< HEAD
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Hide/show user registration fields on registration form and account profile or make fields read-only.
+=======
+* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
+>>>>>>> develop
 
 == Installation ==
 
@@ -89,13 +93,17 @@ User Registration can be easily extended with some premium addons.
 
 == Frequently Asked Questions ==
 
-= What is the plugin license? =
+= Do I need to have coding skills to use the User Registration Plugin? =
 
-* This plugin is released under a GPL license.
+No, you don't need any coding skills. One can simply drag and drop fields, arrange them and use built-in shortcodes to display the form.
 
 = Does the plugin work with any WordPress themes?
 
 Yes, the plugin is designed to work with any themes that have been coded following WordPress guidelines.
+
+= How can I access registered users data?
+
+All the users registered via the registration forms and their data can be accessed from the Users menu in the WordPress Dashboard.
 
 == Screenshots ==
 
@@ -113,6 +121,25 @@ Yes, the plugin is designed to work with any themes that have been coded followi
 
 == Changelog ==
 = 1.6.0 - xx/xx/2019 =
+
+= 1.6.0 - 05/07/2019 =
+* Feature - Form Wise Redirection.
+* Feature - Added Number field's Min, Max & Step attribute option along with Custom CSS option.
+* Tweak   - Introducing new User Registration Brand Logo change.
+* Tweak   - Gravatar message in Edit Profile page hide when selected Custom Picture.
+* Tweak   - On Prevent Core Login option enabled redirect Administrator to Dashboard.
+* Tweak   - Setting page's sub-menu design change.
+* Tweak   - Edit profile in My Account page field structure.
+* Tweak   - My Account page design change.
+* Tweak   - Conditional Logic Option design change in Field option.
+* Add     - Form Preview Button.
+* Add     - Hide and Show Password button in Login page.
+* Add     - Introducing Email Confirmation field.
+* Fix     - Undefined index found_avatar in Gravatar.
+* Fix     - Registration form submission Undefined error.
+* Fix     - KeepAlive issue in Copy Shortcode button.
+* Fix     - Lost Password Endpoint conflict.
+* Fix     - Max Length for input field.
 
 = 1.5.10 - 04/05/2019 =
 * Feature - Prevent Core Login and Registration page.

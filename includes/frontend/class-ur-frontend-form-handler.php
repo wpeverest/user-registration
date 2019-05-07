@@ -42,6 +42,7 @@ class UR_Frontend_Form_Handler {
 			$form_data = array();
 		}
 
+		self::match_email( $form_data );
 		self::match_password( $form_data );
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
@@ -335,6 +336,39 @@ class UR_Frontend_Form_Handler {
 	}
 
 	/**
+	 * Match email and confirm email field.
+	 *
+	 * @param  obj &$form_data Form data submitted.
+	 * @return obj $form_data
+	 */
+	private static function match_email( &$form_data ) {
+
+		$confirm_email_value = '';
+		$has_confirm_email   = false;
+		$email               = '';
+
+		foreach ( $form_data as $index => $single_data ) {
+			if ( 'user_confirm_email' == $single_data->field_name ) {
+				$confirm_email_value = $single_data->value;
+				$has_confirm_email   = true;
+				unset( $form_data[ $index ] );
+			}
+			if ( 'user_email' == $single_data->field_name ) {
+				$email = $single_data->value;
+			}
+		}
+
+		if ( $has_confirm_email ) {
+			if ( empty( $confirm_email_value ) ) {
+				array_push( self::$response_array, __( 'Empty confirm email', 'user-registration' ) );
+			} elseif ( strcasecmp( $confirm_email_value, $email ) != 0 ) {
+				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched', 'user-registration' ) ) );
+			}
+		}
+		return $form_data;
+	}
+
+	/**
 	 * Validate password to check if match username or email address.
 	 *
 	 * @param  array $form_field_data Form field data.
@@ -359,7 +393,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		if ( $password_value === $email_value || $password_value === $username_value ) {
-			array_push( self::$response_array, __( '<label>Week Password!</label><br />Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) );
+			array_push( self::$response_array, __( '<label>Weak Password!</label><br />Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) );
 		}
 	}
 }

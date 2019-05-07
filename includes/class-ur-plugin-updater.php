@@ -61,6 +61,13 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	private $errors = array();
 
 	/**
+	 * Plugin Api Key.
+	 *
+	 * @var string
+	 */
+	private $api_key = '';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {

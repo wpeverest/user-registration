@@ -224,6 +224,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'user-registration' ),
 				'version' => UR_VERSION,
 			),
+			'jquery-tiptip'              => array(
+				'src'     => self::get_asset_url( 'assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => '1.3.0',
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );
@@ -325,18 +330,20 @@ class UR_Frontend_Scripts {
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
-					'redirect_url'                     => get_option( 'user_registration_general_setting_redirect_options' ),
 					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
 					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),
 					'message_number_fields'            => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.', 'user-registration' ) ),
 					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_confirm_email_fields'     => get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched.', 'user-registration' ) ),
 					'ursL10n'                          => array(
 						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
 						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+						'hide_password_title'     => __( 'Hide Password', 'user-registration' ),
+						'show_password_title'     => __( 'Show Password', 'user-registration' ),
 					),
 				);
 			break;

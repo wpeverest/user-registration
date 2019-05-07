@@ -97,6 +97,14 @@ abstract class UR_Form_Field {
 			$form_data['size'] = $data['advance_setting']->size;
 		}
 
+		if ( isset( $data['advance_setting']->min ) ) {
+			$form_data['min'] = $data['advance_setting']->min;
+		}
+
+		if ( isset( $data['advance_setting']->max ) ) {
+			$form_data['max'] = $data['advance_setting']->max;
+		}
+
 		if ( isset( $data['advance_setting']->default_value ) ) {
 			$form_data['default'] = $data['advance_setting']->default_value;
 		}

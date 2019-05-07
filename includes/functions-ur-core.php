@@ -98,7 +98,7 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 	function is_ur_lost_password_page() {
 		global $wp;
 
-		return ( is_ur_account_page() && isset( $wp->query_vars['lost-password'] ) );
+		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) );
 	}
 }
 
@@ -325,6 +325,7 @@ function ur_get_field_type( $field_key ) {
 		switch ( $field_key ) {
 
 			case 'user_email':
+			case 'user_confirm_email':
 			case 'email':
 				$field_type = 'email';
 				break;
@@ -434,6 +435,33 @@ function ur_exclude_profile_details_fields() {
 }
 
 /**
+ * Get readonly fields in profile tab
+ *
+ * @return array
+ */
+function ur_readonly_profile_details_fields() {
+	return apply_filters(
+		'user_registration_readonly_profile_fields',
+		array(
+			'user_login'            => array(
+				'message' => __( 'Username can not be changed.', 'user-registration' ),
+			),
+			'user_pass'             => array(
+				'value'   => 'password',
+				'message' => __( 'Passowrd can not be changed.', 'user-registration' ),
+			),
+			'user_confirm_password' => array(
+				'value'   => 'password',
+				'message' => __( 'Confirm password can not be changed.', 'user-registration' ),
+			),
+			'user_confirm_email'    => array(
+				'message' => __( 'Confirm email can not be changed.', 'user-registration' ),
+			),
+		)
+	);
+}
+
+/**
  * @deprecated 1.4.1
  * @return void
  */
@@ -471,6 +499,7 @@ function ur_get_user_field_only() {
 		'user_registration_user_form_fields',
 		array(
 			'user_email',
+			'user_confirm_email',
 			'user_pass',
 			'user_confirm_password',
 			'user_login',
@@ -524,6 +553,7 @@ function ur_get_registered_form_fields() {
 		'user_registration_registered_form_fields',
 		array(
 			'user_email',
+			'user_confirm_email',
 			'user_pass',
 			'user_confirm_password',
 			'user_login',
@@ -664,11 +694,11 @@ function ur_get_general_settings( $id ) {
  * Insert in between the indexes in multidimensional array.
  *
  * @since  1.5.7
- * @param  array $items      An array of items
- * @param  array $new_items  New items to insert inbetween
+ * @param  array  $items      An array of items
+ * @param  array  $new_items  New items to insert inbetween
  * @param  string $after     Index to insert after
  *
- * @return array 			 Ordered array of items.
+ * @return array             Ordered array of items.
  */
 function ur_insert_after_helper( $items, $new_items, $after ) {
 
@@ -676,11 +706,11 @@ function ur_insert_after_helper( $items, $new_items, $after ) {
 	$position = array_search( $after, array_keys( $items ) ) + 1;
 
 	// Insert the new item.
-	$return_items = array_slice( $items, 0, $position, true );
+	$return_items  = array_slice( $items, 0, $position, true );
 	$return_items += $new_items;
 	$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
-    return $return_items;
+	return $return_items;
 }
 
 /**
@@ -803,6 +833,16 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
 			),
 			array(
 				'type'              => 'text',
@@ -1138,11 +1178,13 @@ function check_username( $username ) {
  *
  * @return array $all_forms form id as key and form title as value.
  */
-function ur_get_all_user_registration_form() {
+function ur_get_all_user_registration_form( $post_count = -1 ) {
 
 	$args = array(
-		'post_type' => 'user_registration',
-		'status'    => 'publish',
+		'post_type'   => 'user_registration',
+		'status'      => 'publish',
+		'numberposts' => $post_count,
+		'order'       => 'ASC',
 	);
 
 	$posts_array = get_posts( $args );
@@ -1357,6 +1399,53 @@ function ur_has_date_field( $form_id ) {
 	}
 
 	return false;
+}
+
+/**
+ * Get attributes from the shortcode content.
+ *
+ * @param  $content     Shortcode content.
+ * @return array        Array of attributes within the shortcode.
+ *
+ * @since  1.6.0
+ */
+function ur_get_shortcode_attr( $content ) {
+	$pattern = get_shortcode_regex();
+
+	$keys   = array();
+	$result = array();
+
+	if ( preg_match_all( '/' . $pattern . '/s', $content, $matches ) ) {
+
+		foreach ( $matches[0] as $key => $value ) {
+
+			// $matches[3] return the shortcode attribute as string.
+			// replace space with '&' for parse_str() function.
+			$get = str_replace( ' ', '&', $matches[3][ $key ] );
+			parse_str( $get, $output );
+
+			// Get all shortcode attribute keys.
+			$keys     = array_unique( array_merge( $keys, array_keys( $output ) ) );
+			$result[] = $output;
+		}
+
+		if ( $keys && $result ) {
+
+			// Loop the result array and add the missing shortcode attribute key
+			foreach ( $result as $key => $value ) {
+
+				// Loop the shortcode attribute key
+				foreach ( $keys as $attr_key ) {
+					$result[ $key ][ $attr_key ] = isset( $result[ $key ][ $attr_key ] ) ? $result[ $key ][ $attr_key ] : null;
+				}
+
+				// Sort the array key.
+				ksort( $result[ $key ] );
+			}
+		}
+	}
+
+	return $result;
 }
 
 /**
