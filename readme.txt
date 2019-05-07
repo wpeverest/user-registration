@@ -116,8 +116,6 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
-= 1.6.0 - xx/xx/2019 =
-
 = 1.6.0 - 05/07/2019 =
 * Feature - Form Wise Redirection.
 * Feature - Added Number field's Min, Max & Step attribute option along with Custom CSS option.
