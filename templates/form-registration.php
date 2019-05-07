@@ -31,6 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $frontend       = UR_Frontend::instance();
 $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
+$redirect_url   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_options', '' );
 $template_class = '';
 
 if ( 'Bordered' === $form_template ) {
@@ -116,6 +117,7 @@ do_action( 'user_registration_before_registration_form' );
 
 			<div style="clear:both"></div>
 			<input type="hidden" name="ur-user-form-id" value="<?php echo $form_id; ?>"/>
+			<input type="hidden" name="ur-redirect-url" value="<?php echo $redirect_url;?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 		</form>
 
