@@ -70,7 +70,7 @@ class UR_AJAX {
 			);
 		}
 
-		if ( check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
+		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
