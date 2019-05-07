@@ -51,7 +51,7 @@ class UR_Preview {
 			admin_url( 'admin.php' )
 		);
 
-		$link = '<a class="post-edit-link" href="' . $edit_form_url . '">Edit Form</a>';
+		$link = '<a class="post-edit-link" href="' . $edit_form_url . '">' . __( 'Edit Form', 'user-registration' ) . '</a>';
 		return $link;
 	}
 
