@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.0
-Stable tag: 1.5.10
+Stable tag: 1.6.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -116,6 +116,25 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
+
+= 1.6.0 - 05/07/2019 =
+* Feature - Form Wise Redirection.
+* Feature - Added Number field's Min, Max & Step attribute option along with Custom CSS option.
+* Tweak   - Introducing new User Registration Brand Logo change.
+* Tweak   - Gravatar message in Edit Profile page hide when selected Custom Picture.
+* Tweak   - On Prevent Core Login option enabled redirect Administrator to Dashboard.
+* Tweak   - Setting page's sub-menu design change.
+* Tweak   - Edit profile in My Account page field structure.
+* Tweak   - My Account page design change.
+* Tweak   - Conditional Logic Option design change in Field option.
+* Add     - Form Preview Button.
+* Add     - Hide and Show Password button in Login page.
+* Add     - Introducing Email Confirmation field.
+* Fix     - Undefined index found_avatar in Gravatar.
+* Fix     - Registration form submission Undefined error.
+* Fix     - KeepAlive issue in Copy Shortcode button.
+* Fix     - Lost Password Endpoint conflict.
+* Fix     - Max Length for input field.
 
 = 1.5.10 - 04/05/2019 =
 * Feature - Prevent Core Login and Registration page.
