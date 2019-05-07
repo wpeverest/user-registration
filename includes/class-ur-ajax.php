@@ -62,6 +62,14 @@ class UR_AJAX {
 	 */
 	public static function user_form_submit() {
 
+		if ( is_user_logged_in() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are already logged in.', 'user-registration' ),
+				)
+			);
+		}
+
 		if ( check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
 			wp_send_json_error(
 				array(
