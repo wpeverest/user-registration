@@ -79,11 +79,7 @@ User Registration can be easily extended with some premium addons.
 
 * [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes.
 
-<<<<<<< HEAD
-* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Hide/show user registration fields on registration form and account profile or make fields read-only.
-=======
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
->>>>>>> develop
 
 == Installation ==
 
