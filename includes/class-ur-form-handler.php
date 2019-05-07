@@ -96,8 +96,15 @@ class UR_Form_Handler {
 			// Hook to allow modification of value.
 			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $_POST[ $key ] );
 
+			$disabled = false;
+			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
+				if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
+					$disabled = true;
+				}
+			}
+
 			// Validation: Required fields.
-			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) ) {
+			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
@@ -322,13 +329,16 @@ class UR_Form_Handler {
 					$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 					throw new Exception( $message );
 				} else {
-
-					if ( ! empty( $_POST['redirect'] ) ) {
-						$redirect = $_POST['redirect'];
-					} elseif ( wp_get_raw_referer() ) {
-						$redirect = wp_get_raw_referer();
+					if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+						$redirect = admin_url();
 					} else {
-						$redirect = get_home_url();
+						if ( ! empty( $_POST['redirect'] ) ) {
+							$redirect = esc_url( $_POST['redirect'] );
+						} elseif ( wp_get_raw_referer() ) {
+							$redirect = wp_get_raw_referer();
+						} else {
+							$redirect = get_home_url();
+						}
 					}
 
 					wp_redirect( wp_validate_redirect( apply_filters( 'user_registration_login_redirect', $redirect, $user ), $redirect ) );

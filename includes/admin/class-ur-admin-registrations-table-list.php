@@ -118,10 +118,25 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 			}
 		}
 		$duplicate_nonce = wp_create_nonce( 'user_registration_form_duplicate' . $registration->ID );
-		$duplicate_link  = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&form=' . $registration->ID );
 
-		if ( current_user_can( $post_type_object->cap->edit_post, $registration->ID ) && 'publish' === $post_status ) {
-			$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . __( 'Duplicate', 'user-registration' ) . '</a>';
+		if ( current_user_can( $post_type_object->cap->edit_post, $registration->ID ) ) {
+			$preview_link = add_query_arg(
+				array(
+					'ur_preview' => 'true',
+					'form_id'    => absint( $registration->ID ),
+				),
+				home_url()
+			);
+
+			$duplicate_link = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&form=' . $registration->ID );
+
+			if ( 'trash' !== $post_status ) {
+				$actions['view'] = '<a href="' . esc_url( $preview_link ) . '" rel="bookmark" target="_blank">' . __( 'Preview', 'user-registration' ) . '</a>';
+			}
+
+			if ( 'publish' === $post_status ) {
+				$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . __( 'Duplicate', 'user-registration' ) . '</a>';
+			}
 		}
 
 		$row_actions = array();

@@ -62,7 +62,7 @@ function ur_login_template_redirect() {
 }
 
 /**
- * Redirects the logged in user to the option set in settings if registration page is selected.
+ * Redirects the logged in user to the option set in form settings if registration page is selected.
  * Donot redirect for admins.
  *
  * @return void
@@ -75,7 +75,8 @@ function ur_registration_template_redirect() {
 		return;
 	}
 
-	$current_user = wp_get_current_user();
+	$current_user    = wp_get_current_user();
+	$current_user_id = $current_user->ID;
 
 	// Donot redirect for admins.
 	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
@@ -88,7 +89,12 @@ function ur_registration_template_redirect() {
 
 		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
 
-			$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
+			$attributes = ur_get_shortcode_attr( $post_content );
+			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
+
+			preg_match_all( '!\d+!', $form_id, $form_id );
+
+			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
 			if ( ! empty( $redirect_url ) ) {
@@ -159,7 +165,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			'label'             => '',
 			'description'       => '',
 			'placeholder'       => '',
-			'maxlength'         => false,
+			'size'              => false,
+			'min'               => false,
+			'max'               => false,
 			'required'          => false,
 			'autocomplete'      => false,
 			'id'                => $key,
@@ -192,8 +200,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
 
-		if ( $args['maxlength'] ) {
-			$args['custom_attributes']['maxlength'] = absint( $args['maxlength'] );
+		if ( $args['size'] ) {
+			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
+		}
+
+		if ( $args['min'] ) {
+			$args['custom_attributes']['min'] = absint( $args['min'] );
+		}
+
+		if ( $args['max'] ) {
+			$args['custom_attributes']['max'] = absint( $args['max'] );
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {
@@ -231,11 +247,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox':
-
-				$field_key 		= isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default_value 	= isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
-				$default 	 	= ! empty( $value ) ? $value : $default_value;
-				$options 		= isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$field_key     = isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
+				$default       = ! empty( $value ) ? $value : $default_value;
+				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 				if ( isset( $options ) && array_filter( $options ) ) {
 
@@ -297,14 +312,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select':
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
 
-				$value    = ! empty( $value ) ? $value : $default_value;
+				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
 												// If we have a blank option, select2 needs a placeholder
 					if ( ! empty( $args['placeholder'] ) ) {
-						$options .= '<option value="" selected disabled>'. esc_html( $args['placeholder'] ) .'</option>';
+						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
@@ -353,10 +368,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
-
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';	// Backward compatibility. Modified since 1.5.7
-				$value    = ! empty( $value ) ? $value : $default_value;
-				$label_id = current( array_keys( $args['options'] ) );
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
+				$value         = ! empty( $value ) ? $value : $default_value;
+				$label_id      = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
@@ -440,18 +454,21 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 			$all_meta_value_keys = array_keys( $all_meta_value );
 		}
 
+		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id );
+
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
-					$placeholder 	   = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
-					$options 		   = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+					$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+					$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
 					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
 					$required          = 'yes' == $required ? true : false;
+					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -465,8 +482,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'radio':
 							case 'select':
-								$advanced_options 		 = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
-								$advanced_options  		 = explode( ',', $advanced_options );
+								$advanced_options        = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+								$advanced_options        = explode( ',', $advanced_options );
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
@@ -477,8 +494,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 
 							case 'checkbox':
-								$advanced_options 		 = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
-								$advanced_options 		 = explode( ',', $advanced_options );
+								$advanced_options        = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+								$advanced_options        = explode( ',', $advanced_options );
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
@@ -517,6 +534,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
+						}
+
+						if ( count( $custom_attributes ) > 0 ) {
+							$extra_params['custom_attributes'] = $custom_attributes;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {

@@ -27,30 +27,95 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<?php
-					$gravatar_image     = get_avatar_url( get_current_user_id(), $args = null );
-					$profile_picture_id = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_id', true );
-					if ( $profile_picture_id ) {
-						$image = wp_get_attachment_thumb_url( $profile_picture_id );
-					} else {
-						$image = $gravatar_image;
-					}
-					?>
-					<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>"><br/>
-
-					<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
-					<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
-
-					<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-					<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>
-					<br/>
-					<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
+					<div class="user-registration-profile-header">
+						<div class="user-registration-img-container">
+							<?php
+							$gravatar_image     = get_avatar_url( get_current_user_id(), $args = null );
+							$profile_picture_id = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_id', true );
+							if ( $profile_picture_id ) {
+								$image = wp_get_attachment_thumb_url( $profile_picture_id );
+							} else {
+								$image = $gravatar_image;
+							}
+							?>
+							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
+							<?php
+								$max_size = wp_max_upload_size();
+								$max_size = size_format( $max_size );
+							?>
+							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
+						</div>
+						<header>
+							<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+							<div class="button-group">
+								<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
+								<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
+								<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
+								<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>
+							</div>
+							<?php if ( ! $profile_picture_id ) { ?>
+								<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+							<?php } ?>
+						</header>
+					</div>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
 
-						<?php foreach ( $profile as $key => $field ) : ?>
-							<?php user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] ); ?>
-						<?php endforeach; ?>
+						<?php foreach ( $form_data_array as $data ) { ?>
+							<div class='ur-form-row'>
+							<?php
+							$width = floor( 100 / count( $data ) ) - count( $data );
+
+							foreach ( $data as $grid_key => $grid_data ) {
+								$found_field = false;
+
+								foreach ( $grid_data as $grid_data_key => $single_item ) {
+									$key = 'user_registration_' . $single_item->general_setting->field_name;
+									if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
+										$found_field = true;
+									}
+								}
+								if ( $found_field ) {
+									?>
+									<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>" style="width:<?php echo $width; ?>%;">
+									<?php
+								}
+
+								foreach ( $grid_data as $grid_data_key => $single_item ) {
+									if ( $found_field ) {
+										$key = 'user_registration_' . $single_item->general_setting->field_name;
+										?>
+										<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+											<?php
+											$field           = $profile[ $key ];
+											$readonly_fields = ur_readonly_profile_details_fields();
+											if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
+												$field['custom_attributes'] = array(
+													'readonly' => 'readonly',
+													// 'disabled' => 'disabled',
+												);
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+													$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+												}
+												if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+													$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+													$field['input_class'][]              = 'user-registration-help-tip';
+												}
+											}
+											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
+											?>
+										</div>
+									<?php } ?>
+								<?php } ?>
+
+								<?php if ( $found_field ) { ?>
+									</div>
+								<?php } ?>
+							<?php } ?>
+							</div>
+						<?php } ?>
+
 					</div>
 					<?php do_action( 'user_registration_edit_profile_form' ); ?>
 					<p>

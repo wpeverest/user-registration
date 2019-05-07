@@ -2,23 +2,22 @@
 /**
  * Contains the query functions for UserRegistration which alter the front-end post queries and loops
  *
- * @class    UR_Query
- * @version  1.0.0
- * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
+ * @version 1.0.0
+ * @package UserRegistration\Classes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * UR_Query Class.
  */
 class UR_Query {
 
-	/** @public array Query vars to add to wp */
+	/**
+	 * Query vars to add to wp.
+	 *
+	 * @var array
+	 */
 	public $query_vars = array();
 
 	/**
@@ -40,7 +39,9 @@ class UR_Query {
 	 * Get any errors from querystring.
 	 */
 	public function get_errors() {
-		if ( ! empty( $_GET['ur_error'] ) && ( $error = sanitize_text_field( $_GET['ur_error'] ) ) && ! ur_has_notice( $error, 'error' ) ) {
+		$error = ! empty( $_GET['ur_error'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_error'] ) ) : ''; // WPCS: input var ok, CSRF ok.
+
+		if ( $error && ! ur_has_notice( $error, 'error' ) ) {
 			ur_add_notice( $error, 'error' );
 		}
 	}
@@ -52,22 +53,20 @@ class UR_Query {
 		// Query vars to add to WP.
 		$this->query_vars = array(
 			// My account actions.
-			'edit-password' => get_option( 'user_registration_myaccount_change_password_endpoint', 'edit-password' ),
-			'edit-profile'  => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
-			'lost-password' => get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ),
-			'user-logout'   => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
+			'edit-password'    => get_option( 'user_registration_myaccount_change_password_endpoint', 'edit-password' ),
+			'edit-profile'     => get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ),
+			'ur-lost-password' => get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' ),
+			'user-logout'      => get_option( 'user_registration_logout_endpoint', 'user-logout' ),
 		);
 	}
 
 	/**
 	 * Get page title for an endpoint.
 	 *
-	 * @param  string
+	 * @param  string $endpoint Endpoint key.
 	 * @return string
 	 */
 	public function get_endpoint_title( $endpoint ) {
-		global $wp;
-
 		switch ( $endpoint ) {
 			case 'edit-password':
 				$title = __( 'Change Password', 'user-registration' );
@@ -75,7 +74,7 @@ class UR_Query {
 			case 'edit-profile':
 				$title = __( 'Profile Details', 'user-registration' );
 				break;
-			case 'lost-password':
+			case 'ur-lost-password':
 				$title = __( 'Lost password', 'user-registration' );
 				break;
 			default:
@@ -94,9 +93,9 @@ class UR_Query {
 	public function get_endpoints_mask() {
 		if ( 'page' === get_option( 'show_on_front' ) ) {
 			$page_on_front     = get_option( 'page_on_front' );
-			$myaccount_page_id = get_option( 'user_registration_myaccount_page_id', 4 );
+			$myaccount_page_id = get_option( 'user_registration_myaccount_page_id' );
 
-			if ( in_array( $page_on_front, array( $myaccount_page_id ) ) ) {
+			if ( in_array( $page_on_front, array( $myaccount_page_id ), true ) ) {
 				return EP_ROOT | EP_PAGES;
 			}
 		}
@@ -120,14 +119,14 @@ class UR_Query {
 	/**
 	 * Add query vars.
 	 *
-	 * @access public
-	 * @param array $vars
+	 * @param array $vars Query vars.
 	 * @return array
 	 */
 	public function add_query_vars( $vars ) {
 		foreach ( $this->get_query_vars() as $key => $var ) {
 			$vars[] = $key;
 		}
+
 		return $vars;
 	}
 
@@ -147,6 +146,7 @@ class UR_Query {
 	 */
 	public function get_current_endpoint() {
 		global $wp;
+
 		foreach ( $this->get_query_vars() as $key => $value ) {
 			if ( isset( $wp->query_vars[ $key ] ) ) {
 				return $key;
@@ -161,10 +161,10 @@ class UR_Query {
 	public function parse_request() {
 		global $wp;
 
-		// Map query vars to their keys, or get them if endpoints are not supported
+		// Map query vars to their keys, or get them if endpoints are not supported.
 		foreach ( $this->get_query_vars() as $key => $var ) {
-			if ( isset( $_GET[ $var ] ) ) {
-				$wp->query_vars[ $key ] = $_GET[ $var ];
+			if ( isset( $_GET[ $var ] ) ) { // WPCS: input var ok, CSRF ok.
+				$wp->query_vars[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $var ] ) ); // WPCS: input var ok, CSRF ok.
 			} elseif ( isset( $wp->query_vars[ $var ] ) ) {
 				$wp->query_vars[ $key ] = $wp->query_vars[ $var ];
 			}
@@ -174,8 +174,7 @@ class UR_Query {
 	/**
 	 * Are we currently on the front page?
 	 *
-	 * @param object $q
-	 *
+	 * @param WP_Query $q Query instance.
 	 * @return bool
 	 */
 	private function is_showing_page_on_front( $q ) {
@@ -185,8 +184,7 @@ class UR_Query {
 	/**
 	 * Is the front page a page we define?
 	 *
-	 * @param int $page_id
-	 *
+	 * @param int $page_id Page ID.
 	 * @return bool
 	 */
 	private function page_on_front_is( $page_id ) {
@@ -196,7 +194,7 @@ class UR_Query {
 	/**
 	 * Hook into pre_get_posts to do the main query.
 	 *
-	 * @param object $q query object
+	 * @param WP_Query $q Query instance.
 	 */
 	public function pre_get_posts( $q ) {
 		// We only want to affect the main query.

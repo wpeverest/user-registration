@@ -7,6 +7,7 @@
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
+			this.init_tiptip();
 
 			// Inline validation
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
@@ -14,6 +15,17 @@
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
 				$('.ur-masked-input').inputmask();
+			}
+		},
+		init_tiptip: function () {
+			if( typeof tipTip !== 'undefined' ) {
+				var tiptip_args = {
+					'attribute': 'title',
+					'fadeIn': 50,
+					'fadeOut': 50,
+					'delay': 200,
+				};
+				$('.user-registration-help-tip').tipTip(tiptip_args);
 			}
 		},
 		load_validation: function () {
@@ -380,6 +392,7 @@
 							complete: function (ajax_response) {
 
 								$this.find('.ur-submit-button').find('span').removeClass('ur-front-spinner');
+								var redirect_url = $this.find('input[name="ur-redirect-url"]').val();
 
 								var message = $('<ul class=""/>');
 								var type = 'error';
@@ -418,9 +431,9 @@
 										jQuery('#billing_country').trigger('change');
 										jQuery('#shipping_country').trigger('change');
 
-										if (user_registration_params.redirect_url !== '') {
+										if ( 'undefined' !== typeof redirect_url && redirect_url !== '') {
 											window.setTimeout(function () {
-												window.location = user_registration_params.redirect_url;
+												window.location = redirect_url;
 											}, 1000);
 										} else {
 
@@ -468,6 +481,27 @@
 	$(function () {
 		request_recaptcha_token();
 	});
+
+	$( document ).on( 'click', '.password_preview', function( e ) {
+		e.preventDefault();
+		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
+		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
+		if( $password_field.length > 0 ) {
+			switch( current_task ) {
+				case 'show':
+					$password_field.attr( 'type', 'text' );
+					$(this).removeClass( 'dashicons-hidden' ).addClass( 'dashicons-visibility' );
+					$(this).attr( 'title', ursL10n.hide_password_title );
+					break;
+				case'hide':
+					$password_field.attr( 'type', 'password' );
+					$(this).removeClass( 'dashicons-visibility' ).addClass( 'dashicons-hidden' );
+					$(this).attr( 'title', ursL10n.show_password_title );
+					break;
+			}
+		}
+	} );
+
 }(jQuery));
 
 var google_recaptcha_user_registration;

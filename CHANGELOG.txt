@@ -1,4 +1,30 @@
-= 1.6.0 - XX-XX-2019 =
+= 1.6.0 - 05/07/2019 =
+* Feature - Form Wise Redirection.
+* Feature - Added Number field's Min, Max & Step attribute option along with Custom CSS option.
+* Tweak   - Introducing new User Registration Brand Logo change.
+* Tweak   - Gravatar message in Edit Profile page hide when selected Custom Picture.
+* Tweak   - On Prevent Core Login option enabled redirect Administrator to Dashboard.
+* Tweak   - Setting page's sub-menu design change.
+* Tweak   - Edit profile in My Account page field structure.
+* Tweak   - My Account page design change.
+* Tweak   - Conditional Logic Option design change in Field option.
+* Add     - Form Preview Button.
+* Add     - Hide and Show Password button in Login page.
+* Add     - Introducing Email Confirmation field.
+* Fix     - Undefined index found_avatar in Gravatar.
+* Fix     - Registration form submission Undefined error.
+* Fix     - KeepAlive issue in Copy Shortcode button.
+* Fix     - Lost Password Endpoint conflict.
+* Fix     - Max Length for input field.
+
+= 1.5.10 - 04/05/2019 =
+* Feature - Prevent Core Login and Registration page.
+* Feature - Custom css fields for default fields.
+* Fix - Prevent Dashboard access issue for multiple user roles.
+* Fix - Target blank in anchor tag issue.
+* Dev - Filter hook to modify form fields.
+* Dev - Filter hook to be used in new setting type.
+* Tweak - Bypass validation for read-only fields.
 
 = 1.5.9 - 03/28/2019 =
 * Fix - Profile picture not displaying in My account page.
