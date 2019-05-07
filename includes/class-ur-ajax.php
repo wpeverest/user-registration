@@ -62,7 +62,13 @@ class UR_AJAX {
 	 */
 	public static function user_form_submit() {
 
-		check_ajax_referer( 'user_registration_form_data_save_nonce', 'security' );
+		if ( check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
 
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
