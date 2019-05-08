@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.0
-Stable tag: 1.6.0
+Tested up to: 5.2
+Stable tag: 1.6.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -116,7 +116,10 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
-= 1.6.0 - 05/07/2019 =
+= 1.6.0.1 - 08/05/2019 =
+* Fix - Form wise redirection
+
+= 1.6.0 - 07/05/2019 =
 * Feature - Form Wise Redirection.
 * Feature - Added Number field's Min, Max & Step attribute option along with Custom CSS option.
 * Tweak   - Introducing new User Registration Brand Logo change.
