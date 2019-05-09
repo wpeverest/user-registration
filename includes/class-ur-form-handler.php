@@ -333,7 +333,7 @@ class UR_Form_Handler {
 						$redirect = admin_url();
 					} else {
 						if ( ! empty( $_POST['redirect'] ) ) {
-							$redirect = esc_url( $_POST['redirect'] );
+							$redirect = $_POST['redirect'];
 						} elseif ( wp_get_raw_referer() ) {
 							$redirect = wp_get_raw_referer();
 						} else {
