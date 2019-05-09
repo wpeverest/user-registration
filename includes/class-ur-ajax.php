@@ -92,6 +92,7 @@ class UR_AJAX {
 				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 				$data = json_decode( wp_remote_retrieve_body( $data ) );
 
+				error_log( print_r( $data, true ) );
 				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
 					wp_send_json_error(
 						array(

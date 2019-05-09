@@ -57,6 +57,7 @@ class UR_Shortcode_My_Account {
 			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 			$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 			$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
+			$reg_form_id       = isset( $atts['reg_form_id'] ) ? absint( $atts['reg_form_id'] ) : 0;
 			$message           = apply_filters( 'user_registration_my_account_message', '' );
 
 			if ( ! empty( $message ) ) {
@@ -71,6 +72,8 @@ class UR_Shortcode_My_Account {
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				self::lost_password();
 			} else {
+				ob_start();
+
 				ur_get_template(
 					'myaccount/form-login.php',
 					array(
@@ -78,6 +81,25 @@ class UR_Shortcode_My_Account {
 						'redirect'       => $redirect_url,
 					)
 				);
+
+				$login_form = ob_get_clean();
+
+				if ( 0 < $reg_form_id ) {
+					$form_attr         = array(
+						'id' => $reg_form_id,
+					);
+					$registration_form = UR_Shortcodes::form( $form_attr );
+
+					ur_get_template(
+						'form-login-registration.php',
+						array(
+							'registration_form' => $registration_form,
+							'login_form'        => $login_form,
+						)
+					);
+				} else {
+					echo $login_form;
+				}
 			}
 		} else {
 
