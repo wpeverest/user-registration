@@ -1,4 +1,5 @@
-.wp-core-ui {
+.user-registration,
+.ur-form-container {
 
 	.button-primary {
 		background: $primary_color;
@@ -10,7 +11,7 @@
 		&:focus {
 			background: $primary_dark;
 			border-color: $primary_dark;
-			box-shadow: inset 0 2px 0 $primary_dark;
+			box-shadow: 0 1px 0 $primary_dark;
 		}
 	}
 
@@ -22,9 +23,9 @@
 		&:hover,
 		&:active,
 		&:focus {
-			background: adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
-			border-color: adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
-			box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
+			background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+			border-color: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+			box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
 		}
 	}
 
