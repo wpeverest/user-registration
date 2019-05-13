@@ -1,12 +1,37 @@
-.wp-core-ui .button-primary {
-	background: $primary_color;
-	border-color: $primary_color;
-	box-shadow: 0 1px 0 $primary_color;
+.wp-core-ui {
 
-	&:hover {
-		background: $primary_dark;
-		border-color: $primary_dark;
-		box-shadow: $primary_dark;
+	.button-primary {
+		background: $primary_color;
+		border-color: $primary_color;
+		box-shadow: 0 1px 0 $primary_color;
+
+		&:hover {
+			background: $primary_dark;
+			border-color: $primary_dark;
+			box-shadow: $primary_dark;
+		}
+	}
+
+	.button-secondary {
+		background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+		border-color: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+		box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+
+		&:hover {
+			background: adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
+			border-color: adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
+			box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -30%, $lightness: +60% );
+		}
+	}
+
+	.publishing-action {
+
+		button,
+		input[type='button'],
+		input[type='submit'],
+		.button {
+			margin-right: 5px;
+		}
 	}
 }
 
