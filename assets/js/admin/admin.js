@@ -411,7 +411,7 @@ jQuery(function ($) {
 					},
 					remove_selected_item: function () {
 						var $this = this;
-						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function () {
+						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function ( e ) {
 							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val();
 							$(this).closest('.ur-selected-item ').remove();
 							$this.check_grid();
@@ -421,6 +421,7 @@ jQuery(function ($) {
 							//remove item from conditional logic options
 							jQuery('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
 
+							return false; // To prevent click on whole item.
 						});
 					},
 					clone_selected_item: function () {
@@ -445,6 +446,8 @@ jQuery(function ($) {
 					check_grid: function () {
 						$('.ur-tabs').tabs({ disabled: [1] });
 						$('.ur-tabs').find('a').eq(0).trigger('click');
+						$('.ur-tabs').find( '[aria-controls="ur-tab-field-options"]' ).addClass( "ur-no-pointer" );
+						$('.ur-selected-item').removeClass('ur-item-active');
 					}
 				};
 				builder.init();
