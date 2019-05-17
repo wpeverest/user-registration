@@ -1,6 +1,6 @@
 ### All Submissions:
 
-* [ ] Have you followed the [User Registration Contributing guideline](https://github.com/wpeverest/everest-forms/blob/master/.github/CONTRIBUTING.md)?
+* [ ] Have you followed the [User Registration Contributing guideline](https://github.com/wpeverest/user-registration/blob/contributing-templates/.github/CONTRIBUTING.md)?
 * [ ] Does your code follow the [WordPress' coding standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/)?
 * [ ] Have you checked to ensure there aren't other open [Pull Requests](../pulls) for the same update/change?
 
