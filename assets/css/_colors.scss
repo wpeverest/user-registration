@@ -30,6 +30,6 @@ $color_gray_base: #1a1f33; //hsl(228, 32%, 15%)
 $color_gray: adjust-color($color_gray-base, $saturation: -7%, $lightness: +15% ); //#393e60
 $color_gray_light: adjust-color($color_gray-base, $saturation: -21%, $lightness: +25% ); //#5b5d71
 $color_gray_lighter: adjust-color($color_gray-base, $saturation: -23%, $lightness: +55% ); //#5b5d71
-$color_gray_lighten : adjust-color($color_gray-base, $saturation: -16%, $lightness: +77% ); //#5b5d71
+$color_gray_lighten : adjust-color($color_gray-base, $saturation: -16%, $lightness: +77% ); //#e8e9ee
 $color_gray_light_skin : adjust-color($color_gray-base, $saturation: -10%, $lightness: +82% ); //#5b5d71
 
