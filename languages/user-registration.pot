@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.6.0.1\n"
+"Project-Id-Version: User Registration 1.6.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-05-09 09:01:59+00:00\n"
+"POT-Creation-Date: 2019-06-04 08:26:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1200,7 +1200,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:58
-#: includes/class-ur-emailer.php:390
+#: includes/class-ur-emailer.php:389
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -3449,6 +3449,7 @@ msgid ""
 "out</a>"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/shortcodes/class-ur-shortcode-my-account.php:308
 msgid "Enter a username or email address."
 msgstr ""
@@ -3463,6 +3464,26 @@ msgid "Password reset is not allowed for this user"
 msgstr ""
 
 #: includes/shortcodes/class-ur-shortcode-my-account.php:357
+=======
+#: includes/shortcodes/class-ur-shortcode-my-account.php:193
+msgid "No profile details found."
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-my-account.php:289
+msgid "Enter a username or email address."
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-my-account.php:310
+#: includes/shortcodes/class-ur-shortcode-my-account.php:315
+msgid "Invalid username or email."
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-my-account.php:325
+msgid "Password reset is not allowed for this user"
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-my-account.php:338
+>>>>>>> develop
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 

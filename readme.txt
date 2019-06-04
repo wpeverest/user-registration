@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.6.0.1
+Stable tag: 1.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -116,6 +116,18 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
+
+= 1.6.1 - XX/06/2019 =
+* Fix - Remove escaping in redirect url.
+* Fix - Lost Password Email from header.
+* Fix - Json_decode error on user profile.
+* Fix - Admin can register user.
+* Fix - UI Dragging.
+* Fix - Field option selection in Builder after field deleted.
+* Fix - Sub menu UI.
+* Tweak - Secondary buton design.
+* Tweak - Button status on hover, foucs and active.
+
 = 1.6.0.1 - 08/05/2019 =
 * Fix - Form wise redirection
 

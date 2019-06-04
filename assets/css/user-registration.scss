@@ -249,11 +249,12 @@
 					display: block;
 					position: relative;
 
-					.password_preview {
-						position: absolute;
-						top: 50%;
-						right: 15px;
-						transform: translateY(-50%);
+						.password_preview {
+							color: $color_gray_two;
+							position: absolute;
+							top: 50%;
+							right: 15px;
+							transform: translateY(-50%);
 
 						&.dashicons {
 
