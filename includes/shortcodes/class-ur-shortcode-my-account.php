@@ -57,7 +57,7 @@ class UR_Shortcode_My_Account {
 			$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 			$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 			$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
-			$reg_form_id       = isset( $atts['reg_form_id'] ) ? absint( $atts['reg_form_id'] ) : 0;
+			$form_id           = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
 			$message           = apply_filters( 'user_registration_my_account_message', '' );
 
 			if ( ! empty( $message ) ) {
@@ -84,10 +84,11 @@ class UR_Shortcode_My_Account {
 
 				$login_form = ob_get_clean();
 
-				if ( 0 < $reg_form_id ) {
-					$form_attr         = array(
-						'id' => $reg_form_id,
+				if ( 0 < $form_id ) {
+					$form_attr = array(
+						'id' => $form_id,
 					);
+					array_merge( $form_attr, $atts );
 					$registration_form = UR_Shortcodes::form( $form_attr );
 
 					ur_get_template(
