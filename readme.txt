@@ -118,15 +118,16 @@ All the users registered via the registration forms and their data can be access
 == Changelog ==
 
 = 1.6.1 - 04/06/2019 =
-* Fix - Remove escaping in redirect url.
-* Fix - Lost Password Email from header.
-* Fix - json_decode error on user profile.
-* Fix - Admin can register user.
-* Fix - UI Dragging.
-* Fix - Field option selection in builder after field deleted.
-* Fix - Sub menu UI.
-* Tweak - Secondary button design.
-* Tweak - Button status on hover, foucs and active.
+* Feature - Two Column Login and Registration Form.
+* Tweak   - Secondary button design.
+* Tweak   - Button status on hover, foucs and active.
+* Fix     - Remove escaping in redirect url.
+* Fix     - Lost Password Email from header.
+* Fix     - json_decode error on user profile.
+* Fix     - Admin can register user.
+* Fix     - UI Dragging.
+* Fix     - Field option selection in builder after field deleted.
+* Fix     - Sub menu UI.
 
 = 1.6.0.1 - 08/05/2019 =
 * Fix - Form wise redirection
