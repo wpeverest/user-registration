@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.6.0\n"
+"Project-Id-Version: User Registration 1.6.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-05-08 13:40:22+00:00\n"
+"POT-Creation-Date: 2019-06-04 08:26:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1010,14 +1010,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:96
 msgid ""
-"Hi Admin,\n"
-"\n"
+"Hi Admin,\r\n"
+"\r\n"
 "\t\t\tA new user {{username}} - {{email}} has successfully registered to "
-"your site <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"your site <a href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tPlease review the user role and details at '<b>Users</b>' menu in "
-"your WP dashboard.\n"
-"\n"
+"your WP dashboard.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1046,13 +1046,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
-" \t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+" \t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tPlease wait until the site admin approves your registration. You "
-"will be notified after it is approved.\n"
-"\n"
+"will be notified after it is approved.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1074,13 +1075,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:83
 msgid ""
-"Hi {{username}},\n"
-"\n"
-" \t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+" \t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tPlease click on this verification link "
-"{{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.\n"
-"\n"
+"{{home_url}}/wp-login.php?ur_token={{email_token}} to confirm "
+"registration.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1106,14 +1109,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  "
-"has been approved.\n"
-"\n"
+"has been approved.\r\n"
+"\r\n"
 "\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account details "
-"and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\t\tThank You!"
 msgstr ""
 
@@ -1139,13 +1143,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:89
 msgid ""
-"Hi {{username}},\n"
-"\n"
-"\t\t\t\tYou have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
+"\t\t\t\tYou have registered on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 " \t\t\t\tUnfortunately your registration is denied. Sorry for the "
-"inconvenience.\n"
-"\n"
+"inconvenience.\r\n"
+"\r\n"
 " \t\t\t\tThank You!"
 msgstr ""
 
@@ -1169,15 +1174,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:91
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\tYour registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has "
-"been changed to pending.\n"
-"\n"
-"\t\t\tSorry for the inconvenience.\n"
-"\n"
-"\t\t\tYou will be notified after it is approved.\n"
-"\n"
+"been changed to pending.\r\n"
+"\r\n"
+"\t\t\tSorry for the inconvenience.\r\n"
+"\r\n"
+"\t\t\tYou will be notified after it is approved.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1195,23 +1200,23 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:58
-#: includes/class-ur-emailer.php:390
+#: includes/class-ur-emailer.php:389
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:86
 msgid ""
-"Someone has requested a password reset for the following account:\n"
-"\n"
-"\t\t\tSiteName: {{blog_info}}\n"
-"\t\t\tUsername: {{username}}\n"
-"\n"
+"Someone has requested a password reset for the following account:\r\n"
+"\r\n"
+"\t\t\tSiteName: {{blog_info}}\r\n"
+"\t\t\tUsername: {{username}}\r\n"
+"\r\n"
 "\t\t\tIf this was a mistake, just ignore this email and nothing will "
-"happen.\n"
-"\n"
-"\t\t\tTo reset your password, visit the following address:\n"
-"\t\t\t{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}\n"
-"\n"
+"happen.\r\n"
+"\r\n"
+"\t\t\tTo reset your password, visit the following address:\r\n"
+"\t\t\t{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -1235,14 +1240,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:88
 msgid ""
-"Hi {{username}},\n"
-"\n"
+"Hi {{username}},\r\n"
+"\r\n"
 "\t\t\tYou have successfully completed user registration on <a "
-"href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tPlease visit '<b>My Account</b>' page to edit your account details "
-"and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>.\n"
-"\n"
+"and create your user profile on <a "
+"href=\"{{home_url}}\">{{blog_info}}</a>.\r\n"
+"\r\n"
 "\t\t\tThank You!"
 msgstr ""
 
@@ -3443,20 +3449,24 @@ msgid ""
 "out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:286
+#: includes/shortcodes/class-ur-shortcode-my-account.php:193
+msgid "No profile details found."
+msgstr ""
+
+#: includes/shortcodes/class-ur-shortcode-my-account.php:289
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:307
-#: includes/shortcodes/class-ur-shortcode-my-account.php:312
+#: includes/shortcodes/class-ur-shortcode-my-account.php:310
+#: includes/shortcodes/class-ur-shortcode-my-account.php:315
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:322
+#: includes/shortcodes/class-ur-shortcode-my-account.php:325
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:335
+#: includes/shortcodes/class-ur-shortcode-my-account.php:338
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
