@@ -1,12 +1,42 @@
-.wp-core-ui .button-primary {
-	background: $primary_color;
-	border-color: $primary_color;
-	box-shadow: 0 1px 0 $primary_color;
+.user-registration,
+.ur-form-container {
 
-	&:hover {
-		background: $primary_dark;
-		border-color: $primary_dark;
-		box-shadow: $primary_dark;
+	.button-primary {
+		background: $primary_color;
+		border-color: $primary_color;
+		box-shadow: 0 1px 0 $primary_color;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: $primary_dark;
+			border-color: $primary_dark;
+			box-shadow: 0 1px 0 $primary_dark;
+		}
+	}
+
+	.button-secondary {
+		background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+		border-color: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+		box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+			border-color: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+			box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+		}
+	}
+
+	.publishing-action {
+
+		button,
+		input[type='button'],
+		input[type='submit'],
+		.button {
+			margin-right: 5px;
+		}
 	}
 }
 
@@ -20,6 +50,8 @@
 	word-break: break-word;
 	white-space: normal;
 	width: 200px !important;
+	z-index: 9;
+
 	span {
 		font-size: 14px;
 		line-height: 20px;
