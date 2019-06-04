@@ -154,41 +154,44 @@ class UR_Shortcode_My_Account {
 
 		if ( isset( $form_data[0] ) ) {
 			$form_data = $form_data[0]->post_content;
-		}
-		$form_data_array = json_decode( $form_data );
 
-		if ( gettype( $form_data_array ) != 'array' ) {
-			$form_data_array = array();
-		}
+			$form_data_array = json_decode( $form_data );
 
-		if ( count( $profile ) < 1 ) {
-			return;
-		}
-
-		// Prepare values
-		foreach ( $profile as $key => $field ) {
-			$value                    = get_user_meta( get_current_user_id(), $key, true );
-			$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-			$new_key                  = str_replace( 'user_registration_', '', $key );
-
-			if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
-				$value                    = get_user_meta( get_current_user_id(), ( str_replace( 'user_', '', $new_key ) ), true );
-				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
-			} elseif ( isset( $user_data->$new_key ) && in_array( $new_key, ur_get_user_table_fields() ) ) {
-				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
-
-			} elseif ( isset( $user_data->display_name ) && $key === 'user_registration_display_name' ) {
-				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
+			if ( gettype( $form_data_array ) != 'array' ) {
+				$form_data_array = array();
 			}
-		}
 
-		ur_get_template(
-			'myaccount/form-edit-profile.php',
-			array(
-				'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
-				'form_data_array' => $form_data_array,
-			)
-		);
+			if ( count( $profile ) < 1 ) {
+				return;
+			}
+
+			// Prepare values
+			foreach ( $profile as $key => $field ) {
+				$value                    = get_user_meta( get_current_user_id(), $key, true );
+				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
+				$new_key                  = str_replace( 'user_registration_', '', $key );
+
+				if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+					$value                    = get_user_meta( get_current_user_id(), ( str_replace( 'user_', '', $new_key ) ), true );
+					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
+				} elseif ( isset( $user_data->$new_key ) && in_array( $new_key, ur_get_user_table_fields() ) ) {
+					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
+
+				} elseif ( isset( $user_data->display_name ) && $key === 'user_registration_display_name' ) {
+					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
+				}
+			}
+
+			ur_get_template(
+				'myaccount/form-edit-profile.php',
+				array(
+					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
+					'form_data_array' => $form_data_array,
+				)
+			);
+		} else {
+			echo '<h1>' . esc_html__( 'No profile details found.', 'user-registration' ) . '</h1>';
+		}
 	}
 
 	/**
