@@ -190,7 +190,7 @@ class UR_Shortcode_My_Account {
 				)
 			);
 		} else {
-			echo esc_html__( 'No profile details found.', 'user-registration' );
+			echo '<h1>' . esc_html__( 'No profile details found.', 'user-registration' ) . '</h1>';
 		}
 	}
 
