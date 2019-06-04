@@ -386,7 +386,6 @@ class UR_Emailer {
 		// Get name value pair to replace smart tag.
 		$name_value = self::status_change_emails_smart_tags( $email );
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		$subject = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
 		$message = new UR_Settings_Reset_Password_Email();
 		$message = $message->ur_get_reset_password_email();
@@ -411,7 +410,7 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
 		if ( 'yes' == get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
-			wp_mail( $email, $subject, $message, $headers );
+			wp_mail( $email, $subject, $message, self::ur_get_header() );
 			return true;
 		}
 
