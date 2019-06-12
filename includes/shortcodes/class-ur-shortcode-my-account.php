@@ -40,17 +40,6 @@ class UR_Shortcode_My_Account {
 		global $wp, $post;
 		wp_enqueue_script( 'jquery-tiptip' );
 		wp_enqueue_script( 'user-registration' );
-		wp_enqueue_media();
-		wp_enqueue_script( 'ur-my-account' );
-		wp_localize_script(
-			'ur-my-account',
-			'ur_my_account_params',
-			array(
-				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
-				'select_image'     => __( 'Select Image', 'user-registration' ),
-				'current_user_can' => current_user_can( 'edit_others_posts' ),
-			)
-		);
 
 		if ( ! is_user_logged_in() ) {
 
@@ -157,6 +146,17 @@ class UR_Shortcode_My_Account {
 	 * Edit profile details page.
 	 */
 	public static function edit_profile() {
+		wp_enqueue_media();
+		wp_enqueue_script( 'ur-my-account' );
+		wp_localize_script(
+			'ur-my-account',
+			'ur_my_account_params',
+			array(
+				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
+				'select_image'     => __( 'Select Image', 'user-registration' ),
+				'current_user_can' => current_user_can( 'edit_others_posts' ),
+			)
+		);
 
 		$user_id = get_current_user_id();
 		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
