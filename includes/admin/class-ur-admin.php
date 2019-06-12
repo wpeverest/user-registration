@@ -28,6 +28,7 @@ class UR_Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
+		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			new UR_Admin_User_List_Manager();
@@ -180,6 +181,43 @@ class UR_Admin {
 				</div>
 			</div>
 		<?php
+	}
+
+	/**
+	 * Check for new user by read time.
+	 *
+	 * @param array $response Heartbeat response data to pass back to front end.
+	 * @param array $data Data received from the front end (unslashed).
+	 */
+	public function new_user_live_notice( $response, $data ) {
+
+		if ( empty( $data['user_registration_new_user_notice'] ) ) {
+			return $response;
+		}
+
+		$read_time = get_option( 'user_registration_users_listing_viewed' );
+		if ( ! $read_time ) {
+			$now = date( 'Y-m-d h:i:s' );
+			update_option( 'user_registration_users_listing_viewed', $now );
+			$read_time = $now;
+		}
+
+		$user_args  = array(
+			'meta_key'    => 'ur_form_id',
+			'count_total' => true,
+			'date_query'  => array(
+				array(
+					'after'     => $read_time,
+					'inclusive' => false,
+				),
+			),
+		);
+		$user_query = new WP_User_Query( $user_args );
+		$user_count = $user_query->get_total();
+
+		$response['user_registration_new_user_notice'] = '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . $user_count . ( ( $user_count === 1 ) ? __( ' new User', 'user-registration' ) : __( ' new Users', 'user-registration' ) ) . __( ' registered.', 'user-registration' ) . '</p></div>';
+		$response['user_registration_new_user_count']  = $user_count;
+		return $response;
 	}
 }
 

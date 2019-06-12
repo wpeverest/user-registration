@@ -31,6 +31,7 @@ class UR_Admin_User_List_Manager {
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		add_action( 'admin_notices', array( $this, 'display_admin_notices' ), 99 );
 		add_action( 'admin_notices', array( $this, 'pending_users_notices' ) );
+		add_action( 'admin_notices', array( $this, 'new_users_notices' ) );
 
 		// Functions about users listing.
 		add_action( 'restrict_manage_users', array( $this, 'add_status_filter' ) );
@@ -144,6 +145,42 @@ class UR_Admin_User_List_Manager {
 
 		if ( count( $users ) > 0 ) {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . admin_url( 'users.php' ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
+		}
+	}
+
+	/**
+	 * Display a notice to admin notifying the new registered users.
+	 */
+	public function new_users_notices() {
+
+		$screen    = get_current_screen();
+		$read_time = get_option( 'user_registration_users_listing_viewed' );
+		$now       = date( 'Y-m-d h:i:s' );
+
+		if ( ! $read_time ) {
+			update_option( 'user_registration_users_listing_viewed', $now );
+			$read_time = $now;
+		}
+
+		if ( 'users' === $screen->id ) {
+			update_option( 'user_registration_users_listing_viewed', $now );
+		}
+
+		$user_args  = array(
+			'meta_key'    => 'ur_form_id',
+			'count_total' => true,
+			'date_query'  => array(
+				array(
+					'after'     => $read_time,
+					'inclusive' => false,
+				),
+			),
+		);
+		$user_query = new WP_User_Query( $user_args );
+		$user_count = $user_query->get_total();
+
+		if ( 0 < $user_count && 'users' === $screen->id ) {
+			echo '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . $user_count . ( ( $user_count === 1 ) ? __( ' new User', 'user-registration' ) : __( ' new Users', 'user-registration' ) ) . __( ' registered.', 'user-registration' ) . '</p></div>';
 		}
 	}
 
