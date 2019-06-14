@@ -137,6 +137,12 @@ jQuery(function ($) {
 			$( 'body' ).removeClass( 'ur-full-screen-mode' );
 		}
 	} );
+
+	$( document ).on( 'keyup', function( e ) {
+		if( 'Escape' === e.key ) {
+			$( '#ur-full-screen-mode.opened' ).trigger( 'click' );
+		}
+	} );
 });
 
 (function ($, user_registration_admin_data) {
