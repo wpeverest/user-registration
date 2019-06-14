@@ -1501,3 +1501,55 @@ img.tips {
 		}
 	}
 }
+
+.ur-form-container {
+	#ur-full-screen-mode {
+		&.closed {
+			.ur-fs-close-label{
+				display:none;
+			}
+		}
+		&.opened {
+			.ur-fs-open-label {
+				display:none;
+			}
+		}
+	}
+}
+
+body.ur-full-screen-mode {
+	margin-top: -32px;
+
+	#wpwrap{
+		#wpcontent{
+			margin-left: 0;
+			padding-left: 0;
+
+			#wpadminbar{
+				display: none;
+			}
+
+			#wpbody{
+				.ur-form-container {
+					margin: 0;
+
+					#menu-management-liquid {
+						margin-top: 0;
+
+						.menu-edit {
+							margin-bottom: 0;
+							box-shadow: none;
+							border-left: 0;
+							border-right: 0;
+							border-top: 0;
+						}
+					}
+				}
+			}
+		}
+
+		#adminmenumain{
+			display: none;
+		}
+	}
+}

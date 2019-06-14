@@ -120,6 +120,23 @@ jQuery(function ($) {
 			$('#save_form_footer').eq(0).trigger('click');
 		}
 	});
+
+	$( '#ur-full-screen-mode' ).on( 'click', function(e) {
+		e.preventDefault();
+		var $this = $( this );
+
+		if( $this.hasClass( 'closed' ) ) {
+			$this.removeClass( 'closed' );
+			$this.addClass( 'opened' );
+
+			$( 'body' ).addClass( 'ur-full-screen-mode' );
+		} else {
+			$this.removeClass( 'opened' );
+			$this.addClass( 'closed' );
+
+			$( 'body' ).removeClass( 'ur-full-screen-mode' );
+		}
+	} );
 });
 
 (function ($, user_registration_admin_data) {
