@@ -110,10 +110,7 @@
 }
 
 .user-registration_page_add-new-registration {
-
 	#post-body {
-		background-color: $white;
-
 		.updated,
 		.error {
 			margin: 0;
@@ -153,28 +150,37 @@
 	}
 
 	#menu-management-liquid {
-		margin-top: 23px;
+		margin-top: 15px;
 	}
 
 	.postbox p.submit {
 		margin-bottom: 0;
 	}
 
+	#nav-menu-header {
+		background-color: $white;
+	}
+
 	.major-publishing-actions {
 		clear: both;
 		padding: 10px 0;
 		line-height: 28px;
+
 		.publishing-action {
 			text-align: right;
 			float: right;
 		}
+
 		.form-invalid {
 			padding-left: 4px;
 			margin-left: -4px;
 		}
+
 		.ur-form-name {
 			width: 25%;
+			margin-right: 6px;
 		}
+
 		#copy-shortcode {
 		    margin-left: -5px;
 		    border-radius: 0 3px 3px 0;
@@ -585,12 +591,13 @@
 	.ur-registered-inputs {
 		width: 35%;
 		background-color: $color_gray_ten;
+
 		.ur-tabs {
 			border: 0 none;
-			background-color: transparent;
 			padding: 0;
 			font-family: Roboto, sans-serif;
 			font-size: 14px;
+
 			.ur-tab-lists {
 				background-color: transparent;
 				background-image: none;
@@ -602,6 +609,7 @@
 				border-top: 0 none;
 				border-right: 0 none;
 				border-left: 0 none;
+
 				li {
 					background-color: transparent;
 					background-image: none;
@@ -612,13 +620,16 @@
 					float: none;
 					display: inline-block;
 					border: 0;
+
 					&.active {
 						margin-bottom: 0;
 						padding-bottom: 0;
 					}
+
 					&.ui-state-disabled {
 						opacity: 1;
 					}
+
 					a {
 						float: none;
 						text-decoration: none;
@@ -627,12 +638,14 @@
 						display: block;
 						color: $color_gray_two;
 						background-color: transparent;
-						padding: 5px 15px;
+						padding: 8px 15px;
 						font-weight: 500;
 						cursor: pointer;
+
 						&:focus {
 							box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent;
 						}
+
 						&.active {
 							background-color: $primary_dark;
 							color: $white;
@@ -1520,6 +1533,10 @@ img.tips {
 body.ur-full-screen-mode {
 	margin-top: -32px;
 
+	#wpbody-content{
+		padding-bottom: 45px;
+	}
+
 	#wpwrap{
 		#wpcontent{
 			margin-left: 0;
@@ -1530,6 +1547,10 @@ body.ur-full-screen-mode {
 			}
 
 			#wpbody{
+				.ur-tab-content {
+					padding: 20px;
+				}
+
 				.ur-form-container {
 					margin: 0;
 
@@ -1551,5 +1572,13 @@ body.ur-full-screen-mode {
 		#adminmenumain{
 			display: none;
 		}
+	}
+
+	#menu-management {
+		margin-top: 0;
+	}
+
+	#wpfooter {
+		margin-left: 0;
 	}
 }
