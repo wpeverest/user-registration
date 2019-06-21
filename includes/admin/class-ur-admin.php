@@ -215,7 +215,7 @@ class UR_Admin {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
-		$response['user_registration_new_user_notice'] = '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . $user_count . ( ( $user_count === 1 ) ? __( ' new User', 'user-registration' ) : __( ' new Users', 'user-registration' ) ) . __( ' registered.', 'user-registration' ) . '</p></div>';
+		$response['user_registration_new_user_notice'] = '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p>' . sprintf( __( '<strong>User Registration:</strong> %1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) ) . '</p></div>';
 		$response['user_registration_new_user_count']  = $user_count;
 		return $response;
 	}

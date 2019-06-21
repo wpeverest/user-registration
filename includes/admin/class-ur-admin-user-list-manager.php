@@ -179,8 +179,8 @@ class UR_Admin_User_List_Manager {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
-		if ( 0 < $user_count && 'users' === $screen->id ) {
-			echo '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . $user_count . ( ( $user_count === 1 ) ? __( ' new User', 'user-registration' ) : __( ' new Users', 'user-registration' ) ) . __( ' registered.', 'user-registration' ) . '</p></div>';
+		if ( $user_count && 'users' === $screen->id ) {
+			echo '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p>' . sprintf( __( '<strong>User Registration:</strong> %1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) ) . '</p></div>';
 		}
 	}
 
