@@ -25,6 +25,7 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
+		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
@@ -184,6 +185,14 @@ class UR_Admin {
 	}
 
 	/**
+	 * Mark the read time of the user list table.
+	 */
+	public function live_user_read() {
+
+		$now = date( 'Y-m-d h:i:s' );
+		update_option( 'user_registration_users_listing_viewed', $now );
+	}
+	/**
 	 * Check for new user by read time.
 	 *
 	 * @param array $response Heartbeat response data to pass back to front end.
@@ -215,8 +224,8 @@ class UR_Admin {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
-		$response['user_registration_new_user_notice'] = '<div id="new-user-live-notice" class="notice notice-success is-dismissible"><p>' . sprintf( __( '<strong>User Registration:</strong> %1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) ) . '</p></div>';
-		$response['user_registration_new_user_count']  = $user_count;
+		$response['user_registration_new_user_message'] = sprintf( __( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
+		$response['user_registration_new_user_count']   = $user_count;
 		return $response;
 	}
 }

@@ -18,29 +18,38 @@ jQuery(function ($) {
 		handleHeartbeatResponse: function() {
 			$( document ).on( 'heartbeat-tick', function ( event, data ) {
 
-				if ( typeof data.user_registration_new_user_count === 'undefined' ) {
+				var $user_menu = $( '#menu-users .wp-menu-name' ),
+					$user_list = $( 'body.users-php .wp-list-table.users' ),
+					columnsCount = $user_list.find( 'thead tr:first-child td, thead tr:first-child th' ).length;
+
+				if ( typeof data.user_registration_new_user_count === 'undefined' || ! $user_list ) {
 					return;
 				}
 
-				var $user_menu = $( '#menu-users .wp-menu-name' );
-
 				if( data.user_registration_new_user_count > 0 ) {
-					if( $user_menu.find( '.user-registration' ).length > 0 ) {
-						$user_menu.find( '.user-registration .user-count' ).text( data.user_registration_new_user_count );
-					} else {
+
+					if( ! $user_menu.find( '.user-registration' ).length ) {
 						$user_menu.append( '<span class="user-registration awaiting-mod"><span class="user-count">' + data.user_registration_new_user_count + '</span></span>' );
 					}
 
-					if( $( 'body' ).hasClass( 'users-php' ) ) {
-						if( $( '#new-user-live-notice' ).length > 0 ) {
-							$( '#new-user-live-notice' ).replaceWith( data.user_registration_new_user_notice );
-						} else {
-							$( '#wpbody-content .wrap .wp-header-end' ).after( data.user_registration_new_user_notice );
-						}
+					if( ! $user_list.find( 'tr.ur-user-notification' ).length ) {
+						$user_list.find( 'thead' ).append( '<tr class="ur-user-notification"><td colspan="' + columnsCount + '"><a href="javascript:void()" onClick="window.location.reload(true);"></a></td></tr>' );
 					}
+
+					$user_menu.find( '.user-registration .user-count' ).text( data.user_registration_new_user_count );
+
+					$user_list
+						.find( '.ur-user-notification a' )
+						.html( data.user_registration_new_user_message )
+						.slideDown( {
+							duration: 500,
+							start: function () {
+								$( this ).css( 'display', 'block' );
+							}
+						} );
 				} else {
 					$user_menu.find( '.user-registration' ).remove();
-					$( '#new-user-live-notice' ).remove();
+					$user_list.find( 'tr.ur-user-notification' ).remove();
 				}
 
 				wp.heartbeat.interval( 'standard' );
