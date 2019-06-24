@@ -815,6 +815,13 @@
 							}
 						}
 
+						.ur-input-type-signature {
+							canvas {
+								background: transparentize($white, 0.5);
+								border: 1px solid $color_gray_six;
+							}
+						}
+
 						&:last-child {
 							margin-bottom: 0;
 						}
