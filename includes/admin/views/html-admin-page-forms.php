@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div id="nav-menu-header">
 					<div class="ur-brand-logo">
-						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>" alt="">
+						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
 					</div>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										value='[user_registration_form id=<?php echo '"' . $post_data[0]->ID . '"'; ?>]'
 										class=" code" size="35">
 
-									<button id="copy-shortcode" class="button button-primary ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+									<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
 										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
 											<path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/>
 										</svg>
@@ -83,21 +83,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							</nav>
 						</div>
-						<div class="ur-form-name-wrapper" >
-							<?php
-							$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : '';
-							?>
-							<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
-						</div>
-						<?php
-						if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
-							$this->get_edit_form_field( $post_data );
-						} else {
-							?>
-							<div class="ur-selected-inputs">
-
+						<div class='ur-builder-wrapper'>
+							<div class="ur-form-name-wrapper" >
+								<?php
+								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : '';
+								?>
+								<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
 							</div>
-						<?php } ?>
+							<?php
+							if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
+								$this->get_edit_form_field( $post_data );
+							} else {
+								?>
+								<div class="ur-selected-inputs">
+
+								</div>
+							<?php } ?>
+						</div>
 					</div>
 				</div><!-- /#post-body -->
 				<div id="nav-menu-footer">

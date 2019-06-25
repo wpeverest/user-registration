@@ -161,36 +161,56 @@
 		background-color: $white;
 		display: flex;
 		align-items: center;
-	}
 
-	.major-publishing-actions {
-		clear: both;
-		padding: 10px 0;
-		line-height: 28px;
+		.ur-brand-logo {
+			border-right: 1px solid $color_gray_five;
+			margin: 12px 0;
 
-		.publishing-action {
-			text-align: right;
-			float: right;
+			img {
+				width: 32px;
+				padding: 0 8px;
+				margin-right: 8px;
+			}
 		}
 
-		.form-invalid {
-			padding-left: 4px;
-			margin-left: -4px;
-		}
+		.major-publishing-actions {
+			clear: both;
+			padding: 10px 0;
+			line-height: 28px;
+			margin-left: auto;
 
-		.ur-form-name {
-			width: 25%;
-			margin-right: 6px;
-		}
+			.publishing-action {
+				text-align: right;
+				float: right;
 
-		#copy-shortcode {
-		    margin-left: -5px;
-		    border-radius: 0 3px 3px 0;
+				input {
+					&.code {
+						width: 265px;
+						height: 30px;
+						padding: 0 6px;
+					}
+				}
+			}
 
-		    svg {
-		    	fill: #ffffff;
-		    	margin-top: 4px;
-		    }
+			.form-invalid {
+				padding-left: 4px;
+				margin-left: -4px;
+			}
+
+			.ur-form-name {
+				width: 25%;
+				margin-right: 6px;
+			}
+
+			#copy-shortcode {
+				margin-left: -5px;
+				border-radius: 0 3px 3px 0;
+
+				svg {
+					fill: #ffffff;
+					margin-top: 4px;
+				}
+			}
 		}
 	}
 
@@ -720,13 +740,38 @@
 			}
 		}
 	}
-	.ur-selected-inputs {
-		width: 70%;
-		box-sizing: border-box;
+
+	.ur-builder-wrapper {
+		flex: 1;
 		border-left: 1px solid $color_gray_six;
-		padding: 20px;
 		height: calc(100vh - 44px);
 		overflow-y: auto;
+
+		.ur-form-name-wrapper {
+			margin-left: 12px;
+			margin-top: 13px;
+
+			input{
+				color: $gray_base;
+				background: none;
+				font-size: 20px;
+				width: fit-content;
+				height: auto;
+				padding: 4px 8px;
+				border-color: transparent;
+
+				&:hover,
+				&:focus {
+					background: $white;
+					border-color: $color_gray_six;
+				}
+			}
+		}
+	}
+
+	.ur-selected-inputs {
+		box-sizing: border-box;
+		padding: 20px;
 
 		.ur-single-row {
 			background-color: $color_gray_eight;
