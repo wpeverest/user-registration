@@ -48,6 +48,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</li>
 									<li class="ur-no-pointer"><a href="#ur-tab-field-options" class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 									</li>
+
+									<?php do_action( 'user_registration_form_bulder_tabs' ); // TODO:: Needs refactor. Move after field-settings and sort.
+									?>
+
 									<li><a href="#ur-tab-field-settings"
 										   class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
 									</li>
@@ -76,11 +80,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 													<?php ur_admin_form_settings( $form_id ); ?>
 												</div>
 											<?php
-											do_action( 'user_registration_after_form_settings', $form_id );
+												do_action( 'user_registration_after_form_settings', $form_id );
 											?>
 									</form>
-
 								</div>
+
+								<?php do_action( 'user_registration_form_bulder_content', $form_id ) ; ?>
 							</nav>
 						</div>
 						<div class='ur-builder-wrapper'>
@@ -104,6 +109,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div><!-- /#post-body -->
 				<div id="nav-menu-footer">
+					<?php do_action( 'user_registration_form_builder_footer' );?>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
 							<input type="button" name="save_form" id="save_form_footer"

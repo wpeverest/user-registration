@@ -19,9 +19,7 @@ jQuery(function ($) {
 	/**
 	 * Append form settings to fileds section.
 	 */
-	var selector = $('.ur-tab-lists').find('li').last(); // Selector: Form settings tab.
-
-	$(selector).on('click', function () {
+	$(document).on('click', '.ur-tab-lists li[aria-controls="ur-tab-field-settings"]', function () {
 		var fields_panel = $('.ur-selected-inputs');
 
 		// Empty fields panel.
@@ -216,6 +214,8 @@ jQuery(function ($) {
 						$this.append(single_row);
 						$this.find('.ur-add-new-row').remove();
 						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle"></button>');
+						var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
+						$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
 						events.render_draggable_sortable();
 						builder.manage_empty_grid();
 						if (user_registration_admin_data.is_edit_form === '1') {
@@ -555,6 +555,10 @@ jQuery(function ($) {
 
 		var form_setting_data = $('#ur-field-settings').serializeArray();
 
+		/** TODO:: Hanlde from multistep forms add-on if possible. */
+		var multistep_page_setting = $('#ur-multi-step-page-settings').serializeArray();
+		/** End Multistep form code. */
+
 		var data = {
 			action: 'user_registration_form_save_action',
 			security: user_registration_admin_data.ur_form_save,
@@ -562,9 +566,11 @@ jQuery(function ($) {
 				form_data: JSON.stringify(form_data),
 				form_name: $('#ur-form-name').val(),
 				form_id: ur_form_id,
-				form_setting_data: form_setting_data
+				form_setting_data: form_setting_data,
+				multistep_page_setting: multistep_page_setting,
 			}
 		};
+
 		$.ajax({
 			url: user_registration_admin_data.ajax_url,
 			data: data,

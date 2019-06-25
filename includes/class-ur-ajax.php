@@ -269,7 +269,7 @@ class UR_AJAX {
 				ur_update_form_settings( $post_data_setting, $post_id );
 			}
 
-			add_filter( 'content_save_pre', 'wp_targeted_link_rel' );
+			do_action( 'user_registration_after_form_settings_save', $_POST['data'] );
 
 			wp_send_json_success(
 				array(
