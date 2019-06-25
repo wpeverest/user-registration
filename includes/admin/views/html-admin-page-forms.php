@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div id="nav-menu-header">
 					<div class="major-publishing-actions wp-clearfix">
+						<div class="ur-brand-logo">
+							<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>" alt="">
+						</div>
 						<label class="ur-form-name-label"
 							   for="ur-form-name"><?php esc_html_e( 'Form Name', 'user-registration' ); ?></label>
 								<?php $form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : ''; ?>
