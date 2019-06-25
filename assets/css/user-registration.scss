@@ -243,6 +243,20 @@
 				padding: 5px 20px;
 			}
 
+			.uraf-canvas-wrap {
+				position: relative;
+
+				.uraf-signature-reset {
+					position: absolute;
+					top: 5px;
+					right: 5px;
+
+					&:hover {
+						color: $color_danger;
+					}
+				}
+			}
+
 			.hide_show_password {
 
 				input[type="password"] {
