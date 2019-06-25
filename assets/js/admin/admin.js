@@ -525,56 +525,69 @@ jQuery(function ($) {
 		}
 
 		$('.ur_save_form_action_button').on('click', function () {
-			var validation_response = get_validation_status();
-			if (validation_response.validation_status === false) {
-				show_message(validation_response.message);
-				return;
-			}
-
-			var form_data = get_form_data();
-			var ur_form_id = $('#ur_form_id').val();
-			var ur_form_id_localization = user_registration_admin_data.post_id;
-			if (ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0)) {
-				ur_form_id = 0;
-			}
-
-			var form_setting_data = $('#ur-field-settings').serializeArray();
-
-			var data = {
-				action: 'user_registration_form_save_action',
-				security: user_registration_admin_data.ur_form_save,
-				data: {
-					form_data: JSON.stringify(form_data),
-					form_name: $('#ur-form-name').val(),
-					form_id: ur_form_id,
-					form_setting_data: form_setting_data
-				}
-			};
-			$.ajax({
-				url: user_registration_admin_data.ajax_url,
-				data: data,
-				type: 'POST',
-				beforeSend: function () {
-					var spinner = '<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
-					$('.ur_save_form_action_button').closest('.publishing-action').append(spinner);
-					$('.ur-notices').remove();
-				},
-				complete: function (response) {
-					$('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').remove();
-					if (response.responseJSON.success === true) {
-						var success_message = i18n_admin.i18n_form_successfully_saved;
-						show_message(success_message, 'success');
-						var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
-						window.location = location;
-					} else {
-						var error = response.responseJSON.data.message;
-						show_message(error);
-					}
-				}
-			});
+			ur_save_form();
 		});
 
+		$(window).on( 'keydown', function(event) {
+			if (event.ctrlKey || event.metaKey) {
+				if( 's' === String.fromCharCode(event.which).toLowerCase() ) {
+					event.preventDefault();
+					ur_save_form();
+					return false;
+				}
+			}
+		});
 	});
+
+	function ur_save_form() {
+		var validation_response = get_validation_status();
+		if (validation_response.validation_status === false) {
+			show_message(validation_response.message);
+			return;
+		}
+
+		var form_data = get_form_data();
+		var ur_form_id = $('#ur_form_id').val();
+		var ur_form_id_localization = user_registration_admin_data.post_id;
+		if (ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0)) {
+			ur_form_id = 0;
+		}
+
+		var form_setting_data = $('#ur-field-settings').serializeArray();
+
+		var data = {
+			action: 'user_registration_form_save_action',
+			security: user_registration_admin_data.ur_form_save,
+			data: {
+				form_data: JSON.stringify(form_data),
+				form_name: $('#ur-form-name').val(),
+				form_id: ur_form_id,
+				form_setting_data: form_setting_data
+			}
+		};
+		$.ajax({
+			url: user_registration_admin_data.ajax_url,
+			data: data,
+			type: 'POST',
+			beforeSend: function () {
+				var spinner = '<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
+				$('.ur_save_form_action_button').closest('.publishing-action').append(spinner);
+				$('.ur-notices').remove();
+			},
+			complete: function (response) {
+				$('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').remove();
+				if (response.responseJSON.success === true) {
+					var success_message = i18n_admin.i18n_form_successfully_saved;
+					show_message(success_message, 'success');
+					var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+					window.location = location;
+				} else {
+					var error = response.responseJSON.data.message;
+					show_message(error);
+				}
+			}
+		});
+	}
 	function show_message(message, type) {
 		var message_string;
 		if (type === 'success') {
