@@ -159,6 +159,8 @@
 
 	#nav-menu-header {
 		background-color: $white;
+		display: flex;
+		align-items: center;
 	}
 
 	.major-publishing-actions {
