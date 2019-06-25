@@ -49,7 +49,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li class="ur-no-pointer"><a href="#ur-tab-field-options" class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 									</li>
 
-									<?php do_action( 'user_registration_form_bulder_tabs' ); // TODO:: Needs refactor. Move after field-settings and sort.
+									<?php
+									do_action( 'user_registration_form_bulder_tabs' ); // TODO:: Needs refactor. Move after field-settings and sort.
 									?>
 
 									<li><a href="#ur-tab-field-settings"
@@ -85,7 +86,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</form>
 								</div>
 
-								<?php do_action( 'user_registration_form_bulder_content', $form_id ) ; ?>
+								<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
 							</nav>
 						</div>
 						<div class='ur-builder-wrapper'>
@@ -93,7 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php
 								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : '';
 								?>
-								<label for="ur-form-name"><?php echo $form_title; ?><span class="ur-edit-form-name dashicons dashicons-edit"></span></label>
+								<label for="ur-form-name"><span class="ur-edit-form-name dashicons dashicons-edit"></span></label>
 								<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
 							</div>
 							<?php
@@ -109,7 +110,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div><!-- /#post-body -->
 				<div id="nav-menu-footer">
-					<?php do_action( 'user_registration_form_builder_footer' );?>
+					<?php do_action( 'user_registration_form_builder_footer' ); ?>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
 							<input type="button" name="save_form" id="save_form_footer"

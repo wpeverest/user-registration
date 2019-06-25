@@ -4,18 +4,6 @@
  */
 jQuery(function ($) {
 
-	// Form name handle.
-	var $form_name_wrapper = $( '.ur-form-container .ur-form-name-wrapper' );
-	$form_name_wrapper.find( 'label' ).on( 'click', function( e ) {
-		$( this ).hide();
-		$( this ).siblings( 'input#ur-form-name' ).show();
-	} );
-
-	$form_name_wrapper.find( 'input#ur-form-name' ).on( 'focusout', function() {
-		$( this ).hide();
-		$( this ).siblings( 'label' ).show();
-	} );
-
 	/**
 	 * Append form settings to fileds section.
 	 */
