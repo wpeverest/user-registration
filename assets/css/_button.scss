@@ -1,10 +1,10 @@
 .user-registration,
 .ur-form-container {
-
 	.button-primary {
 		background: $primary_color;
 		border-color: $primary_color;
 		box-shadow: 0 1px 0 $primary_color;
+		text-shadow: none;
 
 		&:hover,
 		&:active,

@@ -157,14 +157,20 @@
 		margin-bottom: 0;
 	}
 
+	#nav-menu-header,
+	#nav-menu-footer {
+		padding: 10px;
+	}
+
 	#nav-menu-header {
-		background-color: $white;
 		display: flex;
 		align-items: center;
+		position: relative;
+		background-color: $white;
+		z-index: 9;
 
 		.ur-brand-logo {
 			border-right: 1px solid $color_gray_five;
-			margin: 10px 0;
 
 			img {
 				width: 32px;
@@ -176,7 +182,6 @@
 
 		.major-publishing-actions {
 			clear: both;
-			padding: 8px 0;
 			line-height: 28px;
 			margin-left: auto;
 
@@ -212,6 +217,28 @@
 					margin-top: 4px;
 				}
 			}
+		}
+
+		&::before,
+		&::after {
+			content: '';
+			display: flex;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: $white;
+		}
+
+		&::before {
+			top: 0;
+			z-index: -1;
+		}
+
+		&::after {
+			height: 10px;
+			box-shadow: 0px 4px 10px transparentize($gray_base, 0.92);
+			z-index: -2;
 		}
 	}
 
