@@ -164,18 +164,19 @@
 
 		.ur-brand-logo {
 			border-right: 1px solid $color_gray_five;
-			margin: 12px 0;
+			margin: 10px 0;
 
 			img {
 				width: 32px;
 				padding: 0 8px;
 				margin-right: 8px;
+				display: flex;
 			}
 		}
 
 		.major-publishing-actions {
 			clear: both;
-			padding: 10px 0;
+			padding: 8px 0;
 			line-height: 28px;
 			margin-left: auto;
 
@@ -676,14 +677,17 @@
 					}
 				}
 			}
+
 			.ur-tab-content {
 				padding: 10px;
 				height: calc(100vh - 85px);
 				overflow-y: auto;
+
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $color_gray_eight;
 				}
+
 				h2 {
 					margin: 0;
 					font-size: 16px;
@@ -691,10 +695,12 @@
 					font-family: Roboto, sans-serif;
 					color: $color_gray_one;
 				}
+
 				.ur-registered-list {
 					margin: 15px 0;
 					width: 100%;
 					@include clearfix;
+
 					&:last-child {
 						margin-bottom: 0;
 					}
@@ -711,6 +717,7 @@
 						white-space: normal;
 						position: relative;
 						cursor: move;
+
 						.dashicons {
 							position: absolute;
 							top: 0;
@@ -748,12 +755,44 @@
 		overflow-y: auto;
 
 		.ur-form-name-wrapper {
-			display: flex;
-			margin-left: 12px;
+			display: inline-flex;
+			flex-direction: row-reverse;
+			margin-left: 20px;
 			margin-top: 13px;
+			position: relative;
 
 			label {
-				width: auto;
+				width: 40px;
+				height: 40px;
+				border-radius: 3px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 0;
+				z-index: 0;
+
+				&::before,
+				&::after {
+					content: '';
+					display: flex;
+					position: absolute;
+					transition: all 0.3s ease 0s;
+				}
+
+				&::before {
+					width: 1px;
+					height: 20px;
+					left: 40px;
+				}
+
+				&::after {
+					left: 0;
+					height: 100%;
+					z-index: -1;
+					border-radius: 3px;
+					right: calc(100% - 40px);
+					background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+				}
 			}
 
 			input{
@@ -764,11 +803,20 @@
 				height: auto;
 				padding: 4px 8px;
 				border-color: transparent;
+				z-index: 1;
 
-				&:hover,
 				&:focus {
-					background: $white;
-					border-color: $color_gray_six;
+					border-color: transparent;
+
+					+ label {
+						&::before {
+							background: #b4b6bd;
+						}
+
+						&::after {
+							right: 0;
+						}
+					}
 				}
 			}
 		}

@@ -94,8 +94,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php
 								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : '';
 								?>
-								<label for="ur-form-name"><span class="ur-edit-form-name dashicons dashicons-edit"></span></label>
 								<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
+								<label for="ur-form-name"><span class="ur-edit-form-name dashicons dashicons-edit"></span></label>
 							</div>
 							<?php
 							if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
