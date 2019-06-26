@@ -570,6 +570,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			echo '<div class="ur-selected-inputs">';
+			echo '<div class="ur-input-grids">';
 
 			$row_count = 0;
 
@@ -627,7 +628,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="'. $row_count .'">' . $add_or_remove_icon . '</button>';
+			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $row_count . '">' . $add_or_remove_icon . '</button>';
+			echo '</div>';
 			echo '</div>';
 		}
 
