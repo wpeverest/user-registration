@@ -748,8 +748,13 @@
 		overflow-y: auto;
 
 		.ur-form-name-wrapper {
+			display: flex;
 			margin-left: 12px;
 			margin-top: 13px;
+
+			label {
+				width: auto;
+			}
 
 			input{
 				color: $gray_base;
