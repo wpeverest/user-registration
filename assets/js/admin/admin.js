@@ -4,6 +4,27 @@
  */
 jQuery(function ($) {
 
+	// Adjust builder width
+	$( window ).on( 'resize orientationchange', function() {
+		var resizeTimer;
+
+		clearTimeout( resizeTimer );
+		resizeTimer = setTimeout( function() {
+			$( document.body ).trigger( 'adjust_builder_width' );
+		}, 250 );
+	} );
+
+	$( document.body ).on( 'click', '#collapse-button', function() {
+		$( document.body ).trigger( 'ur_adjust_builder_width' );
+	} );
+
+	$( document.body ).on( 'ur_adjust_builder_width', function() {
+		var adminMenuWidth = $( '#adminmenuwrap' ).width(),
+			$builder = $( '.user-registration_page_add-new-registration .ur-form-subcontainer .menu-edit' );
+
+		$builder.css({ 'left': adminMenuWidth + 'px' });
+	}).trigger( 'ur_adjust_builder_width' );
+
 	/**
 	 * Append form settings to fileds section.
 	 */
