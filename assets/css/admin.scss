@@ -149,8 +149,44 @@
 		}
 	}
 
+	#wpfooter {
+		display: none;
+	}
+
+	.ur-form-container {
+		margin: 0;
+
+		#menu-management {
+			margin-top: 0;
+
+			.menu-edit {
+				position: fixed;
+				left: 160px;
+				right: 0;
+				border: none;
+				box-shadow: none;
+			}
+		}
+
+		#ur-full-screen-mode {
+			&.closed {
+				.ur-fs-close-label {
+					display:none;
+				}
+			}
+
+			&.opened {
+				.ur-fs-open-label {
+					display:none;
+				}
+			}
+		}
+	}
+
 	#menu-management-liquid {
-		margin-top: 15px;
+		margin-top: 0;
+		margin-left: -20px;
+		min-width: calc(100% + 20px);
 	}
 
 	.postbox p.submit {
@@ -707,7 +743,7 @@
 
 			.ur-tab-content {
 				padding: 10px;
-				height: calc(100vh - 85px);
+				height: calc(100vh - 175px);
 				overflow-y: auto;
 
 				&#ur-tab-registered-fields,
@@ -778,7 +814,7 @@
 	.ur-builder-wrapper {
 		flex: 1;
 		border-left: 1px solid $color_gray_six;
-		height: calc(100vh - 44px);
+		height: calc(100vh - 134px);
 		overflow-y: auto;
 
 		.ur-form-name-wrapper {
@@ -803,9 +839,8 @@
 					content: '';
 					display: flex;
 					position: absolute;
-					top: 0;
 					left: 0;
-					bottom: 0;
+					height: 32px;
 					border-radius: 3px;
 					right: calc(100% - 32px);
 					transition: all 0.3s ease 0s;
@@ -1695,21 +1730,7 @@ img.tips {
 	}
 }
 
-.ur-form-container {
-	#ur-full-screen-mode {
-		&.closed {
-			.ur-fs-close-label {
-				display:none;
-			}
-		}
 
-		&.opened {
-			.ur-fs-open-label {
-				display:none;
-			}
-		}
-	}
-}
 
 body.ur-full-screen-mode {
 	margin-top: -32px;
@@ -1732,19 +1753,15 @@ body.ur-full-screen-mode {
 					padding: 20px;
 				}
 
-				.ur-form-container {
-					margin: 0;
+				#menu-management-liquid {
+					margin-top: 0;
 
-					#menu-management-liquid {
-						margin-top: 0;
-
-						.menu-edit {
-							margin-bottom: 0;
-							box-shadow: none;
-							border-left: 0;
-							border-right: 0;
-							border-top: 0;
-						}
+					.menu-edit {
+						margin-bottom: 0;
+						box-shadow: none;
+						border-left: 0;
+						border-right: 0;
+						border-top: 0;
 					}
 				}
 			}
@@ -1753,13 +1770,5 @@ body.ur-full-screen-mode {
 		#adminmenumain{
 			display: none;
 		}
-	}
-
-	#menu-management {
-		margin-top: 0;
-	}
-
-	#wpfooter {
-		margin-left: 0;
 	}
 }
