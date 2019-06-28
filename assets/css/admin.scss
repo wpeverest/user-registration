@@ -157,19 +157,18 @@
 		margin: 0;
 
 		.ur-loading-container{
-			position: absolute;
-			left: -20px;
+			position: fixed;
+			left: 160px;
 			right: 0;
 			top: 0;
 			bottom: 0;
-			height: auto;
-			min-height: 100vh;
 			background: $white;
 			display: flex;
 			z-index: 9;
 
 			.ur-circle-loading{
 				margin: auto;
+				left: 30px;
 			}
 		}
 
@@ -251,7 +250,7 @@
 
 		&::after {
 			height: 10px;
-			box-shadow: 0px 4px 10px transparentize($gray_base, 0.92);
+			box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
 			z-index: -2;
 		}
 	}
