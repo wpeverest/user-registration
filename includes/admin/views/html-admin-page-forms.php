@@ -5,13 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap ur-form-container">
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
+		<div class="ur-loading-container">
+			<div class="ur-circle-loading"></div>
+		</div>
 		<div id="menu-management">
-			<div class="ur-loading-container">
-				<div class="ur-circle-loading"></div>
-			</div>
 			<div class="menu-edit">
 				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $post_id; ?>"/>
-
 				<div id="nav-menu-header">
 					<div class="ur-brand-logo">
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
