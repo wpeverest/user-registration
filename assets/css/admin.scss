@@ -159,6 +159,17 @@
 		#menu-management {
 			margin-top: 0;
 
+			.ur-loading-container{
+				position: absolute;
+				height: 100vh;
+				width: 100%;
+				background: white;
+				z-index: 999;
+				.ur-circle-loading{
+					margin: auto;
+				}
+			}
+
 			.menu-edit {
 				position: fixed;
 				left: 160px;
@@ -1762,6 +1773,7 @@ body.ur-full-screen-mode {
 						border-left: 0;
 						border-right: 0;
 						border-top: 0;
+						left: 0!important;
 					}
 				}
 			}
@@ -1770,5 +1782,88 @@ body.ur-full-screen-mode {
 		#adminmenumain{
 			display: none;
 		}
+	}
+}
+
+// User Registration Builder Loading
+@keyframes ur-circle-loading {
+
+	0%,
+	100% {
+		animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1);
+	}
+
+	50% {
+		animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8);
+	}
+
+	0% {
+		-webkit-transform: rotate(0deg) translate(0, -20px) scale(0);
+		transform: rotate(0deg) translate(0, -20px) scale(0);
+	}
+
+	50% {
+		-webkit-transform: rotate(180deg) translate(0, -20px) scale(1);
+		transform: rotate(180deg) translate(0, -20px) scale(1);
+	}
+
+	100% {
+		-webkit-transform: rotate(360deg) translate(0, -20px) scale(0);
+		transform: rotate(360deg) translate(0, -20px) scale(0);
+	}
+}
+
+@-webkit-keyframes ur-circle-loading-keyframe {
+
+	0%,
+	100% {
+		animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1);
+	}
+
+	50% {
+		animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8);
+	}
+
+	0% {
+		-webkit-transform: rotate(0deg) translate(0, -20px) scale(0);
+		transform: rotate(0deg) translate(0, -20px) scale(0);
+	}
+
+	50% {
+		-webkit-transform: rotate(180deg) translate(0, -20px) scale(1);
+		transform: rotate(180deg) translate(0, -20px) scale(1);
+	}
+
+	100% {
+		-webkit-transform: rotate(360deg) translate(0, -20px) scale(0);
+		transform: rotate(360deg) translate(0, -20px) scale(0);
+	}
+}
+
+.ur-circle-loading {
+	position: relative;
+	width: 100px !important;
+	height: 100px !important;
+	-webkit-transform: translate(-50px, -50px) scale(0.5) translate(50px, 50px);
+	transform: translate(-50px, -50px) scale(0.5) translate(50px, 50px);
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		top: 70px;
+		left: 70px;
+		-webkit-animation: ur-circle-loading-keyframe 1.5s linear infinite;
+		animation: ur-circle-loading-keyframe 1.5s linear infinite;
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		background: #475bb2;
+	}
+
+	&::after {
+		-webkit-animation-delay: -0.75s;
+		animation-delay: -0.75s;
+		background: #668fe5;
 	}
 }

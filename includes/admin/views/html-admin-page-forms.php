@@ -6,7 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap ur-form-container">
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
 		<div id="menu-management">
-			<div class="menu-edit ">
+			<div class="ur-loading-container">
+				<div class="ur-circle-loading"></div>
+			</div>
+			<div class="menu-edit">
 				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $post_id; ?>"/>
 
 				<div id="nav-menu-header">

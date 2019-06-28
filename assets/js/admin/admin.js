@@ -20,9 +20,11 @@ jQuery(function ($) {
 
 	$( document.body ).on( 'ur_adjust_builder_width', function() {
 		var adminMenuWidth = $( '#adminmenuwrap' ).width(),
-			$builder = $( '.user-registration_page_add-new-registration .ur-form-subcontainer .menu-edit' );
+			$builder = $( '.user-registration_page_add-new-registration .ur-form-subcontainer .menu-edit' ),
+			$loading = $( '.user-registration_page_add-new-registration .ur-form-subcontainer .ur-loading-container' );
 
-		$builder.css({ 'left': adminMenuWidth + 'px' });
+		$builder.css({ 'left': adminMenuWidth + 'px'});
+		$loading.fadeOut(1000);
 	}).trigger( 'ur_adjust_builder_width' );
 
 	/**
