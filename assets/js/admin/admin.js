@@ -27,6 +27,15 @@ jQuery(function ($) {
 		$loading.fadeOut(1000);
 	}).trigger( 'ur_adjust_builder_width' );
 
+	// Form name edit.
+	$( document.body ).on( 'click', '.ur-form-container .ur-registered-from .ur-form-name-wrapper .ur-edit-form-name', function() {
+		var $input = $(this).siblings( '#ur-form-name' );
+		if( ! $input.hasClass( 'ur-editing' ) ) {
+			$input.focus();
+		}
+		$input.toggleClass( 'ur-editing' );
+	} );
+
 	/**
 	 * Append form settings to fileds section.
 	 */
