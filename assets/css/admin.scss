@@ -841,40 +841,35 @@
 			margin-top: 13px;
 			position: relative;
 
-			label {
+			.ur-edit-form-name {
 				width: 32px;
 				height: 32px;
-				border-radius: 3px;
+				cursor: pointer;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				margin-bottom: 0;
-				z-index: 0;
+				transition: all 0.3s ease 0s;
+				background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
 
-				&::before,
 				&::after {
 					content: '';
-					display: flex;
-					position: absolute;
-					left: 0;
-					height: 32px;
 					border-radius: 3px;
+					position: absolute;
+					left: 32px;
 					right: calc(100% - 32px);
-					transition: all 0.3s ease 0s;
-				}
-
-				&::before {
-					background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
-					z-index: -1;
-				}
-
-				&::after {
+					height: 32px;
+					border-radius: 0 3px 3px 0;
 					background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +75% );
 					z-index: -2;
 				}
+
+				&:hover {
+					background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );;
+				}
 			}
 
-			input{
+			input {
 				color: $gray_base;
 				background: none;
 				font-size: 16px;
@@ -887,15 +882,10 @@
 				&:focus {
 					border-color: transparent;
 
-					+ label {
-						.ur-edit-form-name {
-							color: $white;
-						}
-
-						&::before {
-							background: $primary_color;
-							border-radius: 3px 0 0 3px;
-						}
+					+ .ur-edit-form-name {
+						color: $white;
+						background: $primary_color;
+						border-radius: 3px 0 0 3px;
 
 						&::after {
 							right: 0;
@@ -1749,8 +1739,7 @@ img.tips {
 
 
 
-body{
-
+body {
 	&.ur-full-screen-mode {
 		margin-top: -32px;
 
