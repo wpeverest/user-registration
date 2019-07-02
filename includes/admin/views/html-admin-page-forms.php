@@ -114,15 +114,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</div>
 					</div>
 				</div><!-- /#post-body -->
-				<div id="nav-menu-footer">
-					<div class="major-publishing-actions wp-clearfix">
-						<div class="publishing-action">
-							<input type="button" name="save_form" id="save_form_footer"
-								   class="button button-primary button-large menu-form ur_save_form_action_button"
-								   value="<?php echo $save_label; ?> "/>
-						</div><!-- END .publishing-action -->
-					</div><!-- END .major-publishing-actions -->
-				</div><!-- /#nav-menu-footer -->
 			</div><!-- /.menu-edit -->
 		</div><!-- /#menu-management -->
 	</div>
