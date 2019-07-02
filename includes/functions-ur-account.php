@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_filter( 'login_errors', 'ur_login_error_message' );
 add_filter( 'get_avatar', 'ur_replace_gravatar_image', 10, 6 );
 add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
-add_action( 'admin_init', 'ur_allow_all_user_uploads' );
 
 /**
  * Limit media library access to own uploads.
@@ -36,21 +35,6 @@ function ur_show_current_user_attachments( $query ) {
 	}
 
 	return $query;
-}
-
-/**
- * Allow uploads to all users
- *
- * @since 1.5.8
- *
- * @global $wp_roles
- */
-function ur_allow_all_user_uploads() {
-	global $wp_roles;
-	foreach ( $wp_roles->roles as $role => $role_data ) {
-		$user_role = get_role( $role );
-		$user_role->add_cap( 'upload_files' );
-	}
 }
 
 // Modify error message on invalid username or password.
@@ -231,8 +215,8 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		return $avatar;
 	}
 
-	$profile_picture_id = get_user_meta( $user->ID, 'user_registration_profile_pic_id', true );
-	$class              = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
+	$profile_picture_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
+	$class               = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
 	if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || ( isset( $args['force_default'] ) && $args['force_default'] ) ) {
 		$class[] = 'avatar-default';
@@ -246,13 +230,12 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		}
 	}
 
-	if ( $profile_picture_id ) {
-		$profile_image = wp_get_attachment_thumb_url( $profile_picture_id );
-		$avatar        = sprintf(
+	if ( $profile_picture_url ) {
+		$avatar = sprintf(
 			"<img alt='%s' src='%s' srcset='%s' class='%s' height='%d' width='%d' %s/>",
 			esc_attr( $args['alt'] ),
-			esc_url( $profile_image ),
-			esc_url( $profile_image ) . ' 2x',
+			esc_url( $profile_picture_url ),
+			esc_url( $profile_picture_url ) . ' 2x',
 			esc_attr( join( ' ', $class ) ),
 			(int) $args['height'],
 			(int) $args['width'],

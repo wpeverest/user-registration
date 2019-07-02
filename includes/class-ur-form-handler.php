@@ -61,9 +61,48 @@ class UR_Form_Handler {
 			return;
 		}
 
-		if ( isset( $_POST['profile-pic-id'] ) ) {
-			$picture_id = absint( $_POST['profile-pic-id'] );
-			update_user_meta( $user_id, 'user_registration_profile_pic_id', $picture_id );
+		if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
+
+			if ( ! function_exists( 'wp_handle_upload' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+
+			$upload           = $_FILES['profile-pic'];
+			$upload_overrides = array(
+				'action' => 'save_profile_details',
+			);
+			$uploaded         = wp_handle_upload( $upload, $upload_overrides );
+
+			if ( $uploaded && ! isset( $uploaded['error'] ) ) {
+				$image = wp_get_image_editor( $uploaded['file'] );
+
+				if ( ! is_wp_error( $image ) ) {
+					$image->resize( 150, 150, true );
+					$image->save( $uploaded['file'] );
+				}
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', $uploaded['url'] );
+			} else {
+				ur_add_notice( $uploaded['error'], 'error' );
+			}
+		} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
+
+			switch ( $_FILES['profile-pic']['error'] ) {
+				case UPLOAD_ERR_INI_SIZE:
+					ur_add_notice( __( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
+					break;
+				default:
+					ur_add_notice( __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
+					break;
+			}
+		} elseif ( empty( $_POST['profile-pic-url'] ) ) {
+			$upload_dir  = wp_upload_dir();
+			$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
+			$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
+
+			if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
+				@unlink( $profile_url );
+			}
+			delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
