@@ -94,7 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<div class='ur-builder-wrapper'>
 							<div class="ur-form-name-wrapper" >
 								<?php
-								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : '';
+								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
 								?>
 								<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
 								<span class="ur-edit-form-name dashicons dashicons-edit"></span>
@@ -105,7 +105,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							} else {
 								?>
 								<div class="ur-selected-inputs">
+									<div class="ur-input-grids">
 
+									</div>
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
