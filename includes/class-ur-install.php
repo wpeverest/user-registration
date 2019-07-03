@@ -19,22 +19,22 @@ class UR_Install {
 	 * @var array
 	 */
 	private static $db_updates = array(
-		'1.0.0' => array(
+		'1.0.0'   => array(
 			'ur_update_100_db_version',
 		),
-		'1.2.0' => array(
+		'1.2.0'   => array(
 			'ur_update_120_usermeta',
 			'ur_update_120_db_version',
 		),
-		'1.3.0' => array(
+		'1.3.0'   => array(
 			'ur_update_130_db_version',
 			'ur_update_130_post',
 		),
-		'1.4.0' => array(
+		'1.4.0'   => array(
 			'ur_update_140_db_version',
 			'ur_update_140_option',
 		),
-		'1.4.2' => array(
+		'1.4.2'   => array(
 			'ur_update_142_db_version',
 			'ur_update_142_option',
 		),
@@ -42,10 +42,14 @@ class UR_Install {
 			'ur_update_1581_db_version',
 			'ur_update_1581_meta_key',
 		),
-		'1.6.0' => array(
+		'1.6.0'   => array(
 			'ur_update_160_db_version',
 			'ur_update_160_option_migrate',
-		)
+		),
+		'1.6.2'   => array(
+			'ur_update_162_db_version',
+			'ur_update_162_meta_key',
+		),
 	);
 
 	/**
@@ -225,7 +229,7 @@ class UR_Install {
 
 		$installed_date = get_option( 'user_registration_activated' );
 
-		if( empty( $installed_date ) ) {
+		if ( empty( $installed_date ) ) {
 			update_option( 'user_registration_activated', current_time( 'Y-m-d' ) );
 		}
 	}
