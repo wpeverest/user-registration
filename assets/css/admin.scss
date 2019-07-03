@@ -181,6 +181,7 @@
 				right: 0;
 				border: none;
 				box-shadow: none;
+				margin-bottom: 0;
 			}
 		}
 
@@ -673,7 +674,6 @@
 	display: flex;
 	background-color: $color_gray_nine;
 	font-family: Roboto, sans-serif;
-	border-bottom: 1px solid $color_gray_six;
 
 	* {
 		box-sizing: border-box;
@@ -760,7 +760,7 @@
 
 			.ur-tab-content {
 				padding: 10px;
-				height: calc(100vh - 185px);
+				height: calc(100vh - 130px);
 				overflow-y: auto;
 
 				&#ur-tab-registered-fields,
@@ -831,7 +831,7 @@
 	.ur-builder-wrapper {
 		flex: 1;
 		border-left: 1px solid $color_gray_six;
-		height: calc(100vh - 144px);
+		height: calc(100vh - 89px);
 		overflow-y: auto;
 
 		.ur-form-name-wrapper {
@@ -864,8 +864,8 @@
 					z-index: -2;
 				}
 
-				&:hover {
-					background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );;
+				+ input.ur-editing {
+					background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
 				}
 			}
 
@@ -877,11 +877,12 @@
 				height: auto;
 				padding: 4px 8px;
 				border-color: transparent;
+				pointer-events: none;
 				z-index: 1;
 
-				&:focus {
+				&.ur-editing {
 					border-color: transparent;
-
+					pointer-events: all;
 					+ .ur-edit-form-name {
 						color: $white;
 						background: $primary_color;
@@ -1767,9 +1768,6 @@ body {
 						.menu-edit {
 							margin-bottom: 0;
 							box-shadow: none;
-							border-left: 0;
-							border-right: 0;
-							border-top: 0;
 							left: 0!important;
 						}
 					}
@@ -1785,13 +1783,13 @@ body {
 			.ur-registered-inputs {
 				.ur-tabs {
 					.ur-tab-content {
-						height: calc(100vh - 153px);
+						height: calc(100vh - 98px);
 					}
 				}
 			}
 
 			.ur-builder-wrapper {
-				height: calc(100vh - 112px);
+				height: calc(100vh - 57px);
 			}
 		}
 	}
