@@ -107,9 +107,16 @@ jQuery(function ($) {
 			form_name = $('.ur-form-name-wrapper'),
 			builder_footer  = $( '.ur-builder-wrapper-footer' );
 		fields_panel.find( '.ur-input-grids' ).show();
+		$('.ur-builder-wrapper-content').show();
 		fields_panel.find('form#ur-field-settings').hide();
 		form_name.show();
 		builder_footer.show();
+	});
+
+	var formSetting = $('.ur-tab-lists').find('li').last(); //Setting tb.
+
+	$(formSetting).on('click', function () {
+		$('.ur-builder-wrapper-content').hide();
 	});
 
 	/**
