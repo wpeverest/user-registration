@@ -570,6 +570,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			echo '<div class="ur-selected-inputs">';
+			echo '<div class="ur-builder-wrapper-content">';
+			?>
+			<div class="ur-form-name-wrapper">
+				<?php
+				$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
+				?>
+				<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
+				<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+			</div>
+			<?php
 			echo '<div class="ur-input-grids">';
 
 			$row_count = 0;
@@ -629,6 +639,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			}// End foreach().
 			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $row_count . '">' . $add_or_remove_icon . '</button>';
+			echo '</div>';
 			echo '</div>';
 			echo '</div>';
 		}

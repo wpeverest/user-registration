@@ -837,7 +837,7 @@
 		.ur-form-name-wrapper {
 			display: inline-flex;
 			flex-direction: row-reverse;
-			margin: 20px;
+			margin: 16px 0;
 			position: relative;
 
 			.ur-edit-form-name {
@@ -894,28 +894,6 @@
 						}
 					}
 				}
-			}
-		}
-
-		&.ur-multipart {
-			height: calc(100vh - 82px);
-
-			.ur-selected-inputs {
-				.ur-input-grids {
-					height: calc(100vh - 206px);
-					overflow: auto;
-					margin-left: -20px;
-					margin-right: -20px;
-					padding: 0 20px;
-				}
-			}
-		}
-
-		.ur-builder-wrapper-footer {
-			.user-registration-multi-part-tabs {
-				display: flex;
-				padding: 10px;
-				background: $white;
 			}
 		}
 	}

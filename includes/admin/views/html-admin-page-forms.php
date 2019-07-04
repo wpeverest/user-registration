@@ -92,21 +92,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</nav>
 						</div>
 						<div class='ur-builder-wrapper'>
-							<div class="ur-form-name-wrapper" >
-								<?php
-								$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
-								?>
-								<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
-								<span class="ur-edit-form-name dashicons dashicons-edit"></span>
-							</div>
 							<?php
 							if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
 								$this->get_edit_form_field( $post_data );
 							} else {
 								?>
 								<div class="ur-selected-inputs">
-									<div class="ur-input-grids">
+									<div class="ur-builder-wrapper-content">
+										<div class="ur-form-name-wrapper" >
+											<?php
+											$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
+											?>
+											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
+											<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+										</div>
+										<div class="ur-input-grids">
 
+										</div>
 									</div>
 								</div>
 							<?php } ?>
