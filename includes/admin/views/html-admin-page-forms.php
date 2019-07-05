@@ -91,7 +91,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
 							</nav>
 						</div>
-						<div class='ur-builder-wrapper'>
+						<?php
+						$builder_class = apply_filters( 'user_registration_builder_class', array() );
+						$builder_class = implode( ' ', $builder_class );
+						?>
+						<div class='ur-builder-wrapper <?php echo $builder_class; ?>'>
 							<?php
 							if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
 								$this->get_edit_form_field( $post_data );
