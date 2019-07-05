@@ -201,10 +201,6 @@
 				}
 			}
 
-			.uraf-signature-canvas {
-				border: 1px solid $color_gray_five;
-			}
-
 			input[type="radio"]:focus,
 			input[type="text"]:focus,
 			input[type="email"]:focus,
@@ -241,20 +237,6 @@
 				height: 100px;
 				resize: none;
 				padding: 5px 20px;
-			}
-
-			.uraf-canvas-wrap {
-				position: relative;
-
-				.uraf-signature-reset {
-					position: absolute;
-					top: 5px;
-					right: 5px;
-
-					&:hover {
-						color: $color_danger;
-					}
-				}
 			}
 
 			.hide_show_password {
