@@ -702,14 +702,14 @@
 			font-size: 14px;
 
 			.ur-tab-lists {
-				background-color: transparent;
+				background-color: lighten($gray_base, 82%);
 				background-image: none;
 				padding: 0;
 				border-radius: 0;
 				margin: 0;
 				display: flex;
 				justify-content: space-between;
-				border-bottom: 2px solid $primary_dark;
+				border-bottom: none;
 				border-top: 0 none;
 				border-right: 0 none;
 				border-left: 0 none;
@@ -722,6 +722,8 @@
 					margin-bottom: -1px;
 					padding: 0px;
 					border: 0;
+					flex: 1;
+					text-align: center;
 
 					&.active {
 						margin-bottom: 0;
@@ -738,9 +740,9 @@
 						margin: 0;
 						border: none;
 						display: block;
-						color: $color_gray_two;
+						color: $color_gray_one;
 						background-color: transparent;
-						padding: 8px 15px;
+						padding: 12px 15px;
 						font-weight: 500;
 						cursor: pointer;
 
@@ -749,8 +751,8 @@
 						}
 
 						&.active {
-							background-color: $primary_dark;
-							color: $white;
+							background-color: $white;
+							color: $primary_color;
 							line-height: 24px;
 						}
 					}
@@ -764,12 +766,12 @@
 
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
-					background-color: $color_gray_eight;
+					background-color: $white;
 				}
 
 				h2 {
-					margin: 0;
-					font-size: 16px;
+					margin: 12px 0;
+					font-size: 1em;
 					font-weight: 600;
 					font-family: Roboto, sans-serif;
 					color: $color_gray_one;
@@ -783,6 +785,7 @@
 					&:last-child {
 						margin-bottom: 0;
 					}
+
 					.ur-registered-item {
 						float: left;
 						padding: 10px 15px 10px 45px;
@@ -801,7 +804,7 @@
 							position: absolute;
 							top: 0;
 							bottom: 0;
-							background: rgba(0, 0, 0, 0.3);
+							background: transparentize($gray_base, 0.8);
 							width: 35px;
 							left: 0;
 							line-height: 2.9;
@@ -1673,15 +1676,11 @@ img.tips {
 }
 
 #ur-tab-registered-fields li.ur-registered-item.ui-draggable-disabled {
-	background: #ccc
+	background: $color_gray_five
 }
 
 .ur-no-pointer {
 	pointer-events: none;
-}
-
-#ur-tab-field-settings {
-	background: #F2F2F2;
 }
 
 .user-registration table.form-table dashicons .dashicons, .dashicons{
