@@ -277,6 +277,12 @@
 
 				.select2-selection__rendered {
 					display: block;
+
+					li {
+						&:last-child {
+							margin-left: 0;
+						}
+					}
 				}
 
 				.select2-selection__choice {
