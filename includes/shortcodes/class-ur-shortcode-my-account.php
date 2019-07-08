@@ -40,8 +40,6 @@ class UR_Shortcode_My_Account {
 		global $wp, $post;
 		wp_enqueue_script( 'jquery-tiptip' );
 		wp_enqueue_script( 'user-registration' );
-		wp_enqueue_media();
-		wp_enqueue_script( 'ur-my-account' );
 
 		if ( ! is_user_logged_in() ) {
 
@@ -148,6 +146,8 @@ class UR_Shortcode_My_Account {
 	 * Edit profile details page.
 	 */
 	public static function edit_profile() {
+		wp_enqueue_media();
+		wp_enqueue_script( 'ur-my-account' );
 
 		$user_id = get_current_user_id();
 		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
