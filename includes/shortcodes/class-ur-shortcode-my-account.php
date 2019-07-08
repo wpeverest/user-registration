@@ -42,15 +42,6 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_media();
 		wp_enqueue_script( 'ur-my-account' );
-		wp_localize_script(
-			'ur-my-account',
-			'ur_my_account_params',
-			array(
-				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
-				'select_image'     => __( 'Select Image', 'user-registration' ),
-				'current_user_can' => current_user_can( 'edit_others_posts' ),
-			)
-		);
 
 		if ( ! is_user_logged_in() ) {
 
