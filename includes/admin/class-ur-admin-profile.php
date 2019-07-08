@@ -321,7 +321,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			foreach ( $save_fields as $fieldset ) {
 				foreach ( $fieldset['fields'] as $key => $field ) {
-					if ( isset( $field['type'] ) && 'checkbox' === $field['type'] ) {
+					if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] ) ) {
 						if ( isset( $_POST[ $key ] ) ) {
 							$value = $_POST[ $key ];
 							if ( is_array( $_POST[ $key ] ) ) {

@@ -21,9 +21,9 @@
 	margin-top:15px;
 
 	.nav-tab-content .nav-tab-inside .postbox {
-	    width: 50%;
-	    flex: 1;
-	    margin: 0 15px 10px;
+		width: 50%;
+		flex: 1;
+		margin: 0 15px 10px;
 		.hndle, .stuffbox .hndle {
 			margin: 10px;
 		}
@@ -35,7 +35,7 @@
 	.products {
 		overflow: hidden;
 		display: flex;
-	    flex-wrap: wrap;
+		flex-wrap: wrap;
 
 		li {
 			margin: 0 1% 1% 0 !important;
@@ -176,13 +176,13 @@
 			width: 25%;
 		}
 		#copy-shortcode {
-		    margin-left: -5px;
-		    border-radius: 0 3px 3px 0;
+			margin-left: -5px;
+			border-radius: 0 3px 3px 0;
 
-		    svg {
-		    	fill: #ffffff;
-		    	margin-top: 4px;
-		    }
+			svg {
+				fill: #ffffff;
+				margin-top: 4px;
+			}
 		}
 	}
 
@@ -705,6 +705,7 @@
 			}
 		}
 	}
+
 	.ur-selected-inputs {
 		width: 70%;
 		box-sizing: border-box;
@@ -712,28 +713,34 @@
 		padding: 20px;
 		height: calc(100vh - 50px);
 		overflow-y: auto;
+
 		.ur-single-row {
 			background-color: $color_gray_eight;
 			margin-bottom: 20px;
 			border: 1px solid $color_gray_six;
+
 			&:last-child {
 				margin-bottom: 0;
 			}
+
 			.ur-grids {
 				background-color: $color_gray_eight;
 				border-bottom: 1px solid $color_gray_six;
 				clear: both;
 				display: table;
 				width: 100%;
+
 				div {
 					border-right: 1px solid $color_gray_six;
 					display: inline-block;
 					line-height: 25px;
 					color: $color_gray_four;
 					float: left;
+
 					&.ur-grid-size {
 						padding: 0 10px;
 					}
+
 					&.ur-grid-navigation {
 						width: 25px;
 						height: 25px;
@@ -741,11 +748,13 @@
 						font-family: dashicons;
 						font-size: 16px;
 						cursor: pointer;
+
 						&:hover {
 							background-color: $color_gray_six;
 						}
 					}
 				}
+
 				.ur-remove-row {
 					float: right;
 					border-radius: 0;
@@ -758,9 +767,11 @@
 					padding: 0;
 					line-height: 25px;
 					transition: all 0.1s ease-in-out;
+
 					&:before {
 						font-family: 'dashicons';
 					}
+
 					&:hover {
 						color: $color_danger;
 					}
@@ -792,6 +803,24 @@
 						cursor: move;
 						border: 1px solid $color_gray_seven;
 						transition: border-color 0.35s;
+
+						.select2-container {
+							width: 100% !important;
+
+							.select2-search--inline {
+								.select2-search__field {
+									height: auto;
+									min-width: 10px;
+								}
+							}
+						}
+
+						.ur-input-type-signature {
+							canvas {
+								background: transparentize($white, 0.5);
+								border: 1px solid $color_gray_six;
+							}
+						}
 
 						&:last-child {
 							margin-bottom: 0;
@@ -914,9 +943,11 @@
 						}
 					}
 				}
+
 				.ur-grid-list-item:nth-child(1n+2) {
 					border-left: 2px solid $color_sortable_background;
 				}
+
 				.ur-sortable-active,
 				.ur-grid-list-item:nth-child(1n+2).ur-sortable-active {
 					border-right: 2px dashed $primary_dark;
@@ -927,6 +958,7 @@
 				}
 			}
 		}
+
 		.ur-add-new-row {
 			color: $color_gray_five;
 			display: block;
@@ -938,10 +970,12 @@
 			margin-bottom: 20px;
 			background-color: transparent;
 			border: 0 none;
+
 			&:hover {
 				color: $primary_color;
 			}
 		}
+
 		li.ur-registered-item {
 			list-style: none;
 			padding: 10px 10px;
@@ -970,13 +1004,16 @@
 			}
 		}
 	}
+
 	.ur-general-setting,
 	.ur-advance-setting {
 		padding: 20px 0 0;
 	}
+
 	.ur-advance-setting-block {
 		margin-top: 25px;
 	}
+
 	input[type="email"],
 	input[type="url"],
 	input[type="text"],
@@ -1460,15 +1497,15 @@ img.tips {
 }
 
 .form-settings-tab {
-    padding: 10px 15px;
-    cursor: pointer;
-    background: #c4c4c4;
-    margin-bottom: 10px;
+	padding: 10px 15px;
+	cursor: pointer;
+	background: #c4c4c4;
+	margin-bottom: 10px;
 }
 
 .form-settings-tab.active {
-    background: $primary_color;
-    color: white;
+	background: $primary_color;
+	color: white;
 }
 
 #profile-page form#your-profile .flatpickr-input[readonly]{
