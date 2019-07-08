@@ -708,6 +708,7 @@
 				border-radius: 0;
 				margin: 0;
 				display: flex;
+				justify-content: space-between;
 				border-bottom: 2px solid $primary_dark;
 				border-top: 0 none;
 				border-right: 0 none;
@@ -720,8 +721,6 @@
 					margin: 0;
 					margin-bottom: -1px;
 					padding: 0px;
-					float: none;
-					display: inline-block;
 					border: 0;
 
 					&.active {
