@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -116,6 +116,12 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
+
+= 1.6.2 - XX/07/2019 =
+* Enhancement - Profile picture upload to browser upload.
+* Tweak       - Enqueue scripts.
+* Fix         - Menu Items invalid arguments.
+* Fix         - Log delete on reload.
 
 = 1.6.1 - 04/06/2019 =
 * Feature - Two Column Login and Registration Form.
