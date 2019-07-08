@@ -229,6 +229,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery' ),
 				'version' => '1.3.0',
 			),
+			'selectWoo'                  => array(
+				'src'     => self::get_asset_url( 'assets/js/selectWoo/selectWoo.full' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => '3.5.4',
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );
