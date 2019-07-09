@@ -117,7 +117,7 @@ All the users registered via the registration forms and their data can be access
 
 == Changelog ==
 
-= 1.6.2 - XX/07/2019 =
+= 1.6.2 - 09/07/2019 =
 * Enhancement - Profile picture upload to browser upload.
 * Tweak       - Enqueue scripts.
 * Fix         - Menu Items invalid arguments.
