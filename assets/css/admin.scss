@@ -17,13 +17,27 @@
 	@include loader();
 }
 
+/**
+* Keyframe animation
+*/
+@keyframes spin {
+	100% {
+		transform: rotate( 360deg );
+	}
+}
+
 .ur-export-users-page {
 	margin-top:15px;
 
-	.nav-tab-content .nav-tab-inside .postbox {
-	    width: 50%;
-	    flex: 1;
-	    margin: 0 15px 10px;
+	.nav-tab-content {
+		.nav-tab-inside {
+			.postbox {
+				width: 50%;
+				flex: 1;
+				margin: 0 15px 10px;
+			}
+		}
+
 		.hndle, .stuffbox .hndle {
 			margin: 10px;
 		}
@@ -31,7 +45,6 @@
 }
 
 .ur_addons_wrap {
-
 	.products {
 		overflow: hidden;
 		display: flex;
