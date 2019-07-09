@@ -13,6 +13,12 @@
 			border-color: $primary_dark;
 			box-shadow: 0 1px 0 $primary_dark;
 		}
+
+		&:disabled {
+			color: lighten($primary_color, 30%) !important;
+			background: lighten($primary_color, 10%) !important;
+			border-color: lighten($primary_color, 10%) !important;
+		}
 	}
 
 	.button-secondary {
@@ -30,7 +36,6 @@
 	}
 
 	.publishing-action {
-
 		button,
 		input[type='button'],
 		input[type='submit'],
