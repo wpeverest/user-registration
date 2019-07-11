@@ -336,7 +336,7 @@ jQuery(function ($) {
 							single_row_clone.show();
 							$this_obj.render_draggable_sortable();
 							builder.manage_empty_grid();
-							$( '.ur-input-grids' ).trigger( 'user_registration_row_added', [single_row_clone] );
+							$( document ).trigger( 'user_registration_row_added', [single_row_clone] );
 						});
 					},
 					register_remove_row: function () {
@@ -355,7 +355,9 @@ jQuery(function ($) {
 									if (new_btn.hasClass('ur-add-new-row')) {
 										$(this).closest('.ur-single-row').prev().find('.ur-remove-row').before(new_btn);
 									}
-									$(this).closest('.ur-single-row').remove();
+									var single_row = $(this).closest('.ur-single-row');
+									$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
+									single_row.remove();
 									$this.check_grid();
 								}
 							} else {
@@ -425,7 +427,7 @@ jQuery(function ($) {
 							connectWith: '.ur-grid-list-item'
 						}).disableSelection();
 						$('.ur-input-grids').sortable({
-							containment: '.ur-input-grids',
+							containment: '.ur-builder-wrapper',
 							tolerance: 'pointer',
 							revert: 'invalid',
 							placeholder: 'ur-single-row',
