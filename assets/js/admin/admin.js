@@ -1232,23 +1232,22 @@ jQuery(function ($) {
 		cloning_element.html('');
 		cloning_element.replaceWith(cloning_options);
 	}
-
-	function ur_alert( message, options = [] ) {
-		// TODO : Change alert to SweetAlert2.
-		// https://sweetalert2.github.io/
-		alert( message );
-	}
-
-	function ur_confirmation( message, options ) {
-		// TODO : Change alert to SweetAlert2.
-		// https://sweetalert2.github.io/
-		var result = confirm( message );
-
-		if( true === result && 'confirm' in options ) {
-			options.confirm();
-		} else if( 'reject' in options ) {
-			options.reject();
-		}
-	}
-
 }(jQuery, window.user_registration_admin_data));
+
+function ur_alert( message, options = [] ) {
+	// TODO : Change alert to SweetAlert2.
+	// https://sweetalert2.github.io/
+	alert( message );
+}
+
+function ur_confirmation( message, options ) {
+	// TODO : Change alert to SweetAlert2.
+	// https://sweetalert2.github.io/
+	var result = confirm( message );
+
+	if( true === result && 'confirm' in options ) {
+		options.confirm();
+	} else if( 'reject' in options ) {
+		options.reject();
+	}
+}
