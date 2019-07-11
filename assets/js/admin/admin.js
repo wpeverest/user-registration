@@ -513,8 +513,8 @@ jQuery(function ($) {
 			});
 		};
 		$('.ur-input-grids').ur_form_builder();
-		$('.ur-tabs').find('a').click(function () {
-			$('.ur-tabs').find('a').removeClass('active');
+		$('.ur-tabs .ur-tab-lists').find('a.nav-tab').click(function () {
+			$('.ur-tabs .ur-tab-lists').find('a.nav-tab').removeClass('active');
 			$(this).addClass('active');
 		});
 		$('.ur-tabs').tabs();
@@ -1231,6 +1231,24 @@ jQuery(function ($) {
 		var cloning_element 	= wrapper.find( '.ur-general-setting-options .ur-options-list');
 		cloning_element.html('');
 		cloning_element.replaceWith(cloning_options);
+	}
+
+	function ur_alert( message, options = [] ) {
+		// TODO : Change alert to SweetAlert2.
+		// https://sweetalert2.github.io/
+		alert( message );
+	}
+
+	function ur_confirmation( message, options ) {
+		// TODO : Change alert to SweetAlert2.
+		// https://sweetalert2.github.io/
+		var result = confirm( message );
+
+		if( true === result && 'confirm' in options ) {
+			options.confirm();
+		} else if( 'reject' in options ) {
+			options.reject();
+		}
 	}
 
 }(jQuery, window.user_registration_admin_data));
