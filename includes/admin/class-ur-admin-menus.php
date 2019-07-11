@@ -582,13 +582,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<?php
 			echo '<div class="ur-input-grids">';
 
-			$row_count = 0;
+			foreach ( $form_data_array as $row_id => $rows ) {
 
-			foreach ( $form_data_array as $rows ) {
-
-				$row_count++;
-
-				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_count ) . '">';
+				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
 				echo '<div class="ur-grids">';
 
 				$grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
@@ -638,7 +634,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $row_count . '">' . $add_or_remove_icon . '</button>';
+			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $row_id . '">' . $add_or_remove_icon . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';

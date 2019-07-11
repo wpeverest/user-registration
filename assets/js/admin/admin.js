@@ -219,7 +219,7 @@ jQuery(function ($) {
 						return grid_button.html();
 					},
 					single_row: function () {
-						var single_row = $('<div class=\'ur-single-row\'/>');
+						var single_row = $('<div class=\'ur-single-row\'/ data-row-id="0">');
 						single_row.append($('<div class=\'ur-grids\'/>'));
 						var grid_button = this.get_grid_button();
 						single_row.find('.ur-grids').append(grid_button);
@@ -230,7 +230,7 @@ jQuery(function ($) {
 						single_row.append('<div style="clear:both"></div>');
 						$this.append(single_row);
 						$this.find('.ur-add-new-row').remove();
-						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle"></button>');
+						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0"></button>');
 						var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
 						$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
 						events.render_draggable_sortable();
@@ -579,7 +579,7 @@ jQuery(function ($) {
 		var form_setting_data = $('#ur-field-settings').serializeArray();
 
 		/** TODO:: Hanlde from multistep forms add-on if possible. */
-		var multistep_page_setting = $('#ur-multi-part-page-settings').serializeArray();
+		var multipart_page_setting = $('#ur-multi-part-page-settings').serializeArray();
 		/** End Multistep form code. */
 
 		var data = {
@@ -590,7 +590,7 @@ jQuery(function ($) {
 				form_name: $('#ur-form-name').val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
-				multistep_page_setting: multistep_page_setting,
+				multipart_page_setting: multipart_page_setting,
 			}
 		};
 
@@ -609,7 +609,7 @@ jQuery(function ($) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 					show_message(success_message, 'success');
 					var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
-					window.location = location;
+					// window.location = location;
 				} else {
 					var error = response.responseJSON.data.message;
 					show_message(error);
