@@ -60,6 +60,7 @@ do_action( 'user_registration_before_registration_form' );
 			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
 
 			<?php
+			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
 			foreach ( $form_data_array as $data ) {
 				?>
 						<div class='ur-form-row'>
@@ -92,6 +93,7 @@ do_action( 'user_registration_before_registration_form' );
 						</div>
 					<?php
 			}
+			do_action( 'user_registration_after_form_fields', $form_data_array, $form_id );
 
 			if ( $is_field_exists ) {
 				?>
@@ -117,7 +119,7 @@ do_action( 'user_registration_before_registration_form' );
 
 			<div style="clear:both"></div>
 			<input type="hidden" name="ur-user-form-id" value="<?php echo $form_id; ?>"/>
-			<input type="hidden" name="ur-redirect-url" value="<?php echo $redirect_url;?>"/>
+			<input type="hidden" name="ur-redirect-url" value="<?php echo $redirect_url; ?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 		</form>
 
