@@ -61,7 +61,9 @@ do_action( 'user_registration_before_registration_form' );
 
 			<?php
 			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
+			$row = 0;
 			foreach ( $form_data_array as $data ) {
+				do_action( 'user_registration_before_field_row', $row, $form_data_array, $form_id );
 				?>
 						<div class='ur-form-row'>
 						<?php
@@ -91,7 +93,9 @@ do_action( 'user_registration_before_registration_form' );
 						}
 						?>
 						</div>
-					<?php
+				<?php
+				do_action( 'user_registration_after_field_row', $row, $form_data_array, $form_id );
+				$row++;
 			}
 			do_action( 'user_registration_after_form_fields', $form_data_array, $form_id );
 
