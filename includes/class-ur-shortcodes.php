@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Shortcodes {
 
+	public static $parts = false;
+
 	/**
 	 * Init Shortcodes.
 	 */
@@ -204,6 +206,8 @@ class UR_Shortcodes {
 
 		$form_data_array = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 
+		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
+
 		include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
 		ur_get_template(
 			'form-registration.php',
@@ -214,6 +218,7 @@ class UR_Shortcodes {
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
 				'recaptcha_node'            => $recaptcha_node,
+				'parts'                     => self::$parts,
 			)
 		);
 	}
