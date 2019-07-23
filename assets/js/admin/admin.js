@@ -609,7 +609,7 @@ jQuery(function ($) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 					show_message(success_message, 'success');
 					var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
-					// window.location = location;
+					window.location = location;
 				} else {
 					var error = response.responseJSON.data.message;
 					show_message(error);
