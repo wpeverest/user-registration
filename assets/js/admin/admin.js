@@ -229,10 +229,11 @@ jQuery(function ($) {
 						single_row.append(grid_list);
 						single_row.append('<div style="clear:both"></div>');
 						$this.append(single_row);
-						$this.find('.ur-add-new-row').remove();
-						$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0"></button>');
-						var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
-						$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
+						if ( $this.find('.ur-add-new-row').length == 0 ) {
+							$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0"></button>');
+							var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
+							$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
+						}
 						events.render_draggable_sortable();
 						builder.manage_empty_grid();
 						if (user_registration_admin_data.is_edit_form === '1') {
@@ -570,6 +571,7 @@ jQuery(function ($) {
 		}
 
 		var form_data = get_form_data();
+		var form_row_ids = get_form_row_ids();
 		var ur_form_id = $('#ur_form_id').val();
 		var ur_form_id_localization = user_registration_admin_data.post_id;
 		if (ur_parse_int(ur_form_id_localization, 0) !== ur_parse_int(ur_form_id, 0)) {
@@ -587,6 +589,7 @@ jQuery(function ($) {
 			security: user_registration_admin_data.ur_form_save,
 			data: {
 				form_data: JSON.stringify(form_data),
+				form_row_ids: JSON.stringify(form_row_ids),
 				form_name: $('#ur-form-name').val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
@@ -729,6 +732,15 @@ jQuery(function ($) {
 			form_data.push(single_row_data);
 		});
 		return form_data;
+	}
+
+	function get_form_row_ids() {
+		var row_ids = [];
+		var single_row = $('.ur-input-grids .ur-single-row');
+		$.each(single_row, function () {
+			row_ids.push($(this).attr( 'data-row-id' ));
+		});
+		return row_ids;
 	}
 
 	function get_grid_wise_data($grid_item) {

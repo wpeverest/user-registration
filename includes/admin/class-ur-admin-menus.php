@@ -554,19 +554,23 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		private function get_edit_form_field( $post_data ) {
 
 			if ( isset( $post_data[0] ) ) {
-				$form_data = $post_data[0]->post_content;
+				$form_data    = $post_data[0]->post_content;
+				$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
 			} else {
-				$form_data = '';
+				$form_data    = '';
+				$form_row_ids = '';
 			}
 
 			try {
-				$form_data_array = json_decode( $form_data );
+				$form_data_array    = json_decode( $form_data );
+				$form_row_ids_array = json_decode( $form_row_ids );
 
 				if ( json_last_error() != JSON_ERROR_NONE ) {
 					throw new Exception( '' );
 				}
 			} catch ( Exception $e ) {
-				$form_data_array = array();
+				$form_data_array    = array();
+				$form_row_ids_array = array();
 			}
 
 			echo '<div class="ur-selected-inputs">';
@@ -582,7 +586,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<?php
 			echo '<div class="ur-input-grids">';
 
-			foreach ( $form_data_array as $row_id => $rows ) {
+			$row_id  = 0;
+			$last_id = 0;
+
+			foreach ( $form_data_array as $index => $rows ) {
+				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
+				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
 				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
 				echo '<div class="ur-grids">';
@@ -634,7 +643,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $row_id . '">' . $add_or_remove_icon . '</button>';
+			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . $add_or_remove_icon . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
