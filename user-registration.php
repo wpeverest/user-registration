@@ -2,7 +2,7 @@
 /**
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
- * Description: Drag and Drop user registration and login form builder.
+ * Description: Drag and Drop user registration form and login form builder.
  * Version: 1.6.2
  * Author: WPEverest
  * Author URI: https://wpeverest.com
