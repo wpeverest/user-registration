@@ -105,12 +105,14 @@ do_action( 'user_registration_before_registration_form' );
 					if ( ! empty( $recaptcha_node ) ) {
 						echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> ' . $recaptcha_node . '</div>';
 					}
+
+					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
 					?>
-					<div class="ur-button-container" >
+					<div class="ur-button-container <?php echo implode( ' ', $btn_container_class ); ?>" >
 						<?php
 						do_action( 'user_registration_before_form_buttons', $form_id );
 
-						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array() );
+						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
 						?>
 
 						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
