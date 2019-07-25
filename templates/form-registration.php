@@ -107,11 +107,17 @@ do_action( 'user_registration_before_registration_form' );
 					}
 					?>
 					<div class="ur-button-container" >
-						<?php do_action( 'user_registration_before_form_buttons', $form_id ); ?>
-						<button type="submit" class="btn button ur-submit-button">
+						<?php
+						do_action( 'user_registration_before_form_buttons', $form_id );
+
+						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array() );
+						?>
+
+						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
-							<?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
+							<?php echo esc_html( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ) ); ?>
 						</button>
+
 						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
 					</div>
 					<?php
@@ -119,7 +125,7 @@ do_action( 'user_registration_before_registration_form' );
 
 			if ( count( $form_data_array ) == 0 ) {
 				?>
-						<h2><?php echo __( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
+						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
 					<?php
 			}
 			?>
