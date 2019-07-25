@@ -266,6 +266,8 @@ class UR_AJAX {
 			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
+				$_POST['data']['form_id'] = $post_id; // Form id for new form.
+
 				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
 				ur_update_form_settings( $post_data_setting, $post_id );
 
