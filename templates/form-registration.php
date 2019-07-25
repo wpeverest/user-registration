@@ -108,7 +108,7 @@ do_action( 'user_registration_before_registration_form' );
 
 					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
 					?>
-					<div class="ur-button-container <?php echo implode( ' ', $btn_container_class ); ?>" >
+					<div class="ur-button-container <?php echo esc_html( implode( ' ', $btn_container_class ) ); ?>" >
 						<?php
 						do_action( 'user_registration_before_form_buttons', $form_id );
 
