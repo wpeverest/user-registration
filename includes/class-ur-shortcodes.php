@@ -168,16 +168,23 @@ class UR_Shortcodes {
 			'post__in'    => array( $form_id ),
 		);
 
-		$post_data = get_posts( $args );
-		$form_data = '';
+		$post_data    = get_posts( $args );
+		$form_data    = '';
+		$form_row_ids = '';
 
 		if ( isset( $post_data[0] ) ) {
-			$form_data = $post_data[0]->post_content;
+			$form_data    = $post_data[0]->post_content;
+			$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
 		}
-		$form_data_array = json_decode( $form_data );
+		$form_data_array    = json_decode( $form_data );
+		$form_row_ids_array = json_decode( $form_row_ids );
 
 		if ( gettype( $form_data_array ) != 'array' ) {
 			$form_data_array = array();
+		}
+
+		if ( gettype( $form_row_ids_array ) != 'array' ) {
+			$form_row_ids_array = array();
 		}
 
 		$is_field_exists           = false;
@@ -219,6 +226,7 @@ class UR_Shortcodes {
 				'minimum_password_strength' => $minimum_password_strength,
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
+				'row_ids'                   => $form_row_ids_array,
 			)
 		);
 	}
