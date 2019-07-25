@@ -61,9 +61,10 @@ do_action( 'user_registration_before_registration_form' );
 
 			<?php
 			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
-			$row = 0;
-			foreach ( $form_data_array as $data ) {
-				do_action( 'user_registration_before_field_row', $row, $form_data_array, $form_id );
+
+			foreach ( $form_data_array as $index => $data ) {
+				$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+				do_action( 'user_registration_before_field_row', $row_id, $form_data_array, $form_id );
 				?>
 						<div class='ur-form-row'>
 						<?php
@@ -94,8 +95,7 @@ do_action( 'user_registration_before_registration_form' );
 						?>
 						</div>
 				<?php
-				do_action( 'user_registration_after_field_row', $row, $form_data_array, $form_id );
-				$row++;
+				do_action( 'user_registration_after_field_row', $row_id, $form_data_array, $form_id );
 			}
 			do_action( 'user_registration_after_form_fields', $form_data_array, $form_id );
 
@@ -106,11 +106,14 @@ do_action( 'user_registration_before_registration_form' );
 						echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> ' . $recaptcha_node . '</div>';
 					}
 					?>
+					<div class="ur-button-container" >
+						<?php do_action( 'user_registration_before_form_buttons', $form_id ); ?>
 						<button type="submit" class="btn button ur-submit-button">
 							<span></span>
 							<?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
 						</button>
-
+						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
+					</div>
 					<?php
 			}
 
