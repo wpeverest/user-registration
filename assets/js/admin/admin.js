@@ -170,6 +170,8 @@ jQuery(function ($) {
 			$( '#ur-full-screen-mode.opened' ).trigger( 'click' );
 		}
 	} );
+
+	$( 'input.input-color' ).wpColorPicker();
 });
 
 (function ($, user_registration_admin_data) {
@@ -1246,7 +1248,7 @@ jQuery(function ($) {
 	}
 }(jQuery, window.user_registration_admin_data));
 
-function ur_alert( message, options = [] ) {
+function ur_alert( message, options ) {
 	// TODO : Change alert to SweetAlert2.
 	// https://sweetalert2.github.io/
 	alert( message );

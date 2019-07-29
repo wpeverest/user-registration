@@ -311,6 +311,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				break;
 
+			case 'color':
+				$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" class="input-text input-color ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $args['default'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				break;
+
 			case 'select':
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
 
