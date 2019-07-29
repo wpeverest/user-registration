@@ -299,6 +299,36 @@ $.extend( $.validator, {
 			if ( !this.checkable( element ) && ( element.name in this.submitted || !this.optional( element ) ) ) {
 				this.element( element );
 			}
+			if(element.name=="user_pass"){
+
+				var $this = $('#'+element.id);
+
+				var enable_strength_password  = $this.closest('form').attr('data-enable-strength-password');
+
+				if ( 'no' === enable_strength_password ) {
+					return;
+				}else{
+					var wrapper = $this.closest('form');
+					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
+					var blacklistArray = wp.passwordStrength.userInputBlacklist();
+					blacklistArray.push( wrapper.find('input[data-id="user_email"]').val() ); // Add email address in blacklist.
+					blacklistArray.push( wrapper.find('input[data-id="user_login"]').val() ); // Add username in blacklist.
+					var pwsL10n = ur_password_strength_meter_params.pwsL10n;
+					var strength = wp.passwordStrength.meter(element.value, blacklistArray);
+					if( strength < minimum_password_strength ) {
+						if($('#user_pass').val()!=""){
+							$( '#user_pass-error' ).remove();
+							minimum_password_strength=minimum_password_strength==0?pwsL10n.shortpw:minimum_password_strength;
+							minimum_password_strength=minimum_password_strength==1?pwsL10n.bad:minimum_password_strength;
+							minimum_password_strength=minimum_password_strength==2?pwsL10n.good:minimum_password_strength;
+							minimum_password_strength=minimum_password_strength==3||minimum_password_strength==4?pwsL10n.strong:minimum_password_strength;
+							minimum_password_strength=minimum_password_strength==5?pwsL10n.mismatch:minimum_password_strength;
+							var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength must be '+minimum_password_strength+'</label>';
+							$this.closest( 'p.form-row' ).append( error_msg_dom );
+						}
+					}
+				}
+			}
 		},
 		onkeyup: function( element, event ) {
 
