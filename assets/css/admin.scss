@@ -703,6 +703,20 @@
 		line-height: 2;
 	}
 
+	.wp-picker-container {
+		.wp-picker-input-wrap {
+			label {
+				display: inline-block;
+				width: auto;
+
+				input.wp-color-picker {
+					height: auto;
+					padding: 3px 5px;
+				}
+			}
+		}
+	}
+
 	.ur-registered-inputs {
 		width: 35%;
 		max-width: 450px;
