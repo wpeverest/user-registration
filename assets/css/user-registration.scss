@@ -29,7 +29,7 @@
 	flex-wrap: wrap;
 	align-items: center;
 	margin: 0 0 2em;
-	padding: 1.25em 2em;
+	padding: 1em 1.25em;
 	background-color: lighten($secondary, 5%);
 	color: $secondarytext;
 	border-top: 3px solid $primary;
@@ -37,7 +37,7 @@
 	@include clearfix();
 	width: auto;
 	word-wrap: break-word;
-	line-height: 1.5;
+	line-height: 1.25;
 	text-transform: none;
 	font-size: 14px;
 
@@ -228,7 +228,11 @@
 
 					text-decoration: none;
 					border: none;
-					color: #ff0000;
+					color: $color_danger;
+				}
+
+				&.user-registration-error {
+					display: flex;
 				}
 			}
 
