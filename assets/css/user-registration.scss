@@ -285,6 +285,16 @@
 		transition: 0.9s all ease-out;
 	}
 
+	.ur-button-container {
+		display: flex;
+		margin-top: 10px;
+		padding: 0 10px;
+
+		.ur-submit-button {
+			margin-left: auto;
+		}
+	}
+
 	.ur-submit-button {
 		margin-right: 10px;
 		margin-bottom: 0;
