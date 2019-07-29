@@ -52,11 +52,11 @@ $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_cl
 /**
  * @since 1.5.1
  */
-do_action( 'user_registration_before_registration_form' );
+do_action( 'user_registration_before_registration_form', $form_id );
 
 ?>
 	<div class='ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='ur-frontend-form'>
-		<form method='post' class='register'
+		<form id="ur-form-<?php echo $form_id ?>" method='post' class='register'
 			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
 
 			<?php
@@ -147,6 +147,6 @@ do_action( 'user_registration_before_registration_form' );
  *
  * @since 1.0.0
  */
-do_action( 'user_registration_form_registration' );
+do_action( 'user_registration_form_registration', $form_id );
 
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
