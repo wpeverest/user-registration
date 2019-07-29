@@ -1707,8 +1707,9 @@ img.tips {
 .form-settings-tab {
 	padding: 10px 15px;
 	cursor: pointer;
-	background: #c4c4c4;
+	background: $color_gray_lighten;
 	margin-bottom: 10px;
+	border-radius: 4px;
 }
 
 .form-settings-tab.active {
