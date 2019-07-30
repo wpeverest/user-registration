@@ -55,6 +55,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$this->emails['UR_Settings_Reset_Password_Email'] = include 'emails/class-ur-settings-reset-password-email.php';
 
+			$this->emails['UR_Settings_Profile_Details_Changed_Email'] = include 'emails/class-ur-settings-profile-details-changed-email.php';
+
 			$this->emails = apply_filters( 'user_registration_email_classes', $this->emails );
 		}
 
