@@ -2,9 +2,7 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Profile_Details_Changed_Email
- * @category Class
- * @author   WPEverest
+ * @package UR_Settings_Profile_Details_Changed_Email Class
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +16,9 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 	 */
 	class UR_Settings_Profile_Details_Changed_Email {
 
+		/**
+		 * UR_Settings_Profile_Details_Changed_Email class constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'profile_details_changed_email';
 			$this->title       = __( 'Profile Details Changed Email', 'user-registration' );
@@ -78,6 +79,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Message to be send to admin while profile detail changed.
+		 *
+		 * @return string message
+		 */
 		public function ur_get_profile_details_changed_email() {
 
 			$message = apply_filters(
@@ -89,7 +95,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 			SiteName: {{blog_info}}
 			Username: {{username}}
 
-			If this was a mistake, just ignore this email and nothing will happen.
+			{{all_fields}}
 
 			Thank You!',
 						'user-registration'

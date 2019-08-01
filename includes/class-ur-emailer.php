@@ -189,8 +189,8 @@ class UR_Emailer {
 		$data_html   = '';
 		$smart_data  = array();
 		$email       = '';
-		$username    = '';
 		$user_data   = get_userdata( $user_id );
+		$username    = $user_data->user_login;
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $profile as $key => $form_data ) {
@@ -211,7 +211,6 @@ class UR_Emailer {
 			if ( 'user_email' === $field_name ) {
 				$email = $value;
 			}
-			$username                 = $user_data->user_login;
 			$tmp_data['value']        = $value;
 			$tmp_data['field_type']   = $form_data['type'];
 			$tmp_data['label']        = $form_data['label'];
