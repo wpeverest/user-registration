@@ -5,8 +5,6 @@
  * @class    UR_Settings_General
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,10 +39,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				''                  => __( 'General Options', 'user-registration' ),
-				'login-options'     => __( 'Login Options', 'user-registration' ),
-				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
-				'export-users'      => __( 'Export Users', 'user-registration' ),
+				''                    => __( 'General Options', 'user-registration' ),
+				'login-options'       => __( 'Login Options', 'user-registration' ),
+				'frontend-messages'   => __( 'Frontend Messages', 'user-registration' ),
+				'export-users'        => __( 'Export Users', 'user-registration' ),
+				'import-export-forms' => __( 'Import/Export Forms', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -450,16 +449,21 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function output() {
 
 			global $current_section;
-			if ( $current_section === '' ) {
+			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
 
-			} elseif ( $current_section === 'frontend-messages' ) {
+			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
-			} elseif ( $current_section === 'login-options' ) {
+			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
-			} elseif ( $current_section === 'export-users' ) {
+			} elseif ( 'export-users' === $current_section ) {
 				$settings = array();
 				UR_Admin_Export_Users::output();
+			} elseif ( 'import-export-forms' === $current_section ) {
+				$settings = array();
+				UR_Admin_Import_Export_Forms::output();
+			} else {
+				$settings = array();
 			}
 
 			UR_Admin_Settings::output_fields( $settings );
@@ -473,14 +477,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			global $current_section;
 			$settings = $this->get_settings();
 
-			if ( $current_section === '' ) {
+			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
 
-			} elseif ( $current_section === 'frontend-messages' ) {
+			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
-			} elseif ( $current_section === 'login-options' ) {
+			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
-			} elseif ( $current_section === 'export-users' ) {
+			} elseif ( 'export-users' === $current_section ) {
+				$settings = array();
+			} elseif ( 'import-export-forms' === $current_section ) {
 				$settings = array();
 			}
 

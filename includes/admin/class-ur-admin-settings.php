@@ -172,7 +172,7 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		if ( $current_tab === 'general' && $current_section === 'export-users' ) {
+		if ( $current_tab === 'general' && $current_section === 'export-users' && $current_section === 'import-export-forms' ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
@@ -407,7 +407,7 @@ class UR_Admin_Settings {
 								<?php
 								foreach ( $value['options'] as $key => $val ) {
 									?>
-									<option value="<?php echo esc_attr( $key ); ?>" 
+									<option value="<?php echo esc_attr( $key ); ?>"
 															  <?php
 
 																if ( is_array( $option_value ) ) {
