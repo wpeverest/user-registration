@@ -5,8 +5,6 @@
  * @class    UR_Admin_Settings
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -69,7 +67,7 @@ class UR_Admin_Settings {
 			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		// Trigger actions
+		// Trigger actions.
 		do_action( 'user_registration_settings_save_' . $current_tab );
 		do_action( 'user_registration_update_options_' . $current_tab );
 		do_action( 'user_registration_update_options' );
@@ -80,7 +78,7 @@ class UR_Admin_Settings {
 			self::add_message( __( 'Your settings have been saved.', 'user-registration' ) );
 		}
 
-		// Flush rules
+		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
 		do_action( 'user_registration_settings_saved' );
@@ -89,7 +87,7 @@ class UR_Admin_Settings {
 	/**
 	 * Add a message.
 	 *
-	 * @param string $text
+	 * @param string $text Text.
 	 */
 	public static function add_message( $text ) {
 		self::$messages[] = $text;
@@ -98,7 +96,7 @@ class UR_Admin_Settings {
 	/**
 	 * Add an error.
 	 *
-	 * @param string $text
+	 * @param string $text Text.
 	 */
 	public static function add_error( $text ) {
 		self::$errors[] = $text;
@@ -107,7 +105,7 @@ class UR_Admin_Settings {
 	/**
 	 * Output messages + errors.
 	 *
-	 * @return string
+	 * @echo string
 	 */
 	public static function show_messages() {
 		if ( sizeof( self::$errors ) > 0 ) {
@@ -143,7 +141,7 @@ class UR_Admin_Settings {
 			)
 		);
 
-		// Include settings pages
+		// Include settings pages.
 		self::get_settings_pages();
 
 		// Get current tab/section
@@ -154,7 +152,7 @@ class UR_Admin_Settings {
 
 		if ( $flag ) {
 
-			// Save settings if data has been posted
+			// Save settings if data has been posted.
 			if ( ! empty( $_POST ) ) {
 				self::save();
 			}
@@ -172,7 +170,7 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		if ( $current_tab === 'general' && $current_section === 'export-users' && $current_section === 'import-export-forms' ) {
+		if ( 'general' === $current_tab && ( 'export-users' === $current_section || 'import-export-forms' === $current_section ) ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
@@ -182,12 +180,13 @@ class UR_Admin_Settings {
 	/**
 	 * Get a setting from the settings API.
 	 *
-	 * @param mixed $option_name
+	 * @param mixed $option_name Option Name.
+	 * @param mixed $default Default.
 	 *
 	 * @return string
 	 */
 	public static function get_option( $option_name, $default = '' ) {
-		// Array value
+		// Array value.
 		if ( strstr( $option_name, '[' ) ) {
 
 			parse_str( $option_name, $option_array );
@@ -195,7 +194,7 @@ class UR_Admin_Settings {
 			// Option name is first key
 			$option_name = current( array_keys( $option_array ) );
 
-			// Get value
+			// Get value.
 			$option_values = get_option( $option_name, '' );
 
 			$key = key( $option_array[ $option_name ] );
@@ -215,7 +214,7 @@ class UR_Admin_Settings {
 			$option_value = stripslashes( $option_value );
 		}
 
-		return $option_value === null ? $default : $option_value;
+		return null === $option_value ? $default : $option_value;
 	}
 
 	/**
@@ -223,7 +222,7 @@ class UR_Admin_Settings {
 	 *
 	 * Loops though the user registration options array and outputs each field.
 	 *
-	 * @param array[] $options Opens array to output
+	 * @param array[] $options Opens array to output.
 	 */
 	public static function output_fields( $options ) {
 
@@ -268,14 +267,14 @@ class UR_Admin_Settings {
 				}
 			}
 
-			// Description handling
+			// Description handling.
 			$field_description = self::get_field_description( $value );
 			extract( $field_description );
 
-			// Switch based on type
+			// Switch based on type.
 			switch ( $value['type'] ) {
 
-				// Section Titles
+				// Section Titles.
 				case 'title':
 					if ( ! empty( $value['title'] ) ) {
 						echo '<h2>' . esc_html( $value['title'] ) . '</h2>';
@@ -289,7 +288,7 @@ class UR_Admin_Settings {
 					}
 					break;
 
-				// Section Ends
+				// Section Ends.
 				case 'sectionend':
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_end' );
@@ -300,7 +299,7 @@ class UR_Admin_Settings {
 					}
 					break;
 
-				// Standard text inputs and subtypes like 'number'
+				// Standard text inputs and subtypes like 'number'.
 				case 'text':
 				case 'email':
 				case 'number':
@@ -358,7 +357,7 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
-				// Textarea
+				// Textarea.
 				case 'textarea':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
@@ -384,7 +383,7 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
-				// Select boxes
+				// Select boxes.
 				case 'select':
 				case 'multiselect':
 					$option_value = self::get_option( $value['id'], $value['default'] );
@@ -408,15 +407,15 @@ class UR_Admin_Settings {
 								foreach ( $value['options'] as $key => $val ) {
 									?>
 									<option value="<?php echo esc_attr( $key ); ?>"
-															  <?php
+															<?php
 
-																if ( is_array( $option_value ) ) {
-																	selected( in_array( $key, $option_value ), true );
-																} else {
-																	selected( $option_value, $key );
-																}
+															if ( is_array( $option_value ) ) {
+																selected( in_array( $key, $option_value ), true );
+															} else {
+																selected( $option_value, $key );
+															}
 
-																?>
+															?>
 										><?php echo $val; ?></option>
 										<?php
 								}
@@ -427,7 +426,7 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
-				// Radio inputs
+				// Radio inputs.
 				case 'radio':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
@@ -465,7 +464,7 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
-				// Checkbox input
+				// Checkbox input.
 				case 'checkbox':
 					$option_value    = self::get_option( $value['id'], $value['default'] );
 					$visbility_class = array();
@@ -476,17 +475,17 @@ class UR_Admin_Settings {
 					if ( ! isset( $value['show_if_checked'] ) ) {
 						$value['show_if_checked'] = false;
 					}
-					if ( 'yes' == $value['hide_if_checked'] || 'yes' == $value['show_if_checked'] ) {
+					if ( 'yes' === $value['hide_if_checked'] || 'yes' === $value['show_if_checked'] ) {
 						$visbility_class[] = 'hidden_option';
 					}
-					if ( 'option' == $value['hide_if_checked'] ) {
+					if ( 'option' === $value['hide_if_checked'] ) {
 						$visbility_class[] = 'hide_options_if_checked';
 					}
-					if ( 'option' == $value['show_if_checked'] ) {
+					if ( 'option' === $value['show_if_checked'] ) {
 						$visbility_class[] = 'show_options_if_checked';
 					}
 
-					if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
+					if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
 						?>
 							<tr valign="top" class="
 							<?php
@@ -521,7 +520,7 @@ class UR_Admin_Settings {
 						</label>
 					<?php
 
-					if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
+					if ( ! isset( $value['checkboxgroup'] ) || 'end' === $value['checkboxgroup'] ) {
 						?>
 									</fieldset>
 								</td>
@@ -534,7 +533,7 @@ class UR_Admin_Settings {
 					}
 					break;
 
-				// Single page selects
+				// Single page selects.
 				case 'single_select_page':
 					$args = array(
 						'name'             => $value['id'],
@@ -593,12 +592,12 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
-				// Default: run an action
+				// Default: run an action.
 				default:
 					do_action( 'user_registration_admin_field_' . $value['type'], $value );
 					break;
-			}// End switch().
-		}// End foreach().
+			}// End switch case.
+		}// End foreach.
 	}
 
 	/**
@@ -606,7 +605,7 @@ class UR_Admin_Settings {
 	 * given form field. Plugins can call this when implementing their own custom
 	 * settings types.
 	 *
-	 * @param  array $value The form field value array
+	 * @param  array $value The form field value array.
 	 *
 	 * @return array The description and tip as a 2 element array
 	 */
@@ -646,7 +645,7 @@ class UR_Admin_Settings {
 	 *
 	 * Loops though the user registration options array and outputs each field.
 	 *
-	 * @param  array $options Options array to output
+	 * @param  array $options Options array to output.
 	 *
 	 * @return bool
 	 */
