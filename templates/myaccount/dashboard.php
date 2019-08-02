@@ -35,13 +35,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="user-registration-profile-header">
 	<div class="user-registration-img-container">
 		<?php
-			$gravatar_image     = get_avatar_url( get_current_user_id(), $args = null );
-			$profile_picture_id = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_id', true );
-		if ( $profile_picture_id ) {
-			$image = wp_get_attachment_thumb_url( $profile_picture_id );
-		} else {
-			$image = $gravatar_image;
-		}
+			$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 		?>
 		<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
 	</div>
