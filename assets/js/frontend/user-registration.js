@@ -304,7 +304,7 @@
 				form_submit_event: function () {
 
 					$('form.register').on('submit', function (event) {
-
+						var $this = $(this);
 						// Validator messages.
 						$.extend($.validator.messages, {
 							required: user_registration_params.message_required_fields,
@@ -313,24 +313,23 @@
 							number: user_registration_params.message_number_fields,
 							confirmpassword: user_registration_params.message_confirm_password_fields,
 						});
-
 						if ($this.find('.user-registration-password-strength').length > 0) {
 
 							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
 							var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
 							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
-
-								if ( $('#user_pass').val() != "" ) {
-									$( '#user_pass-error' ).remove();
+								if ( $this.find('#user_pass').val() != "" ) {
+									$this.find( '#user_pass-error' ).remove();
 									var minimum_password_strength = parseInt(min_strength, 0);
-									minimum_password_strength     = minimum_password_strength == 0 ? pwsL10n.shortpw:minimum_password_strength;
-									minimum_password_strength     = minimum_password_strength == 1 ? pwsL10n.bad:minimum_password_strength;
-									minimum_password_strength     = minimum_password_strength == 2 ? pwsL10n.good:minimum_password_strength;
-									minimum_password_strength     = minimum_password_strength == 3 || minimum_password_strength == 4 ? pwsL10n.strong:minimum_password_strength;
-									minimum_password_strength     = minimum_password_strength == 5 ? pwsL10n.mismatch:minimum_password_strength;
+									minimum_password_strength     = minimum_password_strength == 0 ? pwsL10n.shortpw : minimum_password_strength;
+									minimum_password_strength     = minimum_password_strength == 1 ? pwsL10n.bad : minimum_password_strength;
+									minimum_password_strength     = minimum_password_strength == 2 ? pwsL10n.good : minimum_password_strength;
+									minimum_password_strength     = minimum_password_strength == 3 || minimum_password_strength == 4 ? pwsL10n.strong : minimum_password_strength;
+									minimum_password_strength     = minimum_password_strength == 5 ? pwsL10n.mismatch : minimum_password_strength;
 									var error_msg_dom             = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength must be '+ minimum_password_strength +'</label>';
 									$this.find('.user-registration-password-strength').closest( 'p.form-row' ).append( error_msg_dom );
-									$('#user_pass').focus();
+									$this.find('#user_pass').attr('aria-invalid',true);
+									$this.find('#user_pass').focus();
 								}
 
 								return false;
