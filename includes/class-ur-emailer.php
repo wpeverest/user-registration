@@ -363,7 +363,7 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 		$header  = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' === get_option( ' user_registration_enable_admin_email ', 'yes' ) ) {
+		if ( 'yes' === get_option( 'user_registration_enable_admin_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
 				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
@@ -567,7 +567,7 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 		$header  = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' === get_option( ' user_registration_enable_admin_email ', 'yes' ) ) {
+		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
 				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
