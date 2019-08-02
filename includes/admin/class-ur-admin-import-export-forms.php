@@ -19,7 +19,8 @@ class UR_Admin_Import_Export_Forms {
 	 * Constructor
 	 */
 	public function __construct() {
-
+		add_action( 'admin_init', array( $this, 'import_json' ) );
+		add_action( 'admin_init', array( $this, 'export_json' ) );
 	}
 
 	/**
@@ -33,13 +34,158 @@ class UR_Admin_Import_Export_Forms {
 	}
 
 	/**
-	 * Exports form data along with extra information in JSON format.
+	 * Import form data along with settings from JSON file.
 	 *
-	 * @param int $form_id Form Id.
 	 * @return void
 	 */
-	public function export_json( $form_id ) {
-		error_log( print_r( $form_id, true ) );
+	public function import_json() {
+
+		// Check for non empty $_POST.
+		if ( ! isset( $_POST['user_registration_import_form'] ) ) {
+			return;
+		}
+
+		// Nonce check.
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
+			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		}
+
+		// Check for $_FILES set or not.
+		if ( isset( $_FILES['jsonfile'] ) ) {
+
+			$filename = $_FILES['jsonfile']['tmp_name']; // get file name.
+
+			// Check file selected or not.
+			if ( ! empty( $filename ) ) {
+
+				$ext = pathinfo( $filename, PATHINFO_EXTENSION ); // get file extention.
+
+				// Check for file format.
+				if ( 'json' === $ext ) {
+
+					// read json file.
+					$form_data = json_decode( file_get_contents( filename ) );
+
+					// check for non empty json file.
+					if ( ! empty( $form_data ) ) {
+
+						// check for non empty post data array.
+						if ( ! empty( $form_data->form_post ) ) {
+							$post_id = wp_insert_post( $form_data->form_post );
+
+							// Check for any error while inserting.
+							if ( is_wp_error( $post_id ) ) {
+								return $post_id;
+							}
+							if ( $post_id ) {
+
+								// check for non empty post_meta array.
+								if ( ! empty( $form_data->form_post_meta ) ) {
+									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+										add_post_meta( $post_id, $meta_key, $meta_value );
+									}
+									echo '<div id="message" class="updated inline notice notice-success"><p><strong>' . __( 'Import Successfully.', 'user-registration' ) . '</strong></p></div>';
+								}
+							}
+						}
+					}
+				} else {
+					echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . __( 'Invalid file format. Only Json File Allowed.', 'user-registration' ) . '</strong></p></div>';
+				}
+			} else {
+				echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . __( 'Please select json file to import form data.', 'user-registration' ) . '</strong></p></div>';
+			}
+		}
+	}
+
+	/**
+	 * Exports form data along with settings in JSON format.
+	 *
+	 * @return void
+	 */
+	public function export_json() {
+
+		global $wpdb;
+
+		// Check for non empty $_POST.
+		if ( ! isset( $_POST['user_registration_export_form'] ) ) {
+			return;
+		}
+
+		// Nonce check.
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
+			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		}
+
+		$form_id = isset( $_POST['formid'] ) ? $_POST['formid'] : 0;
+
+		// Return if form id is not set and current user doesnot have export capability.
+		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
+			return;
+		}
+
+		$form_post       = get_post( $form_id );
+		$meta_key_prefix = 'user_registration';
+		$form_post_meta  = $this->get_post_meta_by_prefix( $form_id, $meta_key_prefix );
+
+		$export_data = array(
+			'form_post'      => array(
+				'post_content' => $form_post->post_content,
+				'post_title'   => $form_post->post_title,
+				'post_name'    => $form_post->post_name,
+				'post_type'    => $form_post->post_type,
+				'post_status'  => $form_post->post_status,
+			),
+			'form_post_meta' => (array) $form_post_meta,
+		);
+
+		$form_name = strtolower( str_replace( ' ', '-', get_the_title( $form_id ) ) );
+		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
+
+		if ( ob_get_contents() ) {
+			ob_clean();
+		}
+
+		$export_json = wp_json_encode( $export_data );
+		// Force download.
+		header( 'Content-Type: application/force-download' );
+
+		// Disposition / Encoding on response body.
+		header( "Content-Disposition: attachment;filename={$file_name}" );
+		header( 'Content-type: application/json' );
+
+		echo $export_json; // phpcs:ignore WordPress.Security.EscapeOutput
+		exit();
+	}
+
+
+	/**
+	 * Get post meta for a given key prefix.
+	 *
+	 * @param int    $post_id User ID of the user being edited.
+	 * @param string $key_prefix Prefix.
+	 * @return array
+	 */
+	protected function get_post_meta_by_prefix( $post_id, $key_prefix ) {
+
+		$values        = get_post_meta( $post_id );
+		$return_values = array();
+
+		if ( gettype( $values ) !== 'array' ) {
+			return $return_values;
+		}
+
+		foreach ( $values as $meta_key => $value ) {
+			if ( substr( $meta_key, 0, strlen( $key_prefix ) ) === $key_prefix ) {
+				if ( isset( $value[0] ) ) {
+					$return_values[ $meta_key ] = $value[0];
+				} elseif ( 'string' === gettype( $values ) ) {
+					$return_values[ $meta_key ] = $value;
+				}
+			}
+		}
+
+		return $return_values;
 	}
 
 }
