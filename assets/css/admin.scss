@@ -863,6 +863,12 @@
 		height: calc(100vh - 89px);
 		overflow-y: auto;
 
+		.ur-builder-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
 		.ur-form-name-wrapper {
 			display: inline-flex;
 			flex-direction: row-reverse;

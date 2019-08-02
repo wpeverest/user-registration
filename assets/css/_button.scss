@@ -1,5 +1,24 @@
 .user-registration,
 .ur-form-container {
+	button,
+	.button {
+		&.button-icon {
+			height: 32px;
+			width: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.dashicons {
+				line-height: 1;
+			}
+		}
+
+		&.button-icon-round {
+			border-radius: 50%;
+		}
+	}
+
 	.button-primary {
 		background: $primary_color;
 		border-color: $primary_color;

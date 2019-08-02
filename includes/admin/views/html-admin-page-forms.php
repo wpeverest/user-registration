@@ -115,6 +115,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
+								<a class="button button-primary button-icon button-icon-round button-style-customizer" href="#"><span class="dashicons
+dashicons-admin-appearance"></span></a>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>
 						</div>
