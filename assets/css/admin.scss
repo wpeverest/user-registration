@@ -787,7 +787,7 @@
 			}
 
 			.ur-tab-content {
-				padding: 10px;
+				padding: 16px;
 				height: calc(100vh - 130px);
 				overflow-y: auto;
 
@@ -805,51 +805,43 @@
 				}
 
 				.ur-registered-list {
-					margin: 15px 0;
-					width: 100%;
-					@include clearfix;
+					display: flex;
+					flex-wrap: wrap;
+					width: calc(100% + 16px);
+					margin-left: -8px;
 
 					&:last-child {
 						margin-bottom: 0;
 					}
 
 					.ur-registered-item {
-						float: left;
-						padding: 10px 15px 10px 45px;
-						height: auto;
-						line-height: 25px;
-						width: 48%;
-						background-color: $primary_color;
-						color: $white;
-						margin-bottom: 7px;
-						word-break: break-word;
-						white-space: normal;
-						position: relative;
 						cursor: move;
+						padding: 8px;
+						color: $white;
+						height: 120px;
+						font-size: 12px;
+						border-radius: 8px;
+						margin: 0 8px 16px;
+						display: flex;
+						align-items: center;
+						flex-direction: column;
+						justify-content: center;
+						width: calc(33.3333% - 16px);
+						background-color: $primary_color;
 
 						.dashicons {
-							position: absolute;
-							top: 0;
-							bottom: 0;
-							background: transparentize($gray_base, 0.8);
-							width: 35px;
-							left: 0;
-							line-height: 2.9;
-							font-size: 16px;
-							height: auto;
-							margin-right: 5px;
+							font-size: 28px;
+							width: 28px;
+							height: 28px;
 						}
 
-						&:nth-child(2n) {
-							float: right;
-						}
 						&:hover {
 							background-color: $primary_dark;
 							color: $white;
 						}
-						&:nth-child(2n+1) {
-							clear: both;
-							display: block;
+
+						&.ui-draggable-dragging {
+							width: 122px !important; // Inherit js styles
 						}
 					}
 				}
