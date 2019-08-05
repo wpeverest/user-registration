@@ -55,7 +55,7 @@ $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_cl
 do_action( 'user_registration_before_registration_form', $form_id );
 
 ?>
-	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?> ur-frontend-form'>
+	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<form method='post' class='register'
 			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
 
