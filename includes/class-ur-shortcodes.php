@@ -147,6 +147,8 @@ class UR_Shortcodes {
 			'user_registration_form'
 		);
 
+		do_action( 'user_registration_form_shortcode_scripts', $atts );
+
 		ob_start();
 		self::render_form( $atts['id'] );
 
