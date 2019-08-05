@@ -147,6 +147,52 @@ function ur_sanitize_tooltip( $var ) {
 }
 
 /**
+ * Format dimensions for display.
+ *
+ * @since  1.7.0
+ * @param  array $dimensions Array of dimensions.
+ * @param  array $suffix     Suffix, defaults to 'px'.
+ * @return string
+ */
+function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
+	return ur_array_to_string( ur_suffix_array( $dimensions, $unit ) );
+}
+
+/**
+ * Add a suffix into an array.
+ *
+ * @since  1.7.0
+ * @param  array  $array  Raw array data.
+ * @param  string $suffix Suffix to be added.
+ * @return array Modified array with suffix added.
+ */
+function ur_suffix_array( $array = array(), $suffix = '' ) {
+	return preg_filter( '/$/', $suffix, $array );
+}
+/**
+ * Implode an array into a string by $glue and remove empty values.
+ *
+ * @since  1.7.0
+ * @param  array  $array Array to convert.
+ * @param  string $glue  Glue, defaults to ' '.
+ * @return string
+ */
+function ur_array_to_string( $array = array(), $glue = ' ' ) {
+	return is_string( $array ) ? $array : implode( $glue, array_filter( $array ) );
+}
+/**
+ * Explode a string into an array by $delimiter and remove empty values.
+ *
+ * @since  1.7.0
+ * @param  string $string    String to convert.
+ * @param  string $delimiter Delimiter, defaults to ','.
+ * @return array
+ */
+function ur_string_to_array( $string, $delimiter = ',' ) {
+	return is_array( $string ) ? $string : array_filter( explode( $delimiter, $string ) );
+}
+
+/**
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name
