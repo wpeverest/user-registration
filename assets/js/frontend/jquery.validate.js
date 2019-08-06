@@ -315,18 +315,12 @@ $.extend( $.validator, {
 					blacklistArray.push( wrapper.find('input[data-id="user_email"]').val() ); // Add email address in blacklist.
 					blacklistArray.push( wrapper.find('input[data-id="user_login"]').val() ); // Add username in blacklist.
 
-					var pwsL10n  = ur_password_strength_meter_params.pwsL10n;
 					var strength = wp.passwordStrength.meter(element.value, blacklistArray);
 					if( strength < minimum_password_strength ) {
 						console.log(wrapper.find('input[data-id="user_pass"]').val() );
 						if(wrapper.find('input[data-id="user_pass"]').val() != ""){
 							wrapper.find( '#user_pass-error' ).remove();
-							minimum_password_strength = minimum_password_strength == 0 ? pwsL10n.shortpw : minimum_password_strength;
-							minimum_password_strength = minimum_password_strength == 1 ? pwsL10n.bad : minimum_password_strength;
-							minimum_password_strength = minimum_password_strength == 2 ? pwsL10n.good : minimum_password_strength;
-							minimum_password_strength = minimum_password_strength == 3 || minimum_password_strength == 4 ? pwsL10n.strong : minimum_password_strength;
-							minimum_password_strength = minimum_password_strength == 5 ? pwsL10n.mismatch : minimum_password_strength;
-							var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength must be '+minimum_password_strength+'</label>';
+							var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
 							$this.closest( 'p.form-row' ).append( error_msg_dom );
 						}
 					}
