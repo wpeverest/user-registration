@@ -193,6 +193,29 @@ function ur_string_to_array( $string, $delimiter = ',' ) {
 }
 
 /**
+ * Converts a string (e.g. 'yes' or 'no') to a bool.
+ *
+ * @param string $string String to convert.
+ * @return bool
+ */
+function ur_string_to_bool( $string ) {
+	return is_bool( $string ) ? $string : ( 'yes' === $string || 1 === $string || 'true' === $string || '1' === $string );
+}
+
+/**
+ * Converts a bool to a 'yes' or 'no'.
+ *
+ * @param bool $bool String to convert.
+ * @return string
+ */
+function ur_bool_to_string( $bool ) {
+	if ( ! is_bool( $bool ) ) {
+		$bool = ur_string_to_bool( $bool );
+	}
+	return true === $bool ? 'yes' : 'no';
+}
+
+/**
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name
