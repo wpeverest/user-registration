@@ -141,10 +141,13 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
-		wp_localize_script( 'ur-my-account', 'ur_my_account_params', array(
-				'upload_image' 		=> __( 'Upload Profile Picture', 'user-registration' ),
-				'select_image' 		=> __( 'Select Image', 'user-registration' ),
-				'current_user_can'	=>	current_user_can( 'edit_others_posts' )
+		wp_localize_script(
+			'ur-my-account',
+			'ur_my_account_params',
+			array(
+				'upload_image'     => __( 'Upload Profile Picture', 'user-registration' ),
+				'select_image'     => __( 'Select Image', 'user-registration' ),
+				'current_user_can' => current_user_can( 'edit_others_posts' ),
 			)
 		);
 
@@ -210,6 +213,7 @@ class UR_Admin_Assets {
 				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'             => wp_create_nonce( 'user_input_dropped_nonce' ),
 				'ur_form_save'                   => wp_create_nonce( 'ur_form_save_nonce' ),
+				'ur_import_form_save'            => wp_create_nonce( 'ur_import_form_save_nonce' ),
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
 				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false,

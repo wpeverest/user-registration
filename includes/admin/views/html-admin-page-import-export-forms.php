@@ -47,8 +47,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<input type="file" name="jsonfile" id="jsonfile"/>
 							<span class="description">Only JSON file format allowed.</span>
 						</p>
-						<input type="submit" class="button button-primary" name="user_registration_import_form" value="<?php _e( 'Import Forms', 'user-registration' ); ?>">
-
+						<div class="publishing-action">
+							<input type="button" class="button button-primary ur_import_form_action_button" name="user_registration_import_form" value="<?php _e( 'Import Forms', 'user-registration' ); ?>">
+						</div>
 					</div>
 				</div><!-- .postbox -->
 		</div>

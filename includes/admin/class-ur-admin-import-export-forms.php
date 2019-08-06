@@ -19,7 +19,6 @@ class UR_Admin_Import_Export_Forms {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'import_json' ) );
 		add_action( 'admin_init', array( $this, 'export_json' ) );
 	}
 
@@ -31,71 +30,6 @@ class UR_Admin_Import_Export_Forms {
 	public static function output() {
 		$all_forms = ur_get_all_user_registration_form();
 		include_once dirname( __FILE__ ) . '/views/html-admin-page-import-export-forms.php';
-	}
-
-	/**
-	 * Import form data along with settings from JSON file.
-	 *
-	 * @return void
-	 */
-	public function import_json() {
-
-		// Check for non empty $_POST.
-		if ( ! isset( $_POST['user_registration_import_form'] ) ) {
-			return;
-		}
-
-		// Nonce check.
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
-			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
-		}
-
-		// Check for $_FILES set or not.
-		if ( isset( $_FILES['jsonfile'] ) ) {
-
-			$filename = $_FILES['jsonfile']['tmp_name']; // get file name.
-
-			// Check file selected or not.
-			if ( ! empty( $filename ) ) {
-
-				$ext = pathinfo( $filename, PATHINFO_EXTENSION ); // get file extention.
-
-				// Check for file format.
-				if ( 'json' === $ext ) {
-
-					// read json file.
-					$form_data = json_decode( file_get_contents( filename ) );
-
-					// check for non empty json file.
-					if ( ! empty( $form_data ) ) {
-
-						// check for non empty post data array.
-						if ( ! empty( $form_data->form_post ) ) {
-							$post_id = wp_insert_post( $form_data->form_post );
-
-							// Check for any error while inserting.
-							if ( is_wp_error( $post_id ) ) {
-								return $post_id;
-							}
-							if ( $post_id ) {
-
-								// check for non empty post_meta array.
-								if ( ! empty( $form_data->form_post_meta ) ) {
-									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
-										add_post_meta( $post_id, $meta_key, $meta_value );
-									}
-									echo '<div id="message" class="updated inline notice notice-success"><p><strong>' . __( 'Import Successfully.', 'user-registration' ) . '</strong></p></div>';
-								}
-							}
-						}
-					}
-				} else {
-					echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . __( 'Invalid file format. Only Json File Allowed.', 'user-registration' ) . '</strong></p></div>';
-				}
-			} else {
-				echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . __( 'Please select json file to import form data.', 'user-registration' ) . '</strong></p></div>';
-			}
-		}
 	}
 
 	/**

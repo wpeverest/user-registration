@@ -44,6 +44,7 @@ class UR_AJAX {
 			'rated'                 => false,
 			'dashboard_widget'      => false,
 			'dismiss_review_notice' => false,
+			'import_form_action'    => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -192,6 +193,92 @@ class UR_AJAX {
 					'error' => $e->getMessage(),
 				)
 			);
+		}
+	}
+
+	/**
+	 * Import Form from backend
+	 *
+	 * @throws Exception Post data mot set.
+	 * @return json
+	 */
+	public static function import_form_action() {
+		try {
+			check_ajax_referer( 'ur_import_form_save_nonce', 'security' );
+
+			$filename = '';
+			// Check for $_FILES set or not.
+			if ( isset( $_FILES['jsonfile'] ) ) {
+
+				$filename = $_FILES['jsonfile']['name']; // get file name.
+				$ext      = pathinfo( $filename, PATHINFO_EXTENSION ); // get file extention.
+
+				// Check for file format.
+				if ( 'json' === $ext ) {
+
+					// read json file.
+					$form_data = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) );
+
+					// check for non empty json file.
+					if ( ! empty( $form_data ) ) {
+
+						// check for non empty post data array.
+						if ( ! empty( $form_data->form_post ) ) {
+							$post_id = wp_insert_post( $form_data->form_post );
+
+							// Check for any error while inserting.
+							if ( is_wp_error( $post_id ) ) {
+								return $post_id;
+							}
+							if ( $post_id ) {
+
+								// check for non empty post_meta array.
+								if ( ! empty( $form_data->form_post_meta ) ) {
+									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+										add_post_meta( $post_id, $meta_key, $meta_value );
+									}
+									wp_send_json_success(
+										array(
+											'message' => __( 'Import Successfully.', 'user-registration' ),
+										)
+									);
+								}
+							}
+						} else {
+							wp_send_json_error(
+								array(
+									'message' => __( 'Invalid file content. Please export file from user registration plugin.', 'user-registration' ),
+								)
+							);
+						}
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Invalid file content. Please export file from user registration plugin.', 'user-registration' ),
+							)
+						);
+					}
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid file format. Only Json File Allowed.', 'user-registration' ),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Please select json file to import form data.', 'user-registration' ),
+					)
+				);
+			}
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => $e->getMessage(),
+				)
+			);
+
 		}
 	}
 

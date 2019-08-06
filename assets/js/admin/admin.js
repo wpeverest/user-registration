@@ -490,6 +490,48 @@ jQuery(function ($) {
 			});
 		}
 
+		$('.ur_import_form_action_button').on('click', function () {
+			var file_data = $('#jsonfile').prop('files')[0];
+			var form_data = new FormData();
+			form_data.append('jsonfile', file_data);
+			form_data.append('action', 'user_registration_import_form_action');
+			form_data.append('security', user_registration_admin_data.ur_import_form_save);
+
+
+			$.ajax({
+				url: user_registration_admin_data.ajax_url,
+				dataType: 'json',  // what to expect back from the PHP script, if anything
+				cache: false,
+				contentType: false,
+				processData: false,
+				data:form_data,
+				type: 'post',
+				beforeSend: function () {
+					var spinner = '<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
+					$('.ur_import_form_action_button').closest('.publishing-action').append(spinner);
+					$('.ur-import_notice').remove();
+				},
+				complete: function (response) {
+					$('.ur_import_form_action_button').closest('.publishing-action').find('.spinner').remove();
+					if (response.responseJSON.success === true) {
+						$('.ur-import_notice').remove();
+						var message = response.responseJSON.data.message;
+						var message_string = '<div id="message" class="updated inline ur-import_notice"><p><strong>' + message + '</strong></p></div>';
+						$('.ur-export-users-page').prepend(message_string);
+						$('#jsonfile').val("");
+					} else {
+						$('.ur-import_notice').remove();
+						var error = response.responseJSON.data.message;
+						var message_string = '<div id="message" class="error inline ur-import_notice"><p><strong>' + error + '</strong></p></div>';
+						$('.ur-export-users-page').prepend(message_string);
+						$('#jsonfile').val("");
+					}
+				}
+			});
+
+
+		});
+
 		$('.ur_save_form_action_button').on('click', function () {
 			var validation_response = get_validation_status();
 			if (validation_response.validation_status === false) {
