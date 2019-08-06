@@ -163,24 +163,8 @@
 				height: 40px;
 				margin-bottom: 10px;
 
-				&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+				&::placeholder {
 					color: #ddd;
-					font-size:13px;
-				}
-				&::-moz-placeholder { /* Firefox 19+ */
-					color: #ddd;
-					font-size:13px;
-
-				}
-				&:-ms-input-placeholder { /* IE 10+ */
-					color: #ddd;
-					font-size:13px;
-
-				}
-				&:-moz-placeholder { /* Firefox 18- */
-					color: #ddd;
-					font-size:13px;
-
 				}
 			}
 
