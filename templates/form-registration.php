@@ -47,7 +47,7 @@ if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 }
 
-$custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class );
+$custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class, $form_id );
 
 /**
  * @since 1.5.1
