@@ -268,6 +268,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$checkbox_start = 0;
 
+					$field .= '<ul>';
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
@@ -277,11 +278,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							$value = 'checked="checked"';
 						}
 
-						$field .= '<label class="checkbox">';
-						$field .= ' <input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . $value . ' /> ';
-						$field .= trim( $choice ) . ' </label>';
+						$field .= '<li class="ur-checkbox-list">';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . $value . ' /> ';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						$checkbox_start++;
 					}
+					$field .= '</ul>';
 				} else {
 					$field = '<label class="ur-label checkbox ' . implode( ' ', $custom_attributes ) . '">
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
