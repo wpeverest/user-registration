@@ -280,7 +280,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$field .= '<li class="ur-checkbox-list">';
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $choice_index . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . $value . ' /> ';
-						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
+						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						$checkbox_start++;
 					}
 					$field .= '</ul>';
@@ -379,7 +379,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$label_id      = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
 
-					$field .= "<ul>";
+					$field .= '<ul>';
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
 						$field .= '<li class="ur-radio-list">';
@@ -397,7 +397,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							)
 						) . '</label></li>';
 					}
-					$field .= "</ul>";
+					$field .= '</ul>';
 				}
 				break;
 
