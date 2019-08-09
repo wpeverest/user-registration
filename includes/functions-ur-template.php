@@ -378,11 +378,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value         = ! empty( $value ) ? $value : $default_value;
 				$label_id      = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
+
+					$field .= "<ul>";
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
+						$field .= '<li class="ur-radio-list">';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_index ), false ) . ' /> ';
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_index ), false ) . ' /> ' . wp_kses(
+						$field .= wp_kses(
 							trim( $option_text ),
 							array(
 								'a'    => array(
@@ -391,8 +395,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								),
 								'span' => array(),
 							)
-						) . '</label>';
+						) . '</label></li>';
 					}
+					$field .= "</ul>";
 				}
 				break;
 
