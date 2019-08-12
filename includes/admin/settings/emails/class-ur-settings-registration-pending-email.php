@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Registration_Pending_Email
+ * @package  UR_Settings_Registration_Pending_Email
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,6 +17,9 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 	 */
 	class UR_Settings_Registration_Pending_Email {
 
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'registration_pending_email';
 			$this->title       = __( 'Registration Pending Email', 'user-registration' );
@@ -83,6 +84,9 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_registration_pending_email() {
 
 			$message = apply_filters(
@@ -90,15 +94,15 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 				sprintf(
 					__(
 
-						'Hi {{username}},
+						'<pre>Hi {{username}},
 
-			Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending.
+Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending.
 
-			Sorry for the inconvenience.
+Sorry for the inconvenience.
 
-			You will be notified after it is approved.
+You will be notified after it is approved.
 
-			Thank You!',
+Thank You! </pre>',
 						'user-registration'
 					)
 				)

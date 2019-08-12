@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Registration_Denied_Email
+ * @package  UR_Settings_Registration_Denied_Email
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +17,9 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 	 */
 	class UR_Settings_Registration_Denied_Email {
 
-
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'registration_denied_email';
 			$this->title       = __( 'Registration Denied Email', 'user-registration' );
@@ -81,19 +81,22 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_registration_denied_email() {
 
 			$message = apply_filters(
 				'user_registration_get_registration_denied_email',
 				sprintf(
 					__(
-						'Hi {{username}},
+						'<pre>Hi {{username}},
 
-				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
 
- 				Unfortunately your registration is denied. Sorry for the inconvenience.
+Unfortunately your registration is denied. Sorry for the inconvenience.
 
- 				Thank You!',
+Thank You! </pre>',
 						'user-registration'
 					)
 				)
