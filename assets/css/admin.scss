@@ -232,6 +232,7 @@
 		display: flex;
 		align-items: center;
 		position: relative;
+		border-color: $border_color;
 		background-color: $white;
 		z-index: 9;
 
@@ -685,12 +686,13 @@
 
 .ur-registered-from {
 	display: flex;
-	background-color: $color_gray_nine;
+	background-color: $white;
 	font-family: Roboto, sans-serif;
 
 	* {
 		box-sizing: border-box;
 	}
+
 	*:focus {
 		outline: 0;
 	}
@@ -699,8 +701,17 @@
 		text-decoration: none;
 	}
 
+	h3 {
+		color: $gray_base;
+		font-weight: 500;
+	}
+
 	.ur-field {
 		line-height: 2;
+
+		label {
+			font-weight: 400;
+		}
 	}
 
 	.wp-picker-container {
@@ -719,18 +730,18 @@
 
 	.ur-registered-item {
 		cursor: move;
-		padding: 8px;
-		color: $white;
-		height: 120px;
+		padding: 4px;
+		color: $color_gray_two;
+		height: 110px;
 		font-size: 12px;
-		border-radius: 8px;
+		border-radius: 4px;
 		margin: 0 8px 16px;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
 		justify-content: center;
 		width: calc(33.3333% - 16px);
-		background-color: $primary_color;
+		background-color: $color_gray_five;
 
 		.dashicons {
 			font-size: 28px;
@@ -739,18 +750,17 @@
 		}
 
 		&:hover {
-			background-color: $primary_dark;
+			background-color: $primary_color;
 			color: $white;
 		}
 
 		&.ui-draggable-dragging {
-			width: 122px !important; // Inherit js styles
+			width: 110px !important; // Inherit js styles
 		}
 	}
 
 	.ur-registered-inputs {
-		width: 35%;
-		max-width: 450px;
+		width: 412px;
 		background-color: $color_gray_ten;
 
 		.ur-tabs {
@@ -760,7 +770,7 @@
 			font-size: 14px;
 
 			.ur-tab-lists {
-				background-color: lighten($gray_base, 82%);
+				background-color: $color_gray_five;
 				background-image: none;
 				padding: 0;
 				border-radius: 0;
@@ -798,7 +808,7 @@
 						margin: 0;
 						border: none;
 						display: block;
-						color: $color_gray_one;
+						color: $gray_base;
 						background-color: transparent;
 						padding: 12px 15px;
 						font-weight: 500;
@@ -830,9 +840,13 @@
 				h2 {
 					margin: 12px 0;
 					font-size: 1em;
-					font-weight: 600;
+					font-weight: 500;
 					font-family: Roboto, sans-serif;
-					color: $color_gray_one;
+					color: $gray_base;
+
+					~ hr {
+						border-top: 1px solid $border_color;
+					}
 				}
 
 				.ur-registered-list {
@@ -851,7 +865,7 @@
 
 	.ur-builder-wrapper {
 		flex: 1;
-		border-left: 1px solid $color_gray_six;
+		border-left: 1px solid $border_color;
 		height: calc(100vh - 89px);
 		overflow-y: auto;
 
@@ -876,7 +890,8 @@
 				justify-content: center;
 				border-radius: 3px;
 				margin-bottom: 0;
-				background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+				color: $color_gray_one;
+				background: $color_gray_four;
 
 				&::after {
 					content: '';
@@ -887,13 +902,7 @@
 					height: 32px;
 					border-radius: 0 3px 3px 0;
 					transition: all 0.3s ease 0s;
-					background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +75% );
-				}
-
-				+ input{
-					&.ur-editing {
-						background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
-					}
+					background: $color_gray_four;
 				}
 			}
 
@@ -911,6 +920,7 @@
 				&.ur-editing {
 					border-color: transparent;
 					pointer-events: all;
+
 					+ .ur-edit-form-name {
 						color: $white;
 						background: $primary_color;
@@ -930,27 +940,27 @@
 		padding: 0 20px;
 
 		.ur-single-row {
-			background-color: $color_gray_eight;
 			margin-bottom: 20px;
-			border: 1px solid $color_gray_six;
+			border-radius: 3px;
+			background-color: $white;
+			border: 1px solid $border_color;
 
 			&:last-child {
 				margin-bottom: 0;
 			}
 
 			.ur-grids {
-				background-color: $color_gray_eight;
-				border-bottom: 1px solid $color_gray_six;
+				background-color: $color_gray_five;
+				border-bottom: 1px solid $border_color;
 				clear: both;
 				display: table;
 				width: 100%;
 
 				div {
-					border-right: 1px solid $color_gray_six;
+					border-right: 1px solid $border_color;
 					display: inline-block;
 					line-height: 25px;
-					color: $color_gray_four;
-					float: left;
+					color: $color_gray_two;
 
 					&.ur-grid-size {
 						padding: 0 10px;
@@ -959,13 +969,13 @@
 					&.ur-grid-navigation {
 						width: 25px;
 						height: 25px;
-						background-color: $color_gray_seven;
+						background-color: $color_gray_four;
 						font-family: dashicons;
 						font-size: 16px;
 						cursor: pointer;
 
 						&:hover {
-							background-color: $color_gray_six;
+							background-color: darken($color_gray_four, 5%);
 						}
 					}
 				}
@@ -975,7 +985,7 @@
 					border-radius: 0;
 					border: 0;
 					background-color: transparent;
-					color: $color_gray_four;
+					color: $color_gray_two;
 					width: 25px;
 					height: 25px;
 					cursor: pointer;
@@ -1006,17 +1016,19 @@
 					text-align: left;
 					border: 0 none;
 					padding: 15px;
-					background-color: $color_sortable_background;
 					flex: 1;
-					border: 2px dashed #d3d3d3;
+					background: $color_gray_five;
+					border: 2px dashed $color_gray_three;
+					border-radius: 4px;
 
 					.ur-selected-item {
 						margin-bottom: 15px;
 						position: relative;
-						background-color: $color_gray_nine;
+						background-color: $white;
 						padding: 20px;
 						cursor: move;
-						border: 1px solid $color_gray_seven;
+						border: 1px solid $border_color;
+						border-radius: 4px;
 						transition: border-color 0.35s;
 
 						&:last-child {
@@ -1029,20 +1041,13 @@
 						}
 
 						&.ur-item-active {
-							box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-							background-color: #f8f8f8;
-						}
-
-						&.ur-item-active.ui-sortable-helper,
-						&.ui-sortable-helper {
-							box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-							background-color: $color_gray_seven;
+							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
 							visibility: visible !important;
-							border: 2px dashed $color_gray_lighter;
-							background-color: adjust-color($primary_dark, $saturation: -20%, $lightness: +54);
+							border: 2px dashed $color_gray_three;
+							background-color: $color_gray_five;
 						}
 
 						.ur-action-buttons {
@@ -1054,12 +1059,13 @@
 							padding: 0;
 							font-size: 10px;
 							top: 10px;
-							color: $color_gray_five;
+							color: $color_gray_three;
 
 							span {
 								cursor: pointer;
-								font-size: 14px;
+								font-size: 16px;
 								height: auto;
+
 								&:hover {
 									color: $primary_color;
 								}
@@ -1146,15 +1152,6 @@
 				.ur-grid-list-item:nth-child(1n+2) {
 					border-left: 2px solid $color_sortable_background;
 				}
-
-				.ur-sortable-active,
-				.ur-grid-list-item:nth-child(1n+2).ur-sortable-active {
-					border-right: 2px dashed $primary_dark;
-					border-left: 2px dashed $primary_dark;
-					border-top: 2px dashed $primary_dark;
-					border-bottom: 2px dashed $primary_dark;
-					background-color: adjust-color($primary_dark, $saturation: -20%, $lightness: +54);
-				}
 			}
 		}
 
@@ -1183,7 +1180,7 @@
 				width: 100% !important;
 				visibility: visible !important;
 				border: 2px dashed $color_gray_lighter;
-				background-color: adjust-color($primary_dark, $saturation: -20%, $lightness: +54);
+				background-color: $color_gray_five;
 			}
 		}
 	}
@@ -1208,17 +1205,22 @@
 	textarea,
 	.ui-widget select,
 	select {
-		border: 1px solid #ddd;
-		display: block;
 		width: 100%;
-		color: $color_gray_four;
-		box-shadow: 0 0 0 transparent;
+		height: 32px;
+		display: block;
+		color: $color_gray_one;
 		font-size: 12px;
-		height: 35px;
 		padding: 0 10px;
+		border-radius: 3px;
+		border: 1px solid $border_color;
+		box-shadow: 0 0 0 transparent;
 
 		&:focus {
-			border-color: $color_gray_six;
+			border-color: $primary_color;
+		}
+
+		&::placeholder {
+			color: $color_gray_three;
 		}
 	}
 
@@ -1227,7 +1229,7 @@
 		width: 100%;
 		margin-bottom: 10px;
 		color: $color_gray_two;
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: 500;
 	}
 
@@ -1497,7 +1499,7 @@ img.tips {
 		#tiptip_arrow_inner {
 			margin-top: -5px;
 			margin-left: -6px;
-			border-bottom-color: $border_color;
+			border-bottom-color: $color_gray_one;
 		}
 	}
 
@@ -1525,9 +1527,9 @@ img.tips {
 #tiptip_content,
 .ur_error_tip {
 	color: $white;
-	font-size: 0.8em;
+	font-size: 0.9em;
 	max-width: 150px;
-	background: $border_color;
+	background: $color_gray_one;
 	text-align: center;
 	border-radius: 3px;
 	padding: 0.618em 1em;
@@ -1585,7 +1587,7 @@ img.tips {
 .user-registration-help-tip {
 	color: $color_gray_two;
 	display: inline-block;
-	font-size: 1.1em;
+	font-size: 16px;
 	font-style: normal;
 	height: 16px;
 	line-height: 16px;
@@ -1685,7 +1687,12 @@ img.tips {
 }
 
 #ur-tab-registered-fields li.ur-registered-item.ui-draggable-disabled {
-	background: $color_gray_five
+	color: $color_gray_three;
+
+	&:hover {
+		background: $color_gray_five;
+		cursor: not-allowed;
+	}
 }
 
 .ur-no-pointer {
