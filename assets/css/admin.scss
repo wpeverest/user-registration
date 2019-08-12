@@ -237,7 +237,7 @@
 		z-index: 9;
 
 		.ur-brand-logo {
-			border-right: 1px solid $color_gray_five;
+			border-right: 1px solid $border_color;
 
 			img {
 				width: 32px;
@@ -1156,7 +1156,7 @@
 		}
 
 		.ur-add-new-row {
-			color: $color_gray_five;
+			color: $color_gray_two;
 			display: block;
 			margin: 0 auto;
 			font-size: 30px;
