@@ -17,7 +17,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 	class UR_Settings_Profile_Details_Changed_Email {
 
 		/**
-		 * UR_Settings_Profile_Details_Changed_Email class constructor.
+		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'profile_details_changed_email';
@@ -90,14 +90,14 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 				'user_registration_profile_details_changed_email_message',
 				sprintf(
 					__(
-						'User has changed profile information for the following account:
+						'<pre>User has changed profile information for the following account:
 
-			SiteName: {{blog_info}}
-			Username: {{username}}
+SiteName: {{blog_info}}
+Username: {{username}}
 
-			{{all_fields}}
+{{all_fields}}
 
-			Thank You!',
+Thank You! </pre>',
 						'user-registration'
 					)
 				)
