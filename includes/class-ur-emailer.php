@@ -538,10 +538,9 @@ class UR_Emailer {
 		$header  = "Reply-To: {{email}} \r\n";
 		$header .= 'Content-Type: text/html; charset=UTF-8';
 
-		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
-		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
-		$admin_email = explode( ',', $admin_email );
-		$admin_email = array_map( 'trim', $admin_email );
+		$attachment = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
+
+		$admin_users = get_users( 'role=Administrator' );
 
 		$subject = get_option( 'user_registration_profile_details_changed_email_subject', __( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
 		$message = new UR_Settings_Profile_Details_Changed_Email();
@@ -568,8 +567,10 @@ class UR_Emailer {
 		$header  = str_replace( $to_replace, $replace_with, $header );
 
 		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
-			foreach ( $admin_email as $email ) {
-				wp_mail( $email, $subject, $message, $header, $attachment );
+			error_log( print_r( $admin_users, true ) );
+			foreach ( $admin_users as $user ) {
+
+				wp_mail( $user->user_email, $subject, $message, $header, $attachment );
 			}
 		}
 	}
