@@ -717,6 +717,37 @@
 		}
 	}
 
+	.ur-registered-item {
+		cursor: move;
+		padding: 8px;
+		color: $white;
+		height: 120px;
+		font-size: 12px;
+		border-radius: 8px;
+		margin: 0 8px 16px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		width: calc(33.3333% - 16px);
+		background-color: $primary_color;
+
+		.dashicons {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+		}
+
+		&:hover {
+			background-color: $primary_dark;
+			color: $white;
+		}
+
+		&.ui-draggable-dragging {
+			width: 122px !important; // Inherit js styles
+		}
+	}
+
 	.ur-registered-inputs {
 		width: 35%;
 		max-width: 450px;
@@ -812,37 +843,6 @@
 
 					&:last-child {
 						margin-bottom: 0;
-					}
-
-					.ur-registered-item {
-						cursor: move;
-						padding: 8px;
-						color: $white;
-						height: 120px;
-						font-size: 12px;
-						border-radius: 8px;
-						margin: 0 8px 16px;
-						display: flex;
-						align-items: center;
-						flex-direction: column;
-						justify-content: center;
-						width: calc(33.3333% - 16px);
-						background-color: $primary_color;
-
-						.dashicons {
-							font-size: 28px;
-							width: 28px;
-							height: 28px;
-						}
-
-						&:hover {
-							background-color: $primary_dark;
-							color: $white;
-						}
-
-						&.ui-draggable-dragging {
-							width: 122px !important; // Inherit js styles
-						}
 					}
 				}
 			}
@@ -1176,26 +1176,10 @@
 		}
 
 		li.ur-registered-item {
-			list-style: none;
-			padding: 10px 10px;
-			line-height: 20px;
-			background-color: $primary_color;
-			color: $white;
-			text-align: center;
-			margin-bottom: 7px;
-			word-break: break-word;
-			white-space: normal;
-			width: 200px !important;
-
-			> span {
-				font-size: 14px;
-				line-height: 20px;
-				width: auto;
-				height: auto;
-				margin-right: 3px;
-			}
+			width: 120px !important;
 
 			&.ui-sortable-placeholder {
+				margin-left: 0;
 				width: 100% !important;
 				visibility: visible !important;
 				border: 2px dashed $color_gray_lighter;
