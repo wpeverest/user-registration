@@ -10,8 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @version  2.6.0
  * @package  UserRegistration/Abstracts
- * @category Abstract Class
- * @author   WPEverest
  */
 abstract class UR_Form_Field {
 
@@ -21,9 +19,24 @@ abstract class UR_Form_Field {
 	 * @since 1.0.0
 	 * @var int
 	 */
-	public $id                       = 0;
-	public $field_defaults           = array();
-	public $admin_data               = array();
+	public $id = 0;
+	/**
+	 * Default fields array.
+	 *
+	 * @var array
+	 */
+	public $field_defaults = array();
+	/**
+	 * Admin Data Array.
+	 *
+	 * @var array
+	 */
+	public $admin_data = array();
+	/**
+	 * Registered fields configuration.
+	 *
+	 * @var array
+	 */
 	public $registered_fields_config = array();
 
 	/**
@@ -34,8 +47,16 @@ abstract class UR_Form_Field {
 	 */
 	protected $form_id = 0;
 
+	/**
+	 * Abstract function to get regestered admin fields.
+	 */
 	abstract public function get_registered_admin_fields();
 
+	/**
+	 * Get General Setting fields
+	 *
+	 * @param string $key Atrribute of fields.
+	 */
 	public function get_general_setting_data( $key ) {
 
 		if ( isset( $this->admin_data->general_setting->$key ) ) {
@@ -50,9 +71,27 @@ abstract class UR_Form_Field {
 	}
 
 	/**
+	 * Get advance setting values.
+	 *
+	 * @param string $key Atrribute of fields.
+	 */
+	public function get_advance_setting_data( $key ) {
+
+		if ( isset( $this->admin_data->advance_setting->$key ) ) {
+			return $this->admin_data->advance_setting->$key;
+		}
+
+		if ( isset( $this->field_defaults[ 'default_' . $key ] ) ) {
+			return $this->field_defaults[ 'default_' . $key ];
+		}
+
+		return '';
+	}
+
+	/**
 	 * Include admin template for each form fields
 	 *
-	 * @param  array $admin_data
+	 * @param  array $admin_data Admin Data.
 	 */
 	public function get_admin_template( $admin_data = array() ) {
 
@@ -116,6 +155,10 @@ abstract class UR_Form_Field {
 		}
 
 		$form_data['custom_attributes']['data-label'] = $data['general_setting']->label;
+
+		if ( isset( $data['advance_setting']->date_format ) ) {
+			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
+		}
 
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();

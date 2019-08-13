@@ -805,6 +805,13 @@ jQuery(function ($) {
 		var advance_settings = $('.ur_advance_setting');
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
+			switch ($this_node.attr('data-advance-field')) {
+				case 'date_format':
+					$this_node.on('change', function () {
+						trigger_general_setting_date_format($(this));
+					});
+					break;
+			}
 			var node_type = $this_node.get(0).tagName.toLowerCase();
 			var event = 'change';
 			switch (node_type) {
@@ -984,6 +991,11 @@ jQuery(function ($) {
 			wrapper.find('.ur-label').find('label').append('<span style="color:red">*</span>');
 		}
 		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
+	}
+
+	function trigger_general_setting_date_format($label){
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
 	}
 
 	function trigger_general_setting_hide_label($label) {
