@@ -838,7 +838,7 @@
 				}
 
 				h2 {
-					margin: 12px 0;
+					margin: 16px 0;
 					font-size: 1em;
 					font-weight: 500;
 					font-family: Roboto, sans-serif;
@@ -892,6 +892,7 @@
 				margin-bottom: 0;
 				color: $color_gray_one;
 				background: $color_gray_four;
+				border: 1px solid transparent;
 
 				&::after {
 					content: '';
@@ -899,10 +900,9 @@
 					position: absolute;
 					left: 32px;
 					right: calc(100% - 32px);
-					height: 32px;
+					height: 30px;
 					border-radius: 0 3px 3px 0;
 					transition: all 0.3s ease 0s;
-					background: $color_gray_four;
 				}
 			}
 
@@ -916,6 +916,7 @@
 				border-color: transparent;
 				pointer-events: none;
 				z-index: 1;
+				border: 1px solid transparent;
 
 				&.ur-editing {
 					border-color: transparent;
@@ -925,9 +926,11 @@
 						color: $white;
 						background: $primary_color;
 						border-radius: 3px 0 0 3px;
+						border: 1px solid $primary_color;
 
 						&::after {
 							right: 0;
+							border: 1px solid $primary_color;
 						}
 					}
 				}
@@ -1187,7 +1190,7 @@
 
 	.ur-general-setting,
 	.ur-advance-setting {
-		padding: 20px 0 0;
+		margin: 16px 0;
 	}
 
 	.ur-advance-setting-block {
@@ -1209,7 +1212,7 @@
 		height: 32px;
 		display: block;
 		color: $color_gray_one;
-		font-size: 12px;
+		font-size: 13px;
 		padding: 0 10px;
 		border-radius: 3px;
 		border: 1px solid $border_color;
@@ -1227,16 +1230,35 @@
 	label {
 		display: block;
 		width: 100%;
-		margin-bottom: 10px;
-		color: $color_gray_two;
+		margin-bottom: 8px;
+		color: $color_gray_one;
 		font-size: 13px;
 		font-weight: 500;
+		line-height: 1.25;
 	}
 
 	textarea {
 		padding: 10px;
 		height: 100px;
 
+	}
+
+	.form-row {
+		margin-bottom: 1em;
+
+		.description {
+			color: $color_gray_two;
+			font-size: 12px;
+			margin-bottom: 4px;
+			display: block;
+		}
+
+		.ur-radio-list,
+		.ur-checkbox-list {
+			label {
+				display: inline;
+			}
+		}
 	}
 
 	.ur-registered-item.dragging {
@@ -1708,8 +1730,9 @@ img.tips {
 }
 
 .form-settings-tab {
-	padding: 10px 15px;
 	cursor: pointer;
+	padding: 10px 15px;
+	color: $gray_base;
 	background: $color_gray_lighten;
 	margin-bottom: 10px;
 	border-radius: 4px;
