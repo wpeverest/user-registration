@@ -248,11 +248,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+								<?php
+									$value = $this->get_user_meta( $user->ID, $key );
+								?>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
 												   id="<?php echo esc_attr( $key ); ?>"
-												   value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+												   value="<?php echo esc_attr( $value ); ?>"
+												   data-default-date = "<?php echo esc_attr( $value ); ?>"
 												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-												<?php echo esc_attr( $attribute_string ); ?>
+												<?php echo $attribute_string; ?>
 											/>
 
 									<?php
@@ -509,6 +513,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'date':
 									$fields[ $field_index ]['type'] = 'date';
+									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
 									break;
 
 								case 'privacy_policy':
