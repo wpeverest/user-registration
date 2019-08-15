@@ -124,6 +124,12 @@
 		box-sizing: border-box;
 	}
 
+	.description {
+		display: block;
+		font-size: 12px;
+		line-height: 1.25;
+	}
+
 	.ur-form-row {
 		display: flex;
 
@@ -723,10 +729,6 @@
 	height: 16px;
 	margin-left: -40px;
 	float: left;
-}
-
-span.description {
-    font-size: 12px;
 }
 
 .edit-post-visual-editor {
