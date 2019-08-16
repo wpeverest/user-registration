@@ -25,9 +25,7 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
+	display: block;
 	margin: 0 0 10px;
 	padding: 10px 15px;
 	background-color: lighten($secondary, 5%);
@@ -43,6 +41,8 @@
 
 	&::before {
 		content: '\f348';
+		display: inline-block;
+		vertical-align: middle;
 		font-family: 'Dashicons';
 		font-size: 24px;
 		margin-right: 0.875rem;
@@ -63,6 +63,7 @@
 		padding-left: 0 !important; // Required for default theme compatibility
 		margin-left: 0 !important; // Required for default theme compatibility
 	}
+
 	.message{
 		margin:0;padding:0;
 	}
@@ -247,10 +248,6 @@
 					text-decoration: none;
 					border: none;
 					color: $color_danger;
-				}
-
-				&.user-registration-error {
-					display: flex;
 				}
 			}
 
