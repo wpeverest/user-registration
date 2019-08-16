@@ -542,14 +542,15 @@
 			}
 		}
 	}
-	#ur-submit-message-node{
 
-		margin : 20px 0 0 0!important;
-		&.ur-error{
+	#ur-submit-message-node {
+		margin : 20px 0 0 0;
+
+		&.ur-error {
 			background: rgba(206, 0, 0, 0.1);
 		}
 
-		&.ur-message.message{
+		&.ur-message.message {
 			background: rgba(143, 174, 27,0.2);
 		}
 	}
