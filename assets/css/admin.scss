@@ -816,11 +816,13 @@
 		input[type='file'],
 		input[type='month'],
 		input[type='number'],
+		input[type='phone'],
 		input[type='password'],
 		input[type='tel'],
 		input[type='time'],
 		input[type='url'],
 		input[type='week'],
+		input[type='timepicker']
 		textarea,
 		select {
 			&:disabled {
