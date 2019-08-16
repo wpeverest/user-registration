@@ -804,6 +804,61 @@
 		}
 	}
 
+	input[type='text'],
+	input[type='date'],
+	input[type='email'],
+	input[type='file'],
+	input[type='month'],
+	input[type='number'],
+	input[type='phone'],
+	input[type='password'],
+	input[type='tel'],
+	input[type='time'],
+	input[type='url'],
+	input[type='week'],
+	input[type='timepicker'],
+	textarea,
+	.ui-widget select,
+	select {
+		width: 100%;
+		height: 32px;
+		display: block;
+		color: $color_gray_one;
+		font-size: 13px;
+		padding: 0 10px;
+		border-radius: 3px;
+		border: 1px solid $border_color;
+		box-shadow: 0 0 0 transparent;
+
+		&:focus {
+			border-color: $primary_color;
+		}
+
+		&::placeholder {
+			color: $color_gray_three;
+		}
+
+		&:disabled {
+			color: $color_gray_three;
+			background: $color_gray_five;
+		}
+	}
+
+	label {
+		display: block;
+		width: 100%;
+		margin-bottom: 8px;
+		color: $color_gray_one;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.25;
+	}
+
+	textarea {
+		padding: 10px;
+		height: 100px;
+	}
+
 	.ur-builder-wrapper {
 		flex: 1;
 		border-left: 1px solid $border_color;
@@ -822,7 +877,7 @@
 		input[type='time'],
 		input[type='url'],
 		input[type='week'],
-		input[type='timepicker']
+		input[type='timepicker'],
 		textarea,
 		select {
 			&:disabled {
@@ -1156,57 +1211,6 @@
 
 	.ur-advance-setting-block {
 		margin-top: 25px;
-	}
-
-	input[type="email"],
-	input[type="url"],
-	input[type="text"],
-	input[type="password"],
-	input[type="number"],
-	input[type="date"],
-	input[type="phone"],
-	input[type="timepicker"],
-	textarea,
-	.ui-widget select,
-	select {
-		width: 100%;
-		height: 32px;
-		display: block;
-		color: $color_gray_one;
-		font-size: 13px;
-		padding: 0 10px;
-		border-radius: 3px;
-		border: 1px solid $border_color;
-		box-shadow: 0 0 0 transparent;
-
-		&:focus {
-			border-color: $primary_color;
-		}
-
-		&::placeholder {
-			color: $color_gray_three;
-		}
-
-		&:disabled {
-			color: $color_gray_three;
-			background: $color_gray_five;
-		}
-	}
-
-	label {
-		display: block;
-		width: 100%;
-		margin-bottom: 8px;
-		color: $color_gray_one;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 1.25;
-	}
-
-	textarea {
-		padding: 10px;
-		height: 100px;
-
 	}
 
 	.form-row {
