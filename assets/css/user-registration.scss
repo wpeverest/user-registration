@@ -44,7 +44,7 @@
 		display: inline-block;
 		vertical-align: middle;
 		font-family: 'Dashicons';
-		font-size: 24px;
+		font-size: calc(100% + 10px);
 		margin-right: 0.875rem;
 	}
 
@@ -65,7 +65,8 @@
 	}
 
 	.message{
-		margin:0;padding:0;
+		margin:0;
+		padding:0;
 	}
 }
 
@@ -73,18 +74,11 @@
 	border-top-color: #8fae1b;
 	background: rgba( #8fae1b, 0.1 );
 	color: darken( #8fae1b, 15%);
-
-	&::before {
-		color: #8fae1b;
-	}
 }
 
 .user-registration-info {
+	color: #1e85be;
 	border-top-color: #1e85be;
-
-	&::before {
-		color: #1e85be;
-	}
 }
 
 .user-registration-error {
@@ -94,7 +88,6 @@
 
 	&::before {
 		content: '\f534';
-		color: $color_danger;
 	}
 }
 
