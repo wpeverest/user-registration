@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap ur-form-container">
-	<h1 class="wp-heading-inline"><?php echo isset( $post_data[0]->post_title ) ? $post_data[0]->post_title : __( 'User Registration', 'user-registration' ); ?></h1>
+	<h1 style="display:none"></h1> <!-- To manage notices -->
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
 		<div id="menu-management">
 			<div class="menu-edit ">
@@ -35,10 +35,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 						?>
 						<div class="publishing-action">
+							<button id="ur-full-screen-mode" class="button button-secondary button-large closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
 							<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
-							<input type="button" name="save_form" id="save_form_footer"
-								   class="button button-primary button-large menu-form ur_save_form_action_button"
-								   value="<?php echo $save_label; ?> ">
+							<input type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button" value="<?php echo $save_label; ?> ">
 						</div><!-- END .publishing-action -->
 					</div><!-- END .major-publishing-actions -->
 				</div><!-- END .nav-menu-header -->

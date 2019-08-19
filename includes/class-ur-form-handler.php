@@ -97,12 +97,18 @@ class UR_Form_Handler {
 		} elseif ( empty( $_POST['profile-pic-url'] ) ) {
 			$upload_dir  = wp_upload_dir();
 			$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
-			$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
 
-			if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
-				@unlink( $profile_url );
+			// Check if profile already set?
+			if ( $profile_url ) {
+
+				// Then delete file and user meta.
+				$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
+
+				if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
+					@unlink( $profile_url );
+				}
+				delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 			}
-			delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
@@ -202,7 +208,7 @@ class UR_Form_Handler {
 
 			ur_add_notice( __( 'User profile updated successfully.', 'user-registration' ) );
 
-			do_action( 'user_registration_save_profile_details', $user_id );
+			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_safe_redirect( ur_get_endpoint_url( 'edit-profile', '', ur_get_page_permalink( 'myaccount' ) ) );
 			exit;
