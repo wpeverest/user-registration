@@ -3,6 +3,7 @@
  * Configure Email
  *
  * @package UR_Settings_Profile_Details_Changed_Email Class
+ * @since 1.6.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

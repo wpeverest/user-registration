@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -122,6 +122,18 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
+
+= 1.6.3 - 19/08/2019 =
+* Enhancement - Send Email to Admin when user changes their profile details.
+* Feature     - Fullscreen builder mode.
+* Tweak       - Template file update to locate add-ons file
+* Add         - Accept redirect_to get parameter in login page.
+* Fix         - Password strength error message not showing.
+* Fix         - Profile picture in my account dashboard.
+* Fix         - Profile picture save without selecting any file.
+* Fix         - Prevent empty search query.
+* Fix         - Email format issue.
+* Dev         - Hook to filter form data in profile details.
 
 = 1.6.2 - 09/07/2019 =
 * Enhancement - Profile picture upload to browser upload.

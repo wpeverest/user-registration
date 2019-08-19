@@ -181,6 +181,7 @@ class UR_Emailer {
 	 * @param  int $user_id         User ID.
 	 * @param  int $form_id         Form ID.
 	 * @return void
+	 * @since 1.6.3
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
 		$profile     = user_registration_form_data( $user_id, $form_id );
@@ -532,6 +533,7 @@ class UR_Emailer {
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @param  array  $attachments Email Attachement.
 	 * @return void
+	 * @since 1.6.3
 	 */
 	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
