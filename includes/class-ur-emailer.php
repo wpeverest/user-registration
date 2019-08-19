@@ -5,8 +5,6 @@
  * @class    UR_Emailer
  * @version  1.0.0
  * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Emailer {
 
-	/** @public array Query vars to add to wp */
+	/**
+	 * Query vars to add to wp
+	 *
+	 * @var public array Query vars to add to wp
+	 */
 	public $query_vars = array();
 
 	/**
@@ -41,6 +43,15 @@ class UR_Emailer {
 			),
 			10,
 			3
+		);
+		add_action(
+			'user_registration_save_profile_details',
+			array(
+				__CLASS__,
+				'ur_profile_details_changed_mail',
+			),
+			10,
+			2
 		);
 	}
 
@@ -113,17 +124,17 @@ class UR_Emailer {
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $valid_form_data as $field_meta => $form_data ) {
-			if ( $field_meta === 'user_confirm_password' ) {
+			if ( 'user_confirm_password' === $field_meta ) {
 				continue;
 			}
 
-			// Donot include privacy policy value
-			if ( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'privacy_policy' ) {
+			// Donot include privacy policy value.
+			if ( isset( $form_data->extra_params['field_key'] ) && 'privacy_policy' === $form_data->extra_params['field_key'] ) {
 				continue;
 			}
 
-			// Process for file upload
-			if ( isset( $form_data->extra_params['field_key'] ) && $form_data->extra_params['field_key'] === 'file' ) {
+			// Process for file upload.
+			if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 				$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value ) : '';
 			}
 
@@ -131,7 +142,7 @@ class UR_Emailer {
 			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
 			$value      = isset( $form_data->value ) ? $form_data->value : '';
 
-			if ( $field_meta === 'user_pass' ) {
+			if ( 'user_pass' === $field_meta ) {
 				$value = __( 'Chosen Password', 'user-registration' );
 			}
 
@@ -165,13 +176,76 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Email sending process after profile details changed by user.
+	 *
+	 * @param  int $user_id         User ID.
+	 * @param  int $form_id         Form ID.
+	 * @return void
+	 */
+	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
+		$profile     = user_registration_form_data( $user_id, $form_id );
+		$attachments = apply_filters( 'user_registration_email_attachment', array() );
+		$name_value  = array();
+		$data_html   = '';
+		$smart_data  = array();
+		$email       = '';
+		$user_data   = get_userdata( $user_id );
+		$username    = $user_data->user_login;
+
+		// Generate $data_html string to replace for {{all_fields}} smart tag.
+		foreach ( $profile as $key => $form_data ) {
+			$field_name = str_replace( 'user_registration_', '', $key );
+
+			// Check if value contains array.
+			// @codingStandardsIgnoreStart
+			$value = ur_clean( $_POST[ $key ] );
+			if ( is_array( $_POST[ $key ] ) ) {
+				$value = implode( ',', $_POST[ $key ] );
+			}
+			// @codingStandardsIgnoreEnd
+
+			$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
+			$field_key                 = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
+			$name_value[ $field_name ] = $value;
+
+			if ( 'user_email' === $field_name ) {
+				$email = $value;
+			}
+			$tmp_data['value']        = $value;
+			$tmp_data['field_type']   = $form_data['type'];
+			$tmp_data['label']        = $form_data['label'];
+			$tmp_data['field_name']   = $field_name;
+			$tmp_data['extra_params'] = array(
+				'field_key' => $field_key,
+				'label'     => $form_data['label'],
+			);
+
+			array_push( $smart_data, $tmp_data );
+		}
+
+		// Smart tag process for extra fields.
+		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
+
+		if ( ! empty( $email ) && ! empty( $user_id ) ) {
+
+			do_action( 'user_registration_email_send_before' );
+
+			self::send_profile_changed_email_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
+
+			do_action( 'user_registration_email_send_after' );
+		}
+	}
+
+
+	/**
 	 * Trigger the user email.
 	 *
-	 * @param  string $user_email Email of the user.
+	 * @param  string $email Email of the user.
 	 * @param  string $username   Username of the user.
 	 * @param  int    $user_id       User id.
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachment.
 	 * @return void
 	 */
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments ) {
@@ -196,7 +270,7 @@ class UR_Emailer {
 			}
 		);
 
-		if ( $email_status === '0' ) {
+		if ( '0' === $email_status ) {
 
 			$subject = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Email_Confirmation();
@@ -206,7 +280,7 @@ class UR_Emailer {
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
 			wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
-		} elseif ( $status == 0 ) {
+		} elseif ( 0 === $status ) {
 
 			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
@@ -215,10 +289,10 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
-		} elseif ( $status == - 1 ) {
+		} elseif ( - 1 === $status ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Denied_Email();
@@ -227,7 +301,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
 		} elseif ( 'default' === get_option( 'user_registration_general_setting_login_options' ) || 'auto_login' === get_option( 'user_registration_general_setting_login_options' ) ) {
@@ -238,7 +312,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
 		}
@@ -252,7 +326,7 @@ class UR_Emailer {
 	 * @param  int    $user_id       User id.
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
-	 * @param  array  $attachments Email Attachement
+	 * @param  array  $attachments Email Attachement.
 	 * @return void
 	 */
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
@@ -289,7 +363,7 @@ class UR_Emailer {
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 		$header  = str_replace( $to_replace, $replace_with, $header );
 
-		if ( 'yes' == get_option( ' user_registration_enable_admin_email ', 'yes' ) ) {
+		if ( 'yes' === get_option( 'user_registration_enable_admin_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
 				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
@@ -326,7 +400,7 @@ class UR_Emailer {
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		if ( $status == 0 ) {
+		if ( 0 === $status ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Pending_Email();
@@ -335,10 +409,10 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
-		} elseif ( $status == - 1 ) {
+		} elseif ( - 1 === $status ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Denied_Email();
@@ -347,7 +421,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
 		} else {
@@ -359,7 +433,7 @@ class UR_Emailer {
 			$message = str_replace( $to_replace, $replace_with, $message );
 			$subject = str_replace( $to_replace, $replace_with, $subject );
 
-			if ( 'yes' == get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ) {
+			if ( 'yes' === get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
 		}
@@ -368,9 +442,9 @@ class UR_Emailer {
 	/**
 	 * Lost Password Email Trigger
 	 *
-	 * @param  string $user_login username
-	 * @param  obj    $user_data user object
-	 * @param  string $key password reset key
+	 * @param  string $user_login username.
+	 * @param  obj    $user_data user object.
+	 * @param  string $key password reset key.
 	 * @return bool
 	 */
 	public static function lost_password_email( $user_login, $user_data, $key ) {
@@ -409,7 +483,7 @@ class UR_Emailer {
 		$message = str_replace( $to_replace, $replace_with, $message );
 		$subject = str_replace( $to_replace, $replace_with, $subject );
 
-		if ( 'yes' == get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
+		if ( 'yes' === get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
 			wp_mail( $email, $subject, $message, self::ur_get_header() );
 			return true;
 		}
@@ -420,7 +494,7 @@ class UR_Emailer {
 	/**
 	 * Process smart tags for status change emails.
 	 *
-	 * @param  string User Email.
+	 * @param  string $email User Email.
 	 * @since  1.5.0
 	 * @return array smart tag key value pair.
 	 */
@@ -437,7 +511,7 @@ class UR_Emailer {
 
 		$user_meta_fields = ur_get_registered_user_meta_fields();
 
-		// Use name_value for smart tag to replace
+		// Use name_value for smart tag to replace.
 		foreach ( $user_meta_fields as $field ) {
 			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
 		}
@@ -446,6 +520,58 @@ class UR_Emailer {
 		$name_value        = array_merge( $name_value, $user_extra_fields );
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
+	}
+
+	/**
+	 * Trigger the admin email after profile details changed by user.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @return void
+	 */
+	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
+
+		$header  = "Reply-To: {{email}} \r\n";
+		$header .= 'Content-Type: text/html; charset=UTF-8';
+
+		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
+		$admin_email = get_option( 'user_registration_edit_profile_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = explode( ',', $admin_email );
+		$admin_email = array_map( 'trim', $admin_email );
+
+		$subject = get_option( 'user_registration_profile_details_changed_email_subject', __( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
+		$message = new UR_Settings_Profile_Details_Changed_Email();
+		$message = $message->ur_get_profile_details_changed_email();
+		$message = get_option( 'user_registration_profile_details_changed_email', $message );
+
+		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{all_fields}}' );
+		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
+
+		// Add the field name and values from $name_value to the replacement arrays.
+		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
+		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
+
+		// Surround every key with {{ and }}.
+		array_walk(
+			$to_replace,
+			function( &$value, $key ) {
+				$value = '{{' . trim( $value, '{}' ) . '}}';
+			}
+		);
+
+		$message = str_replace( $to_replace, $replace_with, $message );
+		$subject = str_replace( $to_replace, $replace_with, $subject );
+		$header  = str_replace( $to_replace, $replace_with, $header );
+
+		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
+			foreach ( $admin_email as $email ) {
+				wp_mail( $email, $subject, $message, $header, $attachment );
+			}
+		}
 	}
 }
 

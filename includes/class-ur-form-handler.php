@@ -208,7 +208,7 @@ class UR_Form_Handler {
 
 			ur_add_notice( __( 'User profile updated successfully.', 'user-registration' ) );
 
-			do_action( 'user_registration_save_profile_details', $user_id );
+			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_safe_redirect( ur_get_endpoint_url( 'edit-profile', '', ur_get_page_permalink( 'myaccount' ) ) );
 			exit;
