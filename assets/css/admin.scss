@@ -21,9 +21,9 @@
 	margin-top:15px;
 
 	.nav-tab-content .nav-tab-inside .postbox {
-	    width: 50%;
-	    flex: 1;
-	    margin: 0 15px 10px;
+		width: 50%;
+		flex: 1;
+		margin: 0 15px 10px;
 		.hndle, .stuffbox .hndle {
 			margin: 10px;
 		}
@@ -35,7 +35,7 @@
 	.products {
 		overflow: hidden;
 		display: flex;
-	    flex-wrap: wrap;
+		flex-wrap: wrap;
 
 		li {
 			margin: 0 1% 1% 0 !important;
@@ -182,13 +182,13 @@
 		}
 
 		#copy-shortcode {
-		    margin-left: -5px;
-		    border-radius: 0 3px 3px 0;
+			margin-left: -5px;
+			border-radius: 0 3px 3px 0;
 
-		    svg {
-		    	fill: #ffffff;
-		    	margin-top: 4px;
-		    }
+			svg {
+				fill: #ffffff;
+				margin-top: 4px;
+			}
 		}
 	}
 
@@ -718,6 +718,7 @@
 			}
 		}
 	}
+
 	.ur-selected-inputs {
 		width: 70%;
 		box-sizing: border-box;
@@ -815,6 +816,24 @@
 						cursor: move;
 						border: 1px solid $color_gray_seven;
 						transition: border-color 0.35s;
+
+						.select2-container {
+							width: 100% !important;
+
+							.select2-search--inline {
+								.select2-search__field {
+									height: auto;
+									min-width: 10px;
+								}
+							}
+						}
+
+						.ur-input-type-signature {
+							canvas {
+								background: transparentize($white, 0.5);
+								border: 1px solid $color_gray_six;
+							}
+						}
 
 						&:last-child {
 							margin-bottom: 0;

@@ -80,8 +80,6 @@ jQuery(function ( $ ) {
 
 			if( strength >= minimum_password_strength ) {
 				submit_button.removeAttr('disabled');
-			}else{
-				submit_button.attr('disabled', 'disabled');
 			}
 
 			switch ( strength ) {

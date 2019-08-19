@@ -247,11 +247,13 @@ function ur_update_160_db_version() {
  * @return void.
  */
 function ur_update_1581_meta_key() {
-	$users = get_users( array(
-		'meta_key'	 => 'profile_pic_id',
-	) );
+	$users = get_users(
+		array(
+			'meta_key' => 'profile_pic_id',
+		)
+	);
 
-	foreach( $users as $user ) {
+	foreach ( $users as $user ) {
 		$profile_picture_id = get_user_meta( $user->ID, 'profile_pic_id', true );
 		update_user_meta( $user->ID, 'user_registration_profile_pic_id', $profile_picture_id );
 		delete_user_meta( $user->ID, 'profile_pic_id' );
@@ -274,14 +276,45 @@ function ur_update_160_option_migrate() {
 	$redirect_url = get_option( 'user_registration_general_setting_redirect_options' );
 
 	// Get all posts with user_registration post type.
-	$posts     = get_posts( 'post_type=user_registration' );
+	$posts = get_posts( 'post_type=user_registration' );
 
 	foreach ( $posts as $post ) {
 
 		// Update global setting to all user registration posts meta.
 		update_post_meta( $post->ID, 'user_registration_form_setting_redirect_options', $redirect_url );
 	}
+}
 
-	// TODO:: Delete unused option in later updater running user registration version. Donot delete right now for backward compatibility; for redirection to work even if user don't run the updater.
-	// delete_option( 'user_registration_general_setting_redirect_options' );
+/**
+ * Update DB Version.
+ */
+function ur_update_162_db_version() {
+	UR_Install::update_db_version( '1.6.2' );
+}
+
+/**
+ * Replace user meta key profile_pic_id to user_registration_profile_pic_id.
+ *
+ * @since 1.4.8.1
+ *
+ * @return void.
+ */
+function ur_update_162_meta_key() {
+	$users = get_users(
+		array(
+			'meta_key' => 'user_registration_profile_pic_id',
+		)
+	);
+
+	foreach ( $users as $user ) {
+		$profile_picture_id = get_user_meta( $user->ID, 'user_registration_profile_pic_id', true );
+		if ( $profile_picture_id ) {
+			$profile_picture_url = wp_get_attachment_thumb_url( $profile_picture_id );
+			update_user_meta( $user->ID, 'user_registration_profile_pic_url', $profile_picture_url );
+		}
+		delete_user_meta( $user->ID, 'user_registration_profile_pic_id' );
+	}
+
+	// Delete Redirect options form general setting as previous version refered to do so.
+	delete_option( 'user_registration_general_setting_redirect_options' );
 }

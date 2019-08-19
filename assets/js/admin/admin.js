@@ -266,6 +266,7 @@ jQuery(function ($) {
 								var populated_item = template.closest('.ur-selected-item ').find("[data-field='field_name']").val();
 								manage_conditional_field_options(populated_item);
 
+								$( '.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select' ).selectWoo();
 							}
 						});
 					},
@@ -703,7 +704,7 @@ jQuery(function ($) {
 		var default_values = [];
 		$.each(general_setting_field, function () {
 
-			var is_checkbox = $(this).closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox');
+			var is_checkbox = $(this).closest('.ur-general-setting').hasClass('ur-setting-checkbox');
 
 			if( 'options' === $(this).attr('data-field') ) {
 				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );

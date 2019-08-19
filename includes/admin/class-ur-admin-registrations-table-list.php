@@ -364,7 +364,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$per_page     = $this->get_items_per_page( 'user_registration_per_page' );
 		$current_page = $this->get_pagenum();
 
-		// Query args
+		// Query args.
 		$args = array(
 			'post_type'           => 'user_registration',
 			'posts_per_page'      => $per_page,
@@ -372,13 +372,17 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 			'paged'               => $current_page,
 		);
 
-		// Handle the status query
+		// Handle the status query.
 		if ( ! empty( $_REQUEST['status'] ) ) {
 			$args['post_status'] = sanitize_text_field( $_REQUEST['status'] );
 		}
 
-		$args['s']       = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date_created';
+		// Handle the search query.
+		if ( ! empty( $_REQUEST['s'] ) ) {
+			$args['s'] = sanitize_text_field( trim( wp_unslash( $_REQUEST['s'] ) ) ); // WPCS: sanitization ok, CSRF ok.
+		}
+
+		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; // WPCS: sanitization ok, CSRF ok.
 		$args['order']   = isset( $_REQUEST['order'] ) && 'DESC' === strtoupper( $_REQUEST['order'] ) ? 'DESC' : 'ASC';
 
 		// Get the registrations
