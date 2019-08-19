@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.6.2\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-07-08 11:53:58+00:00\n"
+"POT-Creation-Date: 2019-08-19 05:14:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -266,7 +266,7 @@ msgid "Delete permanently"
 msgstr ""
 
 #: includes/admin/class-ur-admin-registrations-table-list.php:134
-#: includes/admin/views/html-admin-page-forms.php:38
+#: includes/admin/views/html-admin-page-forms.php:39
 msgid "Preview"
 msgstr ""
 
@@ -772,7 +772,7 @@ msgid "Enter the error message in form submission on google recaptcha."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:321
-#: includes/class-ur-ajax.php:105 includes/class-ur-form-handler.php:330
+#: includes/class-ur-ajax.php:105 includes/class-ur-form-handler.php:336
 #: includes/class-ur-frontend-scripts.php:349
 msgid "Captcha code error, please try again."
 msgstr ""
@@ -1304,26 +1304,30 @@ msgid "Copied!"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:38
+msgid "Fullscreen"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-forms.php:39
 msgid "Preview Form"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:51
+#: includes/admin/views/html-admin-page-forms.php:50
 msgid "Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:54
+#: includes/admin/views/html-admin-page-forms.php:53
 msgid "Field Options"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:57
+#: includes/admin/views/html-admin-page-forms.php:56
 msgid "Form Setting"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:63
+#: includes/admin/views/html-admin-page-forms.php:62
 msgid "Default User Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:66
+#: includes/admin/views/html-admin-page-forms.php:65
 msgid "Extra Fields"
 msgstr ""
 
@@ -1448,7 +1452,7 @@ msgstr ""
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:98 includes/class-ur-form-handler.php:327
+#: includes/class-ur-ajax.php:98 includes/class-ur-form-handler.php:333
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -1509,11 +1513,11 @@ msgid "User doesnot exist!"
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:351
-#: includes/class-ur-form-handler.php:327
-#: includes/class-ur-form-handler.php:330
-#: includes/class-ur-form-handler.php:335
-#: includes/class-ur-form-handler.php:339
-#: includes/class-ur-form-handler.php:348
+#: includes/class-ur-form-handler.php:333
+#: includes/class-ur-form-handler.php:336
+#: includes/class-ur-form-handler.php:341
+#: includes/class-ur-form-handler.php:345
+#: includes/class-ur-form-handler.php:354
 #: includes/class-ur-user-approval.php:183
 #: includes/class-ur-user-approval.php:188 includes/functions-ur-account.php:53
 #: includes/functions-ur-account.php:56
@@ -1566,71 +1570,71 @@ msgid ""
 "administrator."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:147
+#: includes/class-ur-form-handler.php:153
 msgid "%s is a required field."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:160
+#: includes/class-ur-form-handler.php:166
 msgid "%s is not a valid email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:203
+#: includes/class-ur-form-handler.php:209
 msgid "User profile updated successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:250
+#: includes/class-ur-form-handler.php:256
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:253
+#: includes/class-ur-form-handler.php:259
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:256
+#: includes/class-ur-form-handler.php:262
 msgid "Please enter your new password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:259
+#: includes/class-ur-form-handler.php:265
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:262
+#: includes/class-ur-form-handler.php:268
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:265
+#: includes/class-ur-form-handler.php:271
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:286
+#: includes/class-ur-form-handler.php:292
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:339
+#: includes/class-ur-form-handler.php:345
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:348
+#: includes/class-ur-form-handler.php:354
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:448
+#: includes/class-ur-form-handler.php:454
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:452
+#: includes/class-ur-form-handler.php:458
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:487
+#: includes/class-ur-form-handler.php:493
 msgid "Invalid Key"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:502
+#: includes/class-ur-form-handler.php:508
 msgid "Thanks for confirming your export request."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:504
+#: includes/class-ur-form-handler.php:510
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
@@ -3446,34 +3450,34 @@ msgstr ""
 msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:58
+#: includes/shortcodes/class-ur-shortcode-my-account.php:59
 msgid "Your password has been reset successfully."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:114
+#: includes/shortcodes/class-ur-shortcode-my-account.php:115
 msgid ""
 "Are you sure you want to log out?&nbsp;<a href=\"%s\">Confirm and log "
 "out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:207
+#: includes/shortcodes/class-ur-shortcode-my-account.php:208
 msgid "No profile details found."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:303
+#: includes/shortcodes/class-ur-shortcode-my-account.php:304
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:324
-#: includes/shortcodes/class-ur-shortcode-my-account.php:329
+#: includes/shortcodes/class-ur-shortcode-my-account.php:325
+#: includes/shortcodes/class-ur-shortcode-my-account.php:330
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:339
+#: includes/shortcodes/class-ur-shortcode-my-account.php:340
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:352
+#: includes/shortcodes/class-ur-shortcode-my-account.php:353
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
@@ -3510,22 +3514,22 @@ msgstr ""
 msgid "Welcome, %1$s"
 msgstr ""
 
-#: templates/myaccount/dashboard.php:60
+#: templates/myaccount/dashboard.php:56
 msgid "%1$s"
 msgstr ""
 
-#: templates/myaccount/dashboard.php:68
+#: templates/myaccount/dashboard.php:64
 msgid "@%1$s"
 msgstr ""
 
-#: templates/myaccount/dashboard.php:80
+#: templates/myaccount/dashboard.php:76
 #. translators: 1 profile details url, 2: change password url
 msgid ""
 "From your account dashboard you can edit your <a href=\"%1$s\"> profile "
 "details</a> and <a href=\"%2$s\">edit your password</a>."
 msgstr ""
 
-#: templates/myaccount/dashboard.php:91
+#: templates/myaccount/dashboard.php:87
 #. translators: 1: user display name 2: logout url
 msgid "Not %1$s? <a href=\"%2$s\">Sign out</a>"
 msgstr ""
@@ -3544,7 +3548,7 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:61
-#: templates/myaccount/form-edit-profile.php:119
+#: templates/myaccount/form-edit-profile.php:127
 msgid "Save changes"
 msgstr ""
 
@@ -3630,7 +3634,7 @@ msgid "https://wpeverest.com/plugins/user-registration"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Drag and Drop user registration and login form builder."
+msgid "Drag and Drop user registration form and login form builder."
 msgstr ""
 
 #. Author of the plugin/theme
