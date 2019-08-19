@@ -98,13 +98,13 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 				'user_registration_admin_email_message',
 				sprintf(
 					__(
-						'<pre>Hi Admin,
+						'Hi Admin, <br/>
 
-A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>.
+A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard.
+Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/>
 
-Thank You!</pre>',
+Thank You!',
 						'user-registration'
 					)
 				)

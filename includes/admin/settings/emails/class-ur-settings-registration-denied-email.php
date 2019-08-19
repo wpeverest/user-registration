@@ -90,13 +90,13 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 				'user_registration_get_registration_denied_email',
 				sprintf(
 					__(
-						'<pre>Hi {{username}},
+						'Hi {{username}}, <br/>
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Unfortunately your registration is denied. Sorry for the inconvenience.
+Unfortunately your registration is denied. Sorry for the inconvenience. <br/>
 
-Thank You! </pre>',
+Thank You!',
 						'user-registration'
 					)
 				)

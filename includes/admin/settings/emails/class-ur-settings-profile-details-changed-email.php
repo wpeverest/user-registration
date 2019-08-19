@@ -48,7 +48,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 						'title'    => __( 'Enable this email', 'user-registration' ),
 						'desc'     => __( 'Enable this email sent to the admin when a user changed profile information.', 'user-registration' ),
 						'id'       => 'user_registration_enable_profile_details_changed_email',
-						'default'  => 'yes',
+						'default'  => 'no',
 						'type'     => 'checkbox',
 						'autoload' => false,
 					),
@@ -101,14 +101,14 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 				'user_registration_profile_details_changed_email_message',
 				sprintf(
 					__(
-						'<pre>User has changed profile information for the following account:
+						'User has changed profile information for the following account:<br/>
 
-SiteName: {{blog_info}}
-Username: {{username}}
+SiteName: {{blog_info}} <br/>
+Username: {{username}} <br/>
 
 {{all_fields}}
-
-Thank You! </pre>',
+<br/>
+Thank You!',
 						'user-registration'
 					)
 				)
