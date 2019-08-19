@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Email_Confirmation
+ * @package  UR_Settings_Email_Confirmation
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +17,9 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 	 */
 	class UR_Settings_Successfully_Registered_Email {
 
-
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'successfully_registered_email';
 			$this->title       = __( 'Successfully Registered Email', 'user-registration' );
@@ -80,6 +80,9 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_successfully_registered_email() {
 
 			$message = apply_filters(
@@ -87,13 +90,13 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				sprintf(
 					__(
 
-						'Hi {{username}},
+						'<pre>Hi {{username}},
 
-			You have successfully completed user registration on <a href="{{home_url}}">{{blog_info}}</a>.
+You have successfully completed user registration on <a href="{{home_url}}">{{blog_info}}</a>.
 
-			Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
+Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
 
-			Thank You!',
+Thank You! </pre>',
 						'user-registration'
 					)
 				)
