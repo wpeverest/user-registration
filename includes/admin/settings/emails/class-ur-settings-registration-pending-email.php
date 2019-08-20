@@ -94,15 +94,15 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 				sprintf(
 					__(
 
-						'<pre>Hi {{username}},
+						'Hi {{username}}, <br/>
 
-Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending.
+Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending. <br/>
 
-Sorry for the inconvenience.
+Sorry for the inconvenience. <br/>
 
-You will be notified after it is approved.
+You will be notified after it is approved. <br/>
 
-Thank You! </pre>',
+Thank You!',
 						'user-registration'
 					)
 				)

@@ -90,13 +90,13 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				sprintf(
 					__(
 
-						'<pre>Hi {{username}},
+						'Hi {{username}}, <br/>
 
-You have successfully completed user registration on <a href="{{home_url}}">{{blog_info}}</a>.
+You have successfully completed user registration on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
+Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Thank You! </pre>',
+Thank You!',
 						'user-registration'
 					)
 				)

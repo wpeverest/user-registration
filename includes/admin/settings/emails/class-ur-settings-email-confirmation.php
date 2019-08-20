@@ -84,13 +84,13 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 				'user_registration_get_email_confirmation',
 				sprintf(
 					__(
-						'<pre>Hi {{username}},
+						'Hi {{username}}, <br/>
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Please click on this verification link {{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.
+Please click on this verification link {{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration. <br/>
 
-Thank You! </pre>',
+Thank You!',
 						'user-registration'
 					)
 				)

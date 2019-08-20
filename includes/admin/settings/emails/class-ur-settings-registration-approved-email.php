@@ -90,13 +90,13 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 				'user_registration_get_registration_approved_email',
 				sprintf(
 					__(
-						'<pre>Hi {{username}},
+						'Hi {{username}}, <br/>
 
-Your registration on <a href="{{home_url}}">{{blog_info}}</a>  has been approved.
+Your registration on <a href="{{home_url}}">{{blog_info}}</a>  has been approved. <br/>
 
-Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
+Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-Thank You! </pre>',
+Thank You!',
 						'user-registration'
 					)
 				)
