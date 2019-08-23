@@ -652,6 +652,19 @@
 
 		label {
 			font-weight: 400;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		input {
+			&[type='radio'],
+			&[type='checkbox'] {
+				opacity: 1;
+				box-shadow: none;
+				border-color: $border_color;
+			}
 		}
 	}
 
@@ -861,8 +874,9 @@
 
 	.ur-builder-wrapper {
 		flex: 1;
-		border-left: 1px solid $border_color;
 		height: calc(100vh - 89px);
+		background: lighten($color_gray_five, 3%);
+		border-left: 1px solid $border_color;
 		overflow-y: auto;
 
 		input[type='text'],
@@ -959,11 +973,9 @@
 		padding: 0 20px;
 
 		.ur-single-row {
-			margin-bottom: 20px;
 			border-radius: 3px;
 			position: relative;
-			background-color: $white;
-			border: 1px solid $border_color;
+			border: 1px solid transparent;
 
 			&:last-child {
 				margin-bottom: 0;
@@ -974,6 +986,7 @@
 				border-bottom: 1px solid $border_color;
 				position: absolute;
 				right: 0;
+				// opacity: 0;
 
 				div {
 					border-right: 1px solid $border_color;
@@ -1026,9 +1039,24 @@
 				width: 100%;
 				display: flex;
 				text-align: center;
-				padding: 20px;
 				box-sizing: border-box;
 				justify-content: center;
+				border: 1px solid transparent;
+				border-radius: 4px;
+
+				&:hover {
+					background: $white;
+					border: 1px solid $color_gray_three;
+					box-shadow: 0 2px 6px transparentize($color_gray-base, 0.93);
+
+					.ur-grid-list-item {
+						border-right: 1px solid $color_gray_three;
+
+						&:last-child {
+							border-color: transparent;
+						}
+					}
+				}
 
 				.ur-grid-list-item {
 					display: inline-block;
@@ -1036,17 +1064,15 @@
 					border: 0 none;
 					padding: 15px;
 					flex: 1;
-					background: $color_gray_five;
-					border: 2px dashed $color_gray_three;
+					border: 1px solid transparent;
 					border-radius: 4px;
 
 					.ur-selected-item {
-						margin-bottom: 15px;
+						margin-bottom: 5px;
 						position: relative;
-						background-color: $white;
-						padding: 20px;
+						padding: 15px;
 						cursor: move;
-						border: 1px solid $border_color;
+						border: 1px solid transparent;
 						border-radius: 4px;
 						transition: border-color 0.35s;
 
@@ -1056,16 +1082,17 @@
 
 						&:hover,
 						&.ur-item-active {
+							background: $white;
 							border: 1px solid $primary_color;
 						}
 
-						&.ur-item-active {
+						&.ui-sortable-helper {
 							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
 							visibility: visible !important;
-							border: 2px dashed $color_gray_three;
+							border: 1px dashed $color_gray_three;
 							background-color: $color_gray_five;
 						}
 
@@ -1151,7 +1178,7 @@
 							p {
 								display: inline-block;
 								position: relative;
-								color: $color_gray_five;
+								color: $color_gray_three;
 								padding-left: 26px;
 								padding-top: 8px;
 
@@ -1166,28 +1193,44 @@
 							}
 						}
 					}
+
+					&:first-child {
+						border-radius: 4px 0 0 4px;
+					}
+
+					&:nth-child(2) {
+						border-radius: 0;
+					}
+
+					&:nth-child(3){
+						border-radius: 0 4px 0 4px;
+					}
 				}
 
 				.ur-grid-list-item:nth-child(1n+2) {
-					border-left: 2px solid $color_sortable_background;
+					border-left: 2px solid transparent;
 				}
 			}
 		}
 
 		.ur-add-new-row {
-			color: $color_gray_two;
 			display: block;
-			margin: 0 auto;
-			font-size: 30px;
-			width: 40px;
-			cursor: pointer;
+			margin: 20px auto;
+			width: auto;
+			height: 32px;
 			text-align: center;
-			margin-bottom: 20px;
-			background-color: transparent;
-			border: 0 none;
+			font-family: inherit;
 
-			&:hover {
-				color: $primary_color;
+			&::before {
+				width: 16px;
+				height: 16px;
+				line-height: 1;
+				font-size: 16px;
+				margin-right: 10px;
+				font-family: dashicons;
+				vertical-align: middle;
+				padding: 1px 10px 1px 0;
+				border-right: 1px solid transparentize($white, 0.7);
 			}
 		}
 

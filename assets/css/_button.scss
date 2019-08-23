@@ -2,6 +2,8 @@
 .ur-form-container {
 	button,
 	.button {
+		transition: all 0.25s ease 0s;
+
 		&.button-icon {
 			height: 32px;
 			width: 32px;

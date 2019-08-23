@@ -656,7 +656,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . $add_or_remove_icon . '</button>';
+			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . $add_or_remove_icon . esc_html( 'Add New', 'user-registration' ) . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
