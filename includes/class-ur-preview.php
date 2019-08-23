@@ -28,11 +28,17 @@ class UR_Preview {
 	 * Init hook function.
 	 */
 	public function init() {
-		if ( is_user_logged_in() && ! is_admin() && isset( $_GET['ur_preview'] ) ) {
-			add_filter( 'edit_post_link', array( $this, 'edit_form_link' ) );
-			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-			add_filter( 'template_include', array( $this, 'template_include' ) );
-			add_action( 'template_redirect', array( $this, 'handle_preview' ) );
+		if ( is_user_logged_in() && ! is_admin() ) {
+			if ( isset( $_GET['ur_preview'] ) ) {
+				add_filter( 'edit_post_link', array( $this, 'edit_form_link' ) );
+				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+				add_filter( 'template_include', array( $this, 'template_include' ) );
+				add_action( 'template_redirect', array( $this, 'handle_preview' ) );
+			} elseif ( isset( $_GET['ur_login_preview'] ) ) {
+				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+				add_filter( 'template_include', array( $this, 'template_include' ) );
+				add_action( 'template_redirect', array( $this, 'handle_login_preview' ) );
+			}
 		}
 	}
 
@@ -121,6 +127,57 @@ class UR_Preview {
 		$content = do_shortcode( '[user_registration_form id="' . $form_id . '"]' );
 
 		return $content;
+	}
+
+	/**
+	 * Handles the preview of login form.
+	 */
+	public function handle_login_preview() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		add_filter( 'the_title', array( $this, 'login_form_preview_title' ) );
+		add_filter( 'the_content', array( $this, 'login_form_preview_content' ) );
+	}
+
+	/**
+	 * Filter the title and insert form preview title.
+	 *
+	 * @param  string $title Existing title.
+	 * @return string
+	 */
+	public static function login_form_preview_title( $title ) {
+		if ( in_the_loop() ) {
+			/* translators: %s - Form name. */
+			return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( 'Login Form' ) );
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Displays content of login form preview.
+	 *
+	 * @param string $content Page/Post content.
+	 * @return string
+	 */
+	public function login_form_preview_content( $content ) {
+		remove_filter( 'the_content', array( $this, 'form_preview_content_filter' ) );
+
+		wp_enqueue_script( 'ur-my-account' );
+		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+
+		ob_start();
+		ur_get_template(
+			'myaccount/form-login.php',
+			array(
+				'recaptcha_node' => $recaptcha_node,
+				'redirect'       => '',
+			)
+		);
+		return ob_get_clean();
 	}
 }
 
