@@ -961,6 +961,7 @@
 		.ur-single-row {
 			margin-bottom: 20px;
 			border-radius: 3px;
+			position: relative;
 			background-color: $white;
 			border: 1px solid $border_color;
 
@@ -971,14 +972,13 @@
 			.ur-grids {
 				background-color: $color_gray_five;
 				border-bottom: 1px solid $border_color;
-				clear: both;
-				display: table;
-				width: 100%;
+				position: absolute;
+				right: 0;
 
 				div {
 					border-right: 1px solid $border_color;
 					display: inline-block;
-					line-height: 25px;
+					line-height: 24px;
 					color: $color_gray_two;
 
 					&.ur-grid-size {
@@ -986,8 +986,8 @@
 					}
 
 					&.ur-grid-navigation {
-						width: 25px;
-						height: 25px;
+						width: 24px;
+						height: 24px;
 						background-color: $color_gray_four;
 						font-family: dashicons;
 						font-size: 16px;
