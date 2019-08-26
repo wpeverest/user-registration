@@ -614,7 +614,7 @@ jQuery(function ($) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 					show_message(success_message, 'success');
 					var location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
-					window.location = location;
+					// window.location = location;
 				} else {
 					var error = response.responseJSON.data.message;
 					show_message(error);
@@ -622,19 +622,44 @@ jQuery(function ($) {
 			}
 		});
 	}
+
+	$( document ).on( 'click', '.ur-message .ur-message-close', function() {
+		$message = $( this ).closest( '.ur-message' );
+		removeMessage( $message );
+	} );
+
 	function show_message(message, type) {
-		var message_string;
-		if (type === 'success') {
-			message_string = '<div class="updated ur-notices" style="border-color: green;"><p><strong>' + i18n_admin.i18n_success + '! </strong>' + message + '</p></div>';
-		} else {
-			message_string = '<div class="updated ur-notices" style="border-color: red;"><p><strong>' + i18n_admin.i18n_error + '!!! </strong>' + message + '</p></div>';
+		var $message_container = $( '.ur-form-container' ).find( '.ur-builder-message-container' ),
+			$admin_bar = $( '#wpadminbar' ),
+			message_string = '';
+
+		if( 0 === $message_container.length ) {
+			$( '.ur-form-container' ).append( '<div class="ur-builder-message-container"></div>' );
+			$message_container = $( '.ur-form-container' ).find( '.ur-builder-message-container' );
+			$message_container.css( { 'top' : $admin_bar.height() + 'px' } );
 		}
 
-		$('.ur-form-subcontainer').find('.ur-notices').remove();
-		$('.ur-form-subcontainer').prepend(message_string);
-		$('html, body').animate({
-			scrollTop: ($('.ur-notices').offset().top) - 50
-		}, 600);
+		if( 'success' === type ) {
+			message_string = '<div class="ur-message"><div class="ur-success"><p><strong>' + i18n_admin.i18n_success + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+		} else {
+			message_string = '<div class="ur-message"><div class="ur-error"><p><strong>' + i18n_admin.i18n_error + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+		}
+
+		var $message = $( message_string ).prependTo( $message_container );
+		setTimeout( function( ) {
+			$message.addClass( 'entered' );
+		}, 50 );
+
+		setTimeout( function( ) {
+			removeMessage( $message );
+		}, 2000 );
+	}
+
+	function removeMessage( $message ) {
+		$message.removeClass( 'entered' ).addClass( 'exiting' );
+		setTimeout( function() {
+			$message.remove();
+		}, 120 );
 	}
 
 	function get_validation_status() {

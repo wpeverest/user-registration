@@ -2017,3 +2017,48 @@ body {
 		margin: 0 0 3% 0 !important;
 	}
 }
+
+@keyframes open-message {
+	0% {
+		opacity: 0;
+		transform: translateY(-120%);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+@keyframes close-message {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+}
+
+.ur-builder-message-container {
+	z-index: 9999;
+    position: fixed;
+    top: 32px;
+    left: 0;
+    right: 0;
+    max-width: 560px;
+	margin: 0 auto;
+
+	.ur-message {
+		height: 0px;
+		overflow: hidden;
+		transition: all 240ms cubic-bezier(0, 0, 0.2, 1) 0s;
+
+		&.entered {
+			animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
+			height: 60px;
+		}
+		&.exiting {
+			animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
+		}
+	}
+}
