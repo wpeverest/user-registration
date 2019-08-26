@@ -906,8 +906,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			array(
 				'type'              => 'text',
 				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_redirect_options',
+				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
