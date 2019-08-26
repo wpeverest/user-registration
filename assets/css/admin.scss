@@ -1078,7 +1078,6 @@
 				&:hover {
 					background: $white;
 					border: 1px solid $color_gray_three;
-					box-shadow: 0 2px 6px transparentize($color_gray-base, 0.93);
 
 					.ur-grid-list-item {
 						border-right: 1px solid $color_gray_three;
@@ -1272,7 +1271,7 @@
 				margin-left: 0;
 				width: 100% !important;
 				visibility: visible !important;
-				border: 2px dashed $color_gray_lighter;
+				border: 1px dashed $color_gray_lighter;
 				background-color: $color_gray_five;
 			}
 		}
