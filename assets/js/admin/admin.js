@@ -232,7 +232,7 @@ jQuery(function ($) {
 						single_row.append('<div style="clear:both"></div>');
 						$this.append(single_row);
 						if ( $this.find('.ur-add-new-row').length == 0 ) {
-							$this.append('<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0"></button>');
+							$this.append('<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0">' + user_registration_admin_data.add_new + '</button>');
 							var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
 							$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
 						}
@@ -304,7 +304,6 @@ jQuery(function ($) {
 					manage_empty_grid: function () {
 						var main_containner = $('.ur-input-grids');
 						var drag_me = $('<div class="user-registration-dragged-me"/>');
-						drag_me.html('<div class="user-registration-dragged-me-text"><p>' + i18n_admin.i18n_drag_your_first_item_here + '</p></div>');
 						main_containner.find('.user-registration-dragged-me').remove();
 						$.each(main_containner.find('.ur-grid-list-item'), function () {
 							var $this = $(this);

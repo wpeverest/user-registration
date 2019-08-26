@@ -222,6 +222,7 @@ class UR_Admin_Assets {
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
+				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
 
 			);
 
