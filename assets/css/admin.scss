@@ -1080,9 +1080,9 @@
 					border: 1px solid $color_gray_three;
 
 					.ur-grid-list-item {
-						border-right: 1px solid $color_gray_three;
+						border-left: 1px solid $color_gray_three;
 
-						&:last-child {
+						&:first-child {
 							border-color: transparent;
 						}
 					}
@@ -1222,6 +1222,34 @@
 								}
 							}
 						}
+
+						&:empty {
+							padding: 15px;
+							text-align: center;
+							border-radius: 4px;
+							border: 1px dashed $color_gray_three;
+							background-color: $color_gray_five;
+
+							&::before {
+								content: '\f132';
+								font-size: 32px;
+								color: $color_gray_three;
+								width: 32px;
+								height: 32px;
+								font-family: dashicons;
+								display: table-cell;
+								vertical-align: middle;
+							}
+						}
+					}
+
+					&.ur-sortable-active {
+						.ur-registered-item {
+							margin-bottom: 0;
+						}
+						.user-registration-dragged-me {
+							display: none;
+						}
 					}
 
 					&:first-child {
@@ -1233,12 +1261,8 @@
 					}
 
 					&:nth-child(3){
-						border-radius: 0 4px 0 4px;
+						border-radius: 0 4px 4px 0;
 					}
-				}
-
-				.ur-grid-list-item:nth-child(1n+2) {
-					border-left: 2px solid transparent;
 				}
 			}
 		}
