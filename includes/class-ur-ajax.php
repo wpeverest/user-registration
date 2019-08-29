@@ -234,7 +234,14 @@ class UR_AJAX {
 
 								// check for non empty post_meta array.
 								if ( ! empty( $form_data->form_post_meta ) ) {
+									$all_roles = ur_get_default_admin_roles();
+
 									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+
+										// if user role does not exists in new site then set default as subscriber.
+										if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
+											$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
+										}
 										add_post_meta( $post_id, $meta_key, $meta_value );
 									}
 									wp_send_json_success(
