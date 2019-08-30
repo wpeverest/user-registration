@@ -33,7 +33,7 @@ class UR_Form_Field_User_Email extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Email ', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-email-alt',
+			'icon'  => 'ur-icon ur-icon-email',
 		);
 
 		$this->field_defaults = array(

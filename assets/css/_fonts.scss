@@ -1,0 +1,77 @@
+@font-face {
+	font-family: 'UserRegistration';
+	src:  url('../fonts/UserRegistration.eot?ibqj7s');
+	src:  url('../fonts/UserRegistration.eot?ibqj7s#iefix') format('embedded-opentype'),
+		url('../fonts/UserRegistration.ttf?ibqj7s') format('truetype'),
+		url('../fonts/UserRegistration.woff?ibqj7s') format('woff'),
+		url('../fonts/UserRegistration.svg?ibqj7s#UserRegistration') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+[class^='ur-icon-'],
+[class*=' ur-icon-'] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'UserRegistration' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Define the Map for $field-icons */
+$field-icons: (
+	input-first-name: "\e001",
+	input-last-name: "\e002",
+	input-field: "\e003",
+	input-password: "\e004",
+	input-checkbox: "\e005",
+	radio: "\e006",
+	number: "\e007",
+	phone: "\e008",
+	calendar: "\e009",
+	drop-down: "\e00a",
+	textarea: "\e00b",
+	email: "\e00c",
+	email-secondary: "\e00d",
+	email-confirm: "\e00e",
+	invite-codes: "\e00f",
+	password: "\e010",
+	password-confirm: "\e011",
+	user: "\e012",
+	user-nickname: "\e013",
+	user-display-name: "\e014",
+	user-bio: "\e015",
+	website: "\e016",
+	flag: "\e017",
+	map-one: "\e018",
+	map-two: "\e019",
+	zip-code: "\e01a",
+	select2: "\e01b",
+	multi-select: "\e01c",
+	section-title: "\e01d",
+	time-picker: "\e01e",
+	state: "\e01f",
+	buildings: "\e020",
+	text-editor: "\e021",
+	bill: "\e022",
+	doc: "\e023",
+	single-item: "\e024",
+	code: "\e025",
+);
+
+/* For each key in the map, creating own class */
+@each $name, $value in $field-icons {
+	.ur-icon-#{$name}{
+		&::before{
+			content: $value;
+		}
+	}
+}
