@@ -9,6 +9,7 @@
 @import "button";
 @import "mixins";
 @import "variables";
+@import "fonts";
 
 /**
  * Styling begins
@@ -728,10 +729,9 @@
 		width: calc(33.3333% - 16px);
 		background-color: $color_gray_five;
 
-		.dashicons {
-			font-size: 28px;
-			width: 28px;
-			height: 28px;
+		.ur-icon {
+			font-size: 32px;
+			margin-bottom: 4px;
 		}
 
 		&:hover {

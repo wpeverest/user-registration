@@ -35,7 +35,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Date', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-calendar',
+			'icon'  => 'ur-icon ur-icon-calendar',
 		);
 
 		$this->field_defaults = array(

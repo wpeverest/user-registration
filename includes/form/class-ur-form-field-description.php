@@ -34,7 +34,7 @@ class UR_Form_Field_Description extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'User Bio', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-id-alt',
+			'icon'  => 'ur-icon ur-icon-user-bio',
 		);
 
 		$this->field_defaults = array(

@@ -33,7 +33,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Input Field', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-format-aside',
+			'icon'  => 'ur-icon ur-icon-input-field',
 		);
 
 		$this->field_defaults = array(

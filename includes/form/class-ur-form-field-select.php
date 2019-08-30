@@ -33,7 +33,7 @@ class UR_Form_Field_Select extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Select', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-image-flip-vertical',
+			'icon'  => 'ur-icon ur-icon-drop-down',
 		);
 
 		$this->field_defaults = array(
