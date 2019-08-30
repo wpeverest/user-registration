@@ -812,11 +812,13 @@
 				}
 			}
 
+			.ur-tab-contents {
+				height: calc(100vh - 130px);
+				position: relative;
+				overflow-y: auto;
+			}
 			.ur-tab-content {
 				padding: 16px;
-				height: calc(100vh - 130px);
-				overflow-y: auto;
-
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $white;
@@ -904,6 +906,7 @@
 	}
 
 	.ur-builder-wrapper {
+		position: relative;
 		flex: 1;
 		height: calc(100vh - 89px);
 		background: lighten($color_gray_five, 3%);

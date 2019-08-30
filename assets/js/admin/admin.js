@@ -36,11 +36,33 @@ jQuery(function ($) {
 		$input.toggleClass( 'ur-editing' );
 	} );
 
+	$( document ).on( 'init_perfect_scrollbar update_perfect_scrollbar', function() {
+
+		// Init perfect Scrollbar.
+		if ( 'undefined' !== typeof PerfectScrollbar ) {
+			var builder_wrapper = $( '.ur-builder-wrapper' ),
+				tab_content = $( '.ur-tab-contents' );
+
+			if( builder_wrapper.length >= 1 && 'undefined' === typeof window.ur_builder_scrollbar ) {
+				window.ur_builder_scrollbar = new PerfectScrollbar( builder_wrapper.selector );
+			} else if( 'undefined' !== typeof window.ur_builder_scrollbar ) {
+				window.ur_builder_scrollbar.update();
+			}
+
+			if( tab_content.length >= 1 && 'undefined' === typeof window.ur_tab_scrollbar ) {
+				window.ur_tab_scrollbar = new PerfectScrollbar( tab_content.selector );
+			} else if ( 'undefined' !== typeof window.ur_tab_scrollbar ) {
+				window.ur_tab_scrollbar.update();
+			}
+		}
+	} );
 
 	/**
 	 * Append form settings to fileds section.
 	 */
 	$( document ).ready( function() {
+
+		$( document ).trigger( 'init_perfect_scrollbar' );
 
 		var fields_panel = $('.ur-selected-inputs');
 		var form_settings_section = $('.ur-registered-inputs nav').find('#ur-tab-field-settings');
@@ -74,6 +96,7 @@ jQuery(function ($) {
 			// Hide other settings and show respective id's settings.
 			fields_panel.find('form #ur-field-all-settings > div').hide();
 			fields_panel.find('form #ur-field-all-settings > div#' + this_id ).show();
+			$( document ).trigger( 'update_perfect_scrollbar' );
 		});
 	} );
 
@@ -86,6 +109,7 @@ jQuery(function ($) {
 
 		// Show only the form settings in fields panel.
 		$('.ur-selected-inputs').find('form#ur-field-settings').show();
+		$( document ).trigger( 'update_perfect_scrollbar' );
 	});
 
 	/**
@@ -99,6 +123,7 @@ jQuery(function ($) {
 
 		// Hide the form settings in fields panel.
 		$( '.ur-selected-inputs' ).find( 'form#ur-field-settings' ).hide();
+		$( document ).trigger( 'update_perfect_scrollbar' );
 	});
 
 	/**
@@ -528,6 +553,7 @@ jQuery(function ($) {
 			$(this).addClass('ur-item-active');
 			render_advance_setting($(this));
 			init_events();
+			$( document ).trigger( 'update_perfect_scrollbar' );
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();

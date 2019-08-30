@@ -61,32 +61,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</ul>
 								<div style="clear:both"></div>
 
-								<div id="ur-tab-registered-fields" class="ur-tab-content">
-									<h2><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
-									<hr/>
-									<?php $this->get_registered_user_form_fields(); ?>
-									<h2><?php echo __( 'Extra Fields', 'user-registration' ); ?></h2>
-									<hr/>
-									<?php $this->get_registered_other_form_fields(); ?>
-									<?php do_action( 'user_registration_extra_fields' ); ?>
-								</div>
-								<div id="ur-tab-field-options" class="ur-tab-content">
+								<div class="ur-tab-contents" >
+									<div id="ur-tab-registered-fields" class="ur-tab-content">
+										<h2><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
+										<hr/>
+										<?php $this->get_registered_user_form_fields(); ?>
+										<h2><?php echo __( 'Extra Fields', 'user-registration' ); ?></h2>
+										<hr/>
+										<?php $this->get_registered_other_form_fields(); ?>
+										<?php do_action( 'user_registration_extra_fields' ); ?>
+									</div>
+									<div id="ur-tab-field-options" class="ur-tab-content">
 
-								</div>
-								<div id="ur-tab-field-settings" class="ur-tab-content">
+									</div>
+									<div id="ur-tab-field-settings" class="ur-tab-content">
 
-									<form method="post" id="ur-field-settings" onsubmit="return false;" style='display:none'>
-										<?php
-											$form_id = isset( $post_data[0]->ID ) ? $post_data[0]->ID : 0;
-										?>
-												<div id="ur-field-all-settings">
-													<?php ur_admin_form_settings( $form_id ); ?>
-													<?php do_action( 'user_registration_after_form_settings', $form_id ); ?>
-												</div>
-									</form>
-								</div>
+										<form method="post" id="ur-field-settings" onsubmit="return false;" style='display:none'>
+											<?php
+												$form_id = isset( $post_data[0]->ID ) ? $post_data[0]->ID : 0;
+											?>
+													<div id="ur-field-all-settings">
+														<?php ur_admin_form_settings( $form_id ); ?>
+														<?php do_action( 'user_registration_after_form_settings', $form_id ); ?>
+													</div>
+										</form>
+									</div>
 
-								<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
+									<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
+								</div>
 							</nav>
 						</div>
 						<?php
