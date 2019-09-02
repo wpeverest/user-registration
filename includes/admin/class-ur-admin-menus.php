@@ -606,21 +606,29 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
 				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
+				// $grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
 				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
-				echo '<div class="ur-grids">';
+				?>
 
-				$grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
+				<div class="ur-grids">
+					<button type="button" class="dashicons dashicons-edit"></button>
+					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
+					<div class="ur-toggle-grid-content">
+						<span></span>
+						<div class="ur-grid-selector" data-grid = "1">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>
+						</div>
+						<div class="ur-grid-selector" data-grid = "2">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>
+						</div>
+						<div class="ur-grid-selector" data-grid = "3">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>
+						</div>
+					</div>
+					<div style="clear:both"></div>
+				</div>
 
-				echo '<div class="ur-grid-navigation ur-nav-right dashicons dashicons-arrow-left-alt2"></div>';
-				echo '<div class="ur-grid-size" data-active-grid="' . count( $rows ) . '">' . $grid_string . '</div>';
-				echo '<div class="ur-grid-navigation ur-nav-left dashicons dashicons-arrow-right-alt2"></div>';
-
-				$add_or_remove_icon = '';
-
-				echo '<button type="button" class="dashicons dashicons-no-alt ur-remove-row">' . $add_or_remove_icon . '</button>';
-				echo '<div style="clear:both"></div>';
-				echo '</div>';
-
+				<?php
 				echo '<div class="ur-grid-lists">';
 
 				$grid_id = 0;
@@ -656,7 +664,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . $add_or_remove_icon . esc_html( 'Add New', 'user-registration' ) . '</button>';
+			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . esc_html( 'Add New', 'user-registration' ) . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
