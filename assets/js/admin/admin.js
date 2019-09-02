@@ -471,7 +471,9 @@ jQuery(function ($) {
 						$('#ur-draggabled li').draggable({
 							connectToSortable: '.ur-grid-list-item',
 							containment: '.ur-registered-from',
-							helper: 'clone',
+							helper: function() {
+								return $( this ).clone().insertAfter( $( this ).closest( '.ur-tab-contents' ).siblings( '.ur-tab-lists' ) );
+							},
 							revert: 'invalid',
 							// start: function (event, ui) {
 							// },
