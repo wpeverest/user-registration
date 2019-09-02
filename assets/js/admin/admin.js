@@ -244,8 +244,20 @@ jQuery(function ($) {
 					},
 					get_grid_button: function () {
 						var grid_button = $('<div class="ur-grid-containner"/>');
-						var grid_string = ur_math_ceil(ur_parse_int(loaded_params.number_of_grid_list) / ur_parse_int(loaded_params.active_grid)) + '/' + loaded_params.number_of_grid_list;
-						var grid_content = '<div class="ur-grid-navigation ur-nav-right dashicons dashicons-arrow-left-alt2"></div>' + '<div class="ur-grid-size" data-active-grid="' + loaded_params.active_grid + '">' + grid_string + '</div>' + '<div class="ur-grid-navigation ur-nav-left dashicons dashicons-arrow-right-alt2"></div>' + '<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>';
+						var grid_content = '<button type="button" class="ur-edit-grid"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg></button>';
+						grid_content += '<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>';
+						grid_content += '<div class="ur-toggle-grid-content" style="display:none">';
+						grid_content += '<strong>Select the grid size.</strong>';
+						grid_content += '<div class="ur-grid-selector" data-grid = "1">';
+						grid_content += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
+						grid_content += '</div>';
+						grid_content += '<div class="ur-grid-selector" data-grid = "2">';
+						grid_content += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
+						grid_content += '</div>';
+						grid_content += '<div class="ur-grid-selector" data-grid = "3">';
+						grid_content += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
+						grid_content += '</div>';
+						grid_content += '</div>';
 						grid_button.html(grid_content);
 						return grid_button.html();
 					},
