@@ -629,7 +629,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</button>
 					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
 					<div class="ur-toggle-grid-content" style="display:none">
-						<span></span>
+						<strong>Select the grid size.</strong>
 						<div class="ur-grid-selector" data-grid = "1">
 							<?php echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						</div>
