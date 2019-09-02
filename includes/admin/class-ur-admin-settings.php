@@ -50,6 +50,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-general.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
+			$settings[] = include 'settings/class-ur-settings-import-export.php';
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
@@ -170,7 +171,7 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		if ( 'general' === $current_tab && ( 'export-users' === $current_section || 'import-export-forms' === $current_section ) ) {
+		if ( 'general' === $current_tab || 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
