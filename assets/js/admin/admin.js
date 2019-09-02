@@ -98,6 +98,10 @@ jQuery(function ($) {
 			fields_panel.find('form #ur-field-all-settings > div#' + this_id ).show();
 			$( document ).trigger( 'update_perfect_scrollbar' );
 		});
+
+		$( '.ur-tab-lists > li[aria-controls="ur-tab-field-options"] a.nav-tab' ).on( 'click', function() {
+			$( document ).trigger( 'update_perfect_scrollbar' );
+		} );
 	} );
 
 	// Setting Tab.
