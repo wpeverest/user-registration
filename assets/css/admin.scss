@@ -985,31 +985,53 @@
 			}
 
 			.ur-grids {
-				background-color: $color_gray_five;
-				border-bottom: 1px solid $border_color;
+				display: flex;
 				position: absolute;
 				right: 0;
 				z-index: 1;
-				// // opacity: 0;
+				opacity: 0;
 
 				button {
 					border-radius: 0;
 					border: 0;
-					background-color: transparent;
-					color: $color_gray_two;
-					width: 25px;
-					height: 25px;
+					background-color: $color_gray_two;
+					color: $white;
+					font-size: 16px;
+					height: auto;
+					width: auto;
 					cursor: pointer;
-					padding: 0;
-					line-height: 25px;
+					padding: 3px 6px;
+					line-height: 1;
 					transition: all 0.1s ease-in-out;
+
+					svg {
+						width: 16px;
+						height: 16px;
+						font-size: 16px;
+						fill: $white;
+					}
 
 					&:before {
 						font-family: 'dashicons';
 					}
 
+					&.ur-remove-row {
+						&:hover {
+							background: $red;
+						}
+					}
+
 					&:hover {
-						color: $color_danger;
+						background: $primary_color;
+					}
+
+					&:first-child {
+						border-radius: 3px 0 0 3px;
+						border-right: 1px solid transparentize($white, 0.8)
+					}
+
+					&:nth-child(2) {
+						border-radius: 0 3px 3px 0;
 					}
 				}
 
@@ -1020,10 +1042,18 @@
 					top: 40px;
 					right: 0;
 					display: flex;
+					flex-wrap: wrap;
 					justify-content: center;
+					white-space: nowrap;
 					border: 1px solid $border_color;
 					border-radius: 4px;
 					box-shadow: 1px 4px 14px 1px transparentize($color_gray-base, 0.9);
+
+					small {
+						font-size: 12px;
+						margin-bottom: 0.5rem;
+						color: $color_gray-two;
+					}
 
 					.ur-grid-selector {
 						cursor: pointer;
@@ -1034,12 +1064,6 @@
 							width: 32px;
 							height: 32px;
 							fill: $color_gray_two;
-						}
-
-						&:hover {
-							svg {
-								fill: $primary_color;
-							}
 						}
 
 						&:last-child {
@@ -1057,7 +1081,7 @@
 						border-bottom: transparent;
 						position: absolute;
 						top: -5px;
-						right: 12px;
+						right: 36px;
 						background: $white;
 						transform: rotate(-45deg);
 					}
@@ -1261,6 +1285,13 @@
 					&:nth-child(3){
 						border-radius: 0 4px 4px 0;
 					}
+				}
+			}
+
+			&:hover {
+
+				.ur-grids {
+					opacity: 1;
 				}
 			}
 		}
