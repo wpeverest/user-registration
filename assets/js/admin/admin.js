@@ -407,58 +407,27 @@ jQuery(function ($) {
 
 						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
 							var $this_single_row = $( this ).closest( '.ur-single-row' ),
-								grid_num = $( this ).attr( 'data-grid' );
+								grid_num = $( this ).attr( 'data-grid' ),
+								$grids = builder.get_grid_lists(grid_num);
 
-							var grids = builder.get_grid_lists(grid_num);
-							grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
+							// Prevent from selecting same grid.
+							if( $this_single_row.find( '.ur-grid-lists .ur-grid-list-item' ).length === parseInt( grid_num ) ) {
+								return;
+							}
+
+							$this_single_row.find( 'button.ur-edit-grid' ).html( $( this ).html() );
+
+							$.each($this_single_row.find('.ur-grid-lists .ur-grid-list-item'), function () {
+								$(this).children('*').each(function () {
+									$grids.find('.ur-grid-list-item').eq(0).append($(this).clone());  // "this" is the current element in the loop
+								});
+							});
+							$this_single_row.find('.ur-grid-lists').eq(0).hide();
+							$grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
+							$this_single_row.find('.ur-grid-lists').eq(0).remove();
 							$this_obj.render_draggable_sortable();
 							builder.manage_empty_grid();
 						} );
-
-						$('body').on('click', '.ur-single-row .ur-nav-right', function () {
-							var $this_single_row = $(this).closest('.ur-single-row');
-							var grid_id = $(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid');
-							if (grid_id >= loaded_params.number_of_grid_list) {
-								return;
-							}
-							grid_id = ur_parse_int(grid_id) + 1;
-							var grid_string = ur_math_ceil(ur_parse_int(loaded_params.number_of_grid_list) / ur_parse_int(grid_id)) + '/' + loaded_params.number_of_grid_list;
-							$(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid', grid_id);
-							$(this).closest('.ur-grids').find('.ur-grid-size').text(grid_string);
-							var grids = builder.get_grid_lists(grid_id);
-							$.each($this_single_row.find('.ur-grid-lists .ur-grid-list-item'), function () {
-								$(this).children('*').each(function () {
-									grids.find('.ur-grid-list-item').eq(0).append($(this).clone());  // "this" is the current element in the loop
-								});
-							});
-							$this_single_row.find('.ur-grid-lists').eq(0).hide();
-							grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
-							$this_single_row.find('.ur-grid-lists').eq(0).remove();
-							$this_obj.render_draggable_sortable();
-							builder.manage_empty_grid();
-						});
-						$('body').on('click', '.ur-single-row .ur-nav-left', function () {
-							var $this_single_row = $(this).closest('.ur-single-row');
-							var grid_id = $(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid');
-							if (grid_id <= 1) {
-								return;
-							}
-							grid_id = ur_parse_int(grid_id) - 1;
-							var grid_string = ur_math_ceil(ur_parse_int(loaded_params.number_of_grid_list) / ur_parse_int(grid_id)) + '/' + loaded_params.number_of_grid_list;
-							$(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid', grid_id);
-							$(this).closest('.ur-grids').find('.ur-grid-size').text(grid_string);
-							var grids = builder.get_grid_lists(grid_id);
-							$.each($this_single_row.find('.ur-grid-lists .ur-grid-list-item'), function () {
-								$(this).children('*').each(function () {
-									grids.find('.ur-grid-list-item').eq(0).append($(this).clone());  // "this" is the current element in the loop
-								});
-							});
-							$this_single_row.find('.ur-grid-lists').eq(0).hide();
-							grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
-							$this_single_row.find('.ur-grid-lists').eq(0).remove();
-							$this_obj.render_draggable_sortable();
-							builder.manage_empty_grid();
-						});
 					},
 					render_draggable_sortable: function () {
 						$('.ur-grid-list-item').sortable({
