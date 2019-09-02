@@ -989,34 +989,34 @@
 				border-bottom: 1px solid $border_color;
 				position: absolute;
 				right: 0;
-				// opacity: 0;
+				z-index: 1;
+				// // opacity: 0;
 
-				div {
-					border-right: 1px solid $border_color;
-					display: inline-block;
-					line-height: 24px;
-					color: $color_gray_two;
+				// div {
+				// 	border-right: 1px solid $border_color;
+				// 	display: inline-block;
+				// 	line-height: 24px;
+				// 	color: $color_gray_two;
 
-					&.ur-grid-size {
-						padding: 0 10px;
-					}
+				// 	&.ur-grid-size {
+				// 		padding: 0 10px;
+				// 	}
 
-					&.ur-grid-navigation {
-						width: 24px;
-						height: 24px;
-						background-color: $color_gray_four;
-						font-family: dashicons;
-						font-size: 16px;
-						cursor: pointer;
+				// 	&.ur-grid-navigation {
+				// 		width: 24px;
+				// 		height: 24px;
+				// 		background-color: $color_gray_four;
+				// 		font-family: dashicons;
+				// 		font-size: 16px;
+				// 		cursor: pointer;
 
-						&:hover {
-							background-color: darken($color_gray_four, 5%);
-						}
-					}
-				}
+				// 		&:hover {
+				// 			background-color: darken($color_gray_four, 5%);
+				// 		}
+				// 	}
+				// }
 
-				.ur-remove-row {
-					float: right;
+				button {
 					border-radius: 0;
 					border: 0;
 					background-color: transparent;
@@ -1034,6 +1034,25 @@
 
 					&:hover {
 						color: $color_danger;
+					}
+				}
+
+				.ur-toggle-grid-content {
+					background: $white;
+					padding: 8px;
+					position: absolute;
+					min-width: 160px;
+					right: 0;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: center;
+					border-radius: 4px;
+
+					.ur-grid-selector {
+						svg {
+							width: 32px;
+							height: 32px;
+						}
 					}
 				}
 			}
