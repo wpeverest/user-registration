@@ -279,11 +279,9 @@ jQuery(function ($) {
 					},
 					get_grid_lists: function (number_of_grid) {
 						var grid_lists = $('<div class="ur-grid-lists"/>');
-						var total_width = 0;
 						for (var i = 1; i <= number_of_grid; i++) {
 							var grid_list_item = $('<div ur-grid-id=\'' + i + '\' class=\'ur-grid-list-item\'></div>');
 							var width = Math.floor(100 / number_of_grid) - number_of_grid;
-							total_width += width;
 							grid_list_item.css({
 								'width': width + '%',
 								'min-height': loaded_params.min_grid_height + 'px'
@@ -398,6 +396,25 @@ jQuery(function ($) {
 					},
 					change_ur_grids: function () {
 						var $this_obj = this;
+
+						$( document ).on( 'click', '.ur-grids .ur-edit-grid', function(e) {
+							e.stopPropagation();
+							$( this ).siblings( '.ur-toggle-grid-content' ).stop(true).slideToggle( 200 );
+						} );
+						$( document ).on( 'click', function() {
+							$( '.ur-toggle-grid-content' ).stop(true).slideUp( 200 );
+						} );
+
+						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
+							var $this_single_row = $( this ).closest( '.ur-single-row' ),
+								grid_num = $( this ).attr( 'data-grid' );
+
+							var grids = builder.get_grid_lists(grid_num);
+							grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
+							$this_obj.render_draggable_sortable();
+							builder.manage_empty_grid();
+						} );
+
 						$('body').on('click', '.ur-single-row .ur-nav-right', function () {
 							var $this_single_row = $(this).closest('.ur-single-row');
 							var grid_id = $(this).closest('.ur-grids').find('.ur-grid-size').attr('data-active-grid');

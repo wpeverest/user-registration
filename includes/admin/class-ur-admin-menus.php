@@ -606,26 +606,40 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
 				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
-				// $grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
+				$grid_count = count( $rows );
+
+				$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
+				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
+				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
+
 				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
 				?>
 
 				<div class="ur-grids">
-					<button type="button" class="dashicons dashicons-edit"></button>
+					<button type="button" class="ur-edit-grid">
+						<?php
+						if ( 1 === $grid_count ) {
+							echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput
+						} elseif ( 2 === $grid_count ) {
+							echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput
+						} elseif ( 3 === $grid_count ) {
+							echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput
+						}
+						?>
+					</button>
 					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
-					<div class="ur-toggle-grid-content">
+					<div class="ur-toggle-grid-content" style="display:none">
 						<span></span>
 						<div class="ur-grid-selector" data-grid = "1">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>
+							<?php echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "2">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>
+							<?php echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "3">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>
+							<?php echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						</div>
 					</div>
-					<div style="clear:both"></div>
 				</div>
 
 				<?php
