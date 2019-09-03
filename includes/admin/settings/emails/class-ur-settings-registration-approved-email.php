@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Registration_Approved_Email
+ * @package  UR_Settings_Registration_Approved_Email
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +17,9 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 	 */
 	class UR_Settings_Registration_Approved_Email {
 
-
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'registration_approved_email';
 			$this->title       = __( 'Registration Approved Email', 'user-registration' );
@@ -81,19 +81,22 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_registration_approved_email() {
 
 			$message = apply_filters(
 				'user_registration_get_registration_approved_email',
 				sprintf(
 					__(
-						'Hi {{username}},
+						'Hi {{username}}, <br/>
 
-				Your registration on <a href="{{home_url}}">{{blog_info}}</a>  has been approved.
+Your registration on <a href="{{home_url}}">{{blog_info}}</a>  has been approved. <br/>
 
-				Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>.
+Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-				Thank You!',
+Thank You!',
 						'user-registration'
 					)
 				)

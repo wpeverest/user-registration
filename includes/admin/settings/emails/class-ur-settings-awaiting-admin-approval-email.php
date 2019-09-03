@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Awaiting_Admin_Approval_Email
+ * @package  UR_Settings_Awaiting_Admin_Approval_Email
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +17,9 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 	 */
 	class UR_Settings_Awaiting_Admin_Approval_Email {
 
-
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'awaiting_admin_approval_email';
 			$this->title       = __( 'Awaiting Admin Approval', 'user-registration' );
@@ -81,19 +81,22 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_awaiting_admin_approval_email() {
 
 			$message = apply_filters(
 				'user_registration_get_awaiting_admin_approval_email',
 				sprintf(
 					__(
-						'Hi {{username}},
+						'Hi {{username}}, <br/>
 
- 				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
- 				Please wait until the site admin approves your registration. You will be notified after it is approved.
+Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>
 
- 				Thank You!',
+Thank You!',
 						'user-registration'
 					)
 				)
