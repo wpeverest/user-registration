@@ -993,8 +993,10 @@
 				right: 0;
 				z-index: 1;
 				opacity: 0;
+				transition: all .2s ease-in;
 
 				button {
+					display: flex;
 					border-radius: 0;
 					border: 0;
 					background-color: $color_gray_two;
@@ -1003,7 +1005,7 @@
 					height: auto;
 					width: auto;
 					cursor: pointer;
-					padding: 3px 6px;
+					padding: 4px 6px;
 					line-height: 1;
 					transition: all 0.1s ease-in-out;
 
@@ -1099,6 +1101,7 @@
 				justify-content: center;
 				border: 1px solid transparent;
 				border-radius: 4px;
+				transition: all 0.2s ease-in;
 
 				&:hover {
 					background: $white;
@@ -1121,6 +1124,7 @@
 					flex: 1;
 					border: 1px solid transparent;
 					border-radius: 4px;
+					transition: all 0.2s ease-in;
 
 					.ur-selected-item {
 						margin-bottom: 5px;

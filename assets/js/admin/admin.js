@@ -98,10 +98,10 @@ jQuery(function ($) {
 			fields_panel.find('form #ur-field-all-settings > div#' + this_id ).show();
 			$( document ).trigger( 'update_perfect_scrollbar' );
 		});
+	} );
 
-		$( '.ur-tab-lists > li[aria-controls="ur-tab-field-options"] a.nav-tab' ).on( 'click', function() {
-			$( document ).trigger( 'update_perfect_scrollbar' );
-		} );
+	$( document ).on( 'click', '.ur-tab-lists li[role="tab"] a.nav-tab', function() {
+		$( document ).trigger( 'update_perfect_scrollbar' );
 	} );
 
 	// Setting Tab.
@@ -113,7 +113,6 @@ jQuery(function ($) {
 
 		// Show only the form settings in fields panel.
 		$('.ur-selected-inputs').find('form#ur-field-settings').show();
-		$( document ).trigger( 'update_perfect_scrollbar' );
 	});
 
 	/**
@@ -127,7 +126,6 @@ jQuery(function ($) {
 
 		// Hide the form settings in fields panel.
 		$( '.ur-selected-inputs' ).find( 'form#ur-field-settings' ).hide();
-		$( document ).trigger( 'update_perfect_scrollbar' );
 	});
 
 	/**
@@ -471,7 +469,9 @@ jQuery(function ($) {
 						$('#ur-draggabled li').draggable({
 							connectToSortable: '.ur-grid-list-item',
 							containment: '.ur-registered-from',
-							helper: 'clone',
+							helper: function() {
+								return $( this ).clone().insertAfter( $( this ).closest( '.ur-tab-contents' ).siblings( '.ur-tab-lists' ) );
+							},
 							revert: 'invalid',
 							// start: function (event, ui) {
 							// },
