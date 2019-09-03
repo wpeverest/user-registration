@@ -415,11 +415,11 @@ class UR_Admin_Settings {
 										selected( $option_value, $key );
 									}
 									?>
-									><?php echo $val; // @codingStandardsIgnoreLine ?></option>
+									><?php echo esc_html( $val ); ?></option>
 									<?php
 								}
 								?>
-							</select> <?php echo $description; // @codingStandardsIgnoreLine  ?>
+							</select> <?php echo esc_html( $description ); ?>
 						</td>
 					</tr>
 					<?php
