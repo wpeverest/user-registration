@@ -842,7 +842,7 @@
 		display: block;
 		color: $color_gray_one;
 		font-size: 13px;
-		padding: 0 10px;
+		padding: 0 8px;
 		border-radius: 3px;
 		border: 1px solid $border_color;
 		box-shadow: 0 0 0 transparent;
@@ -859,6 +859,10 @@
 			color: $color_gray_three;
 			background: $color_gray_five;
 		}
+	}
+
+	select {
+		padding-right: 0;
 	}
 
 	label {
