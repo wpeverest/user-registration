@@ -77,9 +77,13 @@ class UR_Frontend {
 	 * @since 1.6.0
 	 */
 	public function prevent_core_login_page() {
+		global $action;
+		
 		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
-			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
-			exit;
+			if( $action !== 'logout') {
+				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+				exit;
+			}
 		}
 	}
 }
