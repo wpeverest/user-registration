@@ -144,6 +144,17 @@ class UR_Admin_Import_Export_Forms {
 
 					// check for non empty post data array.
 					if ( ! empty( $form_data->form_post ) ) {
+
+						// If Form Title already exist concat it with imported tag.
+						$args  = array( 'post_type' => 'user_registration' );
+						$forms = get_posts( $args );
+						foreach ( $forms as $key => $form_obj ) {
+							if ( $form_data->form_post->post_title === $form_obj->post_title ) {
+								$form_data->form_post->post_title = $form_data->form_post->post_title . ' (Imported)';
+								break;
+							}
+						}
+
 						$post_id = wp_insert_post( $form_data->form_post );
 
 						// Check for any error while inserting.
