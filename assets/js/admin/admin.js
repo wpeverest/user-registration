@@ -47,12 +47,14 @@ jQuery(function ($) {
 				window.ur_builder_scrollbar = new PerfectScrollbar( builder_wrapper.selector );
 			} else if( 'undefined' !== typeof window.ur_builder_scrollbar ) {
 				window.ur_builder_scrollbar.update();
+				builder_wrapper.scrollTop( 0 );
 			}
 
 			if( tab_content.length >= 1 && 'undefined' === typeof window.ur_tab_scrollbar ) {
 				window.ur_tab_scrollbar = new PerfectScrollbar( tab_content.selector );
 			} else if ( 'undefined' !== typeof window.ur_tab_scrollbar ) {
 				window.ur_tab_scrollbar.update();
+				tab_content.scrollTop( 0 );
 			}
 		}
 	} );
