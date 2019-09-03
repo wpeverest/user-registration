@@ -242,6 +242,7 @@
 
 			img {
 				width: 32px;
+				height: 32px;
 				padding: 0 8px;
 				margin-right: 8px;
 				display: flex;
@@ -710,6 +711,7 @@
 
 		&.ui-draggable-dragging {
 			width: 110px !important; // Inherit js styles
+			z-index: 9 !important;
 		}
 	}
 
@@ -962,6 +964,7 @@
 						border: 1px solid $primary_color;
 
 						&::after {
+							top: 0;
 							right: 0;
 							border: 1px solid $primary_color;
 						}
@@ -1289,7 +1292,6 @@
 			}
 
 			&:hover {
-
 				.ur-grids {
 					opacity: 1;
 				}
