@@ -49,7 +49,6 @@ jQuery(function ($) {
 				} );
 			} else if( 'undefined' !== typeof window.ur_builder_scrollbar ) {
 				window.ur_builder_scrollbar.update();
-				builder_wrapper.scrollTop( 0 );
 			}
 
 			if( tab_content.length >= 1 && 'undefined' === typeof window.ur_tab_scrollbar ) {
@@ -103,11 +102,17 @@ jQuery(function ($) {
 			fields_panel.find('form #ur-field-all-settings > div').hide();
 			fields_panel.find('form #ur-field-all-settings > div#' + this_id ).show();
 			$( document ).trigger( 'update_perfect_scrollbar' );
+			$( '.ur-builder-wrapper' ).scrollTop( 0 );
 		});
 	} );
 
-	$( document ).on( 'click', '.ur-tab-lists li[role="tab"] a.nav-tab', function() {
+	$( document ).on( 'click', '.ur-tab-lists li[role="tab"] a.nav-tab', function( e, $type ) {
 		$( document ).trigger( 'update_perfect_scrollbar' );
+
+		if( 'triggered_click' != $type ) {
+			$( '.ur-builder-wrapper' ).scrollTop( 0 );
+			$( '.ur-builder-wrapper-content' ).scrollTop( 0 );
+		}
 	} );
 
 	// Setting Tab.
@@ -539,7 +544,7 @@ jQuery(function ($) {
 					},
 					check_grid: function () {
 						$('.ur-tabs').tabs({ disabled: [1] });
-						$('.ur-tabs').find('a').eq(0).trigger('click');
+						$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
 						$('.ur-tabs').find( '[aria-controls="ur-tab-field-options"]' ).addClass( "ur-no-pointer" );
 						$('.ur-selected-item').removeClass('ur-item-active');
 					}
@@ -554,7 +559,7 @@ jQuery(function ($) {
 			$(this).addClass('active');
 		});
 		$('.ur-tabs').tabs();
-		$('.ur-tabs').find('a').eq(0).trigger('click');
+		$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
 		$('.ur-tabs').tabs({ disabled: [1] });
 		$(document).on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
@@ -577,7 +582,7 @@ jQuery(function ($) {
 			$('#ur-tab-field-options').find('.ur-general-setting-block').show();
 			if ($('.ur-item-active').length === 1) {
 				$('.ur-tabs').tabs('enable', 1);
-				$('.ur-tabs').find('a').eq(1).trigger('click');
+				$('.ur-tabs').find('a').eq(1).trigger('click', ['triggered_click']);
 			}
 			$('.ur-options-list').sortable({
 				containment: '.ur-general-setting-options',
