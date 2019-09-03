@@ -230,14 +230,14 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
 
+	// Allow 3rd party plugin filter template file from their plugin.
+	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
+
 	if ( ! file_exists( $located ) ) {
 		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '1.0' );
 
 		return;
 	}
-
-	// Allow 3rd party plugin filter template file from their plugin.
-	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 

@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap ur-form-container">
+	<h1 style="display:none"></h1> <!-- To manage notices -->
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
 		<div class="ur-loading-container">
 			<div class="ur-circle-loading"></div>

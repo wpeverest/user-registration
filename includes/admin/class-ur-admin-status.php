@@ -173,5 +173,8 @@ class UR_Admin_Status {
 			$log_handler = new UR_Log_Handler_File();
 			$log_handler->remove( $_REQUEST['handle'] );
 		}
+
+		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
+		exit();
 	}
 }
