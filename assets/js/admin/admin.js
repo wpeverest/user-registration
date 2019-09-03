@@ -497,7 +497,6 @@ jQuery(function ($) {
 			form_data.append('action', 'user_registration_import_form_action');
 			form_data.append('security', user_registration_admin_data.ur_import_form_save);
 
-
 			$.ajax({
 				url: user_registration_admin_data.ajax_url,
 				dataType: 'json',  // what to expect back from the PHP script, if anything
@@ -512,24 +511,21 @@ jQuery(function ($) {
 					$('.ur-import_notice').remove();
 				},
 				complete: function (response) {
+					var message_string = '';
+
 					$('.ur_import_form_action_button').closest('.publishing-action').find('.spinner').remove();
+					$('.ur-import_notice').remove();
+
 					if (response.responseJSON.success === true) {
-						$('.ur-import_notice').remove();
-						var message = response.responseJSON.data.message;
-						var message_string = '<div id="message" class="updated inline ur-import_notice"><p><strong>' + message + '</strong></p></div>';
-						$('.ur-export-users-page').prepend(message_string);
-						$('#jsonfile').val("");
+						message_string = '<div id="message" class="updated inline ur-import_notice"><p><strong>' + response.responseJSON.data.message + '</strong></p></div>';
 					} else {
-						$('.ur-import_notice').remove();
-						var error = response.responseJSON.data.message;
-						var message_string = '<div id="message" class="error inline ur-import_notice"><p><strong>' + error + '</strong></p></div>';
-						$('.ur-export-users-page').prepend(message_string);
-						$('#jsonfile').val("");
+						message_string = '<div id="message" class="error inline ur-import_notice"><p><strong>' + response.responseJSON.data.message + '</strong></p></div>';
 					}
+
+					$('.ur-export-users-page').prepend(message_string);
+					$('#jsonfile').val("");
 				}
 			});
-
-
 		});
 
 		$('.ur_save_form_action_button').on('click', function () {

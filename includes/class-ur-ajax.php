@@ -197,88 +197,14 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Import Form from backend
+	 * Import Form ajax.
 	 *
 	 * @throws Exception Post data mot set.
-	 * @return json
 	 */
 	public static function import_form_action() {
 		try {
 			check_ajax_referer( 'ur_import_form_save_nonce', 'security' );
-
-			$filename = '';
-			// Check for $_FILES set or not.
-			if ( isset( $_FILES['jsonfile'] ) ) {
-
-				$filename = $_FILES['jsonfile']['name']; // get file name.
-				$ext      = pathinfo( $filename, PATHINFO_EXTENSION ); // get file extention.
-
-				// Check for file format.
-				if ( 'json' === $ext ) {
-
-					// read json file.
-					$form_data = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) );
-
-					// check for non empty json file.
-					if ( ! empty( $form_data ) ) {
-
-						// check for non empty post data array.
-						if ( ! empty( $form_data->form_post ) ) {
-							$post_id = wp_insert_post( $form_data->form_post );
-
-							// Check for any error while inserting.
-							if ( is_wp_error( $post_id ) ) {
-								return $post_id;
-							}
-							if ( $post_id ) {
-
-								// check for non empty post_meta array.
-								if ( ! empty( $form_data->form_post_meta ) ) {
-									$all_roles = ur_get_default_admin_roles();
-
-									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
-
-										// if user role does not exists in new site then set default as subscriber.
-										if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
-											$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
-										}
-										add_post_meta( $post_id, $meta_key, $meta_value );
-									}
-									wp_send_json_success(
-										array(
-											'message' => __( 'Import Successfully.', 'user-registration' ),
-										)
-									);
-								}
-							}
-						} else {
-							wp_send_json_error(
-								array(
-									'message' => __( 'Invalid file content. Please export file from user registration plugin.', 'user-registration' ),
-								)
-							);
-						}
-					} else {
-						wp_send_json_error(
-							array(
-								'message' => __( 'Invalid file content. Please export file from user registration plugin.', 'user-registration' ),
-							)
-						);
-					}
-				} else {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Invalid file format. Only Json File Allowed.', 'user-registration' ),
-						)
-					);
-				}
-			} else {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Please select json file to import form data.', 'user-registration' ),
-					)
-				);
-			}
+			UR_Admin_Import_Export_Forms::import_form();
 		} catch ( Exception $e ) {
 			wp_send_json_error(
 				array(

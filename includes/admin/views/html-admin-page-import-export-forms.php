@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php _e( 'Import your forms along with their settings from <strong>JSON</strong> file.', 'user-registration' ); ?>
 						</p>
 						<p>
-							<input type="file" name="jsonfile" id="jsonfile"/>
+							<input type="file" name="jsonfile" id="jsonfile" accept=".json"/>
 							<span class="description">Only JSON file format allowed.</span>
 						</p>
 						<div class="publishing-action">

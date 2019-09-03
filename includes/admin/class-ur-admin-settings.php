@@ -395,7 +395,7 @@ class UR_Admin_Settings {
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
-						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ); ?>">
+						<td class="forminp forminp-<?php echo esc_html( sanitize_title( $value['type'] ) ); ?>">
 							<select
 								name="<?php echo esc_attr( $value['id'] ); ?><?php echo ( 'multiselect' === $value['type'] ) ? '[]' : ''; ?>"
 								id="<?php echo esc_attr( $value['id'] ); ?>"
@@ -408,20 +408,18 @@ class UR_Admin_Settings {
 								foreach ( $value['options'] as $key => $val ) {
 									?>
 									<option value="<?php echo esc_attr( $key ); ?>"
-															<?php
-
-															if ( is_array( $option_value ) ) {
-																selected( in_array( $key, $option_value ), true );
-															} else {
-																selected( $option_value, $key );
-															}
-
-															?>
-										><?php echo $val; ?></option>
-										<?php
+									<?php
+									if ( is_array( $option_value ) ) {
+										selected( in_array( $key, $option_value ), true );
+									} else {
+										selected( $option_value, $key );
+									}
+									?>
+									><?php echo $val; // @codingStandardsIgnoreLine ?></option>
+									<?php
 								}
 								?>
-							</select> <?php echo $description; ?>
+							</select> <?php echo $description; // @codingStandardsIgnoreLine  ?>
 						</td>
 					</tr>
 					<?php
