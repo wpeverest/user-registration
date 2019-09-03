@@ -682,9 +682,9 @@ jQuery(function ($) {
 			$message.addClass( 'entered' );
 		}, 50 );
 
-		// setTimeout( function( ) {
-		// 	removeMessage( $message );
-		// }, 2000 );
+		setTimeout( function( ) {
+			removeMessage( $message );
+		}, 2000 );
 	}
 
 	function removeMessage( $message ) {
