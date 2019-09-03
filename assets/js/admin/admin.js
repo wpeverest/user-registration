@@ -549,7 +549,7 @@ jQuery(function ($) {
 		$('.ur-tabs').tabs();
 		$('.ur-tabs').find('a').eq(0).trigger('click');
 		$('.ur-tabs').tabs({ disabled: [1] });
-		$('body').on('click', '.ur-selected-item', function () {
+		$(document).on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
 			$('.ur-selected-item').removeClass('ur-item-active');
 			$(this).addClass('ur-item-active');
