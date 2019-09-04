@@ -248,6 +248,9 @@ class UR_Admin_Assets {
 				)
 			);
 		}
+
+		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION );
+		wp_enqueue_script( 'ur-live-user-notice' );
 	}
 
 	/**
