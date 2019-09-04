@@ -160,6 +160,14 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
+		if ( isset( $data['advance_setting']->min_date ) ) {
+			$form_data['custom_attributes']['data-mindate'] = $data['advance_setting']->min_date;
+		}
+
+		if ( isset( $data['advance_setting']->max_date ) ) {
+			$form_data['custom_attributes']['data-maxdate'] = $data['advance_setting']->max_date;
+		}
+
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 		}

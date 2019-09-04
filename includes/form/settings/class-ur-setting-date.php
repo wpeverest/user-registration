@@ -64,9 +64,29 @@ class UR_Setting_Date extends UR_Field_Settings {
 					'd/m/Y'  => date( 'd/m/Y' ) . ' (d/m/Y)',
 				),
 			),
+
+			'min_date'     => array(
+				'label'       => __( 'Min Date', 'user-registration' ),
+				'data-id'     => $this->field_id . '_min_date',
+				'name'        => $this->field_id . '[min_date]',
+				'class'       => $this->default_class . ' ur-settings-min_date',
+				'type'        => 'date',
+				'required'    => false,
+				'default'     => '',
+			),
+
+			'max_date'     => array(
+				'label'       => __( 'Max Date', 'user-registration' ),
+				'data-id'     => $this->field_id . '_max_date',
+				'name'        => $this->field_id . '[max_date]',
+				'class'       => $this->default_class . ' ur-settings-max_date',
+				'type'        => 'date',
+				'required'    => false,
+				'default'     => '',
+			),
 		);
 
-		$this->render_html( $fields );
+			$this->render_html( $fields );
 	}
 }
 

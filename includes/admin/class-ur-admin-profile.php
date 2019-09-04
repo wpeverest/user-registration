@@ -515,6 +515,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$fields[ $field_index ]['type'] = 'date';
 									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
+
+									$min_date                    = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+									$fields[ $field_index ]['attributes']['data-mindate'] = $min_date;
+
+									$max_date                    = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+									$fields[ $field_index ]['attributes']['data-maxdate'] = $max_date;
 									break;
 
 								case 'privacy_policy':

@@ -69,6 +69,16 @@ abstract class UR_Field_Settings {
 					$this->fields_html .= ' />';
 					break;
 
+				case 'date':
+					$this->fields_html .= '<input data-advance-field="' . esc_attr( $field_key ) . '" value="' . esc_attr( $value ) . '" class="' . esc_attr( $field['class'] ) . '" type="date" name="' . esc_attr( $field['name'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr( $field['placeholder'] ) . '"';
+
+					if ( true == $field['required'] ) {
+						$this->fields_html .= ' required ';
+					}
+
+					$this->fields_html .= ' />';
+					break;
+
 				case 'select':
 					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr( $field['placeholder'] ) . '" ';
 

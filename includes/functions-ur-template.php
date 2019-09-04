@@ -510,8 +510,13 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'date':
 								$date_format = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+								$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+								$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
+								$extra_params['custom_attributes']['data-mindate'] = $min_date;
+								$extra_params['custom_attributes']['data-maxdate'] = $max_date;
 								break;
+
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
 								$extra_params['options'] = $class_name::get_instance()->get_country();
