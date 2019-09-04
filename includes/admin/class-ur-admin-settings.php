@@ -171,7 +171,7 @@ class UR_Admin_Settings {
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		if ( 'general' === $current_tab || 'import_export' === $current_tab ) {
+		if ( 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
