@@ -255,9 +255,11 @@ class UR_Emailer {
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+		$ur_login     = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
+		$ur_login     = str_replace( get_home_url() . '/', '', $ur_login );
 
-		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{email_token}}', '{{all_fields}}' );
-		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
+		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{email_token}}', '{{all_fields}}', '{{ur_login}}' );
+		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html, $ur_login );
 
 		// Add the field name and values from $name_value to the replacement arrays.
 		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
