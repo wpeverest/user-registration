@@ -410,6 +410,7 @@ jQuery(function ($) {
 									$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
 									single_row.remove();
 									$this.check_grid();
+									manage_draggable_users_fields();
 								}
 							} else {
 								window.alert(i18n_admin.i18n_at_least_one_row_need_to_select);
