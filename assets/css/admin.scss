@@ -789,8 +789,10 @@
 				position: relative;
 				overflow-y: auto;
 			}
+
 			.ur-tab-content {
 				padding: 16px;
+
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $white;
@@ -1832,7 +1834,7 @@ body {
 		.ur-registered-from {
 			.ur-registered-inputs {
 				.ur-tabs {
-					.ur-tab-content {
+					.ur-tab-contents {
 						height: calc(100vh - 98px);
 					}
 				}
