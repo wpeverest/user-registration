@@ -264,8 +264,9 @@ class UR_AJAX {
 				throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) );
 			}
 
-			$form_name = sanitize_text_field( $_POST['data']['form_name'] );
-			$form_id   = sanitize_text_field( $_POST['data']['form_id'] );
+			$form_name    = sanitize_text_field( $_POST['data']['form_name'] );
+			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] );
+			$form_id      = sanitize_text_field( $_POST['data']['form_id'] );
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -285,11 +286,16 @@ class UR_AJAX {
 			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
+				$_POST['data']['form_id'] = $post_id; // Form id for new form.
+
 				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
 				ur_update_form_settings( $post_data_setting, $post_id );
+
+				// Form row_id save.
+				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
 			}
 
-			add_filter( 'content_save_pre', 'wp_targeted_link_rel' );
+			do_action( 'user_registration_after_form_settings_save', $_POST['data'] );
 
 			wp_send_json_success(
 				array(

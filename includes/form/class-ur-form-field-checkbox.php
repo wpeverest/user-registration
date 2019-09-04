@@ -33,7 +33,7 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Checkbox', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-yes',
+			'icon'  => 'ur-icon ur-icon-input-checkbox',
 		);
 
 		$this->field_defaults = array(

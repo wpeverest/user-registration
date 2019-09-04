@@ -42,9 +42,10 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
-		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus' ), UR_VERSION );
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), $jquery_version );
 		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+		wp_register_style( 'perfect-scrollbar', UR()->plugin_url() . '/assets/css/perfect-scrollbar/perfect-scrollbar.css', '1.4.0' );
 
 		wp_register_style( 'user-registration-dashboard-widget', UR()->plugin_url() . '/assets/css/dashboard.css', UR_VERSION );
 
@@ -69,6 +70,7 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'user-registration-admin' );
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_style( 'perfect-scrollbar' );
 		}
 
 		// Enqueue flatpickr on user profile screen.
@@ -98,6 +100,7 @@ class UR_Admin_Assets {
 			array(
 				'jquery',
 				'selectWoo',
+				'wp-color-picker',
 				'jquery-blockui',
 				'jquery-tiptip',
 				'jquery-ui-sortable',
@@ -106,10 +109,9 @@ class UR_Admin_Assets {
 				'jquery-ui-tabs',
 				'jquery-ui-draggable',
 				'jquery-ui-droppable',
-				'jquery-tiptip',
 				'ur-backbone-modal',
 				'ur-enhanced-select',
-
+				'perfect-scrollbar',
 			),
 			UR_VERSION
 		);
@@ -140,6 +142,7 @@ class UR_Admin_Assets {
 		);
 
 		wp_register_script( 'flatpickr', UR()->plugin_url() . '/assets/js/flatpickr/flatpickr.min.js', array( 'jquery' ), '1.17.0' );
+		wp_register_script( 'perfect-scrollbar', UR()->plugin_url() . '/assets/js/perfect-scrollbar/perfect-scrollbar.min.js', array( 'jquery' ), '1.4.0' );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
 		wp_localize_script(
 			'ur-my-account',
@@ -222,6 +225,7 @@ class UR_Admin_Assets {
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
+				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
 
 			);
 

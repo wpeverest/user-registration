@@ -33,7 +33,7 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Password ', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-lock',
+			'icon'  => 'ur-icon ur-icon-password',
 		);
 
 		$this->field_defaults = array(

@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Shortcodes {
 
+	public static $parts = false;
+
 	/**
 	 * Init Shortcodes.
 	 */
@@ -145,6 +147,8 @@ class UR_Shortcodes {
 			'user_registration_form'
 		);
 
+		do_action( 'user_registration_form_shortcode_scripts', $atts );
+
 		ob_start();
 		self::render_form( $atts['id'] );
 
@@ -166,16 +170,23 @@ class UR_Shortcodes {
 			'post__in'    => array( $form_id ),
 		);
 
-		$post_data = get_posts( $args );
-		$form_data = '';
+		$post_data    = get_posts( $args );
+		$form_data    = '';
+		$form_row_ids = '';
 
 		if ( isset( $post_data[0] ) ) {
-			$form_data = $post_data[0]->post_content;
+			$form_data    = $post_data[0]->post_content;
+			$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
 		}
-		$form_data_array = json_decode( $form_data );
+		$form_data_array    = json_decode( $form_data );
+		$form_row_ids_array = json_decode( $form_row_ids );
 
 		if ( gettype( $form_data_array ) != 'array' ) {
 			$form_data_array = array();
+		}
+
+		if ( gettype( $form_row_ids_array ) != 'array' ) {
+			$form_row_ids_array = array();
 		}
 
 		$is_field_exists           = false;
@@ -204,6 +215,8 @@ class UR_Shortcodes {
 
 		$form_data_array = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 
+		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
+
 		include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
 		ur_get_template(
 			'form-registration.php',
@@ -214,6 +227,8 @@ class UR_Shortcodes {
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
 				'recaptcha_node'            => $recaptcha_node,
+				'parts'                     => self::$parts,
+				'row_ids'                   => $form_row_ids_array,
 			)
 		);
 	}

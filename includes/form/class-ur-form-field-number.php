@@ -35,7 +35,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Number', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-image-filter',
+			'icon'  => 'ur-icon ur-icon-number',
 		);
 
 		$this->field_defaults = array(

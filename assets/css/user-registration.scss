@@ -25,11 +25,9 @@
 .user-registration-message,
 .user-registration-error,
 .user-registration-info {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	margin: 0 0 2em;
-	padding: 1.25em 2em;
+	display: block;
+	margin: 0 0 10px;
+	padding: 10px 15px;
 	background-color: lighten($secondary, 5%);
 	color: $secondarytext;
 	border-top: 3px solid $primary;
@@ -37,14 +35,16 @@
 	@include clearfix();
 	width: auto;
 	word-wrap: break-word;
-	line-height: 1.5;
+	line-height: 1.25;
 	text-transform: none;
 	font-size: 14px;
 
 	&::before {
 		content: '\f348';
+		display: inline-block;
+		vertical-align: middle;
 		font-family: 'Dashicons';
-		font-size: 24px;
+		font-size: calc(100% + 10px);
 		margin-right: 0.875rem;
 	}
 
@@ -63,8 +63,10 @@
 		padding-left: 0 !important; // Required for default theme compatibility
 		margin-left: 0 !important; // Required for default theme compatibility
 	}
+
 	.message{
-		margin:0;padding:0;
+		margin:0;
+		padding:0;
 	}
 }
 
@@ -72,18 +74,11 @@
 	border-top-color: #8fae1b;
 	background: rgba( #8fae1b, 0.1 );
 	color: darken( #8fae1b, 15%);
-
-	&::before {
-		color: #8fae1b;
-	}
 }
 
 .user-registration-info {
+	color: #1e85be;
 	border-top-color: #1e85be;
-
-	&::before {
-		color: #1e85be;
-	}
 }
 
 .user-registration-error {
@@ -93,7 +88,6 @@
 
 	&::before {
 		content: '\f534';
-		color: $color_danger;
 	}
 }
 
@@ -102,10 +96,6 @@
 	border: 1px solid $color_gray_six;
 	padding: 20px;
 	box-sizing: border-box;
-
-	&:last-child {
-		margin-bottom: 0;
-	}
 
 	&.login {
 		margin: 0;
@@ -128,6 +118,12 @@
 		box-sizing: border-box;
 	}
 
+	.description {
+		display: block;
+		font-size: 12px;
+		line-height: 1.25;
+	}
+
 	.ur-form-row {
 		display: flex;
 
@@ -146,6 +142,39 @@
 			.ur-field-item {
 				margin-bottom: 20px;
 				font-size: 13px;
+
+				&.field-checkbox,
+				&.field-radio {
+					ul {
+						margin: 0;
+						list-style: none;
+
+						li {
+							margin-left: 0;
+							line-height: 1.3;
+							vertical-align: middle;
+							margin-bottom: 10px;
+
+							input,
+							label {
+								display: inline-block;
+								vertical-align: inherit;
+							}
+
+							input {
+								&[type='checkbox'],
+								&[type='radio'] {
+									margin-top: 2px;
+								}
+							}
+
+							label {
+								display: inline;
+							}
+						}
+					}
+				}
+
 				&:last-child {
 					margin-bottom: 0;
 				}
@@ -164,28 +193,12 @@
 				display: block;
 				width: 100%;
 				border-radius: 0;
-				height: 40px;
+				min-height: 36px;
 				margin-bottom: 10px;
 				line-height: 1.5;
 
-				&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+				&::placeholder {
 					color: #ddd;
-					font-size:13px;
-				}
-				&::-moz-placeholder { /* Firefox 19+ */
-					color: #ddd;
-					font-size:13px;
-
-				}
-				&:-ms-input-placeholder { /* IE 10+ */
-					color: #ddd;
-					font-size:13px;
-
-				}
-				&:-moz-placeholder { /* Firefox 18- */
-					color: #ddd;
-					font-size:13px;
-
 				}
 			}
 
@@ -222,14 +235,13 @@
 			legend,
 			label {
 				display: block;
-				width: 100%;
 				margin-bottom: 10px;
 
 				.required {
 
 					text-decoration: none;
 					border: none;
-					color: #ff0000;
+					color: $color_danger;
 				}
 			}
 
@@ -300,9 +312,9 @@
 		}
 	}
 
+	button,
 	input[type="submit"],
 	button[type="submit"] {
-		float: right;
 		padding: 10px 20px;
 		line-height: 1.5;
 		text-align: center;
@@ -311,6 +323,21 @@
 		border: none;
 		cursor: pointer;
 		transition: 0.9s all ease-out;
+	}
+
+	input[type="submit"] {
+		float: right;
+	}
+
+	.ur-button-container {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 10px;
+		padding: 0 10px;
+
+		.ur-submit-button {
+			margin-left: auto;
+		}
 	}
 
 	.ur-submit-button {
@@ -536,14 +563,15 @@
 			}
 		}
 	}
-	#ur-submit-message-node{
 
-		margin : 20px 0 0 0!important;
-		&.ur-error{
+	#ur-submit-message-node {
+		margin : 20px 0 0 0;
+
+		&.ur-error {
 			background: rgba(206, 0, 0, 0.1);
 		}
 
-		&.ur-message.message{
+		&.ur-message.message {
 			background: rgba(143, 174, 27,0.2);
 		}
 	}
@@ -722,10 +750,6 @@
 	float: left;
 }
 
-span.description {
-    font-size: 12px;
-}
-
 .edit-post-visual-editor {
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
@@ -822,4 +846,8 @@ span.description {
 	border-width: 6px;
 	height: 0;
 	width: 0;
+}
+
+.ur-hidden {
+	display:none;
 }

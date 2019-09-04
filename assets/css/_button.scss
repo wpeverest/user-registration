@@ -1,10 +1,31 @@
 .user-registration,
 .ur-form-container {
+	button,
+	.button {
+		transition: all 0.25s ease 0s;
+
+		&.button-icon {
+			height: 32px;
+			width: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.dashicons {
+				line-height: 1;
+			}
+		}
+
+		&.button-icon-round {
+			border-radius: 50%;
+		}
+	}
 
 	.button-primary {
 		background: $primary_color;
 		border-color: $primary_color;
 		box-shadow: 0 1px 0 $primary_color;
+		text-shadow: none;
 
 		&:hover,
 		&:active,
@@ -13,24 +34,45 @@
 			border-color: $primary_dark;
 			box-shadow: 0 1px 0 $primary_dark;
 		}
+
+		&:disabled {
+			color: lighten($primary_color, 30%) !important;
+			background: lighten($primary_color, 10%) !important;
+			border-color: lighten($primary_color, 10%) !important;
+		}
 	}
 
 	.button-secondary {
-		background: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
-		border-color: adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
-		box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -25%, $lightness: +70% );
+		background: $color_gray_four;
+		border-color: $color_gray_four;
+		box-shadow: 0 1px 0 $color_gray_four;
 
 		&:hover,
 		&:active,
 		&:focus {
-			background: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
-			border-color: adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
-			box-shadow: 0 1px 0 adjust-color($color_gray-base, $saturation: -27%, $lightness: +60% );
+			background: $color_gray_three;
+			border-color: $color_gray_three;
+			box-shadow: 0 1px 0 $color_gray_three;
+		}
+	}
+
+	.button-danger {
+		color: $white;
+		background: $color_danger;
+		border-color: $color_danger;
+		box-shadow: 0 1px 0 $color_danger;
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: $white;
+			background: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
+			border-color: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
+			box-shadow: 0 1px 0 adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
 		}
 	}
 
 	.publishing-action {
-
 		button,
 		input[type='button'],
 		input[type='submit'],

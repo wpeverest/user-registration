@@ -33,7 +33,7 @@ class UR_Form_Field_User_Url extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Website', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-admin-links',
+			'icon'  => 'ur-icon ur-icon-website',
 		);
 
 		$this->field_defaults = array(

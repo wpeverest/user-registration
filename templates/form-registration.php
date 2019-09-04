@@ -47,23 +47,24 @@ if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
 }
 
-$custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class );
+$custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class, $form_id );
 
 /**
  * @since 1.5.1
  */
-do_action( 'user_registration_before_registration_form' );
+do_action( 'user_registration_before_registration_form', $form_id );
 
 ?>
-	<div class='ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='ur-frontend-form'>
+	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<form method='post' class='register'
 			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
 
 			<?php
+			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
 
-			do_action( 'user_registration_form_registration_start', $form_id );
-
-			foreach ( $form_data_array as $data ) {
+			foreach ( $form_data_array as $index => $data ) {
+				$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+				do_action( 'user_registration_before_field_row', $row_id, $form_data_array, $form_id );
 				?>
 						<div class='ur-form-row'>
 						<?php
@@ -93,8 +94,10 @@ do_action( 'user_registration_before_registration_form' );
 						}
 						?>
 						</div>
-					<?php
+				<?php
+				do_action( 'user_registration_after_field_row', $row_id, $form_data_array, $form_id );
 			}
+			do_action( 'user_registration_after_form_fields', $form_data_array, $form_id );
 
 			if ( $is_field_exists ) {
 				?>
@@ -102,18 +105,29 @@ do_action( 'user_registration_before_registration_form' );
 					if ( ! empty( $recaptcha_node ) ) {
 						echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> ' . $recaptcha_node . '</div>';
 					}
+
+					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
 					?>
-						<button type="submit" class="btn button ur-submit-button">
+					<div class="ur-button-container <?php echo esc_html( implode( ' ', $btn_container_class ) ); ?>" >
+						<?php
+						do_action( 'user_registration_before_form_buttons', $form_id );
+
+						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
+						?>
+
+						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
-							<?php echo __( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ), 'user-registration' ); ?>
+							<?php echo esc_html( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ) ); ?>
 						</button>
 
+						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
+					</div>
 					<?php
 			}
 
 			if ( count( $form_data_array ) == 0 ) {
 				?>
-						<h2><?php echo __( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
+						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
 					<?php
 			}
 			?>
@@ -135,6 +149,6 @@ do_action( 'user_registration_before_registration_form' );
  *
  * @since 1.0.0
  */
-do_action( 'user_registration_form_registration' );
+do_action( 'user_registration_form_registration', $form_id );
 
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
