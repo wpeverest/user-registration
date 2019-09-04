@@ -44,6 +44,7 @@ class UR_AJAX {
 			'rated'                 => false,
 			'dashboard_widget'      => false,
 			'dismiss_review_notice' => false,
+			'import_form_action'    => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -192,6 +193,25 @@ class UR_AJAX {
 					'error' => $e->getMessage(),
 				)
 			);
+		}
+	}
+
+	/**
+	 * Import Form ajax.
+	 *
+	 * @throws Exception Post data mot set.
+	 */
+	public static function import_form_action() {
+		try {
+			check_ajax_referer( 'ur_import_form_save_nonce', 'security' );
+			UR_Admin_Import_Export_Forms::import_form();
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => $e->getMessage(),
+				)
+			);
+
 		}
 	}
 
