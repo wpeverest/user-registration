@@ -28,19 +28,20 @@
 }
 
 .ur-export-users-page {
-	margin-top:15px;
+	margin-top: 6px;
 
 	.nav-tab-content {
 		.nav-tab-inside {
 			.postbox {
 				width: 50%;
 				flex: 1;
-				margin: 0 15px 10px;
 			}
 		}
 
-		.hndle, .stuffbox .hndle {
+		.hndle,
+		.stuffbox .hndle {
 			margin: 10px;
+			padding-bottom: 10px;
 		}
 	}
 }
