@@ -4,17 +4,20 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.6.1
+Stable tag: 1.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Drag and drop user registration and login form builder
+Drag and drop user registration form and login form builder
 
 == Description ==
 
-User Registration plugin provides you with an easy way to create frontend user registration and login forms. Drag and Drop fields make ordering and creating forms extremely easy. The plugin is lightweight, exendible and can be used to create any type of registration form.
+User Registration plugin provides you with an easy way to create frontend user registration form and login form. Drag and Drop fields make ordering and creating forms extremely easy. The plugin is lightweight, extendible, and can be used to create any type of registration form.
 
-Supports frontend profile account page for profile edit, password change, Log out and more.
+Beside registration form, the plugin also supports beautiful frontend profile account page for profile edit, password change, Log out and more. Users can visit their account page after registration and view the details they have filled and can make changes if necessary.
+
+The registration forms are 100% mobile responsive and optimized to display on any devices.
+
 
 View [All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
 
@@ -29,9 +32,11 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 [youtube https://www.youtube.com/watch?v=zNhNvj8jPhM]
 
 ### Features And Options:
-* Simple, Clean and Beautiful Registration Forms
+* Simple, Clean and Beautiful WordPress Registration Forms
 * Drag and Drop Fields
 * Unlimited Registration Forms
+* Inbuilt Login Form
+* Frontend Profile account page
 * Multiple Column Design
 * Multiple Form template designs
 * Shortcode Support
@@ -39,12 +44,13 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Email notifications
 * Email Customizers
 * Form Duplicate Option
-* Profile account page
-* Admin approval option
+* Admin approval option for registration
 * Auto login option
 * Email confirmation to register
 * Enable/Disable Strong Password
 * Default User Role Selection Option
+* Support for profile image upload
+* Form Preview Option on backend
 * User data export in CSV
 * Well Documented
 * Translation ready
@@ -116,6 +122,24 @@ All the users registered via the registration forms and their data can be access
 11. Shortcode
 
 == Changelog ==
+
+= 1.6.3 - 19/08/2019 =
+* Enhancement - Send Email to Admin when user changes their profile details.
+* Feature     - Fullscreen builder mode.
+* Tweak       - Template file update to locate add-ons file
+* Add         - Accept redirect_to get parameter in login page.
+* Fix         - Password strength error message not showing.
+* Fix         - Profile picture in my account dashboard.
+* Fix         - Profile picture save without selecting any file.
+* Fix         - Prevent empty search query.
+* Fix         - Email format issue.
+* Dev         - Hook to filter form data in profile details.
+
+= 1.6.2 - 09/07/2019 =
+* Enhancement - Profile picture upload to browser upload.
+* Tweak       - Enqueue scripts.
+* Fix         - Menu Items invalid arguments.
+* Fix         - Log delete on reload.
 
 = 1.6.1 - 04/06/2019 =
 * Feature - Two Column Login and Registration Form.

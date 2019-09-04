@@ -120,6 +120,29 @@ jQuery(function ($) {
 			$('#save_form_footer').eq(0).trigger('click');
 		}
 	});
+
+	$( '#ur-full-screen-mode' ).on( 'click', function(e) {
+		e.preventDefault();
+		var $this = $( this );
+
+		if( $this.hasClass( 'closed' ) ) {
+			$this.removeClass( 'closed' );
+			$this.addClass( 'opened' );
+
+			$( 'body' ).addClass( 'ur-full-screen-mode' );
+		} else {
+			$this.removeClass( 'opened' );
+			$this.addClass( 'closed' );
+
+			$( 'body' ).removeClass( 'ur-full-screen-mode' );
+		}
+	} );
+
+	$( document ).on( 'keyup', function( e ) {
+		if( 'Escape' === e.key ) {
+			$( '#ur-full-screen-mode.opened' ).trigger( 'click' );
+		}
+	} );
 });
 
 (function ($, user_registration_admin_data) {
@@ -243,6 +266,7 @@ jQuery(function ($) {
 								var populated_item = template.closest('.ur-selected-item ').find("[data-field='field_name']").val();
 								manage_conditional_field_options(populated_item);
 
+								$( '.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select' ).selectWoo();
 							}
 						});
 					},
@@ -680,7 +704,7 @@ jQuery(function ($) {
 		var default_values = [];
 		$.each(general_setting_field, function () {
 
-			var is_checkbox = $(this).closest('.ur-general-setting-block').hasClass('ur-general-setting-checkbox');
+			var is_checkbox = $(this).closest('.ur-general-setting').hasClass('ur-setting-checkbox');
 
 			if( 'options' === $(this).attr('data-field') ) {
 				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );

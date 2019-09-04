@@ -1,3 +1,21 @@
+= 1.6.3 - 19/08/2019 =
+* Enhancement - Send Email to Admin when user changes their profile details.
+* Feature     - Fullscreen builder mode.
+* Tweak       - Template file update to locate add-ons file
+* Add         - Accept redirect_to get parameter in login page.
+* Fix         - Password strength error message not showing.
+* Fix         - Profile picture in my account dashboard.
+* Fix         - Profile picture save without selecting any file.
+* Fix         - Prevent empty search query.
+* Fix         - Email format issue.
+* Dev         - Hook to filter form data in profile details.
+
+= 1.6.2 - 09/07/2019 =
+* Enhancement - Profile picture upload to browser upload.
+* Tweak       - Enqueue scripts.
+* Fix         - Menu Items invalid arguments.
+* Fix         - Log delete on reload.
+
 = 1.6.1 - 04/06/2019 =
 * Feature - Two Column Login and Registration Form.
 * Tweak   - Secondary button design.

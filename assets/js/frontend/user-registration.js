@@ -304,6 +304,7 @@
 				form_submit_event: function () {
 
 					$('form.register').on('submit', function (event) {
+						var $this = $(this);
 
 						// Validator messages.
 						$.extend($.validator.messages, {
@@ -314,40 +315,50 @@
 							confirmpassword: user_registration_params.message_confirm_password_fields,
 						});
 
-						if (!$this.valid()) {
-							return;
-						}
-
 						if ($this.find('.user-registration-password-strength').length > 0) {
 
 							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
 							var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
+
 							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
 
-								$('html, body').animate({
-      								scrollTop: $this.find('.user-registration-password-strength').siblings('label').offset().top - 50
-    							});
+								if ( $this.find('#user_pass').val() != "" ) {
+									$this.find( '#user_pass-error' ).remove();
+
+									var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
+									$this.find('.user-registration-password-strength').closest( 'p.form-row' ).append( error_msg_dom );
+									$this.find('#user_pass').attr('aria-invalid',true);
+									$this.find('#user_pass').focus();
+								}
 
 								return false;
 							}
 						}
+
+						if (!$this.valid()) {
+							return;
+						}
+
 						event.preventDefault();
+
 						var form_data;
+						var form_id = 0;
+						var form_nonce = '0';
+						var captchaResponse = $this.find('#g-recaptcha-response').val();
+
 						try {
 							form_data = JSON.stringify(form.get_form_data());
 						} catch (ex) {
 							form_data = '';
 						}
-						var form_id = 0;
+
 						if ($(this).closest('form').find('input[name="ur-user-form-id"]').length === 1) {
 							form_id = $(this).closest('form').find('input[name="ur-user-form-id"]').val();
 						}
-						var form_nonce = '0';
+
 						if ($(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1) {
 							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
 						}
-
-						var captchaResponse = $this.find('#g-recaptcha-response').val();
 
 						var data = {
 							action: 'user_registration_user_form_submit',
@@ -360,17 +371,18 @@
 
 						$(document).trigger("user_registration_frontend_before_form_submit", [data, $this]);
 
-						if ('undefined' !== typeof (ur_google_recaptcha_code)) {
+						if ( 'undefined' !== typeof ( ur_google_recaptcha_code ) ) {
 
-							if ('1' === ur_google_recaptcha_code.is_captcha_enable) {
+							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
+
 								var captchaResponse = $this.find('#g-recaptcha-response').val();
 
 								if (0 === captchaResponse.length) {
 
 									form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
-
 									return;
 								}
+
 								if (ur_google_recaptcha_code.version == 'v3') {
 									request_recaptcha_token();
 								} else {
@@ -386,10 +398,7 @@
 							data: data,
 							type: 'POST',
 							async: true,
-
-							beforeSend: function () {
-							},
-							complete: function (ajax_response) {
+							complete: function ( ajax_response ) {
 
 								$this.find('.ur-submit-button').find('span').removeClass('ur-front-spinner');
 								var redirect_url = $this.find('input[name="ur-redirect-url"]').val();

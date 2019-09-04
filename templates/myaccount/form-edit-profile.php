@@ -23,23 +23,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 <div class="ur-frontend-form login" id="ur-frontend-form">
-	<form class="user-registration-EditProfileForm edit-profile" action="" method="post">
+	<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
 					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
 					<div class="user-registration-profile-header">
-						<div class="user-registration-img-container">
+						<div class="user-registration-img-container" style="width:100%">
 							<?php
-							$gravatar_image     = get_avatar_url( get_current_user_id(), $args = null );
-							$profile_picture_id = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_id', true );
-							if ( $profile_picture_id ) {
-								$image = wp_get_attachment_thumb_url( $profile_picture_id );
-							} else {
-								$image = $gravatar_image;
-							}
+							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 							?>
-							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
+							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 							<?php
 								$max_size = wp_max_upload_size();
 								$max_size = size_format( $max_size );
@@ -49,12 +45,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<header>
 							<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
 							<div class="button-group">
-								<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
+								<input type="hidden" name="profile-pic-url" value="<?php echo $profile_picture_url; ?>" />
 								<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 								<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-								<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>
+								<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 							</div>
-							<?php if ( ! $profile_picture_id ) { ?>
+							<?php if ( ! $profile_picture_url ) { ?>
 								<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
 							<?php } ?>
 						</header>
@@ -103,6 +99,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['input_class'][]              = 'user-registration-help-tip';
 												}
 											}
+
+											$filter_data = array(
+												'form_data' => $field,
+											);
+
+											$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
+											$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+
 											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
 											?>
 										</div>

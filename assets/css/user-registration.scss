@@ -166,6 +166,7 @@
 				border-radius: 0;
 				height: 40px;
 				margin-bottom: 10px;
+				line-height: 1.5;
 
 				&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 					color: #ddd;
@@ -266,6 +267,33 @@
 								}
 							}
 						}
+					}
+				}
+			}
+		}
+
+		.select2-container {
+			.select2-selection--multiple {
+				border: 1px solid $color_gray_five;
+
+				.select2-selection__rendered {
+					display: block;
+
+					li {
+						&:last-child {
+							margin-left: 0;
+						}
+					}
+				}
+
+				.select2-selection__choice {
+					margin: 5px;
+				}
+
+				.select2-search--inline {
+					input[type='text'] {
+						margin: 5px;
+						height: inherit;
 					}
 				}
 			}
