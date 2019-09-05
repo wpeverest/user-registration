@@ -109,17 +109,20 @@ All the users registered via the registration forms and their data can be access
 
 == Screenshots ==
 
-1. Mulitple Registration Forms
-2. Form Fields
-3. Frontend Form
-4. Frontend Form
-5. Mulitple Column Support
-6. Account Details
-7. Dashboard
+1. Form Fields
+2. Field Options
+3. Form Settings
+4. General Options
+5. Login Options
+6. Frontend Messages
+7. Google reCaptcha
 8. Field Options
-9. Login Form
-10. Settings
-11. Shortcode
+9. General Email Settings
+10. Gutenberg Block
+11. Registration Form
+12. Login Form
+13. User Account Page -  Horizontal Layout
+14. User Account Page -  Vertical Layout
 
 == Changelog ==
 
