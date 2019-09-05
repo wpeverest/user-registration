@@ -96,7 +96,7 @@ Username: {{username}} <br/>
 If this was a mistake, just ignore this email and nothing will happen. <br/>
 
 To reset your password, visit the following address: <br/>
-{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}} <br/>
+{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} <br/>
 
 Thank You!',
 						'user-registration'
