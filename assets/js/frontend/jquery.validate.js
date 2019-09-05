@@ -318,7 +318,7 @@ $.extend( $.validator, {
 							if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
 								wrapper.find( '#user_pass-error' ).remove();
 								var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
-								$this.closest( 'p.form-row' ).append( error_msg_dom );
+								$this.closest( '.form-row' ).append( error_msg_dom );
 							}
 						}
 					}

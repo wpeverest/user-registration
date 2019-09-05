@@ -326,7 +326,7 @@
 									$this.find( '#user_pass-error' ).remove();
 
 									var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
-									$this.find('.user-registration-password-strength').closest( 'p.form-row' ).append( error_msg_dom );
+									$this.find('.user-registration-password-strength').closest( '.form-row' ).append( error_msg_dom );
 									$this.find('#user_pass').attr('aria-invalid',true);
 									$this.find('#user_pass').focus();
 								}
