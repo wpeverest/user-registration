@@ -123,7 +123,7 @@ All the users registered via the registration forms and their data can be access
 
 == Changelog ==
 
-= 1.7.0 - 04/09/2019 =
+= 1.7.0 - 05/09/2019 =
 * Feature - Live new user registration notice and badge.
 * Feature - Import/Export registration form in JSON format.
 * Feature - Shortcut to save form ( Ctrl + s ).
@@ -142,8 +142,10 @@ All the users registered via the registration forms and their data can be access
 * Tweak   - Field description placement below the input in front-end.
 * Tweak   - Success and Error messages.
 * Tweak   - Fields Icon change.
-* Fix     - Manage draggable user fields on row delete
+* Tweak   - SweetAlert2 confirmation and alert box.
+* Fix     - Manage draggable user fields on row delete.
 * Add     - Perfect Scrollbar in the builder.
+* Add     - New Smarttag ( {{ur_login}} ).
 * Dev     - Action hook in form builder footer wrapper.
 * Dev     - Action hook after form save.
 * Dev     - Filter hooks before and after form fields.

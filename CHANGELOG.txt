@@ -1,4 +1,4 @@
-= 1.7.0 - 04/09/2019 =
+= 1.7.0 - 05/09/2019 =
 * Feature - Live new user registration notice and badge.
 * Feature - Import/Export registration form in JSON format.
 * Feature - Shortcut to save form ( Ctrl + s ).
