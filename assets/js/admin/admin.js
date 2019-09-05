@@ -394,26 +394,34 @@ jQuery(function ($) {
 						var $this = this;
 						$('body').on('click', '.ur-remove-row', function () {
 							if ($('.ur-input-grids').find('.ur-single-row:visible').length > 1) {
-								var confirm = window.confirm(i18n_admin.i18n_are_you_sure_want_to_delete);
-								if (confirm) {
-									var btn = $(this).prev();
-									var new_btn;
-									if (btn.hasClass('ur-add-new-row')) {
-										new_btn = btn.clone();
-									} else {
-										new_btn = $(this).clone().attr('class', 'dashicons-minus ur-remove-row');
-									}
-									if (new_btn.hasClass('ur-add-new-row')) {
-										$(this).closest('.ur-single-row').prev().find('.ur-remove-row').before(new_btn);
-									}
-									var single_row = $(this).closest('.ur-single-row');
-									$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
-									single_row.remove();
-									$this.check_grid();
-									manage_draggable_users_fields();
-								}
+								var $this_row = $( this );
+								ur_confirmation( i18n_admin.i18n_are_you_sure_want_to_delete, {
+									confirm: function() {
+										var btn = $this_row.prev();
+										var new_btn;
+										if (btn.hasClass('ur-add-new-row')) {
+											new_btn = btn.clone();
+										} else {
+											new_btn = $this_row.clone().attr('class', 'dashicons-minus ur-remove-row');
+										}
+										if (new_btn.hasClass('ur-add-new-row')) {
+											$this_row.closest('.ur-single-row').prev().find('.ur-remove-row').before(new_btn);
+										}
+										var single_row = $this_row.closest('.ur-single-row');
+										$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
+										single_row.remove();
+										$this.check_grid();
+										manage_draggable_users_fields();
+										Swal.fire({
+											type: 'success',
+											title: 'Successfully deleted!',
+											showConfirmButton: false,
+											timer: 1000
+										});
+									},
+								} );
 							} else {
-								window.alert(i18n_admin.i18n_at_least_one_row_need_to_select);
+								ur_alert( i18n_admin.i18n_at_least_one_row_need_to_select )
 							}
 						});
 					},
@@ -1353,20 +1361,28 @@ jQuery(function ($) {
 	}
 }(jQuery, window.user_registration_admin_data));
 
-function ur_alert( message, options ) {
-	// TODO : Change alert to SweetAlert2.
-	// https://sweetalert2.github.io/
-	alert( message );
+function ur_alert( message, options = {} ) {
+	Swal.fire({
+		type: 'error',
+		title: options.title,
+		text: message,
+	});
 }
 
-function ur_confirmation( message, options ) {
-	// TODO : Change alert to SweetAlert2.
-	// https://sweetalert2.github.io/
-	var result = confirm( message );
+function ur_confirmation( message, options = {} ) {
 
-	if( true === result && 'confirm' in options ) {
-		options.confirm();
-	} else if( 'reject' in options ) {
-		options.reject();
-	}
+	Swal.fire({
+		title: options.title,
+		text: message,
+		type: ( 'undefined' !== typeof options.type ) ? options.type : 'warning',
+		showCancelButton: ( 'undefined' !== typeof options.showCancelButton ) ? options.showCancelButton : true,
+		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : 'OK',
+		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText :'Cancel',
+	}).then((result) => {
+		if (result.value) {
+			options.confirm();
+		} else {
+			options.reject();
+		}
+	});
 }
