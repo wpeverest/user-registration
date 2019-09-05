@@ -415,6 +415,7 @@ class UR_Emailer {
 	 * Lost Password Email Trigger
 	 *
 	 * @param  string $user_login username.
+	 * @param  obj    $user_data user object.
 	 * @param  string $key password reset key.
 	 * @return bool
 	 */
