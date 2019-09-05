@@ -569,7 +569,7 @@ class UR_Emailer {
 				$values,
 				function( &$value, $key ) {
 					if ( 'user_pass' === $key ) {
-						$value = esc_html__( 'Chosen Password', 'user_registration' );
+						$value = esc_html__( 'Chosen Password', 'user-registration' );
 					}
 				}
 			);

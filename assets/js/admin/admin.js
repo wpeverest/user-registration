@@ -1361,7 +1361,10 @@ jQuery(function ($) {
 	}
 }(jQuery, window.user_registration_admin_data));
 
-function ur_alert( message, options = {} ) {
+function ur_alert( message, options ) {
+	if( 'undefined' === typeof options ) {
+		options = {};
+	}
 	Swal.fire({
 		type: 'error',
 		title: options.title,
@@ -1369,8 +1372,10 @@ function ur_alert( message, options = {} ) {
 	});
 }
 
-function ur_confirmation( message, options = {} ) {
-
+function ur_confirmation( message, options ) {
+	if( 'undefined' === typeof options ) {
+		options = {};
+	}
 	Swal.fire({
 		title: options.title,
 		text: message,
@@ -1378,7 +1383,7 @@ function ur_confirmation( message, options = {} ) {
 		showCancelButton: ( 'undefined' !== typeof options.showCancelButton ) ? options.showCancelButton : true,
 		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : 'OK',
 		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText :'Cancel',
-	}).then((result) => {
+	}).then( function(result) {
 		if (result.value) {
 			options.confirm();
 		} else {
