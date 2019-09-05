@@ -1417,11 +1417,12 @@
 		color: $color_gray_two;
 		cursor: pointer;
 		display: flex;
-		flex: 1 0 35px;
+		flex: 1 0 32px;
 		align-items: center;
 		justify-content: center;
-		height: 35px;
-		max-width: 35px;
+		height: 32px;
+		max-width: 32px;
+		border-radius: 4px;
 		position: relative;
 
 		&:hover {
@@ -1436,7 +1437,7 @@
 	}
 
 	.add {
-		margin-right: 10px;
+		margin-right: 8px;
 	}
 
 	.ur-options-list {
@@ -1446,33 +1447,33 @@
 			align-items: center;
 
 			.editor-block-mover__control-drag-handle {
-				margin-right: 10px;
+				margin-right: 8px;
 				cursor: grab;
+
+				svg {
+					fill: $color_gray_two;
+				}
 			}
 
 			input {
-				margin-right: 10px;
-			}
-
-			.add {
-				margin-right: 10px;
+				margin-right: 8px;
 			}
 		}
 
 		.ui-sortable-handle {
 			padding: 5px;
+			border-radius: 3px;
 			border: 1px solid transparent;
 
 			&:active{
-				background: $color_gray_eight;
-				border: 1px solid $primary_color;
 				padding: 5px;
+				background: $white;
+				border: 1px solid $primary_color;
 				box-shadow: 0 0 20px rgba(0,0,0,.2);
 			}
 
 			&.ui-sortable-placeholder {
-				border: 1px dashed $primary_dark;
-				background-color: $primary_light;
+				background-color: $color_gray_four;
 				visibility: visible !important;
 			}
 		}
@@ -1481,16 +1482,20 @@
 	.urcl-rules {
 		display: flex;
 		flex-wrap: wrap;
-		margin-bottom: 15px;
+		margin-bottom: 8px;
 
 		> div {
-			margin-right: 10px;
+			margin-right: 8px;
+		}
+
+		.urcl-operator {
+			width: 78px;
 		}
 
 		.urcl-field,
 		.urcl-value {
-			max-width: 32%;
-			flex: 1 0 32%;
+			max-width: 27%;
+			flex: 1 0 27%;
 		}
 	}
 }
