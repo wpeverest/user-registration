@@ -255,20 +255,11 @@ class UR_Emailer {
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-
-		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{email_token}}', '{{all_fields}}' );
-		$replace_with = array( $username, $email, get_bloginfo(), get_home_url(), $email_token, $data_html );
-
-		// Add the field name and values from $name_value to the replacement arrays.
-		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
-		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
-
-		// Surround every key with {{ and }}.
-		array_walk(
-			$to_replace,
-			function( &$value, $key ) {
-				$value = '{{' . trim( $value, '{}' ) . '}}';
-			}
+		$values       = array(
+			'username'    => $username,
+			'email'       => $user_email,
+			'all_fields'  => $data_html,
+			'email_token' => $email_token,
 		);
 
 		if ( '0' === $email_status ) {
@@ -277,8 +268,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Email_Confirmation();
 			$message = $message->ur_get_email_confirmation();
 			$message = get_option( 'user_registration_email_confirmation', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 		} elseif ( 0 === $status ) {
@@ -287,8 +278,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
 			$message = $message->ur_get_awaiting_admin_approval_email();
 			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
@@ -299,8 +290,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Registration_Denied_Email();
 			$message = $message->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
@@ -310,8 +301,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Successfully_Registered_Email();
 			$message = $message->ur_get_successfully_registered_email();
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
@@ -345,24 +336,14 @@ class UR_Emailer {
 		$message = $message->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
 
-		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{all_fields}}' );
-		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
-
-		// Add the field name and values from $name_value to the replacement arrays.
-		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
-		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
-
-		// Surround every key with {{ and }}.
-		array_walk(
-			$to_replace,
-			function( &$value, $key ) {
-				$value = '{{' . trim( $value, '{}' ) . '}}';
-			}
+		$values  = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
 		);
-
-		$message = str_replace( $to_replace, $replace_with, $message );
-		$subject = str_replace( $to_replace, $replace_with, $subject );
-		$header  = str_replace( $to_replace, $replace_with, $header );
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
+		$header  = self::parse_smart_tags( $header, $values, $name_value );
 
 		if ( 'yes' === get_option( 'user_registration_enable_admin_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
@@ -382,21 +363,11 @@ class UR_Emailer {
 	public static function status_change_email( $email, $username, $status ) {
 
 		// Get name value pair to replace smart tag.
-		$name_value = self::status_change_emails_smart_tags( $email );
+		$name_value = self::user_data_smart_tags( $email );
 
-		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}' );
-		$replace_with = array( $username, $email, get_bloginfo(), get_home_url() );
-
-		// Add the field name and values from $name_value to the replacement arrays.
-		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
-		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
-
-		// Surround every key with {{ and }}.
-		array_walk(
-			$to_replace,
-			function( &$value, $key ) {
-				$value = '{{' . trim( $value, '{}' ) . '}}';
-			}
+		$values = array(
+			'username' => $username,
+			'email'    => $user_email,
 		);
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
@@ -407,8 +378,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Registration_Pending_Email();
 			$message = $message->ur_get_registration_pending_email();
 			$message = get_option( 'user_registration_registration_pending_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
@@ -419,8 +390,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Registration_Denied_Email();
 			$message = $message->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
@@ -431,8 +402,8 @@ class UR_Emailer {
 			$message = new UR_Settings_Registration_Approved_Email();
 			$message = $message->ur_get_registration_approved_email();
 			$message = get_option( 'user_registration_registration_approved_email', $message );
-			$message = str_replace( $to_replace, $replace_with, $message );
-			$subject = str_replace( $to_replace, $replace_with, $subject );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
@@ -458,31 +429,19 @@ class UR_Emailer {
 			return false;
 		}
 
-		// Get name value pair to replace smart tag.
-		$name_value = self::status_change_emails_smart_tags( $email );
-
 		$subject = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
 		$message = new UR_Settings_Reset_Password_Email();
 		$message = $message->ur_get_reset_password_email();
 		$message = get_option( 'user_registration_reset_password_email', $message );
 
-		$to_replace   = array( '{{username}}', '{{key}}', '{{blog_info}}', '{{home_url}}' );
-		$replace_with = array( $username, $key, get_bloginfo(), get_home_url() );
-
-		// Add the field name and values from $name_value to the replacement arrays.
-		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
-		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
-
-		// Surround every key with {{ and }}.
-		array_walk(
-			$to_replace,
-			function( &$value, $key ) {
-				$value = '{{' . trim( $value, '{}' ) . '}}';
-			}
+		$values = array(
+			'username' => $username,
+			'email'    => $email,
+			'key'      => $key,
 		);
 
-		$message = str_replace( $to_replace, $replace_with, $message );
-		$subject = str_replace( $to_replace, $replace_with, $subject );
+		$message = self::parse_smart_tags( $message, $values );
+		$subject = self::parse_smart_tags( $subject, $values );
 
 		if ( 'yes' === get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
 			wp_mail( $email, $subject, $message, self::ur_get_header() );
@@ -490,37 +449,6 @@ class UR_Emailer {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Process smart tags for status change emails.
-	 *
-	 * @param  string $email User Email.
-	 * @since  1.5.0
-	 * @return array smart tag key value pair.
-	 */
-	public static function status_change_emails_smart_tags( $email ) {
-		$name_value = array();
-		$user       = get_user_by( 'email', $email );
-		$user_id    = isset( $user->ID ) ? absint( $user->ID ) : 0;
-
-		$user_fields = ur_get_user_table_fields();
-
-		foreach ( $user_fields as $field ) {
-			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
-		}
-
-		$user_meta_fields = ur_get_registered_user_meta_fields();
-
-		// Use name_value for smart tag to replace.
-		foreach ( $user_meta_fields as $field ) {
-			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
-		}
-
-		$user_extra_fields = ur_get_user_extra_fields( $user_id );
-		$name_value        = array_merge( $name_value, $user_extra_fields );
-
-		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 
 	/**
@@ -550,30 +478,115 @@ class UR_Emailer {
 		$message = $message->ur_get_profile_details_changed_email();
 		$message = get_option( 'user_registration_profile_details_changed_email', $message );
 
-		$to_replace   = array( '{{username}}', '{{email}}', '{{blog_info}}', '{{home_url}}', '{{all_fields}}' );
-		$replace_with = array( $username, $user_email, get_bloginfo(), get_home_url(), $data_html );
-
-		// Add the field name and values from $name_value to the replacement arrays.
-		$to_replace   = array_merge( $to_replace, array_keys( $name_value ) );
-		$replace_with = array_merge( $replace_with, array_values( $name_value ) );
-
-		// Surround every key with {{ and }}.
-		array_walk(
-			$to_replace,
-			function( &$value, $key ) {
-				$value = '{{' . trim( $value, '{}' ) . '}}';
-			}
+		$values  = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
 		);
-
-		$message = str_replace( $to_replace, $replace_with, $message );
-		$subject = str_replace( $to_replace, $replace_with, $subject );
-		$header  = str_replace( $to_replace, $replace_with, $header );
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
+		$header  = self::parse_smart_tags( $header, $values, $name_value );
 
 		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
 				wp_mail( $email, $subject, $message, $header, $attachment );
 			}
 		}
+	}
+
+	/**
+	 * Process smart tags for status change emails.
+	 *
+	 * @param  string $email User Email.
+	 * @since  1.5.0
+	 * @return array smart tag key value pair.
+	 */
+	public static function user_data_smart_tags( $email ) {
+		$name_value = array();
+		$user       = get_user_by( 'email', $email );
+		$user_id    = isset( $user->ID ) ? absint( $user->ID ) : 0;
+
+		$user_fields = ur_get_user_table_fields();
+
+		foreach ( $user_fields as $field ) {
+			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
+		}
+
+		$user_meta_fields = ur_get_registered_user_meta_fields();
+
+		// Use name_value for smart tag to replace.
+		foreach ( $user_meta_fields as $field ) {
+			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
+		}
+
+		$user_extra_fields = ur_get_user_extra_fields( $user_id );
+		$name_value        = array_merge( $name_value, $user_extra_fields );
+
+		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
+	}
+
+	/**
+	 * Parse Smart tags for emails.
+	 *
+	 * @param string $content Contents.
+	 * @param array  $values Data values.
+	 * @param array  $name_value  Extra values.
+	 */
+	private static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
+		$smart_tags = array(
+			'{{username}}',
+			'{{email}}',
+			'{{email_token}}',
+			'{{blog_info}}',
+			'{{home_url}}',
+			'{{ur_login}}',
+			'{{key}}',
+			'{{all_fields}}',
+		);
+
+		$ur_login = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
+		$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
+
+		$default_values = array(
+			'username'    => '',
+			'email'       => '',
+			'email_token' => '',
+			'blog_info'   => get_bloginfo(),
+			'home_url'    => get_home_url(),
+			'ur_login'    => $ur_login,
+			'key'         => '',
+			'all_fields'  => '',
+		);
+		$values         = wp_parse_args( $values, $default_values );
+
+		if ( ! empty( $values['email'] ) ) {
+			$user_data = self::user_data_smart_tags( $values['email'] );
+			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
+				$user_data = array_merge( $user_data, $name_value );
+			}
+			$values = array_merge( $values, $user_data );
+			array_walk(
+				$values,
+				function( &$value, $key ) {
+					if ( 'user_pass' === $key ) {
+						$value = esc_html__( 'Chosen Password', 'user-registration' );
+					}
+				}
+			);
+
+			$user_smart_tags = array_keys( $user_data );
+			array_walk(
+				$user_smart_tags,
+				function( &$value ) {
+					$value = '{{' . trim( $value, '{}' ) . '}}';
+				}
+			);
+			$smart_tags = array_merge( $smart_tags, $user_smart_tags );
+		}
+		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
+		$content    = str_replace( $smart_tags, array_values( $values ), $content );
+
+		return $content;
 	}
 }
 

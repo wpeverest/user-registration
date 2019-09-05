@@ -33,7 +33,7 @@ class UR_Form_Field_Display_Name extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Display Name', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-id',
+			'icon'  => 'ur-icon ur-icon-user-display-name',
 		);
 
 		$this->field_defaults = array(

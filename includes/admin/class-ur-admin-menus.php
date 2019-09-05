@@ -554,9 +554,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		private function get_edit_form_field( $post_data ) {
 
 			if ( isset( $post_data[0] ) ) {
-				$form_data = $post_data[0]->post_content;
+				$form_data    = $post_data[0]->post_content;
+				$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
 			} else {
-				$form_data = '';
+				$form_data    = '';
+				$form_row_ids = '';
 			}
 
 			try {
@@ -569,29 +571,78 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$form_data_array = array();
 			}
 
+			try {
+				$form_row_ids_array = json_decode( $form_row_ids );
+
+				if ( json_last_error() != JSON_ERROR_NONE ) {
+					throw new Exception( '' );
+				}
+			} catch ( Exception $e ) {
+				$form_row_ids_array = array();
+			}
+
 			echo '<div class="ur-selected-inputs">';
+			echo '<div class="ur-builder-wrapper-content">';
+			?>
+			<div class="ur-builder-header">
+				<div class="ur-form-name-wrapper">
+					<?php
+					$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
+					?>
+					<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
+					<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+				</div>
+				<div class="ur-builder-header-right">
+					<?php do_action( 'user_registration_builder_header_extra', $post_data[0]->ID, $form_data_array ); ?>
+				</div>
+			</div>
+			<?php
+			echo '<div class="ur-input-grids">';
 
-			$row_count = 0;
+			$row_id  = 0;
+			$last_id = 0;
 
-			foreach ( $form_data_array as $rows ) {
+			foreach ( $form_data_array as $index => $rows ) {
+				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
+				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
-				$row_count ++;
+				$grid_count = count( $rows );
 
-				echo '<div class="ur-single-row">';
-				echo '<div class="ur-grids">';
+				$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
+				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
+				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
 
-				$grid_string = ceil( UR_Config::$ur_form_grid / count( $rows ) ) . '/' . UR_Config::$ur_form_grid;
+				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
+				?>
 
-				echo '<div class="ur-grid-navigation ur-nav-right dashicons dashicons-arrow-left-alt2"></div>';
-				echo '<div class="ur-grid-size" data-active-grid="' . count( $rows ) . '">' . $grid_string . '</div>';
-				echo '<div class="ur-grid-navigation ur-nav-left dashicons dashicons-arrow-right-alt2"></div>';
+				<div class="ur-grids">
+					<button type="button" class="ur-edit-grid">
+						<?php
+						if ( 1 === $grid_count ) {
+							echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput
+						} elseif ( 2 === $grid_count ) {
+							echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput
+						} elseif ( 3 === $grid_count ) {
+							echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput
+						}
+						?>
+					</button>
+					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
+					<div class="ur-toggle-grid-content" style="display:none">
+						<small>Select the grid column.</small>
+						<div class="ur-grid-selector" data-grid = "1">
+							<?php echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						</div>
+						<div class="ur-grid-selector" data-grid = "2">
+							<?php echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						</div>
+						<div class="ur-grid-selector" data-grid = "3">
+							<?php echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						</div>
+					</div>
+				</div>
 
-				$add_or_remove_icon = '';
-
-				echo '<button type="button" class="dashicons dashicons-no-alt ur-remove-row">' . $add_or_remove_icon . '</button>';
-				echo '<div style="clear:both"></div>';
-				echo '</div>';
-
+				<?php
 				echo '<div class="ur-grid-lists">';
 
 				$grid_id = 0;
@@ -627,7 +678,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="dashicons dashicons-plus-alt ur-add-new-row">' . $add_or_remove_icon . '</button>';
+			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . esc_html( 'Add New', 'user-registration' ) . '</button>';
+			echo '</div>';
+			echo '</div>';
 			echo '</div>';
 		}
 

@@ -291,7 +291,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Country', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-admin-site',
+			'icon'  => 'ur-icon ur-icon-flag',
 		);
 
 		$this->field_defaults = array(

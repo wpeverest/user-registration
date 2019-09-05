@@ -2,6 +2,8 @@ $primary_color: #475BB2;
 $primary_dark: darken($primary_color, 10% ); // #217dbb
 $primary_light: lighten($primary_color, 40%); // #e1f0fa
 
+$green: #40c057;
+
 $white: #ffffff;
 $color_gray_eleven: darken($white, 1% ); // #fcfcfc
 $color_gray_ten: darken($white, 2.5% ); // #f9f9f9
@@ -10,16 +12,16 @@ $color_gray_eight: darken($white, 5% ); //#f2f2f2
 $color_gray_seven: darken($white, 9% ); // #e8e8e8
 $color_gray_six: darken($white, 13.5% ); // #dddddd
 
-$gray_base: #1f2026;
-$color_gray_one: lighten($gray_base, 25%); // #404040
-$color_gray_two: lighten($gray_base, 40%); // #666666
-$color_gray_three: lighten($gray_base, 45%); // #737373
-$color_gray_four:  lighten($gray_base, 47%); // #787878
-$color_gray_five: lighten($gray_base, 69.5%); // #b1b1b1
+$gray_base: #2d3559;
+$color_gray_one: adjust-color($gray_base, $saturation: -11%, $lightness: +12%); // #4c5477
+$color_gray_two: adjust-color($gray_base, $saturation: -18%, $lightness: +21%); // #676d8a
+$color_gray_three: adjust-color($gray_base, $saturation: -13%, $lightness: +50%); // #b6bbcf
+$color_gray_four: adjust-color($gray_base, $saturation: -14%, $lightness: +63%); // #dee0e9
+$color_gray_five: adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #b1b1b1
 $color_sortable_background: #f7f7f7;
 
-$color_danger: #d82223;
-$border_color: #333333;
+$border_color: $color_gray_four;
+$color_danger: #ff4149;
 $label_color:  #69717A;
 $input_background_color: #f8f9fa;
 $flat_background: #F6F7F9;

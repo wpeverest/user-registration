@@ -33,7 +33,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Textarea', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-editor-textcolor',
+			'icon'  => 'ur-icon ur-icon-textarea',
 		);
 
 		$this->field_defaults = array(
