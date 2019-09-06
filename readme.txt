@@ -126,6 +126,9 @@ All the users registered via the registration forms and their data can be access
 
 == Changelog ==
 
+= 1.7.1 - 06/09/2019 =
+* Fix - Password Validation Message.
+
 = 1.7.0 - 05/09/2019 =
 * Feature - Live new user registration notice and badge.
 * Feature - Import/Export registration form in JSON format.
