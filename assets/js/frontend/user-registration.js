@@ -340,7 +340,7 @@
 						}
 
 						event.preventDefault();
-
+						$this.find( '.ur-submit-button' ).prop( 'disabled', true );
 						var form_data;
 						var form_id = 0;
 						var form_nonce = '0';
@@ -466,7 +466,7 @@
 								form.show_message(message, type, $this);
 
 								$(document).trigger("user_registration_frontend_after_ajax_complete", [ajax_response.responseText, type, $this]);
-
+								$this.find( '.ur-submit-button' ).prop( 'disabled', false );
 							}
 						});
 					});
