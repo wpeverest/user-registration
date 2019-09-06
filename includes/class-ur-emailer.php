@@ -257,7 +257,7 @@ class UR_Emailer {
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 		$values       = array(
 			'username'    => $username,
-			'email'       => $user_email,
+			'email'       => $email,
 			'all_fields'  => $data_html,
 			'email_token' => $email_token,
 		);

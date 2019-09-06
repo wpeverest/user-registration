@@ -393,7 +393,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		if ( $password_value === $email_value || $password_value === $username_value ) {
-			array_push( self::$response_array, __( '<label>Weak Password!</label><br />Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) );
+			array_push( self::$response_array, __( 'Password should not match with Username or Email address.', 'user-registration' ) );
 		}
 	}
 }
