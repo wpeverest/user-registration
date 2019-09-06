@@ -110,19 +110,21 @@ All the users registered via the registration forms and their data can be access
 == Screenshots ==
 
 1. Form Fields
-2. Field Options
-3. Form Settings
-4. General Options
-5. Login Options
-6. Frontend Messages
-7. Google reCaptcha
-8. Field Options
+2. Form Fields - Fullscreen Mode
+3. Field Options
+4. Form Settings
+5. General Options
+6. Login Options
+7. Frontend Messages
+8. Google reCaptcha
 9. General Email Settings
-10. Gutenberg Block
-11. Registration Form
-12. Login Form
-13. User Account Page -  Horizontal Layout
-14. User Account Page -  Vertical Layout
+10. Export Users
+11. Import/Export Forms
+12. Gutenberg Block
+13. Registration Form
+14. Login Form
+15. User Account Page -  Horizontal Layout
+16. User Account Page -  Vertical Layout
 
 == Changelog ==
 
