@@ -323,9 +323,9 @@
 							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
 
 								if ( $this.find('#user_pass').val() != "" ) {
-									$this.find( '#user_pass-error' ).remove();
+									$this.find( '#user_pass_error' ).remove();
 
-									var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
+									var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
 									$this.find('.user-registration-password-strength').closest( '.form-row' ).append( error_msg_dom );
 									$this.find('#user_pass').attr('aria-invalid',true);
 									$this.find('#user_pass').focus();
@@ -501,8 +501,8 @@
 				var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
 				if( strength < minimum_password_strength ) {
 					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
-						wrapper.find( '#user_pass-error' ).remove();
-						var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
+						wrapper.find( '#user_pass_error' ).remove();
+						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
 						$this.closest( '.form-row' ).append( error_msg_dom );
 					}
 				}
