@@ -369,7 +369,7 @@ class UR_Emailer {
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		if ( 0 === absint( $status ) ) {
+		if ( 0 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Pending_Email();
@@ -381,7 +381,7 @@ class UR_Emailer {
 			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
-		} elseif ( - 1 === absint( $status ) ) {
+		} elseif ( -1 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Denied_Email();
