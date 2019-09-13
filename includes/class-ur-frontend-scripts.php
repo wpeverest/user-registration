@@ -349,6 +349,7 @@ class UR_Frontend_Scripts {
 						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
 						'hide_password_title'     => __( 'Hide Password', 'user-registration' ),
 						'show_password_title'     => __( 'Show Password', 'user-registration' ),
+						'password_strength_error' => __( 'Password strength is not strong enough', 'user-registration' ),
 					),
 				);
 			break;
