@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.7.0\n"
+"Project-Id-Version: User Registration 1.7.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-09-05 12:08:53+00:00\n"
+"POT-Creation-Date: 2019-09-13 05:46:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1021,7 +1021,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:69
-#: includes/class-ur-emailer.php:334
+#: includes/class-ur-emailer.php:331
 msgid "A New User Registered"
 msgstr ""
 
@@ -1081,7 +1081,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:60
-#: includes/class-ur-emailer.php:277
+#: includes/class-ur-emailer.php:275
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -1109,7 +1109,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:52
-#: includes/class-ur-emailer.php:267
+#: includes/class-ur-emailer.php:266
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -1140,7 +1140,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:70
-#: includes/class-ur-emailer.php:476
+#: includes/class-ur-emailer.php:473
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -1172,7 +1172,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:60
-#: includes/class-ur-emailer.php:401
+#: includes/class-ur-emailer.php:398
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1206,7 +1206,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:60
-#: includes/class-ur-emailer.php:289 includes/class-ur-emailer.php:389
+#: includes/class-ur-emailer.php:286 includes/class-ur-emailer.php:386
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -1236,7 +1236,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:377
+#: includes/class-ur-emailer.php:374
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -1268,7 +1268,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:59
-#: includes/class-ur-emailer.php:432
+#: includes/class-ur-emailer.php:429
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -1302,7 +1302,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:60
-#: includes/class-ur-emailer.php:300
+#: includes/class-ur-emailer.php:297
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -1631,7 +1631,7 @@ msgid ""
 "email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:146 includes/class-ur-emailer.php:572
+#: includes/class-ur-emailer.php:146 includes/class-ur-emailer.php:569
 msgid "Chosen Password"
 msgstr ""
 
@@ -1737,35 +1737,39 @@ msgstr ""
 msgid "Show Password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:359
+#: includes/class-ur-frontend-scripts.php:352
+msgid "Password strength is not strong enough"
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:360
 msgid "Please enter a stronger password."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:361
+#: includes/class-ur-frontend-scripts.php:362
 #: includes/functions-ur-core.php:898
 msgid "Very Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:362
+#: includes/class-ur-frontend-scripts.php:363
 #: includes/functions-ur-core.php:899
 msgid "Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:363
+#: includes/class-ur-frontend-scripts.php:364
 #: includes/functions-ur-core.php:900
 msgid "Medium"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:364
+#: includes/class-ur-frontend-scripts.php:365
 #: includes/functions-ur-core.php:901
 msgid "Strong"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:365
+#: includes/class-ur-frontend-scripts.php:366
 msgid "Password with confirm password not matched."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:368
+#: includes/class-ur-frontend-scripts.php:369
 msgid ""
 "Hint: To make password stronger, use upper and lower case letters, numbers, "
 "and symbols like ! \" ? $ % ^ & )."
@@ -3393,9 +3397,7 @@ msgid "Email and confirm email not matched"
 msgstr ""
 
 #: includes/frontend/class-ur-frontend-form-handler.php:396
-msgid ""
-"<label>Weak Password!</label><br />Hint: To make password stronger, use "
-"upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
+msgid "Password should not match with Username or Email address."
 msgstr ""
 
 #: includes/functions-ur-account.php:53

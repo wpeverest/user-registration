@@ -10,6 +10,7 @@
 @import "mixins";
 @import "variables";
 @import "fonts";
+@import "tables";
 
 /**
  * Styling begins
@@ -845,7 +846,7 @@
 		display: block;
 		color: $color_gray_one;
 		font-size: 13px;
-		padding: 0 8px;
+		padding: 4px 8px;
 		border-radius: 3px;
 		border: 1px solid $border_color;
 		box-shadow: 0 0 0 transparent;
@@ -1110,19 +1111,6 @@
 				border-radius: 4px;
 				transition: all 0.2s ease-in;
 
-				&:hover {
-					background: $white;
-					border: 1px solid $color_gray_three;
-
-					.ur-grid-list-item {
-						border-left: 1px solid $color_gray_three;
-
-						&:first-child {
-							border-color: transparent;
-						}
-					}
-				}
-
 				.ur-grid-list-item {
 					display: inline-block;
 					text-align: left;
@@ -1323,6 +1311,20 @@
 			&:hover {
 				.ur-grids {
 					opacity: 1;
+				}
+			}
+
+				.ur-grid-lists {
+					background: $white;
+					border: 1px solid $color_gray_three;
+
+					.ur-grid-list-item {
+						border-left: 1px solid $color_gray_three;
+
+						&:first-child {
+							border-color: transparent;
+						}
+					}
 				}
 			}
 		}

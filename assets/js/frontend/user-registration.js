@@ -323,9 +323,9 @@
 							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
 
 								if ( $this.find('#user_pass').val() != "" ) {
-									$this.find( '#user_pass-error' ).remove();
+									$this.find( '#user_pass_error' ).remove();
 
-									var error_msg_dom = '<label id="user_pass-error" class="user-registration-error" for="user_pass">Password strength is not strong enough.</label>';
+									var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
 									$this.find('.user-registration-password-strength').closest( '.form-row' ).append( error_msg_dom );
 									$this.find('#user_pass').attr('aria-invalid',true);
 									$this.find('#user_pass').focus();
@@ -340,7 +340,7 @@
 						}
 
 						event.preventDefault();
-
+						$this.find( '.ur-submit-button' ).prop( 'disabled', true );
 						var form_data;
 						var form_id = 0;
 						var form_nonce = '0';
@@ -466,7 +466,7 @@
 								form.show_message(message, type, $this);
 
 								$(document).trigger("user_registration_frontend_after_ajax_complete", [ajax_response.responseText, type, $this]);
-
+								$this.find( '.ur-submit-button' ).prop( 'disabled', false );
 							}
 						});
 					});
@@ -485,6 +485,29 @@
 				disableMobile: true
 			});
 		}
+
+		$("form.register").on("focusout", "#user_pass", function() {
+			$this = $('#user_pass');
+			var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
+
+			if ( 'yes' === enable_strength_password ) {
+				var wrapper                   = $this.closest('form');
+				var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
+				var blacklistArray            = wp.passwordStrength.userInputBlacklist();
+
+				blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
+				blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+
+				var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
+				if( strength < minimum_password_strength ) {
+					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
+						wrapper.find( '#user_pass_error' ).remove();
+						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
+						$this.closest( '.form-row' ).append( error_msg_dom );
+					}
+				}
+			}
+		});
 	});
 
 	$(function () {

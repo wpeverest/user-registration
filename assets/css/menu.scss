@@ -9,6 +9,7 @@
  */
 @import 'mixins';
 @import 'variables';
+@import 'colors';
 
 /**
  * Styling begins
@@ -90,5 +91,29 @@
 				}
 			}
 		}
+	}
+}
+
+/**
+ * Progressbar styles
+ **/
+ .user-registration-progress {
+	display: flex;
+	height: 1rem;
+	overflow: hidden;
+	font-size: .75rem;
+	margin: 1rem 0;
+	background-color: $color_gray_five;
+	border-radius: .25rem;
+
+	.user-registration-progress-bar {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		color: $white;
+		text-align: center;
+		white-space: nowrap;
+		background-color: $primary_color;
+		transition: width .6s ease;
 	}
 }

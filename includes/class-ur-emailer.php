@@ -257,13 +257,12 @@ class UR_Emailer {
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 		$values       = array(
 			'username'    => $username,
-			'email'       => $user_email,
+			'email'       => $email,
 			'all_fields'  => $data_html,
 			'email_token' => $email_token,
 		);
 
 		if ( '0' === $email_status ) {
-
 			$subject = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Email_Confirmation();
 			$message = $message->ur_get_email_confirmation();
@@ -272,8 +271,7 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
-		} elseif ( 0 === $status ) {
-
+		} elseif ( 0 === intval( $status ) ) {
 			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
 			$message = $message->ur_get_awaiting_admin_approval_email();
@@ -284,8 +282,7 @@ class UR_Emailer {
 			if ( 'yes' === get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
-		} elseif ( - 1 === $status ) {
-
+		} elseif ( -1 === intval( $status ) ) {
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Denied_Email();
 			$message = $message->ur_get_registration_denied_email();
@@ -357,7 +354,7 @@ class UR_Emailer {
 	 *
 	 * @param  string $email    Email address of the user.
 	 * @param  string $username Username of the user.
-	 * @param  bool   $status   Stautus of the user.
+	 * @param  int    $status   Stautus of the user.
 	 * @return void
 	 */
 	public static function status_change_email( $email, $username, $status ) {
@@ -367,12 +364,12 @@ class UR_Emailer {
 
 		$values = array(
 			'username' => $username,
-			'email'    => $user_email,
+			'email'    => $email,
 		);
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-		if ( 0 === $status ) {
+		if ( 0 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Pending_Email();
@@ -384,7 +381,7 @@ class UR_Emailer {
 			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header() );
 			}
-		} elseif ( - 1 === $status ) {
+		} elseif ( -1 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Registration_Denied_Email();

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -127,6 +127,13 @@ All the users registered via the registration forms and their data can be access
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.7.1 - 13/09/2019 =
+* Fix - Password Validation Message.
+* Fix - Password strength error message translation issue.
+* Fix - Smart Tag issue while sending the email.
+* Fix - Double click on form submit button.
+* Fix - Blink on the grid hover.
 
 = 1.7.0 - 05/09/2019 =
 * Feature - Live new user registration notice and badge.
