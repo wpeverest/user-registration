@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.6.2
+Stable tag: 1.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -109,19 +109,75 @@ All the users registered via the registration forms and their data can be access
 
 == Screenshots ==
 
-1. Mulitple Registration Forms
-2. Form Fields
-3. Frontend Form
-4. Frontend Form
-5. Mulitple Column Support
-6. Account Details
-7. Dashboard
-8. Field Options
-9. Login Form
-10. Settings
-11. Shortcode
+1. Form Fields
+2. Form Fields - Fullscreen Mode
+3. Field Options
+4. Form Settings
+5. General Options
+6. Login Options
+7. Frontend Messages
+8. Google reCaptcha
+9. General Email Settings
+10. Export Users
+11. Import/Export Forms
+12. Gutenberg Block
+13. Registration Form
+14. Login Form
+15. User Account Page -  Horizontal Layout
+16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.7.1 - 13/09/2019 =
+* Fix - Password Validation Message.
+* Fix - Password strength error message translation issue.
+* Fix - Smart Tag issue while sending the email.
+* Fix - Double click on form submit button.
+* Fix - Submit button hidden in IE.
+* Fix - Blink on the grid hover.
+
+= 1.7.0 - 05/09/2019 =
+* Feature - Live new user registration notice and badge.
+* Feature - Import/Export registration form in JSON format.
+* Feature - Shortcut to save form ( Ctrl + s ).
+* Tweak   - Form name edit position change.
+* Tweak   - UI enhancement for full-screen mode.
+* Tweak   - Input field box design on the builder.
+* Tweak   - Brand logo add in the builder.
+* Tweak   - Header design enhancement on the builder.
+* Tweak   - Remove footer save button.
+* Tweak   - Remove builder reload on save.
+* Tweak   - Form builder pre-loader.
+* Tweak   - Setting tab design.
+* Tweak   - Form fields design.
+* Tweak   - Overall form builder design
+* Tweak   - Add row button color adjustment.
+* Tweak   - Field description placement below the input in front-end.
+* Tweak   - Success and Error messages.
+* Tweak   - Fields Icon change.
+* Tweak   - SweetAlert2 confirmation and alert box.
+* Fix     - Manage draggable user fields on row delete.
+* Add     - Perfect Scrollbar in the builder.
+* Add     - New Smarttag ( {{ur_login}} ).
+* Dev     - Action hook in form builder footer wrapper.
+* Dev     - Action hook after form save.
+* Dev     - Filter hooks before and after form fields.
+* Dev     - Filter before and after field row.
+* Dev     - Add and Delete row JS events.
+* Dev     - Color picker field in form setting.
+* Dev     - Bool to string and vise Versa formatting add.
+
+= 1.6.3 - 19/08/2019 =
+* Enhancement - Send Email to Admin when user changes their profile details.
+* Feature     - Fullscreen builder mode.
+* Tweak       - Template file update to locate add-ons file
+* Add         - Accept redirect_to get parameter in login page.
+* Fix         - Password strength error message not showing.
+* Fix         - Profile picture in my account dashboard.
+* Fix         - Profile picture save without selecting any file.
+* Fix         - Prevent empty search query.
+* Fix         - Email format issue.
+* Dev         - Hook to filter form data in profile details.
 
 = 1.6.2 - 09/07/2019 =
 * Enhancement - Profile picture upload to browser upload.

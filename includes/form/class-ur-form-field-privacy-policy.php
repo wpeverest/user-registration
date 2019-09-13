@@ -33,7 +33,7 @@ class UR_Form_Field_Privacy_Policy extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Privacy Policy', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-yes',
+			'icon'  => 'ur-icon ur-icon-doc',
 		);
 
 		$this->field_defaults = array(

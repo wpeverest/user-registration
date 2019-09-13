@@ -25,9 +25,11 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
+		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
+		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 
 		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
 			new UR_Admin_User_List_Manager();
@@ -42,6 +44,7 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
 
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
@@ -180,6 +183,51 @@ class UR_Admin {
 				</div>
 			</div>
 		<?php
+	}
+
+	/**
+	 * Mark the read time of the user list table.
+	 */
+	public function live_user_read() {
+
+		$now = date( 'Y-m-d h:i:s' );
+		update_option( 'user_registration_users_listing_viewed', $now );
+	}
+	/**
+	 * Check for new user by read time.
+	 *
+	 * @param array $response Heartbeat response data to pass back to front end.
+	 * @param array $data Data received from the front end (unslashed).
+	 */
+	public function new_user_live_notice( $response, $data ) {
+
+		if ( empty( $data['user_registration_new_user_notice'] ) ) {
+			return $response;
+		}
+
+		$read_time = get_option( 'user_registration_users_listing_viewed' );
+		if ( ! $read_time ) {
+			$now = date( 'Y-m-d h:i:s' );
+			update_option( 'user_registration_users_listing_viewed', $now );
+			$read_time = $now;
+		}
+
+		$user_args  = array(
+			'meta_key'    => 'ur_form_id',
+			'count_total' => true,
+			'date_query'  => array(
+				array(
+					'after'     => $read_time,
+					'inclusive' => false,
+				),
+			),
+		);
+		$user_query = new WP_User_Query( $user_args );
+		$user_count = $user_query->get_total();
+
+		$response['user_registration_new_user_message'] = sprintf( __( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
+		$response['user_registration_new_user_count']   = $user_count;
+		return $response;
 	}
 }
 

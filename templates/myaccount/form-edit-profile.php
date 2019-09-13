@@ -99,6 +99,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['input_class'][]              = 'user-registration-help-tip';
 												}
 											}
+
+											$filter_data = array(
+												'form_data' => $field,
+											);
+
+											$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
+											$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+
 											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
 											?>
 										</div>

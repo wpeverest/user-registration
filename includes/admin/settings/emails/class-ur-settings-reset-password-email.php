@@ -2,9 +2,7 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Reset_Password_Email
- * @category Class
- * @author   WPEverest
+ * @package  UR_Settings_Reset_Password_Email
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +16,9 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 	 */
 	class UR_Settings_Reset_Password_Email {
 
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'reset_password_email';
 			$this->title       = __( 'Reset Password Email', 'user-registration' );
@@ -78,23 +79,26 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_reset_password_email() {
 
 			$message = apply_filters(
 				'user_registration_reset_password_email_message',
 				sprintf(
 					__(
-						'Someone has requested a password reset for the following account:
+						'Someone has requested a password reset for the following account: <br/>
 
-			SiteName: {{blog_info}}
-			Username: {{username}}
+SiteName: {{blog_info}} <br/>
+Username: {{username}} <br/>
 
-			If this was a mistake, just ignore this email and nothing will happen.
+If this was a mistake, just ignore this email and nothing will happen. <br/>
 
-			To reset your password, visit the following address:
-			{{home_url}}/wp-login.php?action=rp&key={{key}}&login={{username}}
+To reset your password, visit the following address: <br/>
+{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} <br/>
 
-			Thank You!',
+Thank You!',
 						'user-registration'
 					)
 				)

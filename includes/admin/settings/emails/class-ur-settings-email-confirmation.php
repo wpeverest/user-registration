@@ -2,10 +2,8 @@
 /**
  * Configure Email
  *
- * @class    UR_Settings_Email_Confirmation
+ * @package  UR_Settings_Email_Confirmation
  * @extends  UR_Settings_Email
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +16,9 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 	 * UR_Settings_Email_Confirmation Class.
 	 */
 	class UR_Settings_Email_Confirmation {
-
+		/**
+		 * Constructor.
+		 */
 		public function __construct() {
 			$this->id          = 'email_confirmation';
 			$this->title       = __( 'Email Confirmation', 'user-registration' );
@@ -75,19 +75,22 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Email Format.
+		 */
 		public function ur_get_email_confirmation() {
 
 			$message = apply_filters(
 				'user_registration_get_email_confirmation',
 				sprintf(
 					__(
-						'Hi {{username}},
+						'Hi {{username}}, <br/>
 
- 				You have registered on <a href="{{home_url}}">{{blog_info}}</a>.
+You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
- 				Please click on this verification link {{home_url}}/wp-login.php?ur_token={{email_token}} to confirm registration.
+Please click on this verification link {{home_url}}/{{ur_login}}?ur_token={{email_token}} to confirm registration. <br/>
 
- 				Thank You!',
+Thank You!',
 						'user-registration'
 					)
 				)

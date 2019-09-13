@@ -9,6 +9,7 @@
  */
 @import 'mixins';
 @import 'variables';
+@import 'colors';
 
 /**
  * Styling begins
@@ -71,5 +72,48 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		vertical-align: middle;
+	}
+}
+
+.wp-list-table {
+	&.users {
+		.ur-user-notification {
+			td {
+				padding: 0;
+				text-align: center;
+
+				a {
+					display: none;
+					padding: 10px;
+					box-shadow: none;
+					background: lighten(#475bb2, 45%);
+					border: 1px solid lighten(#475bb2, 25%)
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Progressbar styles
+ **/
+ .user-registration-progress {
+	display: flex;
+	height: 1rem;
+	overflow: hidden;
+	font-size: .75rem;
+	margin: 1rem 0;
+	background-color: $color_gray_five;
+	border-radius: .25rem;
+
+	.user-registration-progress-bar {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		color: $white;
+		text-align: center;
+		white-space: nowrap;
+		background-color: $primary_color;
+		transition: width .6s ease;
 	}
 }

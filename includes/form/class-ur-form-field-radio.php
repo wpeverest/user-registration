@@ -36,7 +36,7 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
 			'label' => __( 'Radio', 'user-registration' ),
-			'icon'  => 'dashicons dashicons-marker',
+			'icon'  => 'ur-icon ur-icon-radio',
 		);
 
 		$this->field_defaults = array(

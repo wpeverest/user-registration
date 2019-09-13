@@ -147,6 +147,75 @@ function ur_sanitize_tooltip( $var ) {
 }
 
 /**
+ * Format dimensions for display.
+ *
+ * @since  1.7.0
+ * @param  array $dimensions Array of dimensions.
+ * @param  array $suffix     Suffix, defaults to 'px'.
+ * @return string
+ */
+function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
+	return ur_array_to_string( ur_suffix_array( $dimensions, $unit ) );
+}
+
+/**
+ * Add a suffix into an array.
+ *
+ * @since  1.7.0
+ * @param  array  $array  Raw array data.
+ * @param  string $suffix Suffix to be added.
+ * @return array Modified array with suffix added.
+ */
+function ur_suffix_array( $array = array(), $suffix = '' ) {
+	return preg_filter( '/$/', $suffix, $array );
+}
+/**
+ * Implode an array into a string by $glue and remove empty values.
+ *
+ * @since  1.7.0
+ * @param  array  $array Array to convert.
+ * @param  string $glue  Glue, defaults to ' '.
+ * @return string
+ */
+function ur_array_to_string( $array = array(), $glue = ' ' ) {
+	return is_string( $array ) ? $array : implode( $glue, array_filter( $array ) );
+}
+/**
+ * Explode a string into an array by $delimiter and remove empty values.
+ *
+ * @since  1.7.0
+ * @param  string $string    String to convert.
+ * @param  string $delimiter Delimiter, defaults to ','.
+ * @return array
+ */
+function ur_string_to_array( $string, $delimiter = ',' ) {
+	return is_array( $string ) ? $string : array_filter( explode( $delimiter, $string ) );
+}
+
+/**
+ * Converts a string (e.g. 'yes' or 'no') to a bool.
+ *
+ * @param string $string String to convert.
+ * @return bool
+ */
+function ur_string_to_bool( $string ) {
+	return is_bool( $string ) ? $string : ( 'yes' === $string || 1 === $string || 'true' === $string || '1' === $string );
+}
+
+/**
+ * Converts a bool to a 'yes' or 'no'.
+ *
+ * @param bool $bool String to convert.
+ * @return string
+ */
+function ur_bool_to_string( $bool ) {
+	if ( ! is_bool( $bool ) ) {
+		$bool = ur_string_to_bool( $bool );
+	}
+	return true === $bool ? 'yes' : 'no';
+}
+
+/**
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name
@@ -161,14 +230,14 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
 
+	// Allow 3rd party plugin filter template file from their plugin.
+	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
+
 	if ( ! file_exists( $located ) ) {
 		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '1.0' );
 
 		return;
 	}
-
-	// Allow 3rd party plugin filter template file from their plugin.
-	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
@@ -837,8 +906,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			array(
 				'type'              => 'text',
 				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_redirect_options',
+				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),

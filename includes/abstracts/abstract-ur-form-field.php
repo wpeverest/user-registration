@@ -431,7 +431,7 @@ abstract class UR_Form_Field {
 		$class          = 'ur-general-setting-' . $strip_prefix;
 
 		echo "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		echo '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
 		echo $this->get_field_general_settings();
 		echo '</div>';
 
@@ -439,7 +439,7 @@ abstract class UR_Form_Field {
 
 		if ( '' != $advance_settings ) {
 			echo "<div class='ur-advance-setting-block'>";
-			echo '<h2>' . __( 'Advance Settings', 'user-registration' ) . '</h2>';
+			echo '<h2>' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
 			echo $advance_settings;
 			echo '</div>';
 		}
