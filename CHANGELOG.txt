@@ -1,5 +1,9 @@
-= 1.7.1 - 06/09/2019 =
+= 1.7.1 - 13/09/2019 =
 * Fix - Password Validation Message.
+* Fix - Password strength error message translation issue.
+* Fix - Smart Tag issue while sending the email.
+* Fix - Double click on form submit button.
+* Fix - Blink on the grid hover.
 
 = 1.7.0 - 05/09/2019 =
 * Feature - Live new user registration notice and badge.
