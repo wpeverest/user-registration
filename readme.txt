@@ -133,6 +133,7 @@ All the users registered via the registration forms and their data can be access
 * Fix - Password strength error message translation issue.
 * Fix - Smart Tag issue while sending the email.
 * Fix - Double click on form submit button.
+* Fix - Submit button hidden in IE.
 * Fix - Blink on the grid hover.
 
 = 1.7.0 - 05/09/2019 =
