@@ -690,12 +690,12 @@ jQuery(function ($) {
 			data: data,
 			type: 'POST',
 			beforeSend: function () {
-				var spinner = '<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
-				$('.ur_save_form_action_button').closest('.publishing-action').append(spinner);
+				var spinner = '<span class="ur-spinner is-active"></span>';
+				$('.ur_save_form_action_button').append(spinner);
 				$('.ur-notices').remove();
 			},
 			complete: function (response) {
-				$('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').remove();
+				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 					show_message(success_message, 'success');
