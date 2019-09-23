@@ -1248,15 +1248,12 @@ function check_username( $username ) {
  * @return array $all_forms form id as key and form title as value.
  */
 function ur_get_all_user_registration_form( $post_count = -1 ) {
-
-	$args = array(
-		'post_type'   => 'user_registration',
+	$args        = array(
 		'status'      => 'publish',
 		'numberposts' => $post_count,
 		'order'       => 'ASC',
 	);
-
-	$posts_array = get_posts( $args );
+	$posts_array = UR()->form->get_form( '', $args );
 	$all_forms   = array();
 
 	foreach ( $posts_array as $post ) {

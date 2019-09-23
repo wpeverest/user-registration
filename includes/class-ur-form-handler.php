@@ -523,7 +523,7 @@ class UR_Form_Handler {
 	 *
 	 * @since 1.7.2
 	 */
-	public function get_form( $id, $args = array() ) {
+	public function get_form( $id = '', $args = array() ) {
 		$forms = array();
 		$args  = apply_filters( 'user_registration_get_form_args', $args );
 
@@ -538,6 +538,21 @@ class UR_Form_Handler {
 				}
 				$forms = empty( $args['content_only'] ) ? $the_post : json_decode( $the_post->post_content );
 			}
+		} else {
+			// No ID provided, get multiple forms.
+			$defaults = array(
+				'post_type'     => 'user_registration',
+				'orderby'       => 'ID',
+				'order'         => 'DESC',
+				'no_found_rows' => true,
+				'nopaging'      => true,
+			);
+
+			$args = wp_parse_args( $args, $defaults );
+
+			$args['post_type'] = 'user_registration';
+
+			$forms = get_posts( $args );
 		}
 
 		return $forms;
