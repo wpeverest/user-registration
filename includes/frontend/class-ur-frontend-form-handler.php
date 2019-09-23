@@ -31,7 +31,7 @@ class UR_Frontend_Form_Handler {
 	public static function handle_form( $form_data, $form_id ) {
 
 		self::$form_id      = $form_id;
-		$post_content       = self::get_post_content( $form_id );
+		$post_content       = self::get_post_content();
 		$post_content_array = array();
 
 		if ( ! empty( $post_content ) ) {
@@ -137,18 +137,19 @@ class UR_Frontend_Form_Handler {
 	 * @param  int $form_id form id
 	 * @return mixed
 	 */
-	private static function get_post_content( $form_id ) {
-		$args      = array(
-			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-		);
-		$post_data = get_posts( $args );
-		if ( isset( $post_data[0]->post_content ) ) {
-			return $post_data[0]->post_content;
-		} else {
-			return '';
+	private static function get_post_content() {
+		if ( self::$form_id ) {
+			$args      = array(
+				'post_type'   => 'user_registration',
+				'post_status' => 'publish',
+				'post__in'    => array( self::$form_id ),
+			);
+			$post_data = get_posts( $args );
+			if ( isset( $post_data[0]->post_content ) ) {
+				return $post_data[0]->post_content;
+			}
 		}
+		return '';
 	}
 
 	/**

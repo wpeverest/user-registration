@@ -161,29 +161,13 @@ class UR_Shortcodes {
 	 * @since 1.0.1 Recaptcha only
 	 */
 	private static function render_form( $form_id ) {
+		$form_data_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$form_row_ids    = '';
 
-		$page_id = get_the_ID();
-
-		$args = array(
-			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-		);
-
-		$post_data    = get_posts( $args );
-		$form_data    = '';
-		$form_row_ids = '';
-
-		if ( isset( $post_data[0] ) ) {
-			$form_data    = $post_data[0]->post_content;
-			$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
+		if ( ! empty( $form_data_array ) ) {
+			$form_row_ids = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
 		}
-		$form_data_array    = json_decode( $form_data );
 		$form_row_ids_array = json_decode( $form_row_ids );
-
-		if ( gettype( $form_data_array ) != 'array' ) {
-			$form_data_array = array();
-		}
 
 		if ( gettype( $form_row_ids_array ) != 'array' ) {
 			$form_row_ids_array = array();

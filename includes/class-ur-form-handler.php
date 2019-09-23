@@ -514,6 +514,27 @@ class UR_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Get Form data.
+	 *
+	 * @param int   $id Form ID.
+	 * @param array $args Form Arguments.
+	 */
+	public function get_form( $id, $args = array() ) {
+		$forms = array();
+		$args  = apply_filters( 'user_registration_get_form_args', $args );
+
+		if ( ! empty( $id ) ) {
+			$the_post = get_post( absint( $id ) );
+
+			if ( $the_post && 'user_registration' === $the_post->post_type ) {
+				$forms = empty( $args['content_only'] ) ? $the_post : json_decode( $the_post->post_content );
+			}
+		}
+
+		return $forms;
+	}
 }
 
 UR_Form_Handler::init();

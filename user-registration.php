@@ -93,6 +93,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define_constants();
 			$this->includes();
 			$this->init_hooks();
+			add_action( 'plugins_loaded', array( $this, 'objects' ), 1 );
 
 			do_action( 'user_registration_loaded' );
 		}
@@ -234,6 +235,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public function include_template_functions() {
 			include_once UR_ABSPATH . 'includes/functions-ur-template.php';
+		}
+
+		public function objects() {
+			$this->form = new UR_Form_Handler();
 		}
 
 		/**
