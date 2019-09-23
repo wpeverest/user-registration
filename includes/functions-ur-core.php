@@ -1372,7 +1372,7 @@ function ur_get_meta_key_label( $form_id ) {
 		}
 	}
 
-	return apply_filters( 'user_registration_meta_key_label', $key_label, $form_id );
+	return apply_filters( 'user_registration_meta_key_label', $key_label, $form_id, $post_content_array );
 }
 
 /**
