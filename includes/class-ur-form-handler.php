@@ -520,6 +520,8 @@ class UR_Form_Handler {
 	 *
 	 * @param int   $id Form ID.
 	 * @param array $args Form Arguments.
+	 *
+	 * @since 1.7.2
 	 */
 	public function get_form( $id, $args = array() ) {
 		$forms = array();

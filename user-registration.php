@@ -237,6 +237,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/functions-ur-template.php';
 		}
 
+		/**
+		 * Setup Objects.
+		 *
+		 * @since 1.7.2
+		 */
 		public function objects() {
 			$this->form = new UR_Form_Handler();
 		}
