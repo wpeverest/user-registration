@@ -183,7 +183,6 @@ class UR_Shortcodes {
 		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 
 		$has_date = ur_has_date_field( $form_id );
-		error_log( print_r( $has_date, true ) );
 
 		if ( true === $has_date ) {
 			wp_enqueue_style( 'flatpickr' );
