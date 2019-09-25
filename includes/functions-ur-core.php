@@ -1250,7 +1250,8 @@ function check_username( $username ) {
 /**
  * Get all user registration forms title with respective id.
  *
- * @return array $all_forms form id as key and form title as value.
+ * @param int $post_count Post Count.
+ * @return array
  */
 function ur_get_all_user_registration_form( $post_count = -1 ) {
 	$args        = array(
@@ -1290,6 +1291,8 @@ function ur_get_user_login_option() {
 /**
  * Get the node to display google reCaptcha
  *
+ * @param string $recaptcha_enabled Is Recaptcha enabled.
+ * @param string $context Recaptcha context.
  * @return string
  */
 function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
@@ -1319,20 +1322,20 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 			$rc_counter++;
 		}
 
-		if ( $recaptcha_version == 'v3' ) {
-			if ( $context === 'login' ) {
+		if ( 'v3' === $recaptcha_version ) {
+			if ( 'login' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
-			} elseif ( $context === 'register' ) {
+			} elseif ( 'register' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
 			} else {
 				$recaptcha_node = '';
 			}
 		} else {
 
-			if ( $context === 'login' ) {
+			if ( 'login' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 
-			} elseif ( $context === 'register' ) {
+			} elseif ( 'register' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
 			} else {
 				$recaptcha_node = '';
@@ -1350,7 +1353,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
  *
  * @param  int $form_id Form ID.
  * @since  1.5.0
- * @return array $key_label
+ * @return array
  */
 function ur_get_meta_key_label( $form_id ) {
 
@@ -1376,7 +1379,7 @@ function ur_get_meta_key_label( $form_id ) {
  *
  * @param  int $user_id    User ID.
  * @since  1.5.0
- * @return array    $name_value Meta key => value pair.
+ * @return array
  */
 function ur_get_user_extra_fields( $user_id ) {
 
@@ -1403,18 +1406,20 @@ function ur_get_user_extra_fields( $user_id ) {
 /**
  * Get link for back button used on email settings.
  *
- * @param  string $label
- * @param  string $url ]
+ * @param  string $label Label.
+ * @param  string $url URL.
  */
 function ur_back_link( $label, $url ) {
 	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }
 
 /**
- * wp_doing ajax() is introduced in core @since 4.7,
- * Filters whether the current request is a WordPress Ajax request.
+ * The function wp_doing ajax() is introduced in core @since 4.7,
  */
 if ( ! function_exists( 'wp_doing_ajax' ) ) {
+	/**
+	 * Filters whether the current request is a WordPress Ajax request.
+	 */
 	function wp_doing_ajax() {
 		return apply_filters( 'wp_doing_ajax', defined( 'DOING_AJAX' ) && DOING_AJAX );
 	}
@@ -1429,7 +1434,7 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
  */
 function ur_is_json( $str ) {
 	$json = json_decode( $str );
-	return $json && $str != $json;
+	return $json && $str !== $json;
 }
 
 /**
