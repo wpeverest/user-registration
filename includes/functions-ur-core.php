@@ -1226,13 +1226,14 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
 function check_username( $username ) {
 
 	if ( username_exists( $username ) ) {
-		$last_char = substr( $username, -1 );
+		preg_match_all( '/\d+$/m', $username, $matches );
 
-		if ( is_numeric( $last_char ) ) {
-			$strip_last_char = substr( $username, 0, -1 );
-			$last_char       = $last_char + 1;
-			$username        = $strip_last_char . $last_char;
-			$username        = check_username( $username );
+		if ( isset( $matches[0][0] ) ) {
+			$last_char       = $matches[0][0];
+			$strip_last_char = substr( $username, 0, -( strlen( (string) $last_char ) ) );
+			$last_char++;
+			$username = $strip_last_char . $last_char;
+			$username = check_username( $username );
 
 			return $username;
 		} else {
