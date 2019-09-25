@@ -764,16 +764,16 @@ function ur_get_general_settings( $id ) {
  * Insert in between the indexes in multidimensional array.
  *
  * @since  1.5.7
- * @param  array  $items      An array of items
- * @param  array  $new_items  New items to insert inbetween
- * @param  string $after     Index to insert after
+ * @param  array  $items      An array of items.
+ * @param  array  $new_items  New items to insert inbetween.
+ * @param  string $after      Index to insert after.
  *
- * @return array             Ordered array of items.
+ * @return array              Ordered array of items.
  */
 function ur_insert_after_helper( $items, $new_items, $after ) {
 
 	// Search for the item position and +1 since is after the selected item key.
-	$position = array_search( $after, array_keys( $items ) ) + 1;
+	$position = array_search( $after, array_keys( $items ), true ) + 1;
 
 	// Insert the new item.
 	$return_items  = array_slice( $items, 0, $position, true );
@@ -786,7 +786,7 @@ function ur_insert_after_helper( $items, $new_items, $after ) {
 /**
  * Load form field class.
  *
- * @param $class_key
+ * @param string $class_key Class Key.
  */
 function ur_load_form_field_class( $class_key ) {
 	$exploded_class = explode( '_', $class_key );
@@ -818,7 +818,7 @@ function ur_get_default_admin_roles() {
 	}
 
 	if ( ! isset( $wp_roles ) ) {
-		$wp_roles = new WP_Roles();
+		$wp_roles = new WP_Roles(); // @codingStandardsIgnoreLine
 	}
 
 	$roles     = isset( $wp_roles->roles ) ? $wp_roles->roles : array();
@@ -838,9 +838,7 @@ function ur_get_default_admin_roles() {
  * @return int
  */
 function ur_get_random_number() {
-	$time = time();
-
-	return $time;
+	return time();
 }
 
 /**
@@ -998,13 +996,13 @@ function ur_login_option() {
 /**
  * Get Post meta value by meta key.
  *
- * @param      $post_id    Post ID.
- * @param      $meta_key   Meta Key.
- * @param null                $default
+ * @param int    $post_id Post ID.
+ * @param string $meta_key Meta Key.
+ * @param mixed  $default Default Value.
  *
  * @since 1.0.1
  *
- * @return null
+ * @return mixed
  */
 function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
@@ -1020,10 +1018,13 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 /**
  * Get general form settings by meta key (settings id).
  *
- * @param $form_id    Form ID.
- * @param $meta_key   Meta Key.
+ * @param int    $form_id Form ID.
+ * @param string $meta_key Meta Key.
+ * @param mixed  $default Default Value.
  *
  * @since 1.0.1
+ *
+ * @return mixed
  */
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 
@@ -1044,8 +1045,8 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 /**
  * Get user status in case of admin approval login option
  *
- * @param $user_id
- * @return int $user_status
+ * @param int $user_id User ID.
+ * @return int
  */
 function ur_get_user_approval_status( $user_id ) {
 
@@ -1062,9 +1063,12 @@ function ur_get_user_approval_status( $user_id ) {
 }
 
 /**
- * Get form data by key.
+ * Get form data by field key.
  *
- * @param $form_data
+ * @param array  $form_data Form Data.
+ * @param string $key Field Key.
+ *
+ * @return array
  */
 function ur_get_form_data_by_key( $form_data, $key = null ) {
 
@@ -1186,10 +1190,10 @@ function ur_get_logger() {
 /**
  * Handles addon plugin updater.
  *
- * @param      $file
- * @param      $item_id
- * @param      $addon_version
- * @param bool          $beta
+ * @param string $file Plugin File.
+ * @param int    $item_id Item ID.
+ * @param string $addon_version Addon Version.
+ * @param bool   $beta Is beta version.
  *
  * @since 1.1.0
  */
@@ -1197,7 +1201,7 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
 	$api_endpoint = 'https://wpeverest.com/edd-sl-api/';
 	$license_key  = trim( get_option( 'user-registration_license_key' ) );
 	if ( class_exists( 'UR_AddOn_Updater' ) ) {
-		$edd_updater = new UR_AddOn_Updater(
+		new UR_AddOn_Updater(
 			$api_endpoint,
 			$file,
 			array(
@@ -1210,15 +1214,14 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
 			)
 		);
 	}
-
 }
 
 /**
  * Check if username already exists in case of optional username
  * And while stripping through email address and incremet last number by 1.
  *
- * @param  string $username
- * @return string $username Modified username
+ * @param  string $username Username.
+ * @return string
  */
 function check_username( $username ) {
 
