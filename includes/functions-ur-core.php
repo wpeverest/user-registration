@@ -548,10 +548,11 @@ function ur_get_user_profile_field_only() {
 	return apply_filters( 'user_registration_user_profile_field_only', $user_fields );
 }
 
-/*
-* All fields to update without adding prefix
-* @returns array
-*/
+/**
+ * All fields to update without adding prefix.
+ *
+ * @return array
+ */
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_fields_without_prefix', $fields );
@@ -650,7 +651,7 @@ function ur_get_registered_form_fields() {
 /**
  * General settings for each fields
  *
- * @param string $id id for each field
+ * @param string $id id for each field.
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
@@ -720,18 +721,18 @@ function ur_get_general_settings( $id ) {
 			'mailchimp',
 		)
 	);
-	$strip_id            = substr( $id, 18 );
+	$strip_id            = str_replace( 'user_registration_', '', $id );
 
-	if ( in_array( $strip_id, $exclude_placeholder ) ) {
+	if ( in_array( $strip_id, $exclude_placeholder, true ) ) {
 		unset( $general_settings['placeholder'] );
 	}
 
 	$choices_fields = array( 'radio', 'select', 'checkbox' );
 
-	if ( in_array( $strip_id, $choices_fields ) ) {
+	if ( in_array( $strip_id, $choices_fields, true ) ) {
 
 		$settings['options'] = array(
-			'type'        => $strip_id === 'checkbox' ? 'checkbox' : 'radio',
+			'type'        => 'checkbox' === $strip_id ? 'checkbox' : 'radio',
 			'label'       => __( 'Options', 'user-registration' ),
 			'name'        => 'ur_general_setting[options]',
 			'placeholder' => '',
@@ -746,7 +747,7 @@ function ur_get_general_settings( $id ) {
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
 
-	if ( $strip_id === 'privacy_policy' ) {
+	if ( 'privacy_policy' === $strip_id ) {
 		$general_settings['required'] = array(
 			'type'        => 'hidden',
 			'label'       => '',
