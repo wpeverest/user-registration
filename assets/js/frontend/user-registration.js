@@ -272,7 +272,7 @@
 					formwise_data.field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
 					if (field.attr('data-label') !== undefined) {
 						formwise_data.label = field.attr('data-label');
-					} else if (field.prev().get(0).tagName.toLowerCase() === 'label') {
+					} else if ( field.prev().length && field.prev().get(0).tagName.toLowerCase() === 'label') {
 						formwise_data.label = field.prev().text();
 					} else {
 						formwise_data.label = formwise_data.field_type;
