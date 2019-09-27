@@ -16,11 +16,9 @@ $options 			 = array_map( 'trim', $options );
 
 ?>
 <div class="ur-input-type-select ur-admin-template">
-
 	<div class="ur-label">
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
-
 	<div class="ur-field" data-field-key="select">
 		<select id="ur-input-type-select" disabled>
 			<?php
@@ -30,10 +28,5 @@ $options 			 = array_map( 'trim', $options );
 			?>
 		</select>
 	</div>
-
-
-	<?php
-		UR_Form_Field_Select::get_instance()->get_setting();
-	?>
 </div>
 

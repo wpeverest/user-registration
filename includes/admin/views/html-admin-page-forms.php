@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div id="menu-management">
 			<div class="menu-edit">
-				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $post_id; ?>"/>
+				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $form_id; ?>"/>
 				<div id="nav-menu-header">
 					<div class="ur-brand-logo">
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
@@ -19,11 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
 							<?php
-							if ( isset( $post_data[0] ) ) {
+							if ( ! empty( $form_data ) ) {
 
 								?>
 									<input type="text" onfocus="this.select();" readonly="readonly"
-										value='[user_registration_form id=<?php echo '"' . $post_data[0]->ID . '"'; ?>]'
+										value='[user_registration_form id=<?php echo '"' . $form_id . '"'; ?>]'
 										class=" code" size="35">
 
 									<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
@@ -36,7 +36,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							}
 							?>
 							<button id="ur-full-screen-mode" class="button button-secondary button-large closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
-							<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
+							<?php if ( isset( $preview_link ) ) { ?>
+								<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
+							<?php } ?>
 							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo $save_label; ?> </button>
 						</div><!-- END .publishing-action -->
 					</div><!-- END .major-publishing-actions -->
@@ -78,13 +80,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<div id="ur-tab-field-settings" class="ur-tab-content">
 
 										<form method="post" id="ur-field-settings" onsubmit="return false;" style='display:none'>
-											<?php
-												$form_id = isset( $post_data[0]->ID ) ? $post_data[0]->ID : 0;
-											?>
-													<div id="ur-field-all-settings">
-														<?php ur_admin_form_settings( $form_id ); ?>
-														<?php do_action( 'user_registration_after_form_settings', $form_id ); ?>
-													</div>
+											<div id="ur-field-all-settings">
+												<?php ur_admin_form_settings( $form_id ); ?>
+												<?php do_action( 'user_registration_after_form_settings', $form_id ); ?>
+											</div>
 										</form>
 									</div>
 
@@ -98,17 +97,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 						?>
 						<div class='ur-builder-wrapper <?php echo $builder_class; ?>'>
 							<?php
-							if ( isset( $post_data[0] ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
-								$this->get_edit_form_field( $post_data );
+							if ( ! empty( $form_data ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
+								$this->get_edit_form_field( $form_data );
 							} else {
 								?>
 								<div class="ur-selected-inputs">
 									<div class="ur-builder-wrapper-content">
 										<div class="ur-form-name-wrapper" >
-											<?php
-											$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
-											?>
-											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php echo esc_html( $form_title ); ?>">
+											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>">
 											<span class="ur-edit-form-name dashicons dashicons-edit"></span>
 										</div>
 										<div class="ur-input-grids">

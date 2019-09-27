@@ -56,17 +56,22 @@ abstract class UR_Form_Field {
 	 */
 	public function get_admin_template( $admin_data = array() ) {
 
-		ob_start();
-
 		$this->admin_data = $admin_data;
 
+		ob_start();
 		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
 		include $admin_template_path;
+		$template = ob_get_clean();
+
+		$settings = $this->get_setting();
 
 		$this->admin_data = array();
 
-		return ob_get_clean();
+		return array(
+			'template' => $template . $settings,
+			'settings' => $settings,
+		);
 	}
 
 
@@ -375,25 +380,26 @@ abstract class UR_Form_Field {
 	 */
 	public function get_setting() {
 
-		$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
-		$strip_prefix   = substr( $this->id, 18 );
-		$class          = 'ur-general-setting-' . $strip_prefix;
+		$strip_prefix = substr( $this->id, 18 );
+		$class        = 'ur-general-setting-' . $strip_prefix;
 
-		echo "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		echo '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
-		echo $this->get_field_general_settings();
-		echo '</div>';
+		$settings  = "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
+		$settings .= '<h2>' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
+		$settings .= $this->get_field_general_settings();
+		$settings .= '</div>';
 
 		$advance_settings = $this->get_field_advance_settings();
 
-		if ( '' != $advance_settings ) {
-			echo "<div class='ur-advance-setting-block'>";
-			echo '<h2>' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
-			echo $advance_settings;
-			echo '</div>';
+		if ( ! empty( $advance_settings ) ) {
+			$settings .= "<div class='ur-advance-setting-block'>";
+			$settings .= '<h2>' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
+			$settings .= $advance_settings;
+			$settings .= '</div>';
 		}
 
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
+		$settings = apply_filters( 'user_registration_after_advance_settings_filter', $settings, $this->id, $this->admin_data );
+		return $settings;
 	}
 
 	abstract public function validation( $single_form_field, $form_data, $filter_hook, $form_id );

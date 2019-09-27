@@ -271,31 +271,30 @@ jQuery(function ($) {
 						return grid_button.html();
 					},
 					single_row: function () {
-						var single_row = $('<div class=\'ur-single-row\'/ data-row-id="0">');
-						single_row.append($('<div class=\'ur-grids\'/>'));
-						var grid_button = this.get_grid_button();
-						single_row.find('.ur-grids').append(grid_button);
-						single_row.find('.ur-grids').find('span[data-id="' + loaded_params.active_grid + '"]').addClass('ur-active-grid');
-						var grid_list = this.get_grid_lists(loaded_params.active_grid);
-						single_row.append('<div style="clear:both"></div>');
-						single_row.append(grid_list);
-						single_row.append('<div style="clear:both"></div>');
-						$this.append(single_row);
+
+						if (user_registration_admin_data.is_edit_form !== '1') {
+							var single_row = $('<div class=\'ur-single-row\'/ data-row-id="0">');
+							single_row.append($('<div class=\'ur-grids\'/>'));
+							var grid_button = this.get_grid_button();
+							single_row.find('.ur-grids').append(grid_button);
+							single_row.find('.ur-grids').find('span[data-id="' + loaded_params.active_grid + '"]').addClass('ur-active-grid');
+							var grid_list = this.get_grid_lists(loaded_params.active_grid);
+							single_row.append('<div style="clear:both"></div>');
+							single_row.append(grid_list);
+							single_row.append('<div style="clear:both"></div>');
+
+							$this.append(single_row);
+							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).find('.user-registration-dragged-me').remove();
+							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).append(user_registration_admin_data.required_form_html);
+						}
+
 						if ( $this.find('.ur-add-new-row').length == 0 ) {
 							$this.append('<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0">' + user_registration_admin_data.add_new + '</button>');
-							var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().data('row-id');
+							var total_rows = $this.find('.ur-add-new-row').siblings('.ur-single-row').last().prev().attr('data-row-id');
 							$this.find('.ur-add-new-row').attr('data-total-rows', total_rows );
 						}
 						events.render_draggable_sortable();
 						builder.manage_empty_grid();
-						if (user_registration_admin_data.is_edit_form === '1') {
-							$('.ur-single-row').eq($('.ur-single-row').length - 1).remove();
-						}
-						if (user_registration_admin_data.is_edit_form !== '1') {
-
-							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).find('.user-registration-dragged-me').remove();
-							$('.ur-single-row').eq(0).find('.ur-grid-lists').eq(0).find('.ur-grid-list-item').eq(0).append(user_registration_admin_data.required_form_html);
-						}
 						manage_draggable_users_fields();
 					},
 					get_grid_lists: function (number_of_grid) {

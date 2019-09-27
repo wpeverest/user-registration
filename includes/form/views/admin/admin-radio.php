@@ -16,11 +16,9 @@ $options 			 = array_map( 'trim', $options );
 ?>
 
 <div class="ur-input-type-select ur-admin-template">
-
 	<div class="ur-label">
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
-
 	<div class="ur-field" data-field-key="radio">
 			<?php
 			if ( count( $options ) < 1 ) {
@@ -32,9 +30,5 @@ $options 			 = array_map( 'trim', $options );
 			}
 			?>
 	</div>
-
-	<?php
-		UR_Form_Field_Radio::get_instance()->get_setting();
-	?>
 </div>
 
