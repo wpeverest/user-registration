@@ -256,7 +256,7 @@ jQuery(function ($) {
 						var grid_content = '<button type="button" class="ur-edit-grid"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg></button>';
 						grid_content += '<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>';
 						grid_content += '<div class="ur-toggle-grid-content" style="display:none">';
-						grid_content += '<strong>Select the grid size.</strong>';
+						grid_content += '<small>Select the grid column.</small>';
 						grid_content += '<div class="ur-grid-selector" data-grid = "1">';
 						grid_content += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
 						grid_content += '</div>';

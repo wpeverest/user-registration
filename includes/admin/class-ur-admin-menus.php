@@ -424,7 +424,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$form_data = ( $form_id ) ? UR()->form->get_form( $form_id ) : array();
 
 			$save_label = __( 'Create Form', 'user-registration' );
-			error_log( print_r( $form_data, true ) );
 			if ( ! empty( $form_data ) ) {
 				$save_label   = __( 'Update form', 'user-registration' );
 				$preview_link = add_query_arg(
@@ -551,8 +550,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$form_data_content = $form_data->post_content;
 				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
 			} else {
-				$form_data    = '';
-				$form_row_ids = '';
+				$form_data_content = '';
+				$form_row_ids      = '';
 			}
 
 			try {
