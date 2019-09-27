@@ -766,7 +766,7 @@ jQuery(function ($) {
 			response.message = i18n_admin.i18n_empty_form_name;
 			return response;
 		}
-		if ($('.ur_save_form_action_button').closest('.publishing-action').find('.spinner').length > 0) {
+		if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
 			response.validation_status = false;
 			response.message = i18n_admin.i18n_previous_save_action_ongoing;
 			return response;
