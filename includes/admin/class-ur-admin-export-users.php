@@ -131,9 +131,9 @@ class UR_Admin_Export_Users {
 		);
 
 		// Filter for excluding File Upload Field.
-		add_filter( 'user_registration_meta_key_label', array( __CLASS__, 'remove_file_field_filter' ), 10, 3 );
+		add_filter( 'user_registration_meta_key_label', array( __CLASS__, 'exclude_field_key' ), 10, 3 );
 		$columns = ur_get_meta_key_label( $form_id );
-		remove_filter( 'user_registration_meta_key_label', array( __CLASS__, 'remove_file_field_filter' ) );
+		remove_filter( 'user_registration_meta_key_label', array( __CLASS__, 'exclude_field_key' ) );
 
 		$exclude_columns = apply_filters(
 			'user_registration_csv_export_exclude_columns',
@@ -247,12 +247,14 @@ class UR_Admin_Export_Users {
 	 * @param array $post_content_array Post Content Array.
 	 * @return array
 	 */
-	public static function remove_file_field_filter( $key_label, $form_id, $post_content_array ) {
+	public static function exclude_field_key( $key_label, $form_id, $post_content_array ) {
+		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'file' ) );
+
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 					if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
-						if ( 'file' === $field->field_key ) {
+						if ( in_array( $field->field_key, $exclude_field_keys, true ) ) {
 							unset( $key_label[ $field->general_setting->field_name ] );
 						}
 					}
