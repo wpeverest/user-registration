@@ -397,7 +397,11 @@ abstract class UR_Form_Field {
 			$settings .= '</div>';
 		}
 
+		// Redundent code start.
+		ob_start();
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
+		$settings .= ob_get_clean();
+		// Redundent code end.
 		$settings = apply_filters( 'user_registration_after_advance_settings_filter', $settings, $this->id, $this->admin_data );
 		return $settings;
 	}
