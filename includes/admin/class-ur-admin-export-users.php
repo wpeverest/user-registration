@@ -139,6 +139,7 @@ class UR_Admin_Export_Users {
 			'user_registration_csv_export_exclude_columns',
 			array(
 				'user_confirm_password',
+				'user_confirm_email',
 			)
 		);
 
