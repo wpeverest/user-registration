@@ -5,9 +5,8 @@
  * @class    UR_Frontend_Form_Handler
  * @version  1.0.0
  * @package  UserRegistration/Frontend
- * @category Admin
- * @author   WPEverest
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -17,26 +16,38 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Frontend_Form_Handler {
 
-	public static $form_id          = 0;
-	public static $response_array   = array();
+	/**
+	 * Form ID.
+	 *
+	 * @var int
+	 */
+	public static $form_id = 0;
+
+	/**
+	 * Response Data array.
+	 *
+	 * @var array
+	 */
+	public static $response_array = array();
+
+	/**
+	 * Valid Form data.
+	 *
+	 * @var array
+	 */
 	private static $valid_form_data = array();
 
 	/**
 	 * Handle frontend form POST data
 	 *
-	 * @param  array $form_data Submitted form data
-	 * @param  int   $form_id ID of the form
+	 * @param  array $form_data Submitted form data.
+	 * @param  int   $form_id ID of the form.
 	 * @return void
 	 */
 	public static function handle_form( $form_data, $form_id ) {
 
 		self::$form_id      = $form_id;
-		$post_content       = self::get_post_content( $form_id );
-		$post_content_array = array();
-
-		if ( ! empty( $post_content ) ) {
-			$post_content_array = json_decode( $post_content );
-		}
+		$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
 
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();
@@ -114,7 +125,7 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Get form field data by post_content array passed
 	 *
-	 * @param  array $post_content_array
+	 * @param array $post_content_array Post Content Array.
 	 * @return array
 	 */
 	private static function get_form_field_data( $post_content_array ) {
@@ -132,31 +143,11 @@ class UR_Frontend_Form_Handler {
 	}
 
 	/**
-	 * Get post content by form id
-	 *
-	 * @param  int $form_id form id
-	 * @return mixed
-	 */
-	private static function get_post_content( $form_id ) {
-		$args      = array(
-			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-		);
-		$post_data = get_posts( $args );
-		if ( isset( $post_data[0]->post_content ) ) {
-			return $post_data[0]->post_content;
-		} else {
-			return '';
-		}
-	}
-
-	/**
 	 * Validation from each field's class validation() method.
 	 * Sanitization from get_sanitize_value().
 	 *
-	 * @param  array $form_field_data
-	 * @param  array $form_data  Form data to validate
+	 * @param  array $form_field_data Form Field Data.
+	 * @param  array $form_data  Form data to validate.
 	 */
 	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
 		$form_data_field     = wp_list_pluck( $form_data, 'field_name' );
@@ -166,9 +157,9 @@ class UR_Frontend_Form_Handler {
 			array_push( self::$response_array, __( 'Duplicate field key in form, please contact site administrator.', 'user-registration' ) );
 		}
 
-		$containsSearch = count( array_intersect( ur_get_required_fields(), $form_data_field ) ) == count( ur_get_required_fields() );
+		$contains_search = count( array_intersect( ur_get_required_fields(), $form_data_field ) ) == count( ur_get_required_fields() );
 
-		if ( false === $containsSearch ) {
+		if ( false === $contains_search ) {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
 
@@ -199,8 +190,8 @@ class UR_Frontend_Form_Handler {
 	 * Triger validation method for user fields
 	 * Useful for custom fields validation
 	 *
-	 * @param array $form_field_data
-	 * @param array $form_data
+	 * @param array $form_field_data Form Field Data.
+	 * @param array $form_data Form Data.
 	 */
 	public static function add_hook( $form_field_data = array(), $form_data = array() ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
@@ -226,7 +217,7 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Sanitize form data
 	 *
-	 * @param  obj &$form_data
+	 * @param  obj $form_data Form data.
 	 * @return object
 	 */
 	private static function get_sanitize_value( &$form_data ) {
@@ -277,9 +268,9 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Update form data to usermeta table.
 	 *
-	 * @param  int   $user_id
+	 * @param  int   $user_id User ID.
 	 * @param  array $valid_form_data All valid form data.
-	 * @param  int   $form_id
+	 * @param  int   $form_id Form ID.
 	 * @return void
 	 */
 	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
@@ -306,7 +297,7 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Match password and confirm password field
 	 *
-	 * @param  obj &$form_data Form data submitted
+	 * @param  obj $form_data Form data submitted.
 	 * @return obj $form_data
 	 */
 	private static function match_password( &$form_data ) {
@@ -338,7 +329,7 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Match email and confirm email field.
 	 *
-	 * @param  obj &$form_data Form data submitted.
+	 * @param  obj $form_data Form data submitted.
 	 * @return obj $form_data
 	 */
 	private static function match_email( &$form_data ) {

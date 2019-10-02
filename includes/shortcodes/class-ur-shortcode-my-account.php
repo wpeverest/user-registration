@@ -159,22 +159,9 @@ class UR_Shortcode_My_Account {
 		$user_data = get_userdata( $user_id );
 		$user_data = $user_data->data;
 
-		$args = array(
-			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-		);
+		$form_data_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
 
-		$form_data = get_posts( $args );
-
-		if ( isset( $form_data[0] ) ) {
-			$form_data = $form_data[0]->post_content;
-
-			$form_data_array = json_decode( $form_data );
-
-			if ( gettype( $form_data_array ) != 'array' ) {
-				$form_data_array = array();
-			}
+		if ( ! empty( $form_data_array ) ) {
 
 			if ( count( $profile ) < 1 ) {
 				return;

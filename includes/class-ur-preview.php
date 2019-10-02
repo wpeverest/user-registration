@@ -103,12 +103,15 @@ class UR_Preview {
 	 * @return string
 	 */
 	public static function form_preview_title( $title ) {
-		$form_id   = absint( $_GET['form_id'] );
-		$form_data = get_post( $form_id );
+		$form_id   = absint( $_GET['form_id'] ); // @codingStandardsIgnoreLine
 
 		if ( in_the_loop() ) {
-			/* translators: %s - Form name. */
-			return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( $form_data->post_title ) );
+			$form_data = UR()->form->get_form( $form_id );
+
+			if ( ! empty( $form_data ) ) {
+				/* translators: %s - Form name. */
+				return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( $form_data->post_title ) );
+			}
 		}
 
 		return $title;

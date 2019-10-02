@@ -3,6 +3,7 @@ table.user-registration-table {
 	background: $white;
 	border-collapse: collapse;
 
+	caption,
 	th,
 	td {
 		padding: 1rem;
@@ -10,6 +11,7 @@ table.user-registration-table {
 		border-bottom: 1px solid $border-color;
 	}
 
+	caption,
 	th {
 		font-size: 14px;
 		font-weight: 500;

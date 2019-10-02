@@ -1,3 +1,17 @@
+= 1.7.2 - 02/10/2019 =
+* Refactor - Has date field function.
+* Refactor - Check username function.
+* Tweak    - Button spinner.
+* Fix      - Exclude file upload field from export users.
+* Fix      - Remove the Password field from excluding.
+* Fix      - Exclude Confirm Email field from edit profile.
+* Fix      - Undefined error on label hidden.
+* Fix      - Grid toggle text.
+* Fix      - Email address vaidation.
+* Fix      - Heartbeat start on Document ready.
+* Add      - Styles for table caption.
+* Dev      - Introducing get_form function.
+
 = 1.7.1 - 13/09/2019 =
 * Fix - Password Validation Message.
 * Fix - Password strength error message translation issue.
