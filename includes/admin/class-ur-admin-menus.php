@@ -687,6 +687,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( class_exists( $class_name ) ) {
 				return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
 			}
+
+			/* Backward Compat since 1.4.0 */
+			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
+			if ( class_exists( $class_name_old ) ) {
+				return $class_name_old::get_instance()->get_admin_template( $single_field );
+			}
+			/* Backward compat end */
 		}
 
 		private function get_registered_user_form_fields() {
