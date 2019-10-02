@@ -248,7 +248,7 @@ class UR_Admin_Export_Users {
 	 * @return array
 	 */
 	public static function exclude_field_key( $key_label, $form_id, $post_content_array ) {
-		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'file' ) );
+		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'file', 'html', 'section_title' ) );
 
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
