@@ -499,6 +499,7 @@ function ur_exclude_profile_details_fields() {
 		array(
 			'user_pass',
 			'user_confirm_password',
+			'user_confirm_email',
 		)
 	);
 }
