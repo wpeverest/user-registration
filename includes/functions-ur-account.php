@@ -112,6 +112,7 @@ function ur_get_account_menu_items() {
 
 	$user_id = get_current_user_id();
 	$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+	$form_id = ( $form_id ) ? $form_id : 0;
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 
