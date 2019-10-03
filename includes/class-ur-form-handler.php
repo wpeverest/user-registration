@@ -527,7 +527,7 @@ class UR_Form_Handler {
 		$forms = array();
 		$args  = apply_filters( 'user_registration_get_form_args', $args );
 
-		if ( ! empty( $id ) ) {
+		if ( is_numeric( $id ) ) {
 			$the_post = get_post( absint( $id ) );
 
 			if ( $the_post && 'user_registration' === $the_post->post_type ) {
