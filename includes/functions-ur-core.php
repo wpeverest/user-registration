@@ -1360,7 +1360,7 @@ function ur_get_meta_key_label( $form_id ) {
 
 	$key_label = array();
 
-	$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 	foreach ( $post_content_array as $post_content_row ) {
 		foreach ( $post_content_row as $post_content_grid ) {
@@ -1447,7 +1447,7 @@ function ur_is_json( $str ) {
  */
 function ur_has_date_field( $form_id ) {
 
-	$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 	if ( ! empty( $post_content_array ) ) {
 		foreach ( $post_content_array as $post_content_row ) {

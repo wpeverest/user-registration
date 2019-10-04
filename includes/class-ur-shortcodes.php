@@ -161,7 +161,7 @@ class UR_Shortcodes {
 	 * @since 1.0.1 Recaptcha only
 	 */
 	private static function render_form( $form_id ) {
-		$form_data_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 		$form_row_ids    = '';
 
 		if ( ! empty( $form_data_array ) ) {

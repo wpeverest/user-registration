@@ -159,7 +159,7 @@ class UR_Shortcode_My_Account {
 		$user_data = get_userdata( $user_id );
 		$user_data = $user_data->data;
 
-		$form_data_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		if ( ! empty( $form_data_array ) ) {
 

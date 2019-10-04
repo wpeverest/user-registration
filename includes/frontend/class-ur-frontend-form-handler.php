@@ -47,7 +47,7 @@ class UR_Frontend_Form_Handler {
 	public static function handle_form( $form_data, $form_id ) {
 
 		self::$form_id      = $form_id;
-		$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();

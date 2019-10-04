@@ -442,7 +442,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		$all_meta_value = get_user_meta( $user_id );
 		$fields         = array();
 
-		$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		$all_meta_value_keys = array();
 		if ( gettype( $all_meta_value ) === 'array' ) {
