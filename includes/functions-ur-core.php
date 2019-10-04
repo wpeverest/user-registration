@@ -1482,7 +1482,7 @@ function ur_get_shortcode_attr( $content ) {
 
 		foreach ( $matches[0] as $key => $value ) {
 
-			// $matches[3] return the shortcode attribute as string.
+			// $matches[ 3 ] return the shortcode attribute as string.
 			// replace space with '&' for parse_str() function.
 			$get = str_replace( ' ', '&', $matches[3][ $key ] );
 			parse_str( $get, $output );
