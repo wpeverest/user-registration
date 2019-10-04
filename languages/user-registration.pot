@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.7.2\n"
+"Project-Id-Version: User Registration 1.7.3\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2019-10-02 06:53:52+00:00\n"
+"POT-Creation-Date: 2019-10-04 05:35:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3641,7 +3641,7 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:61
-#: templates/myaccount/form-edit-profile.php:127
+#: templates/myaccount/form-edit-profile.php:126
 msgid "Save changes"
 msgstr ""
 
