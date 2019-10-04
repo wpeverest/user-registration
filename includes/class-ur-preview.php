@@ -105,7 +105,7 @@ class UR_Preview {
 	public static function form_preview_title( $title ) {
 		$form_id   = absint( $_GET['form_id'] ); // @codingStandardsIgnoreLine
 
-		if ( in_the_loop() ) {
+		if ( $form_id && in_the_loop() ) {
 			$form_data = UR()->form->get_form( $form_id );
 
 			if ( ! empty( $form_data ) ) {

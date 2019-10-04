@@ -403,6 +403,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int            $form_id
 		 */
 		protected function get_form_fields( $all_meta_value, $form_id ) {
+			$form_id            = ( $form_id ) ? $form_id : 0;
 			$post_content_array = UR()->form->get_form(
 				$form_id,
 				array(

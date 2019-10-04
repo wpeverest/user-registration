@@ -1360,7 +1360,7 @@ function ur_get_meta_key_label( $form_id ) {
 
 	$key_label = array();
 
-	$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 	foreach ( $post_content_array as $post_content_row ) {
 		foreach ( $post_content_row as $post_content_grid ) {
@@ -1447,7 +1447,7 @@ function ur_is_json( $str ) {
  */
 function ur_has_date_field( $form_id ) {
 
-	$post_content_array = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 	if ( ! empty( $post_content_array ) ) {
 		foreach ( $post_content_array as $post_content_row ) {
@@ -1482,7 +1482,7 @@ function ur_get_shortcode_attr( $content ) {
 
 		foreach ( $matches[0] as $key => $value ) {
 
-			// $matches[3] return the shortcode attribute as string.
+			// $matches[ 3 ] return the shortcode attribute as string.
 			// replace space with '&' for parse_str() function.
 			$get = str_replace( ' ', '&', $matches[3][ $key ] );
 			parse_str( $get, $output );
