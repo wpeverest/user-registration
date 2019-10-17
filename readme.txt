@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.2
-Stable tag: 1.7.1
+Stable tag: 1.7.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -127,6 +127,25 @@ All the users registered via the registration forms and their data can be access
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.7.3 - 04/10/2019 =
+* Fix - Form ID being empty.
+* Fix - Form ID check.
+* Fix - Field key not found in edit profile details.
+
+= 1.7.2 - 02/10/2019 =
+* Refactor - Has date field function.
+* Refactor - Check username function.
+* Tweak    - Button spinner.
+* Fix      - Exclude file upload field from export users.
+* Fix      - Remove the Password field from excluding.
+* Fix      - Exclude Confirm Email field from edit profile.
+* Fix      - Undefined error on label hidden.
+* Fix      - Grid toggle text.
+* Fix      - Email address vaidation.
+* Fix      - Heartbeat start on Document ready.
+* Add      - Styles for table caption.
+* Dev      - Introducing get_form function.
 
 = 1.7.1 - 13/09/2019 =
 * Fix - Password Validation Message.

@@ -56,5 +56,7 @@ jQuery(function ($) {
 			});
 		}
 	};
-	URLiveUser.init();
+	$( document ).ready( function() {
+		URLiveUser.init();
+	});
 }(jQuery));

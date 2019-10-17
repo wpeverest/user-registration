@@ -514,6 +514,49 @@ class UR_Form_Handler {
 			}
 		}
 	}
+
+	/**
+	 * Get Form data.
+	 *
+	 * @param int   $id Form ID.
+	 * @param array $args Form Arguments.
+	 *
+	 * @since 1.7.2
+	 */
+	public function get_form( $id = '', $args = array() ) {
+		$forms = array();
+		$args  = apply_filters( 'user_registration_get_form_args', $args );
+
+		if ( is_numeric( $id ) ) {
+			$the_post = get_post( absint( $id ) );
+
+			if ( $the_post && 'user_registration' === $the_post->post_type ) {
+				if ( isset( $args['publish'] ) ) {
+					if ( ( $args['publish'] && 'publish' === $the_post->post_type ) || ( ! $args['publish'] && 'publish' !== $the_post->post_type ) ) {
+						return array();
+					}
+				}
+				$forms = empty( $args['content_only'] ) ? $the_post : json_decode( $the_post->post_content );
+			}
+		} else {
+			// No ID provided, get multiple forms.
+			$defaults = array(
+				'post_type'     => 'user_registration',
+				'orderby'       => 'ID',
+				'order'         => 'DESC',
+				'no_found_rows' => true,
+				'nopaging'      => true,
+			);
+
+			$args = wp_parse_args( $args, $defaults );
+
+			$args['post_type'] = 'user_registration';
+
+			$forms = get_posts( $args );
+		}
+
+		return $forms;
+	}
 }
 
 UR_Form_Handler::init();

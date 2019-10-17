@@ -110,13 +110,9 @@ function ur_get_account_menu_items() {
 		'user-logout'   => __( 'Logout', 'user-registration' ),
 	);
 
-	$user_id       = get_current_user_id();
-	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
-	$form_id       = 0;
-
-	if ( isset( $form_id_array[0] ) ) {
-		$form_id = $form_id_array[0];
-	}
+	$user_id = get_current_user_id();
+	$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+	$form_id = ( $form_id ) ? $form_id : 0;
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 

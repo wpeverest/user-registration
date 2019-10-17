@@ -407,19 +407,16 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int            $form_id
 		 */
 		protected function get_form_fields( $all_meta_value, $form_id ) {
-
-			$post_id = $form_id;
-			$args    = array(
-				'post_type'   => 'user_registration',
-				'post_status' => 'publish',
-				'post__in'    => array( $post_id ),
+			$form_id            = ( $form_id ) ? $form_id : 0;
+			$post_content_array = UR()->form->get_form(
+				$form_id,
+				array(
+					'content_only' => true,
+					'publish'      => true,
+				)
 			);
 
-			$post_data          = get_posts( $args );
-			$post_content       = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
-			$fields             = array();
-			$post_content_array = json_decode( $post_content );
-
+			$fields = array();
 			if ( gettype( $post_content_array ) != 'array' ) {
 				return $fields;
 			}

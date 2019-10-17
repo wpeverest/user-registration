@@ -277,7 +277,8 @@ class UR_Admin_Assets {
 
 		foreach ( $required_fields as $field ) {
 
-			$class_name = ur_load_form_field_class( $field );
+			$class_name    = ur_load_form_field_class( $field );
+			$template_data = $class_name::get_instance()->get_admin_template(); // @codingStandardsIgnoreLine
 
 			if ( $class_name !== null ) {
 
@@ -285,7 +286,7 @@ class UR_Admin_Assets {
 
 				$template .= '<div class="ur-action-buttons"><span title="' . __( 'Clone', 'user-registration' ) . '" class="dashicons dashicons-admin-page ur-clone"></span><span title="' . __( 'Trash', 'user-registration' ) . '" class="dashicons dashicons-trash ur-trash"></span></div>';
 
-				$template .= $class_name::get_instance()->get_admin_template();
+				$template .= $template_data['template'];
 
 				$template .= '</div>';
 

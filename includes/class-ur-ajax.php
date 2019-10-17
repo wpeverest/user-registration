@@ -179,13 +179,9 @@ class UR_AJAX {
 				throw  new Exception( 'class not exists' );
 			}
 
-			$template = $class_name::get_instance()->get_admin_template();
+			$templates = $class_name::get_instance()->get_admin_template();
 
-			wp_send_json_success(
-				array(
-					'template' => $template,
-				)
-			);
+			wp_send_json_success( $templates );
 
 		} catch ( Exception $e ) {
 			wp_send_json_error(

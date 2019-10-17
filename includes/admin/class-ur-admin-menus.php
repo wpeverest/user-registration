@@ -420,27 +420,20 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Init the add registration page.
 		 */
 		public function add_registration_page() {
-			$post_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
-			$args      = array(
-				'post_type'   => 'user_registration',
-				'post_status' => 'publish',
-				'post__in'    => array( $post_id ),
-			);
-			$post_data = get_posts( $args );
+			$form_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
+			$form_data = ( $form_id ) ? UR()->form->get_form( $form_id ) : array();
 
 			$save_label = __( 'Create Form', 'user-registration' );
-
-			if ( $post_id > 0 ) {
-				$save_label = __( 'Update form', 'user-registration' );
+			if ( ! empty( $form_data ) ) {
+				$save_label   = __( 'Update form', 'user-registration' );
+				$preview_link = add_query_arg(
+					array(
+						'ur_preview' => 'true',
+						'form_id'    => $form_id,
+					),
+					home_url()
+				);
 			}
-
-			$preview_link = add_query_arg(
-				array(
-					'ur_preview' => 'true',
-					'form_id'    => $post_id,
-				),
-				home_url()
-			);
 
 			// Forms view
 			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
@@ -551,18 +544,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<?php
 		}
 
-		private function get_edit_form_field( $post_data ) {
+		private function get_edit_form_field( $form_data ) {
 
-			if ( isset( $post_data[0] ) ) {
-				$form_data    = $post_data[0]->post_content;
-				$form_row_ids = get_post_meta( $post_data[0]->ID, 'user_registration_form_row_ids', true );
+			if ( ! empty( $form_data ) ) {
+				$form_data_content = $form_data->post_content;
+				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
 			} else {
-				$form_data    = '';
-				$form_row_ids = '';
+				$form_data_content = '';
+				$form_row_ids      = '';
 			}
 
 			try {
-				$form_data_array = json_decode( $form_data );
+				$form_data_array = json_decode( $form_data_content );
 
 				if ( json_last_error() != JSON_ERROR_NONE ) {
 					throw new Exception( '' );
@@ -587,13 +580,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<div class="ur-builder-header">
 				<div class="ur-form-name-wrapper">
 					<?php
-					$form_title = isset( $post_data[0]->post_title ) ? trim( $post_data[0]->post_title ) : __( 'Untitled', 'user-registration' );
+					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 					?>
 					<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
 					<span class="ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
-					<?php do_action( 'user_registration_builder_header_extra', $post_data[0]->ID, $form_data_array ); ?>
+					<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
 				</div>
 			</div>
 			<?php
@@ -656,11 +649,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					foreach ( $grid_lists as $single_field ) {
 
 						if ( isset( $single_field->field_key ) ) {
+							$admin_field = $this->get_admin_field( $single_field );
 							echo '<div class="ur-selected-item">';
 							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
-
-							$this->get_admin_field( $single_field );
-
+							echo $admin_field['template']; // @codingStandardsIgnoreLine
 							echo '</div>';
 						}
 					}
@@ -686,20 +678,20 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		public static function get_admin_field( $single_field ) {
 
-			if ( $single_field->field_key == null || $single_field->field_key == '' ) {
+			if ( empty( $single_field->field_key ) ) {
 				throw new Exception( __( 'Empty form data', 'user-registration' ) );
 			}
 
 			$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
 
 			if ( class_exists( $class_name ) ) {
-				echo $class_name::get_instance()->get_admin_template( $single_field );
+				return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
 			}
 
 			/* Backward Compat since 1.4.0 */
 			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
 			if ( class_exists( $class_name_old ) ) {
-				echo $class_name_old::get_instance()->get_admin_template( $single_field );
+				return $class_name_old::get_instance()->get_admin_template( $single_field );
 			}
 			/* Backward compat end */
 		}

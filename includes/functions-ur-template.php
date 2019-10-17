@@ -443,19 +443,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	 */
 	function user_registration_form_data( $user_id = 0, $form_id = 0 ) {
 		$all_meta_value = get_user_meta( $user_id );
+		$fields         = array();
 
-		$fields             = array();
-		$args               = array(
-			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
-			'post__in'    => array( $form_id ),
-		);
-		$post_data          = get_posts( $args );
-		$post_content       = isset( $post_data[0]->post_content ) ? $post_data[0]->post_content : '';
-		$post_content_array = json_decode( $post_content );
-		if ( gettype( $post_content_array ) != 'array' ) {
-			return $fields;
-		}
+		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		$all_meta_value_keys = array();
 		if ( gettype( $all_meta_value ) === 'array' ) {
