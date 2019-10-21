@@ -166,11 +166,19 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->min_date ) ) {
-			$form_data['custom_attributes']['data-mindate'] = $data['advance_setting']->min_date;
+			$form_data['custom_attributes']['data-min-date'] = $data['advance_setting']->min_date;
 		}
 
 		if ( isset( $data['advance_setting']->max_date ) ) {
-			$form_data['custom_attributes']['data-maxdate'] = $data['advance_setting']->max_date;
+			$form_data['custom_attributes']['data-max-date'] = $data['advance_setting']->max_date;
+		}
+
+		if ( isset( $data['advance_setting']->set_current_date ) ) {
+			$form_data['custom_attributes']['data-default-date'] = $data['advance_setting']->set_current_date;
+		}
+
+		if ( isset( $data['advance_setting']->enable_date_range ) ) {
+			$form_data['custom_attributes']['data-mode'] = $data['advance_setting']->enable_date_range;
 		}
 
 		if ( 'country' === $field_key ) {

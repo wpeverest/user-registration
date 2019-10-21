@@ -248,9 +248,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
-								<?php
+									<?php
 									$value = $this->get_user_meta( $user->ID, $key );
-								?>
+									?>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
 												   id="<?php echo esc_attr( $key ); ?>"
 												   value="<?php echo esc_attr( $value ); ?>"
@@ -513,11 +513,18 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
 
-									$min_date                    = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
-									$fields[ $field_index ]['attributes']['data-mindate'] = $min_date;
+									$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+									$fields[ $field_index ]['attributes']['data-min-date'] = $min_date;
 
-									$max_date                    = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
-									$fields[ $field_index ]['attributes']['data-maxdate'] = $max_date;
+									$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+									$fields[ $field_index ]['attributes']['data-max-date'] = $max_date;
+
+									$set_current_date                    = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+									$fields[ $field_index ]['attributes']['data-default-date'] = $set_current_date;
+
+									$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+									$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
+
 									break;
 
 								case 'privacy_policy':

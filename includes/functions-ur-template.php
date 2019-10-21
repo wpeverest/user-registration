@@ -504,12 +504,16 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 
 							case 'date':
-								$date_format = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
-								$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
-								$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
-								$extra_params['custom_attributes']['data-date-format'] = $date_format;
-								$extra_params['custom_attributes']['data-mindate'] = $min_date;
-								$extra_params['custom_attributes']['data-maxdate'] = $max_date;
+								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+								$min_date          = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+								$max_date          = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+								$extra_params['custom_attributes']['data-date-format']  = $date_format;
+								$extra_params['custom_attributes']['data-min-date']     = $min_date;
+								$extra_params['custom_attributes']['data-max-date']     = $max_date;
+								$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
+								$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
 								break;
 
 							case 'country':
