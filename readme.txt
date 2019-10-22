@@ -52,6 +52,7 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 * Support for profile image upload
 * Form Preview Option on backend
 * User data export in CSV
+* Import/Export registration form
 * Well Documented
 * Translation ready
 
@@ -59,13 +60,17 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 
 User Registration can be easily extended with some premium addons.
 
+* [Style Customizer](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to customize design elements like color, font size, font color, border, margin, padding and more for registration and login form.
+
+* [Multi Step Form](https://wpeverest.com/wordpress-plugins/user-registration/multi-part/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to break lengthy registration form into multiple pages.
+
 * [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
 
-* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles. Check our article for [content restriction](https://wpeverest.com/blog/restrict-content-in-wordpress/)
 
 * [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, Billings.
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, billings plus allows you to create extended registration page with woocommerce fields. Check [detail guide](https://wpeverest.com/blog/woocommerce-registration-form/)
 
 * [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
@@ -83,7 +88,7 @@ User Registration can be easily extended with some premium addons.
 
 * [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to view their registered learndash courses, course progresses, expiry date on my account section and more.
 
-* [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes.
+* [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes. Check our [invitation code guide](https://wpeverest.com/blog/user-registration-invitation-code/)
 
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
 
