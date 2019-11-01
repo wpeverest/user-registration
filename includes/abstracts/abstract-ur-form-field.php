@@ -119,8 +119,7 @@ abstract class UR_Form_Field {
 		if ( isset( $data['advance_setting']->custom_class ) ) {
 			array_push( $form_data['input_class'], $data['advance_setting']->custom_class );
 		}
-
-		$form_data['custom_attributes']['data-label'] = $data['general_setting']->label;
+		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );
 
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
@@ -234,7 +233,6 @@ abstract class UR_Form_Field {
 				case 'text':
 					$extra_attribute          = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
 					$value                    = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
-					$value                    = ur_string_translation( $form_id, $setting_key, $value );
 					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
 					if ( true == $setting_value['required'] ) {
