@@ -108,9 +108,17 @@ No, you don't need any coding skills. One can simply drag and drop fields, arran
 
 Yes, the plugin is designed to work with any themes that have been coded following WordPress guidelines.
 
-= How can I access registered users data?
+= How can admin access registered users data?
 
 All the users registered via the registration forms and their data can be accessed from the Users menu in the WordPress Dashboard.
+
+= Can a user edit their profile informaton after registration?
+
+Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available. 
+
+= Does the plugin come with a login form as well?
+
+Yes, the plugin has a shortcode for the login form.
 
 == Screenshots ==
 
