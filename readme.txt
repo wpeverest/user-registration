@@ -300,36 +300,4 @@ All the users registered via the registration forms and their data can be access
 * Dev - Filter to override user role
 * Dev - Filter to update settings on settings page
 
-= 1.5.3 - 10/12/2018 =
-* Tweak - Conditionally load flatpickr if only form has date field.
-* Fix   - Enqueque CSS on block editor
-
-= 1.5.2 - 28/11/2018 =
-* Fix - Remove cursor not allowed CSS for flat template
-
-= 1.5.1 - 27/11/2018 =
-* Add - Gutenberg form selection block
-* Add - Redirect option on registration page for logged in users
-* Add - Hooks for form custom class and before user registration form
-* Fix - Redirect after login issue on page builders and widgets
-* Fix - Server side validation for google reCaptcha
-* Fix - Empty error messages if exists form backend validation
-* Fix - Multiple occurrence of similar message after form submission
-* Fix - Required field naming readability on backend form submit
-* Fix - Translated error message issue on form submit
-* Fix - CSV export issue due to already sent headers
-* Tweak - Display (previously hidden) Option to insert myaccount page on settings
-* Tweak - Remove applied filter to change lost password url on admin side
-* Tweak - Redirect option from myaccount shortcode too
-
-= 1.5.0 - 30/10/2018 =
-* Feature - CSV Export of user data
-* Feature - Customizable minimum password strength
-* Add - Privacy policy text
-* Add - Smart tags for status change emails
-* Fix - Passwords including characters such as apostrophe (')
-* Fix - Email header including line break
-* Fix - Load FlatPickr on mobile devices too
-* Fix - File link to the email using smart tag
-
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
