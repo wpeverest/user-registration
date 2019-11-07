@@ -120,8 +120,8 @@
 
 	.description {
 		display: block;
-		font-size: 12px;
-		line-height: 1.25;
+		font-size: 14px;
+		line-height: 1.5;
 	}
 
 	.ur-form-row {
@@ -141,7 +141,6 @@
 
 			.ur-field-item {
 				margin-bottom: 20px;
-				font-size: 13px;
 
 				&.field-checkbox,
 				&.field-radio {
@@ -203,7 +202,7 @@
 			}
 
 			input[type="checkbox"],
-			input[type="radio"]{
+			input[type="radio"] {
 				font-size: 12px;
 				display: inline-block;
 				vertical-align: middle;
@@ -235,13 +234,17 @@
 			legend,
 			label {
 				display: block;
+				font-size: 14px;
 				margin-bottom: 10px;
 
 				.required {
-
 					text-decoration: none;
 					border: none;
 					color: $color_danger;
+				}
+
+				&.ur-label {
+					font-weight: bold;
 				}
 			}
 
@@ -377,8 +380,6 @@
 
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						margin-left: 5px;
 						color: $label_color;
 					}
@@ -395,6 +396,7 @@
 					}
 				}
 			}
+
 			input[type="submit"],
 			button[type="submit"] {
 				background: $input_background_color;
@@ -449,8 +451,6 @@
 
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						color: $label_color;
 					}
 
@@ -459,7 +459,6 @@
 					}
 
 					.hide_show_password {
-
 						input[type="password"] {
 							padding-right: 50px;
 						}
@@ -494,10 +493,9 @@
 					button[type="button"]{
 						border-radius: 25px;
 					}
+
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						margin-left: 5px;
 						color: $label_color;
 					}
@@ -531,7 +529,6 @@
 			form {
 				.ur-form-row {
 					.ur-form-grid {
-
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -555,6 +552,7 @@
 						}
 					}
 				}
+
 				input[type="submit"],
 				button[type="submit"] {
 					border-radius:2px;
