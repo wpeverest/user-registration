@@ -525,6 +525,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 									$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
 
+									$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
+									$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
+
 									break;
 
 								case 'privacy_policy':

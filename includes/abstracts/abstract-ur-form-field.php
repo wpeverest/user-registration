@@ -181,6 +181,12 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-mode'] = $data['advance_setting']->enable_date_range;
 		}
 
+		if ( isset( $data['advance_setting']->date_localization ) ) {
+			wp_register_script( 'flatpickr-localization', 'https://npmcdn.com/flatpickr/dist/l10n/' . $data['advance_setting']->date_localization . '.js' );
+			wp_enqueue_script( 'flatpickr-localization', 'https://npmcdn.com/flatpickr/dist/l10n/' . $data['advance_setting']->date_localization . '.js' );
+			$form_data['custom_attributes']['data-locale'] = $data['advance_setting']->date_localization;
+		}
+
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 		}
