@@ -1146,6 +1146,8 @@
 								.select2-search__field {
 									height: auto;
 									min-width: 10px;
+									background: none;
+									margin: 0;
 								}
 							}
 						}
@@ -1348,7 +1350,6 @@
 			&::before {
 				width: 16px;
 				height: 16px;
-				line-height: 1;
 				font-size: 16px;
 				margin-right: 10px;
 				font-family: dashicons;
@@ -1713,6 +1714,7 @@ img.tips {
 		min-height: 28px;
 		border-radius: 4px;
 		line-height: 1.5;
+		border: 1px solid #ddd !important;
 
 		li {
 			margin: 0;
