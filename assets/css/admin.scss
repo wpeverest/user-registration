@@ -681,6 +681,12 @@
 		}
 	}
 
+	.select2 {
+		&.select2-container {
+			width: 100% !important;
+		}
+	}
+
 	.wp-picker-container {
 		.wp-picker-input-wrap {
 			label {
@@ -1736,6 +1742,7 @@ img.tips {
 			font-size: inherit;
 			font-weight: inherit;
 			padding: 3px 0;
+			margin: 0;
 			line-height: 1;
 			min-height: 26px;
 		}
