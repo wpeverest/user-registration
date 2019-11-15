@@ -5,14 +5,12 @@
 		transition: all 0.25s ease 0s;
 
 		&.button-icon {
-			height: 32px;
 			width: 32px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
+			padding: 0 0 2px;
 
 			.dashicons {
 				line-height: 1;
+				vertical-align: middle;
 			}
 		}
 
@@ -52,6 +50,7 @@
 	}
 
 	.button-secondary {
+		color: $color_gray_base;
 		background: $color_gray_four;
 		border-color: $color_gray_four;
 		box-shadow: 0 1px 0 $color_gray_four;
@@ -59,6 +58,7 @@
 		&:hover,
 		&:active,
 		&:focus {
+			color: $color_gray_base;
 			background: $color_gray_three;
 			border-color: $color_gray_three;
 			box-shadow: 0 1px 0 $color_gray_three;
