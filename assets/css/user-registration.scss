@@ -325,7 +325,7 @@
 		white-space: normal;
 		border: none;
 		cursor: pointer;
-		transition: 0.9s all ease-out;
+		transition: 0.35s all ease-out;
 	}
 
 	input[type="submit"] {
@@ -398,7 +398,9 @@
 			}
 
 			input[type="submit"],
-			button[type="submit"] {
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
 				background: $input_background_color;
 				border: 1px solid $label_color;
 				color: $label_color;
@@ -512,19 +514,20 @@
 					}
 				}
 			}
+
 			input[type="submit"],
-			button[type="submit"] {
-				background: $round-button;
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
 				border: 0 none;
 				color: $white;
 				border-radius:25px;
 				float: none;
-				width: calc(100% - 20px);
 				display: block;
-				margin: 0 auto;
-				padding: 15px 20px;
+				padding: 15px 25px;
 			}
 		}
+
 		&.ur-frontend-form--rounded-edge{
 			form {
 				.ur-form-row {
@@ -553,8 +556,11 @@
 					}
 				}
 
+
 				input[type="submit"],
-				button[type="submit"] {
+				button[type="submit"],
+				button.user-registration-multi-part-nav-prev,
+				button.user-registration-multi-part-nav-next {
 					border-radius:2px;
 				}
 			}
