@@ -1008,6 +1008,10 @@ jQuery(function ($) {
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
 			var node_type = $this_node.get(0).tagName.toLowerCase();
+			
+			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
+				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+			}
 			var event = 'change';
 			switch (node_type) {
 				case 'input':
@@ -1039,8 +1043,12 @@ jQuery(function ($) {
 			case 'input':
 				hidden_node.val($this_node.val());
 				break;
-			case 'select':
-				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+				case 'select':
+					if( 'country_advance_setting_default_value' === this_node_id ){
+						$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+					}else{
+						hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+					}
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());
