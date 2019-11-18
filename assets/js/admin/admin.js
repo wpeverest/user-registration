@@ -1014,6 +1014,7 @@ jQuery(function ($) {
 					$('.ur-settings-min-date').addClass('flatpickr-field').flatpickr({
 						disableMobile : true,
 						dateFormat    : $('.ur-settings-date-format').val(),
+						static        : true,
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-min-date').val(dateStr);
 						},
@@ -1026,6 +1027,7 @@ jQuery(function ($) {
 					$('.ur-settings-max-date').addClass('flatpickr-field').flatpickr({
 						disableMobile : true,
 						dateFormat    : $('.ur-settings-date-format').val(),
+						static        : true,
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-max-date').val(dateStr);
 						},
@@ -1055,6 +1057,7 @@ jQuery(function ($) {
 						flatpickr(".ur-settings-min-date", {
 							dateFormat  : $('.ur-settings-date-format').val(),
 							defaultDate : min_Date,
+							static        : true,
 							onChange    : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
 							},
@@ -1068,6 +1071,7 @@ jQuery(function ($) {
 						flatpickr(".ur-settings-max-date", {
 							dateFormat : $('.ur-settings-date-format').val(),
 							defaultDate : maxDate, 
+							static        : true,
 							onChange    : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
 							},
@@ -1082,11 +1086,12 @@ jQuery(function ($) {
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							dateFormat    : $('.ur-settings-date-format').val(),
+							static        : true,
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
 							},
 							onOpen: function(selectedDates, dateStr, instance) {
-								startpicker.set('maxDate', new Date($('.ur-settings-max-date').val()));
+								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
 							},
 						});
 					}else{
@@ -1099,6 +1104,7 @@ jQuery(function ($) {
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							dateFormat    : $('.ur-settings-date-format').val(),
+							static        : true,
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
 							},
