@@ -1017,6 +1017,9 @@ jQuery(function ($) {
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-min-date').val(dateStr);
 						},
+						onOpen: function(selectedDates, dateStr, instance) {
+							instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+						},
 					});
 				}
 				if('' === $('.ur-settings-max-date').val()){
@@ -1025,6 +1028,9 @@ jQuery(function ($) {
 						dateFormat    : $('.ur-settings-date-format').val(),
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-max-date').val(dateStr);
+						},
+						onOpen: function(selectedDates, dateStr, instance) {
+							instance.set('minDate', new Date($('.ur-settings-min-date').val()));
 						},
 					});
 				}
@@ -1044,24 +1050,30 @@ jQuery(function ($) {
 					$this_node.on('change', function () {
 						trigger_general_setting_date_format($(this));
 
-						var minDate = flatpickr.formatDate(new Date($('.ur-settings-min-date').val()), $(this).val())
-						$('.ur-settings-min-date').val(minDate);
+						var min_Date = flatpickr.formatDate(new Date($('.ur-settings-min-date').val()), $(this).val());
+						$('.ur-settings-min-date').val(min_Date);
 						flatpickr(".ur-settings-min-date", {
 							dateFormat  : $('.ur-settings-date-format').val(),
-							defaultDate : minDate,
+							defaultDate : min_Date,
 							onChange    : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
-							}
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+							},
 						} );
 
-						var maxDate = flatpickr.formatDate(new Date($('.ur-settings-max-date').val()), $(this).val())
+						var maxDate = flatpickr.formatDate(new Date($('.ur-settings-max-date').val()), $(this).val());
 						$('.ur-settings-max-date').val(maxDate);
 						flatpickr(".ur-settings-max-date", {
 							dateFormat : $('.ur-settings-date-format').val(),
-							defaultDate : maxDate,
+							defaultDate : maxDate, 
 							onChange    : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
-							}
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
+							},
 						} );
 					});
 					break;
@@ -1072,6 +1084,9 @@ jQuery(function ($) {
 							dateFormat    : $('.ur-settings-date-format').val(),
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								startpicker.set('maxDate', new Date($('.ur-settings-max-date').val()));
 							},
 						});
 					}else{
@@ -1086,6 +1101,9 @@ jQuery(function ($) {
 							dateFormat    : $('.ur-settings-date-format').val(),
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
 							},
 						});
 					}else{

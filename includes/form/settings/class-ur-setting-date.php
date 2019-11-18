@@ -70,7 +70,7 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'label'       => __( 'Enable Min-Max Date', 'user-registration' ),
 				'name'        => $this->field_id . '[enable_min_max]',
 				'class'       => $this->default_class . ' ur-settings-enable-min-max',
-				'default'     => 'true',
+				'default'     => 'false',
 				'required'    => false,
 				'options'     => array(
 					'true'  => 'Yes',
