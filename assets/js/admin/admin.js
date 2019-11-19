@@ -1046,9 +1046,8 @@ jQuery(function ($) {
 				case 'select':
 					if( 'country_advance_setting_default_value' === this_node_id ){
 						$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
-					}else{
-						hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 					}
+					hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());
