@@ -107,6 +107,9 @@ if ( 'bordered' === $form_template ) {
 					?>
 
 					<?php
+					$users_can_register = get_option( 'users_can_register', 'yes' );
+				
+				if ( $users_can_register ) {
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
 
 					if ( ! empty( $url_options ) ) {
@@ -127,6 +130,7 @@ if ( 'bordered' === $form_template ) {
 						}
 						echo '</p>';
 					}
+				}
 					?>
 					</p>
 					<?php do_action( 'user_registration_login_form_end' ); ?>
