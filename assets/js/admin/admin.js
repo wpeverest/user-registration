@@ -901,6 +901,8 @@ jQuery(function ($) {
 							general_setting_data['default_value'] = get_ur_data($(this) );
 					}
 
+				} else if ( 'html' === $(this).attr('data-field') ) {
+					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)).replace(/"/g, "'");
 				} else {
 					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
 				}
