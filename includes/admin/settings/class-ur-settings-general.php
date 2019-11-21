@@ -113,7 +113,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 					array(
 						'title'    => __( 'My account page', 'user-registration' ),
-						'desc'     => sprintf( __( 'Page contents: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
+						'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
 						'id'       => 'user_registration_myaccount_page_id',
 						'type'     => 'single_select_page',
 						'default'  => '',

@@ -117,7 +117,10 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
-							<?php echo esc_html( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' ) ); ?>
+							<?php
+							$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
+								echo ur_string_translation( $form_id, 'user_registration_form_setting_form_submit_label', $submit );
+							?>
 						</button>
 
 						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
