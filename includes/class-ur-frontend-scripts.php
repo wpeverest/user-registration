@@ -43,10 +43,9 @@ class UR_Frontend_Scripts {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ), 5 );
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
-
 	}
 
 	/**
@@ -187,7 +186,7 @@ class UR_Frontend_Scripts {
 			'flatpickr'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.17.0',
+				'version' => '4.5.1',
 			),
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),

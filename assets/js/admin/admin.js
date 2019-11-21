@@ -1051,41 +1051,12 @@ jQuery(function ($) {
 				case 'date_format':
 					$this_node.on('change', function () {
 						trigger_general_setting_date_format($(this));
-
-						var min_Date = flatpickr.formatDate(new Date($('.ur-settings-min-date').val()), $(this).val());
-						$('.ur-settings-min-date').val(min_Date);
-						flatpickr(".ur-settings-min-date", {
-							dateFormat  : $('.ur-settings-date-format').val(),
-							defaultDate : min_Date,
-							static        : true,
-							onChange    : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-min-date').val(dateStr);
-							},
-							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
-							},
-						} );
-
-						var maxDate = flatpickr.formatDate(new Date($('.ur-settings-max-date').val()), $(this).val());
-						$('.ur-settings-max-date').val(maxDate);
-						flatpickr(".ur-settings-max-date", {
-							dateFormat : $('.ur-settings-date-format').val(),
-							defaultDate : maxDate, 
-							static        : true,
-							onChange    : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-max-date').val(dateStr);
-							},
-							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
-							},
-						} );
 					});
 					break;
 				case 'min_date':
 					if('true' === $('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
-							dateFormat    : $('.ur-settings-date-format').val(),
 							static        : true,
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
@@ -1103,7 +1074,6 @@ jQuery(function ($) {
 					if('true' === $('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
-							dateFormat    : $('.ur-settings-date-format').val(),
 							static        : true,
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
