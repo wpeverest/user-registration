@@ -144,7 +144,7 @@ Yes, the plugin has a shortcode for the login form.
 = 1.7.4 - 21/11/2019 =
 * Feature - WPML Plugin Compatibility.
 * Tweak   - Country Field Default Value.
-* Tweak   - Icons alignment after update Wordpress v5.3.
+* Tweak   - Icons alignment to support WordPress v5.3.
 * Fix     - HTML field Form Duplication.
 
 = 1.7.3 - 04/10/2019 =
