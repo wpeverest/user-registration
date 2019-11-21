@@ -1584,3 +1584,22 @@ function ur_delete_expired_transients() {
 	return absint( $rows + $rows2 );
 }
 add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
+
+/**
+ * String translation function.
+ *
+ * @since 1.7.3
+ *
+ * @param int    $form_id Form ID.
+ * @param string $field_id Field ID.
+ * @param mixed  $variable To be translated for WPML compatibility.
+ */
+function ur_string_translation( $form_id, $field_id, $variable ) {
+	if ( function_exists( 'icl_register_string' ) ) {
+		icl_register_string( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+	}
+	if ( function_exists( 'icl_t' ) ) {
+		$variable = icl_t( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+	}
+	return $variable;
+}
