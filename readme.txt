@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.2
-Stable tag: 1.7.3
+Tested up to: 5.3
+Stable tag: 1.7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -140,6 +140,12 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.7.4 - 21/11/2019 =
+* Feature - WPML Plugin Compatibility.
+* Tweak   - Country Field Default Value.
+* Tweak   - Icons alignment after update Wordpress v5.3.
+* Fix     - HTML field Form Duplication.
 
 = 1.7.3 - 04/10/2019 =
 * Fix - Form ID being empty.
