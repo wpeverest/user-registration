@@ -290,8 +290,12 @@
 			input {
 				&.code {
 					width: 265px;
-					height: 30px;
+					height: 33px;
 					padding: 0 6px;
+					margin: 0;
+					border-color: $border_color;
+					background-color: $color_gray_five;
+					border-radius: 3px 0 0 3px;
 				}
 			}
 		}
@@ -308,11 +312,12 @@
 
 		#copy-shortcode {
 			margin-left: -5px;
-			border-radius: 0 3px 3px 0;
+			border-radius: 0 4px 4px 0;
 
 			svg {
-				fill: #ffffff;
-				margin-top: 4px;
+				fill: $white;
+				margin-bottom: 5px;
+				vertical-align: middle;
 			}
 		}
 	}
@@ -676,6 +681,12 @@
 		}
 	}
 
+	.select2 {
+		&.select2-container {
+			width: 100% !important;
+		}
+	}
+
 	.wp-picker-container {
 		.wp-picker-input-wrap {
 			label {
@@ -846,6 +857,7 @@
 	.ui-widget select,
 	select {
 		width: 100%;
+		max-width: 100%;
 		height: 32px;
 		display: block;
 		color: $color_gray_one;
@@ -958,7 +970,6 @@
 				background: none;
 				font-size: 16px;
 				width: auto;
-				height: auto;
 				padding: 4px 8px;
 				border-color: transparent;
 				pointer-events: none;
@@ -1141,6 +1152,8 @@
 								.select2-search__field {
 									height: auto;
 									min-width: 10px;
+									background: none;
+									margin: 0;
 								}
 							}
 						}
@@ -1343,7 +1356,6 @@
 			&::before {
 				width: 16px;
 				height: 16px;
-				line-height: 1;
 				font-size: 16px;
 				margin-right: 10px;
 				font-family: dashicons;
@@ -1687,7 +1699,7 @@ img.tips {
 	}
 
 	.select2-search__field {
-		min-width: 150px;
+		min-width: 20px;
 	}
 
 	.select2-selection--single {
@@ -1706,8 +1718,9 @@ img.tips {
 
 	.select2-selection--multiple {
 		min-height: 28px;
-		border-radius: 0;
+		border-radius: 4px;
 		line-height: 1.5;
+		border: 1px solid #ddd !important;
 
 		li {
 			margin: 0;
@@ -1729,6 +1742,9 @@ img.tips {
 			font-size: inherit;
 			font-weight: inherit;
 			padding: 3px 0;
+			margin: 0;
+			line-height: 1;
+			min-height: 26px;
 		}
 	}
 }
@@ -1746,8 +1762,9 @@ img.tips {
 	pointer-events: none;
 }
 
-.user-registration table.form-table dashicons .dashicons, .dashicons{
-	line-height: inherit;
+.user-registration table.form-table .dashicons {
+	margin-bottom: 2px;
+	vertical-align: middle;
 }
 
 #smart-tags{

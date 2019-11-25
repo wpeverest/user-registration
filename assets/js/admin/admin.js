@@ -901,6 +901,8 @@ jQuery(function ($) {
 							general_setting_data['default_value'] = get_ur_data($(this) );
 					}
 
+				} else if ( 'html' === $(this).attr('data-field') ) {
+					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)).replace(/"/g, "'");
 				} else {
 					general_setting_data[$(this).attr('data-field')] = get_ur_data($(this)) ;
 				}
@@ -1089,6 +1091,10 @@ jQuery(function ($) {
 					break;
 			}
 			var node_type = $this_node.get(0).tagName.toLowerCase();
+			
+			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
+				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+			}
 			var event = 'change';
 			switch (node_type) {
 				case 'input':
@@ -1120,8 +1126,11 @@ jQuery(function ($) {
 			case 'input':
 				hidden_node.val($this_node.val());
 				break;
-			case 'select':
-				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+				case 'select':
+					if( 'country_advance_setting_default_value' === this_node_id ){
+						$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+					}
+					hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());

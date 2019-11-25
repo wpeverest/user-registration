@@ -128,7 +128,7 @@ class UR_Frontend_Form_Handler {
 	 * @param array $post_content_array Post Content Array.
 	 * @return array
 	 */
-	private static function get_form_field_data( $post_content_array ) {
+	public static function get_form_field_data( $post_content_array ) {
 		$form_field_data_array = array();
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
@@ -220,7 +220,7 @@ class UR_Frontend_Form_Handler {
 	 * @param  obj $form_data Form data.
 	 * @return object
 	 */
-	private static function get_sanitize_value( &$form_data ) {
+	public static function get_sanitize_value( &$form_data ) {
 
 		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
 		$fields    = ur_get_registered_form_fields();
@@ -273,7 +273,7 @@ class UR_Frontend_Form_Handler {
 	 * @param  int   $form_id Form ID.
 	 * @return void
 	 */
-	private static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
+	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {

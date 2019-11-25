@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php
 							}
 							?>
-							<button id="ur-full-screen-mode" class="button button-secondary button-large closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
+							<button id="ur-full-screen-mode" class="button button-secondary button-large button-icon closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
 							<?php if ( isset( $preview_link ) ) { ?>
 								<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
 							<?php } ?>

@@ -120,8 +120,8 @@
 
 	.description {
 		display: block;
-		font-size: 12px;
-		line-height: 1.25;
+		font-size: 14px;
+		line-height: 1.5;
 	}
 
 	.ur-form-row {
@@ -141,7 +141,6 @@
 
 			.ur-field-item {
 				margin-bottom: 20px;
-				font-size: 13px;
 
 				&.field-checkbox,
 				&.field-radio {
@@ -203,7 +202,7 @@
 			}
 
 			input[type="checkbox"],
-			input[type="radio"]{
+			input[type="radio"] {
 				font-size: 12px;
 				display: inline-block;
 				vertical-align: middle;
@@ -235,13 +234,17 @@
 			legend,
 			label {
 				display: block;
+				font-size: 14px;
 				margin-bottom: 10px;
 
 				.required {
-
 					text-decoration: none;
 					border: none;
 					color: $color_danger;
+				}
+
+				&.ur-label {
+					font-weight: bold;
 				}
 			}
 
@@ -322,7 +325,7 @@
 		white-space: normal;
 		border: none;
 		cursor: pointer;
-		transition: 0.9s all ease-out;
+		transition: 0.35s all ease-out;
 	}
 
 	input[type="submit"] {
@@ -377,8 +380,6 @@
 
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						margin-left: 5px;
 						color: $label_color;
 					}
@@ -395,8 +396,11 @@
 					}
 				}
 			}
+
 			input[type="submit"],
-			button[type="submit"] {
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
 				background: $input_background_color;
 				border: 1px solid $label_color;
 				color: $label_color;
@@ -449,8 +453,6 @@
 
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						color: $label_color;
 					}
 
@@ -459,7 +461,6 @@
 					}
 
 					.hide_show_password {
-
 						input[type="password"] {
 							padding-right: 50px;
 						}
@@ -494,10 +495,9 @@
 					button[type="button"]{
 						border-radius: 25px;
 					}
+
 					legend,
 					label {
-						font-weight: 600;
-						line-height: 2.5;
 						margin-left: 5px;
 						color: $label_color;
 					}
@@ -514,24 +514,24 @@
 					}
 				}
 			}
+
 			input[type="submit"],
-			button[type="submit"] {
-				background: $round-button;
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
 				border: 0 none;
 				color: $white;
 				border-radius:25px;
 				float: none;
-				width: calc(100% - 20px);
 				display: block;
-				margin: 0 auto;
-				padding: 15px 20px;
+				padding: 15px 25px;
 			}
 		}
+
 		&.ur-frontend-form--rounded-edge{
 			form {
 				.ur-form-row {
 					.ur-form-grid {
-
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -555,8 +555,12 @@
 						}
 					}
 				}
+
+
 				input[type="submit"],
-				button[type="submit"] {
+				button[type="submit"],
+				button.user-registration-multi-part-nav-prev,
+				button.user-registration-multi-part-nav-next {
 					border-radius:2px;
 				}
 			}

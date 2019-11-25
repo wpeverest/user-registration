@@ -29,12 +29,12 @@
 	</rule>
 	<rule ref="WordPress.VIP.ValidatedSanitizedInput">
 		<properties>
-			<property name="customSanitizingFunctions" type="array" value="ur_clean,ur_sanitize_tooltip" />
+			<property name="customSanitizingFunctions" type="array" value="ur_clean,ur_sanitize_tooltip,ur_string_translation" />
 		</properties>
 	</rule>
 	<rule ref="WordPress.XSS.EscapeOutput">
 		<properties>
-			<property name="customEscapingFunctions" type="array" value="ur_help_tip,ur_sanitize_tooltip" />
+			<property name="customEscapingFunctions" type="array" value="ur_help_tip,ur_sanitize_tooltip,ur_string_translation" />
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
