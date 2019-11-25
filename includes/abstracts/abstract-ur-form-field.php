@@ -159,9 +159,8 @@ abstract class UR_Form_Field {
 			array_push( $form_data['input_class'], $data['advance_setting']->custom_class );
 		}
 
-		$form_data['custom_attributes']['data-label'] = $data['general_setting']->label;
-
 		if ( isset( $data['advance_setting']->date_format ) ) {
+			update_option( 'user_registration_date_format', $data['advance_setting']->date_format );
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 

@@ -1015,7 +1015,6 @@ jQuery(function ($) {
 				if('' === $('.ur-settings-min-date').val()){
 					$('.ur-settings-min-date').addClass('flatpickr-field').flatpickr({
 						disableMobile : true,
-						dateFormat    : $('.ur-settings-date-format').val(),
 						static        : true,
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-min-date').val(dateStr);
@@ -1028,7 +1027,6 @@ jQuery(function ($) {
 				if('' === $('.ur-settings-max-date').val()){
 					$('.ur-settings-max-date').addClass('flatpickr-field').flatpickr({
 						disableMobile : true,
-						dateFormat    : $('.ur-settings-date-format').val(),
 						static        : true,
 						onChange      : function(selectedDates, dateStr, instance) {
 							$('.ur-settings-max-date').val(dateStr);
