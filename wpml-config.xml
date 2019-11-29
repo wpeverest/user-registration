@@ -1,0 +1,35 @@
+<wpml-config>
+	<admin-texts>
+		<key name="user_registration_successful_form_submission_message_manual_registation" />
+		<key name="user_registration_successful_form_submission_message_email_confirmation" />
+		<key name="user_registration_successful_form_submission_message_admin_approval" />
+		<key name="user_registration_form_submission_error_message_required_fields" />
+		<key name="user_registration_form_submission_error_message_email" />
+		<key name="user_registration_form_submission_error_message_website_URL" />
+		<key name="user_registration_form_submission_error_message_number" />
+		<key name="user_registration_form_submission_error_message_confirm_email" />
+		<key name="user_registration_form_submission_error_message_confirm_password" />
+		<key name="user_registration_form_submission_error_message_recaptcha" />
+
+		<key name="user_registration_admin_email_subject" />
+		<key name="user_registration_admin_email" />
+		<key name="user_registration_awaiting_admin_approval_email_subject" />
+		<key name="user_registration_awaiting_admin_approval_email" />
+		<key name="user_registration_email_confirmation_subject" />
+		<key name="user_registration_email_confirmation" />
+		<key name="user_registration_registration_denied_email_subject" />
+		<key name="user_registration_registration_denied_email" />
+		<key name="user_registration_successfully_registered_email_subject" />
+		<key name="user_registration_successfully_registered_email" />
+		<key name="user_registration_registration_pending_email_subject" />
+		<key name="user_registration_registration_pending_email" />
+		<key name="user_registration_registration_approved_email_subject" />
+		<key name="user_registration_registration_approved_email" />
+		<key name="user_registration_reset_password_email_subject" />
+		<key name="user_registration_reset_password_email" />
+		<key name="user_registration_profile_details_changed_email_subject" />
+		<key name="user_registration_profile_details_changed_email" />
+
+		<key name="user_registration_general_setting_registration_label" />
+	</admin-texts>
+</wpml-config>
