@@ -1089,7 +1089,7 @@ jQuery(function ($) {
 					break;
 			}
 			var node_type = $this_node.get(0).tagName.toLowerCase();
-			
+
 			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
 				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 			}

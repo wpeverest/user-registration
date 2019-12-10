@@ -513,21 +513,30 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
 
-									$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
-									$fields[ $field_index ]['attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
+									if( ! empty( $field->advance_setting->min_date ) ) {
+										$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+										$fields[ $field_index ]['attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
+									}
 
-									$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
-									$fields[ $field_index ]['attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+									if( ! empty( $field->advance_setting->max_date ) ) {
+										$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+										$fields[ $field_index ]['attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+									}
 
-									$set_current_date                    = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
-									$fields[ $field_index ]['attributes']['data-default-date'] = $set_current_date;
+									if( ! empty( $field->advance_setting->set_current_date ) ) {
+										$set_current_date                    = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+										$fields[ $field_index ]['attributes']['data-default-date'] = $set_current_date;
+									}
 
-									$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
-									$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
+									if( ! empty( $field->advance_setting->enable_date_range ) ) {
+										$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+										$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
+									}
 
-									$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
-									$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
-
+									if( ! empty( $field->advance_setting->date_localization ) ) {
+										$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
+										$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
+									}
 									break;
 
 								case 'privacy_policy':
