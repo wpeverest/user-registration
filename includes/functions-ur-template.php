@@ -625,6 +625,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
  *
  * @return string
  */
+
 function ur_logout_url( $redirect = '' )
 {
 	$logout_endpoint = get_option('user_registration_logout_endpoint');
@@ -634,6 +635,10 @@ function ur_logout_url( $redirect = '' )
 		preg_match('/' . get_shortcode_regex() . '/s', $post_content, $matches);
 
 		$attributes = shortcode_parse_atts( $matches[3] );
+		/**
+		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
+		 * @since  1.7.5
+		 */
 		if( isset( $attributes['logout_redirect'] ) ) {
 			$redirect = isset( $attributes['logout_redirect']) ? $attributes['logout_redirect'] : '';
 			$redirect = trim( $redirect, ']' );
