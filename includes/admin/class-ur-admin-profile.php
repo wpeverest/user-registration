@@ -247,16 +247,33 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											  rows="5"
 											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
-								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 									<?php
-									$value = $this->get_user_meta( $user->ID, $key );
+									$value           = $this->get_user_meta( $user->ID, $key );
+									// following code is for making date format compatiple with flatpickr.
+									$attribute_array = explode( ' ', $attribute_string );
+									$date_format     = '';
+									$data_mode       = '';
+									foreach ($attribute_array as $attribute) {
+										$attribute_key_value = explode('=', $attribute);
+										if ('data-date-format' === $attribute_key_value[0]) {
+											$date_format = $attribute_key_value[1];
+											if( '"F' == $date_format ){
+												$date_format = "F j,Y";
+											}
+										}
+										if ('data-mode' === $attribute_key_value[0]) {
+											$data_mode = $attribute_key_value[1];
+										}
+									}
+									error_log($value);
 									?>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
-												   id="<?php echo esc_attr( $key ); ?>"
-												   value="<?php echo esc_attr( $value ); ?>"
-												   data-default-date = "<?php echo esc_attr( $value ); ?>"
-												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-												<?php echo $attribute_string; ?>
+										   id="<?php echo esc_attr( $key ); ?>"
+										   value="<?php $this->get_date_field_value( $data_mode, $value, $date_format );?>"
+										   data-default-date = "<?php $this->get_date_field_value( $data_mode, $value, $date_format );?>"
+										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+										<?php echo $attribute_string; ?>
 											/>
 
 									<?php
@@ -361,6 +378,25 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			}
 
 			return $value;
+		}
+
+		/**
+		 * Get Date Field value with proper format.
+		 * @param $data_mode Date Range
+		 * @param $value Date Value
+		 * @param $date_format Date Format.
+		 */
+		protected  function get_date_field_value( $data_mode, $value, $date_format ) {
+			if( "range" == trim($data_mode, '"') ) {
+				$range_value = explode(' to ', $value );
+				if( is_array( $range_value ) ) {
+					echo esc_attr( trim(date( $date_format, strtotime( $range_value[0] ) ), '"') . ' to ' . trim(date( $date_format, strtotime( $range_value[1] ) ), '"') );
+				}else{
+					echo esc_attr( '' !== $value ? date( $date_format, strtotime( $value ) ) : '' );
+				}
+			}else{
+				echo esc_attr( '' !== $value ? date( $date_format, strtotime( $value ) ) : '' );
+			}
 		}
 
 		/**
