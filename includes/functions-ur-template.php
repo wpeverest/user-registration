@@ -27,9 +27,11 @@ function ur_template_redirect() {
 
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) {
 		// Logout
-		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) );
+		$redirect_url = str_replace('/user-logout','', $wp->request );
+		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
+
 		// Redirect to the correct logout endpoint.
 		wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		exit;
@@ -54,7 +56,7 @@ function ur_login_template_redirect() {
 		$redirect_url = trim( $redirect_url, '"' );
 		$redirect_url = trim( $redirect_url, "'" );
 
-		if ( ! empty( $redirect_url ) ) {
+		if ( ! empty( $redirect_url )) {
 			wp_redirect( $redirect_url );
 			exit();
 		}
@@ -143,11 +145,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	function user_registration_form_field( $key, $args, $value = null ) {
 
 		/* Conditional Logic codes */
-			$rules                      = array();
-			$rules['conditional_rules'] = isset( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';
-			$rules['logic_gate']        = isset( $args['logic_gate'] ) ? $args['logic_gate'] : '';
-			$rules['rules']             = isset( $args['rules'] ) ? $args['rules'] : array();
-			$rules['required']          = isset( $args['required'] ) ? $args['required'] : '';
+		$rules                      = array();
+		$rules['conditional_rules'] = isset( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';
+		$rules['logic_gate']        = isset( $args['logic_gate'] ) ? $args['logic_gate'] : '';
+		$rules['rules']             = isset( $args['rules'] ) ? $args['rules'] : array();
+		$rules['required']          = isset( $args['required'] ) ? $args['required'] : '';
 
 		foreach ( $rules['rules'] as $rules_key => $rule ) {
 			if ( empty( $rule['field'] ) ) {
@@ -155,9 +157,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			}
 		}
 
-			$rules['rules'] = array_values( $rules['rules'] );
+		$rules['rules'] = array_values( $rules['rules'] );
 
-			$rules = ( ! empty( $rules['rules'] ) && isset( $args['enable_conditional_logic'] ) ) ? wp_json_encode( $rules ) : '';
+		$rules = ( ! empty( $rules['rules'] ) && isset( $args['enable_conditional_logic'] ) ) ? wp_json_encode( $rules ) : '';
 		/*Conditonal Logic codes end*/
 
 		$defaults = array(
@@ -280,7 +282,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field = '<label class="ur-label checkbox ' . implode( ' ', $custom_attributes ) . '">
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-							 . $args['label'] . $required . '</label>';
+						. $args['label'] . $required . '</label>';
 				}
 				break;
 
@@ -316,7 +318,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
-												// If we have a blank option, select2 needs a placeholder
+					// If we have a blank option, select2 needs a placeholder
 					if ( ! empty( $args['placeholder'] ) ) {
 						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
@@ -380,15 +382,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-							trim( $option_text ),
-							array(
-								'a'    => array(
-									'href'  => array(),
-									'title' => array(),
-								),
-								'span' => array(),
-							)
-						) . '</label></li>';
+								trim( $option_text ),
+								array(
+									'a'    => array(
+										'href'  => array(),
+										'title' => array(),
+									),
+									'span' => array(),
+								)
+							) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -405,15 +407,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-					$args['label'],
-					array(
-						'a'    => array(
-							'href'  => array(),
-							'title' => array(),
-						),
-						'span' => array(),
-					)
-				) . $required . '</label>';
+						$args['label'],
+						array(
+							'a'    => array(
+								'href'  => array(),
+								'title' => array(),
+							),
+							'span' => array(),
+						)
+					) . $required . '</label>';
 			}
 
 			$field_html     .= $field;
@@ -641,10 +643,29 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
  *
  * @return string
  */
-function ur_logout_url( $redirect = '' ) {
-	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
-	$redirect        = $redirect ? $redirect : ur_get_page_permalink( 'myaccount' );
-	$redirect        = apply_filters( 'user_registration_redirect_after_logout', $redirect );
+
+function ur_logout_url( $redirect = '' )
+{
+	$logout_endpoint = get_option('user_registration_logout_endpoint');
+	if (( ur_post_content_has_shortcode('user_registration_login') || ur_post_content_has_shortcode( 'user_registration_my_account')) && is_user_logged_in()) {
+		global $post;
+		$post_content = isset( $post->post_content ) ? $post->post_content : '';
+		preg_match('/' . get_shortcode_regex() . '/s', $post_content, $matches);
+
+		$attributes = shortcode_parse_atts( $matches[3] );
+		/**
+		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
+		 * @since  1.7.5
+		 */
+		if( isset( $attributes['logout_redirect'] ) ) {
+			$redirect = isset( $attributes['logout_redirect']) ? $attributes['logout_redirect'] : '';
+			$redirect = trim( $redirect, ']' );
+			$redirect = trim( $redirect, '"' );
+			$redirect = trim( $redirect, "'" );
+			$redirect = '' != $redirect ? home_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
+		}
+	}
+	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint ) {
 		return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );

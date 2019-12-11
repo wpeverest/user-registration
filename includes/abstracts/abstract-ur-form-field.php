@@ -187,7 +187,7 @@ abstract class UR_Form_Field {
 		}
 
 		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );
-		
+
 		if ( isset( $form_data['label'] ) ) {
 			$form_data['label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $form_data['label'] );
 		}
@@ -197,7 +197,7 @@ abstract class UR_Form_Field {
 		if ( isset( $form_data['description'] ) ) {
 			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_description', $form_data['description'] );
 		}
-		
+
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 		}
@@ -315,8 +315,12 @@ abstract class UR_Form_Field {
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required ';
 					}
-
-					$general_setting_wrapper .= $extra_attribute . ' />';
+					$disabled = '';
+					// To make invite code field name non editable.
+					if($value === 'invite_code'){
+						$disabled = 'disabled';
+					}
+					$general_setting_wrapper .= $extra_attribute . ' '. $disabled .'/>';
 					break;
 
 				case 'radio':
