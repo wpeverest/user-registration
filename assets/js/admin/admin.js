@@ -1058,6 +1058,7 @@ jQuery(function ($) {
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
+							defaultDate   : new Date($('.ur-settings-min-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-min-date').val(dateStr);
 							},
@@ -1075,6 +1076,7 @@ jQuery(function ($) {
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
+							defaultDate   : new Date($('.ur-settings-max-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
 								$('.ur-settings-max-date').val(dateStr);
 							},
