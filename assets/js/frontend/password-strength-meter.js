@@ -48,7 +48,7 @@ jQuery(function ( $ ) {
 				meter.remove();
 				$(document.body).trigger('ur-password-strength-removed');
 			} else if ( 0 === meter.length ) {
-				password_field.closest( '.form-row' ).after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>');
+				password_field.closest( '.field-user_pass' ).after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>');
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
