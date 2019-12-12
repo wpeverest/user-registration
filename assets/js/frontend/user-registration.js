@@ -47,7 +47,7 @@
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
 					errorPlacement: function (error, element) {
-						if ('radio' === element.attr('type') || 'checkbox' === element.attr('type')) {
+						if ('radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type')  ) {
 							element.parent().parent().parent().append(error);
 						} else if (element.is('select') && element.attr('class').match(/date-month|date-day|date-year/)) {
 							if (element.parent().find('label.user-registration-error:visible').length === 0) {
@@ -326,7 +326,7 @@
 									$this.find( '#user_pass_error' ).remove();
 
 									var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
-									$this.find('.user-registration-password-strength').closest( '.form-row' ).append( error_msg_dom );
+									$this.find('.user-registration-password-hint').after( error_msg_dom );
 									$this.find('#user_pass').attr('aria-invalid',true);
 									$this.find('#user_pass').focus();
 								}
@@ -503,7 +503,7 @@
 					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
 						wrapper.find( '#user_pass_error' ).remove();
 						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
-						$this.closest( '.form-row' ).append( error_msg_dom );
+						wrapper.find('.user-registration-password-hint').after( error_msg_dom );
 					}
 				}
 			}
@@ -518,6 +518,14 @@
 		e.preventDefault();
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
 		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
+
+		if( $password_field.length === 0){
+			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_pass"]' );
+		}
+		if( $password_field.length === 0){
+			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_confirm_password"]' );
+		}
+
 		if( $password_field.length > 0 ) {
 			switch( current_task ) {
 				case 'show':
