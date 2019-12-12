@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 					array(
 						'title'    => __( 'Enable hide/show password', 'user-registration' ),
-						'desc'     => __( 'Check to enable hide/show password icon in login form.', 'user-registration' ),
+						'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 						'id'       => 'user_registration_login_option_hide_show_password',
 						'type'     => 'checkbox',
 						'desc_tip' => true,

@@ -43,11 +43,12 @@ jQuery(function ( $ ) {
 			var minimum_password_strength = wrapper.attr('data-minimum-password-strength');
 
 			var meter = wrapper.find('.user-registration-password-strength');
+			var password_field = wrapper.find('.password-input-group');
 			if ( '' === field.val() ) {
 				meter.remove();
 				$(document.body).trigger('ur-password-strength-removed');
 			} else if ( 0 === meter.length ) {
-				field.after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>');
+				password_field.closest( '.form-row' ).after('<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>');
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
