@@ -49,7 +49,7 @@ class UR_Admin_Notices {
 
 		if ( current_user_can( 'manage_user_registration' ) ) {
 			add_action( 'admin_print_styles', array( __CLASS__, 'add_notices' ) );
-			add_action( 'admin_print_scripts', array( __CLASS__, 'hide_unrelated_notices' ) );
+			add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		}
 	}
 
