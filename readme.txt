@@ -141,6 +141,14 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
+= 1.7.5 - 13/12/2019 =
+* Enhancement - Redirect URL after logout.
+* Enhancement - Password field eye icon.
+* Fix - Escaping attribute in checkbox field.
+* Fix - Remove admin notice from form builder.
+* Fix - Case sensitive in confirm password.
+* Fix - Invite code field name made non editable. 
+
 = 1.7.4 - 21/11/2019 =
 * Feature - WPML Plugin Compatibility.
 * Tweak   - Country Field Default Value.
