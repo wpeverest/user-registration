@@ -266,7 +266,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											$data_mode = $attribute_key_value[1];
 										}
 									}
-									error_log($value);
 									?>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
 										   id="<?php echo esc_attr( $key ); ?>"
