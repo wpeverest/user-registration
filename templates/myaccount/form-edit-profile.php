@@ -99,6 +99,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												}
 											}
 
+											if( 'phone' === $single_item->field_key ){
+												$field['phone_format'] = $single_item->general_setting->phone_format;
+												if( 'smart' === $field['phone_format']){
+													unset($field['input_mask']);
+												}
+											}
+
 											$filter_data = array(
 												'form_data' => $field,
 											);

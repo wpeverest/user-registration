@@ -339,6 +339,17 @@
 							return;
 						}
 
+						var $el = $( '.ur-smart-phone-field' );
+
+						if( 'true' === $el.attr('aria-invalid')){
+							var wrapper = $el.closest('p.form-row');
+							wrapper.find('#' + $el.data('id') + '-error').remove();
+							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">Please enter a valid phone number.</label>';
+							wrapper.append(phone_error_msg_dom);
+							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
+						}
+
 						event.preventDefault();
 						$this.find( '.ur-submit-button' ).prop( 'disabled', true );
 						var form_data;
