@@ -1,4 +1,4 @@
-my-account.js
+/* global  user_registration_params  */
 jQuery(function ( $ ) {
 
 	$('.profile-pic-remove').on('click', function (e) {
@@ -21,7 +21,7 @@ jQuery(function ( $ ) {
 			evt.preventDefault();
 			var wrapper = $el.closest('p.form-row');
 			wrapper.find('#' + $el.data('id') + '-error').remove();
-			var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">Please enter a valid phone number.</label>';
+			var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
 			wrapper.append(phone_error_msg_dom);
 			wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
 			return true;
