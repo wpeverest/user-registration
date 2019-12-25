@@ -335,10 +335,6 @@
 							}
 						}
 
-						if (!$this.valid()) {
-							return;
-						}
-
 						var $el = $( '.ur-smart-phone-field' );
 
 						if( 'true' === $el.attr('aria-invalid')){
@@ -348,6 +344,10 @@
 							wrapper.append(phone_error_msg_dom);
 							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
 							return true;
+						}
+
+						if (!$this.valid()) {
+							return;
 						}
 
 						event.preventDefault();
