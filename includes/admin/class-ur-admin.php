@@ -30,10 +30,7 @@ class UR_Admin {
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
-
-		if ( 'admin_approval' === get_option( 'user_registration_general_setting_login_options' ) ) {
-			new UR_Admin_User_List_Manager();
-		}
+		
 	}
 
 	/**
@@ -46,7 +43,7 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-
+		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 	}
 
