@@ -534,11 +534,17 @@
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
 		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
 
-		if( $password_field.length === 0){
+		if( $password_field.length === 0 ) {
 			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_pass"]' );
 		}
-		if( $password_field.length === 0){
+		if( $password_field.length === 0 ) {
 			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_confirm_password"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_registration_user_pass"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_registration_user_confirm_password"]' );
 		}
 
 		if( $password_field.length > 0 ) {
