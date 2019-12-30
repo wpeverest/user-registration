@@ -167,7 +167,7 @@ class UR_User_Approval {
 	 * @return \WP_Error
 	 * @throws \Exception
 	 */
-	public function check_status_on_login( WP_User $user ) {
+	public function check_status_on_login( WP_User $user, $password ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
 
