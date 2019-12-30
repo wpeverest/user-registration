@@ -114,6 +114,12 @@
 		padding: 0;
 	}
 
+	.register {
+		#node_recaptcha_register {
+			padding: 0 10px;
+		}
+	}
+
 	* {
 		box-sizing: border-box;
 	}
@@ -236,6 +242,7 @@
 				display: block;
 				font-size: 14px;
 				margin-bottom: 10px;
+				margin-top: 10px;
 
 				.required {
 					text-decoration: none;

@@ -9,6 +9,7 @@
 		<key name="user_registration_form_submission_error_message_number" />
 		<key name="user_registration_form_submission_error_message_confirm_email" />
 		<key name="user_registration_form_submission_error_message_confirm_password" />
+		<key name="user_registration_form_submission_error_message_phone_number" />
 		<key name="user_registration_form_submission_error_message_recaptcha" />
 
 		<key name="user_registration_admin_email_subject" />
