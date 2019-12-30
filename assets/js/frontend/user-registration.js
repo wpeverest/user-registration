@@ -47,14 +47,18 @@
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
 					errorPlacement: function (error, element) {
-						if ('radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type')  ) {
+						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
-						} else if (element.is('select') && element.attr('class').match(/date-month|date-day|date-year/)) {
+						} else if ( element.is('select') && element.attr('class').match(/date-month|date-day|date-year/) ) {
 							if (element.parent().find('label.user-registration-error:visible').length === 0) {
 								element.parent().find('select:last').after(error);
 							}
+						} else if( element.hasClass('ur-smart-phone-field') ) {
+							var wrapper = element.closest('p.form-row');
+							wrapper.find('#' + element.data('id') + '-error').remove();
+							wrapper.append(error);
 						} else {
-							if (element.hasClass('urfu-file-input')) {
+							if ( element.hasClass('urfu-file-input') ) {
 								error.insertAfter(element.parent().parent());
 							} else {
 								error.insertAfter(element);
@@ -333,6 +337,17 @@
 
 								return false;
 							}
+						}
+
+						var $el = $( '.ur-smart-phone-field' );
+
+						if( 'true' === $el.attr('aria-invalid')){
+							var wrapper = $el.closest('p.form-row');
+							wrapper.find('#' + $el.data('id') + '-error').remove();
+							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+							wrapper.append(phone_error_msg_dom);
+							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
 						}
 
 						if (!$this.valid()) {

@@ -341,6 +341,7 @@ class UR_Frontend_Scripts {
 					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),
 					'message_number_fields'            => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.', 'user-registration' ) ),
 					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_validate_phone_number'  => get_option( 'user_registration_form_submission_error_message_phone_number', __( 'Please enter a valid phone number.', 'user-registration' ) ),
 					'message_confirm_email_fields'     => get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched.', 'user-registration' ) ),
 					'ursL10n'                          => array(
 						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
