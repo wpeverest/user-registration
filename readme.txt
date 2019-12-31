@@ -143,7 +143,6 @@ Yes, the plugin has a shortcode for the login form.
 
 = 1.7.6 - 30/12/2019 =
 * Enhancement - Registered user source.
-* Enhancement - Add Phone Validation Message in Frontend messages.
 * Tweak - Remove inline css from recaptcha.
 * Fix - Email attachment hook mismatch arguments.
 * Fix - wp_authenticate_user filter mismatch arguments.
