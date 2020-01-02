@@ -337,7 +337,7 @@ class UR_Email_Confirmation {
 	 * @param  WP_User $user User instance
 	 * @return mixed
 	 */
-	public function check_email_status( WP_User $user ) {
+	public function check_email_status( WP_User $user, $password ) {
 
 		$email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
 

@@ -47,14 +47,18 @@
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
 					errorPlacement: function (error, element) {
-						if ('radio' === element.attr('type') || 'checkbox' === element.attr('type')) {
+						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
-						} else if (element.is('select') && element.attr('class').match(/date-month|date-day|date-year/)) {
+						} else if ( element.is('select') && element.attr('class').match(/date-month|date-day|date-year/) ) {
 							if (element.parent().find('label.user-registration-error:visible').length === 0) {
 								element.parent().find('select:last').after(error);
 							}
+						} else if( element.hasClass('ur-smart-phone-field') ) {
+							var wrapper = element.closest('p.form-row');
+							wrapper.find('#' + element.data('id') + '-error').remove();
+							wrapper.append(error);
 						} else {
-							if (element.hasClass('urfu-file-input')) {
+							if ( element.hasClass('urfu-file-input') ) {
 								error.insertAfter(element.parent().parent());
 							} else {
 								error.insertAfter(element);
@@ -326,13 +330,24 @@
 									$this.find( '#user_pass_error' ).remove();
 
 									var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
-									$this.find('.user-registration-password-strength').closest( '.form-row' ).append( error_msg_dom );
+									$this.find('.user-registration-password-hint').after( error_msg_dom );
 									$this.find('#user_pass').attr('aria-invalid',true);
 									$this.find('#user_pass').focus();
 								}
 
 								return false;
 							}
+						}
+
+						var $el = $( '.ur-smart-phone-field' );
+
+						if( 'true' === $el.attr('aria-invalid')){
+							var wrapper = $el.closest('p.form-row');
+							wrapper.find('#' + $el.data('id') + '-error').remove();
+							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+							wrapper.append(phone_error_msg_dom);
+							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
 						}
 
 						if (!$this.valid()) {
@@ -503,7 +518,7 @@
 					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
 						wrapper.find( '#user_pass_error' ).remove();
 						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
-						$this.closest( '.form-row' ).append( error_msg_dom );
+						wrapper.find('.user-registration-password-hint').after( error_msg_dom );
 					}
 				}
 			}
@@ -518,6 +533,20 @@
 		e.preventDefault();
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
 		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
+
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_pass"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_confirm_password"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_registration_user_pass"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_registration_user_confirm_password"]' );
+		}
+
 		if( $password_field.length > 0 ) {
 			switch( current_task ) {
 				case 'show':

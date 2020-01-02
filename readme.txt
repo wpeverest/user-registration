@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.3
-Stable tag: 1.7.4
+Tested up to: 5.3.2
+Stable tag: 1.7.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -140,6 +140,21 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.7.6 - 30/12/2019 =
+* Enhancement - Registered user source.
+* Tweak - Remove inline css from recaptcha.
+* Fix - Email attachment hook mismatch arguments.
+* Fix - wp_authenticate_user filter mismatch arguments.
+* Fix - Hide/show password enabled in edit profile.
+
+= 1.7.5 - 13/12/2019 =
+* Enhancement - Redirect URL after logout.
+* Enhancement - Password field eye icon.
+* Fix - Escaping attribute in checkbox field.
+* Fix - Remove admin notice from form builder.
+* Fix - Case sensitive in confirm password.
+* Fix - Invite code field name made non editable. 
 
 = 1.7.4 - 21/11/2019 =
 * Feature - WPML Plugin Compatibility.
