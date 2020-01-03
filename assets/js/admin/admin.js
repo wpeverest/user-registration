@@ -665,7 +665,9 @@ jQuery(function ($) {
 			ur_form_id = 0;
 		}
 
-		var form_setting_data = $('#ur-field-settings').serializeArray();
+		var form_setting_data = $('#ur-field-settings :not(.urcl-user-role-field)').serializeArray();
+
+		var conditional_roles_settings_data = get_form_conditional_role_data();
 
 		/** TODO:: Hanlde from multistep forms add-on if possible. */
 		var multipart_page_setting = $('#ur-multi-part-page-settings').serializeArray();
@@ -680,6 +682,7 @@ jQuery(function ($) {
 				form_name: $('#ur-form-name').val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
+				conditional_roles_settings_data: conditional_roles_settings_data,
 				multipart_page_setting: multipart_page_setting,
 			}
 		};
@@ -829,6 +832,45 @@ jQuery(function ($) {
 			}
 		}
 		return response;
+	}
+
+	function get_form_conditional_role_data() {
+		var form_data = [];
+		var single_row = $('.urcl-field-logic');
+
+		$.each(single_row, function () {
+			var grid_list_item = $(this).find('.urcl-user-role-field');
+			var all_field_data = [];
+			var assign_role = '';
+			$.each(grid_list_item, function () {
+				$field_key = $(this).attr('name').split('[');
+
+				if ( 'user_registration_form_conditional_user_role' === $field_key[0] ) {
+					assign_role =  $(this).val();
+					grid_list_item.splice( $(this) , 1); 
+				}
+			});
+
+			var conditional_group = $(this).find('.urcl-conditional-group');
+			$.each(conditional_group, function () {
+				var inner_conditions = [];
+				var grid_list_item = $(this).find('.urcl-user-role-field');
+				$.each(grid_list_item, function () {
+					var conditions = {
+						field_key:  $(this).attr('name'),
+						field_value:  $(this).val(),
+					};
+					inner_conditions.push( conditions );
+				});
+				all_field_data.push( inner_conditions );
+			});
+			var all_fields = {
+				assign_role:  assign_role,
+				conditions:  all_field_data,
+			};
+			form_data.push(all_fields);
+		});
+		return form_data;
 	}
 
 	function get_form_data() {
