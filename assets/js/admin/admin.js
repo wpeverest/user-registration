@@ -841,6 +841,7 @@ jQuery(function ($) {
 		$.each(single_row, function () {
 			var grid_list_item = $(this).find('.urcl-user-role-field');
 			var all_field_data = [];
+			var or_field_data = [];
 			var assign_role = '';
 			$.each(grid_list_item, function () {
 				$field_key = $(this).attr('name').split('[');
@@ -864,9 +865,29 @@ jQuery(function ($) {
 				});
 				all_field_data.push( inner_conditions );
 			});
+
+			var or_groups = $(this).find('.urcl-or-groups');
+			$.each(or_groups, function () {
+				var conditional_or_group = $(this).find('.urcl-conditional-or-group');
+				var or_data = [];
+				$.each(conditional_or_group, function () {
+					var inner_or_conditions = [];
+					var or_list_item = $(this).find('.urcl-user-role-field');
+					$.each(or_list_item, function () {
+						var or_conditions = {
+							field_key:  $(this).attr('name'),
+							field_value:  $(this).val(),
+						};
+						inner_or_conditions.push( or_conditions );
+					});
+					or_data.push( inner_or_conditions );
+				});
+				or_field_data.push( or_data );
+			});
 			var all_fields = {
 				assign_role:  assign_role,
 				conditions:  all_field_data,
+				or_conditions:  or_field_data,
 			};
 			form_data.push(all_fields);
 		});
