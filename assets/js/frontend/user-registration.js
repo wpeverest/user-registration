@@ -2,15 +2,65 @@
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
 (function ($) {
+	var passwords_not_matched = false;
+
 	var user_registration = {
 		$user_registration: $('.ur-frontend-form form.register'),
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
 			this.init_tiptip();
+			this.init_real_time_password_match();
 
 			// Inline validation
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
+		},
+		init_real_time_password_match: function () {
+			let error_message = `<p class="user-registration-error" id="password-not-matched-error">Passwords doesn't match!</p>`;
+
+			// Function to compare two passwords and show error message
+			function match_password( element1, element2 ) {
+				const password         = $( element1 ).val();
+				const confirm_password = $( element2 ).val();
+				const matched          = ( password === confirm_password );
+
+				$( '#password-not-matched-error' ).remove();
+
+				if ( ! matched ) {
+					passwords_not_matched = true;
+					$( element2 ).closest( '.form-row' ).after( error_message );
+				} else {
+					passwords_not_matched = false;
+				}
+			}
+
+			// Bind events for real time password matching
+			$( document ).on( 'focusout', '#user_confirm_password', function ( e ) {
+				match_password( '#user_pass', '#user_confirm_password' )
+			});
+			$( document ).on( 'focusout', '#user_pass', function ( e ) {
+				const password         = $( '#user_pass' ).val();
+				const confirm_password = $( '#user_confirm_password' ).val();
+
+				if ( confirm_password !== '' ) {
+					match_password( '#user_pass', '#user_confirm_password' )
+				} else if ( password === confirm_password ) {
+					match_password( '#user_pass', '#user_confirm_password' )
+				}
+			});
+			$( document ).on( 'focusout', '#password_2', function ( e ) {
+				match_password( '#password_1', '#password_2' )
+			});
+			$( document ).on( 'focusout', '#password_1', function ( e ) {
+				const password         = $( '#password_1' ).val();
+				const confirm_password = $( '#password_2' ).val();
+
+				if ( confirm_password !== '' ) {
+					match_password( '#password_1', '#password_2' )
+				} else if ( password === confirm_password ) {
+					match_password( '#password_1', '#password_2' )
+				}
+			});
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
@@ -347,6 +397,12 @@
 							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
 							wrapper.append(phone_error_msg_dom);
 							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
+						}
+
+						// Return if the passwords are not matched
+						if ( true === passwords_not_matched ) {
+							$this.find( '#user_pass, #user_confirm_password, #password_1, #password_2' ).attr( 'aria-invalid' ,true );
 							return true;
 						}
 
