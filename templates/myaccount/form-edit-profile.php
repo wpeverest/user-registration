@@ -37,8 +37,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							?>
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 							<?php
-								$max_size = wp_max_upload_size();
-								$max_size = size_format( $max_size );
+							$max_size = wp_max_upload_size();
+							$max_size = size_format( $max_size );
 							?>
 							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
 						</div>
@@ -60,69 +60,75 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 						<?php foreach ( $form_data_array as $data ) { ?>
 							<div class='ur-form-row'>
-							<?php
-							$width = floor( 100 / count( $data ) ) - count( $data );
+								<?php
+								$width = floor( 100 / count( $data ) ) - count( $data );
 
-							foreach ( $data as $grid_key => $grid_data ) {
-								$found_field = false;
+								foreach ( $data as $grid_key => $grid_data ) {
+									$found_field = false;
 
-								foreach ( $grid_data as $grid_data_key => $single_item ) {
-									$key = 'user_registration_' . $single_item->general_setting->field_name;
-									if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
-										$found_field = true;
+									foreach ( $grid_data as $grid_data_key => $single_item ) {
+										$key = 'user_registration_' . $single_item->general_setting->field_name;
+										if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
+											$found_field = true;
+										}
 									}
-								}
-								if ( $found_field ) {
-									?>
-									<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>" style="width:<?php echo $width; ?>%;">
-									<?php
-								}
-
-								foreach ( $grid_data as $grid_data_key => $single_item ) {
-									$key = 'user_registration_' . $single_item->general_setting->field_name;
-									if ( isset( $profile[ $key ] ) ) {
-										$field = $profile[ $key ];
+									if ( $found_field ) {
 										?>
-										<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
-											<?php
-											$readonly_fields = ur_readonly_profile_details_fields();
-											if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
-												$field['custom_attributes'] = array(
-													'readonly' => 'readonly',
-												);
-												if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
-													$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
-												}
-												if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
-													$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
-													$field['input_class'][]              = 'user-registration-help-tip';
-												}
-											}
+										<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>" style="width:<?php echo $width; ?>%;">
+										<?php
+									}
 
-											if( 'phone' === $single_item->field_key ){
-												$field['phone_format'] = $single_item->general_setting->phone_format;
-												if( 'smart' === $field['phone_format'] ){
-													unset( $field['input_mask'] );
-												}
-											}
-
-											$filter_data = array(
-												'form_data' => $field,
+									foreach ( $grid_data as $grid_data_key => $single_item ) {
+										$key = 'user_registration_' . $single_item->general_setting->field_name;
+										if ( isset( $profile[ $key ] ) ) {
+											$field = $profile[ $key ];
+											$field['input_class'] = array( 'ur-edit-profile-field ' );
+											$advance_data = array(
+												'general_setting' => (object) $single_item->general_setting,
+												'advance_setting' => (object) $single_item->advance_setting
 											);
-
-											$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
-											$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-
-											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
 											?>
+											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+												<?php
+												$readonly_fields = ur_readonly_profile_details_fields();
+												if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
+													$field['custom_attributes'] = array(
+														'readonly' => 'readonly',
+													);
+													if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+														$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+													}
+													if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+														$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+														$field['input_class'][]              = 'user-registration-help-tip';
+													}
+												}
+
+												if( 'phone' === $single_item->field_key ){
+													$field['phone_format'] = $single_item->general_setting->phone_format;
+													if( 'smart' === $field['phone_format'] ){
+														unset( $field['input_mask'] );
+													}
+												}
+
+												$filter_data = array(
+													'form_data' => $field,
+													'data' => $advance_data
+												);
+
+												$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
+												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+
+												user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
+												?>
+											</div>
+										<?php } ?>
+									<?php } ?>
+
+									<?php if ( $found_field ) { ?>
 										</div>
 									<?php } ?>
 								<?php } ?>
-
-								<?php if ( $found_field ) { ?>
-									</div>
-								<?php } ?>
-							<?php } ?>
 							</div>
 						<?php } ?>
 
