@@ -34,33 +34,39 @@
 				}
 			}
 
-			// Bind events for real time password matching
-			$( document ).on( 'focusout', '#user_confirm_password', function ( e ) {
-				match_password( '#user_pass', '#user_confirm_password' )
-			});
-			$( document ).on( 'focusout', '#user_pass', function ( e ) {
-				const password         = $( '#user_pass' ).val();
-				const confirm_password = $( '#user_confirm_password' ).val();
-
-				if ( confirm_password !== '' ) {
+			// Bind events for real time password matching ( For Frontend )
+			if ( $( '#user_confirm_password' ).length ) {
+				$( document ).on( 'focusout', '#user_confirm_password', function ( e ) {
 					match_password( '#user_pass', '#user_confirm_password' )
-				} else if ( password === confirm_password ) {
-					match_password( '#user_pass', '#user_confirm_password' )
-				}
-			});
-			$( document ).on( 'focusout', '#password_2', function ( e ) {
-				match_password( '#password_1', '#password_2' )
-			});
-			$( document ).on( 'focusout', '#password_1', function ( e ) {
-				const password         = $( '#password_1' ).val();
-				const confirm_password = $( '#password_2' ).val();
+				});
+				$( document ).on( 'focusout', '#user_pass', function ( e ) {
+					const password         = $( '#user_pass' ).val();
+					const confirm_password = $( '#user_confirm_password' ).val();
+	
+					if ( confirm_password !== '' ) {
+						match_password( '#user_pass', '#user_confirm_password' )
+					} else if ( password === confirm_password ) {
+						match_password( '#user_pass', '#user_confirm_password' )
+					}
+				});
+			}
+			
+			// Bind events for real time password matching ( For Change Password Form )
+			if ( $( '#password_2' ).length ) {
+				$( document ).on( 'focusout', '#password_2', function ( e ) {
+					match_password( '#password_1', '#password_2' )
+				});
+				$( document ).on( 'focusout', '#password_1', function ( e ) {
+					const password         = $( '#password_1' ).val();
+					const confirm_password = $( '#password_2' ).val();
 
-				if ( confirm_password !== '' ) {
-					match_password( '#password_1', '#password_2' )
-				} else if ( password === confirm_password ) {
-					match_password( '#password_1', '#password_2' )
-				}
-			});
+					if ( confirm_password !== '' ) {
+						match_password( '#password_1', '#password_2' )
+					} else if ( password === confirm_password ) {
+						match_password( '#password_1', '#password_2' )
+					}
+				});
+			}
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
