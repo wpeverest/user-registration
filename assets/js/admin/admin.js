@@ -1298,7 +1298,7 @@ jQuery(function ($) {
 		}
 	}, 2);
 
-	$(document).on('click', '#ur-tab-registered-fields h2, #ur-setting-form div h2', function () {
+	$(document).on('click', '.ur-toggle-heading', function () {
 		if ($(this).hasClass('closed')) {
 			$(this).removeClass('closed');
 		} else {
@@ -1306,7 +1306,9 @@ jQuery(function ($) {
 		}
 		var field_list = $(this).find(' ~ .ur-registered-list')[0];
 		$(field_list).slideToggle();
-		$(this).siblings('div').slideToggle();
+
+		// For `Field Options` section
+		$(this).siblings( 'div' ).slideToggle();
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {
