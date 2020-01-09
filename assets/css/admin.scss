@@ -1789,14 +1789,9 @@ img.tips {
 	background-color:#fff
 }
 
-#ur-tab-registered-fields {
-	h2 {
+.ur-registered-inputs {
+	.ur-toggle-heading {
 		cursor: pointer;
-
-		&:hover, &:focus {
-			// box-shadow: 0 0 20px rgba(0,0,0,.2);
-
-		}
 
 		&:before {
 			content: '\f142';
@@ -1813,7 +1808,7 @@ img.tips {
 
 		&.closed {
 			&:before {
-				content: '\f140'!important;
+				content: '\f140';
 			}
 		}
 	}
