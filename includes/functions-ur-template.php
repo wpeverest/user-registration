@@ -27,7 +27,7 @@ function ur_template_redirect() {
 
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) {
 		// Logout
-		$redirect_url = str_replace('/user-logout','', $wp->request );
+		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -56,7 +56,7 @@ function ur_login_template_redirect() {
 		$redirect_url = trim( $redirect_url, '"' );
 		$redirect_url = trim( $redirect_url, "'" );
 
-		if ( ! empty( $redirect_url )) {
+		if ( ! empty( $redirect_url ) ) {
 			wp_redirect( $redirect_url );
 			exit();
 		}
@@ -274,7 +274,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 
 						$field .= '<li class="ur-checkbox-list">';
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr($choice_index) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . esc_attr($value) . ' /> ';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . esc_attr( $value ) . ' /> ';
 						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						$checkbox_start++;
 					}
@@ -292,8 +292,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				if ( empty( $extra_params ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
-					$field .= '<span class="password-input-group">';
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field          .= '<span class="password-input-group">';
+					$field          .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 						$field .= '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
 					}
@@ -395,15 +395,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-								trim( $option_text ),
-								array(
-									'a'    => array(
-										'href'  => array(),
-										'title' => array(),
-									),
-									'span' => array(),
-								)
-							) . '</label></li>';
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -420,15 +420,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-						$args['label'],
-						array(
-							'a'    => array(
-								'href'  => array(),
-								'title' => array(),
-							),
-							'span' => array(),
-						)
-					) . $required . '</label>';
+					$args['label'],
+					array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'span' => array(),
+					)
+				) . $required . '</label>';
 			}
 
 			$field_html     .= $field;
@@ -529,16 +529,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
 
-						if ( in_array( 'user_registration_' . $field_name, $all_meta_value_keys ) ) {
-							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => $field_label,
-								'description' => $field_description,
-								'type'        => $field_type,
-								'placeholder' => $placeholder,
-								'field_key'   => $field_key,
-								'required'    => $required,
-							);
-						} elseif ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
+						if ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => $field_label,
 								'description' => $field_description,
@@ -642,21 +633,21 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
  * @return string
  */
 
-function ur_logout_url( $redirect = '' )
-{
-	$logout_endpoint = get_option('user_registration_logout_endpoint');
-	if (( ur_post_content_has_shortcode('user_registration_login') || ur_post_content_has_shortcode( 'user_registration_my_account')) && is_user_logged_in()) {
+function ur_logout_url( $redirect = '' ) {
+	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
+	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		global $post;
 		$post_content = isset( $post->post_content ) ? $post->post_content : '';
-		preg_match('/' . get_shortcode_regex() . '/s', $post_content, $matches);
+		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 
 		$attributes = shortcode_parse_atts( $matches[3] );
 		/**
 		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
+		 *
 		 * @since  1.7.5
 		 */
-		if( isset( $attributes['logout_redirect'] ) ) {
-			$redirect = isset( $attributes['logout_redirect']) ? $attributes['logout_redirect'] : '';
+		if ( isset( $attributes['logout_redirect'] ) ) {
+			$redirect = isset( $attributes['logout_redirect'] ) ? $attributes['logout_redirect'] : '';
 			$redirect = trim( $redirect, ']' );
 			$redirect = trim( $redirect, '"' );
 			$redirect = trim( $redirect, "'" );

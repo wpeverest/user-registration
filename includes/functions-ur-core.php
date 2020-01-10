@@ -360,7 +360,7 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
  *
  * @since  1.1.0
  *
- * @param  array $headers
+ * @param  array $headers header.
  *
  * @return array $headers
  */
@@ -500,6 +500,7 @@ function ur_exclude_profile_details_fields() {
 			'user_pass',
 			'user_confirm_password',
 			'user_confirm_email',
+			'profile_picture',
 		)
 	);
 }
