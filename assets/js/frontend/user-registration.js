@@ -1,10 +1,15 @@
 /* global  user_registration_params */
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
-(function ($) {
+( function ($) {
 	var user_registration = {
 		$user_registration: $('.ur-frontend-form form.register'),
-		init: function () {
+		init: function ( ele ) {
+
+			if( ele ) {
+				this.$user_registration = ele;
+			}
+
 			this.load_validation();
 			this.init_inputMask();
 			this.init_tiptip();
@@ -490,6 +495,45 @@
 			form.init();
 			events.init();
 		});
+	};
+
+
+	window.user_registration_reinit = function(){
+
+		user_registration.init( $('.elementor-shortcode > .ur-frontend-form > .register'));
+		$(function () {
+			$('.elementor-shortcode>.ur-frontend-form>form').ur_form_submission();
+			var date_selector = $('.elementor-shortcode>.ur-frontend-form>form  input[type="date"]');
+			if (date_selector.length > 0) {
+				date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr({
+					disableMobile: true
+				});
+			}
+
+			$(".elementor-shortcode>.ur-frontend-form>form").on("focusout", "#user_pass", function() {
+				$this = $('.elementor-shortcode>.ur-frontend-form>form>#user_pass');
+				var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
+
+				if ( 'yes' === enable_strength_password ) {
+					var wrapper                   = $this.closest('form');
+					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
+					var blacklistArray            = wp.passwordStrength.userInputBlacklist();
+
+					blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
+					blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+
+					var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
+					if( strength < minimum_password_strength ) {
+						if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
+							wrapper.find( '#user_pass_error' ).remove();
+							var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
+							wrapper.find('.user-registration-password-hint').after( error_msg_dom );
+						}
+					}
+				}
+			});
+		});
+		request_recaptcha_token();
 	};
 
 	$(function () {
