@@ -642,6 +642,11 @@ jQuery(function ($) {
 		$(document).on('click', '.ur-button-quick-links', function() {
 			$('.ur-quick-links-content').slideToggle();
 		})
+		$(document).on('focusout', '.ur-button-quick-links', function() {
+			if ( ! $('.ur-quick-links-content').is(':hidden') ) {
+				$('.ur-quick-links-content').slideToggle();
+			}
+		})
 
 		$(window).on( 'keydown', function(event) {
 			if (event.ctrlKey || event.metaKey) {
@@ -702,19 +707,15 @@ jQuery(function ($) {
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 
-					if (user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1') {
+					if ( user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1' ) {
 						var title = `Form successfully created.`
-						var message_body = `<div>Our Docs</div>`
-						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/'>Registration Form and Login Form</a></div>`
-						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/form-settings/'>Individual Form Settings</a></div>`
-						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/settings/'>General Settings</a></div>`
-						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/'>Full Documentations</a></div>`
+						message_body = `<p>Now to create your <strong>Login Form</strong>, please checkout the step by step <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/'>Documentations & Guidelines</a>.</p>`
 						Swal.fire({
 							type: 'success',
 							title: title,
 							html: message_body,
 						}).then( value => {
-							
+
 							if( 0 === parseInt( ur_form_id ) ) {
 								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
 							}
