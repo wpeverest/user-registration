@@ -149,6 +149,9 @@ class UR_Install {
 		do_action( 'user_registration_installed' );
 	}
 
+	/**
+	 * Set 'user_registration_is_newest_ur_form_created' flag.
+	 */
 	private static function set_is_newest_ur_form_created_flag() {
 		update_option( 'user_registration_is_newest_ur_form_created', '0' );
 	}

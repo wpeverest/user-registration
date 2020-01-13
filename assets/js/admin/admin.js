@@ -701,7 +701,7 @@ jQuery(function ($) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
-					console.log(user_registration_admin_data.is_newest_ur_form_created)
+
 					if (user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1') {
 						var title = `Form successfully created.`
 						var message_body = `<div>Our Docs</div>`
@@ -714,6 +714,7 @@ jQuery(function ($) {
 							title: title,
 							html: message_body,
 						}).then( value => {
+							
 							if( 0 === parseInt( ur_form_id ) ) {
 								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
 							}
