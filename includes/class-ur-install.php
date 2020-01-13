@@ -141,11 +141,16 @@ class UR_Install {
 		self::update_ur_version();
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
+		self::set_is_newest_ur_form_created_flag();
 
 		delete_transient( 'ur_installing' );
 
 		do_action( 'user_registration_flush_rewrite_rules' );
 		do_action( 'user_registration_installed' );
+	}
+
+	private static function set_is_newest_ur_form_created_flag() {
+		update_option( 'user_registration_is_newest_ur_form_created', '0' );
 	}
 
 	/**

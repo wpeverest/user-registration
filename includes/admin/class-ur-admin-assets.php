@@ -230,7 +230,7 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
-
+				'is_newest_ur_form_created'      => get_option( 'user_registration_is_newest_ur_form_created', false ),
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );

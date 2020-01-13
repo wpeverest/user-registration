@@ -116,9 +116,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="ur-builder-wrapper-footer">
 								<div class="ur-button-quick-links" title="Quick Links"><span>?</span></div>
 								<ul class="ur-quick-links-content" hidden>
-									<li><a href="#">Get Support</a></li>
-									<li><a href="#">Create Login Form</a></li>
-									<li><a href="#">Documentation</a></li>
+									<li><a href="#"><?php echo __( 'Get Support', 'user-registration' ); ?></a></li>
+									<li><a href="#"><?php echo __( 'Create Login Form', 'user-registration' ); ?></a></li>
+									<li><a href="#"><?php echo __( 'Documentation', 'user-registration' ); ?></a></li>
 								</ul>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>
