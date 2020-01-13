@@ -639,6 +639,10 @@ jQuery(function ($) {
 			ur_save_form();
 		});
 
+		$(document).on('click', '.ur-button-quick-links', function() {
+			$('.ur-quick-links-content').slideToggle();
+		})
+
 		$(window).on( 'keydown', function(event) {
 			if (event.ctrlKey || event.metaKey) {
 				if( 's' === String.fromCharCode(event.which).toLowerCase() ) {
@@ -697,10 +701,29 @@ jQuery(function ($) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
-					show_message(success_message, 'success');
+					console.log(user_registration_admin_data.is_edit_form)
+					if (user_registration_admin_data.is_edit_form !== '1') {
+						var title = `Form successfully created.`
+						var message_body = `<div>Our Docs</div>`
+						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/'>Registration Form and Login Form</a></div>`
+						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/form-settings/'>Individual Form Settings</a></div>`
+						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/settings/'>General Settings</a></div>`
+						message_body += `<div><a style='font-size:80%;' href='https://docs.wpeverest.com/docs/user-registration/'>Full Documentations</a></div>`
+						Swal.fire({
+							type: 'success',
+							title: title,
+							html: message_body,
+						}).then( value => {
+							if( 0 === parseInt( ur_form_id ) ) {
+								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+							}
+						})
+					} else {
+						show_message(success_message, 'success');
 
-					if( 0 === parseInt( ur_form_id ) ) {
-						window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+						if( 0 === parseInt( ur_form_id ) ) {
+							window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+						}
 					}
 				} else {
 					var error = response.responseJSON.data.message;

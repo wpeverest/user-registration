@@ -114,6 +114,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
+								<div class="button-icon button-icon-round ur-button-quick-links" title="Quick Links">
+									<span class="dashicons dashicons-editor-help"></span>
+								</div>
+								<div class="ur-quick-links-content" hidden>
+									<div><a href="#">Quick Link 1</a></div>
+									<div><a href="#">Quick Link 2</a></div>
+									<div><a href="#">Quick Link 3</a></div>
+								</div>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>
 						</div>
