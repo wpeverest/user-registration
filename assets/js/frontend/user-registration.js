@@ -16,7 +16,7 @@
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
 		},
 		init_real_time_password_match: function () {
-			let error_message = `<label class="user-registration-error user_confirm_password-error">Passwords doesn't match!</label>`;
+			let error_message = `<label for="user_confirm_password" class="user-registration-error" id="user_confirm_password-error">${user_registration_params.message_confirm_password_fields}</label>`;
 
 			// Function to compare two passwords and show error message
 			function match_password( element1, element2 ) {
@@ -24,7 +24,7 @@
 				const confirm_password = $( element2 ).val();
 				const matched          = ( password === confirm_password );
 
-				$( element2 ).closest('.ur-frontend-form').find('.user_confirm_password-error' ).remove();
+				$( element2 ).closest('.ur-frontend-form').find('#user_confirm_password-error' ).remove();
 
 				if ( ! matched ) {
 					passwords_not_matched = true;
