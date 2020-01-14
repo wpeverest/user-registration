@@ -8,29 +8,9 @@
 			this.load_validation();
 			this.init_inputMask();
 			this.init_tiptip();
-			this.init_real_time_email_match();
 
 			// Inline validation
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
-		},
-		init_real_time_email_match: function () {
-			// Bind events for real time email matching ( For Frontend )
-			if ( $( '#user_confirm_email' ).length ) {
-				$( document ).on( 'focusout', '#user_confirm_email', function ( e ) {
-					var $form = $(this).closest( 'form' );
-					match_email_and_place_error( $form )
-				});
-				$( document ).on( 'focusout', '#user_email', function ( e ) {
-					var $form = $(this).closest( 'form' );
-
-					if (
-						$form.find('#user_confirm_email').val() || 
-						( this.value === $form.find('#user_confirm_email').val() ) // This line is needed, when both fields have empty value
-					) {
-						match_email_and_place_error( $form )
-					}
-				});
-			}
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
@@ -66,6 +46,14 @@
 				$this.validate({
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
+					rules: {
+						user_confirm_email: {
+							equalTo: "#user_email",
+						},
+					},
+					messages: {
+						user_confirm_email: user_registration_params.message_confirm_email_fields,
+					},
 					errorPlacement: function (error, element) {
 						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
@@ -374,11 +362,6 @@
 							return;
 						}
 
-						// Check if the emails match
-						if ( match_email() === false ) {
-							return true;
-						}
-
 						event.preventDefault();
 						$this.find( '.ur-submit-button' ).prop( 'disabled', true );
 						var form_data;
@@ -632,34 +615,3 @@ function request_recaptcha_token() {
 		});
 	}
 };
-
-/**
- * Try to match the emails and show error message if not matched, in `.ur-frontend-form`.
- */
-function match_email_and_place_error( form ) {
-	jQuery( form ).find('#user_confirm_email-error' ).remove();
-
-	if ( ! match_email( form ) ) {
-		var error_message = user_registration_params.message_confirm_email_fields;
-		var error_html    = `<label for="user_confirm_email" class="user-registration-error" id="user_confirm_email-error">${error_message}</label>`;
-
-		jQuery(form).find( '#user_confirm_email' ).closest( '.form-row' ).after( error_html );
-	}
-}
-
-/**
- * Function to compare emails in a `.ur-frontend-form`
- * @return boolean
- */
-function match_email( form ) {
-	
-	if ( ! form ) {
-		form = jQuery( '.ur-frontend-form form' );
-	}
-
-	var email         = jQuery(form).find( '#user_email' ).val();
-	var confirm_email = jQuery(form).find( '#user_confirm_email' ).val();
-	var is_matched    = ( email === confirm_email );
-
-	return is_matched;
-}
