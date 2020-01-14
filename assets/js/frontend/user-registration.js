@@ -498,7 +498,11 @@
 	};
 
 
-	window.user_registration_reinit = function(){
+	window.user_registration_reinit = function() {
+
+		if ( 0 > $('.elementor-shortcode').length ) {
+			return false;
+		}
 
 		user_registration.init( $('.elementor-shortcode > .ur-frontend-form > .register'));
 		$(function () {
