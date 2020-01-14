@@ -145,6 +145,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						),
 					),
 					array(
+						'title'    => __( 'Enable Strong Password', 'user-registration' ),
+						'desc'     => __( 'Check to enable strong password.', 'user-registration' ),
+						'id'       => 'user_registration_my_account_enable_strong_password',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'yes',
+					),
+					array(
 						'type' => 'sectionend',
 						'id'   => 'my_account_options',
 					),

@@ -2,71 +2,15 @@
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
 (function ($) {
-	var passwords_not_matched = false;
-
 	var user_registration = {
-		$user_registration: $('.ur-frontend-form form.register'),
+		$user_registration: $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password'),
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
 			this.init_tiptip();
-			this.init_real_time_password_match();
 
 			// Inline validation
 			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
-		},
-		init_real_time_password_match: function () {
-			let error_message = `<label for="user_confirm_password" class="user-registration-error" id="user_confirm_password-error">${user_registration_params.message_confirm_password_fields}</label>`;
-
-			// Function to compare two passwords and show error message
-			function match_password( element1, element2 ) {
-				const password         = $( element1 ).val();
-				const confirm_password = $( element2 ).val();
-				const matched          = ( password === confirm_password );
-
-				$( element2 ).closest('.ur-frontend-form').find('#user_confirm_password-error' ).remove();
-
-				if ( ! matched ) {
-					passwords_not_matched = true;
-					$( element2 ).closest( '.form-row' ).after( error_message );
-				} else {
-					passwords_not_matched = false;
-				}
-			}
-
-			// Bind events for real time password matching ( For Frontend )
-			if ( $( '#user_confirm_password' ).length ) {
-				$( document ).on( 'focusout', '#user_confirm_password', function ( e ) {
-					match_password( '#user_pass', '#user_confirm_password' )
-				});
-				$( document ).on( 'focusout', '#user_pass', function ( e ) {
-					const password         = $( '#user_pass' ).val();
-					const confirm_password = $( '#user_confirm_password' ).val();
-	
-					if ( confirm_password !== '' ) {
-						match_password( '#user_pass', '#user_confirm_password' )
-					} else if ( password === confirm_password ) {
-						match_password( '#user_pass', '#user_confirm_password' )
-					}
-				});
-			}
-			
-			// Bind events for real time password matching ( For Change Password Form )
-			if ( $( '#password_2' ).length ) {
-				$( document ).on( 'focusout', '#password_2', function ( e ) {
-					match_password( '#password_1', '#password_2' )
-				});
-				$( document ).on( 'focusout', '#password_1', function ( e ) {
-					const password         = $( '#password_1' ).val();
-					const confirm_password = $( '#password_2' ).val();
-
-					if ( confirm_password !== '' ) {
-						match_password( '#password_1', '#password_2' )
-					} else if ( password === confirm_password ) {
-						match_password( '#password_1', '#password_2' )
-					}
-				});
-			}
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
@@ -102,8 +46,22 @@
 				$this.validate({
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
+					rules: {
+						user_confirm_password: {
+							equalTo: "#user_pass",
+						},
+						password_2: {
+							equalTo: '#password_1',
+						}
+					},
+					messages: {
+						user_confirm_password: user_registration_params.message_confirm_password_fields,
+						password_2: user_registration_params.message_confirm_password_fields,
+					},
 					errorPlacement: function (error, element) {
-						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
+						if ( element.is( '#password_2' ) ) {
+							element.parent().append(error);
+						} else if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
 						} else if ( element.is('select') && element.attr('class').match(/date-month|date-day|date-year/) ) {
 							if (element.parent().find('label.user-registration-error:visible').length === 0) {
@@ -406,12 +364,6 @@
 							return true;
 						}
 
-						// Return if the passwords are not matched
-						if ( true === passwords_not_matched ) {
-							$this.find( '#user_pass, #user_confirm_password, #password_1, #password_2' ).attr( 'aria-invalid' ,true );
-							return true;
-						}
-
 						if (!$this.valid()) {
 							return;
 						}
@@ -563,8 +515,10 @@
 			});
 		}
 
-		$("form.register").on("focusout", "#user_pass", function() {
-			$this = $('#user_pass');
+		$("form.register, form.edit-password").on("focusout", "#user_pass, #password_1", function() {
+			$this = $(this);
+			var this_name = $(this).attr( 'name' );
+			var this_data_id = $(this).data( 'id' );
 			var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
 
 			if ( 'yes' === enable_strength_password ) {
@@ -577,9 +531,9 @@
 
 				var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
 				if( strength < minimum_password_strength ) {
-					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
-						wrapper.find( '#user_pass_error' ).remove();
-						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
+					if( $this.val() !== "" ){
+						wrapper.find( `#${this_data_id}_error` ).remove();
+						var error_msg_dom = `<label id="${this_data_id}_error" class="user-registration-error" for="${this_name}">` + ursL10n.password_strength_error +'.</label>';
 						wrapper.find('.user-registration-password-hint').after( error_msg_dom );
 					}
 				}
