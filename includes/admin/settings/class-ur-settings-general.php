@@ -154,6 +154,22 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'yes',
 					),
 					array(
+						'title'    => __( 'Minimum Password Strength', 'user-registration' ),
+						'desc'     => __( 'This option lets you specify minimum strength for the password in My Account section.', 'user-registration' ),
+						'id'       => 'user_registration_my_account_minimum_password_strength',
+						'default'  => '3',
+						'type'     => 'select',
+						'class'    => 'ur-enhanced-select',
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+						'options'  => array(
+							'0' => __( 'Very Weak', 'user-registration' ),
+							'1' => __( 'Weak', 'user-registration' ),
+							'2' => __( 'Medium', 'user-registration' ),
+							'3' => __( 'Strong', 'user-registration' ),
+						),
+					),
+					array(
 						'type' => 'sectionend',
 						'id'   => 'my_account_options',
 					),
