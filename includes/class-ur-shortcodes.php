@@ -215,5 +215,15 @@ class UR_Shortcodes {
 				'row_ids'                   => $form_row_ids_array,
 			)
 		);
+
+		// Workaround for elementor's problematic popups.
+		if( ! has_action( 'ui-elementor-init') ) {
+			do_action('ui-elementor-init');
+			do_action('elementor/widget/popup/after_render');
+			add_action('elementor/widget/popup/after_render',
+				function () {
+					echo '<script type="text/javascript" defer>user_registration_reinit();</script>';
+				});
+		}
 	}
 }
