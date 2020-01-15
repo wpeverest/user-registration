@@ -42,22 +42,32 @@
 
 			this.$user_registration.each(function () {
 				var $this = $(this);
+				var rules = {};
+				var messages = {};
+
+				if ( $this.hasClass('edit-password') ) {
+					/**
+					 * Password matching for `Change Password` form
+					 */
+					rules.password_2 = {
+						equalTo: '#password_1',
+					};
+					messages.password_2 = user_registration_params.message_confirm_password_fields;
+				} else if ( $this.hasClass('register') && $this.find( '#user_confirm_password' ).length ) {
+					/**
+					 * Password matching for registration form
+					 */
+					rules.user_confirm_password = {
+						equalTo: '#user_pass',
+					};
+					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
+				}
 
 				$this.validate({
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
-					rules: {
-						user_confirm_password: {
-							equalTo: "#user_pass",
-						},
-						password_2: {
-							equalTo: '#password_1',
-						}
-					},
-					messages: {
-						user_confirm_password: user_registration_params.message_confirm_password_fields,
-						password_2: user_registration_params.message_confirm_password_fields,
-					},
+					rules: rules,
+					messages: messages,
 					errorPlacement: function (error, element) {
 						if ( element.is( '#password_2' ) ) {
 							element.parent().append(error);
@@ -99,6 +109,12 @@
 						$parent.removeClass('user-registration-has-error');
 					},
 					submitHandler: function (form) {
+						
+						// Return `true` for `Change Password` form to allow submission
+						if ( $(form).hasClass('edit-password') ) {
+							return true;
+						}
+
 						return false;
 					}
 				});
