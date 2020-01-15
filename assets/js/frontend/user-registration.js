@@ -42,18 +42,24 @@
 
 			this.$user_registration.each(function () {
 				var $this = $(this);
+				var rules = {};
+				var messages = {};
+
+				if ( $this.find( '#user_confirm_email' ).length ) {
+					/**
+					 * For real time email matching
+					 */
+					rules.user_confirm_email = {
+						equalTo: '#user_email',
+					};
+					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
+				}
 
 				$this.validate({
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
-					rules: {
-						user_confirm_email: {
-							equalTo: "#user_email",
-						},
-					},
-					messages: {
-						user_confirm_email: user_registration_params.message_confirm_email_fields,
-					},
+					rules: rules,
+					messages: messages,
 					errorPlacement: function (error, element) {
 						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
