@@ -860,6 +860,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 		'setting_data' => array(
 			array(
+				'label'             => __( 'User login option', 'user-registration' ),
+				'description'       => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_login_options',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
+				'type'              => 'select',
+				'class'             => array( 'ur-enhanced-select' ),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'options'           => ur_login_option(),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -1053,7 +1065,9 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$login_option = get_option( 'user_registration_general_setting_login_options', '' );
+	$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+
+	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 	if ( 'admin_approval' === $login_option ) {
 

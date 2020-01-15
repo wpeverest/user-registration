@@ -20,8 +20,10 @@ class UR_Email_Confirmation {
 
 	public function __construct() {
 
+		$form_id = get_user_meta( get_current_user_id(), 'ur_form_id', true );
+		error_log( print_r( $form_id, true ) );
 		// Return if the login option is not email confirmation
-		if ( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
+		if ( 'email_confirmation' !== ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			return;
 		}
 
@@ -324,7 +326,7 @@ class UR_Email_Confirmation {
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 
-		if ( 'email_confirmation' === get_option( 'user_registration_general_setting_login_options' ) ) {
+		if ( 'email_confirmation' !== ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
