@@ -20,10 +20,8 @@ class UR_Email_Confirmation {
 
 	public function __construct() {
 
-		$form_id = get_user_meta( get_current_user_id(), 'ur_form_id', true );
-		error_log( print_r( $form_id, true ) );
 		// Return if the login option is not email confirmation
-		if ( 'email_confirmation' !== ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		if ( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options', 'default' ) ) {
 			return;
 		}
 
