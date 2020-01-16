@@ -561,6 +561,34 @@ jQuery(function ($) {
 				events.register();
 			});
 		};
+		var SelectionAdapter, DropdownAdapter;
+		$.fn.select2.amd.require([
+		'select2/selection/single',
+		'select2/selection/placeholder',
+		'select2/selection/allowClear',
+		'select2/dropdown',
+		'select2/dropdown/search',
+		'select2/dropdown/attachBody',
+		'select2/utils'
+	  ], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
+			SelectionAdapter = Utils.Decorate(
+				SingleSelection,
+				Placeholder
+			);
+			
+			SelectionAdapter = Utils.Decorate(
+				SelectionAdapter,
+				AllowClear
+			);
+				
+			DropdownAdapter = Utils.Decorate(
+				Utils.Decorate(
+					Dropdown,
+					DropdownSearch
+				),
+				AttachBody
+			);
+	  });
 		$('.ur-input-grids').ur_form_builder();
 		$('.ur-tabs .ur-tab-lists').find('a.nav-tab').click(function () {
 			$('.ur-tabs .ur-tab-lists').find('a.nav-tab').removeClass('active');
@@ -576,6 +604,35 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
+    
+			var base_element = $('#ur-setting-form select.ur-settings-selected-countries')
+			$(base_element).on('change', function (e) {
+				var new_value = $( this ).val();
+				$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value )
+			});
+			$(base_element).select2({
+				placeholder: 'Select countries...',
+				selectionAdapter: SelectionAdapter,
+				dropdownAdapter: DropdownAdapter,
+				allowClear: true,
+				templateResult: function (data) {
+			
+					if (!data.id) { return data.text; }
+			
+					var $res = $('<div></div>');
+			
+					$res.text(data.text);
+					$res.addClass('wrap');
+			
+					return $res;
+				},
+				templateSelection: function (data) {
+
+					if (!data.id) { return data.text; }
+					var selected = ($(base_element).val() || []).length;
+					return "Selected " + selected + " country(s)";
+				}
+			})
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();

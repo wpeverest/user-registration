@@ -41,13 +41,14 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 			),
 			'selected_countries' => array(
-				'label'       => __( 'Selected Countries', 'user-registration' ),
+				'label'       => __( 'Selected Countries Yo', 'user-registration' ),
 				'data-id'     => $this->field_id . '_selected_countries',
 				'name'        => $this->field_id . '[selected_countries][]',
 				'class'       => $this->default_class . ' ur-settings-selected-countries',
 				'type'        => 'select',
-				'required'    => false,
-				'default'     => 'AF',
+				'default'     => array( 'AF' ),
+				'multiple'    => true,
+				'required'    => true,
 				'options'     => array(
 					'AF' => __( 'Afghanistan', 'user-registration' ),
 					'AX' => __( '&#197;land Islands', 'user-registration' ),
@@ -299,7 +300,6 @@ class UR_Setting_Country extends UR_Field_Settings {
 					'ZM' => __( 'Zambia', 'user-registration' ),
 					'ZW' => __( 'Zimbabwe', 'user-registration' ),
 					),
-
 			),
 			'default_value' => array(
 				'label'       => __( 'Default Value', 'user-registration' ),
