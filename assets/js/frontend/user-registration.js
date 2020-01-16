@@ -494,12 +494,37 @@
 
 	$(function () {
 		$('form.register').ur_form_submission();
-		var date_selector = $('.ur-frontend-form  input[type="date"]');
-		if (date_selector.length > 0) {
-			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr({
-				disableMobile: true
-			});
-		}
+
+		var flatpickr_loaded = false;
+
+		$('#load_flatpickr').click( function() {
+			var date_selector = $('.ur-frontend-form input[type="date"]');
+			date_selector.attr('type', 'text');
+
+			var date_field = date_selector.attr('id');
+			var date_flatpickr;
+
+			if ( ! flatpickr_loaded ) {
+				$(this).attr('data-date-format', date_selector.data('date-format'));
+				$(this).attr('data-mode', date_selector.data('mode'));
+				$(this).attr('data-locale', date_selector.data('locale'));
+				$(this).attr('data-min-date', date_selector.data('min-date'));
+				$(this).attr('data-max-date', date_selector.data('max-date'));
+
+				date_flatpickr = $(this).flatpickr({
+					disableMobile: true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('#'+ date_field).val(dateStr);
+					},
+				});
+
+				flatpickr_loaded = true;
+			}
+
+			if ( date_flatpickr ) {
+				date_flatpickr.open();
+			}
+		});
 
 		$("form.register").on("focusout", "#user_pass", function() {
 			$this = $('#user_pass');

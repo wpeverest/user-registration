@@ -323,28 +323,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				break;
 			case 'date':
-				// following code is for making date format compatiple with flatpickr.
-				$date_format     = '';
-				$data_mode       = '';
-				foreach ($custom_attributes as $attribute) {
-					$attribute_key_value = explode('=', $attribute);
-					if ('data-date-format' === $attribute_key_value[0]) {
-						$date_format = $attribute_key_value[1];
-						if( '"F' == $date_format ){
-							$date_format = "F j,Y";
-						}
-					}
-					if ('data-mode' === $attribute_key_value[0]) {
-						$data_mode = $attribute_key_value[1];
-					}
-				}
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$default_value = 'data-default-date="' . esc_attr( get_date_field_value( $data_mode, $value, $date_format ) ) . '"';
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( get_date_field_value( $data_mode, $value, $date_format ) ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $default_value . ' />';
+					$field .= '<input type="text" id="load_flatpickr" value="' . esc_attr( $value ) . '" class="regular-text" readonly />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
 				} else {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( get_date_field_value( $data_mode, $value, $date_format ) ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $default_value . ' />';
+					$field .= '<input type="text" id="load_flatpickr" value="' . esc_attr( $value ) . '" class="regular-text" readonly />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
 				break;
 
@@ -615,27 +601,6 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		return $fields;
 	}
 }// End if().
-
-if ( ! function_exists( 'get_date_field_value' ) ) {
-	/**
-	 * Get Date Field value with proper format.
-	 * @param $data_mode Date Range
-	 * @param $value Date Value
-	 * @param $date_format Date Format.
-	 */
-	function get_date_field_value( $data_mode, $value, $date_format ) {
-		if( "range" == trim($data_mode, '"') ) {
-			$range_value = explode(' to ', $value );
-			if( is_array( $range_value ) ) {
-				return trim(date( $date_format, strtotime( $range_value[0] ) ), '"') . ' to ' . trim(date( $date_format, strtotime( $range_value[1] ) ), '"') ;
-			}else{
-				return '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
-			}
-		}else{
-			return '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
-		}
-	}
-}
 
 if ( ! function_exists( 'user_registration_account_content' ) ) {
 
