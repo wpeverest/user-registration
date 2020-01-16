@@ -1334,10 +1334,10 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 		} else {
 
 			if ( 'login' === $context ) {
-				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
 
 			} elseif ( 'register' === $context ) {
-				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" style="margin-left:11px;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>';
+				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
 			} else {
 				$recaptcha_node = '';
 			}

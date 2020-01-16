@@ -322,7 +322,7 @@ class UR_Frontend_Form_Handler {
 		if ( $has_confirm_password ) {
 			if ( empty( $confirm_password ) ) {
 				array_push( self::$response_array, __( 'Empty confirm password', 'user-registration' ) );
-			} elseif ( strcasecmp( $confirm_password, $password ) != 0 ) {
+			} elseif ( strcmp( $confirm_password, $password ) != 0 ) {
 				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
 			}
 		}

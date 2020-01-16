@@ -185,7 +185,6 @@ class UR_Emailer {
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
 		$profile     = user_registration_form_data( $user_id, $form_id );
-		$attachments = apply_filters( 'user_registration_email_attachment', array() );
 		$name_value  = array();
 		$data_html   = '';
 		$smart_data  = array();
@@ -225,6 +224,7 @@ class UR_Emailer {
 		}
 
 		// Smart tag process for extra fields.
+		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data,  $form_id, $user_id );
 		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {

@@ -37,7 +37,7 @@ class UR_User_Approval {
 
 		// Handle user Sign on
 		add_action( 'wp_login', array( $this, 'track_first_login' ), 10, 2 );
-		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ) );
+		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ), 10, 2  );
 
 		// Handle Lost Password Page
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
@@ -167,7 +167,7 @@ class UR_User_Approval {
 	 * @return \WP_Error
 	 * @throws \Exception
 	 */
-	public function check_status_on_login( WP_User $user ) {
+	public function check_status_on_login( WP_User $user, $password ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
 
