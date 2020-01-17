@@ -1111,16 +1111,14 @@ jQuery(function ($) {
 				hidden_node.val($this_node.val());
 				break;
 			case 'select':
-				console.log(this_node_id)
 				if( 'country_advance_setting_default_value' === this_node_id ){
-					console.log('country_advance_setting_default_value')
 					$('.ur-builder-wrapper #ur-input-type-country').find('option[selected="selected"]').removeAttr('selected');
 					$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 				}
 				hidden_node.find('option[selected="selected"]').removeAttr('selected');
 				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 
-				if ( $this_node.attr('multiple') === true || $this_node.attr('multiple') === 'multiple') {
+				if ( 'country_advance_setting_selected_countries' === this_node_id ) {
 					hidden_node.find('option').removeAttr('selected');
 					$this_node.val().forEach( value => {
 						hidden_node.find(`option[value="${value}"]`).attr('selected', 'selected');
@@ -1486,4 +1484,6 @@ function ur_update_country_default_value_options() {
 	})
 	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html )
 	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
+	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
+	jQuery('.ur-selected-item.ur-item-active #ur-input-type-country').html( html )
 }
