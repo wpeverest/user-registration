@@ -285,6 +285,55 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		);
 	}
 
+	public function get_selected_countries( $form_id ) {
+		$countries = $this->get_country();
+		$filtered_countries = array();
+		$selected_countries = array();
+
+		$form_data = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+		$fields = self::get_form_field_data( $form_data );
+
+		foreach ( $fields as $field ) {
+			if ( "country" === $field->field_key ) {
+				$advance_setting = $field->advance_setting;
+				if ( isset ( $advance_setting->selected_countries ) ) {
+					$selected_countries = $advance_setting->selected_countries;
+					break;
+				}
+			}
+		}
+
+		if ( is_array( $selected_countries ) ) {
+			foreach ( $countries as $iso => $country_name ) {
+				if ( in_array( $iso, $selected_countries, true ) ) {
+					$filtered_countries[ $iso ] = $country_name;
+				}
+			}
+		}
+
+		return $filtered_countries;
+	}
+	
+	/**
+	 * Get form field data by post_content array passed
+	 *
+	 * @param array $post_content_array Post Content Array.
+	 * @return array
+	 */
+	public static function get_form_field_data( $post_content_array ) {
+		$form_field_data_array = array();
+		foreach ( $post_content_array as $row_index => $row ) {
+			foreach ( $row as $grid_index => $grid ) {
+				foreach ( $grid as $field_index => $field ) {
+					if ( 'confirm_user_pass' != $field->general_setting->field_name ) {
+						array_push( $form_field_data_array, $field );
+					}
+				}
+			}
+		}
+		return ( $form_field_data_array );
+	}
+
 	public function __construct() {
 
 		$this->id                       = 'user_registration_country';

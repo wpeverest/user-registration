@@ -134,6 +134,18 @@ abstract class UR_Form_Field {
 
 		if ( 'country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
+			$filtered_options = array();
+			$selected_countries = $data['advance_setting']->selected_countries;
+
+			if ( is_array( $selected_countries ) ) {
+				foreach ( $form_data['options'] as $iso => $country_name ) {
+					if ( in_array( $iso, $selected_countries, true ) ) {
+						$filtered_options[ $iso ] = $country_name;
+					}
+				}
+	
+				$form_data['options'] = $filtered_options;
+			}
 		}
 
 		/**  Redundant codes. */

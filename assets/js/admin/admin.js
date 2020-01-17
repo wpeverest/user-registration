@@ -604,43 +604,45 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
-			
-			// Update the default_value options
-			ur_update_country_default_value_options();
-    
-			var base_element = $('#ur-setting-form select.ur-settings-selected-countries')
-			$(base_element).on('change', function (e) {
-				var new_value = $( this ).val();
-				$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value )
 
-				$('#ur-setting-form .ur_advance_setting.ur-settings-default-value').trigger('change')
-
+			if ( $(this).find('.ur-field').data('field-key') === 'country' ) {
 				// Update the default_value options
 				ur_update_country_default_value_options();
-			});
-			$(base_element).select2({
-				placeholder: 'Select countries...',
-				selectionAdapter: SelectionAdapter,
-				dropdownAdapter: DropdownAdapter,
-				allowClear: true,
-				templateResult: function (data) {
-			
-					if (!data.id) { return data.text; }
-			
-					var $res = $('<div></div>');
-			
-					$res.text(data.text);
-					$res.addClass('wrap');
-			
-					return $res;
-				},
-				templateSelection: function (data) {
-
-					if (!data.id) { return data.text; }
-					var selected = ($(base_element).val() || []).length;
-					return "Selected " + selected + " country(s)";
-				}
-			})
+		
+				var base_element = $('#ur-setting-form select.ur-settings-selected-countries')
+				$( base_element ).on('change', function (e) {
+					var new_value = $( this ).val();
+	
+					// Update the hidden node
+					$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value )
+	
+					// Update the default_value options
+					ur_update_country_default_value_options();
+				});
+				$( base_element ).select2({
+					placeholder: 'Select countries...',
+					selectionAdapter: SelectionAdapter,
+					dropdownAdapter: DropdownAdapter,
+					allowClear: true,
+					templateResult: function (data) {
+				
+						if (!data.id) { return data.text; }
+				
+						var $res = $('<div></div>');
+				
+						$res.text(data.text);
+						$res.addClass('wrap');
+				
+						return $res;
+					},
+					templateSelection: function (data) {
+	
+						if (!data.id) { return data.text; }
+						var selected = ($(base_element).val() || []).length;
+						return "Selected " + selected + " country(s)";
+					}
+				})
+			}
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
@@ -831,11 +833,19 @@ jQuery(function ($) {
 			response.message = i18n_admin.i18n_empty_form_name;
 			return response;
 		}
-		if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
-			response.validation_status = false;
-			response.message = i18n_admin.i18n_previous_save_action_ongoing;
-			return response;
-		}
+		$.each($( '.ur-selected-item select.ur-settings-selected-countries' ), function () {
+			var selected_countries = $( this ).val();
+			if ( ! selected_countries ) {
+				response.validation_status = false;
+				response.message = 'Please select at least one country.';
+				return response;
+			}
+			if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
+				response.validation_status = false;
+				response.message = i18n_admin.i18n_previous_save_action_ongoing;
+				return response;
+			}
+		});
 		$.each($('.ur-input-grids .ur-general-setting-block input[data-field="field_name"]'), function () {
 			var $field = $(this);
 			var need_to_break = false;
@@ -1116,9 +1126,12 @@ jQuery(function ($) {
 
 				if ( 'country_advance_setting_selected_countries' === this_node_id ) {
 					hidden_node.find('option').removeAttr('selected');
-					$this_node.val().forEach( value => {
-						hidden_node.find(`option[value="${value}"]`).attr('selected', 'selected');
-					})
+					
+					if ( $this_node.val() ) {
+						$this_node.val().forEach( value => {
+							hidden_node.find(`option[value="${value}"]`).attr('selected', 'selected');
+						})
+					}
 				}
 				break;
 			case 'textarea':
@@ -1471,13 +1484,21 @@ function ur_confirmation( message, options ) {
 }
 
 function ur_update_country_default_value_options() {
-	var $selected_countries_field = jQuery('#ur-setting-form select.ur-settings-selected-countries');
-	var selected_countries = $selected_countries_field.val();
+	var selected_countries_field_selector = '#ur-setting-form select.ur-settings-selected-countries';
+	var selected_countries = jQuery( selected_countries_field_selector ).val();
 	var html = '';
-	selected_countries.forEach( country_iso_code => {
-		var country_name = $selected_countries_field.find(`option[value="${country_iso_code}"]`).html();
-		html += `<option value="${country_iso_code}">${country_name}</option>`;
-	})
-	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html )
-	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
+
+	if ( selected_countries ) {
+		selected_countries.forEach( country_iso_code => {
+			var country_name = jQuery( selected_countries_field_selector ).find(`option[value="${country_iso_code}"]`).html();
+			html += `<option value="${country_iso_code}">${country_name}</option>`;
+		})
+	}
+	
+	var hidden_default_value_selector = '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value';
+	var selected_country_iso = jQuery( hidden_default_value_selector ).find( 'option[selected="selected"]' ).val();
+	
+	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html ).find( `option[value="${selected_country_iso}"]` ).attr('selected', 'selected')
+
+	jQuery( hidden_default_value_selector ).html( html ).find( `option[value="${selected_country_iso}"]` ).attr('selected', 'selected')
 }
