@@ -604,11 +604,19 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
+			
+			// Update the default_value options
+			ur_update_country_default_value_options();
     
 			var base_element = $('#ur-setting-form select.ur-settings-selected-countries')
 			$(base_element).on('change', function (e) {
 				var new_value = $( this ).val();
 				$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value )
+
+				$('#ur-setting-form .ur_advance_setting.ur-settings-default-value').trigger('change')
+
+				// Update the default_value options
+				ur_update_country_default_value_options();
 			});
 			$(base_element).select2({
 				placeholder: 'Select countries...',
@@ -1103,12 +1111,21 @@ jQuery(function ($) {
 				hidden_node.val($this_node.val());
 				break;
 			case 'select':
+				console.log(this_node_id)
 				if( 'country_advance_setting_default_value' === this_node_id ){
+					console.log('country_advance_setting_default_value')
 					$('.ur-builder-wrapper #ur-input-type-country').find('option[selected="selected"]').removeAttr('selected');
 					$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 				}
 				hidden_node.find('option[selected="selected"]').removeAttr('selected');
 				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+
+				if ( $this_node.attr('multiple') === true || $this_node.attr('multiple') === 'multiple') {
+					hidden_node.find('option').removeAttr('selected');
+					$this_node.val().forEach( value => {
+						hidden_node.find(`option[value="${value}"]`).attr('selected', 'selected');
+					})
+				}
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());
@@ -1457,4 +1474,16 @@ function ur_confirmation( message, options ) {
 			options.reject();
 		}
 	});
+}
+
+function ur_update_country_default_value_options() {
+	var $selected_countries_field = jQuery('#ur-setting-form select.ur-settings-selected-countries');
+	var selected_countries = $selected_countries_field.val();
+	var html = '';
+	selected_countries.forEach( country_iso_code => {
+		var country_name = $selected_countries_field.find(`option[value="${country_iso_code}"]`).html();
+		html += `<option value="${country_iso_code}">${country_name}</option>`;
+	})
+	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html )
+	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
 }
