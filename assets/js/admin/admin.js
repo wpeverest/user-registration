@@ -563,14 +563,14 @@ jQuery(function ($) {
 		};
 		var SelectionAdapter, DropdownAdapter;
 		$.fn.select2.amd.require([
-		'select2/selection/single',
-		'select2/selection/placeholder',
-		'select2/selection/allowClear',
-		'select2/dropdown',
-		'select2/dropdown/search',
-		'select2/dropdown/attachBody',
-		'select2/utils'
-	  ], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
+			'select2/selection/single',
+			'select2/selection/placeholder',
+			'select2/selection/allowClear',
+			'select2/dropdown',
+			'select2/dropdown/search',
+			'select2/dropdown/attachBody',
+			'select2/utils'
+		], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
 			SelectionAdapter = Utils.Decorate(
 				SingleSelection,
 				Placeholder
@@ -588,7 +588,7 @@ jQuery(function ($) {
 				),
 				AttachBody
 			);
-	  });
+		});
 		$('.ur-input-grids').ur_form_builder();
 		$('.ur-tabs .ur-tab-lists').find('a.nav-tab').click(function () {
 			$('.ur-tabs .ur-tab-lists').find('a.nav-tab').removeClass('active');
@@ -1111,10 +1111,6 @@ jQuery(function ($) {
 				hidden_node.val($this_node.val());
 				break;
 			case 'select':
-				if( 'country_advance_setting_default_value' === this_node_id ){
-					$('.ur-builder-wrapper #ur-input-type-country').find('option[selected="selected"]').removeAttr('selected');
-					$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
-				}
 				hidden_node.find('option[selected="selected"]').removeAttr('selected');
 				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 
@@ -1484,6 +1480,4 @@ function ur_update_country_default_value_options() {
 	})
 	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html )
 	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
-	jQuery('.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value').html( html )
-	jQuery('.ur-selected-item.ur-item-active #ur-input-type-country').html( html )
 }
