@@ -482,7 +482,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'country':
 									$country                           = ur_load_form_field_class( $field_key );
-									$fields[ $field_index ]['options'] = $country::get_instance()->get_selected_countries( $form_id );
+									$fields[ $field_index ]['options'] = $country::get_instance()->get_country();
 									$fields[ $field_index ]['type']    = 'country';
 									$fields[ $field_index ]['class']   = '';
 									break;
