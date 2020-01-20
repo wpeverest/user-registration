@@ -531,19 +531,22 @@
 
 	/**
 	 * For Selective Countries feature.
-	 * Disable a country option if it's not allowed.
+	 * Append and remove on click a country option if it's not allowed.
 	 */
 	$(function() {
-		if ( $('.field-country').length ) {
+		if ( $('.user-registration-EditProfileForm.edit-profile .field-country').length > 0 ) {
 			$('.field-country').each(function() {
 				var option_value = $(this).find( '.ur-data-holder' ).data('option-value');
 				var option_html  = $(this).find( '.ur-data-holder' ).data('option-html');
-				var $select = $(this).find('select');
+				var $select      = $(this).find('select');
 
 				if ( $select.find(`option[value="${option_value}"]`).length === 0 ) {
-					$select.append( `<option disabled selected='selected' value="${option_value}">${option_html}</option>` );
+					$select.append( `<option class='ur-remove' selected='selected' value="${option_value}">${option_html}</option>` );
 				}
-			})
+				$(this).on( 'click', function() {
+					$(this).find('.ur-remove').remove();
+				});
+			});
 		}
 	});
 

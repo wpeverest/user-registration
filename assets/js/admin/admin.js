@@ -561,6 +561,15 @@ jQuery(function ($) {
 				events.register();
 			});
 		};
+		$('.ur-input-grids').ur_form_builder();
+		$('.ur-tabs .ur-tab-lists').find('a.nav-tab').click(function () {
+			$('.ur-tabs .ur-tab-lists').find('a.nav-tab').removeClass('active');
+			$(this).addClass('active');
+		});
+		$('.ur-tabs').tabs();
+		$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
+		$('.ur-tabs').tabs({ disabled: [1] });
+
 		var SelectionAdapter, DropdownAdapter;
 		$.fn.select2.amd.require([
 			'select2/selection/single',
@@ -571,13 +580,12 @@ jQuery(function ($) {
 			'select2/dropdown/attachBody',
 			'select2/utils'
 		], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
+
 			SelectionAdapter = Utils.Decorate(
-				SingleSelection,
-				Placeholder
-			);
-			
-			SelectionAdapter = Utils.Decorate(
-				SelectionAdapter,
+				Utils.Decorate(
+					SingleSelection,
+					Placeholder
+				),
 				AllowClear
 			);
 				
@@ -589,14 +597,6 @@ jQuery(function ($) {
 				AttachBody
 			);
 		});
-		$('.ur-input-grids').ur_form_builder();
-		$('.ur-tabs .ur-tab-lists').find('a.nav-tab').click(function () {
-			$('.ur-tabs .ur-tab-lists').find('a.nav-tab').removeClass('active');
-			$(this).addClass('active');
-		});
-		$('.ur-tabs').tabs();
-		$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
-		$('.ur-tabs').tabs({ disabled: [1] });
 		$(document).on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
 			$('.ur-selected-item').removeClass('ur-item-active');
@@ -609,37 +609,38 @@ jQuery(function ($) {
 				// Update the default_value options
 				ur_update_country_default_value_options();
 		
-				var base_element = $('#ur-setting-form select.ur-settings-selected-countries')
-				$( base_element ).on('change', function (e) {
+				var $selected_countries_option_field = $('#ur-setting-form select.ur-settings-selected-countries');
+				$selected_countries_option_field.on('change', function (e) {
 					var new_value = $( this ).val();
 	
 					// Update the hidden node
-					$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value )
+					$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value );
 	
 					// Update the default_value options
 					ur_update_country_default_value_options();
 				});
-				$( base_element ).select2({
+				$selected_countries_option_field.select2({
 					placeholder: 'Select countries...',
 					selectionAdapter: SelectionAdapter,
 					dropdownAdapter: DropdownAdapter,
-					allowClear: true,
 					templateResult: function (data) {
-				
-						if (!data.id) { return data.text; }
-				
-						var $res = $('<div></div>');
-				
-						$res.text(data.text);
-						$res.addClass('wrap');
-				
-						return $res;
+
+						if ( ! data.id ) {
+							return data.text;
+						}
+						return $( '<div></div>' ).text( data.text ).addClass('wrap');
 					},
 					templateSelection: function (data) {
 	
-						if (!data.id) { return data.text; }
-						var selected = ($(base_element).val() || []).length;
-						return "Selected " + selected + " country(s)";
+						if ( ! data.id ) {
+							return data.text;
+						}
+						var length = 0;
+						
+						if ( $selected_countries_option_field.val() ) {
+							length = $selected_countries_option_field.val().length;
+						}
+						return "Selected " + length + " country(s)";
 					}
 				})
 			}
@@ -837,7 +838,7 @@ jQuery(function ($) {
 			var selected_countries = $( this ).val();
 			if ( ! selected_countries ) {
 				response.validation_status = false;
-				response.message = 'Please select at least one country.';
+				response.message = i18n_admin.i18n_select_countries;
 				return response;
 			}
 			if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
@@ -1484,21 +1485,27 @@ function ur_confirmation( message, options ) {
 }
 
 function ur_update_country_default_value_options() {
-	var selected_countries_field_selector = '#ur-setting-form select.ur-settings-selected-countries';
-	var selected_countries = jQuery( selected_countries_field_selector ).val();
+	var selected_countries_option_field_selector = '#ur-setting-form select.ur-settings-selected-countries';
+	var selected_countries = jQuery( selected_countries_option_field_selector ).val();
 	var html = '';
 
 	if ( selected_countries ) {
 		selected_countries.forEach( country_iso_code => {
-			var country_name = jQuery( selected_countries_field_selector ).find(`option[value="${country_iso_code}"]`).html();
+			var country_name = jQuery( selected_countries_option_field_selector ).find(`option[value="${country_iso_code}"]`).html();
 			html += `<option value="${country_iso_code}">${country_name}</option>`;
-		})
+		});
 	}
 	
 	var hidden_default_value_selector = '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value';
 	var selected_country_iso = jQuery( hidden_default_value_selector ).find( 'option[selected="selected"]' ).val();
 	
-	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value').html( html ).find( `option[value="${selected_country_iso}"]` ).attr('selected', 'selected')
+	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value')
+		.html( html )
+		.find( `option[value="${selected_country_iso}"]` )
+		.attr('selected', 'selected');
 
-	jQuery( hidden_default_value_selector ).html( html ).find( `option[value="${selected_country_iso}"]` ).attr('selected', 'selected')
+	jQuery( hidden_default_value_selector )
+		.html( html )
+		.find( `option[value="${selected_country_iso}"]` )
+		.attr('selected', 'selected');
 }
