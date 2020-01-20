@@ -529,6 +529,24 @@
 		request_recaptcha_token();
 	});
 
+	/**
+	 * For Selective Countries feature.
+	 * Disable a country option if it's not allowed.
+	 */
+	$(function() {
+		if ( $('.field-country').length ) {
+			$('.field-country').each(function() {
+				var option_value = $(this).find( '.ur-data-holder' ).data('option-value');
+				var option_html  = $(this).find( '.ur-data-holder' ).data('option-html');
+				var $select = $(this).find('select');
+
+				if ( $select.find(`option[value="${option_value}"]`).length === 0 ) {
+					$select.append( `<option disabled selected='selected' value="${option_value}">${option_html}</option>` );
+				}
+			})
+		}
+	});
+
 	$( document ).on( 'click', '.password_preview', function( e ) {
 		e.preventDefault();
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';

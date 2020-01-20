@@ -112,8 +112,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 											$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
 											$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+											$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'];
 
-											user_registration_form_field( $key, $field, ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'] );
+											user_registration_form_field( $key, $field, $value );
+											
+											if ( 'country' === $single_item->field_key ) {
+												echo sprintf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', $value, UR_Form_Field_Country::get_instance()->get_country()[ $value ]);
+											}
 											?>
 										</div>
 									<?php } ?>

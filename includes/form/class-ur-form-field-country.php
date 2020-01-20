@@ -285,16 +285,17 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		);
 	}
 
-	public function get_selected_countries( $form_id ) {
+	public function get_selected_countries( $form_id, $field_name ) {
 		$countries = $this->get_country();
 		$filtered_countries = array();
 		$selected_countries = array();
 
 		$form_data = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
 		$fields = self::get_form_field_data( $form_data );
-
+		
+		// Get selected_countries data of the field
 		foreach ( $fields as $field ) {
-			if ( "country" === $field->field_key ) {
+			if ( "country" === $field->field_key && $field_name === $field->general_setting->field_name ) {
 				$advance_setting = $field->advance_setting;
 				if ( isset ( $advance_setting->selected_countries ) ) {
 					$selected_countries = $advance_setting->selected_countries;
@@ -303,6 +304,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			}
 		}
 
+		// Filter countries with selected_countries data
 		if ( is_array( $selected_countries ) ) {
 			foreach ( $countries as $iso => $country_name ) {
 				if ( in_array( $iso, $selected_countries, true ) ) {
