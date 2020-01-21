@@ -530,8 +530,7 @@
 	});
 
 	/**
-	 * For Selective Countries feature.
-	 * Append and remove on click a country option if it's not allowed.
+	 * Append a country option and Remove it on click, if the country is not allowed.
 	 */
 	$(function() {
 		if ( $('.user-registration-EditProfileForm.edit-profile .field-country').length > 0 ) {
@@ -540,12 +539,14 @@
 				var option_html  = $(this).find( '.ur-data-holder' ).data('option-html');
 				var $select      = $(this).find('select');
 
-				if ( $select.find(`option[value="${option_value}"]`).length === 0 ) {
-					$select.append( `<option class='ur-remove' selected='selected' value="${option_value}">${option_html}</option>` );
+				if ( option_value && option_html ) {
+					if ( $select.find(`option[value="${option_value}"]`).length === 0 ) {
+						$select.append( `<option class='ur-remove' selected='selected' value="${option_value}">${option_html}</option>` );
+					}
+					$(this).on( 'click', function() {
+						$(this).find('.ur-remove').remove();
+					});
 				}
-				$(this).on( 'click', function() {
-					$(this).find('.ur-remove').remove();
-				});
 			});
 		}
 	});

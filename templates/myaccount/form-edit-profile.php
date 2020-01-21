@@ -116,6 +116,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 											user_registration_form_field( $key, $field, $value );
 											
+											/**
+											 * Embed the current country value to allow to remove it if it's not allowed.
+											 */
 											if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
 												echo sprintf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', $value, UR_Form_Field_Country::get_instance()->get_country()[ $value ]);
 											}

@@ -77,14 +77,9 @@ abstract class UR_Field_Settings {
 					}
 
 					$is_multiple = isset( $field['multiple'] ) && true === $field['multiple'];
-					$has_name    = isset( $field['name'] );
 
 					if ( true === $is_multiple ) {
 						$this->fields_html .= ' multiple ';
-					}
-
-					if ( true === $has_name ) {
-						$this->fields_html .= sprintf( ' name="%s" ', $field['name'] );
 					}
 
 					$field_options = isset( $field['options'] ) ? $field['options'] : array();
@@ -92,11 +87,15 @@ abstract class UR_Field_Settings {
 					$this->fields_html .= '>';
 
 					foreach ( $field_options as $option_key => $option_value ) {
-						$required           = $value === $option_key ? 'selected="selected"' : '';
-						if ( true === $is_multiple ) {
-							$required = in_array ( $option_key, $value, true ) ? 'selected="selected"' : '';
+						$selected_value = '';
+
+						if ( true === $is_multiple && is_array( $value ) ) {
+							$selected_value = in_array ( $option_key, $value, true ) ? 'selected="selected"' : '';
+						} else {
+							$selected_value = ( $value === $option_key ) ? 'selected="selected"' : '';
 						}
-						$this->fields_html .= '<option value="' . esc_attr( $option_key ) . '" ' . $required . '>' . esc_html( $option_value ) . '</option>';
+
+						$this->fields_html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_value . '>' . esc_html( $option_value ) . '</option>';
 					}
 
 					$this->fields_html .= '</select>';

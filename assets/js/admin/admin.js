@@ -570,6 +570,9 @@ jQuery(function ($) {
 		$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
 		$('.ur-tabs').tabs({ disabled: [1] });
 
+		/**
+		 * This block of code is for the "Selected Countries" option of "Country" field
+		 */
 		var SelectionAdapter, DropdownAdapter;
 		$.fn.select2.amd.require([
 			'select2/selection/single',
@@ -578,17 +581,26 @@ jQuery(function ($) {
 			'select2/dropdown',
 			'select2/dropdown/search',
 			'select2/dropdown/attachBody',
-			'select2/utils'
-		], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
-
+			'select2/utils',
+			'select2/selection/eventRelay',
+		], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils, EventRelay) {
+			// Add placeholder
 			SelectionAdapter = Utils.Decorate(
-				Utils.Decorate(
-					SingleSelection,
-					Placeholder
-				),
+				SingleSelection,
+				Placeholder
+			);
+			// Allow to clear all selections with a cross button-icon
+			SelectionAdapter = Utils.Decorate(
+				SelectionAdapter,
 				AllowClear
 			);
-				
+			// Allow to flow/fire events
+			SelectionAdapter = Utils.Decorate(
+				SelectionAdapter,
+				EventRelay
+			);
+
+			// Add search box in dropdown
 			DropdownAdapter = Utils.Decorate(
 				Utils.Decorate(
 					Dropdown,
@@ -597,6 +609,7 @@ jQuery(function ($) {
 				AttachBody
 			);
 		});
+
 		$(document).on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
 			$('.ur-selected-item').removeClass('ur-item-active');
@@ -606,32 +619,42 @@ jQuery(function ($) {
 			$( document ).trigger( 'update_perfect_scrollbar' );
 
 			if ( $(this).find('.ur-field').data('field-key') === 'country' ) {
-				// Update the default_value options
-				ur_update_country_default_value_options();
-		
+				/**
+				 * Bind UI actions for `Selective Countries` feature
+				 */
 				var $selected_countries_option_field = $('#ur-setting-form select.ur-settings-selected-countries');
-				$selected_countries_option_field.on('change', function (e) {
-					var new_value = $( this ).val();
-	
-					// Update the hidden node
-					$('.ur-selected-item.ur-item-active select[data-id="country_advance_setting_selected_countries"]').val( new_value );
-	
-					// Update the default_value options
-					ur_update_country_default_value_options();
-				});
-				$selected_countries_option_field.select2({
+				$selected_countries_option_field.on('change', function ( e ) {
+					var selected_countries_iso_s = $( this ).val();
+					var html = '';
+
+					// Get html of selected countries
+					if ( Array.isArray( selected_countries_iso_s ) ) {
+						selected_countries_iso_s.forEach( iso => {
+							var country_name = $(this).find(`option[value="${iso}"]`).html();
+							html += `<option value="${iso}">${country_name}</option>`;
+						});
+					}
+
+					// Update default_value options in `Field Options` tab
+					$('#ur-setting-form select.ur-settings-default-value').html( html )
+					
+					// Update default_value options (hidden)
+					$('.ur-selected-item.ur-item-active select.ur-settings-default-value').html( html )
+				})
+				.select2({
 					placeholder: 'Select countries...',
 					selectionAdapter: SelectionAdapter,
 					dropdownAdapter: DropdownAdapter,
-					templateResult: function (data) {
+					templateResult: function ( data ) {
 
 						if ( ! data.id ) {
 							return data.text;
 						}
-						return $( '<div></div>' ).text( data.text ).addClass('wrap');
+
+						return $( '<div></div>' ).text( data.text ).addClass( 'wrap' );
 					},
-					templateSelection: function (data) {
-	
+					templateSelection: function ( data ) {
+
 						if ( ! data.id ) {
 							return data.text;
 						}
@@ -640,9 +663,23 @@ jQuery(function ($) {
 						if ( $selected_countries_option_field.val() ) {
 							length = $selected_countries_option_field.val().length;
 						}
+
 						return "Selected " + length + " country(s)";
-					}
+					},
 				})
+				/**
+				 * The following block of code is required to fix the following issue:
+				 * - When the dropdown is open, if the contents of this option's container changes, for example when a different field is
+				 * activated, the behaviour of input tags changes. Specifically, when pressed space key inside ANY input tag, the dropdown
+				 * APPEARS.
+				 * 
+				 * P.S. The option we're talking about is `Selective Countries` for country field.
+				 */
+				.on( 'select2:close', function ( e ) {
+					setTimeout( function() {
+						$( ':focus' ).blur();
+					}, 1 );
+				});
 			}
 		});
 		function render_advance_setting(selected_obj) {
@@ -834,16 +871,19 @@ jQuery(function ($) {
 			response.message = i18n_admin.i18n_empty_form_name;
 			return response;
 		}
+		if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
+			response.validation_status = false;
+			response.message = i18n_admin.i18n_previous_save_action_ongoing;
+			return response;
+		}
 		$.each($( '.ur-selected-item select.ur-settings-selected-countries' ), function () {
 			var selected_countries = $( this ).val();
-			if ( ! selected_countries ) {
+			if (
+				! selected_countries ||
+				( Array.isArray( selected_countries ) && selected_countries.length === 0 )
+			) {
 				response.validation_status = false;
 				response.message = i18n_admin.i18n_select_countries;
-				return response;
-			}
-			if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
-				response.validation_status = false;
-				response.message = i18n_admin.i18n_previous_save_action_ongoing;
 				return response;
 			}
 		});
@@ -1122,17 +1162,18 @@ jQuery(function ($) {
 				hidden_node.val($this_node.val());
 				break;
 			case 'select':
-				hidden_node.find('option[selected="selected"]').removeAttr('selected');
-				hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+				hidden_node.find('option').removeAttr('selected');
 
-				if ( 'country_advance_setting_selected_countries' === this_node_id ) {
-					hidden_node.find('option').removeAttr('selected');
-					
-					if ( $this_node.val() ) {
-						$this_node.val().forEach( value => {
-							hidden_node.find(`option[value="${value}"]`).attr('selected', 'selected');
-						})
+				if ( $this_node.prop('multiple') ) {
+					var selected_options = $this_node.val();
+
+					if ( Array.isArray( selected_options ) ) {
+						selected_options.forEach( value => {
+							hidden_node.find( `option[value="${value}"]` ).attr( 'selected', 'selected' );
+						});
 					}
+				} else {
+					hidden_node.find('option[value="' + $this_node.val() + '"]').attr( 'selected', 'selected' );
 				}
 				break;
 			case 'textarea':
@@ -1482,30 +1523,4 @@ function ur_confirmation( message, options ) {
 			options.reject();
 		}
 	});
-}
-
-function ur_update_country_default_value_options() {
-	var selected_countries_option_field_selector = '#ur-setting-form select.ur-settings-selected-countries';
-	var selected_countries = jQuery( selected_countries_option_field_selector ).val();
-	var html = '';
-
-	if ( selected_countries ) {
-		selected_countries.forEach( country_iso_code => {
-			var country_name = jQuery( selected_countries_option_field_selector ).find(`option[value="${country_iso_code}"]`).html();
-			html += `<option value="${country_iso_code}">${country_name}</option>`;
-		});
-	}
-	
-	var hidden_default_value_selector = '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-default-value';
-	var selected_country_iso = jQuery( hidden_default_value_selector ).find( 'option[selected="selected"]' ).val();
-	
-	jQuery('#ur-setting-form .ur_advance_setting.ur-settings-default-value')
-		.html( html )
-		.find( `option[value="${selected_country_iso}"]` )
-		.attr('selected', 'selected');
-
-	jQuery( hidden_default_value_selector )
-		.html( html )
-		.find( `option[value="${selected_country_iso}"]` )
-		.attr('selected', 'selected');
 }
