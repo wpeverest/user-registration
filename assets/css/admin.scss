@@ -1383,6 +1383,7 @@
 			height: 48px;
 			width: 48px;
 			bottom: 72px;
+			box-shadow: 1px 2px 8px transparentize($gray_base, 0.85);
 
 			.dashicons {
 				font-size: 24px;
