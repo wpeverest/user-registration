@@ -46,7 +46,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'name'        => $this->field_id . '[selected_countries][]',
 				'class'       => $this->default_class . ' ur-settings-selected-countries',
 				'type'        => 'select',
-				'default'     => array(),
+				'default'     => array_keys( UR_Form_Field_Country::get_instance()->get_country() ),
 				'multiple'    => true,
 				'required'    => true,
 				'options'     => UR_Form_Field_Country::get_instance()->get_country(),
@@ -73,7 +73,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 		}
 		
 		$selected_countries = $this->field_data->advance_setting->selected_countries;
-		$value              = array();
+		$value              = UR_Form_Field_Country::get_instance()->get_country();
 
 		// Get only the selected countries
 		if ( is_array( $selected_countries ) ) {
