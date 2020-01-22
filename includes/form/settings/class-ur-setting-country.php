@@ -41,7 +41,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 			),
 			'selected_countries' => array(
-				'label'       => __( 'Selected Countries Yo', 'user-registration' ),
+				'label'       => __( 'Selected Countries', 'user-registration' ),
 				'data-id'     => $this->field_id . '_selected_countries',
 				'name'        => $this->field_id . '[selected_countries][]',
 				'class'       => $this->default_class . ' ur-settings-selected-countries',

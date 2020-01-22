@@ -132,7 +132,8 @@ abstract class UR_Form_Field {
 			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_description', $form_data['description'] );
 		}
 
-		if ( 'country' === $field_key ) {
+		// Filter only selected countries for `Country` fields
+		if ( 'country' === $field_key || "billing_country" === $field_key || "shipping_country" === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 			$filtered_options = array();
 			$selected_countries = $data['advance_setting']->selected_countries;

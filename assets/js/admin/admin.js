@@ -617,8 +617,10 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
+			
+			var field_key = $(this).find('.ur-field').data('field-key');
 
-			if ( $(this).find('.ur-field').data('field-key') === 'country' ) {
+			if ( 'country' === field_key || 'billing_country' === field_key || 'shipping_country' === field_key ) {
 				/**
 				 * Bind UI actions for `Selective Countries` feature
 				 */
