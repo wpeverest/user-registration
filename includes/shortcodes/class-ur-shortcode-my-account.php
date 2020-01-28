@@ -151,7 +151,7 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'ur-my-account' );
 
 		$user_id = get_current_user_id();
-		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+		$form_id       = ur_get_form_id_by_userid( $user_id );
 
 		add_filter( 'user_registration_user_profile_field_only', 'ur_get_registered_form_fields' );
 		$profile = user_registration_form_data( $user_id, $form_id );
@@ -201,7 +201,7 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function edit_account() {
 		$user_id                   = get_current_user_id();
-		$form_id                   = get_user_meta( $user_id, 'ur_form_id', true );
+		$form_id       = ur_get_form_id_by_userid( $user_id );
 		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
@@ -236,8 +236,7 @@ class UR_Shortcode_My_Account {
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
 				$user                      = self::check_password_reset_key( $rp_key, $rp_login );
-				$form_id                   = get_user_meta( $user->ID, 'ur_form_id', true );
-
+				$form_id                   = ur_get_form_id_by_userid( $user->ID );
 				$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 

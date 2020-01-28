@@ -1065,7 +1065,7 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+	$form_id = ur_get_form_id_by_userid( $user_id );
 
 	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
@@ -1616,4 +1616,21 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		$variable = icl_t( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	return $variable;
+}
+
+/**
+ * Get Form ID from User ID.
+ *
+ * @param int $user_id User ID.
+ *
+ * @return int $form_id Form ID.
+ */
+function ur_get_form_id_by_userid( $user_id ) {
+	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
+	$form_id       = 0;
+
+	if ( isset( $form_id_array[0] ) ) {
+		$form_id = $form_id_array[0];
+	}
+	return $form_id;
 }
