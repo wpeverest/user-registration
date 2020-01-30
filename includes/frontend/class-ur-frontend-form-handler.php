@@ -257,11 +257,8 @@ class UR_Frontend_Form_Handler {
 				case 'select':
 				case 'country':
 				case 'file':
-					$form_data->value = sanitize_text_field( $form_data->value );
-					break;
 				case 'date':
 					$form_data->value = sanitize_text_field( $form_data->value );
-					$form_data->date_format = get_option( 'user_registration_date_format' );
 					break;
 			}
 		}

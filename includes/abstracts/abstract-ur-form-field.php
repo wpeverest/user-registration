@@ -160,7 +160,7 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->date_format ) ) {
-			update_option( 'user_registration_date_format', $data['advance_setting']->date_format );
+			update_option( 'user_registration_' . $data['general_setting']->field_name . '_date_format', $data['advance_setting']->date_format );
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
