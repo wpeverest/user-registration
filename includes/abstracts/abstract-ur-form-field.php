@@ -144,7 +144,7 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_' . ( ++$index_data ), $option );
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -158,7 +158,7 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_' . ( ++$index_data ), $option );
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -172,7 +172,7 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_' . ( ++$index_data ), $option );
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
