@@ -43,7 +43,7 @@ class UR_Email_Confirmation {
 	 */
 	public function create_quick_links( $actions, $user ) {
 
-		$form_id       = ur_get_form_id_by_userid( $user->ID );
+		$form_id = ur_get_form_id_by_userid( $user->ID );
 
 		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$verify_link = add_query_arg(
@@ -85,9 +85,9 @@ class UR_Email_Confirmation {
 	 */
 	public function trigger_query_actions() {
 
-		$user_id  = absint( isset( $_GET['user'] ) ? $_GET['user'] : 0 );
+		$user_id = absint( isset( $_GET['user'] ) ? $_GET['user'] : 0 );
 
-		$form_id       = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
