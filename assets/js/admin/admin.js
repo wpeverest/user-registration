@@ -4,6 +4,30 @@
  */
 jQuery(function ($) {
 
+	// Bind UI Actions for upgradable fields
+	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
+		e.preventDefault();
+
+		var label = $(this).text();
+		var message = "We're sorry, " + label + " field is not available right now. Please install and activate the <strong>User Registration Advanced Fields</strong> plugin to unlock all these awesome features.";
+		var title = label + " is a PRO field";
+
+		Swal.fire({
+			title: title,
+			html: message,
+			type: "question",
+			confirmButtonText: "Let's do it",
+			showCancelButton: true,
+			cancelButtonText: 'OK',
+		}).then( function(result) {
+			if (result.value) {
+				options.confirm();
+			} else {
+				options.reject();
+			}
+		});
+	});
+
 	// Adjust builder width
 	$( window ).on( 'resize orientationchange', function() {
 		var resizeTimer;
@@ -486,7 +510,7 @@ jQuery(function ($) {
 								$(this).removeClass('ur-sortable-active');
 							}
 						});
-						$('#ur-draggabled li').draggable({
+						$('#ur-draggabled .draggable').draggable({
 							connectToSortable: '.ur-grid-list-item',
 							containment: '.ur-registered-from',
 							helper: function() {
