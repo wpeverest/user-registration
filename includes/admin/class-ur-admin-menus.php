@@ -54,21 +54,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'label'       => 'File Upload',
 					'icon'        => 'ur-icon ur-icon-file-upload',
 					'field_class' => 'UR_File',
-					'plugin_name' => 'User Registration File Upload',
+					'plan'        => 'Personal Plan',
 				),
 				array(
 					'id'          => 'user_registration_mailchimp',
 					'label'       => 'MailChimp',
 					'icon'        => 'ur-icon ur-icon-mailchimp',
 					'field_class' => 'UR_MailChimp',
-					'plugin_name' => 'User Registration MailChimp',
+					'plan'        => 'Personal Plan',
 				),
 				array(
 					'id'          => 'user_registration_invite_code',
 					'label'       => 'Invitation Code',
 					'icon'        => 'ur-icon ur-icon-invite-codes',
 					'field_class' => 'UR_Form_Field_Invite_Code',
-					'plugin_name' => 'User Registration Invite Codes',
+					'plan'        => 'Professional Plan or Plus Plan',
 				),
 			);
 
@@ -84,7 +84,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'Advanced Fields',
 					'fields_parent_class' => 'URAF_Admin',
-					'plugin_name'         => 'User Registration Advanced Fields',
+					'plan'                => 'Personal Plan',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_section_title',
@@ -126,7 +126,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'WooCommerce Billing Address',
 					'fields_parent_class' => 'URWC_Admin',
-					'plugin_name'         => 'User Registration WooCommerce',
+					'plan'                => 'Personal Plan',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_billing_address_title',
@@ -203,7 +203,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'WooCommerce Shipping Address',
 					'fields_parent_class' => 'URWC_Admin',
-					'plugin_name'         => 'User Registration WooCommerce',
+					'plan'                => 'Personal Plan',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_shipping_address_title',
@@ -260,7 +260,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'Payment Fields',
 					'fields_parent_class' => 'User_Registration_Payments_Admin',
-					'plugin_name'         => 'User Registration Payments (PayPal)',
+					'plan'                => 'Professional Plan or Plus Plan',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_single_item',
@@ -275,11 +275,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$class_to_check = $section['fields_parent_class'];
 
 				if ( ! class_exists( $class_to_check ) ) {
-					$fields      = $section['fields'];
-					$plugin_name = isset( $section['plugin_name'] ) ? $section['plugin_name'] : '';
+					$fields = $section['fields'];
+					$plan   = isset( $section['plan'] ) ? $section['plan'] : '';
 
 					for ( $i = 0; $i < count($fields); $i++ ) {
-						$fields[$i]['plugin_name'] = $plugin_name;
+						$fields[$i]['plan'] = $plan;
 					}
 					
 					echo '<h2>' . __( $section['section_title'], 'user-registration-advanced-fields' ) . '</h2><hr/>';
@@ -300,9 +300,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$id          = $args['id'];
 			$icon        = $args['icon'];
 			$label       = $args['label'];
-			$plugin_name = isset( $args['plugin_name'] ) ? $args['plugin_name'] : '';
+			$plan = isset( $args['plan'] ) ? $args['plan'] : '';
 
-			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plugin-name="' . $plugin_name . '"><span class="' . $icon . '"></span>' . $label . '</li>';
+			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plan="' . $plan . '"><span class="' . $icon . '"></span>' . $label . '</li>';
 		}
 
 		/**

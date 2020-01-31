@@ -9,9 +9,9 @@ jQuery(function ($) {
 		e.preventDefault();
 
 		var label = $(this).text();
-		var plugin_name = $(this).data('plugin-name');
 		var title = label + " is a PRO field";
-		var message = "We're sorry, " + label + " field is not available right now. Please install and activate the <strong>" + plugin_name + "</strong> plugin to unlock this field.";
+		var plan = $(this).data('plan');
+		var message = "We're sorry, " + label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
 
 		Swal.fire({
 			title: title,
@@ -21,10 +21,9 @@ jQuery(function ($) {
 			showCancelButton: true,
 			cancelButtonText: 'OK',
 		}).then( function(result) {
-			if (result.value) {
-				options.confirm();
-			} else {
-				options.reject();
+			if ( result.value ) {
+				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/';
+				window.open( url, '_blank' );
 			}
 		});
 	});
