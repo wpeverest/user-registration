@@ -257,6 +257,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   readonly />
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
 										   id="<?php echo esc_attr( $key ); ?>"
+										   value="<?php echo esc_attr( $value );?>"
 										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 										   style="display:none"
 										<?php echo $attribute_string; ?>

@@ -510,7 +510,7 @@
 				$(this).attr('data-locale', date_selector.data('locale'));
 				$(this).attr('data-min-date', date_selector.data('min-date'));
 				$(this).attr('data-max-date', date_selector.data('max-date'));
-
+				$(this).attr('data-default-date', $(this).val() );
 				date_flatpickr = $(this).flatpickr({
 					disableMobile: true,
 					onChange      : function(selectedDates, dateStr, instance) {
