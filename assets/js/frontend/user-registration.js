@@ -496,12 +496,13 @@
 		$('form.register').ur_form_submission();
 
 		var flatpickr_loaded = false;
+		var date_field = $('#load_flatpickr').attr('data-id');
+		var date_selector = $('.ur-frontend-form #' + date_field);
+			date_selector.attr('type', 'text');
+		 	date_selector.val( $('#load_flatpickr').val() );
 
 		$('#load_flatpickr').click( function() {
-			var date_selector = $('.ur-frontend-form input[type="date"]');
-			date_selector.attr('type', 'text');
 
-			var date_field = date_selector.attr('id');
 			var date_flatpickr;
 
 			if ( ! flatpickr_loaded ) {
@@ -510,7 +511,7 @@
 				$(this).attr('data-locale', date_selector.data('locale'));
 				$(this).attr('data-min-date', date_selector.data('min-date'));
 				$(this).attr('data-max-date', date_selector.data('max-date'));
-				$(this).attr('data-default-date', $(this).val() );
+				$(this).attr('data-default-date', $(this).val());
 				date_flatpickr = $(this).flatpickr({
 					disableMobile: true,
 					onChange      : function(selectedDates, dateStr, instance) {

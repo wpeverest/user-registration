@@ -65,14 +65,6 @@ class UR_Form_Field_Date extends UR_Form_Field {
 				}
 			);
 		}
-		if ( ! $this->is_valid_date( $value ) && ! empty( $value )  && empty( $is_enable_date_range ) ) {
-			add_filter(
-				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					return __( $field_label . ' must be valid date.', 'user-registration' );
-				}
-			);
-		}
 	}
 
 	/**
