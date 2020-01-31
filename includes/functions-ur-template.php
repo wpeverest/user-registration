@@ -328,9 +328,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$value = date( $date_format );
 				}else{
 					$date_format = $args['custom_attributes']['data-date-format'];
+					if ( ! strpos( $value, 'to' ) ) {
+						$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+					}
 
-					$value = str_replace('/', '-', $value );
-					$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 				}
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $value ) . '" class="regular-text" readonly />';
