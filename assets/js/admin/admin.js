@@ -9,8 +9,9 @@ jQuery(function ($) {
 		e.preventDefault();
 
 		var label = $(this).text();
-		var message = "We're sorry, " + label + " field is not available right now. Please install and activate the <strong>User Registration Advanced Fields</strong> plugin to unlock all these awesome features.";
+		var plugin_name = $(this).data('plugin-name');
 		var title = label + " is a PRO field";
+		var message = "We're sorry, " + label + " field is not available right now. Please install and activate the <strong>" + plugin_name + "</strong> plugin to unlock this field.";
 
 		Swal.fire({
 			title: title,

@@ -54,18 +54,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'label'       => 'File Upload',
 					'icon'        => 'ur-icon ur-icon-file-upload',
 					'field_class' => 'UR_File',
+					'plugin_name' => 'User Registration File Upload',
 				),
 				array(
 					'id'          => 'user_registration_mailchimp',
 					'label'       => 'MailChimp',
 					'icon'        => 'ur-icon ur-icon-mailchimp',
 					'field_class' => 'UR_MailChimp',
+					'plugin_name' => 'User Registration MailChimp',
 				),
 				array(
 					'id'          => 'user_registration_invite_code',
 					'label'       => 'Invitation Code',
 					'icon'        => 'ur-icon ur-icon-invite-codes',
 					'field_class' => 'UR_Form_Field_Invite_Code',
+					'plugin_name' => 'User Registration Invite Codes',
 				),
 			);
 
@@ -81,6 +84,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'Advanced Fields',
 					'fields_parent_class' => 'URAF_Admin',
+					'plugin_name'         => 'User Registration Advanced Fields',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_section_title',
@@ -122,6 +126,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'WooCommerce Billing Address',
 					'fields_parent_class' => 'URWC_Admin',
+					'plugin_name'         => 'User Registration WooCommerce',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_billing_address_title',
@@ -198,22 +203,70 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					'section_title'       => 'WooCommerce Shipping Address',
 					'fields_parent_class' => 'URWC_Admin',
+					'plugin_name'         => 'User Registration WooCommerce',
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_shipping_address_title',
 							'label' => 'Shipping Address',
 							'icon'  => 'ur-icon ur-icon-bill',
 						),
-						// 'shipping_address_title',
-						// 'shipping_country',
-						// 'shipping_first_name',
-						// 'shipping_last_name',
-						// 'shipping_company',
-						// 'shipping_address_1',
-						// 'shipping_address_2',
-						// 'shipping_city',
-						// 'shipping_state',
-						// 'shipping_postcode',
+						array(
+							'id'    => 'user_registration_shipping_country',
+							'label' => 'Country',
+							'icon'  => 'ur-icon ur-icon-flag',
+						),
+						array(
+							'id'    => 'user_registration_shipping_first_name',
+							'label' => 'First Name',
+							'icon'  => 'ur-icon ur-icon-input-first-name',
+						),
+						array(
+							'id'    => 'user_registration_shipping_last_name',
+							'label' => 'Last Name',
+							'icon'  => 'ur-icon ur-icon-input-last-name',
+						),
+						array(
+							'id'    => 'user_registration_shipping_company',
+							'label' => 'Company',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_shipping_address_1',
+							'label' => 'Address 1',
+							'icon'  => 'ur-icon ur-icon-map-one',
+						),
+						array(
+							'id'    => 'user_registration_shipping_address_2',
+							'label' => 'Address 2',
+							'icon'  => 'ur-icon ur-icon-map-two',
+						),
+						array(
+							'id'    => 'user_registration_shipping_city',
+							'label' => 'Town / City',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_shipping_state',
+							'label' => 'State / County',
+							'icon'  => 'ur-icon ur-icon-state',
+						),
+						array(
+							'id'    => 'user_registration_shipping_postcode',
+							'label' => 'Postcode / Zip',
+							'icon'  => 'ur-icon ur-icon-zip-code',
+						),
+					),
+				),
+				array(
+					'section_title'       => 'Payment Fields',
+					'fields_parent_class' => 'User_Registration_Payments_Admin',
+					'plugin_name'         => 'User Registration Payments (PayPal)',
+					'fields'              => array(
+						array(
+							'id'    => 'user_registration_single_item',
+							'label' => 'Single Item',
+							'icon'  => 'ur-icon ur-icon-file-dollar',
+						),
 					),
 				),
 			);
@@ -222,9 +275,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$class_to_check = $section['fields_parent_class'];
 
 				if ( ! class_exists( $class_to_check ) ) {
+					$fields      = $section['fields'];
+					$plugin_name = isset( $section['plugin_name'] ) ? $section['plugin_name'] : '';
+
+					for ( $i = 0; $i < count($fields); $i++ ) {
+						$fields[$i]['plugin_name'] = $plugin_name;
+					}
+					
 					echo '<h2>' . __( $section['section_title'], 'user-registration-advanced-fields' ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
-					$this->render_upgradable_fields( $section['fields'] );
+					$this->render_upgradable_fields( $fields );
 					echo '</ul >';
 				}
 			}
@@ -237,7 +297,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		public function render_upgradable_field( $args ) {
-			echo '<li id="' . $args['id'] . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $args['id'] . '"><span class="' . $args['icon'] . '"></span>' . $args['label'] . '</li>';
+			$id          = $args['id'];
+			$icon        = $args['icon'];
+			$label       = $args['label'];
+			$plugin_name = isset( $args['plugin_name'] ) ? $args['plugin_name'] : '';
+
+			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plugin-name="' . $plugin_name . '"><span class="' . $icon . '"></span>' . $label . '</li>';
 		}
 
 		/**
