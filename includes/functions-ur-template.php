@@ -326,6 +326,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( empty( $value ) && 'today' === $args['custom_attributes']['data-default-date'] ) {
 					$date_format = $args['custom_attributes']['data-date-format'];
 					$value = date( $date_format );
+				}else{
+					$date_format = $args['custom_attributes']['data-date-format'];
+
+					$value = str_replace('/', '-', $value );
+					$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 				}
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $value ) . '" class="regular-text" readonly />';
@@ -535,8 +540,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'date':
 								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
-								$min_date          = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
-								$max_date          = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace('/', '-', $field->advance_setting->min_date ) : '';
+								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace('/', '-', $field->advance_setting->max_date ) : '';
 								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
 								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 								$date_localization = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';

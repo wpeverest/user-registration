@@ -125,8 +125,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
 						$attribute_string     = '';
+						$date_format = '';
 
 						foreach ( $attributes as $name => $value ) {
+							if( 'data-date-format' === $name ) {
+								$date_format = $value;
+							}
 							if ( is_bool( $value ) ) {
 								if ( $value ) {
 									$attribute_string .= $name . ' ';
@@ -249,7 +253,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 									<?php
-									$value           = $this->get_user_meta( $user->ID, $key );
+									$value       = $this->get_user_meta( $user->ID, $key );
+									$value = str_replace('/', '-', $value );
+									$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 									?>
 									<input type="text" id="load_flatpickr"
 										   value="<?php echo esc_attr( $value );?>"
@@ -518,12 +524,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
 
 									if( ! empty( $field->advance_setting->min_date ) ) {
-										$min_date = isset( $field->advance_setting->min_date ) ? $field->advance_setting->min_date : '';
+										$min_date = str_replace('/', '-', $field->advance_setting->min_date );
 										$fields[ $field_index ]['attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
 									}
 
 									if( ! empty( $field->advance_setting->max_date ) ) {
-										$max_date = isset( $field->advance_setting->max_date ) ? $field->advance_setting->max_date : '';
+										$max_date = str_replace('/', '-', $field->advance_setting->max_date );
 										$fields[ $field_index ]['attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
 									}
 

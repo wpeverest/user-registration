@@ -165,11 +165,13 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->min_date ) ) {
-			$form_data['custom_attributes']['data-min-date'] = '' !== $data['advance_setting']->min_date ? date( $data['advance_setting']->date_format, strtotime( $data['advance_setting']->min_date ) ) : '';
+			$min_date = str_replace('/', '-', $data['advance_setting']->min_date );
+			$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
 		}
 
 		if ( isset( $data['advance_setting']->max_date ) ) {
-			$form_data['custom_attributes']['data-max-date'] = '' !== $data['advance_setting']->max_date ? date( $data['advance_setting']->date_format, strtotime( $data['advance_setting']->max_date ) ) : '';
+			$max_date = str_replace('/', '-', $data['advance_setting']->min_date );
+			$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
 		}
 
 		if ( isset( $data['advance_setting']->set_current_date ) ) {
