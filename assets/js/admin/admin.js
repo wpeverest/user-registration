@@ -632,8 +632,8 @@ jQuery(function ($) {
 					// Get html of selected countries
 					if ( Array.isArray( selected_countries_iso_s ) ) {
 						selected_countries_iso_s.forEach( iso => {
-							var country_name = $(this).find(`option[value="${iso}"]`).html();
-							html += `<option value="${iso}">${country_name}</option>`;
+							var country_name = $(this).find('option[value="' + iso + '"]').html();
+							html += '<option value="' + iso + '">' + country_name + '</option>';
 						});
 					}
 
@@ -1171,7 +1171,7 @@ jQuery(function ($) {
 
 					if ( Array.isArray( selected_options ) ) {
 						selected_options.forEach( value => {
-							hidden_node.find( `option[value="${value}"]` ).attr( 'selected', 'selected' );
+							hidden_node.find( 'option[value="' + value + '"]' ).attr( 'selected', 'selected' );
 						});
 					}
 				} else {

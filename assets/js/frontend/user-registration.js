@@ -540,8 +540,8 @@
 				var $select      = $(this).find('select');
 
 				if ( option_value && option_html ) {
-					if ( $select.find(`option[value="${option_value}"]`).length === 0 ) {
-						$select.append( `<option class='ur-remove' selected='selected' value="${option_value}">${option_html}</option>` );
+					if ( $select.find('option[value="' + option_value + '"]').length === 0 ) {
+						$select.append( "<option class='ur-remove' selected='selected' value='" + option_value + "'>" + option_html + "</option>" );
 					}
 					$(this).on( 'click', function() {
 						$(this).find('.ur-remove').remove();
