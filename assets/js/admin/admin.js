@@ -708,8 +708,8 @@ jQuery(function ($) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 
 					if ( user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1' ) {
-						var title = `Form successfully created.`
-						message_body = `<p>Learn to create a login form <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>here</a>.</p><p>Check <strong>User Registration</strong> plugin's docs <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>here</a>.</p>`
+						var title = "Form successfully created."
+						message_body = "<p>Learn to create a login form <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>here</a>.</p><p>Check <strong>User Registration</strong> plugin's docs <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>here</a>.</p>"
 						Swal.fire({
 							type: 'success',
 							title: title,
