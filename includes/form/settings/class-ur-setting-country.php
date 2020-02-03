@@ -66,6 +66,9 @@ class UR_Setting_Country extends UR_Field_Settings {
 		$this->render_html( $fields );
 	}
 
+	/**
+	 * Get country options for Country field's default value option.
+	 */
 	public function get_default_value_options() {
 
 		if ( ! isset( $this->field_data->advance_setting->selected_countries ) ) {

@@ -285,6 +285,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		);
 	}
 
+	/**
+	 * Get selected countries list of a Country field.
+	 */
 	public function get_selected_countries( $form_id, $field_name ) {
 		$countries = $this->get_country();
 		$filtered_countries = array();
