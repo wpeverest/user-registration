@@ -8,15 +8,15 @@ jQuery(function ($) {
 	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
 		e.preventDefault();
 
+		var icon = '<i class="dashicons dashicons-lock"></i>';
 		var label = $(this).text();
-		var title = label + " is a PRO field";
+		var title = icon + label + " is a PRO field";
 		var plan = $(this).data('plan');
 		var message = "We're sorry, " + label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
 
 		Swal.fire({
 			title: title,
 			html: message,
-			type: "question",
 			confirmButtonText: "Let's do it",
 			showCancelButton: true,
 			cancelButtonText: 'OK',
