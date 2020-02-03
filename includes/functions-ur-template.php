@@ -115,10 +115,10 @@ function ur_registration_template_redirect() {
  * @return array
  */
 function ur_body_class( $classes ) {
-	$classes = (array) $classes;
+	$classes   = (array) $classes;
+	$classes[] = 'user-registration-page';
 	if ( is_ur_account_page() ) {
 		$classes[] = 'user-registration-account';
-		$classes[] = 'user-registration-page';
 	}
 
 	foreach ( UR()->query->query_vars as $key => $value ) {
