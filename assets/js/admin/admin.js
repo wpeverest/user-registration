@@ -10,7 +10,7 @@ jQuery(function ($) {
 
 		var icon = '<i class="dashicons dashicons-lock"></i>';
 		var label = $(this).text();
-		var title = icon + label + " is a PRO field";
+		var title = icon + "<div class='ur-swal-title'>" + label + " is a PRO field</div>";
 		var plan = $(this).data('plan');
 		var message = "We're sorry, " + label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
 
@@ -1034,7 +1034,7 @@ jQuery(function ($) {
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
 			var node_type = $this_node.get(0).tagName.toLowerCase();
-			
+
 			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
 				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 			}
