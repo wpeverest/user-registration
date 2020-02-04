@@ -323,17 +323,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 
-				$date_format = $args['custom_attributes']['data-date-format'];
-				if ( empty( $value ) && 'today' === $args['custom_attributes']['data-default-date'] ) {
-					$value = date( $date_format );
-				}else{
-					if ( ! strpos( $value, 'to' ) ) {
-						$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
-					} else {
-						$date_range = explode( 'to', $value );
-						$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
-					}
+				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
+					$date_format = $args['custom_attributes']['data-date-format'];
+					if ( empty( $value ) && 'today' === $args['custom_attributes']['data-default-date'] ) {
+						$value = date( $date_format );
+					}else{
+						if ( ! strpos( $value, 'to' ) ) {
+							$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+						} else {
+							$date_range = explode( 'to', $value );
+							$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
+						}
 
+					}
 				}
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $value ) . '" class="regular-text" readonly />';
