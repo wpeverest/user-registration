@@ -42,12 +42,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Add endpoints custom URLs in Appearance > Menus > Pages.
 			add_action( 'admin_head-nav-menus.php', array( $this, 'add_nav_menu_meta_boxes' ) );
 
-			// Add all available extra fields and disable it, if the pro fields are not activated.
-			add_action( 'ur_after_other_form_fields_registered', array( $this, 'add_available_other_fields' ) );
-			add_action( 'user_registration_extra_fields', array( $this, 'add_available_extra_fields' ) );
+			// Add all available upgradable fields.
+			add_action( 'ur_after_other_form_fields_printed', array( $this, 'add_upgradable_other_fields' ) ); // Adds fields in the `Extra Fields` section.
+			add_action( 'user_registration_extra_fields', array( $this, 'add_upgradable_extra_fields' ) );
 		}
 
-		public function add_available_other_fields() {
+		public function add_upgradable_other_fields() {
 			$fields = array(
 				array(
 					'id'          => 'user_registration_file',
@@ -79,7 +79,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 		}
 
-		public function add_available_extra_fields() {
+		public function add_upgradable_extra_fields() {
 			$field_sections = array(
 				array(
 					'section_title'       => 'Advanced Fields',
@@ -278,11 +278,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$fields = $section['fields'];
 					$plan   = isset( $section['plan'] ) ? $section['plan'] : '';
 
+					// Set the same plan for all the section's fields.
 					for ( $i = 0; $i < count($fields); $i++ ) {
 						$fields[$i]['plan'] = $plan;
 					}
 					
-					echo '<h2>' . __( $section['section_title'], 'user-registration-advanced-fields' ) . '</h2><hr/>';
+					echo '<h2>' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
 					$this->render_upgradable_fields( $fields );
 					echo '</ul >';
@@ -290,12 +291,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 		}
 
+		/**
+		 * Render multiple upgradable fields.
+		 */
 		public function render_upgradable_fields( $fields ) {
 			foreach( $fields as $field ) {
 				$this->render_upgradable_field( $field );
 			}
 		}
 
+		/**
+		 * Render an upgradable field.
+		 */
 		public function render_upgradable_field( $args ) {
 			$id          = $args['id'];
 			$icon        = $args['icon'];
@@ -982,7 +989,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$this->ur_get_list( $field );
 			}
 
-			do_action( 'ur_after_other_form_fields_registered' );
+			do_action( 'ur_after_other_form_fields_printed' );
 			echo ' </ul > ';
 		}
 
