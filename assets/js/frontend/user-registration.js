@@ -499,7 +499,7 @@
 		var date_field = $('#load_flatpickr').attr('data-id');
 		var date_selector = $('.ur-frontend-form #' + date_field);
 			date_selector.attr('type', 'text');
-
+			date_selector.val( $('#formated_date').val() );
 		$('#load_flatpickr').click( function() {
 
 			var date_flatpickr;

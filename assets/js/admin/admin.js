@@ -1381,6 +1381,7 @@ jQuery(function ($) {
 		$('#load_flatpickr').click( function() {
 			var date_selector = $('#profile-page form#your-profile  input[type="date"]');
 			date_selector.attr('type', 'text');
+			date_selector.val( $('#formated_date').val() );
 
 			var date_field = date_selector.attr('id');
 			var date_flatpickr;
