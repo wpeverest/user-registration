@@ -255,6 +255,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									<?php
 									$value        = $this->get_user_meta( $user->ID, $key );
 									$actual_value = $value;
+									$value = str_replace('/', '-', $value );
 									if ( ! strpos( $value, 'to' ) ) {
 										$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 									} else {

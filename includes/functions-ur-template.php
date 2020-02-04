@@ -330,6 +330,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$value        = date( $date_format );
 						$actual_value = date( $date_format );
 					}else{
+						$value = str_replace('/', '-', $value );
 						if ( ! strpos( $value, 'to' ) ) {
 							$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 						} else {
