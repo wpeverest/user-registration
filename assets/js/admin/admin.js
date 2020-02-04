@@ -1388,7 +1388,6 @@ jQuery(function ($) {
 			if ( ! flatpickr_loaded ) {
 				$(this).attr('data-date-format', date_selector.data('date-format'));
 				$(this).attr('data-mode', date_selector.data('mode'));
-				$(this).attr('data-locale', date_selector.data('locale'));
 				$(this).attr('data-min-date', date_selector.data('min-date'));
 				$(this).attr('data-max-date', date_selector.data('max-date'));
 				$(this).attr('data-default-date', $(this).val());

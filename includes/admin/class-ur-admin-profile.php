@@ -126,14 +126,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
 						$attribute_string     = '';
 						$date_format = '';
-						$date_mode = '';
 
 						foreach ( $attributes as $name => $value ) {
 							if( 'data-date-format' === $name ) {
 								$date_format = $value;
-							}
-							if( 'data-mode' === $name ) {
-								$date_mode = $value;
 							}
 							if ( is_bool( $value ) ) {
 								if ( $value ) {
@@ -258,8 +254,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 									<?php
 									$value       = $this->get_user_meta( $user->ID, $key );
-									if ( 'range' !== $date_mode ) {
+									if ( ! strpos( $value, 'to' ) ) {
 										$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+									} else {
+										$date_range = explode( 'to', $value );
+										$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
 									}
 									?>
 									<input type="text" id="load_flatpickr"
@@ -546,11 +545,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									if( ! empty( $field->advance_setting->enable_date_range ) ) {
 										$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 										$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
-									}
-
-									if( ! empty( $field->advance_setting->date_localization ) ) {
-										$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
-										$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
 									}
 									break;
 
