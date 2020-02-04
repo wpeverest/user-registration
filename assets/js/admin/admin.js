@@ -10,16 +10,15 @@ jQuery(function ($) {
 
 		var icon = '<i class="dashicons dashicons-lock"></i>';
 		var label = $(this).text();
-		var title = icon + "<div class='ur-swal-title'>" + label + " is a PRO field</div>";
+		var title = icon + "<div class='ur-swal-title'>" + label + " is a Premium field.</div>";
 		var plan = $(this).data('plan');
-		var message = "We're sorry, " + label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
+		var message = label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
 
 		Swal.fire({
 			title: title,
 			html: message,
+			showCloseButton: true,
 			confirmButtonText: "Let's do it",
-			showCancelButton: true,
-			cancelButtonText: 'OK',
 		}).then( function(result) {
 			if ( result.value ) {
 				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/';
@@ -1034,7 +1033,7 @@ jQuery(function ($) {
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
 			var node_type = $this_node.get(0).tagName.toLowerCase();
-			
+
 			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
 				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 			}
