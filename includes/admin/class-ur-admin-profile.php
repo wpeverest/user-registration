@@ -253,7 +253,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 									<?php
-									$value       = $this->get_user_meta( $user->ID, $key );
+									$value        = $this->get_user_meta( $user->ID, $key );
+									$actual_value = $value;
 									if ( ! strpos( $value, 'to' ) ) {
 										$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 									} else {
@@ -262,7 +263,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									}
 									?>
 									<input type="text" id="load_flatpickr"
-										   value="<?php echo esc_attr( $value );?>"
+										   value="<?php echo esc_attr( $actual_value );?>"
 										   class="regular-text"
 										   readonly />
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
