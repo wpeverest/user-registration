@@ -836,7 +836,7 @@ jQuery(function ($) {
 
 	function get_form_conditional_role_data() {
 		var form_data = [];
-		var single_row = $('.urcl-field-logic');
+		var single_row = $('.urcl-role-logic-wrap');
 
 		$.each(single_row, function () {
 			var grid_list_item = $(this).find('.urcl-user-role-field');
@@ -848,7 +848,7 @@ jQuery(function ($) {
 
 				if ( 'user_registration_form_conditional_user_role' === $field_key[0] ) {
 					assign_role =  $(this).val();
-					grid_list_item.splice( $(this) , 1); 
+					grid_list_item.splice( $(this) , 1);
 				}
 			});
 
@@ -1073,7 +1073,7 @@ jQuery(function ($) {
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
 			var node_type = $this_node.get(0).tagName.toLowerCase();
-			
+
 			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
 				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 			}
