@@ -499,7 +499,6 @@
 		var date_field = $('#load_flatpickr').attr('data-id');
 		var date_selector = $('.ur-frontend-form #' + date_field);
 			date_selector.attr('type', 'text');
-		 	date_selector.val( $('#load_flatpickr').val() );
 
 		$('#load_flatpickr').click( function() {
 
@@ -510,8 +509,7 @@
 				$(this).attr('data-mode', date_selector.data('mode'));
 				$(this).attr('data-min-date', date_selector.data('min-date'));
 				$(this).attr('data-max-date', date_selector.data('max-date'));
-				$(this).attr('data-default-date', $(this).val());
-
+				$(this).attr('data-default-date', $('#formated_date').val());
 				date_flatpickr = $(this).flatpickr({
 					disableMobile: true,
 					onChange      : function(selectedDates, dateStr, instance) {

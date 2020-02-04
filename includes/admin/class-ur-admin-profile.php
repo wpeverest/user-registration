@@ -266,6 +266,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   value="<?php echo esc_attr( $actual_value );?>"
 										   class="regular-text"
 										   readonly />
+									<input type="hidden" id="formated_date" value="<?php echo esc_attr( $value );?>"/>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
 										   id="<?php echo esc_attr( $key ); ?>"
 										   value="<?php echo esc_attr( $value );?>"
