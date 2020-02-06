@@ -571,6 +571,28 @@
 		request_recaptcha_token();
 	});
 
+	/**
+	 * Append a country option and Remove it on click, if the country is not allowed.
+	 */
+	$(function() {
+		if ( $('.user-registration-EditProfileForm.edit-profile .field-country').length > 0 ) {
+			$('.field-country').each(function() {
+				var option_value = $(this).find( '.ur-data-holder' ).data('option-value');
+				var option_html  = $(this).find( '.ur-data-holder' ).data('option-html');
+				var $select      = $(this).find('select');
+
+				if ( option_value && option_html ) {
+					if ( $select.find('option[value="' + option_value + '"]').length === 0 ) {
+						$select.append( "<option class='ur-remove' selected='selected' value='" + option_value + "'>" + option_html + "</option>" );
+					}
+					$(this).on( 'click', function() {
+						$(this).find('.ur-remove').remove();
+					});
+				}
+			});
+		}
+	});
+
 	$( document ).on( 'click', '.password_preview', function( e ) {
 		e.preventDefault();
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';

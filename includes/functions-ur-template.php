@@ -520,7 +520,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
-								$extra_params['options'] = $class_name::get_instance()->get_country();
+								$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
 								break;
 
 							default:

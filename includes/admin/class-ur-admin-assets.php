@@ -322,6 +322,7 @@ class UR_Admin_Assets {
 			'i18n_multiple_field_key'                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
 			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
 			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
+			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
 
 		);
 
