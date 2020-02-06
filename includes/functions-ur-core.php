@@ -872,17 +872,13 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'checkbox',
 				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_strong_password',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array(
-					'yes' => __( 'Yes', 'user-registration' ),
-					'no'  => __( 'No', 'user-registration' ),
-				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
 			),
@@ -925,17 +921,13 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'checkbox',
 				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array(
-					'yes' => __( 'Yes', 'user-registration' ),
-					'no'  => __( 'No', 'user-registration' ),
-				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
 			),
@@ -1304,7 +1296,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	static $rc_counter = 0;
 
-	if ( 'yes' == $recaptcha_enabled && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
+	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if ( 0 === $rc_counter ) {
 			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
