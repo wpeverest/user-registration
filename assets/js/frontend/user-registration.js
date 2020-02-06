@@ -45,6 +45,16 @@
 				var rules = {};
 				var messages = {};
 
+				if ( $this.find( '#user_confirm_email' ).length ) {
+					/**
+					 * For real time email matching
+					 */
+					rules.user_confirm_email = {
+						equalTo: '#user_email',
+					};
+					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
+        }
+        
 				if ( $this.hasClass('edit-password') ) {
 					/**
 					 * Password matching for `Change Password` form
