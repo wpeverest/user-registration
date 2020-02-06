@@ -206,10 +206,11 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 		}
 
 		$export_items[] = array(
-			'group_id'    => 'user-registration',
-			'group_label' => __( 'User Extra Information', 'user-registration' ),
-			'item_id'     => "user-registration-{$meta->umeta_id}",
-			'data'        => $data,
+			'group_id'          => 'user-registration',
+			'group_label'       => __( 'User Extra Information', 'user-registration' ),
+			'group_description' => __( 'User registration data.', 'user-registration' ),
+			'item_id'           => "user-registration-{$meta->umeta_id}",
+			'data'              => $data,
 		);
 	}
 
