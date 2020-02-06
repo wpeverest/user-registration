@@ -258,7 +258,7 @@ class UR_Frontend_Form_Handler {
 				case 'country':
 				case 'file':
 				case 'date':
-					$form_data->value = sanitize_text_field( $form_data->value );
+					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
 			}
 		}
