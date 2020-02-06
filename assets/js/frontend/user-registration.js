@@ -3,7 +3,7 @@
 /* global  grecaptcha */
 (function ($) {
 	var user_registration = {
-		$user_registration: $('.ur-frontend-form form.register'),
+		$user_registration: $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password'),
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
@@ -53,6 +53,24 @@
 						equalTo: '#user_email',
 					};
 					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
+        }
+        
+				if ( $this.hasClass('edit-password') ) {
+					/**
+					 * Password matching for `Change Password` form
+					 */
+					rules.password_2 = {
+						equalTo: '#password_1',
+					};
+					messages.password_2 = user_registration_params.message_confirm_password_fields;
+				} else if ( $this.hasClass('register') && $this.find( '#user_confirm_password' ).length ) {
+					/**
+					 * Password matching for registration form
+					 */
+					rules.user_confirm_password = {
+						equalTo: '#user_pass',
+					};
+					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
 				}
 
 				$this.validate({
@@ -61,7 +79,9 @@
 					rules: rules,
 					messages: messages,
 					errorPlacement: function (error, element) {
-						if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
+						if ( element.is( '#password_2' ) ) {
+							element.parent().append(error);
+						} else if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
 						} else if ( element.is('select') && element.attr('class').match(/date-month|date-day|date-year/) ) {
 							if (element.parent().find('label.user-registration-error:visible').length === 0) {
@@ -99,6 +119,12 @@
 						$parent.removeClass('user-registration-has-error');
 					},
 					submitHandler: function (form) {
+						
+						// Return `true` for `Change Password` form to allow submission
+						if ( $(form).hasClass('edit-password') ) {
+							return true;
+						}
+
 						return false;
 					}
 				});
@@ -515,11 +541,13 @@
 			});
 		}
 
-		$("form.register").on("focusout", "#user_pass", function() {
-			$this = $('#user_pass');
+		$("form.register, form.edit-password").on("focusout", "#user_pass, #password_1", function() {
+			$this = $(this);
+			var this_name = $(this).attr( 'name' );
+			var this_data_id = $(this).data( 'id' );
 			var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
 
-			if ( 'yes' === enable_strength_password ) {
+			if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
 				var wrapper                   = $this.closest('form');
 				var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
 				var blacklistArray            = wp.passwordStrength.userInputBlacklist();
@@ -529,9 +557,9 @@
 
 				var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
 				if( strength < minimum_password_strength ) {
-					if( wrapper.find('input[data-id="user_pass"]').val() !== "" ){
-						wrapper.find( '#user_pass_error' ).remove();
-						var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error +'.</label>';
+					if( $this.val() !== "" ){
+						wrapper.find( `#${this_data_id}_error` ).remove();
+						var error_msg_dom = `<label id="${this_data_id}_error" class="user-registration-error" for="${this_name}">` + ursL10n.password_strength_error +'.</label>';
 						wrapper.find('.user-registration-password-hint').after( error_msg_dom );
 					}
 				}
