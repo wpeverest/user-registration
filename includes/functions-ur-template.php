@@ -308,7 +308,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'tel':
 			case 'number':
 			case 'url':
-			case 'date':
 			case 'file':
 			case 'timepicker':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
@@ -318,6 +317,37 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				}
+				break;
+			case 'date':
+				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+
+				$actual_value = $value;
+				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
+					$date_format = $args['custom_attributes']['data-date-format'];
+					if ( empty( $value ) && 'today' === $args['custom_attributes']['data-default-date'] ) {
+						$value        = date( $date_format );
+						$actual_value = date( $date_format );
+					}else{
+						$value = str_replace('/', '-', $value );
+						if ( ! strpos( $value, 'to' ) ) {
+							$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+						} else {
+							$date_range = explode( 'to', $value );
+							$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
+						}
+
+					}
+				}
+				if ( empty( $extra_params ) ) {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
+				} else {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
 				break;
 
@@ -516,6 +546,19 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 									$extra_params['options'][ $value ] = $value;
 									unset( $extra_params['options'][ $key ] );
 								}
+								break;
+
+							case 'date':
+								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace('/', '-', $field->advance_setting->min_date ) : '';
+								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace('/', '-', $field->advance_setting->max_date ) : '';
+								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+								$extra_params['custom_attributes']['data-date-format']  = $date_format;
+								$extra_params['custom_attributes']['data-min-date']     = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
+								$extra_params['custom_attributes']['data-max-date']     = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+								$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
+								$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
 								break;
 
 							case 'country':

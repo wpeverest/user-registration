@@ -74,9 +74,8 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'perfect-scrollbar' );
 			wp_enqueue_style( 'sweetalert2' );
 		}
-
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_style( 'flatpickr' );
 		}
 
@@ -237,7 +236,7 @@ class UR_Admin_Assets {
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
 			wp_enqueue_media();
 			wp_enqueue_script( 'ur-my-account' );

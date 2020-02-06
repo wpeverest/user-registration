@@ -125,8 +125,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
 						$attribute_string     = '';
+						$date_format = '';
 
 						foreach ( $attributes as $name => $value ) {
+							if( 'data-date-format' === $name ) {
+								$date_format = $value;
+							}
 							if ( is_bool( $value ) ) {
 								if ( $value ) {
 									$attribute_string .= $name . ' ';
@@ -247,12 +251,29 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											  rows="5"
 											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
-								<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+									<?php
+									$value        = $this->get_user_meta( $user->ID, $key );
+									$actual_value = $value;
+									$value = str_replace('/', '-', $value );
+									if ( ! strpos( $value, 'to' ) ) {
+										$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+									} else {
+										$date_range = explode( 'to', $value );
+										$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
+									}
+									?>
+									<input type="text" id="load_flatpickr"
+										   value="<?php echo esc_attr( $actual_value );?>"
+										   class="regular-text"
+										   readonly />
+									<input type="hidden" id="formated_date" value="<?php echo esc_attr( $value );?>"/>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
-												   id="<?php echo esc_attr( $key ); ?>"
-												   value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-												<?php echo esc_attr( $attribute_string ); ?>
+										   id="<?php echo esc_attr( $key ); ?>"
+										   value="<?php echo esc_attr( $value );?>"
+										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+										   style="display:none"
+										<?php echo $attribute_string; ?>
 											/>
 
 									<?php
@@ -506,6 +527,28 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'date':
 									$fields[ $field_index ]['type'] = 'date';
+									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
+
+									if( ! empty( $field->advance_setting->min_date ) ) {
+										$min_date = str_replace('/', '-', $field->advance_setting->min_date );
+										$fields[ $field_index ]['attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
+									}
+
+									if( ! empty( $field->advance_setting->max_date ) ) {
+										$max_date = str_replace('/', '-', $field->advance_setting->max_date );
+										$fields[ $field_index ]['attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+									}
+
+									if( ! empty( $field->advance_setting->set_current_date ) ) {
+										$set_current_date                    = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+										$fields[ $field_index ]['attributes']['data-default-date'] = $set_current_date;
+									}
+
+									if( ! empty( $field->advance_setting->enable_date_range ) ) {
+										$enable_date_range                    = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+										$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
+									}
 									break;
 
 								case 'privacy_policy':

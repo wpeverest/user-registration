@@ -53,14 +53,14 @@ abstract class UR_Field_Settings {
 		foreach ( $fields as $field_key => $field ) {
 
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
-			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . esc_html( $field['label'] ) . '</label>';
+			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . '</label>';
 
 			$value = $this->get_advance_setting_data( $field_key ) == '' ? $field['default'] : $this->get_advance_setting_data( $field_key );
 
 			switch ( $field['type'] ) {
 
 				case 'text':
-					$this->fields_html .= '<input data-advance-field="' . esc_attr( $field_key ) . '" value="' . esc_attr( $value ) . '" class="' . esc_attr( $field['class'] ) . '" type="text" name="' . esc_attr( $field['name'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . esc_attr( $field['placeholder'] ) . '"';
+					$this->fields_html .= '<input data-advance-field="' . esc_attr( $field_key ) . '" value="' . esc_attr( $value ) . '" class="' . esc_attr( $field['class'] ) . '" type="text" name="' . esc_attr( $field['name'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"  placeholder="' . ( isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '' ) . '"';
 
 					if ( true == $field['required'] ) {
 						$this->fields_html .= ' required ';
