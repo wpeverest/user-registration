@@ -143,18 +143,19 @@ jQuery(function ($) {
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
 	 */
 	var minimum_password_strength_wrapper_field = $('#general-settings').find('#user_registration_form_setting_minimum_password_strength_field');
-	var strong_password_field = $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field select#user_registration_form_setting_enable_strong_password');
-	var enable_strong_password = strong_password_field.val();
+	var strong_password_field = $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field input#user_registration_form_setting_enable_strong_password');
+	var enable_strong_password = strong_password_field.is(':checked');
 
-	if ('yes' === enable_strong_password) {
+	if ( 'yes' === enable_strong_password || true === enable_strong_password ) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
 	}
 
 	$(strong_password_field).change(function () {
+		enable_strong_password = $(this).is(':checked');
 
-		if ('yes' === $(this).val()) {
+		if ( 'yes' === enable_strong_password || true === enable_strong_password ) {
 			minimum_password_strength_wrapper_field.show('slow');
 		} else {
 			minimum_password_strength_wrapper_field.hide('slow');

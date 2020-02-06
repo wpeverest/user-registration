@@ -505,7 +505,7 @@
 			$this = $('#user_pass');
 			var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
 
-			if ( 'yes' === enable_strength_password ) {
+			if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
 				var wrapper                   = $this.closest('form');
 				var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
 				var blacklistArray            = wp.passwordStrength.userInputBlacklist();
