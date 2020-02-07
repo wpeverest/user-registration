@@ -1663,6 +1663,18 @@ img.tips {
 /**
  * Select2 elements.
  */
+
+.select2-results__option .wrap:before{
+    content:"\2610";
+    width:25px;
+    height:25px;
+    padding-right: 10px;
+}
+
+.select2-results__option[data-selected=true] .wrap:before{
+    content:"\2714";
+}
+
 .select2-drop,
 .select2-dropdown {
 	z-index: 999999 !important;
