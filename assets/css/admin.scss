@@ -1663,6 +1663,18 @@ img.tips {
 /**
  * Select2 elements.
  */
+
+.select2-results__option .wrap:before{
+    content:"\2610";
+    width:25px;
+    height:25px;
+    padding-right: 10px;
+}
+
+.select2-results__option[data-selected=true] .wrap:before{
+    content:"\2714";
+}
+
 .select2-drop,
 .select2-dropdown {
 	z-index: 999999 !important;
@@ -1789,14 +1801,9 @@ img.tips {
 	background-color:#fff
 }
 
-#ur-tab-registered-fields {
-	h2 {
+.ur-registered-inputs {
+	.ur-toggle-heading {
 		cursor: pointer;
-
-		&:hover, &:focus {
-			// box-shadow: 0 0 20px rgba(0,0,0,.2);
-
-		}
 
 		&:before {
 			content: '\f142';
@@ -1813,7 +1820,7 @@ img.tips {
 
 		&.closed {
 			&:before {
-				content: '\f140'!important;
+				content: '\f140';
 			}
 		}
 	}

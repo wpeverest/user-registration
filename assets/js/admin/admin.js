@@ -437,7 +437,6 @@ jQuery(function ($) {
 						} );
 
 						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
-							var $this_single_row = $( this ).closest( '.ur-single-row' ),
 								grid_num = $( this ).attr( 'data-grid' ),
 								$grids = builder.get_grid_lists(grid_num);
 
@@ -1537,7 +1536,8 @@ jQuery(function ($) {
 	});
 
 
-	$(document).on('click', '#ur-tab-registered-fields h2', function () {
+	$(document).on('click', '.ur-toggle-heading', function () {
+		
 		if ($(this).hasClass('closed')) {
 			$(this).removeClass('closed');
 		} else {
@@ -1545,6 +1545,9 @@ jQuery(function ($) {
 		}
 		var field_list = $(this).find(' ~ .ur-registered-list')[0];
 		$(field_list).slideToggle();
+
+		// For `Field Options` section
+		$(this).siblings( 'div' ).slideToggle();
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {
