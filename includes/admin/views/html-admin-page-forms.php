@@ -116,9 +116,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="ur-builder-wrapper-footer">
 								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
 								<ul class="ur-quick-links-content" hidden>
-									<li><a href="#" target='_blank'><?php echo __( 'Get Support', 'user-registration' ); ?></a></li>
-									<li><a href="#" target='_blank'><?php echo __( 'Create Login Form', 'user-registration' ); ?></a></li>
-									<li><a href="#" target='_blank'><?php echo __( 'Documentation', 'user-registration' ); ?></a></li>
+									<li><a href="https://wpeverest.com/support/" target='_blank'><?php echo __( 'Get Support', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target='_blank'><?php echo __( 'Create Login Form', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/" target='_blank'><?php echo __( 'Documentation', 'user-registration' ); ?></a></li>
 								</ul>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>
