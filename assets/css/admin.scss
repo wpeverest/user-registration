@@ -641,7 +641,6 @@
 .ur-registered-from {
 	display: flex;
 	background-color: $white;
-	font-family: Roboto, sans-serif;
 
 	* {
 		box-sizing: border-box;
@@ -739,7 +738,6 @@
 		.ur-tabs {
 			border: 0 none;
 			padding: 0;
-			font-family: Roboto, sans-serif;
 			font-size: 14px;
 
 			.ur-tab-lists {
@@ -818,7 +816,6 @@
 					margin: 16px 0;
 					font-size: 1em;
 					font-weight: 500;
-					font-family: Roboto, sans-serif;
 					color: $gray_base;
 
 					~ hr {
