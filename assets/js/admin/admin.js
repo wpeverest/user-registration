@@ -639,14 +639,21 @@ jQuery(function ($) {
 			ur_save_form();
 		});
 
-		$(document).on('click', '.ur-button-quick-links', function() {
-			$('.ur-quick-links-content').slideToggle();
-		})
-		$(document).on('focusout', '.ur-button-quick-links', function() {
-			if ( ! $('.ur-quick-links-content').is(':hidden') ) {
-				$('.ur-quick-links-content').slideToggle();
+		/**
+		 * For toggling quick links content.
+		 */
+		$( document.body ).on( 'click', '.ur-quick-links-content', function( e ) {
+			e.stopPropagation();
+		});
+		$( document.body ).on( 'click', '.ur-button-quick-links', function( e ) {
+			e.stopPropagation();
+			$( '.ur-quick-links-content' ).slideToggle();
+		});
+		$( document.body ).on( 'click', function( e ) {
+			if ( ! $( '.ur-quick-links-content' ).is( ':hidden' ) ) {
+				$( '.ur-quick-links-content' ).slideToggle();
 			}
-		})
+		});
 
 		$(window).on( 'keydown', function(event) {
 			if (event.ctrlKey || event.metaKey) {
