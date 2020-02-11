@@ -179,13 +179,13 @@ class UR_Admin_Export_Users {
 			$user_id_row    = array( 'user_id' => $user->data->ID );
 			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
 
-			foreach ( $user_extra_row as $user_extra_data ) {
+			foreach ( $user_extra_row as $user_extra_data_key => $user_extra_data ) {
 				$columns = $this->generate_columns( $form_id );
 
-				if ( ! isset( $columns[ $user_extra_data ] ) ) {
+				if ( ! isset( $columns[ $user_extra_data_key ] ) ) {
 
 					// Remove the rows value that are not in columns.
-					unset( $user_extra_row[ $user_extra_data ] );
+					unset( $user_extra_row[ $user_extra_data_key ] );
 				}
 			}
 

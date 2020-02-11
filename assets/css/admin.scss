@@ -474,8 +474,40 @@
 	}
 }
 
-.user-registration {
+/**
+ * Sweet Alert styling
+ **/
+.user-registration_page_add-new-registration {
+	.swal2-container {
+		.swal2-title {
+			color: $gray_base;
+			font-size: 24px;
+			flex-wrap: wrap;
+			margin-bottom: 24px;
+		}
 
+		.dashicons {
+			color: $color_danger;
+			font-size: 28px;
+			width: 56px;
+			height: 56px;
+			line-height: 56px;
+			margin: 0 auto 20px;
+			border: 2px solid $color_danger;
+			border-radius: 50%;
+		}
+
+		.ur-swal-title {
+			flex: 100%;
+		}
+
+		.swal2-content {
+			color: $color_gray_one;
+		}
+	}
+}
+
+.user-registration {
 	h2.ur-nav-tab-wrapper {
 		margin-bottom: 1em;
 	}
@@ -641,7 +673,6 @@
 .ur-registered-from {
 	display: flex;
 	background-color: $white;
-	font-family: Roboto, sans-serif;
 
 	* {
 		box-sizing: border-box;
@@ -739,7 +770,6 @@
 		.ur-tabs {
 			border: 0 none;
 			padding: 0;
-			font-family: Roboto, sans-serif;
 			font-size: 14px;
 
 			.ur-tab-lists {
@@ -818,7 +848,6 @@
 					margin: 16px 0;
 					font-size: 1em;
 					font-weight: 500;
-					font-family: Roboto, sans-serif;
 					color: $gray_base;
 
 					~ hr {
@@ -1727,6 +1756,18 @@ img.tips {
 /**
  * Select2 elements.
  */
+
+.select2-results__option .wrap:before{
+    content:"\2610";
+    width:25px;
+    height:25px;
+    padding-right: 10px;
+}
+
+.select2-results__option[data-selected=true] .wrap:before{
+    content:"\2714";
+}
+
 .select2-drop,
 .select2-dropdown {
 	z-index: 999999 !important;
@@ -1813,12 +1854,18 @@ img.tips {
 	}
 }
 
-#ur-tab-registered-fields li.ur-registered-item.ui-draggable-disabled {
-	color: $color_gray_three;
+#ur-tab-registered-fields li.ur-registered-item {
+	&.ui-draggable-disabled {
+		color: $color_gray_three;
 
-	&:hover {
-		background: $color_gray_five;
-		cursor: not-allowed;
+		&.ur-upgradable-field {
+			cursor: pointer !important;
+		}
+
+		&:hover {
+			background: $color_gray_five;
+			cursor: not-allowed;
+		}
 	}
 }
 
@@ -1853,14 +1900,9 @@ img.tips {
 	background-color:#fff
 }
 
-#ur-tab-registered-fields {
-	h2 {
+.ur-registered-inputs {
+	.ur-toggle-heading {
 		cursor: pointer;
-
-		&:hover, &:focus {
-			// box-shadow: 0 0 20px rgba(0,0,0,.2);
-
-		}
 
 		&:before {
 			content: '\f142';
@@ -1877,7 +1919,7 @@ img.tips {
 
 		&.closed {
 			&:before {
-				content: '\f140'!important;
+				content: '\f140';
 			}
 		}
 	}
