@@ -81,11 +81,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
-											$field = $profile[ $key ];
+											$field                = $profile[ $key ];
 											$field['input_class'] = array( 'ur-edit-profile-field ' );
-											$advance_data = array(
+											$advance_data         = array(
 												'general_setting' => (object) $single_item->general_setting,
-												'advance_setting' => (object) $single_item->advance_setting
+												'advance_setting' => (object) $single_item->advance_setting,
 											);
 											?>
 											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
@@ -104,33 +104,33 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
-												if( 'phone' === $single_item->field_key ){
+												if ( 'phone' === $single_item->field_key ) {
 													$field['phone_format'] = $single_item->general_setting->phone_format;
-													if( 'smart' === $field['phone_format'] ){
+													if ( 'smart' === $field['phone_format'] ) {
 														unset( $field['input_mask'] );
 													}
 												}
 
 												$filter_data = array(
 													'form_data' => $field,
-													'data' => $advance_data
+													'data' => $advance_data,
 												);
-                      
-                      $form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
-											$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-											$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'];
 
-											user_registration_form_field( $key, $field, $value );
-											
-											/**
-											 * Embed the current country value to allow to remove it if it's not allowed.
-											 */
-											if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-												echo sprintf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', $value, UR_Form_Field_Country::get_instance()->get_country()[ $value ]);
-											}
-											?>
-										</div>
+												$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
+												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'];
 
+												user_registration_form_field( $key, $field, $value );
+
+												/**
+												 * Embed the current country value to allow to remove it if it's not allowed.
+												 */
+												if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
+													echo sprintf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', $value, UR_Form_Field_Country::get_instance()->get_country()[ $value ] );
+												}
+												?>
+											</div>
+										<?php } ?>
 									<?php } ?>
 
 									<?php if ( $found_field ) { ?>

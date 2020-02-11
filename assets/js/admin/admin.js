@@ -4,6 +4,29 @@
  */
 jQuery(function ($) {
 
+	// Bind UI Actions for upgradable fields
+	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
+		e.preventDefault();
+
+		var icon = '<i class="dashicons dashicons-lock"></i>';
+		var label = $(this).text();
+		var title = icon + "<div class='ur-swal-title'>" + label + " is a Premium field.</div>";
+		var plan = $(this).data('plan');
+		var message = label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
+
+		Swal.fire({
+			title: title,
+			html: message,
+			showCloseButton: true,
+			confirmButtonText: "Let's do it",
+		}).then( function(result) {
+			if ( result.value ) {
+				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/';
+				window.open( url, '_blank' );
+			}
+		});
+	});
+
 	// Adjust builder width
 	$( window ).on( 'resize orientationchange', function() {
 		var resizeTimer;
@@ -486,7 +509,7 @@ jQuery(function ($) {
 								$(this).removeClass('ur-sortable-active');
 							}
 						});
-						$('#ur-draggabled li').draggable({
+						$('#ur-draggabled .draggable').draggable({
 							connectToSortable: '.ur-grid-list-item',
 							containment: '.ur-registered-from',
 							helper: function() {

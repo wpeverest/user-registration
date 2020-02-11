@@ -474,8 +474,40 @@
 	}
 }
 
-.user-registration {
+/**
+ * Sweet Alert styling
+ **/
+.user-registration_page_add-new-registration {
+	.swal2-container {
+		.swal2-title {
+			color: $gray_base;
+			font-size: 24px;
+			flex-wrap: wrap;
+			margin-bottom: 24px;
+		}
 
+		.dashicons {
+			color: $color_danger;
+			font-size: 28px;
+			width: 56px;
+			height: 56px;
+			line-height: 56px;
+			margin: 0 auto 20px;
+			border: 2px solid $color_danger;
+			border-radius: 50%;
+		}
+
+		.ur-swal-title {
+			flex: 100%;
+		}
+
+		.swal2-content {
+			color: $color_gray_one;
+		}
+	}
+}
+
+.user-registration {
 	h2.ur-nav-tab-wrapper {
 		margin-bottom: 1em;
 	}
@@ -1758,12 +1790,18 @@ img.tips {
 	}
 }
 
-#ur-tab-registered-fields li.ur-registered-item.ui-draggable-disabled {
-	color: $color_gray_three;
+#ur-tab-registered-fields li.ur-registered-item {
+	&.ui-draggable-disabled {
+		color: $color_gray_three;
 
-	&:hover {
-		background: $color_gray_five;
-		cursor: not-allowed;
+		&.ur-upgradable-field {
+			cursor: pointer !important;
+		}
+
+		&:hover {
+			background: $color_gray_five;
+			cursor: not-allowed;
+		}
 	}
 }
 
