@@ -21,7 +21,7 @@ add_action( 'wp_dashboard_setup', 'ur_add_dashboard_widget' );
  */
 function ur_add_dashboard_widget() {
 
-	if( ! current_user_can( 'manage_user_registration' ) ) {
+	if ( ! current_user_can( 'manage_user_registration' ) ) {
 		return;
 	}
 
@@ -40,9 +40,9 @@ function ur_status_widget() {
 		'user-registration-dashboard-widget-js',
 		'ur_widget_params',
 		array(
-			'ajax_url'           => admin_url( 'admin-ajax.php' ),
-			'loading'			 => __( 'loading...', 'user-registration' ),
-			'widget_nonce' 		 => wp_create_nonce( 'dashboard-widget' ),
+			'ajax_url'     => admin_url( 'admin-ajax.php' ),
+			'loading'      => __( 'loading...', 'user-registration' ),
+			'widget_nonce' => wp_create_nonce( 'dashboard-widget' ),
 		)
 	);
 
@@ -56,23 +56,25 @@ function ur_status_widget() {
  */
 function ur_get_user_report( $form_id ) {
 
-	$current_date 		= current_time( 'Y-m-d' );
-	$users 				= get_users( array(
-							'meta_key'	 => 'ur_form_id',
-						) );
-	$total_users		= 0;
-	$today_users	= 0;
-	$last_week_users    = 0;
-	$last_month_users   = 0;
+	$current_date     = current_time( 'Y-m-d' );
+	$users            = get_users(
+		array(
+			'meta_key' => 'ur_form_id',
+		)
+	);
+	$total_users      = 0;
+	$today_users      = 0;
+	$last_week_users  = 0;
+	$last_month_users = 0;
 
-	foreach( $users as $user ) {
+	foreach ( $users as $user ) {
 		$user_registered = date( 'Y-m-d', strtotime( $user->data->user_registered ) );
 		$user_form       = get_user_meta( $user->ID, 'ur_form_id', true );
 
-		if( ( int ) $form_id === ( int ) $user_form ) {
+		if ( (int) $form_id === (int) $user_form ) {
 
 			// Count today users.
-			if( $user_registered === $current_date ) {
+			if ( $user_registered === $current_date ) {
 				$today_users++;
 			}
 
@@ -85,12 +87,12 @@ function ur_get_user_report( $form_id ) {
 			$last_month = date( 'Y-m-d', $last_month );
 
 			// Get last week users count.
-			if( $user_registered > $last_week ) {
+			if ( $user_registered > $last_week ) {
 				$last_week_users++;
 			}
 
 			// Get last month users count.
-			if( $user_registered > $last_month ) {
+			if ( $user_registered > $last_month ) {
 				$last_month_users++;
 			}
 
@@ -99,10 +101,10 @@ function ur_get_user_report( $form_id ) {
 	}
 
 	$report = array(
-		'total_users'			=> $total_users,
-		'today_users' 		=> $today_users,
-		'last_week_users'		=> $last_week_users,
-		'last_month_users'		=> $last_month_users,
+		'total_users'      => $total_users,
+		'today_users'      => $today_users,
+		'last_week_users'  => $last_week_users,
+		'last_month_users' => $last_month_users,
 	);
 
 	return $report;
@@ -531,10 +533,10 @@ function ur_check_activation_date() {
 
 	// Plugin Activation Time.
 	$activation_date = get_option( 'user_registration_activated' );
-	$last_month 	 = strtotime( 'now' ) - MONTH_IN_SECONDS;
-	$last_month 	 = date( 'Y-m-d', $last_month );
+	$last_month      = strtotime( 'now' ) - MONTH_IN_SECONDS;
+	$last_month      = date( 'Y-m-d', $last_month );
 
-	if( ! empty( $activation_date ) ) {
+	if ( ! empty( $activation_date ) ) {
 		if ( $activation_date < $last_month ) {
 			return true;
 		}

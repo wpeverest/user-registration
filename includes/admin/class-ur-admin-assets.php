@@ -74,9 +74,8 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'perfect-scrollbar' );
 			wp_enqueue_style( 'sweetalert2' );
 		}
-
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_style( 'flatpickr' );
 		}
 
@@ -237,7 +236,7 @@ class UR_Admin_Assets {
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
 			wp_enqueue_media();
 			wp_enqueue_script( 'ur-my-account' );
@@ -322,6 +321,7 @@ class UR_Admin_Assets {
 			'i18n_multiple_field_key'                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
 			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
 			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
+			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
 
 		);
 
