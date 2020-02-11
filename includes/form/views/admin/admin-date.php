@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
 	<div class="ur-field" data-field-key="date">
-		<input type="date" id="ur-input-type-date" placeholder="<?php echo esc_attr( $this->get_general_setting_data( 'placeholder' ) ); ?>" disabled/>
+		<input type="text" id="ur-input-type-date" placeholder="<?php echo esc_attr( $this->get_advance_setting_data( 'date_format' ) ); ?>" disabled/>
 	</div>
 </div>
-

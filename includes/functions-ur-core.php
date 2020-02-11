@@ -861,6 +861,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 		'setting_data' => array(
 			array(
+				'label'             => __( 'User login option', 'user-registration' ),
+				'description'       => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_login_options',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
+				'type'              => 'select',
+				'class'             => array( 'ur-enhanced-select' ),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'options'           => ur_login_option(),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -873,17 +885,13 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'checkbox',
 				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_strong_password',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array(
-					'yes' => __( 'Yes', 'user-registration' ),
-					'no'  => __( 'No', 'user-registration' ),
-				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
 			),
@@ -926,17 +934,13 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'checkbox',
 				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
-				'options'           => array(
-					'yes' => __( 'Yes', 'user-registration' ),
-					'no'  => __( 'No', 'user-registration' ),
-				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
 			),
@@ -1054,7 +1058,9 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$login_option = get_option( 'user_registration_general_setting_login_options', '' );
+	$form_id = ur_get_form_id_by_userid( $user_id );
+
+	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 	if ( 'admin_approval' === $login_option ) {
 
@@ -1305,7 +1311,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	static $rc_counter = 0;
 
-	if ( 'yes' == $recaptcha_enabled && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
+	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if ( 0 === $rc_counter ) {
 			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
@@ -1603,4 +1609,21 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		$variable = icl_t( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	return $variable;
+}
+
+/**
+ * Get Form ID from User ID.
+ *
+ * @param int $user_id User ID.
+ *
+ * @return int $form_id Form ID.
+ */
+function ur_get_form_id_by_userid( $user_id ) {
+	$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
+	$form_id       = 0;
+
+	if ( isset( $form_id_array[0] ) ) {
+		$form_id = $form_id_array[0];
+	}
+	return $form_id;
 }

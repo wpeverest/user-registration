@@ -74,9 +74,8 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'perfect-scrollbar' );
 			wp_enqueue_style( 'sweetalert2' );
 		}
-
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_style( 'flatpickr' );
 		}
 
@@ -230,14 +229,14 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
-
+				'is_newest_ur_form_created'      => get_option( 'user_registration_is_newest_ur_form_created', false ),
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
 			wp_enqueue_media();
 			wp_enqueue_script( 'ur-my-account' );
@@ -322,6 +321,7 @@ class UR_Admin_Assets {
 			'i18n_multiple_field_key'                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
 			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
 			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
+			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
 
 		);
 
