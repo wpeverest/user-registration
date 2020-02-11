@@ -134,11 +134,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'icon'  => 'ur-icon ur-icon-bill',
 						),
 						array(
-							'id'    => 'user_registration_billing_address_title',
-							'label' => 'Billing Address',
-							'icon'  => 'ur-icon ur-icon-bill',
-						),
-						array(
 							'id'    => 'user_registration_billing_country',
 							'label' => 'Country',
 							'icon'  => 'ur-icon ur-icon-flag',
@@ -282,7 +277,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					for ( $i = 0; $i < count($fields); $i++ ) {
 						$fields[$i]['plan'] = $plan;
 					}
-					
+
 					echo '<h2>' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
 					$this->render_upgradable_fields( $fields );
