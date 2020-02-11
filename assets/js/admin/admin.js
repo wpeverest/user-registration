@@ -769,6 +769,22 @@ jQuery(function ($) {
 			ur_save_form();
 		});
 
+		/**
+		 * For toggling quick links content.
+		 */
+		$( document.body ).on( 'click', '.ur-quick-links-content', function( e ) {
+			e.stopPropagation();
+		});
+		$( document.body ).on( 'click', '.ur-button-quick-links', function( e ) {
+			e.stopPropagation();
+			$( '.ur-quick-links-content' ).slideToggle();
+		});
+		$( document.body ).on( 'click', function( e ) {
+			if ( ! $( '.ur-quick-links-content' ).is( ':hidden' ) ) {
+				$( '.ur-quick-links-content' ).slideToggle();
+			}
+		});
+
 		$(window).on( 'keydown', function(event) {
 			if (event.ctrlKey || event.metaKey) {
 				if( 's' === String.fromCharCode(event.which).toLowerCase() ) {
@@ -827,10 +843,26 @@ jQuery(function ($) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
-					show_message(success_message, 'success');
 
-					if( 0 === parseInt( ur_form_id ) ) {
-						window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+					if ( user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1' ) {
+						var title = "Form successfully created."
+						message_body = "<p>To create your login form please click <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>here</a>. For more step by step guideline please check our documentation <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>here</a>.</p>"
+						Swal.fire({
+							type: 'success',
+							title: title,
+							html: message_body,
+						}).then( value => {
+
+							if( 0 === parseInt( ur_form_id ) ) {
+								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+							}
+						})
+					} else {
+						show_message(success_message, 'success');
+
+						if( 0 === parseInt( ur_form_id ) ) {
+							window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+						}
 					}
 				} else {
 					var error = response.responseJSON.data.message;
