@@ -153,7 +153,6 @@ class UR_Shortcode_My_Account {
 		$user_id = get_current_user_id();
 		$form_id       = ur_get_form_id_by_userid( $user_id );
 
-		add_filter( 'user_registration_user_profile_field_only', 'ur_get_registered_form_fields' );
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		$user_data = get_userdata( $user_id );

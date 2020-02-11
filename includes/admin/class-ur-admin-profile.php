@@ -48,6 +48,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$form_fields       = $this->get_form_fields( $all_meta_for_user, $form_id );
 
 			if ( ! empty( $form_fields ) ) {
+				unset( $form_fields['user_registration_profile_pic_url'] );
 				$show_fields = apply_filters(
 					'user_registration_profile_meta_fields',
 					array(
@@ -84,31 +85,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				?>
 				<h2><?php echo $fieldset['title']; ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
-
-					<?php
-					$default_image      = plugins_url( '/assets/images/default_profile.png', UR_PLUGIN_FILE );
-					$profile_picture_id = get_user_meta( $user->ID, 'user_registration_profile_pic_id', true );
-
-					if ( $profile_picture_id ) {
-						$image = wp_get_attachment_thumb_url( $profile_picture_id );
-					} else {
-						$image = $default_image;
-					}
-					?>
-					<tr>
-						<th>
-							<label for=""><?php echo __( 'Profile Picture', 'user-registration' ); ?></label>
-						</th>
-						<td>
-							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" width="96px" height="96px" /><br/>
-
-							<input type="hidden" name="profile-pic-id" value="<?php echo $profile_picture_id; ?>" />
-							<input type="hidden" name="profile-default-image" value="<?php echo $default_image; ?>" />
-
-							<button class="button profile-pic-remove" style="<?php echo ( $default_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-							<button class="button profile-pic-upload"><?php echo __( 'Upload Image', 'user-registration' ); ?></php></button>
-						</td>
-					</tr>
 
 					<?php
 					$profile_field_type = array(
@@ -332,11 +308,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int $user_id User ID of the user being saved
 		 */
 		public function update_user_profile( $user_id ) {
-
-			if ( isset( $_POST['profile-pic-id'] ) ) {
-				$picture_id = absint( $_POST['profile-pic-id'] );
-				update_user_meta( $user_id, 'user_registration_profile_pic_id', $picture_id );
-			}
 
 			$save_fields = $this->get_user_meta_by_form_fields( $user_id );
 

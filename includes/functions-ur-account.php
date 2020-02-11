@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_filter( 'login_errors', 'ur_login_error_message' );
-add_filter( 'get_avatar', 'ur_replace_gravatar_image', 10, 6 );
+add_filter( 'get_avatar', 'ur_replace_gravatar_image', 99, 6 );
 add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
 
 /**
@@ -187,6 +187,12 @@ function ur_get_account_endpoint_url( $endpoint ) {
  * @param array  $args
  */
 function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt, $args = array() ) {
+	global $wp_filter;
+
+	remove_all_filters( 'get_avatar' );
+
+	add_filter( 'get_avatar', 'ur_replace_gravatar_image', 100, 6 );
+
 	// Process the user identifier.
 	$user = false;
 	if ( is_numeric( $id_or_email ) ) {

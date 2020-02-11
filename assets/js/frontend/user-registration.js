@@ -390,7 +390,18 @@
 							return true;
 						}
 
-						if (!$this.valid()) {
+						var exist_detail = $('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+						if( 1 === exist_detail ){
+							var profile = $('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+							var wrapper = $('.uraf-profile-picture-upload');
+							wrapper.find('#' + profile.attr('name') + '-error').remove();
+							wrapper.find('.uraf-profile-picture-file-error').remove();
+							var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+							wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+						}
+
+						if ( !$this.valid() ) {
 							return;
 						}
 

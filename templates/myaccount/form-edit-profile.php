@@ -43,17 +43,38 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
 						</div>
 						<header>
-							<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+								<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
 							<div class="button-group">
-								<input type="hidden" name="profile-pic-url" value="<?php echo $profile_picture_url; ?>" />
-								<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
-								<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-								<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
-							</div>
-							<?php if ( ! $profile_picture_url ) { ?>
-								<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-							<?php } ?>
-						</header>
+						<?php
+
+						if ( has_action( 'uraf_profile_picture_buttons' ) ) {
+							?>
+							<div class="uraf-profile-picture-upload">
+								<p class="form-row " id="profile_pic_url_field" data-priority="">
+									<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
+									<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+									<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="" />'; ?>
+								</span>
+								<?php do_action( 'uraf_profile_picture_buttons' ); ?>
+							</p>
+							<div style="clear:both; margin-bottom: 20px"></div>
+						</div>
+
+							<?php
+						} else {
+							?>
+						<input type="hidden" name="profile-pic-url" value="<?php echo $profile_picture_url; ?>" />
+						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
+						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
+						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+							<?php
+						}
+						?>
+						 </div>
+						 <?php if ( ! $profile_picture_url ) { ?>
+							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+						<?php } ?>
+					</header>
 					</div>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
@@ -104,7 +125,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
-												if ( 'phone' === $single_item->field_key ) {
+											  if ( 'phone' === $single_item->field_key ) {
 													$field['phone_format'] = $single_item->general_setting->phone_format;
 													if ( 'smart' === $field['phone_format'] ) {
 														unset( $field['input_mask'] );

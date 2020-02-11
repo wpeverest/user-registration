@@ -326,10 +326,10 @@ abstract class UR_Form_Field {
 					}
 					$disabled = '';
 					// To make invite code field name non editable.
-					if($value === 'invite_code'){
+					if ( $value === 'invite_code' || $value === 'profile_pic_url' ) {
 						$disabled = 'disabled';
 					}
-					$general_setting_wrapper .= $extra_attribute . ' '. $disabled .'/>';
+					$general_setting_wrapper .= $extra_attribute . ' ' . $disabled . '/>';
 					break;
 
 				case 'radio':
