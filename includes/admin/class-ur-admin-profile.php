@@ -43,7 +43,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		public function get_user_meta_by_form_fields( $user_id ) {
 
 			$show_fields       = array();
-			$form_id           = $this->get_user_meta( $user_id, 'ur_form_id' );
+			$form_id       = ur_get_form_id_by_userid( $user_id );
 			$all_meta_for_user = $this->get_user_meta_by_prefix( $user_id, 'user_registration_' );
 			$form_fields       = $this->get_form_fields( $all_meta_for_user, $form_id );
 

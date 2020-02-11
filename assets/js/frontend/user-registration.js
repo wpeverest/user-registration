@@ -478,13 +478,13 @@
 										$('.user-registration-password-hint').remove();
 										$('.user-registration-password-strength').remove();
 
-										if (user_registration_params.login_option == 'admin_approval') {
+										if ( response.data.form_login_option == 'admin_approval') {
 											message.append('<li>' + ursL10n.user_under_approval + '</li>');
 										}
-										else if (user_registration_params.login_option == 'email_confirmation') {
+										else if ( response.data.form_login_option == 'email_confirmation') {
 											message.append('<li>' + ursL10n.user_email_pending + '</li>');
 										}
-										else if (user_registration_params.login_option == 'payment') {
+										else if ( response.data.form_login_option == 'payment') {
 											message.append('<li>' + response.data.message + '</li>');
 										}
 										else {
