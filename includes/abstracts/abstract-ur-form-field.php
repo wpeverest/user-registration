@@ -165,12 +165,12 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->min_date ) ) {
-			$min_date = str_replace('/', '-', $data['advance_setting']->min_date );
+			$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
 			$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
 		}
 
 		if ( isset( $data['advance_setting']->max_date ) ) {
-			$max_date = str_replace('/', '-', $data['advance_setting']->min_date );
+			$max_date                                        = str_replace( '/', '-', $data['advance_setting']->max_date );
 			$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
 		}
 
@@ -195,10 +195,10 @@ abstract class UR_Form_Field {
 		}
 
 		// Filter only selected countries for `Country` fields
-		if ( 'country' === $field_key || "billing_country" === $field_key || "shipping_country" === $field_key ) {
+		if ( 'country' === $field_key || 'billing_country' === $field_key || 'shipping_country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
-			$filtered_options = array();
-			$selected_countries = $data['advance_setting']->selected_countries;
+			$filtered_options     = array();
+			$selected_countries   = $data['advance_setting']->selected_countries;
 
 			if ( is_array( $selected_countries ) ) {
 				foreach ( $form_data['options'] as $iso => $country_name ) {
@@ -206,7 +206,7 @@ abstract class UR_Form_Field {
 						$filtered_options[ $iso ] = $country_name;
 					}
 				}
-	
+
 				$form_data['options'] = $filtered_options;
 			}
 		}
