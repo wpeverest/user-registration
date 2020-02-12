@@ -72,9 +72,12 @@ module.exports = function( grunt ){
 			},
 			vendor: {
 				files: {
+					'<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js': ['<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js'],
 					'<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js': ['<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js'],
 					'<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js': ['<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js'],
-					'<%= dirs.js %>/selectWoo/selectWoo.min.js': ['<%= dirs.js %>/selectWoo/selectWoo.js']
+					'<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js': ['<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js'],
+					'<%= dirs.js %>/selectWoo/selectWoo.min.js': ['<%= dirs.js %>/selectWoo/selectWoo.js'],
+					'<%= dirs.js %>/sweetalert2/sweetalert2.min.js': ['<%= dirs.js %>/sweetalert2/sweetalert2.js'],
 				}
 			}
 		},

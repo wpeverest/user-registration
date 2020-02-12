@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.3.2
-Stable tag: 1.7.6
+Stable tag: 1.8.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -114,7 +114,7 @@ All the users registered via the registration forms and their data can be access
 
 = Can a user edit their profile informaton after registration?
 
-Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available. 
+Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
 
 = Does the plugin come with a login form as well?
 
@@ -141,6 +141,24 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
+= 1.8.0 - 12/02/2020
+* Feature 	  - Profile picture upload field.
+* Enhancement - Date field.
+* Enhancement - Login option for separate forms.
+* Enhancement - Selective Countries.
+* Enhancement - Show all fields.
+* Enhancement - Conditional logic in edit profile.
+* Enhancement - Real time Password Matching.
+* Enhancement - Real time Email Matching.
+* Enhancement - Popup with documentation links on new form creation.
+* Enhancement - Dropdown changed to checkbox.
+* Tweak 	  - Toggle field option.
+* Tweak		  - SweetAlert2 added in frontend.
+* Tweak		  - CDN styling swapped with local file.
+* Fix   	  - Conditional user role settings.
+* Fix		  - Exclude fields in edit profile.
+* Fix		  - Reset password link broke.
+
 = 1.7.6 - 30/12/2019 =
 * Enhancement - Registered user source.
 * Tweak - Remove inline css from recaptcha.
@@ -154,7 +172,7 @@ Yes, the plugin has a shortcode for the login form.
 * Fix - Escaping attribute in checkbox field.
 * Fix - Remove admin notice from form builder.
 * Fix - Case sensitive in confirm password.
-* Fix - Invite code field name made non editable. 
+* Fix - Invite code field name made non editable.
 
 = 1.7.4 - 21/11/2019 =
 * Feature - WPML Plugin Compatibility.

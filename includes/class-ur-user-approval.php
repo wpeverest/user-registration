@@ -34,7 +34,7 @@ class UR_User_Approval {
 
 		// Handle user Sign on
 		add_action( 'wp_login', array( $this, 'track_first_login' ), 10, 2 );
-		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ), 10, 2  );
+		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ), 10, 2 );
 
 		// Handle Lost Password Page
 		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
@@ -52,9 +52,9 @@ class UR_User_Approval {
 		add_action( 'ur_user_user_denied', array( $this, 'disconnect_user_session' ) );
 
 		// Try to hide the not approved users from any theme or plugin request in frontend
-		// add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
+		add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
 
-		// do_action( 'ur_user_construct' );
+		do_action( 'ur_user_construct' );
 
 	}
 
@@ -132,9 +132,9 @@ class UR_User_Approval {
 	public function send_request_notification_to_admin( $user_id ) {
 
 			// If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin
-			if ( $this->is_admin_creation_process() ) {
-				return;
-			}
+		if ( $this->is_admin_creation_process() ) {
+			return;
+		}
 
 	}
 
@@ -144,7 +144,6 @@ class UR_User_Approval {
 	 * @param $user_id
 	 */
 	public function set_user_status( $form_data, $form_id, $user_id ) {
-
 
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
@@ -176,8 +175,7 @@ class UR_User_Approval {
 	 */
 	public function check_status_on_login( WP_User $user, $password ) {
 
-
-		$form_id       = ur_get_form_id_by_userid( $user->ID );
+		$form_id = ur_get_form_id_by_userid( $user->ID );
 
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$user_manager = new UR_Admin_User_Manager( $user );
@@ -201,15 +199,15 @@ class UR_User_Approval {
 					return new WP_Error( 'denied_access', $message );
 					break;
 			}
-		} else if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		} elseif ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
 
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
-			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-			$url = substr( $url, 0, strpos( $url, '?' ) );
+			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+			$url      = substr( $url, 0, strpos( $url, '?' ) );
 			$instance = new UR_Email_Confirmation();
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( $email_status === '0' ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
@@ -221,12 +219,12 @@ class UR_User_Approval {
 
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
-			if( ! empty( $payment_status ) && $payment_status !== 'completed' ) {
+			if ( ! empty( $payment_status ) && $payment_status !== 'completed' ) {
 
-				$user_id = $user->ID;
-				$instance = new User_Registration_Payments_Process();
+				$user_id      = $user->ID;
+				$instance     = new User_Registration_Payments_Process();
 				$redirect_url = $instance->generate_redirect_url( $user_id );
-				$message = '<strong>' . __( 'ERROR:', 'user-registration-payments' ) . '</strong> ' . sprintf( __( 'Your account is still pending payment. Process the payment by clicking on this: %s', 'user-registration-payments' ), '<a id="payment-link" href="'. esc_url( $redirect_url ) .'">'. __( 'link', 'user-registration-payments' ). '</a>' );
+				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending payment. Process the payment by clicking on this: %s', 'user-registration' ), '<a id="payment-link" href="' . esc_url( $redirect_url ) . '">' . __( 'link', 'user-registration' ) . '</a>' );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}
@@ -246,7 +244,7 @@ class UR_User_Approval {
 			return;
 		}
 
-		$form_id       = ur_get_form_id_by_userid( get_current_user_id() );
+		$form_id = ur_get_form_id_by_userid( get_current_user_id() );
 
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$status = ur_get_user_approval_status( get_current_user_id() );
@@ -282,7 +280,7 @@ class UR_User_Approval {
 	 * @param $user_id
 	 */
 	public function disconnect_user_session( $user_id ) {
-		$form_id       = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			// get all sessions for user with ID $user_id
@@ -303,7 +301,7 @@ class UR_User_Approval {
 	 */
 	public function allow_password_reset( $result, $user_id ) {
 
-		$form_id       = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
