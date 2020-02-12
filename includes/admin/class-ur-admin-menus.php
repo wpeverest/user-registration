@@ -72,7 +72,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				),
 			);
 
-			foreach( $fields as $field ) {
+			foreach ( $fields as $field ) {
 				if ( ! class_exists( $field['field_class'] ) ) {
 					$this->render_upgradable_field( $field );
 				}
@@ -266,7 +266,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				),
 			);
 
-			foreach( $field_sections as $section ) {
+			foreach ( $field_sections as $section ) {
 				$class_to_check = $section['fields_parent_class'];
 
 				if ( ! class_exists( $class_to_check ) ) {
@@ -274,11 +274,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$plan   = isset( $section['plan'] ) ? $section['plan'] : '';
 
 					// Set the same plan for all the section's fields.
-					for ( $i = 0; $i < count($fields); $i++ ) {
-						$fields[$i]['plan'] = $plan;
+					for ( $i = 0; $i < count( $fields ); $i++ ) {
+						$fields[ $i ]['plan'] = $plan;
 					}
 
-					echo '<h2>' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
+					echo '<h2 class="ur-toggle-heading">' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
 					$this->render_upgradable_fields( $fields );
 					echo '</ul >';
@@ -290,7 +290,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Render multiple upgradable fields.
 		 */
 		public function render_upgradable_fields( $fields ) {
-			foreach( $fields as $field ) {
+			foreach ( $fields as $field ) {
 				$this->render_upgradable_field( $field );
 			}
 		}
@@ -299,10 +299,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Render an upgradable field.
 		 */
 		public function render_upgradable_field( $args ) {
-			$id          = $args['id'];
-			$icon        = $args['icon'];
-			$label       = $args['label'];
-			$plan = isset( $args['plan'] ) ? $args['plan'] : '';
+			$id    = $args['id'];
+			$icon  = $args['icon'];
+			$label = $args['label'];
+			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
 
 			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plan="' . $plan . '"><span class="' . $icon . '"></span>' . $label . '</li>';
 		}
