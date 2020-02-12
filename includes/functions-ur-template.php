@@ -325,19 +325,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$actual_value = $value;
 				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
-					$date_format = $args['custom_attributes']['data-date-format'];
-					if ( empty( $value ) && 'today' === $args['custom_attributes']['data-default-date'] ) {
-						$value        = date( $date_format );
-						$actual_value = date( $date_format );
-					}else{
-						$value = str_replace('/', '-', $value );
+					$date_format  = $args['custom_attributes']['data-date-format'];
+					$default_date = isset( $args['custom_attributes']['data-default-date'] ) ? $args['custom_attributes']['data-default-date'] : '';
+					if ( empty( $value ) && 'today' === $default_date ) {
+												$value = date( $date_format );
+						$actual_value                  = date( $date_format );
+					} else {
+						$value = str_replace( '/', '-', $value );
 						if ( ! strpos( $value, 'to' ) ) {
 							$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
 						} else {
 							$date_range = explode( 'to', $value );
-							$value = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
+							$value      = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
 						}
-
 					}
 				}
 				if ( empty( $extra_params ) ) {
@@ -550,8 +550,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 							case 'date':
 								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
-								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace('/', '-', $field->advance_setting->min_date ) : '';
-								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace('/', '-', $field->advance_setting->max_date ) : '';
+								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
 								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
 								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 								$extra_params['custom_attributes']['data-date-format']  = $date_format;
