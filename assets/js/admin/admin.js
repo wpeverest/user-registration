@@ -21,7 +21,7 @@ jQuery(function ($) {
 			confirmButtonText: "Let's do it",
 		}).then( function(result) {
 			if ( result.value ) {
-				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/';
+				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro';
 				window.open( url, '_blank' );
 			}
 		});

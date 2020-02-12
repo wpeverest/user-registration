@@ -19,11 +19,11 @@ Beside registration form, the plugin also supports beautiful frontend profile ac
 The registration forms are 100% mobile responsive and optimized to display on any devices.
 
 
-View [All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
+View [All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 View [Demo](http://demo.wpeverest.com/user-registration/)
 
-Get [Free Support](https://wpeverest.com/support-forum/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme)
+Get [Free Support](https://wpeverest.com/support-forum/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 
@@ -60,37 +60,37 @@ Check [Documentation](http://docs.wpeverest.com/docs/user-registration/)
 
 User Registration can be easily extended with some premium addons.
 
-* [Style Customizer](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to customize design elements like color, font size, font color, border, margin, padding and more for registration and login form.
+* [Style Customizer](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows users to customize design elements like color, font size, font color, border, margin, padding and more for registration and login form.
 
-* [Multi Step Form](https://wpeverest.com/wordpress-plugins/user-registration/multi-part/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to break lengthy registration form into multiple pages.
+* [Multi Step Form](https://wpeverest.com/wordpress-plugins/user-registration/multi-part/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows users to break lengthy registration form into multiple pages.
 
-* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
+* [Social Connect](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows users to register/login to your site with social platforms like Facebook, Twitter, Google+ or LinkedIn.
 
-* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles. Check our article for [content restriction](https://wpeverest.com/blog/restrict-content-in-wordpress/)
+* [Content Restriction](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles. Check our article for [content restriction](https://wpeverest.com/blog/restrict-content-in-wordpress/)
 
-* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to add upload field in registration form so that users can upload documents, images and more.
+* [File Upload](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to add upload field in registration form so that users can upload documents, images and more.
 
-* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, billings plus allows you to create extended registration page with woocommerce fields. Check [detail guide](https://wpeverest.com/blog/woocommerce-registration-form/)
+* [WooCommerce Integration](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Integrates and syncs WooCommerce related information to user registration account page like orders, customer details, billings plus allows you to create extended registration page with woocommerce fields. Check [detail guide](https://wpeverest.com/blog/woocommerce-registration-form/)
 
-* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
+* [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Lets you sync your registered users with MailChimp list. Automatically add users to your selected MailChimp list upon registration.
 
-* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
+* [Advanced Fields](https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Lets you add advanced extra fields such as WYSIWYG, Time picker, Phone Number, HTML, Section title in form.
 
-* [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
+* [Conditional Logic](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Lets you apply conditions to your fields. Conditional Logic allows you to show or hide certain fields based upon other field’s value.
 
-* [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows admin to connect users registered via other forms to User Registration selected form.
+* [Profile Connect](https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows admin to connect users registered via other forms to User Registration selected form.
 
-* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
+* [PDF Form Submission](https://wpeverest.com/wordpress-plugins/user-registration/pdf-form-submission/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Lets you export user's data in PDF, PDF file as email attachment on form submission.
 
-* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Integrates PayPal into your forms for registration fee payments, donations, and more.
+* [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
-* [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Collects and stores users geolocation data along with their form filled information.
+* [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Collects and stores users geolocation data along with their form filled information.
 
-* [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows users to view their registered learndash courses, course progresses, expiry date on my account section and more.
+* [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows users to view their registered learndash courses, course progresses, expiry date on my account section and more.
 
-* [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to restrict the registration on your site to only users with invite codes. Check our [invitation code guide](https://wpeverest.com/blog/user-registration-invitation-code/)
+* [Invite Codes](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to restrict the registration on your site to only users with invite codes. Check our [invitation code guide](https://wpeverest.com/blog/user-registration-invitation-code/)
 
-* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=user-registration-readme) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
+* [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
 
 == Installation ==
 
