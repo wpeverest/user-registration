@@ -1029,6 +1029,18 @@
 				}
 			}
 		}
+
+		&.ur-multipart {
+			.ur-button-quick-links {
+				bottom: 60px;
+			}
+
+			.ur-builder-wrapper-footer {
+				.button.button-style-customizer {
+					bottom: 124px;
+				}
+			}
+		}
 	}
 
 	.ur-selected-inputs {
