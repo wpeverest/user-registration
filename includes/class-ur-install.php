@@ -141,7 +141,6 @@ class UR_Install {
 		self::update_ur_version();
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
-		self::set_is_newest_ur_form_created_flag();
 
 		delete_transient( 'ur_installing' );
 

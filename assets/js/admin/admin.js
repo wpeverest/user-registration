@@ -10,15 +10,15 @@ jQuery(function ($) {
 
 		var icon = '<i class="dashicons dashicons-lock"></i>';
 		var label = $(this).text();
-		var title = icon + "<div class='ur-swal-title'>" + label + " is a Premium field.</div>";
+		var title = icon + '<div class="ur-swal-title">' + label + ' is a Premium field.</div>';
 		var plan = $(this).data('plan');
-		var message = label + " field is not available right now. Please upgrade to <strong>" + plan + "</strong> of the plugin to unlock this field.";
+		var message = label + ' field is not available right now. Please upgrade to <strong>' + plan + '</strong> of the plugin to unlock this field.';
 
 		Swal.fire({
 			title: title,
 			html: message,
 			showCloseButton: true,
-			confirmButtonText: "Let's do it",
+			confirmButtonText: 'Let\'s do it'
 		}).then( function(result) {
 			if ( result.value ) {
 				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro';
@@ -713,11 +713,12 @@ jQuery(function ($) {
 				$selected_countries_option_field.on('change', function ( e ) {
 					var selected_countries_iso_s = $( this ).val();
 					var html = '';
+					var self = this;
 
 					// Get html of selected countries
 					if ( Array.isArray( selected_countries_iso_s ) ) {
-						selected_countries_iso_s.forEach( iso => {
-							var country_name = $(this).find('option[value="' + iso + '"]').html();
+						selected_countries_iso_s.forEach( function( iso ) {
+							var country_name = $(self).find('option[value="' + iso + '"]').html();
 							html += '<option value="' + iso + '">' + country_name + '</option>';
 						});
 					}
@@ -916,7 +917,7 @@ jQuery(function ($) {
 							type: 'success',
 							title: title,
 							html: message_body,
-						}).then( value => {
+						}).then( function( value ) {
 
 							if( 0 === parseInt( ur_form_id ) ) {
 								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
@@ -1431,7 +1432,7 @@ jQuery(function ($) {
 					var selected_options = $this_node.val();
 
 					if ( Array.isArray( selected_options ) ) {
-						selected_options.forEach( value => {
+						selected_options.forEach( function( value ) {
 							hidden_node.find( 'option[value="' + value + '"]' ).attr( 'selected', 'selected' );
 						});
 					}
