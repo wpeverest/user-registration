@@ -291,9 +291,6 @@ class UR_AJAX {
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
 			}
 
-			// Set 'user_registration_is_newest_ur_form_created' flag to '1'
-			update_option( 'user_registration_is_newest_ur_form_created', '1' );
-
 			do_action( 'user_registration_after_form_settings_save', $_POST['data'] );
 
 			wp_send_json_success(

@@ -640,7 +640,7 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
-			
+
 			var field_key = $(this).find('.ur-field').data('field-key');
 
 			if ( 'country' === field_key || 'billing_country' === field_key || 'shipping_country' === field_key ) {
@@ -662,7 +662,7 @@ jQuery(function ($) {
 
 					// Update default_value options in `Field Options` tab
 					$('#ur-setting-form select.ur-settings-default-value').html( html )
-					
+
 					// Update default_value options (hidden)
 					$('.ur-selected-item.ur-item-active select.ur-settings-default-value').html( html )
 				})
@@ -684,7 +684,7 @@ jQuery(function ($) {
 							return data.text;
 						}
 						var length = 0;
-						
+
 						if ( $selected_countries_option_field.val() ) {
 							length = $selected_countries_option_field.val().length;
 						}
@@ -697,7 +697,7 @@ jQuery(function ($) {
 				 * - When the dropdown is open, if the contents of this option's container changes, for example when a different field is
 				 * activated, the behaviour of input tags changes. Specifically, when pressed space key inside ANY input tag, the dropdown
 				 * APPEARS.
-				 * 
+				 *
 				 * P.S. The option we're talking about is `Selective Countries` for country field.
 				 */
 				.on( 'select2:close', function ( e ) {
@@ -847,7 +847,7 @@ jQuery(function ($) {
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
 
-					if ( user_registration_admin_data.is_edit_form !== '1' && user_registration_admin_data.is_newest_ur_form_created !== '1' ) {
+					if ( user_registration_admin_data.is_edit_form !== '1' ) {
 						var title = "Form successfully created."
 						message_body = "<p>To create your login form please click <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>here</a>. For more step by step guideline please check our documentation <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>here</a>.</p>"
 						Swal.fire({
@@ -1655,7 +1655,7 @@ jQuery(function ($) {
 
 
 	$(document).on('click', '.ur-toggle-heading', function () {
-		
+
 		if ($(this).hasClass('closed')) {
 			$(this).removeClass('closed');
 		} else {

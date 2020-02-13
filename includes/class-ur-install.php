@@ -150,13 +150,6 @@ class UR_Install {
 	}
 
 	/**
-	 * Set 'user_registration_is_newest_ur_form_created' flag.
-	 */
-	private static function set_is_newest_ur_form_created_flag() {
-		update_option( 'user_registration_is_newest_ur_form_created', '0' );
-	}
-
-	/**
 	 * Reset any notices added to admin.
 	 *
 	 * @since 1.2.0
