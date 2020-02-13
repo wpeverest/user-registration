@@ -460,6 +460,7 @@ jQuery(function ($) {
 						} );
 
 						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
+							var $this_single_row = $( this ).closest( '.ur-single-row' ),
 								grid_num = $( this ).attr( 'data-grid' ),
 								$grids = builder.get_grid_lists(grid_num);
 
