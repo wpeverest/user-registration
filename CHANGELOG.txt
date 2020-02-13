@@ -1,20 +1,18 @@
-= 1.8.0 - 12/02/2020
-* Feature 	  - Profile picture upload field.
-* Enhancement - Date field.
-* Enhancement - Login option for separate forms.
-* Enhancement - Selective Countries.
-* Enhancement - Show all fields.
+= 1.8.0 - 13/02/2020
+* Feature - Login option introduced for individual forms.
+* Feature - Allows selective country selection in country field.
+* Enhancement - Date field
 * Enhancement - Conditional logic in edit profile.
-* Enhancement - Real time Password Matching.
-* Enhancement - Real time Email Matching.
-* Enhancement - Popup with documentation links on new form creation.
-* Enhancement - Dropdown changed to checkbox.
-* Tweak 	  - Toggle field option.
+* Enhancement - Real time password matching.
+* Enhancement - Real time email matching.
+* Enhancement - Modal popup with documentation links on form creation.
+* Enhancement - Form settings dropdown changed to checkbox.
+* Enhancement - Premium fields showcase.
+* Tweak 	  - Toggle feature added for field option's setting.
 * Tweak		  - SweetAlert2 added in frontend.
 * Tweak		  - CDN styling swapped with local file.
-* Fix   	  - Conditional user role settings.
-* Fix		  - Exclude fields in edit profile.
-* Fix		  - Reset password link broke.
+* Fix		  - Exclude unwanted fields in edit profile.
+* Fix		  - Broken reset password link.
 
 = 1.7.6 - 30/12/2019 =
 * Enhancement - Registered user source.
