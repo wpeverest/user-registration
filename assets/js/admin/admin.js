@@ -595,28 +595,26 @@ jQuery(function ($) {
 
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
+		 * 
+		 * Doc: https://select2.org/
+		 * Ref: https://jsfiddle.net/Lkkm2L48/7/
 		 */
 		var SelectionAdapter, DropdownAdapter;
 		$.fn.select2.amd.require([
 			'select2/selection/single',
 			'select2/selection/placeholder',
-			'select2/selection/allowClear',
 			'select2/dropdown',
 			'select2/dropdown/search',
 			'select2/dropdown/attachBody',
 			'select2/utils',
 			'select2/selection/eventRelay',
-		], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils, EventRelay) {
-			// Add placeholder
+		], function (SingleSelection, Placeholder, Dropdown, DropdownSearch, AttachBody, Utils, EventRelay) {
+			// Add placeholder which shows current number of selections
 			SelectionAdapter = Utils.Decorate(
 				SingleSelection,
 				Placeholder
 			);
-			// Allow to clear all selections with a cross button-icon
-			SelectionAdapter = Utils.Decorate(
-				SelectionAdapter,
-				AllowClear
-			);
+
 			// Allow to flow/fire events
 			SelectionAdapter = Utils.Decorate(
 				SelectionAdapter,
@@ -625,11 +623,74 @@ jQuery(function ($) {
 
 			// Add search box in dropdown
 			DropdownAdapter = Utils.Decorate(
-				Utils.Decorate(
-					Dropdown,
-					DropdownSearch
-				),
+				Dropdown,
+				DropdownSearch
+			);
+
+			// Add attach-body in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
 				AttachBody
+			);
+
+			/**
+			 * Create UnSelectAll Adapter for unselect-all button
+			 * 
+			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
+			 */
+			function UnselectAll() {}
+			UnselectAll.prototype.render = function ( decorated ) {
+				var self = this;
+				var $rendered = decorated.call( this );
+				var $unSelectAllButton = $( '<button class="ur-unselect-all-countries-button" type="button">Unselect All</button>' );
+			
+				$unSelectAllButton.on( 'click', function() {
+					self.$element.val( [] );
+					self.$element.trigger( 'change' );
+					self.trigger('close');
+				});
+				$rendered.find( '.select2-dropdown' ).prepend( $unSelectAllButton );
+				
+				return $rendered;
+			};
+			
+			// Add unselect all button in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
+				UnselectAll
+			);
+
+			/**
+			 * Create SelectAll Adapter for select-all button
+			 * 
+			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
+			 */
+			function SelectAll() {}
+			SelectAll.prototype.render = function ( decorated ) {
+				var self = this;
+				var $rendered = decorated.call( this );
+				var $selectAllButton = $( '<button class="ur-select-all-countries-button" type="button">Select All</button>' );
+			
+				$selectAllButton.on( 'click', function() {
+					var $options = self.$element.find( 'option' );
+					var values = [];
+
+					$options.each( function() {
+						values.push( $(this).val() );
+					})
+					self.$element.val( values );
+					self.$element.trigger( 'change' );
+					self.trigger('close');
+				});
+				$rendered.find( '.select2-dropdown' ).prepend( $selectAllButton );
+				
+				return $rendered;
+			};
+			
+			// Add select all button in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
+				SelectAll
 			);
 		});
 
