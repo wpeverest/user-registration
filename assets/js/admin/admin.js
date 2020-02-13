@@ -912,7 +912,7 @@ jQuery(function ($) {
 
 					if ( user_registration_admin_data.is_edit_form !== '1' ) {
 						var title = "Form successfully created."
-						message_body = "<p>To create your login form please click <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>here</a>. For more step by step guideline please check our documentation <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>here</a>.</p>"
+						message_body = "<p>Want to create a login form as well? Check this <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>docs</a>.</p>"
 						Swal.fire({
 							type: 'success',
 							title: title,

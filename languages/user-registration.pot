@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.8.0\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2020-02-12 06:28:41+00:00\n"
+"POT-Creation-Date: 2020-02-13 10:30:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,11 +34,11 @@ msgstr ""
 msgid "Could not install."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:286
+#: includes/admin/class-ur-admin-assets.php:285
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:286
+#: includes/admin/class-ur-admin-assets.php:285
 #: includes/admin/class-ur-admin-registrations-table-list.php:114
 msgid "Trash"
 msgstr ""
@@ -139,7 +139,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:585
-#: includes/class-ur-install.php:646
+#: includes/class-ur-install.php:639
 msgid "Settings"
 msgstr ""
 
@@ -1789,27 +1789,27 @@ msgid ""
 "and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:376
+#: includes/class-ur-install.php:369
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:646
+#: includes/class-ur-install.php:639
 msgid "View User Registration settings"
 msgstr ""
 
-#: includes/class-ur-install.php:662
+#: includes/class-ur-install.php:655
 msgid "View User Registration documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:662
+#: includes/class-ur-install.php:655
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:663
+#: includes/class-ur-install.php:656
 msgid "Visit free customer support"
 msgstr ""
 
-#: includes/class-ur-install.php:663
+#: includes/class-ur-install.php:656
 msgid "Free support"
 msgstr ""
 
@@ -1823,62 +1823,62 @@ msgstr ""
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:256
+#: includes/class-ur-plugin-updater.php:255
 msgid "Deactivate License Key"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:256
+#: includes/class-ur-plugin-updater.php:255
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:291
+#: includes/class-ur-plugin-updater.php:290
 msgid ""
 "The provided license key expired on %1$s. Please <a href=\"%2$s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:295
+#: includes/class-ur-plugin-updater.php:294
 msgid ""
 "The provided license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:299
+#: includes/class-ur-plugin-updater.php:298
 msgid ""
 "The provided license is invalid. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:304
+#: includes/class-ur-plugin-updater.php:303
 msgid ""
 "The provided license is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:309
+#: includes/class-ur-plugin-updater.php:308
 msgid "This appears to be an invalid license key for <strong>%1$s</strong>."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:313
+#: includes/class-ur-plugin-updater.php:312
 msgid ""
 "The provided license key has reached its activation limit. Please <a "
 "href=\"%1$s\" target=\"_blank\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:317
+#: includes/class-ur-plugin-updater.php:316
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:321
+#: includes/class-ur-plugin-updater.php:320
 msgid ""
 "The provided license key could not be found. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:325
+#: includes/class-ur-plugin-updater.php:324
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -3841,99 +3841,99 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:306
+#: includes/admin/class-ur-admin-assets.php:305
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:307
+#: includes/admin/class-ur-admin-assets.php:306
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:308
+#: includes/admin/class-ur-admin-assets.php:307
 msgctxt "user registration admin"
 msgid "Are you sure want to delete?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:309
+#: includes/admin/class-ur-admin-assets.php:308
 msgctxt "user registration admin"
 msgid "At least one row needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:310
+#: includes/admin/class-ur-admin-assets.php:309
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:311
+#: includes/admin/class-ur-admin-assets.php:310
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:312
+#: includes/admin/class-ur-admin-assets.php:311
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:313
+#: includes/admin/class-ur-admin-assets.php:312
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:314
+#: includes/admin/class-ur-admin-assets.php:313
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:315
+#: includes/admin/class-ur-admin-assets.php:314
 msgctxt "user registration admin"
 msgid "At least one field needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:316
+#: includes/admin/class-ur-admin-assets.php:315
 msgctxt "user registration admin"
 msgid "Empty form name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:317
+#: includes/admin/class-ur-admin-assets.php:316
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:318
+#: includes/admin/class-ur-admin-assets.php:317
 msgctxt "user registration admin"
 msgid "Duplicate field name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:319
+#: includes/admin/class-ur-admin-assets.php:318
 msgctxt "user registration admin"
 msgid "Empty field label."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:320
+#: includes/admin/class-ur-admin-assets.php:319
 msgctxt "user registration admin"
 msgid ""
 "Invalid field name. Please do not use space, empty or special character, "
 "you can use underscore."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:321
+#: includes/admin/class-ur-admin-assets.php:320
 msgctxt "user registration admin"
 msgid "Multiple field key "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:322
+#: includes/admin/class-ur-admin-assets.php:321
 msgctxt "user registration admin"
 msgid "field is required."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:323
+#: includes/admin/class-ur-admin-assets.php:322
 msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:324
+#: includes/admin/class-ur-admin-assets.php:323
 msgctxt "user registration admin"
 msgid "Please select at least one country."
 msgstr ""
@@ -3966,22 +3966,22 @@ msgctxt "The action on users list page"
 msgid "Unverify"
 msgstr ""
 
-#: includes/class-ur-install.php:315
+#: includes/class-ur-install.php:308
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:324
+#: includes/class-ur-install.php:317
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:316
+#: includes/class-ur-install.php:309
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:325
+#: includes/class-ur-install.php:318
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
