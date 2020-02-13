@@ -141,7 +141,7 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 1.8.0 - 12/02/2020
+= 1.8.0 - 13/02/2020
 * Feature - Login option introduced for individual forms.
 * Feature - Allows selective country selection in country field.
 * Enhancement - Date field
