@@ -501,8 +501,10 @@
 			flex: 100%;
 		}
 
-		.swal2-content {
+		.swal2-content,
+		p {
 			color: $color_gray_one;
+			font-size: 1em;
 		}
 	}
 }

@@ -596,7 +596,7 @@ jQuery(function ($) {
 
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
-		 * 
+		 *
 		 * Doc: https://select2.org/
 		 * Ref: https://jsfiddle.net/Lkkm2L48/7/
 		 */
@@ -636,25 +636,25 @@ jQuery(function ($) {
 
 			/**
 			 * Create UnSelectAll Adapter for unselect-all button
-			 * 
+			 *
 			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
 			 */
 			function UnselectAll() {}
 			UnselectAll.prototype.render = function ( decorated ) {
 				var self = this;
 				var $rendered = decorated.call( this );
-				var $unSelectAllButton = $( '<button class="ur-unselect-all-countries-button" type="button">Unselect All</button>' );
-			
+				var $unSelectAllButton = $( '<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Unselect All</button>' );
+
 				$unSelectAllButton.on( 'click', function() {
 					self.$element.val( [] );
 					self.$element.trigger( 'change' );
 					self.trigger('close');
 				});
 				$rendered.find( '.select2-dropdown' ).prepend( $unSelectAllButton );
-				
+
 				return $rendered;
 			};
-			
+
 			// Add unselect all button in dropdown
 			DropdownAdapter = Utils.Decorate(
 				DropdownAdapter,
@@ -663,15 +663,15 @@ jQuery(function ($) {
 
 			/**
 			 * Create SelectAll Adapter for select-all button
-			 * 
+			 *
 			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
 			 */
 			function SelectAll() {}
 			SelectAll.prototype.render = function ( decorated ) {
 				var self = this;
 				var $rendered = decorated.call( this );
-				var $selectAllButton = $( '<button class="ur-select-all-countries-button" type="button">Select All</button>' );
-			
+				var $selectAllButton = $( '<button class="button button-secondary button-medium ur-select-all-countries-button" type="button">Select All</button>' );
+
 				$selectAllButton.on( 'click', function() {
 					var $options = self.$element.find( 'option' );
 					var values = [];
@@ -684,10 +684,10 @@ jQuery(function ($) {
 					self.trigger('close');
 				});
 				$rendered.find( '.select2-dropdown' ).prepend( $selectAllButton );
-				
+
 				return $rendered;
 			};
-			
+
 			// Add select all button in dropdown
 			DropdownAdapter = Utils.Decorate(
 				DropdownAdapter,
