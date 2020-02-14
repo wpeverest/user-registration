@@ -1728,7 +1728,7 @@ jQuery(function ($) {
 		$(field_list).slideToggle();
 
 		// For `Field Options` section
-		$(this).siblings( 'div' ).slideToggle();
+		$( this ).siblings( '.ur-toggle-content' ).slideToggle();
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {

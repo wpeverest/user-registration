@@ -474,7 +474,9 @@ abstract class UR_Form_Field {
 
 		$settings  = "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
 		$settings .= '<h2 class="ur-toggle-heading">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
+		$settings .= '<div class="ur-toggle-content">';
 		$settings .= $this->get_field_general_settings();
+		$settings .= '</div>';
 		$settings .= '</div>';
 
 		$advance_settings = $this->get_field_advance_settings();
@@ -482,7 +484,9 @@ abstract class UR_Form_Field {
 		if ( ! empty( $advance_settings ) ) {
 			$settings .= "<div class='ur-advance-setting-block'>";
 			$settings .= '<h2 class="ur-toggle-heading">' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
+			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;
+			$settings .= '</div>';
 			$settings .= '</div>';
 		}
 
