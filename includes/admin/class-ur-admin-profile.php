@@ -242,6 +242,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									<input type="text" id="load_flatpickr"
 										   value="<?php echo esc_attr( $actual_value );?>"
 										   class="regular-text"
+										   data-id = '<?php echo esc_attr( $key ); ?>'
 										   readonly />
 									<input type="hidden" id="formated_date" value="<?php echo esc_attr( $value );?>"/>
 									<input type="date" name="<?php echo esc_attr( $key ); ?>"
