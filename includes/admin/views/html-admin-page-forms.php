@@ -66,10 +66,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 								<div class="ur-tab-contents" >
 									<div id="ur-tab-registered-fields" class="ur-tab-content">
-										<h2><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading'><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_user_form_fields(); ?>
-										<h2><?php echo __( 'Extra Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading'><?php echo __( 'Extra Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_other_form_fields(); ?>
 										<?php do_action( 'user_registration_extra_fields' ); ?>
@@ -114,6 +114,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
+								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
+								<ul class="ur-quick-links-content" hidden>
+									<li><a href="https://wpeverest.com/support/" target='_blank'><?php echo __( 'Get Support', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target='_blank'><?php echo __( 'Create Login Form', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/" target='_blank'><?php echo __( 'Documentation', 'user-registration' ); ?></a></li>
+								</ul>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>
 						</div>

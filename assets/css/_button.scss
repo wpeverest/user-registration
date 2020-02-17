@@ -6,7 +6,7 @@
 
 		&.button-icon {
 			width: 32px;
-			padding: 0 0 2px;
+			padding: 0;
 
 			.dashicons {
 				line-height: 1;
@@ -110,5 +110,15 @@
 		height: auto;
 		margin-right: 3px;
 
+	}
+}
+
+.select2-container {
+	.ur-select-all-countries-button {
+		margin: 6px 3px 4px 6px;
+	}
+
+	.ur-unselect-all-countries-button {
+		margin: 6px 3px 4px;
 	}
 }

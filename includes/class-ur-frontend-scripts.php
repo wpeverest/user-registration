@@ -43,10 +43,9 @@ class UR_Frontend_Scripts {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ), 5 );
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
-
 	}
 
 	/**
@@ -77,6 +76,12 @@ class UR_Frontend_Scripts {
 					'src'     => self::get_asset_url( 'assets/css/my-account-layout.css' ),
 					'deps'    => '',
 					'version' => UR_VERSION,
+					'media'   => 'all',
+				),
+				'sweetalert2'                         => array(
+					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
+					'deps'    => '',
+					'version' => '8.17.1',
 					'media'   => 'all',
 				),
 			)
@@ -187,7 +192,7 @@ class UR_Frontend_Scripts {
 			'flatpickr'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.17.0',
+				'version' => '4.5.1',
 			),
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
@@ -234,6 +239,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery' ),
 				'version' => '3.5.4',
 			),
+			'sweetalert2'                => array(
+				'src'     => UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js',
+				'deps'    => array( 'jquery' ),
+				'version' => '8.17.1',
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );
@@ -266,6 +276,7 @@ class UR_Frontend_Scripts {
 				'has_rtl' => false,
 			),
 		);
+
 		foreach ( $register_styles as $name => $props ) {
 			self::register_style( $name, $props['src'], $props['deps'], $props['version'], 'all', $props['has_rtl'] );
 		}
@@ -341,7 +352,7 @@ class UR_Frontend_Scripts {
 					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),
 					'message_number_fields'            => get_option( 'user_registration_form_submission_error_message_number', __( 'Please enter a valid number.', 'user-registration' ) ),
 					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
-					'message_validate_phone_number'  => get_option( 'user_registration_form_submission_error_message_phone_number', __( 'Please enter a valid phone number.', 'user-registration' ) ),
+					'message_validate_phone_number'    => get_option( 'user_registration_form_submission_error_message_phone_number', __( 'Please enter a valid phone number.', 'user-registration' ) ),
 					'message_confirm_email_fields'     => get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched.', 'user-registration' ) ),
 					'ursL10n'                          => array(
 						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
