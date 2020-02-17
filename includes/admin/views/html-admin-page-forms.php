@@ -66,6 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 								<div class="ur-tab-contents" >
 									<div id="ur-tab-registered-fields" class="ur-tab-content">
+										<input id="ur-search-fields" class="ur-type-text" type="text" placeholder="Search Fields..." />
 										<h2 class='ur-toggle-heading'><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_user_form_fields(); ?>

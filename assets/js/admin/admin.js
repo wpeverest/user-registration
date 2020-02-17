@@ -4,6 +4,34 @@
  */
 jQuery(function ($) {
 
+	// Bind UI Action handlers for searching fields.
+	$( document.body ).on( 'input', '#ur-search-fields', function() {
+		var search_string = $( this ).val().toLowerCase();
+		
+		$( '.ur-registered-item' ).each( function() {
+			var field_label = $( this ).text().toLowerCase();
+			if ( field_label.search( search_string ) > -1 ) {
+				$( this ).show();
+			} else {
+				$( this ).hide();
+			}
+		})
+
+		$( '.ur-registered-list' ).each( function() {
+			var search_result_fields_count = $( this ).find( '.ur-registered-item:visible' ).length;
+			var hr = $( this ).prev( 'hr' );
+			var heading = $( this ).prev( 'hr' ).prev( '.ur-toggle-heading' );
+			
+			if ( 0 === search_result_fields_count ) {
+				hr.hide();
+				heading.hide();
+			} else {
+				hr.show();
+				heading.show();
+			}
+		})
+	});
+
 	// Bind UI Actions for upgradable fields
 	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
 		e.preventDefault();
