@@ -8,6 +8,7 @@ jQuery(function ($) {
 	$( document.body ).on( 'input', '#ur-search-fields', function() {
 		var search_string = $( this ).val().toLowerCase();
 		
+		// Show/Hide fields.
 		$( '.ur-registered-item' ).each( function() {
 			var field_label = $( this ).text().toLowerCase();
 			if ( field_label.search( search_string ) > -1 ) {
@@ -19,6 +20,7 @@ jQuery(function ($) {
 			}
 		})
 
+		// Show/Hide field sections.
 		$( '.ur-registered-list' ).each( function() {
 			var search_result_fields_count = $( this ).find( '.ur-registered-item.ur-searched-item' ).length;
 			var hr = $( this ).prev( 'hr' );
