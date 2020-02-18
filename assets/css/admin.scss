@@ -866,6 +866,15 @@
 					}
 				}
 
+				.ur-fields-not-found {
+					text-align: center;
+					margin-top: 2.85em;
+
+					.ur-fields-not-found-title {
+						font-size: 1.7em;
+					}
+				}
+
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $white;
