@@ -34,6 +34,13 @@ jQuery(function ($) {
 				heading.show();
 			}
 		})
+
+		// Show/Hide fields not found indicator.
+		if ( $( '.ur-registered-item.ur-searched-item' ).length ) {
+			$( '.ur-fields-not-found' ).hide();
+		} else {
+			$( '.ur-fields-not-found' ).show();
+		}
 	});
 
 	// Bind UI Actions for upgradable fields
