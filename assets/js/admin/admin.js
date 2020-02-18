@@ -11,14 +11,16 @@ jQuery(function ($) {
 		$( '.ur-registered-item' ).each( function() {
 			var field_label = $( this ).text().toLowerCase();
 			if ( field_label.search( search_string ) > -1 ) {
+				$( this ).addClass( 'ur-searched-item' );
 				$( this ).show();
 			} else {
+				$( this ).removeClass( 'ur-searched-item' );
 				$( this ).hide();
 			}
 		})
 
 		$( '.ur-registered-list' ).each( function() {
-			var search_result_fields_count = $( this ).find( '.ur-registered-item:visible' ).length;
+			var search_result_fields_count = $( this ).find( '.ur-registered-item.ur-searched-item' ).length;
 			var hr = $( this ).prev( 'hr' );
 			var heading = $( this ).prev( 'hr' ).prev( '.ur-toggle-heading' );
 			
@@ -1756,7 +1758,9 @@ jQuery(function ($) {
 		$(field_list).slideToggle();
 
 		// For `Field Options` section
-		$(this).siblings( 'div' ).slideToggle();
+		if ( $( this ).parent().is( '.ur-general-setting-block' ) || $( this ).parent().is( '.ur-advance-setting-block' ) ) {
+			$( this ).siblings( 'div' ).slideToggle();
+		}
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {
