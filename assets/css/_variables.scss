@@ -1,17 +1,40 @@
 /**
- * UserRegistration CSS Variables
+ * Variables
  */
 
-$green:         	#7ad03a;
-$red:           	#f00;
-$orange:        	#ffba00;
-$blue:          	#2ea2cc;
+// Color System
+// Primary
+$primary_color: 	#475BB2;
+$primary_dark: 		darken($primary_color, 10% ); // #217dbb
+$primary_light: 	lighten($primary_color, 40%); // #e1f0fa
 
-$primary:           #a46497;                                    // Primary color for buttons (alt)
-$primarytext:       desaturate(lighten($primary, 50%), 18%);    // Text on primary color bg
+// Alerts
+$green:		#7ad03a;
+$red:		#ff4149;
+$orange:	#ffba00;
+$blue:		#2ea2cc;
 
-$secondary:         desaturate(lighten($primary, 40%), 21%);    // Secondary buttons
-$secondarytext:     desaturate(darken($secondary, 60%), 21%);   // Text on secondary color bg
+// Gray Shades
+$white: 					#ffffff;
+$gray_base: 				#2d3559;
+$color_gray_one: 			adjust-color($gray_base, $saturation: -11%, $lightness: +12%); // #4c5477
+$color_gray_two: 			adjust-color($gray_base, $saturation: -18%, $lightness: +21%); // #676d8a
+$color_gray_three: 			adjust-color($gray_base, $saturation: -13%, $lightness: +50%); // #b6bbcf
+$color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63%); // #dee0e9
+$color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
+$color_sortable_background: #f7f7f7;
 
-$highlight:         adjust-hue($primary, 150deg);               // Prices, In stock labels, sales flash
-$highlightext:      desaturate(lighten($highlight, 50%), 18%);  // Text on highlight color bg
+
+$border_color:				$color_gray_four;
+$label_color:				$color_gray_two;
+$border_color_input: 		darken($border_color, 10%);
+$input_background_color: 	$color_gray_five;
+$flat_background: 			$color_gray_five;
+$rounded-color: 			darken($border_color, 10%);
+
+$color_gray_base: #1a1f33; //hsl(228, 32%, 15%)
+$color_gray: adjust-color($color_gray-base, $saturation: -7%, $lightness: +15% ); //#393e60
+$color_gray_light: adjust-color($color_gray-base, $saturation: -21%, $lightness: +25% ); //#5b5d71
+$color_gray_lighter: adjust-color($color_gray-base, $saturation: -23%, $lightness: +55% ); //#5b5d71
+$color_gray_lighten : adjust-color($color_gray-base, $saturation: -16%, $lightness: +77% ); //#e8e9ee
+$color_gray_light_skin : adjust-color($color_gray-base, $saturation: -10%, $lightness: +82% ); //#5b5d71

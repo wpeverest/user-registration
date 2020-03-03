@@ -7,10 +7,9 @@
 /**
 * Imports
 */
-@import "colors";
+@import "variables";
 @import "button";
 @import "mixins";
-@import "variables";
 
 /**
 * Utility classes
@@ -28,9 +27,9 @@
 	display: block;
 	margin: 0 0 10px;
 	padding: 10px 15px;
-	background-color: lighten($secondary, 5%);
-	color: $secondarytext;
-	border-top: 3px solid $primary;
+	background-color: lighten($primary_color, 47%);
+	color: $color_gray_one;
+	border-top: 3px solid $primary_color;
 	list-style: none outside;
 	@include clearfix();
 	width: auto;
@@ -82,9 +81,9 @@
 }
 
 .user-registration-error {
-	border-top-color: $color_danger;
-	background: rgba( $color_danger, 0.1 );
-	color: darken( $color_danger, 15%);
+	border-top-color: $red;
+	background: rgba( $red, 0.1 );
+	color: darken( $red, 15%);
 
 	&::before {
 		content: '\f534';
@@ -93,7 +92,7 @@
 
 .ur-frontend-form {
 	margin-bottom: 30px;
-	border: 1px solid $color_gray_six;
+	border: 1px solid $border_color;
 	padding: 20px;
 	box-sizing: border-box;
 
@@ -252,7 +251,7 @@
 				.required {
 					text-decoration: none;
 					border: none;
-					color: $color_danger;
+					color: $red;
 				}
 
 				&.ur-label {
@@ -364,7 +363,7 @@
 
 			text-decoration: none;
 			border: none;
-			color: #ff0000;
+			color: $red;
 		}
 	}
 
@@ -381,7 +380,7 @@
 					textarea,
 					select {
 						border: none;
-						border-bottom: 1px solid $label_color;
+						border-bottom: 1px solid $border_color_input;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px  15px;
@@ -414,7 +413,7 @@
 			button.user-registration-multi-part-nav-prev,
 			button.user-registration-multi-part-nav-next {
 				background: $input_background_color;
-				border: 1px solid $label_color;
+				border: 1px solid $border_color;
 				color: $label_color;
 				border-radius: 0;
 
