@@ -24,12 +24,10 @@ $color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63
 $color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
 $color_sortable_background: #f7f7f7;
 
-
+// Other Color variables
 $border_color:				$color_gray_four;
 $label_color:				$color_gray_two;
 $border_color_input: 		darken($border_color, 10%);
 $input_background_color: 	$color_gray_five;
 $flat_background: 			$color_gray_five;
 $rounded-color: 			darken($border_color, 10%);
-
-
