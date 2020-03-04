@@ -11,7 +11,7 @@
 		}
 
 		.user-registration-MyAccount-navigation {
-			background: $color_gray_light_skin;
+			background: $color_gray_five;
 			width: 20%;
 
 			ul {
@@ -21,7 +21,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							background: $color_gray_lighten;
+							background: $color_gray_four;
 							border-left: 4px solid $primary_color;
 						}
 					}
@@ -56,7 +56,7 @@
 		.user-registration-MyAccount-navigation {
 			ul {
 				justify-content: center;
-				border-bottom: 1px solid $color_gray_lighten;
+				border-bottom: 1px solid $border_color;
 
 				.user-registration-MyAccount-navigation-link {
 					a {
@@ -65,7 +65,7 @@
 
 					&.is-active {
 						a {
-							background-color: $color_gray_lighten;
+							background-color: $color_gray_four;
 						}
 					}
 				}
