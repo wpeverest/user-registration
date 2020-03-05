@@ -1,17 +1,40 @@
 /**
- * UserRegistration CSS Variables
+ * Variables
  */
 
-$green:         	#7ad03a;
-$red:           	#f00;
-$orange:        	#ffba00;
-$blue:          	#2ea2cc;
+// Color System
+// Primary
+$primary_color: 	#475BB2;
+$primary_dark: 		darken($primary_color, 10% ); // #217dbb
+$primary_light: 	lighten($primary_color, 40%); // #e1f0fa
 
-$primary:           #a46497;                                    // Primary color for buttons (alt)
-$primarytext:       desaturate(lighten($primary, 50%), 18%);    // Text on primary color bg
+// Alerts
+$green:		#7ad03a;
+$red:		#ff4149;
+$orange:	#ffba00;
+$blue:		#2ea2cc;
 
-$secondary:         desaturate(lighten($primary, 40%), 21%);    // Secondary buttons
-$secondarytext:     desaturate(darken($secondary, 60%), 21%);   // Text on secondary color bg
+// Gray Shades
+$white: 					#ffffff;
+$gray_base: 				#2d3559;
+$color_gray_one: 			adjust-color($gray_base, $saturation: -11%, $lightness: +12%); // #4c5477
+$color_gray_two: 			adjust-color($gray_base, $saturation: -18%, $lightness: +21%); // #676d8a
+$color_gray_three: 			adjust-color($gray_base, $saturation: -13%, $lightness: +50%); // #b6bbcf
+$color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63%); // #dee0e9
+$color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
+$color_sortable_background: #f7f7f7;
 
-$highlight:         adjust-hue($primary, 150deg);               // Prices, In stock labels, sales flash
-$highlightext:      desaturate(lighten($highlight, 50%), 18%);  // Text on highlight color bg
+// Other Color variables
+$border_color:				$color_gray_four;
+$label_color:				$color_gray_two;
+$border_color_input: 		darken($border_color, 10%);
+$input_background_color: 	$color_gray_five;
+$flat_background: 			$color_gray_five;
+$rounded-color: 			darken($border_color, 10%);
+
+// Social login Color Variable
+$color_social_default: $primary_color;
+$color_facebook: #4267b2; // Facebook brand color
+$color_twitter: #1da1f2; // Twitter brand color
+$color_google: #4285F4; // Google brand color
+$color_linkedin: #0077b5; //Linkedin brand color

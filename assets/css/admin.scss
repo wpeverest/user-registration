@@ -5,10 +5,9 @@
 /**
  * Imports
  */
-@import "colors";
+@import "variables";
 @import "button";
 @import "mixins";
-@import "variables";
 @import "fonts";
 @import "tables";
 
@@ -386,9 +385,9 @@
 
 	.ur-backbone-modal-header {
 		height: auto;
-		background-color: $color_gray_eleven;
+		background-color: $color_gray_five;
 		padding: 1em 1.5em;
-		border-bottom: 1px solid $color_gray_six;
+		border-bottom: 1px solid $border_color;
 
 		h1 {
 			margin: 0;
@@ -408,7 +407,7 @@
 			right: 0;
 			text-align: center;
 			border: 0;
-			border-left: 1px solid $color_gray_six;
+			border-left: 1px solid $border_color;
 			background-color: transparent;
 			transition: color 0.1s ease-in-out, background 0.1s ease-in-out;
 
@@ -422,7 +421,7 @@
 
 			&:hover,
 			&:focus {
-				background-color: $color_gray_six;
+				background-color: $color_gray_four;
 				border-color: #ccc;
 				color: $gray_base;
 			}
@@ -459,7 +458,7 @@
 		bottom: 0;
 		z-index: 100;
 		padding: 1em 1.5em;
-		background-color: $color_gray_eleven;
+		background-color: $color_gray_five;
 		border-top: 1px solid #dfdfdf;
 		box-shadow: 0 -4px 4px -4px rgba(0, 0, 0, 0.1);
 
@@ -487,13 +486,13 @@
 		}
 
 		.dashicons {
-			color: $color_danger;
+			color: $red;
 			font-size: 28px;
 			width: 56px;
 			height: 56px;
 			line-height: 56px;
 			margin: 0 auto 20px;
-			border: 2px solid $color_danger;
+			border: 2px solid $red;
 			border-radius: 50%;
 		}
 
@@ -650,7 +649,7 @@
 		.colorpickpreview {
 			padding: 3px;
 			padding-left: 20px;
-			border: 1px solid $color_gray_six;
+			border: 1px solid $border_color;
 			border-right: 0;
 		}
 
@@ -768,7 +767,6 @@
 
 	.ur-registered-inputs {
 		width: 412px;
-		background-color: $color_gray_ten;
 
 		.ur-tabs {
 			border: 0 none;
@@ -1121,7 +1119,7 @@
 					white-space: nowrap;
 					border: 1px solid $border_color;
 					border-radius: 4px;
-					box-shadow: 1px 4px 14px 1px transparentize($color_gray-base, 0.9);
+					box-shadow: 1px 4px 14px 1px transparentize($gray_base, 0.9);
 
 					small {
 						font-size: 12px;
@@ -1149,7 +1147,7 @@
 						content: '';
 						width: 8px;
 						height: 8px;
-						border: solid $border-color;
+						border: solid $border_color;
 						border-width: 1px;
 						border-left: transparent;
 						border-bottom: transparent;
@@ -1207,7 +1205,7 @@
 						.ur-input-type-signature {
 							canvas {
 								background: transparentize($white, 0.5);
-								border: 1px solid $color_gray_six;
+								border: 1px solid $border_color;
 							}
 						}
 
@@ -1260,7 +1258,7 @@
 
 							.ur-trash {
 								&:hover {
-									color: $color_danger;
+									color: $red;
 								}
 							}
 						}
@@ -1418,7 +1416,7 @@
 				margin-left: 0;
 				width: 100% !important;
 				visibility: visible !important;
-				border: 1px dashed $color_gray_lighter;
+				border: 1px dashed $color_gray_three;
 				background-color: $color_gray_five;
 			}
 		}
@@ -1539,7 +1537,7 @@
 	.add,
 	.remove {
 		background: $white;
-		border: 1px solid $color_gray_six;
+		border: 1px solid $border_color;
 		color: $color_gray_two;
 		cursor: pointer;
 		display: flex;
@@ -1731,14 +1729,14 @@ img.tips {
 	line-height: 1.8em;
 	position: absolute;
 	white-space: normal;
-	background: $color_danger;
+	background: $red;
 	margin: 1.5em 1px 0 -1em;
 	z-index: 9999999;
 
 	&::after {
 		content: '';
 		display: block;
-		border: 8px solid $color_danger;
+		border: 8px solid $red;
 		border-right-color: transparent;
 		border-left-color: transparent;
 		border-top-color: transparent;
@@ -1799,7 +1797,7 @@ img.tips {
 }
 
 .select2-dropdown {
-	border-color: $color_gray_six;
+	border-color: $color_gray_four;
 }
 
 .select2-dropdown--below {
@@ -1816,7 +1814,7 @@ img.tips {
 	}
 
 	.select2-selection {
-		border-color: $color_gray_six;
+		border-color: $color_gray_four;
 	}
 
 	.select2-search__field {
@@ -1902,7 +1900,7 @@ img.tips {
 	cursor: pointer;
 	padding: 10px 15px;
 	color: $gray_base;
-	background: $color_gray_lighten;
+	background: $color_gray_four;
 	margin-bottom: 10px;
 	line-height: 1.2;
 	border-radius: 4px;
@@ -2234,7 +2232,6 @@ body {
 
 			&:nth-child(1n+2) {
 				border-left: 0 none;
-				border-top: 2px solid $color_gray_eight;
 			}
 		}
 	}
@@ -2295,7 +2292,7 @@ body {
 			border-radius: 3px;
 			border-left: 3px solid;
 			position: relative;
-			box-shadow: 0px 1px 8px 2px transparentize($color_gray-base, 0.9);
+			box-shadow: 0px 1px 8px 2px transparentize($gray_base, 0.9);
 
 			p {
 				margin: 8px 0;
