@@ -2,13 +2,14 @@
  * admin.scss
  * General User Registration admin styles.
  */
+
 /**
  * Imports
  */
 @import "variables";
-@import "button";
 @import "mixins";
 @import "fonts";
+@import "button";
 @import "tables";
 
 /**
@@ -129,18 +130,6 @@
 }
 
 .user-registration_page_add-new-registration {
-	#post-body {
-		.updated,
-		.error {
-			margin: 0;
-		}
-	}
-
-	#post-body-content {
-		position: relative;
-		float: none;
-	}
-
 	.howto span {
 		float: left;
 		margin-top: 6px;
@@ -2196,13 +2185,6 @@ body {
 		.ur-selected-inputs {
 			width: 100%;
 		}
-	}
-}
-
-@media only screen and (min-width: 769px) and (max-width: 1000px) {
-
-	.user-registration_page_add-new-registration #post-body-content {
-		min-width: 0;
 	}
 }
 
