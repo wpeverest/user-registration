@@ -419,6 +419,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
 					),
+					array(
+						'type' => 'sectionend',
+						'id'   => 'my_account_options',
+					),
+					array(
+						'title' => __( '', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '<div class="notice inline notice-alt notice-error "><p>' . esc_html__( 'Core Login may be enabled only if you setup a valid user registration login page!', 'user-registration' ) . '</p></div>',
+						'id'    => 'account_endpoint_options',
+					),
 
 					array(
 						'title'    => __( 'Prevent Core Login', 'user-registration' ),
@@ -428,6 +438,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
 						'default'  => 'no',
+					),
+
+					array(
+						'title'    => __( 'Login redirect URL', 'user-registration' ),
+						'desc'     => __( 'Select the page you with to redirect to.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_login_redirect_url',
+						'type'     => 'single_select_page',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'class'    => 'login-url',
+						'default'  => '',
 					),
 
 					array(

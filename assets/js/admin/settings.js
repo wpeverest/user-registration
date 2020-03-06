@@ -94,4 +94,25 @@
 			$('#user_registration_integration_setting_recaptcha_site_secret').closest('tr').show();
 		}
 	}
+
+	$( '.login-url' ).ready( function() {
+		var $url       = $( '.login-url' ),
+			$check    = $( '#user_registration_login_options_prevent_core_login' ),
+			$redirect = $('#user_registration_login_options_login_redirect_url');
+
+		if ( ! $check.attr( 'checked' ) ) {
+			$url.val('').closest( '.single_select_page' ).css( 'display', 'none' );
+		} else {
+			$redirect.attr( 'required', true );
+		}
+	});
+
+	$( '#user_registration_login_options_prevent_core_login' ).change( function() {
+		var $url = $( '#user_registration_login_options_prevent_core_login' );
+
+		$('.single_select_page').toggle();
+		$( '#user_registration_login_options_login_redirect_url' ).attr( 'required', function() {
+			return ( 'checked' === $url.attr( 'checked' ) ) ? 'required' : false;
+		});
+	});
 })(jQuery);
