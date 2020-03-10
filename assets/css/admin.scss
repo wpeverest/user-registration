@@ -132,15 +132,18 @@
 	margin-top: 10px;
 }
 
+/**
+ * Form Builder Styles
+ **/
 .user-registration_page_add-new-registration {
 	#wpfooter {
-		display: none;
+		display: none; //Hide WP footer on form builder page
 	}
 
 	.ur-form-container {
 		margin: 0;
 
-		.ur-loading-container{
+		.ur-loading-container {
 			position: fixed;
 			left: 160px;
 			right: 0;
@@ -150,7 +153,7 @@
 			display: flex;
 			z-index: 9;
 
-			.ur-circle-loading{
+			.ur-circle-loading {
 				margin: auto;
 				left: 30px;
 			}
@@ -169,6 +172,7 @@
 			}
 		}
 
+		// Form Builder Fullscreen mode
 		#ur-full-screen-mode {
 			&.closed {
 				.ur-fs-close-label {
@@ -190,16 +194,8 @@
 		min-width: calc(100% + 20px);
 	}
 
-	.postbox p.submit {
-		margin-bottom: 0;
-	}
-
-	#nav-menu-header,
-	#nav-menu-footer {
-		padding: 12px;
-	}
-
 	#nav-menu-header {
+		padding: 12px;
 		display: flex;
 		align-items: center;
 		position: relative;
@@ -264,16 +260,6 @@
 			}
 		}
 
-		.form-invalid {
-			padding-left: 4px;
-			margin-left: -4px;
-		}
-
-		.ur-form-name {
-			width: 25%;
-			margin-right: 6px;
-		}
-
 		#copy-shortcode {
 			margin-left: -5px;
 			border-radius: 0 4px 4px 0;
@@ -284,15 +270,6 @@
 				vertical-align: middle;
 			}
 		}
-	}
-
-	.blank-slate .menu-settings {
-		display: none;
-	}
-
-	.delete-action {
-		float: left;
-		line-height: 28px;
 	}
 }
 
