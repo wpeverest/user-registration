@@ -51,6 +51,9 @@
 	}
 }
 
+/**
+ * Addons page
+ **/
 .ur_addons_wrap {
 	.products {
 		overflow: hidden;
@@ -130,33 +133,6 @@
 }
 
 .user-registration_page_add-new-registration {
-	.howto span {
-		float: left;
-		margin-top: 6px;
-	}
-
-	.list-wrap {
-		display: none;
-		clear: both;
-		margin-bottom: 10px;
-	}
-
-	.list li {
-		display: none;
-		margin: 0;
-		margin-bottom: 5px;
-
-		.menu-item-title {
-			cursor: pointer;
-			display: block;
-
-			input {
-				margin-right: 3px;
-				margin-top: -3px;
-			}
-		}
-	}
-
 	#wpfooter {
 		display: none;
 	}
