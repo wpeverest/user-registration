@@ -85,7 +85,7 @@
 
 				.product-image {
 					display: block;
-					background: #ffffff;
+					background: $white;
 
 					img {
 						max-width: 100%;
@@ -105,7 +105,7 @@
 				h2, h3 {
 					margin: 0 !important;
 					padding: 20px !important;
-					background: #fff;
+					background: $white;
 				}
 
 				p {
@@ -116,7 +116,7 @@
 
 				&:hover,
 				&:focus {
-					background-color: #fff;
+					background-color: $white;
 				}
 			}
 		}
@@ -451,17 +451,12 @@
 }
 
 .user-registration {
-	h2.ur-nav-tab-wrapper {
-		margin-bottom: 1em;
-	}
-
 	nav.ur-nav-tab-wrapper {
 		margin: 1.5em 0 1em;
-		border-bottom: 1px solid #ccc;
 	}
 
+	// Setting Page Submenu
 	#mainform {
-
 		> .subsubsub {
 			background: #e5e5e5;
 			float: none;
@@ -471,8 +466,8 @@
 				padding: 7px 10px;
 
 				&.current {
-					color: #fff;
-					background: #475BB2;
+					color: $white;
+					background: $primary_color;
 				}
 			}
 		}
@@ -486,13 +481,43 @@
 		margin: 0;
 		position: relative;
 
+		fieldset {
+			margin-top: 4px;
+
+			img.help_tip,
+			.user-registration-help-tip {
+				margin: -3px 0 0 5px;
+			}
+
+			p.description {
+				margin-bottom: 8px;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+
+		th {
+			position: relative;
+			padding-right: 24px;
+
+			img.help_tip,
+			.user-registration-help-tip {
+				margin: 0 -24px 0 0;
+				float: right;
+			}
+		}
+
 		.select2-container {
 			display: block;
 			max-width: 350px;
+			margin-bottom: 3px;
 		}
 
 		.forminp-radio ul {
 			margin: 0;
+
 			li {
 				line-height: 1.4em;
 			}
@@ -512,7 +537,7 @@
 			width: 100%;
 		}
 
-		img.help_tip,
+		.help_tip,
 		.user-registration-help-tip {
 			padding: 0;
 			margin: -4px 0 0 5px;
@@ -521,50 +546,8 @@
 			line-height: 1;
 		}
 
-		span.help_tip {
-			cursor: help;
-			color: $blue;
-		}
-
-		th {
-			position: relative;
-			padding-right: 24px;
-		}
-
-		.select2-container {
-			vertical-align: top;
-			margin-bottom: 3px;
-		}
-
-		table.widefat th {
-			padding-right: inherit;
-		}
-
-		th img.help_tip,
-		th .user-registration-help-tip {
-			margin: 0 -24px 0 0;
-			float: right;
-		}
-
 		.wp-list-table .user-registration-help-tip {
 			float: none;
-		}
-
-		fieldset {
-			margin-top: 4px;
-
-			img.help_tip,
-			.user-registration-help-tip {
-				margin: -3px 0 0 5px;
-			}
-
-			p.description {
-				margin-bottom: 8px;
-			}
-
-			&:first-child {
-				margin-top: 0;
-			}
 		}
 
 		.iris-picker {
@@ -1854,7 +1837,7 @@ img.tips {
 }
 
 #profile-page form#your-profile .flatpickr-input[readonly]{
-	background-color:#fff
+	background-color:$white
 }
 
 .ur-registered-inputs {
