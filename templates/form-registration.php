@@ -72,14 +72,14 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 						foreach ( $data as $grid_key => $grid_data ) {
 							?>
-										<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>"
+										<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
 											 style="width:<?php echo $width; ?>%">
 									<?php
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 										if ( isset( $single_item->field_key ) ) {
 											?>
-															<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+															<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
@@ -108,14 +108,15 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
 					?>
-					<div class="ur-button-container <?php echo esc_html( implode( ' ', $btn_container_class ) ); ?>" >
+					<div class="ur-button-container <?php echo esc_attr( implode( ' ', $btn_container_class ) ); ?>" >
 						<?php
 						do_action( 'user_registration_before_form_buttons', $form_id );
 
 						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
+						$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 						?>
 
-						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
+						<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
 							<?php
 							$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
