@@ -592,10 +592,6 @@
 	}
 }
 
-.ur-admin-template-options {
-	display: none;
-}
-
 .ur-registered-from {
 	display: flex;
 	background-color: $white;
@@ -618,8 +614,6 @@
 	}
 
 	.ur-field {
-		line-height: 2;
-
 		label {
 			font-weight: 400;
 
@@ -1437,26 +1431,9 @@
 		}
 	}
 
-	.ur-registered-item.dragging {
-		border: 0;
-		box-shadow: 0 0 0 transparent;
-		border-radius: 0;
-		padding: 5px 10px;
-		height: auto;
-		background-color: $primary_color;
-		color: $white;
-		text-align: center;
-		width: 200px;
-	}
-
 	.ur-general-setting-block,
 	.ur-advance-setting-block {
 		display: none;
-	}
-
-	.ur-advance-setting label,
-	.ur-general-setting label {
-		display: block;
 	}
 
 	.add,
@@ -1490,7 +1467,6 @@
 	}
 
 	.ur-options-list {
-
 		li {
 			display: flex;
 			align-items: center;
