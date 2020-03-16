@@ -108,7 +108,7 @@ class UR_Shortcode_My_Account {
 				}
 			}
 
-			// Start output buffer since the html may need discarding for BW compatibility
+			// Start output buffer since the html may need discarding for BW compatibility.
 			ob_start();
 
 			if ( isset( $wp->query_vars['user-logout'] ) ) {
@@ -117,14 +117,14 @@ class UR_Shortcode_My_Account {
 
 			do_action( 'before-user-registration-my-account-shortcode' );
 
-			// Collect notices before output
+			// Collect notices before output.
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 			$notices = ur_get_notices();
 
-			// Output the new account page
+			// Output the new account page.
 			self::my_account( $atts );
 
-			// Send output buffer
+			// Send output buffer.
 			ob_end_flush();
 		}
 	}
@@ -166,7 +166,7 @@ class UR_Shortcode_My_Account {
 				return;
 			}
 
-			// Prepare values
+			// Prepare values.
 			foreach ( $profile as $key => $field ) {
 				$value                    = get_user_meta( get_current_user_id(), $key, true );
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
@@ -178,7 +178,7 @@ class UR_Shortcode_My_Account {
 				} elseif ( isset( $user_data->$new_key ) && in_array( $new_key, ur_get_user_table_fields() ) ) {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->$new_key, $key );
 
-				} elseif ( isset( $user_data->display_name ) && $key === 'user_registration_display_name' ) {
+				} elseif ( isset( $user_data->display_name ) && 'user_registration_display_name' === $key ) {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 				}
 			}
@@ -204,7 +204,7 @@ class UR_Shortcode_My_Account {
 		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
-		if ( '1' === $enable_strong_password ) {
+		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
@@ -246,7 +246,7 @@ class UR_Shortcode_My_Account {
 					wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 				}
 
-				// reset key / login is correct, display reset password form with hidden key / login values
+				// reset key / login is correct, display reset password form with hidden key / login values.
 				if ( is_object( $user ) ) {
 					return ur_get_template(
 						'myaccount/form-reset-password.php',
@@ -263,7 +263,7 @@ class UR_Shortcode_My_Account {
 			}
 		}
 
-		// Show lost password form by default
+		// Show lost password form by default.
 		ur_get_template(
 			'myaccount/form-lost-password.php',
 			array(
@@ -333,7 +333,7 @@ class UR_Shortcode_My_Account {
 		// Get password reset key (function introduced in WordPress 4.4).
 		$key = get_password_reset_key( $user_data );
 
-		// Send email notification
+		// Send email notification.
 		if ( UR_Emailer::lost_password_email( $user_login, $user_data, $key ) == false ) {
 			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
 			return false;
@@ -347,9 +347,9 @@ class UR_Shortcode_My_Account {
 	 *
 	 * @uses $wpdb WordPress Database object
 	 *
-	 * @param string $key Hash to validate sending user's password
-	 * @param string $login The user login
-	 * @return WP_User|bool User's database row on success, false for invalid keys
+	 * @param string $key Hash to validate sending user's password.
+	 * @param string $login The user login.
+	 * @return WP_User|bool User's database row on success, false for invalid keys.
 	 */
 	public static function check_password_reset_key( $key, $login ) {
 		// Check for the password reset key.
@@ -367,8 +367,8 @@ class UR_Shortcode_My_Account {
 	/**
 	 * Handles resetting the user's password.
 	 *
-	 * @param object $user The user
-	 * @param string $new_pass New password for the user in plaintext
+	 * @param object $user The user.
+	 * @param string $new_pass New password for the user in plaintext.
 	 */
 	public static function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
