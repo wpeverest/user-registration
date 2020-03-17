@@ -215,13 +215,14 @@ abstract class UR_Form_Field {
 		if ( 'select' === $field_key ) {
 			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
-
 			$options = array();
+
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 
@@ -232,9 +233,10 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 
@@ -245,9 +247,10 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 		/** Redundant Codes End. */
