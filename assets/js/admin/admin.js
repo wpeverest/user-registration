@@ -1677,18 +1677,18 @@ jQuery(function ($) {
 
 	$( document ).ready( function() {
 		var date_flatpickrs = {};
-		
+
 		$( document.body ).on( 'click', '#load_flatpickr', function() {
 			var field_id = $( this ).data( 'id' );
 			var date_flatpickr = date_flatpickrs[ field_id ];
 
 			// Load a flatpicker for the field, if hasn't been loaded.
 			if ( ! date_flatpickr ) {
-				var formated_date = $( this ).closest( '.ur-field-item' ).find( '#formated_date' ).val();
-				var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+				var formated_date = $( this ).siblings( '#formated_date' ).val() ? $( this ).siblings( '#formated_date' ).val() : $( this ).closest( '.ur-field-item' ).find( '#formatted_date' ).val();
+				var date_selector = $( '.ur-frontend-form #' + field_id + ', #fieldset-user_registration #' + field_id ).attr( 'type', 'text' ).val( formated_date );
 
 				$( this ).attr( 'data-date-format', date_selector.data( 'date-format') );
-				$( this ).attr( 'data-mode', date_selector.data( 'mode') );
+				$( this ).attr( 'data-mode', date_selector.data( 'mode' ) );
 				$( this ).attr( 'data-min-date', date_selector.data( 'min-date') );
 				$( this ).attr( 'data-max-date', date_selector.data( 'max-date') );
 				$( this ).attr( 'data-default-date', formated_date );
@@ -1698,11 +1698,8 @@ jQuery(function ($) {
 						$( '#' + field_id ).val( dateString );
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
-						var min_date = $( `input[name="${field_id}"]` ).data( 'min-date' );
-						var max_date = $( `input[name="${field_id}"]` ).data( 'max-date' );
-						
-						instance.set( 'minDate', new Date( min_date ) );
-						instance.set( 'maxDate', new Date( max_date ) );
+						instance.set( 'minDate', date_selector.data( 'min-date') );
+						instance.set( 'maxDate', date_selector.data( 'max-date') );
 					},
 				});
 				date_flatpickrs[ field_id ] = date_flatpickr;
