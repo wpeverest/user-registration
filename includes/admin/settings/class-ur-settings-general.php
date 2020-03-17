@@ -415,19 +415,31 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_label',
 						'type'     => 'text',
-						'desc_tip' => true,
+						'desc_tip' => __( 'Enable.', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
 					),
 
 					array(
-						'title'    => __( 'Prevent Core Login', 'user-registration' ),
-						'desc'     => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
-						'id'       => 'user_registration_login_options_prevent_core_login',
-						'type'     => 'checkbox',
+						'title'      => __( 'Prevent Core Login', 'user-registration' ),
+						'desc'       => __( 'Enable.', 'user-registration' ),
+						'id'         => 'user_registration_login_options_prevent_core_login',
+						'type'       => 'checkbox',
+						'desc_tip'   => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
+						'css'        => 'min-width: 350px;',
+						'default'    => 'no',
+						'desc_field' => __( 'Before you enable this option please note that you have created a login OR my-account page which has a login form. Learn to create a login form here.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Redirect to Login Page', 'user-registration' ),
+						'desc'     => __( 'Select the login page where you wants to redirect.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_login_redirect_url',
+						'type'     => 'single_select_page',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
-						'default'  => 'no',
+						'class'    => 'ur-redirect-to-login-page',
+						'default'  => '',
 					),
 
 					array(
