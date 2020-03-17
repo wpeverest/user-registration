@@ -94,9 +94,9 @@
 			$('#user_registration_integration_setting_recaptcha_site_secret').closest('tr').show();
 		}
 	}
+	$( '.ur-redirect-to-login-page' ).ready( function() {
 
-	$( '.login-url' ).ready( function() {
-		var $url       = $( '.login-url' ),
+		var $url       = $( '.ur-redirect-to-login-page' ),
 			$check    = $( '#user_registration_login_options_prevent_core_login' ),
 			$redirect = $('#user_registration_login_options_login_redirect_url');
 
