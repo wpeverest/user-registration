@@ -1696,7 +1696,14 @@ jQuery(function ($) {
 					disableMobile : true,
 					onChange : function( selectedDates, dateString, instance ) {
 						$( '#' + field_id ).val( dateString );
-					}
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						var min_date = $( `input[name="${field_id}"]` ).data( 'min-date' );
+						var max_date = $( `input[name="${field_id}"]` ).data( 'min-date' );
+						
+						instance.set( 'minDate', min_date );
+						instance.set( 'maxDate', max_date );
+					},
 				});
 				date_flatpickrs[ field_id ] = date_flatpickr;
 			}
