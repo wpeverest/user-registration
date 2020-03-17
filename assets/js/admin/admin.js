@@ -1305,42 +1305,37 @@ jQuery(function ($) {
 					break;
 			}
 		});
-		var advance_settings = $('.ur_advance_setting');
+		var advance_settings = $('#ur-setting-form .ur_advance_setting');
 
 		$('.ur-settings-enable-min-max').on('change', function () {
 			if('true' === $(this).val()){
-				$('.ur-advance-min_date').show();
-				$('.ur-advance-max_date').show();
-				if('' === $('.ur-settings-min-date').val()){
-					$('.ur-settings-min-date').addClass('flatpickr-field').flatpickr({
-						disableMobile : true,
-						static        : true,
-						onChange      : function(selectedDates, dateStr, instance) {
-							$('.ur-settings-min-date').val(dateStr);
-						},
-						onOpen: function(selectedDates, dateStr, instance) {
-							instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
-						},
-					});
-				}
-				if('' === $('.ur-settings-max-date').val()){
-					$('.ur-settings-max-date').addClass('flatpickr-field').flatpickr({
-						disableMobile : true,
-						static        : true,
-						onChange      : function(selectedDates, dateStr, instance) {
-							$('.ur-settings-max-date').val(dateStr);
-						},
-						onOpen: function(selectedDates, dateStr, instance) {
-							instance.set('minDate', new Date($('.ur-settings-min-date').val()));
-						},
-					});
-				}
+				$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').show();
+				$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').show();
 
+				$('#ur-setting-form .ur-settings-min-date').addClass('flatpickr-field').flatpickr({
+					disableMobile : true,
+					static        : true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('.ur-item-active .ur-settings-min-date').val(dateStr);
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						instance.set('maxDate', new Date($('.ur-item-active .ur-settings-max-date').val()));
+					},
+				});
+
+				$('#ur-setting-form .ur-settings-max-date').addClass('flatpickr-field').flatpickr({
+					disableMobile : true,
+					static        : true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('.ur-item-active .ur-settings-max-date').val(dateStr);
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						instance.set('minDate', new Date($('.ur-item-active .ur-settings-min-date').val()));
+					},
+				});
 			}else{
-				$('.ur-advance-min_date').hide();
-				$('.ur-advance-max_date').hide();
-				$('.ur-settings-min-date').val('');
-				$('.ur-settings-max-date').val('');
+				$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').hide();
+				$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').hide();
 			}
 		});
 
@@ -1353,39 +1348,37 @@ jQuery(function ($) {
 					});
 					break;
 				case 'min_date':
-					if('true' === $('.ur-settings-enable-min-max').val()){
+					if('true' === $('.ur-item-active').find('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
-							defaultDate   : new Date($('.ur-settings-min-date').val()),
+							defaultDate   : new Date($('.ur-item-active').find('.ur-settings-min-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-min-date').val(dateStr);
+								$('.ur-item-active').find('.ur-settings-min-date').val(dateStr);
 							},
 							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+								instance.set('maxDate', new Date($('.ur-item-active').find('.ur-settings-max-date').val()));
 							},
 						});
 					}else{
-						$('.ur-advance-min_date').hide();
-						$('.ur-settings-min-date').val('');
+						$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').hide();
 					}
 					break;
 				case 'max_date':
-					if('true' === $('.ur-settings-enable-min-max').val()){
+					if('true' === $('.ur-item-active').find('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
-							defaultDate   : new Date($('.ur-settings-max-date').val()),
+							defaultDate   : new Date($('.ur-item-active').find('.ur-settings-max-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-max-date').val(dateStr);
+								$('.ur-item-active').find('.ur-settings-max-date').val(dateStr);
 							},
 							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
+								instance.set('minDate', new Date($('.ur-item-active .ur-settings-min-date').val()));
 							},
 						});
 					}else{
-						$('.ur-advance-max_date').hide();
-						$('.ur-settings-max-date').val('');
+						$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').hide();
 					}
 					break;
 			}
