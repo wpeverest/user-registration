@@ -373,30 +373,30 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 					array(
 						'title'    => __( 'Enable remember me', 'user-registration' ),
-						'desc'     => __( 'Check to enable/disable remember me.', 'user-registration' ),
+						'desc'     => __( 'Enable', 'user-registration' ),
 						'id'       => 'user_registration_login_options_remember_me',
 						'type'     => 'checkbox',
-						'desc_tip' => true,
+						'desc_tip' => __( 'Check to enable/disable remember me.', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
 						'default'  => 'yes',
 					),
 
 					array(
 						'title'    => __( 'Enable lost password', 'user-registration' ),
-						'desc'     => __( 'Check to enable/disable lost password.', 'user-registration' ),
+						'desc'     => __( 'Enable', 'user-registration' ),
 						'id'       => 'user_registration_login_options_lost_password',
 						'type'     => 'checkbox',
-						'desc_tip' => true,
+						'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
 						'default'  => 'yes',
 					),
 
 					array(
 						'title'    => __( 'Enable google reCaptcha', 'user-registration' ),
-						'desc'     => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+						'desc'     => __( 'Enable', 'user-registration' ),
 						'id'       => 'user_registration_login_options_enable_recaptcha',
 						'type'     => 'checkbox',
-						'desc_tip' => true,
+						'desc_tip' => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 						'css'      => 'min-width: 350px;',
 						'default'  => 'no',
 					),
@@ -415,20 +415,20 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_registration_label',
 						'type'     => 'text',
-						'desc_tip' => __( 'Enable.', 'user-registration' ),
+						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
 					),
 
 					array(
 						'title'      => __( 'Prevent Core Login', 'user-registration' ),
-						'desc'       => __( 'Enable.', 'user-registration' ),
+						'desc'       => __( 'Enable Prevent Core Login', 'user-registration' ),
 						'id'         => 'user_registration_login_options_prevent_core_login',
 						'type'       => 'checkbox',
 						'desc_tip'   => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
 						'css'        => 'min-width: 350px;',
 						'default'    => 'no',
-						'desc_field' => __( 'Before you enable this option please note that you have created a login OR my-account page which has a login form. Learn to create a login form here.', 'user-registration' ),
+						'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target="_blank">here</a>.', 'user-registration' ),
 					),
 
 					array(
