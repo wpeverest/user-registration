@@ -1699,10 +1699,10 @@ jQuery(function ($) {
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
 						var min_date = $( `input[name="${field_id}"]` ).data( 'min-date' );
-						var max_date = $( `input[name="${field_id}"]` ).data( 'min-date' );
+						var max_date = $( `input[name="${field_id}"]` ).data( 'max-date' );
 						
-						instance.set( 'minDate', min_date );
-						instance.set( 'maxDate', max_date );
+						instance.set( 'minDate', new Date( min_date ) );
+						instance.set( 'maxDate', new Date( max_date ) );
 					},
 				});
 				date_flatpickrs[ field_id ] = date_flatpickr;
