@@ -50,7 +50,7 @@ jQuery(function ( $ ) {
 			} else if ( 0 === meter.length ) {
 				var html = '<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>';
 				password_field.closest( '.field-user_pass' ).after( html );
-				$( '#password_1' ).after( html );
+				$( '#password_1' ).closest('.password-input-group').after( html );
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
@@ -83,6 +83,8 @@ jQuery(function ( $ ) {
 
 			if( strength >= minimum_password_strength ) {
 				submit_button.removeAttr('disabled');
+			} else {
+				submit_button.attr('disabled', 'disabled');
 			}
 
 			switch ( strength ) {

@@ -53,8 +53,8 @@
 						equalTo: '#user_email',
 					};
 					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
-        }
-        
+				}
+
 				if ( $this.hasClass('edit-password') ) {
 					/**
 					 * Password matching for `Change Password` form
@@ -80,7 +80,7 @@
 					messages: messages,
 					errorPlacement: function (error, element) {
 						if ( element.is( '#password_2' ) ) {
-							element.parent().append(error);
+							element.parent().after(error);
 						} else if ( 'radio' === element.attr('type') || 'checkbox' === element.attr('type') || 'password' === element.attr('type') ) {
 							element.parent().parent().parent().append(error);
 						} else if ( element.is('select') && element.attr('class').match(/date-month|date-day|date-year/) ) {
@@ -119,7 +119,7 @@
 						$parent.removeClass('user-registration-has-error');
 					},
 					submitHandler: function (form) {
-						
+
 						// Return `true` for `Change Password` form to allow submission
 						if ( $(form).hasClass('edit-password') ) {
 							return true;
@@ -633,17 +633,23 @@
 		var current_task = ( $(this).hasClass( 'dashicons-hidden' ) ) ? 'show' : 'hide';
 		var $password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password"]' );
 
+		// Hide/show password for user registration form
 		if( $password_field.length === 0 ) {
 			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_pass"]' );
 		}
 		if( $password_field.length === 0 ) {
 			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_confirm_password"]' );
 		}
+
+		// Hide/show password for edit password form
 		if( $password_field.length === 0 ) {
-			$password_field = $(this).closest( '.field-user_pass' ).find( 'input[name="user_registration_user_pass"]' );
+			$password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password_current"]' );
 		}
 		if( $password_field.length === 0 ) {
-			$password_field = $(this).closest( '.field-user_confirm_password' ).find( 'input[name="user_registration_user_confirm_password"]' );
+			$password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password_1"]' );
+		}
+		if( $password_field.length === 0 ) {
+			$password_field = $(this).closest( '.user-registration-form-row' ).find( 'input[name="password_2"]' );
 		}
 
 		if( $password_field.length > 0 ) {

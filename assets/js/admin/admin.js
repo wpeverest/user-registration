@@ -7,7 +7,7 @@ jQuery(function ($) {
 	// Bind UI Action handlers for searching fields.
 	$( document.body ).on( 'input', '#ur-search-fields', function() {
 		var search_string = $( this ).val().toLowerCase();
-		
+
 		// Show/Hide fields.
 		$( '.ur-registered-item' ).each( function() {
 			var field_label = $( this ).text().toLowerCase();
@@ -25,7 +25,7 @@ jQuery(function ($) {
 			var search_result_fields_count = $( this ).find( '.ur-registered-item.ur-searched-item' ).length;
 			var hr = $( this ).prev( 'hr' );
 			var heading = $( this ).prev( 'hr' ).prev( '.ur-toggle-heading' );
-			
+
 			if ( 0 === search_result_fields_count ) {
 				hr.hide();
 				heading.hide();
@@ -1767,9 +1767,7 @@ jQuery(function ($) {
 		$(field_list).slideToggle();
 
 		// For `Field Options` section
-		if ( $( this ).parent().is( '.ur-general-setting-block' ) || $( this ).parent().is( '.ur-advance-setting-block' ) ) {
-			$( this ).siblings( 'div' ).slideToggle();
-		}
+		$( this ).siblings( '.ur-toggle-content' ).slideToggle();
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {

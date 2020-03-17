@@ -162,10 +162,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<?php } ?>
 
 					</div>
-					<?php do_action( 'user_registration_edit_profile_form' ); ?>
+					<?php
+					do_action( 'user_registration_edit_profile_form' );
+					$submit_btn_class = apply_filters( 'user_registration_form_update_btn_class', array() );
+					?>
 					<p>
 						<?php wp_nonce_field( 'save_profile_details' ); ?>
-						<input type="submit" class="user-registration-Button button" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+						<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
 						<input type="hidden" name="action" value="save_profile_details" />
 					</p>
 				</div>
