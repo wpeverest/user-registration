@@ -924,6 +924,17 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
+				'label'             => __( 'Form Submit Button Custom Class', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_submit_class',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', '' ),
+			),
+			array(
+				'type'              => 'text',
 				'label'             => __( 'Form Submit Button Label', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
