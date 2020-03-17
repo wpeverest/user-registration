@@ -781,6 +781,39 @@
 			.ur-tab-content {
 				padding: 16px;
 
+				.ur-search-fields {
+					display: flex;
+					align-items: center;
+					position: relative;
+
+					input.ur-type-text {
+						height: 40px;
+						padding: 8px 12px;
+						font-size: 14px;
+						background: $color_gray_five;
+						border-color: $color_gray_five;
+						border-radius: 4px;
+
+						&::placeholder {
+							color: $color_gray_three;
+						}
+					}
+
+					svg {
+						position: absolute;
+						right: 12px;
+					}
+				}
+
+				.ur-fields-not-found {
+					text-align: center;
+					margin-top: 2.85em;
+
+					.ur-fields-not-found-title {
+						font-size: 1.7em;
+					}
+				}
+
 				&#ur-tab-registered-fields,
 				&#ur-tab-field-options {
 					background-color: $white;

@@ -4,6 +4,45 @@
  */
 jQuery(function ($) {
 
+	// Bind UI Action handlers for searching fields.
+	$( document.body ).on( 'input', '#ur-search-fields', function() {
+		var search_string = $( this ).val().toLowerCase();
+
+		// Show/Hide fields.
+		$( '.ur-registered-item' ).each( function() {
+			var field_label = $( this ).text().toLowerCase();
+			if ( field_label.search( search_string ) > -1 ) {
+				$( this ).addClass( 'ur-searched-item' );
+				$( this ).show();
+			} else {
+				$( this ).removeClass( 'ur-searched-item' );
+				$( this ).hide();
+			}
+		})
+
+		// Show/Hide field sections.
+		$( '.ur-registered-list' ).each( function() {
+			var search_result_fields_count = $( this ).find( '.ur-registered-item.ur-searched-item' ).length;
+			var hr = $( this ).prev( 'hr' );
+			var heading = $( this ).prev( 'hr' ).prev( '.ur-toggle-heading' );
+
+			if ( 0 === search_result_fields_count ) {
+				hr.hide();
+				heading.hide();
+			} else {
+				hr.show();
+				heading.show();
+			}
+		})
+
+		// Show/Hide fields not found indicator.
+		if ( $( '.ur-registered-item.ur-searched-item' ).length ) {
+			$( '.ur-fields-not-found' ).hide();
+		} else {
+			$( '.ur-fields-not-found' ).show();
+		}
+	});
+
 	// Bind UI Actions for upgradable fields
 	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
 		e.preventDefault();
