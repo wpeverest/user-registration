@@ -182,9 +182,9 @@ class UR_Admin_User_List_Manager {
 	public function add_column_head( $columns ) {
 
 		$the_columns['ur_user_user_registered_source'] = __( 'Source', 'user-registration' );
-		$newcol                             = array_slice( $columns, 0, -1 );
-		$newcol                             = array_merge( $newcol, $the_columns );
-		$columns                            = array_merge( $newcol, array_slice( $columns, 1 ) );
+		$newcol                                        = array_slice( $columns, 0, -1 );
+		$newcol                                        = array_merge( $newcol, $the_columns );
+		$columns                                       = array_merge( $newcol, array_slice( $columns, 1 ) );
 
 		return $columns;
 	}
@@ -200,33 +200,35 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function add_column_cell( $val, $column_name, $user_id ) {
 
+		$form_id = ur_get_form_id_by_userid( $user_id );
+
 		if ( $column_name == 'ur_user_user_status' ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
-			return UR_Admin_User_Manager::get_status_label( $status );
-		} else if(  $column_name == 'ur_user_user_registered_source' ) {
+			return $status;
+		} elseif ( $column_name == 'ur_user_user_registered_source' ) {
 			$user_metas = get_user_meta( $user_id );
 
-			if( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
-				$networks = array( 'facebook', 'linkedin', 'google', 'twitter');
+			if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
+				$networks = array( 'facebook', 'linkedin', 'google', 'twitter' );
 
-				foreach( $networks as $network ){
+				foreach ( $networks as $network ) {
 
-					if( isset( $user_metas['user_registration_social_connect_' . $network . '_username'] ) ) {
+					if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
 							return ucfirst( $network );
-						}
 					}
-				}  else if( isset( $user_metas['ur_form_id'] ) ) {
-					$form_post = get_post( $user_metas['ur_form_id'][0] );
+				}
+			} elseif ( isset( $user_metas['ur_form_id'] ) ) {
+				$form_post = get_post( $user_metas['ur_form_id'][0] );
 
-					if( ! empty( $form_post ) ){
+				if ( ! empty( $form_post ) ) {
 					return $form_post->post_title;
-					} else {
-						return '-';
-					}
 				} else {
 					return '-';
 				}
+			} else {
+				return '-';
+			}
 		}
 		return $val;
 	}

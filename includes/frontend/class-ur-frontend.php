@@ -78,10 +78,21 @@ class UR_Frontend {
 	 */
 	public function prevent_core_login_page() {
 		global $action;
+		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
+		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+		$matched        = 0;
 
-		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+		if ( ! empty( $login_page ) ) {
+			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
+			$page_id = $login_page->ID;
+		} elseif ( ! empty( $myaccount_page ) ) {
+			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+			$page_id = $myaccount_page->ID;
+		}
+
+		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
 			if ( 'register' === $action || 'login' === $action ) {
-				$myaccount_page = add_query_arg( $_GET, ur_get_page_permalink( 'myaccount' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$myaccount_page = get_permalink( $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
 			}

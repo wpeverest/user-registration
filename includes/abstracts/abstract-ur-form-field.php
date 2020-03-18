@@ -215,13 +215,14 @@ abstract class UR_Form_Field {
 		if ( 'select' === $field_key ) {
 			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
-
 			$options = array();
+
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 
@@ -232,9 +233,10 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 
@@ -245,9 +247,10 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = $option;
-					$form_data['options'] = $options;
+					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
+
+				$form_data['options'] = $options;
 			}
 		}
 		/** Redundant Codes End. */
@@ -474,7 +477,9 @@ abstract class UR_Form_Field {
 
 		$settings  = "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
 		$settings .= '<h2 class="ur-toggle-heading">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
+		$settings .= '<div class="ur-toggle-content">';
 		$settings .= $this->get_field_general_settings();
+		$settings .= '</div>';
 		$settings .= '</div>';
 
 		$advance_settings = $this->get_field_advance_settings();
@@ -482,7 +487,9 @@ abstract class UR_Form_Field {
 		if ( ! empty( $advance_settings ) ) {
 			$settings .= "<div class='ur-advance-setting-block'>";
 			$settings .= '<h2 class="ur-toggle-heading">' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
+			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;
+			$settings .= '</div>';
 			$settings .= '</div>';
 		}
 
