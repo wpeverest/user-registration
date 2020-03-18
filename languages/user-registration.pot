@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Registration 1.8.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2020-03-17 10:58:23+00:00\n"
+"POT-Creation-Date: 2020-03-18 07:49:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +45,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-export-users.php:52
 #: includes/admin/class-ur-admin-import-export-forms.php:51
-#: includes/admin/class-ur-admin-menus.php:505
+#: includes/admin/class-ur-admin-menus.php:510
 #: includes/admin/class-ur-admin-notices.php:121
 #: includes/admin/class-ur-admin-settings.php:68
 #: includes/admin/class-ur-admin-status.php:169
@@ -118,15 +118,15 @@ msgstr ""
 msgid "Please select json file to import form data."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:416
+#: includes/admin/class-ur-admin-menus.php:421
 msgid "Copy of "
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:480
+#: includes/admin/class-ur-admin-menus.php:485
 msgid "You do not have permissions to edit forms!"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:509
+#: includes/admin/class-ur-admin-menus.php:514
 msgid "You do not have permissions to delete forms!"
 msgstr ""
 
@@ -134,74 +134,74 @@ msgstr ""
 msgid "User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:584
+#: includes/admin/class-ur-admin-menus.php:589
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:585
+#: includes/admin/class-ur-admin-menus.php:590
 #: includes/class-ur-install.php:638
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:601
+#: includes/admin/class-ur-admin-menus.php:606
 msgid "User Registration Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:602
+#: includes/admin/class-ur-admin-menus.php:607
 #: includes/class-ur-email-confirmation.php:135
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:618
-#: includes/admin/class-ur-admin-menus.php:619
-#: includes/admin/class-ur-admin-menus.php:667
+#: includes/admin/class-ur-admin-menus.php:623
+#: includes/admin/class-ur-admin-menus.php:624
+#: includes/admin/class-ur-admin-menus.php:672
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:635
+#: includes/admin/class-ur-admin-menus.php:640
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:636
+#: includes/admin/class-ur-admin-menus.php:641
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:673
+#: includes/admin/class-ur-admin-menus.php:678
 msgid "Search Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:690
+#: includes/admin/class-ur-admin-menus.php:695
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:692
+#: includes/admin/class-ur-admin-menus.php:697
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:736
+#: includes/admin/class-ur-admin-menus.php:741
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:760
+#: includes/admin/class-ur-admin-menus.php:765
 #: includes/admin/settings/class-ur-settings-general.php:175
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:798
+#: includes/admin/class-ur-admin-menus.php:803
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:802
+#: includes/admin/class-ur-admin-menus.php:807
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:847
+#: includes/admin/class-ur-admin-menus.php:852
 #: includes/admin/views/html-admin-page-forms.php:116
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:946
+#: includes/admin/class-ur-admin-menus.php:951
 msgid "Empty form data"
 msgstr ""
 
@@ -400,16 +400,25 @@ msgstr ""
 msgid "Impossible to create an UR_Admin_User_Manager object. Unkwon data type."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:312
+#: includes/admin/class-ur-admin-user-manager.php:152
+#: includes/admin/class-ur-admin-user-manager.php:171
+#: includes/admin/class-ur-admin-user-manager.php:335
 msgid "approved"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:316
+#: includes/admin/class-ur-admin-user-manager.php:156
+#: includes/admin/class-ur-admin-user-manager.php:169
+#: includes/admin/class-ur-admin-user-manager.php:339
 msgid "pending"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:320
+#: includes/admin/class-ur-admin-user-manager.php:160
+#: includes/admin/class-ur-admin-user-manager.php:343
 msgid "denied"
+msgstr ""
+
+#: includes/admin/class-ur-admin-user-manager.php:167
+msgid "verified"
 msgstr ""
 
 #: includes/admin/class-ur-admin.php:121
@@ -3637,20 +3646,20 @@ msgstr ""
 msgid "No profile details found."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:289
+#: includes/shortcodes/class-ur-shortcode-my-account.php:293
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:310
-#: includes/shortcodes/class-ur-shortcode-my-account.php:315
+#: includes/shortcodes/class-ur-shortcode-my-account.php:314
+#: includes/shortcodes/class-ur-shortcode-my-account.php:319
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:325
+#: includes/shortcodes/class-ur-shortcode-my-account.php:329
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:338
+#: includes/shortcodes/class-ur-shortcode-my-account.php:342
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
