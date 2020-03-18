@@ -50,7 +50,7 @@
 					 * For real time email matching
 					 */
 					rules.user_confirm_email = {
-						equalTo: '#user_email',
+						equalTo: '.user-registration #user_email',
 					};
 					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
 				}
@@ -68,7 +68,7 @@
 					 * Password matching for registration form
 					 */
 					rules.user_confirm_password = {
-						equalTo: '#user_pass',
+						equalTo: '.user-registration #user_pass',
 					};
 					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
 				}

@@ -232,33 +232,37 @@ class UR_Shortcode_My_Account {
 			 * Process reset key / login from email confirmation link
 			 */
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
+
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
 				$user                      = self::check_password_reset_key( $rp_key, $rp_login );
-				$form_id                   = ur_get_form_id_by_userid( $user->ID );
-				$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
-				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
-				if ( 'yes' === $enable_strong_password ) {
+				if ( ! empty( $user ) ) {
+					$form_id                   = ur_get_form_id_by_userid( $user->ID );
+					$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+					$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
-					// Enqueue script.
-					wp_enqueue_script( 'ur-password-strength-meter' );
-					wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
-				}
+					if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
 
-				// reset key / login is correct, display reset password form with hidden key / login values.
-				if ( is_object( $user ) ) {
-					return ur_get_template(
-						'myaccount/form-reset-password.php',
-						array(
-							'key'                       => $rp_key,
-							'login'                     => $rp_login,
-							'enable_strong_password'    => $enable_strong_password,
-							'minimum_password_strength' => $minimum_password_strength,
-						)
-					);
-				} else {
-					self::set_reset_password_cookie();
+						// Enqueue script.
+						wp_enqueue_script( 'ur-password-strength-meter' );
+						wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
+					}
+
+					// reset key / login is correct, display reset password form with hidden key / login values.
+					if ( is_object( $user ) ) {
+						return ur_get_template(
+							'myaccount/form-reset-password.php',
+							array(
+								'key'                    => $rp_key,
+								'login'                  => $rp_login,
+								'enable_strong_password' => $enable_strong_password,
+								'minimum_password_strength' => $minimum_password_strength,
+							)
+						);
+					} else {
+						self::set_reset_password_cookie();
+					}
 				}
 			}
 		}

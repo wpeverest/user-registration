@@ -80,6 +80,7 @@ class UR_Frontend {
 		global $action;
 		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
 		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+		$matched        = 0;
 
 		if ( ! empty( $login_page ) ) {
 			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
