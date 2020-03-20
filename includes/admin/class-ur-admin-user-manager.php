@@ -137,42 +137,16 @@ class UR_Admin_User_Manager {
 		}
 
 		$user_status = get_user_meta( $this->user->ID, 'ur_user_status', true );
-		$label       = '';
-		if ( $user_status !== '' ) {
-
-			// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
-			if ( $exact_value ) {
-				return $user_status;
-			}
-
-			// If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
-			$user_status = ( $user_status == array() ) ? self::APPROVED : $user_status;
-
-			if ( '1' === $user_status ) {
-				$label = __( 'approved', 'user-registration' );
-			}
-
-			if ( '0' === $user_status ) {
-				$label = __( 'pending', 'user-registration' );
-			}
-
-			if ( '-1' === $user_status ) {
-				$label = __( 'denied', 'user-registration' );
-			}
-		} else {
-			$val   = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
-			$token = get_user_meta( $this->user->ID, 'ur_confirm_email_token', true );
-
-			if ( '1' === $val ) {
-				$label = __( 'verified', 'user-registration' );
-			} elseif ( '0' === $val && isset( $token ) ) {
-				$label = __( 'pending', 'user-registration' );
-			} elseif ( '' === $val ) {
-				$label = __( 'approved', 'user-registration' );
-			}
+		// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
+		if ( $exact_value ) {
+			return $user_status;
 		}
 
-		return ucfirst( $label );
+		// If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
+		$user_status = ( $user_status == '' || $user_status == array() ) ? self::APPROVED : $user_status;
+		// If the value requested is not the exact value, than store it in the object
+		$this->user_status = $user_status;
+		return $user_status;
 	}
 
 	/**
