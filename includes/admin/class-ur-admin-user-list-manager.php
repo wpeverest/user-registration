@@ -202,10 +202,10 @@ class UR_Admin_User_List_Manager {
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
-		if ( $column_name == 'ur_user_user_status' ) {
+		if ( $column_name == 'ur_user_user_status' && 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
-			return $status;
+			return UR_Admin_User_Manager::get_status_label( $status );
 		} elseif ( $column_name == 'ur_user_user_registered_source' ) {
 			$user_metas = get_user_meta( $user_id );
 
