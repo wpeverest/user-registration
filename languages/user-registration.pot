@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the User Registration package.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.8.2\n"
+"Project-Id-Version: User Registration 1.8.2.1\n"
 "Report-Msgid-Bugs-To: wpeverest@gmail.com\n"
-"POT-Creation-Date: 2020-03-18 10:43:45+00:00\n"
+"POT-Creation-Date: 2020-03-20 04:29:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -400,25 +400,16 @@ msgstr ""
 msgid "Impossible to create an UR_Admin_User_Manager object. Unkwon data type."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:152
-#: includes/admin/class-ur-admin-user-manager.php:171
-#: includes/admin/class-ur-admin-user-manager.php:335
+#: includes/admin/class-ur-admin-user-manager.php:311
 msgid "approved"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:156
-#: includes/admin/class-ur-admin-user-manager.php:169
-#: includes/admin/class-ur-admin-user-manager.php:339
+#: includes/admin/class-ur-admin-user-manager.php:315
 msgid "pending"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:160
-#: includes/admin/class-ur-admin-user-manager.php:343
+#: includes/admin/class-ur-admin-user-manager.php:319
 msgid "denied"
-msgstr ""
-
-#: includes/admin/class-ur-admin-user-manager.php:167
-msgid "verified"
 msgstr ""
 
 #: includes/admin/class-ur-admin.php:121
