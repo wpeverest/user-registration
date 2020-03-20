@@ -328,7 +328,7 @@ class UR_Form_Handler {
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
-				if ( 'yes' === $recaptcha_enabled ) {
+				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					if ( ! empty( $recaptcha_value ) ) {
 
 						$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
