@@ -96,7 +96,27 @@ jQuery(function ($) {
 			$input.focus();
 		}
 		$input.toggleClass( 'ur-editing' );
+		$input.attr('data-editing', $input.attr('data-editing') == 'true' ? 'false' : 'true');
 	} );
+
+	// In case the user goes out of focus from title edit state.
+	$( document.body ).not( $( '.ur-form-name-wrapper' ) ).click( function( e ) {
+		var field = $( '#ur-form-name' );
+
+		// Both of these controls should in no way allow stopping event propagation.
+		if( 'ur-form-name' === e.target.id || 'ur-form-name-edit-button' === e.target.id ) {
+			return;
+		}
+
+		if ( ! field.attr('hidden') && field.hasClass('ur-editing') ) {
+			e.stopPropagation();
+
+			// Only allow flipping state if currently editing.
+			if ( 'true' !== field.data( 'data-editing' ) && field.val() && '' !== field.val().trim() ) {
+				field.toggleClass( 'ur-editing' ).trigger( 'blur' ).attr('data-editing', field.attr('data-editing') == 'true' ? 'false' : 'true');
+			}
+		}
+	});
 
 	$( document ).on( 'init_perfect_scrollbar update_perfect_scrollbar', function() {
 
