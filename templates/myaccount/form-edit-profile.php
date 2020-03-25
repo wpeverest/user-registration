@@ -125,11 +125,15 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
-											  if ( 'phone' === $single_item->field_key ) {
+												if ( 'phone' === $single_item->field_key ) {
 													$field['phone_format'] = $single_item->general_setting->phone_format;
 													if ( 'smart' === $field['phone_format'] ) {
 														unset( $field['input_mask'] );
 													}
+												}
+
+												if ( 'file' === $single_item->field_key ) {
+													$field['max_files'] = $single_item->general_setting->max_files;
 												}
 
 												$filter_data = array(
@@ -168,7 +172,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 					?>
 					<p>
 						<?php wp_nonce_field( 'save_profile_details' ); ?>
-						<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+						<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
 						<input type="hidden" name="action" value="save_profile_details" />
 					</p>
 				</div>

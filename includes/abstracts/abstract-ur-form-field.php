@@ -118,8 +118,8 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-		$this->form_id = $form_id;
 
+		$this->form_id     = $form_id;
 		$form_data         = (array) $data['general_setting'];
 		$form_data['type'] = $field_type;
 
@@ -151,6 +151,10 @@ abstract class UR_Form_Field {
 
 		if ( isset( $data['advance_setting']->default_value ) ) {
 			$form_data['default'] = $data['advance_setting']->default_value;
+		}
+
+		if ( isset( $data['general_setting']->max_files ) ) {
+			$form_data['max_files'] = $data['general_setting']->max_files;
 		}
 
 		$form_data['input_class'] = array( 'ur-frontend-field ' );
@@ -215,11 +219,11 @@ abstract class UR_Form_Field {
 		if ( 'select' === $field_key ) {
 			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
-			$options = array();
+			$options     = array();
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -233,7 +237,7 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -247,7 +251,7 @@ abstract class UR_Form_Field {
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -441,16 +445,25 @@ abstract class UR_Form_Field {
 
 				case 'hidden':
 					$value = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
-					if ( ! empty( $value ) ) {
 
-						$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
-						if ( true == $setting_value['required'] ) {
-							$general_setting_wrapper .= ' required ';
-						}
-
-						$general_setting_wrapper .= '/>';
+					if ( true == $setting_value['required'] ) {
+						$general_setting_wrapper .= ' required ';
 					}
+
+					$general_setting_wrapper .= '/>';
+
+					break;
+				case 'number':
+					$value                    = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="number" name="' . $setting_value['name'] . '" min = "1"';
+
+					if ( true == $setting_value['required'] ) {
+						$general_setting_wrapper .= ' required ';
+					}
+
+					$general_setting_wrapper .= '/>';
 					break;
 
 				default:
