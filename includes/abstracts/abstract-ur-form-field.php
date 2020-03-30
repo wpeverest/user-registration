@@ -456,7 +456,7 @@ abstract class UR_Form_Field {
 
 					break;
 				case 'number':
-					$value                    = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
+					$value                    = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'max_files' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
 					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="number" name="' . $setting_value['name'] . '" min = "1"';
 
 					if ( true == $setting_value['required'] ) {
