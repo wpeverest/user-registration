@@ -206,8 +206,11 @@ class UR_Admin_User_List_Manager {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
 			return UR_Admin_User_Manager::get_status_label( $status );
-		} elseif ( $column_name == 'ur_user_user_registered_source' ) {
+		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
+			$user_data  = get_userdata( $user_id );
 			$user_metas = get_user_meta( $user_id );
+
+			$registered_log = $user_data->user_registered;
 
 			if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
 				$networks = array( 'facebook', 'linkedin', 'google', 'twitter' );
@@ -215,14 +218,16 @@ class UR_Admin_User_List_Manager {
 				foreach ( $networks as $network ) {
 
 					if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
-							return ucfirst( $network );
+						$log = ucfirst( $network ) . ' at ' . date( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
+						return $log;
 					}
 				}
 			} elseif ( isset( $user_metas['ur_form_id'] ) ) {
 				$form_post = get_post( $user_metas['ur_form_id'][0] );
 
 				if ( ! empty( $form_post ) ) {
-					return $form_post->post_title;
+					$log = $form_post->post_title . ' at ' . date( 'F j Y, h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
+					return $log;
 				} else {
 					return '-';
 				}
