@@ -127,7 +127,7 @@ class UR_Preview {
 		$form_id = absint( $_GET['form_id'] );
 
 		remove_filter( 'the_content', array( $this, 'form_preview_content_filter' ) );
-		$content = do_shortcode( '[user_registration_form id="' . $form_id . '"]' );
+		$content = apply_shortcodes( '[user_registration_form id="' . $form_id . '"]' );
 
 		return $content;
 	}

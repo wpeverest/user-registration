@@ -506,7 +506,7 @@ class UR_Form_Handler {
 
 			do_action( 'user_request_action_confirmed', $request_id );
 
-			$request = wp_get_user_request_data( $request_id );
+			$request = wp_get_user_request( $request_id );
 
 			if ( $request && in_array( $request->action_name, _wp_privacy_action_request_types(), true ) ) {
 				if ( 'export_personal_data' === $request->action_name ) {
