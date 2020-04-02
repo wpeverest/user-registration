@@ -175,6 +175,7 @@ class UR_User_Approval {
 
 			$status = $user_manager->get_user_status();
 
+			error_log( print_r( $status, true ) );
 			do_action( 'ur_user_before_check_status_on_login', $status, $user );
 
 			switch ( $status ) {

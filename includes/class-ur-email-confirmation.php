@@ -155,9 +155,9 @@ class UR_Email_Confirmation {
 			return false;
 		}
 
-		$form_id       = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
-		if ( $column_name == 'ur_user_user_status' && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		if ( $column_name == 'ur_user_user_status' ) {
 			$val   = get_user_meta( $user_id, 'ur_confirm_email', true );
 			$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
@@ -225,7 +225,7 @@ class UR_Email_Confirmation {
 			$user_id = absint( $user_id );
 			$user    = get_user_by( 'id', $user_id );
 
-			$form_id       = ur_get_form_id_by_userid( $user_id );
+			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			if ( $user && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
@@ -255,7 +255,7 @@ class UR_Email_Confirmation {
 			$user_id    = absint( $user_id );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
-			$form_id       = ur_get_form_id_by_userid( $user_id );
+			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			// Check if the token matches the token value stored in db.
 			if ( $user_token === $_GET['ur_token'] && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
@@ -353,9 +353,9 @@ class UR_Email_Confirmation {
 	 * @return mixed
 	 */
 	public function check_email_status( WP_User $user, $password ) {
-		$form_id       = ur_get_form_id_by_userid( $user->ID );
+		$form_id = ur_get_form_id_by_userid( $user->ID );
 
-		$general_login_option =  get_option( 'user_registration_general_setting_login_options', 'default' );
+		$general_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 
 		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', $general_login_option ) ) {
 			$email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
@@ -384,7 +384,7 @@ class UR_Email_Confirmation {
 	 * @return \WP_Error
 	 */
 	public function allow_password_reset( $result, $user_id ) {
-		$form_id       = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 

@@ -131,22 +131,35 @@ class UR_Admin_User_Manager {
 	 */
 	public function get_user_status( $exact_value = false ) {
 
-		// If the status is already get from the db and the requested status is not the exact value then provide the old one
+		// If the status is already get from the db and the requested status is not the exact value then provide the old one.
 		if ( ! is_null( $this->user_status ) && ! $exact_value ) {
 			return $this->user_status;
 		}
 
-		$user_status = get_user_meta( $this->user->ID, 'ur_user_status', true );
-		// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
-		if ( $exact_value ) {
-			return $user_status;
+		$user_status       = get_user_meta( $this->user->ID, 'ur_user_status', true );
+		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
+
+		if ( '' === $user_status && '' === $user_email_status ) {
+
+			// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active.
+			if ( $exact_value ) {
+				return $user_status;
+			}
+
+			// If the status is empty it's assume that user registered when the plugin was not active, then it is allowed.
+			$user_status = self::APPROVED;
+
+			// If the value requested is not the exact value, than store it in the object.
+			$this->user_status = $user_status;
+
+		} elseif ( '' !== $user_status && '' === $user_email_status ) {
+
+			$this->user_status = $user_status;
+
+		} elseif ( '' === $user_status && '' !== $user_email_status ) {
+
+			$this->user_status = $user_email_status;
 		}
-
-		// If the status is empty it's assume that user registered when the plugin was not active, then it is allowed
-		$user_status = ( $user_status == '' || $user_status == array() ) ? self::APPROVED : $user_status;
-
-		// If the value requested is not the exact value, than store it in the object
-		$this->user_status = $user_status;
 
 		return $user_status;
 	}
