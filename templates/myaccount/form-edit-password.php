@@ -41,7 +41,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . __( 'Show Password', 'user-registration' ) . '"></a>';
 						}
 						?>
 						</span>
@@ -53,7 +53,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" />
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . __( 'Show Password', 'user-registration' ) . '"></a>';
 						}
 						?>
 						</span>
@@ -64,7 +64,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_2" id="password_2" />
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . __( 'Show Password', 'user-registration' ) . '"></a>';
 						}
 						?>
 						</span>
