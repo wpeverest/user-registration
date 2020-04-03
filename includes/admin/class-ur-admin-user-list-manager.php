@@ -182,10 +182,10 @@ class UR_Admin_User_List_Manager {
 	public function add_column_head( $columns ) {
 
 		$the_columns['ur_user_user_registered_source'] = __( 'Source', 'user-registration' );
+		$the_columns['ur_user_user_registered_log']    = __( 'Registered At', 'user-registration' );
 		$newcol                                        = array_slice( $columns, 0, -1 );
 		$newcol                                        = array_merge( $newcol, $the_columns );
 		$columns                                       = array_merge( $newcol, array_slice( $columns, 1 ) );
-
 		return $columns;
 	}
 
@@ -207,10 +207,7 @@ class UR_Admin_User_List_Manager {
 			$status       = $user_manager->get_user_status();
 			return UR_Admin_User_Manager::get_status_label( $status );
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
-			$user_data  = get_userdata( $user_id );
 			$user_metas = get_user_meta( $user_id );
-
-			$registered_log = $user_data->user_registered;
 
 			if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
 				$networks = array( 'facebook', 'linkedin', 'google', 'twitter' );
@@ -218,19 +215,27 @@ class UR_Admin_User_List_Manager {
 				foreach ( $networks as $network ) {
 
 					if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
-						$log = ucfirst( $network ) . ' at ' . date( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
-						return $log;
+						return ucfirst( $network );
 					}
 				}
 			} elseif ( isset( $user_metas['ur_form_id'] ) ) {
 				$form_post = get_post( $user_metas['ur_form_id'][0] );
 
 				if ( ! empty( $form_post ) ) {
-					$log = $form_post->post_title . ' at ' . date( 'F j Y, h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
-					return $log;
+					return $form_post->post_title;
 				} else {
 					return '-';
 				}
+			} else {
+				return '-';
+			}
+		} elseif ( 'ur_user_user_registered_log' === $column_name ) {
+			$user_data      = get_userdata( $user_id );
+			$registered_log = $user_data->user_registered;
+
+			if ( $user_data ) {
+				$log = date( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
+				return $log;
 			} else {
 				return '-';
 			}
@@ -255,11 +260,11 @@ class UR_Admin_User_List_Manager {
 		<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
 			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
 
-			<?php
-			echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
-			echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
-			echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
-			?>
+		<?php
+		echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
+		echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
+		echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
+		?>
 		</select>
 		<?php
 		submit_button( __( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
@@ -425,10 +430,10 @@ class UR_Admin_User_List_Manager {
 					</th>
 					<td>
 						<select id="ur_user_user_status" name="ur_user_user_status">
-							<?php
-							$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
-							foreach ( $available_statuses as $status ) :
-								?>
+						<?php
+						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
+						foreach ( $available_statuses as $status ) :
+							?>
 								<option
 									value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
 							<?php endforeach; ?>
@@ -438,7 +443,7 @@ class UR_Admin_User_List_Manager {
 					</td>
 				</tr>
 			</table>
-		<?php
+			<?php
 	}
 
 
@@ -457,7 +462,7 @@ class UR_Admin_User_List_Manager {
 		}
 
 		if ( empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) {
-				return false;
+			return false;
 		}
 
 		$new_status = $_POST['ur_user_user_status'];
