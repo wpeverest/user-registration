@@ -41,7 +41,7 @@ class UR_Shortcode_Login {
 		$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 
-		if ( 'yes' === $recaptcha_enabled ) {
+		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			wp_enqueue_script( 'user-registration' );
 		}
 
