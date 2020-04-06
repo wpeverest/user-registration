@@ -164,14 +164,16 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
-		if ( isset( $data['advance_setting']->min_date ) ) {
-			$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
-			$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
-		}
+		if ( isset( $data['advance_setting']->enable_min_max ) && 'true' === $data['advance_setting']->enable_min_max ) {
+			if ( isset( $data['advance_setting']->min_date ) ) {
+				$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
+				$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
+			}
 
-		if ( isset( $data['advance_setting']->max_date ) ) {
-			$max_date                                        = str_replace( '/', '-', $data['advance_setting']->max_date );
-			$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
+			if ( isset( $data['advance_setting']->max_date ) ) {
+				$max_date                                        = str_replace( '/', '-', $data['advance_setting']->max_date );
+				$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
+			}
 		}
 
 		if ( isset( $data['advance_setting']->set_current_date ) ) {
