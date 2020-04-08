@@ -4,6 +4,68 @@
  */
 jQuery(function ($) {
 
+	// Bind UI Action handlers for searching fields.
+	$( document.body ).on( 'input', '#ur-search-fields', function() {
+		var search_string = $( this ).val().toLowerCase();
+
+		// Show/Hide fields.
+		$( '.ur-registered-item' ).each( function() {
+			var field_label = $( this ).text().toLowerCase();
+			if ( field_label.search( search_string ) > -1 ) {
+				$( this ).addClass( 'ur-searched-item' );
+				$( this ).show();
+			} else {
+				$( this ).removeClass( 'ur-searched-item' );
+				$( this ).hide();
+			}
+		})
+
+		// Show/Hide field sections.
+		$( '.ur-registered-list' ).each( function() {
+			var search_result_fields_count = $( this ).find( '.ur-registered-item.ur-searched-item' ).length;
+			var hr = $( this ).prev( 'hr' );
+			var heading = $( this ).prev( 'hr' ).prev( '.ur-toggle-heading' );
+
+			if ( 0 === search_result_fields_count ) {
+				hr.hide();
+				heading.hide();
+			} else {
+				hr.show();
+				heading.show();
+			}
+		})
+
+		// Show/Hide fields not found indicator.
+		if ( $( '.ur-registered-item.ur-searched-item' ).length ) {
+			$( '.ur-fields-not-found' ).hide();
+		} else {
+			$( '.ur-fields-not-found' ).show();
+		}
+	});
+
+	// Bind UI Actions for upgradable fields
+	$( document ).on( 'mousedown', '.ur-upgradable-field', function( e ) {
+		e.preventDefault();
+
+		var icon = '<i class="dashicons dashicons-lock"></i>';
+		var label = $(this).text();
+		var title = icon + '<div class="ur-swal-title">' + label + ' is a Premium field.</div>';
+		var plan = $(this).data('plan');
+		var message = label + ' field is not available right now. Please upgrade to <strong>' + plan + '</strong> of the plugin to unlock this field.';
+
+		Swal.fire({
+			title: title,
+			html: message,
+			showCloseButton: true,
+			confirmButtonText: 'Let\'s do it'
+		}).then( function(result) {
+			if ( result.value ) {
+				var url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro';
+				window.open( url, '_blank' );
+			}
+		});
+	});
+
 	// Adjust builder width
 	$( window ).on( 'resize orientationchange', function() {
 		var resizeTimer;
@@ -143,18 +205,19 @@ jQuery(function ($) {
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
 	 */
 	var minimum_password_strength_wrapper_field = $('#general-settings').find('#user_registration_form_setting_minimum_password_strength_field');
-	var strong_password_field = $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field select#user_registration_form_setting_enable_strong_password');
-	var enable_strong_password = strong_password_field.val();
+	var strong_password_field = $('#general-settings').find('#user_registration_form_setting_enable_strong_password_field input#user_registration_form_setting_enable_strong_password');
+	var enable_strong_password = strong_password_field.is(':checked');
 
-	if ('yes' === enable_strong_password) {
+	if ( 'yes' === enable_strong_password || true === enable_strong_password ) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
 	}
 
 	$(strong_password_field).change(function () {
+		enable_strong_password = $(this).is(':checked');
 
-		if ('yes' === $(this).val()) {
+		if ( 'yes' === enable_strong_password || true === enable_strong_password ) {
 			minimum_password_strength_wrapper_field.show('slow');
 		} else {
 			minimum_password_strength_wrapper_field.hide('slow');
@@ -408,9 +471,32 @@ jQuery(function ($) {
 										}
 										var single_row = $this_row.closest('.ur-single-row');
 										$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
+
+										// Remove Row Fields from Conditional Select Dropdown.
+										var row_fields = single_row.find('.ur-grid-lists .ur-selected-item .ur-general-setting');
+										$( row_fields ).each( function () {
+											var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+											var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
+
+											//strip certain fields
+											if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
+												return;
+											}
+
+											var field_name = $(this).find("[data-field='field_name']").val();
+
+											if (typeof field_name !== 'undefined') {
+												// Remove item from conditional logic options
+												$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').remove();
+
+												// Remove Field from Form Setting Conditionally Assign User Role.
+												$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').remove();
+											}
+										});
 										single_row.remove();
 										$this.check_grid();
 										manage_draggable_users_fields();
+
 										Swal.fire({
 											type: 'success',
 											title: 'Successfully deleted!',
@@ -418,6 +504,9 @@ jQuery(function ($) {
 											timer: 1000
 										});
 									},
+									reject: function() {
+										// Do Nothing.
+									}
 								} );
 							} else {
 								ur_alert( i18n_admin.i18n_at_least_one_row_need_to_select )
@@ -486,7 +575,7 @@ jQuery(function ($) {
 								$(this).removeClass('ur-sortable-active');
 							}
 						});
-						$('#ur-draggabled li').draggable({
+						$('#ur-draggabled .draggable').draggable({
 							connectToSortable: '.ur-grid-list-item',
 							containment: '.ur-registered-from',
 							helper: function() {
@@ -525,12 +614,16 @@ jQuery(function ($) {
 							builder.manage_empty_grid();
 							manage_draggable_users_fields();
 
-							//remove item from conditional logic options
-							jQuery('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+							// Remove item from conditional logic options
+							$('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+
+							// Remove Field from Form Setting Conditionally Assign User Role.
+							$('[class*="urcl-field-conditional-field-select"] option[value="' + removed_item + '"]').remove();
 
 							return false; // To prevent click on whole item.
 						});
 					},
+
 					clone_selected_item: function () {
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-clone', function () {
 							var data_field_key = $(this).closest('.ur-selected-item ').find('.ur-field').attr('data-field-key');
@@ -548,6 +641,9 @@ jQuery(function ($) {
 							var label_string = label_node.val().replace(find_string, '');
 							clone.find('input[data-field="field_name"]').attr('value', label_string + new Date().getTime());
 							$(this).closest('.ur-grid-list-item').append(clone);
+
+							var populated_item = clone.find("[data-field='field_name']").val();
+								manage_conditional_field_options(populated_item);
 						});
 					},
 					check_grid: function () {
@@ -569,6 +665,108 @@ jQuery(function ($) {
 		$('.ur-tabs').tabs();
 		$('.ur-tabs').find('a').eq(0).trigger('click', ['triggered_click']);
 		$('.ur-tabs').tabs({ disabled: [1] });
+
+		/**
+		 * This block of code is for the "Selected Countries" option of "Country" field
+		 *
+		 * Doc: https://select2.org/
+		 * Ref: https://jsfiddle.net/Lkkm2L48/7/
+		 */
+		var SelectionAdapter, DropdownAdapter;
+		$.fn.select2.amd.require([
+			'select2/selection/single',
+			'select2/selection/placeholder',
+			'select2/dropdown',
+			'select2/dropdown/search',
+			'select2/dropdown/attachBody',
+			'select2/utils',
+			'select2/selection/eventRelay',
+		], function (SingleSelection, Placeholder, Dropdown, DropdownSearch, AttachBody, Utils, EventRelay) {
+			// Add placeholder which shows current number of selections
+			SelectionAdapter = Utils.Decorate(
+				SingleSelection,
+				Placeholder
+			);
+
+			// Allow to flow/fire events
+			SelectionAdapter = Utils.Decorate(
+				SelectionAdapter,
+				EventRelay
+			);
+
+			// Add search box in dropdown
+			DropdownAdapter = Utils.Decorate(
+				Dropdown,
+				DropdownSearch
+			);
+
+			// Add attach-body in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
+				AttachBody
+			);
+
+			/**
+			 * Create UnSelectAll Adapter for unselect-all button
+			 *
+			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
+			 */
+			function UnselectAll() {}
+			UnselectAll.prototype.render = function ( decorated ) {
+				var self = this;
+				var $rendered = decorated.call( this );
+				var $unSelectAllButton = $( '<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Unselect All</button>' );
+
+				$unSelectAllButton.on( 'click', function() {
+					self.$element.val( [] );
+					self.$element.trigger( 'change' );
+					self.trigger('close');
+				});
+				$rendered.find( '.select2-dropdown' ).prepend( $unSelectAllButton );
+
+				return $rendered;
+			};
+
+			// Add unselect all button in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
+				UnselectAll
+			);
+
+			/**
+			 * Create SelectAll Adapter for select-all button
+			 *
+			 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
+			 */
+			function SelectAll() {}
+			SelectAll.prototype.render = function ( decorated ) {
+				var self = this;
+				var $rendered = decorated.call( this );
+				var $selectAllButton = $( '<button class="button button-secondary button-medium ur-select-all-countries-button" type="button">Select All</button>' );
+
+				$selectAllButton.on( 'click', function() {
+					var $options = self.$element.find( 'option' );
+					var values = [];
+
+					$options.each( function() {
+						values.push( $(this).val() );
+					})
+					self.$element.val( values );
+					self.$element.trigger( 'change' );
+					self.trigger('close');
+				});
+				$rendered.find( '.select2-dropdown' ).prepend( $selectAllButton );
+
+				return $rendered;
+			};
+
+			// Add select all button in dropdown
+			DropdownAdapter = Utils.Decorate(
+				DropdownAdapter,
+				SelectAll
+			);
+		});
+
 		$(document).on('click', '.ur-selected-item', function () {
 			$('.ur-registered-inputs').find('ul li.ur-no-pointer').removeClass('ur-no-pointer');
 			$('.ur-selected-item').removeClass('ur-item-active');
@@ -576,6 +774,73 @@ jQuery(function ($) {
 			render_advance_setting($(this));
 			init_events();
 			$( document ).trigger( 'update_perfect_scrollbar' );
+
+			var field_key = $(this).find('.ur-field').data('field-key');
+
+			if ( 'country' === field_key || 'billing_country' === field_key || 'shipping_country' === field_key ) {
+				/**
+				 * Bind UI actions for `Selective Countries` feature
+				 */
+				var $selected_countries_option_field = $('#ur-setting-form select.ur-settings-selected-countries');
+				$selected_countries_option_field.on('change', function ( e ) {
+					var selected_countries_iso_s = $( this ).val();
+					var html = '';
+					var self = this;
+
+					// Get html of selected countries
+					if ( Array.isArray( selected_countries_iso_s ) ) {
+						selected_countries_iso_s.forEach( function( iso ) {
+							var country_name = $(self).find('option[value="' + iso + '"]').html();
+							html += '<option value="' + iso + '">' + country_name + '</option>';
+						});
+					}
+
+					// Update default_value options in `Field Options` tab
+					$('#ur-setting-form select.ur-settings-default-value').html( html )
+
+					// Update default_value options (hidden)
+					$('.ur-selected-item.ur-item-active select.ur-settings-default-value').html( html )
+				})
+				.select2({
+					placeholder: 'Select countries...',
+					selectionAdapter: SelectionAdapter,
+					dropdownAdapter: DropdownAdapter,
+					templateResult: function ( data ) {
+
+						if ( ! data.id ) {
+							return data.text;
+						}
+
+						return $( '<div></div>' ).text( data.text ).addClass( 'wrap' );
+					},
+					templateSelection: function ( data ) {
+
+						if ( ! data.id ) {
+							return data.text;
+						}
+						var length = 0;
+
+						if ( $selected_countries_option_field.val() ) {
+							length = $selected_countries_option_field.val().length;
+						}
+
+						return "Selected " + length + " country(s)";
+					},
+				})
+				/**
+				 * The following block of code is required to fix the following issue:
+				 * - When the dropdown is open, if the contents of this option's container changes, for example when a different field is
+				 * activated, the behaviour of input tags changes. Specifically, when pressed space key inside ANY input tag, the dropdown
+				 * APPEARS.
+				 *
+				 * P.S. The option we're talking about is `Selective Countries` for country field.
+				 */
+				.on( 'select2:close', function ( e ) {
+					setTimeout( function() {
+						$( ':focus' ).blur();
+					}, 1 );
+				});
+			}
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
@@ -639,6 +904,22 @@ jQuery(function ($) {
 			ur_save_form();
 		});
 
+		/**
+		 * For toggling quick links content.
+		 */
+		$( document.body ).on( 'click', '.ur-quick-links-content', function( e ) {
+			e.stopPropagation();
+		});
+		$( document.body ).on( 'click', '.ur-button-quick-links', function( e ) {
+			e.stopPropagation();
+			$( '.ur-quick-links-content' ).slideToggle();
+		});
+		$( document.body ).on( 'click', function( e ) {
+			if ( ! $( '.ur-quick-links-content' ).is( ':hidden' ) ) {
+				$( '.ur-quick-links-content' ).slideToggle();
+			}
+		});
+
 		$(window).on( 'keydown', function(event) {
 			if (event.ctrlKey || event.metaKey) {
 				if( 's' === String.fromCharCode(event.which).toLowerCase() ) {
@@ -665,7 +946,9 @@ jQuery(function ($) {
 			ur_form_id = 0;
 		}
 
-		var form_setting_data = $('#ur-field-settings').serializeArray();
+		var form_setting_data = $('#ur-field-settings :not(.urcl-user-role-field)').serializeArray();
+
+		var conditional_roles_settings_data = get_form_conditional_role_data();
 
 		/** TODO:: Hanlde from multistep forms add-on if possible. */
 		var multipart_page_setting = $('#ur-multi-part-page-settings').serializeArray();
@@ -680,6 +963,7 @@ jQuery(function ($) {
 				form_name: $('#ur-form-name').val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
+				conditional_roles_settings_data: conditional_roles_settings_data,
 				multipart_page_setting: multipart_page_setting,
 			}
 		};
@@ -697,10 +981,26 @@ jQuery(function ($) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
 					var success_message = i18n_admin.i18n_form_successfully_saved;
-					show_message(success_message, 'success');
 
-					if( 0 === parseInt( ur_form_id ) ) {
-						window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+					if ( user_registration_admin_data.is_edit_form !== '1' ) {
+						var title = "Form successfully created."
+						message_body = "<p>Want to create a login form as well? Check this <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>docs</a>.</p>"
+						Swal.fire({
+							type: 'success',
+							title: title,
+							html: message_body,
+						}).then( function( value ) {
+
+							if( 0 === parseInt( ur_form_id ) ) {
+								window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+							}
+						})
+					} else {
+						show_message(success_message, 'success');
+
+						if( 0 === parseInt( ur_form_id ) ) {
+							window.location = user_registration_admin_data.admin_url + response.responseJSON.data.post_id;
+						}
 					}
 				} else {
 					var error = response.responseJSON.data.message;
@@ -771,6 +1071,17 @@ jQuery(function ($) {
 			response.message = i18n_admin.i18n_previous_save_action_ongoing;
 			return response;
 		}
+		$.each($( '.ur-selected-item select.ur-settings-selected-countries' ), function () {
+			var selected_countries = $( this ).val();
+			if (
+				! selected_countries ||
+				( Array.isArray( selected_countries ) && selected_countries.length === 0 )
+			) {
+				response.validation_status = false;
+				response.message = i18n_admin.i18n_select_countries;
+				return response;
+			}
+		});
 		$.each($('.ur-input-grids .ur-general-setting-block input[data-field="field_name"]'), function () {
 			var $field = $(this);
 			var need_to_break = false;
@@ -829,6 +1140,66 @@ jQuery(function ($) {
 			}
 		}
 		return response;
+	}
+
+	function get_form_conditional_role_data() {
+		var form_data = [];
+		var single_row = $('.urcl-role-logic-wrap');
+
+		$.each(single_row, function () {
+			var grid_list_item = $(this).find('.urcl-user-role-field');
+			var all_field_data = [];
+			var or_field_data = [];
+			var assign_role = '';
+			$.each(grid_list_item, function () {
+				$field_key = $(this).attr('name').split('[');
+
+				if ( 'user_registration_form_conditional_user_role' === $field_key[0] ) {
+					assign_role =  $(this).val();
+					grid_list_item.splice( $(this) , 1);
+				}
+			});
+
+			var conditional_group = $(this).find('.urcl-conditional-group');
+			$.each(conditional_group, function () {
+				var inner_conditions = [];
+				var grid_list_item = $(this).find('.urcl-user-role-field');
+				$.each(grid_list_item, function () {
+					var conditions = {
+						field_key:  $(this).attr('name'),
+						field_value:  $(this).val(),
+					};
+					inner_conditions.push( conditions );
+				});
+				all_field_data.push( inner_conditions );
+			});
+
+			var or_groups = $(this).find('.urcl-or-groups');
+			$.each(or_groups, function () {
+				var conditional_or_group = $(this).find('.urcl-conditional-or-group');
+				var or_data = [];
+				$.each(conditional_or_group, function () {
+					var inner_or_conditions = [];
+					var or_list_item = $(this).find('.urcl-user-role-field');
+					$.each(or_list_item, function () {
+						var or_conditions = {
+							field_key:  $(this).attr('name'),
+							field_value:  $(this).val(),
+						};
+						inner_or_conditions.push( or_conditions );
+					});
+					or_data.push( inner_or_conditions );
+				});
+				or_field_data.push( or_data );
+			});
+			var all_fields = {
+				assign_role:  assign_role,
+				conditions:  all_field_data,
+				or_conditions:  or_field_data,
+			};
+			form_data.push(all_fields);
+		});
+		return form_data;
 	}
 
 	function get_form_data() {
@@ -1007,10 +1378,91 @@ jQuery(function ($) {
 			}
 		});
 		var advance_settings = $('.ur_advance_setting');
+
+		$('.ur-settings-enable-min-max').on('change', function () {
+			if('true' === $(this).val()){
+				$('.ur-advance-min_date').show();
+				$('.ur-advance-max_date').show();
+				if('' === $('.ur-settings-min-date').val()){
+					$('.ur-settings-min-date').addClass('flatpickr-field').flatpickr({
+						disableMobile : true,
+						static        : true,
+						onChange      : function(selectedDates, dateStr, instance) {
+							$('.ur-settings-min-date').val(dateStr);
+						},
+						onOpen: function(selectedDates, dateStr, instance) {
+							instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+						},
+					});
+				}
+				if('' === $('.ur-settings-max-date').val()){
+					$('.ur-settings-max-date').addClass('flatpickr-field').flatpickr({
+						disableMobile : true,
+						static        : true,
+						onChange      : function(selectedDates, dateStr, instance) {
+							$('.ur-settings-max-date').val(dateStr);
+						},
+						onOpen: function(selectedDates, dateStr, instance) {
+							instance.set('minDate', new Date($('.ur-settings-min-date').val()));
+						},
+					});
+				}
+
+			}else{
+				$('.ur-advance-min_date').hide();
+				$('.ur-advance-max_date').hide();
+				$('.ur-settings-min-date').val('');
+				$('.ur-settings-max-date').val('');
+			}
+		});
+
 		$.each(advance_settings, function () {
 			var $this_node = $(this);
+			switch ($this_node.attr('data-advance-field')) {
+				case 'date_format':
+					$this_node.on('change', function () {
+						trigger_general_setting_date_format($(this));
+					});
+					break;
+				case 'min_date':
+					if('true' === $('.ur-settings-enable-min-max').val()){
+						$(this).addClass('flatpickr-field').flatpickr({
+							disableMobile : true,
+							static        : true,
+							defaultDate   : new Date($('.ur-settings-min-date').val()),
+							onChange      : function(selectedDates, dateStr, instance) {
+								$('.ur-settings-min-date').val(dateStr);
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+							},
+						});
+					}else{
+						$('.ur-advance-min_date').hide();
+						$('.ur-settings-min-date').val('');
+					}
+					break;
+				case 'max_date':
+					if('true' === $('.ur-settings-enable-min-max').val()){
+						$(this).addClass('flatpickr-field').flatpickr({
+							disableMobile : true,
+							static        : true,
+							defaultDate   : new Date($('.ur-settings-max-date').val()),
+							onChange      : function(selectedDates, dateStr, instance) {
+								$('.ur-settings-max-date').val(dateStr);
+							},
+							onOpen: function(selectedDates, dateStr, instance) {
+								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
+							},
+						});
+					}else{
+						$('.ur-advance-max_date').hide();
+						$('.ur-settings-max-date').val('');
+					}
+					break;
+			}
 			var node_type = $this_node.get(0).tagName.toLowerCase();
-			
+
 			if( 'country_advance_setting_default_value' === $this_node.attr('data-id') ){
 				$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
 			}
@@ -1045,11 +1497,20 @@ jQuery(function ($) {
 			case 'input':
 				hidden_node.val($this_node.val());
 				break;
-				case 'select':
-					if( 'country_advance_setting_default_value' === this_node_id ){
-						$('.ur-builder-wrapper #ur-input-type-country').find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+			case 'select':
+				hidden_node.find('option').removeAttr('selected');
+
+				if ( $this_node.prop('multiple') ) {
+					var selected_options = $this_node.val();
+
+					if ( Array.isArray( selected_options ) ) {
+						selected_options.forEach( function( value ) {
+							hidden_node.find( 'option[value="' + value + '"]' ).attr( 'selected', 'selected' );
+						});
 					}
-					hidden_node.find('option[value="' + $this_node.val() + '"]').attr('selected', 'selected');
+				} else {
+					hidden_node.find('option[value="' + $this_node.val() + '"]').attr( 'selected', 'selected' );
+				}
 				break;
 			case 'textarea':
 				hidden_node.val($this_node.val());
@@ -1155,7 +1616,14 @@ jQuery(function ($) {
 
 	function trigger_general_setting_field_name($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		var old_field_name =  wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + old_field_name + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + old_field_name + '"]').attr('value', $label.val());
 	}
 
 	function trigger_general_setting_options($label) {
@@ -1171,8 +1639,14 @@ jQuery(function ($) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').text($label.val());
 
-		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		var field_name = $('.ur-selected-item.ur-item-active .ur-general-setting').find("[data-field='field_name']").val();
+		// Change label of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').text($label.val());
+
+		// Change label of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').text($label.val());
 
 	}
 
@@ -1195,6 +1669,11 @@ jQuery(function ($) {
 			wrapper.find('.ur-label').find('label').append('<span style="color:red">*</span>');
 		}
 		wrapper.find('.ur-general-setting-block').find('select[data-field="' + $label.attr('data-field') + '"]').find('option[value="' + $label.val() + '"]').attr('selected', 'selected');
+	}
+
+	function trigger_general_setting_date_format($label){
+		var wrapper = $('.ur-selected-item.ur-item-active');
+		wrapper.find('.ur-field').find('input').attr('placeholder', $label.val());
 	}
 
 	function trigger_general_setting_hide_label($label) {
@@ -1250,34 +1729,35 @@ jQuery(function ($) {
 
 	function manage_conditional_field_options(populated_item) {
 
-		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each(function () {
-			var field_label = jQuery(this).find('.ur-label label').text();
-			var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
+		$('.ur-grid-lists .ur-selected-item .ur-general-setting').each(function () {
+
+			var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+			var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
 
 			//strip certain fields
 			if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
 				return;
 			}
 
-			var general_setting = jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-			general_setting.each(function () {
-				var field_name = jQuery(this).find("[data-field='field_name']").val();
+				var field_name = $(this).find("[data-field='field_name']").val();
 				if (typeof field_name !== 'undefined') {
-
 					//check if option exist in the given select
-					var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
-					if (!select_value == true) {
-						jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					var select_value = $(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
+					if ( select_value === false) {
+						// Append Field in Field Options
+						$('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						// Append Field in Form Setting Conditionally Assign User Role.
+						$('[class*="urcl-field-conditional-field-select"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
 						if (field_name == populated_item) {
-							jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
+							$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
 						}
 					} else {
-						jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
 					}
 				}
-			});
+
 		});
-		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
+		$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
 	}
 
 	function ur_math_ceil(value) {
@@ -1288,16 +1768,43 @@ jQuery(function ($) {
 		return parseInt(value, 0);
 	}
 
-	setTimeout(function () {
-		var date_selector = $('#profile-page form#your-profile  input[type="date"]');
-		if (date_selector.length > 0) {
-			date_selector.addClass('flatpickr-field').attr('type', 'text').flatpickr({
-				disableMobile: true
-			});
-		}
-	}, 2);
+	$(document).ready(function () {
 
-	$(document).on('click', '#ur-tab-registered-fields h2', function () {
+		var flatpickr_loaded = false;
+
+		$('#load_flatpickr').click( function() {
+			var date_selector = $('#profile-page form#your-profile  input[type="date"]');
+			date_selector.attr('type', 'text');
+			date_selector.val( $('#formated_date').val() );
+
+			var date_field = date_selector.attr('id');
+			var date_flatpickr;
+
+			if ( ! flatpickr_loaded ) {
+				$(this).attr('data-date-format', date_selector.data('date-format'));
+				$(this).attr('data-mode', date_selector.data('mode'));
+				$(this).attr('data-min-date', date_selector.data('min-date'));
+				$(this).attr('data-max-date', date_selector.data('max-date'));
+				$(this).attr('data-default-date', $('#formated_date').val());
+				date_flatpickr = $(this).flatpickr({
+					disableMobile: true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('#'+ date_field).val(dateStr);
+					},
+				});
+
+				flatpickr_loaded = true;
+			}
+
+			if ( date_flatpickr ) {
+				date_flatpickr.open();
+			}
+		});
+	});
+
+
+	$(document).on('click', '.ur-toggle-heading', function () {
+
 		if ($(this).hasClass('closed')) {
 			$(this).removeClass('closed');
 		} else {
@@ -1305,6 +1812,9 @@ jQuery(function ($) {
 		}
 		var field_list = $(this).find(' ~ .ur-registered-list')[0];
 		$(field_list).slideToggle();
+
+		// For `Field Options` section
+		$( this ).siblings( '.ur-toggle-content' ).slideToggle();
 	});
 
 	$(document).on('click', '.ur-options-list .add', function( e ) {

@@ -41,6 +41,275 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			// Add endpoints custom URLs in Appearance > Menus > Pages.
 			add_action( 'admin_head-nav-menus.php', array( $this, 'add_nav_menu_meta_boxes' ) );
+
+			// Add all available upgradable fields.
+			add_action( 'ur_after_other_form_fields_printed', array( $this, 'add_upgradable_other_fields' ) ); // Adds fields in the `Extra Fields` section.
+			add_action( 'user_registration_extra_fields', array( $this, 'add_upgradable_extra_fields' ) );
+		}
+
+		public function add_upgradable_other_fields() {
+			$fields = array(
+				array(
+					'id'          => 'user_registration_file',
+					'label'       => 'File Upload',
+					'icon'        => 'ur-icon ur-icon-file-upload',
+					'field_class' => 'UR_File',
+					'plan'        => 'Personal Plan',
+				),
+				array(
+					'id'          => 'user_registration_mailchimp',
+					'label'       => 'MailChimp',
+					'icon'        => 'ur-icon ur-icon-mailchimp',
+					'field_class' => 'UR_MailChimp',
+					'plan'        => 'Personal Plan',
+				),
+				array(
+					'id'          => 'user_registration_invite_code',
+					'label'       => 'Invitation Code',
+					'icon'        => 'ur-icon ur-icon-invite-codes',
+					'field_class' => 'UR_Form_Field_Invite_Code',
+					'plan'        => 'Professional Plan or Plus Plan',
+				),
+			);
+
+			foreach ( $fields as $field ) {
+				if ( ! class_exists( $field['field_class'] ) ) {
+					$this->render_upgradable_field( $field );
+				}
+			}
+		}
+
+		public function add_upgradable_extra_fields() {
+			$field_sections = array(
+				array(
+					'section_title'       => 'Advanced Fields',
+					'fields_parent_class' => 'URAF_Admin',
+					'plan'                => 'Personal Plan',
+					'fields'              => array(
+						array(
+							'id'    => 'user_registration_section_title',
+							'label' => 'Section Title',
+							'icon'  => 'ur-icon ur-icon-section-title',
+						),
+						array(
+							'id'    => 'user_registration_html',
+							'label' => 'HTML',
+							'icon'  => 'ur-icon ur-icon-code',
+						),
+						array(
+							'id'    => 'user_registration_timepicker',
+							'label' => 'Time Picker',
+							'icon'  => 'ur-icon ur-icon-time-picker',
+						),
+						array(
+							'id'    => 'user_registration_phone',
+							'label' => 'Phone',
+							'icon'  => 'ur-icon ur-icon-phone',
+						),
+						array(
+							'id'    => 'user_registration_wysiwyg',
+							'label' => 'WYSIWYG',
+							'icon'  => 'ur-icon ur-icon-text-editor',
+						),
+						array(
+							'id'    => 'user_registration_select2',
+							'label' => 'Select2',
+							'icon'  => 'ur-icon ur-icon-select2',
+						),
+						array(
+							'id'    => 'user_registration_multi_select2',
+							'label' => 'Multi Select2',
+							'icon'  => 'ur-icon ur-icon-multi-select',
+						),
+						array(
+							'id'    => 'user_registration_profile_picture',
+							'label' => 'Profile Picture',
+							'icon'  => 'ur-icon ur-icon-user-display-name',
+						),
+					),
+				),
+				array(
+					'section_title'       => 'WooCommerce Billing Address',
+					'fields_parent_class' => 'URWC_Admin',
+					'plan'                => 'Personal Plan',
+					'fields'              => array(
+						array(
+							'id'    => 'user_registration_billing_address_title',
+							'label' => 'Billing Address',
+							'icon'  => 'ur-icon ur-icon-bill',
+						),
+						array(
+							'id'    => 'user_registration_billing_country',
+							'label' => 'Country',
+							'icon'  => 'ur-icon ur-icon-flag',
+						),
+						array(
+							'id'    => 'user_registration_billing_first_name',
+							'label' => 'First Name',
+							'icon'  => 'ur-icon ur-icon-input-first-name',
+						),
+						array(
+							'id'    => 'user_registration_billing_last_name',
+							'label' => 'Last Name',
+							'icon'  => 'ur-icon ur-icon-input-last-name',
+						),
+						array(
+							'id'    => 'user_registration_billing_company',
+							'label' => 'Company',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_billing_address_1',
+							'label' => 'Address 1',
+							'icon'  => 'ur-icon ur-icon-map-one',
+						),
+						array(
+							'id'    => 'user_registration_billing_address_2',
+							'label' => 'Address 2',
+							'icon'  => 'ur-icon ur-icon-map-two',
+						),
+						array(
+							'id'    => 'user_registration_billing_city',
+							'label' => 'Town / City',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_billing_state',
+							'label' => 'State / County',
+							'icon'  => 'ur-icon ur-icon-state',
+						),
+						array(
+							'id'    => 'user_registration_billing_postcode',
+							'label' => 'Postcode / Zip',
+							'icon'  => 'ur-icon ur-icon-zip-code',
+						),
+						array(
+							'id'    => 'user_registration_billing_email',
+							'label' => 'Email',
+							'icon'  => 'ur-icon ur-icon-email',
+						),
+						array(
+							'id'    => 'user_registration_billing_phone',
+							'label' => 'Phone',
+							'icon'  => 'ur-icon ur-icon-phone',
+						),
+						array(
+							'id'    => 'user_registration_separate_shipping',
+							'label' => 'Separate Shipping',
+							'icon'  => 'ur-icon ur-icon-bill',
+						),
+					),
+				),
+				array(
+					'section_title'       => 'WooCommerce Shipping Address',
+					'fields_parent_class' => 'URWC_Admin',
+					'plan'                => 'Personal Plan',
+					'fields'              => array(
+						array(
+							'id'    => 'user_registration_shipping_address_title',
+							'label' => 'Shipping Address',
+							'icon'  => 'ur-icon ur-icon-bill',
+						),
+						array(
+							'id'    => 'user_registration_shipping_country',
+							'label' => 'Country',
+							'icon'  => 'ur-icon ur-icon-flag',
+						),
+						array(
+							'id'    => 'user_registration_shipping_first_name',
+							'label' => 'First Name',
+							'icon'  => 'ur-icon ur-icon-input-first-name',
+						),
+						array(
+							'id'    => 'user_registration_shipping_last_name',
+							'label' => 'Last Name',
+							'icon'  => 'ur-icon ur-icon-input-last-name',
+						),
+						array(
+							'id'    => 'user_registration_shipping_company',
+							'label' => 'Company',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_shipping_address_1',
+							'label' => 'Address 1',
+							'icon'  => 'ur-icon ur-icon-map-one',
+						),
+						array(
+							'id'    => 'user_registration_shipping_address_2',
+							'label' => 'Address 2',
+							'icon'  => 'ur-icon ur-icon-map-two',
+						),
+						array(
+							'id'    => 'user_registration_shipping_city',
+							'label' => 'Town / City',
+							'icon'  => 'ur-icon ur-icon-buildings',
+						),
+						array(
+							'id'    => 'user_registration_shipping_state',
+							'label' => 'State / County',
+							'icon'  => 'ur-icon ur-icon-state',
+						),
+						array(
+							'id'    => 'user_registration_shipping_postcode',
+							'label' => 'Postcode / Zip',
+							'icon'  => 'ur-icon ur-icon-zip-code',
+						),
+					),
+				),
+				array(
+					'section_title'       => 'Payment Fields',
+					'fields_parent_class' => 'User_Registration_Payments_Admin',
+					'plan'                => 'Professional Plan or Plus Plan',
+					'fields'              => array(
+						array(
+							'id'    => 'user_registration_single_item',
+							'label' => 'Single Item',
+							'icon'  => 'ur-icon ur-icon-file-dollar',
+						),
+					),
+				),
+			);
+
+			foreach ( $field_sections as $section ) {
+				$class_to_check = $section['fields_parent_class'];
+
+				if ( ! class_exists( $class_to_check ) ) {
+					$fields = $section['fields'];
+					$plan   = isset( $section['plan'] ) ? $section['plan'] : '';
+
+					// Set the same plan for all the section's fields.
+					for ( $i = 0; $i < count( $fields ); $i++ ) {
+						$fields[ $i ]['plan'] = $plan;
+					}
+
+					echo '<h2 class="ur-toggle-heading">' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
+					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
+					$this->render_upgradable_fields( $fields );
+					echo '</ul >';
+				}
+			}
+		}
+
+		/**
+		 * Render multiple upgradable fields.
+		 */
+		public function render_upgradable_fields( $fields ) {
+			foreach ( $fields as $field ) {
+				$this->render_upgradable_field( $field );
+			}
+		}
+
+		/**
+		 * Render an upgradable field.
+		 */
+		public function render_upgradable_field( $args ) {
+			$id    = $args['id'];
+			$icon  = $args['icon'];
+			$label = $args['label'];
+			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
+
+			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plan="' . $plan . '"><span class="' . $icon . '"></span>' . $label . '</li>';
 		}
 
 		/**
@@ -719,6 +988,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 				$this->ur_get_list( $field );
 			}
+
+			do_action( 'ur_after_other_form_fields_printed' );
 			echo ' </ul > ';
 		}
 

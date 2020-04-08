@@ -189,7 +189,7 @@ class UR_Shortcodes {
 			wp_enqueue_script( 'flatpickr' );
 		}
 
-		if ( 'yes' === $enable_strong_password ) {
+		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 			wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 		}

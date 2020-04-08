@@ -251,6 +251,8 @@ class UR_Emailer {
 	 */
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
+		$form_id      = ur_get_form_id_by_userid( $user_id );
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
@@ -293,7 +295,7 @@ class UR_Emailer {
 			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				wp_mail( $email, $subject, $message, self::ur_get_header(), $attachment );
 			}
-		} elseif ( 'default' === get_option( 'user_registration_general_setting_login_options' ) || 'auto_login' === get_option( 'user_registration_general_setting_login_options' ) ) {
+		} elseif ( 'default' === $login_option || 'auto_login' === $login_option ) {
 			$subject = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
 			$message = new UR_Settings_Successfully_Registered_Email();
 			$message = $message->ur_get_successfully_registered_email();

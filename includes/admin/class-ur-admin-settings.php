@@ -255,6 +255,9 @@ class UR_Admin_Settings {
 			if ( ! isset( $value['desc_tip'] ) ) {
 				$value['desc_tip'] = false;
 			}
+			if ( ! isset( $value['desc_field'] ) ) {
+				$value['desc_field'] = false;
+			}
 			if ( ! isset( $value['placeholder'] ) ) {
 				$value['placeholder'] = '';
 			}
@@ -522,6 +525,7 @@ class UR_Admin_Settings {
 					if ( ! isset( $value['checkboxgroup'] ) || 'end' === $value['checkboxgroup'] ) {
 						?>
 									</fieldset>
+									<?php echo $desc_field; ?>
 								</td>
 							</tr>
 						<?php
@@ -529,6 +533,7 @@ class UR_Admin_Settings {
 						?>
 							</fieldset>
 						<?php
+						echo $desc_field;
 					}
 					break;
 
@@ -612,6 +617,8 @@ class UR_Admin_Settings {
 		$description  = '';
 		$tooltip_html = '';
 
+		$desc_field = '';
+
 		if ( true === $value['desc_tip'] ) {
 			$tooltip_html = $value['desc'];
 		} elseif ( ! empty( $value['desc_tip'] ) ) {
@@ -619,6 +626,10 @@ class UR_Admin_Settings {
 			$tooltip_html = $value['desc_tip'];
 		} elseif ( ! empty( $value['desc'] ) ) {
 			$description = $value['desc'];
+		}
+
+		if ( ! empty( $value['desc_field'] ) ) {
+			$desc_field = $value['desc_field'];
 		}
 
 		if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
@@ -629,12 +640,19 @@ class UR_Admin_Settings {
 			$description = '<span class="description">' . wp_kses_post( $description ) . '</span>';
 		}
 
+		if ( $desc_field && in_array( $value['type'], array( 'textarea', 'radio', 'checkbox' ) ) ) {
+			$desc_field = '<p class="description">' . wp_kses_post( $desc_field ) . '</p>';
+		} elseif ( $desc_field ) {
+			$desc_field = '<span class="description">' . wp_kses_post( $desc_field ) . '</span>';
+		}
+
 		if ( $tooltip_html ) {
 			$tooltip_html = ur_help_tip( $tooltip_html );
 		}
 
 		return array(
 			'description'  => $description,
+			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
 	}

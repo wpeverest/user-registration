@@ -93,7 +93,7 @@ class UR_Frontend_Form_Handler {
 			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
 			if ( $user_id > 0 ) {
-				$login_option   = get_option( 'user_registration_general_setting_login_options', 'default' );
+				$login_option   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 				$success_params = array(
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
@@ -104,7 +104,8 @@ class UR_Frontend_Form_Handler {
 					$success_params['auto_login'] = true;
 				}
 
-				$success_params = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
+				$success_params['form_login_option'] = $login_option;
+				$success_params                      = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
 				wp_send_json_success( $success_params );
 			}
@@ -258,7 +259,7 @@ class UR_Frontend_Form_Handler {
 				case 'country':
 				case 'file':
 				case 'date':
-					$form_data->value = sanitize_text_field( $form_data->value );
+					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
 			}
 		}

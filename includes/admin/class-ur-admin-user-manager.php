@@ -137,7 +137,6 @@ class UR_Admin_User_Manager {
 		}
 
 		$user_status = get_user_meta( $this->user->ID, 'ur_user_status', true );
-
 		// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active
 		if ( $exact_value ) {
 			return $user_status;

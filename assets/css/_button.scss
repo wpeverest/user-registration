@@ -6,7 +6,7 @@
 
 		&.button-icon {
 			width: 32px;
-			padding: 0 0 2px;
+			padding: 0;
 
 			.dashicons {
 				line-height: 1;
@@ -50,7 +50,7 @@
 	}
 
 	.button-secondary {
-		color: $color_gray_base;
+		color: $gray_base;
 		background: $color_gray_four;
 		border-color: $color_gray_four;
 		box-shadow: 0 1px 0 $color_gray_four;
@@ -58,7 +58,7 @@
 		&:hover,
 		&:active,
 		&:focus {
-			color: $color_gray_base;
+			color: $gray_base;
 			background: $color_gray_three;
 			border-color: $color_gray_three;
 			box-shadow: 0 1px 0 $color_gray_three;
@@ -67,17 +67,17 @@
 
 	.button-danger {
 		color: $white;
-		background: $color_danger;
-		border-color: $color_danger;
-		box-shadow: 0 1px 0 $color_danger;
+		background: $red;
+		border-color: $red;
+		box-shadow: 0 1px 0 $red;
 
 		&:hover,
 		&:active,
 		&:focus {
 			color: $white;
-			background: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
-			border-color: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
-			box-shadow: 0 1px 0 adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
+			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
 		}
 	}
 
@@ -110,5 +110,15 @@
 		height: auto;
 		margin-right: 3px;
 
+	}
+}
+
+.select2-container {
+	.ur-select-all-countries-button {
+		margin: 6px 3px 4px 6px;
+	}
+
+	.ur-unselect-all-countries-button {
+		margin: 6px 3px 4px;
 	}
 }
