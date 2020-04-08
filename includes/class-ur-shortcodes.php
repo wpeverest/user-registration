@@ -222,7 +222,7 @@ class UR_Shortcodes {
 			do_action('elementor/widget/popup/after_render');
 			add_action('elementor/widget/popup/after_render',
 				function () {
-					echo '<script type="text/javascript" defer>user_registration_reinit();</script>';
+					echo '<script type="text/javascript" defer>try{user_registration_reinit();}catch(e){}</script>';
 				});
 		}
 	}
