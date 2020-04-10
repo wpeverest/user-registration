@@ -471,9 +471,32 @@ jQuery(function ($) {
 										}
 										var single_row = $this_row.closest('.ur-single-row');
 										$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
+
+										// Remove Row Fields from Conditional Select Dropdown.
+										var row_fields = single_row.find('.ur-grid-lists .ur-selected-item .ur-general-setting');
+										$( row_fields ).each( function () {
+											var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+											var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
+
+											//strip certain fields
+											if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
+												return;
+											}
+
+											var field_name = $(this).find("[data-field='field_name']").val();
+
+											if (typeof field_name !== 'undefined') {
+												// Remove item from conditional logic options
+												$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').remove();
+
+												// Remove Field from Form Setting Conditionally Assign User Role.
+												$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').remove();
+											}
+										});
 										single_row.remove();
 										$this.check_grid();
 										manage_draggable_users_fields();
+
 										Swal.fire({
 											type: 'success',
 											title: 'Successfully deleted!',
@@ -481,6 +504,9 @@ jQuery(function ($) {
 											timer: 1000
 										});
 									},
+									reject: function() {
+										// Do Nothing.
+									}
 								} );
 							} else {
 								ur_alert( i18n_admin.i18n_at_least_one_row_need_to_select )
@@ -588,12 +614,16 @@ jQuery(function ($) {
 							builder.manage_empty_grid();
 							manage_draggable_users_fields();
 
-							//remove item from conditional logic options
-							jQuery('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+							// Remove item from conditional logic options
+							$('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+
+							// Remove Field from Form Setting Conditionally Assign User Role.
+							$('[class*="urcl-field-conditional-field-select"] option[value="' + removed_item + '"]').remove();
 
 							return false; // To prevent click on whole item.
 						});
 					},
+
 					clone_selected_item: function () {
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-clone', function () {
 							var data_field_key = $(this).closest('.ur-selected-item ').find('.ur-field').attr('data-field-key');
@@ -611,6 +641,9 @@ jQuery(function ($) {
 							var label_string = label_node.val().replace(find_string, '');
 							clone.find('input[data-field="field_name"]').attr('value', label_string + new Date().getTime());
 							$(this).closest('.ur-grid-list-item').append(clone);
+
+							var populated_item = clone.find("[data-field='field_name']").val();
+								manage_conditional_field_options(populated_item);
 						});
 					},
 					check_grid: function () {
@@ -1583,7 +1616,14 @@ jQuery(function ($) {
 
 	function trigger_general_setting_field_name($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		var old_field_name =  wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + old_field_name + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + old_field_name + '"]').attr('value', $label.val());
 	}
 
 	function trigger_general_setting_options($label) {
@@ -1599,8 +1639,14 @@ jQuery(function ($) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').text($label.val());
 
-		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		var field_name = $('.ur-selected-item.ur-item-active .ur-general-setting').find("[data-field='field_name']").val();
+		// Change label of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').text($label.val());
+
+		// Change label of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').text($label.val());
 
 	}
 
@@ -1683,34 +1729,35 @@ jQuery(function ($) {
 
 	function manage_conditional_field_options(populated_item) {
 
-		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each(function () {
-			var field_label = jQuery(this).find('.ur-label label').text();
-			var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
+		$('.ur-grid-lists .ur-selected-item .ur-general-setting').each(function () {
+
+			var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+			var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
 
 			//strip certain fields
 			if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
 				return;
 			}
 
-			var general_setting = jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-			general_setting.each(function () {
-				var field_name = jQuery(this).find("[data-field='field_name']").val();
+				var field_name = $(this).find("[data-field='field_name']").val();
 				if (typeof field_name !== 'undefined') {
-
 					//check if option exist in the given select
-					var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
-					if (!select_value == true) {
-						jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					var select_value = $(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
+					if ( select_value === false) {
+						// Append Field in Field Options
+						$('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						// Append Field in Form Setting Conditionally Assign User Role.
+						$('[class*="urcl-field-conditional-field-select"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
 						if (field_name == populated_item) {
-							jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
+							$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
 						}
 					} else {
-						jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
 					}
 				}
-			});
+
 		});
-		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
+		$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
 	}
 
 	function ur_math_ceil(value) {

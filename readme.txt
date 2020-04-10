@@ -143,6 +143,7 @@ Yes, the plugin has a shortcode for the login form.
 
 = 1.8.2.1 - 20/03/2020
 * Fix - Unable to Login User Due to Pending Status.
+* Fix - Recaptcha Backward compatibility
 
 = 1.8.2 - 18/03/2020
 * Feature - Search Field introduced in form builder.

@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -194,7 +195,7 @@ abstract class UR_Form_Field {
 			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_description', $form_data['description'] );
 		}
 
-		// Filter only selected countries for `Country` fields
+		// Filter only selected countries for `Country` fields.
 		if ( 'country' === $field_key || 'billing_country' === $field_key || 'shipping_country' === $field_key ) {
 			$form_data['options'] = UR_Form_Field_Country::get_instance()->get_country();
 			$filtered_options     = array();
@@ -212,14 +213,14 @@ abstract class UR_Form_Field {
 		}
 
 		/**  Redundant codes. */
-		if ( 'select' === $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+		if ( 'select' === $field_key || 'select2' === $field_key || 'multi_select2' === $field_key ) {
+			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
-			$options = array();
+			$options     = array();
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -227,13 +228,13 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'radio' === $field_key ) {
-			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7
+			$option_data = isset( $data['advance_setting']->options ) ? explode( ',', $data['advance_setting']->options ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $option_data;
 
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -241,13 +242,13 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'checkbox' === $field_key ) {
-			$choices     = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7
+			$choices     = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 
 			$options = array();
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ]   = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
 				$form_data['options'] = $options;
@@ -329,14 +330,14 @@ abstract class UR_Form_Field {
 					}
 					$disabled = '';
 					// To make invite code field name non editable.
-					if ( $value === 'invite_code' || $value === 'profile_pic_url' ) {
+					if ( 'invite_code' === $value || 'profile_pic_url' === $value ) {
 						$disabled = 'disabled';
 					}
 					$general_setting_wrapper .= $extra_attribute . ' ' . $disabled . '/>';
 					break;
 
 				case 'radio':
-					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7.
 					$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
 					$old_options     = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $default_options;
 					$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
@@ -372,7 +373,7 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'checkbox':
-					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
+					// Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7.
 					$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
 					$old_options     = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;

@@ -328,7 +328,7 @@ class UR_Form_Handler {
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
-				if ( 'yes' === $recaptcha_enabled ) {
+				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					if ( ! empty( $recaptcha_value ) ) {
 
 						$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
@@ -506,7 +506,7 @@ class UR_Form_Handler {
 
 			do_action( 'user_request_action_confirmed', $request_id );
 
-			$request = wp_get_user_request_data( $request_id );
+			$request = wp_get_user_request( $request_id );
 
 			if ( $request && in_array( $request->action_name, _wp_privacy_action_request_types(), true ) ) {
 				if ( 'export_personal_data' === $request->action_name ) {
