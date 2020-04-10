@@ -44,6 +44,7 @@ class UR_Admin_User_List_Manager {
 		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
+		add_filter( 'manage_users_sortable_columns', array( $this, 'make_registered_at_column_sortable' ) );
 		add_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
 	}
 
@@ -241,6 +242,15 @@ class UR_Admin_User_List_Manager {
 			}
 		}
 		return $val;
+	}
+
+	/**
+	 * Make our "Registration At" column sortable
+	 *
+	 * @param array $columns Array of all user sortable columns
+	 */
+	public function make_registered_at_column_sortable( $columns ) {
+		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
 	}
 
 	public function add_status_filter( $which ) {
