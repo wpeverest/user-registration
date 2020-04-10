@@ -85,12 +85,17 @@ class UR_Admin_User_List_Manager {
 		$approve_action = '<a style="color:#086512" href="' . esc_url( $approve_link ) . '">' . _x( 'Approve', 'The action on users list page', 'user-registration' ) . '</a>';
 		$deny_action    = '<a style="color:#e20707" href="' . esc_url( $deny_link ) . '">' . _x( 'Deny', 'The action on users list page', 'user-registration' ) . '</a>';
 
-		if ( $user_manager->is_pending() || $user_manager->is_denied() ) {
-			$actions['ur_user_approve_action'] = $approve_action;
-		}
+		$user_status = $user_manager->get_user_status();
 
-		if ( $user_manager->is_pending() || $user_manager->is_approved() ) {
-			$actions['ur_user_deny_action'] = $deny_action;
+		if ( 'admin_approval' === $user_status['login_option'] ) {
+			if ( 0 == $user_status['user_status'] ) {
+				$actions['ur_user_deny_action']    = $deny_action;
+				$actions['ur_user_approve_action'] = $approve_action;
+			} elseif ( 1 == $user_status['user_status'] ) {
+				$actions['ur_user_deny_action'] = $deny_action;
+			} elseif ( -1 == $user_status['user_status'] ) {
+				$actions['ur_user_approve_action'] = $approve_action;
+			}
 		}
 
 		return $actions;
@@ -203,10 +208,18 @@ class UR_Admin_User_List_Manager {
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
-		if ( $column_name == 'ur_user_user_status' && 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		if ( 'ur_user_user_status' === $column_name ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
-			return UR_Admin_User_Manager::get_status_label( $status );
+
+			if ( ! empty( $status ) ) {
+				if ( 'admin_approval' === $status['login_option'] || 'default' === $status['login_option'] ) {
+					return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
+				} else {
+					$user_managers = new UR_Email_Confirmation( $user_id );
+					return $user_managers->add_column_cell( $status['user_status'], $user_id );
+				}
+			}
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
 			$user_metas = get_user_meta( $user_id );
 
@@ -440,13 +453,17 @@ class UR_Admin_User_List_Manager {
 					</th>
 					<td>
 						<select id="ur_user_user_status" name="ur_user_user_status">
-						<?php
-						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
-						foreach ( $available_statuses as $status ) :
-							?>
+							<?php
+							if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
+								$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
+								foreach ( $available_statuses as $status ) :
+									?>
 								<option
-									value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
-							<?php endforeach; ?>
+									value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
+									<?php
+							endforeach;
+							}
+							?>
 						</select>
 
 						<span class="description"><?php _e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
