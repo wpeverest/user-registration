@@ -851,8 +851,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<?php
 					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 					?>
-					<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>">
-					<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+					<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
+					<span id="ur-form-name-edit-button" class="ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
 					<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
