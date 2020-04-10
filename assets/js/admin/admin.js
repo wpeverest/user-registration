@@ -527,7 +527,9 @@ jQuery(function ($) {
 						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
 							var $this_single_row = $( this ).closest( '.ur-single-row' ),
 								grid_num = $( this ).attr( 'data-grid' ),
-								$grids = builder.get_grid_lists(grid_num);
+								grid_comp = $this_single_row.find('.ur-grid-lists .ur-grid-list-item').length,
+								$grids = builder.get_grid_lists(grid_num),
+								iterator = 0;
 
 							// Prevent from selecting same grid.
 							if( $this_single_row.find( '.ur-grid-lists .ur-grid-list-item' ).length === parseInt( grid_num ) ) {
@@ -538,9 +540,21 @@ jQuery(function ($) {
 
 							$.each($this_single_row.find('.ur-grid-lists .ur-grid-list-item'), function () {
 								$(this).children('*').each(function () {
-									$grids.find('.ur-grid-list-item').eq(0).append($(this).clone());  // "this" is the current element in the loop
+									$grids.find('.ur-grid-list-item').eq(iterator).append($(this).clone());  // "this" is the current element in the loop.
+
+									// In case the fields have to be redistributed into 2 columns - prioritizes left column first, if 3rd column is going away.
+									if ( 3 === parseInt( $(this).parent().attr('ur-grid-id') ) && 3 === parseInt( grid_comp ) && 2 === parseInt( grid_num ) ) {
+										iterator = Math.abs( --iterator ); // Alternates between 0 and 1.
+									}
 								});
+
+								// Decides to check if it's trying to push into lower amount of columns.
+								// If so, it simply resets the index to 0 to disallow elements from removed rows.
+								if( ( parseInt( grid_num ) > grid_comp ) || ( ( $(this).children('*').length ) && ( 2 <= parseInt( grid_num ) ) ) ) {
+									iterator =  parseInt( grid_num ) <= ( ++iterator ) ? 0 : iterator;
+								}
 							});
+
 							$this_single_row.find('.ur-grid-lists').eq(0).hide();
 							$grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
 							$this_single_row.find('.ur-grid-lists').eq(0).remove();
@@ -1111,7 +1125,7 @@ jQuery(function ($) {
 				setTimeout(function () {
 					$('#ur-setting-form').find('input[data-field="' + field_attribute + '"]').removeAttr('style');
 				}, 2000);
-				need_to_break = true;  //console.log('User registration console ' + $field.closest('.ur-selected-item').find('.ur-label label').text());
+				need_to_break = true;
 			}
 			if (need_to_break) {
 				return false;
