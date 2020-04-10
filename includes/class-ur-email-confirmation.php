@@ -22,7 +22,6 @@ class UR_Email_Confirmation {
 
 		if ( is_admin() ) {
 			add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
-			// add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 			add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 			add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		}
