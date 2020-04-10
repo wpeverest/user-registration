@@ -44,6 +44,7 @@ class UR_Admin_User_List_Manager {
 		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
+		add_filter( 'manage_users_sortable_columns', array( $this, 'make_registered_at_column_sortable' ) );
 		add_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
 	}
 
@@ -182,10 +183,10 @@ class UR_Admin_User_List_Manager {
 	public function add_column_head( $columns ) {
 
 		$the_columns['ur_user_user_registered_source'] = __( 'Source', 'user-registration' );
+		$the_columns['ur_user_user_registered_log']    = __( 'Registered At', 'user-registration' );
 		$newcol                                        = array_slice( $columns, 0, -1 );
 		$newcol                                        = array_merge( $newcol, $the_columns );
 		$columns                                       = array_merge( $newcol, array_slice( $columns, 1 ) );
-
 		return $columns;
 	}
 
@@ -206,7 +207,7 @@ class UR_Admin_User_List_Manager {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
 			return UR_Admin_User_Manager::get_status_label( $status );
-		} elseif ( $column_name == 'ur_user_user_registered_source' ) {
+		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
 			$user_metas = get_user_meta( $user_id );
 
 			if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
@@ -215,7 +216,7 @@ class UR_Admin_User_List_Manager {
 				foreach ( $networks as $network ) {
 
 					if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
-							return ucfirst( $network );
+						return ucfirst( $network );
 					}
 				}
 			} elseif ( isset( $user_metas['ur_form_id'] ) ) {
@@ -229,8 +230,27 @@ class UR_Admin_User_List_Manager {
 			} else {
 				return '-';
 			}
+		} elseif ( 'ur_user_user_registered_log' === $column_name ) {
+			$user_data      = get_userdata( $user_id );
+			$registered_log = $user_data->user_registered;
+
+			if ( $user_data ) {
+				$log = date( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
+				return $log;
+			} else {
+				return '-';
+			}
 		}
 		return $val;
+	}
+
+	/**
+	 * Make our "Registration At" column sortable
+	 *
+	 * @param array $columns Array of all user sortable columns
+	 */
+	public function make_registered_at_column_sortable( $columns ) {
+		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
 	}
 
 	public function add_status_filter( $which ) {
@@ -250,11 +270,11 @@ class UR_Admin_User_List_Manager {
 		<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
 			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
 
-			<?php
-			echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
-			echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
-			echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
-			?>
+		<?php
+		echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
+		echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
+		echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
+		?>
 		</select>
 		<?php
 		submit_button( __( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
@@ -420,10 +440,10 @@ class UR_Admin_User_List_Manager {
 					</th>
 					<td>
 						<select id="ur_user_user_status" name="ur_user_user_status">
-							<?php
-							$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
-							foreach ( $available_statuses as $status ) :
-								?>
+						<?php
+						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
+						foreach ( $available_statuses as $status ) :
+							?>
 								<option
 									value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
 							<?php endforeach; ?>
@@ -433,7 +453,7 @@ class UR_Admin_User_List_Manager {
 					</td>
 				</tr>
 			</table>
-		<?php
+			<?php
 	}
 
 
@@ -452,7 +472,7 @@ class UR_Admin_User_List_Manager {
 		}
 
 		if ( empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) {
-				return false;
+			return false;
 		}
 
 		$new_status = $_POST['ur_user_user_status'];
