@@ -174,7 +174,8 @@ class UR_Frontend_Form_Handler {
 				if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
 					if ( 'yes' === $form_field_data[ $key ]->general_setting->required ) {
-						$response = $form_field_data[ $key ]->general_setting->label . ' is required field';
+						$field_label = $form_field_data[ $key ]->general_setting->label;
+						$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
 						array_push( self::$response_array, $response );
 					}
 				}
