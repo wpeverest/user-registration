@@ -457,7 +457,7 @@ jQuery(function ($) {
 						$('body').on('click', '.ur-remove-row', function () {
 							if ($('.ur-input-grids').find('.ur-single-row:visible').length > 1) {
 								var $this_row = $( this );
-								ur_confirmation( i18n_admin.i18n_are_you_sure_want_to_delete, {
+								ur_confirmation( user_registration_admin_data.i18n_admin.i18n_are_you_sure_want_to_delete, {
 									confirm: function() {
 										var btn = $this_row.prev();
 										var new_btn;
@@ -509,7 +509,7 @@ jQuery(function ($) {
 									}
 								} );
 							} else {
-								ur_alert( i18n_admin.i18n_at_least_one_row_need_to_select )
+								ur_alert( user_registration_admin_data.i18n_admin.i18n_at_least_one_row_need_to_select )
 							}
 						});
 					},
@@ -606,7 +606,7 @@ jQuery(function ($) {
 								var length_of_required = $('.ur-input-grids').find('.ur-field[data-field-key="' + data_field_id + '"]').length;
 								var only_one_field_index = $.makeArray(user_registration_admin_data.form_one_time_draggable_fields);
 								if (length_of_required > 0 && $.inArray(data_field_id, only_one_field_index) >= 0) {
-									show_message(i18n_admin.i18n_user_required_field_already_there);
+									show_message(user_registration_admin_data.i18n_admin.i18n_user_required_field_already_there);
 									$(ui.helper).remove();
 									return;
 								}
@@ -622,19 +622,40 @@ jQuery(function ($) {
 					remove_selected_item: function () {
 						var $this = this;
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function ( e ) {
-							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val();
-							$(this).closest('.ur-selected-item ').remove();
-							$this.check_grid();
-							builder.manage_empty_grid();
-							manage_draggable_users_fields();
+							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val(),
+								ele = $this,
+								$ele = $(this);
 
-							// Remove item from conditional logic options
-							$('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+							ur_confirmation(
+								user_registration_admin_data.i18n_admin.i18n_are_you_sure_want_to_delete,
+								{
+									title:             user_registration_admin_data.i18n_admin.i18n_msg_delete,
+									showCancelButton:  true,
+									confirmButtonText: user_registration_admin_data.i18n_admin.i18n_choice_ok,
+									cancelButtonText:  user_registration_admin_data.i18n_admin.i18n_choice_cancel,
+									ele:               ele,
+									$ele:              $ele,
+									removed_item:      removed_item,
+									confirm: function() {
+										$ele.closest('.ur-selected-item ').remove();
+										ele.check_grid();
+										builder.manage_empty_grid();
+										manage_draggable_users_fields();
 
-							// Remove Field from Form Setting Conditionally Assign User Role.
-							$('[class*="urcl-field-conditional-field-select"] option[value="' + removed_item + '"]').remove();
+										// Remove item from conditional logic options
+										$('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
 
-							return false; // To prevent click on whole item.
+										// Remove Field from Form Setting Conditionally Assign User Role.
+										$('[class*="urcl-field-conditional-field-select"] option[value="' + removed_item + '"]').remove();
+
+										// To prevent click on whole item.
+										return false;
+									},
+									reject: function() {
+										return false;
+									}
+								}
+							);
 						});
 					},
 
@@ -644,7 +665,7 @@ jQuery(function ($) {
 							var selected_node = $('.ur-input-grids').find('.ur-field[data-field-key="' + data_field_key + '"]');
 							var length_of_required = selected_node.length;
 							if (length_of_required > 0 && $.inArray(data_field_key, user_registration_admin_data.form_one_time_draggable_fields) > -1) {
-								show_message(i18n_admin.i18n_user_required_field_already_there_could_not_clone);
+								show_message(user_registration_admin_data.i18n_admin.i18n_user_required_field_already_there_could_not_clone);
 								return;
 							}
 							var clone = $(this).closest('.ur-selected-item ').clone();
@@ -994,7 +1015,7 @@ jQuery(function ($) {
 			complete: function (response) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
-					var success_message = i18n_admin.i18n_form_successfully_saved;
+					var success_message = user_registration_admin_data.i18n_admin.i18n_form_successfully_saved;
 
 					if ( user_registration_admin_data.is_edit_form !== '1' ) {
 						var title = "Form successfully created."
@@ -1041,9 +1062,9 @@ jQuery(function ($) {
 		}
 
 		if( 'success' === type ) {
-			message_string = '<div class="ur-message"><div class="ur-success"><p><strong>' + i18n_admin.i18n_success + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+			message_string = '<div class="ur-message"><div class="ur-success"><p><strong>' + user_registration_admin_data.i18n_admin.i18n_success + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 		} else {
-			message_string = '<div class="ur-message"><div class="ur-error"><p><strong>' + i18n_admin.i18n_error + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+			message_string = '<div class="ur-message"><div class="ur-error"><p><strong>' + user_registration_admin_data.i18n_admin.i18n_error + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 		}
 
 		var $message = $( message_string ).prependTo( $message_container );
@@ -1072,17 +1093,17 @@ jQuery(function ($) {
 		};
 		if ($('.ur-selected-item').length === 0) {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_at_least_one_field_need_to_select;
+			response.message = user_registration_admin_data.i18n_admin.i18n_at_least_one_field_need_to_select;
 			return response;
 		}
 		if ($('#ur-form-name').val() === '') {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_empty_form_name;
+			response.message = user_registration_admin_data.i18n_admin.i18n_empty_form_name;
 			return response;
 		}
 		if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_previous_save_action_ongoing;
+			response.message = user_registration_admin_data.i18n_admin.i18n_previous_save_action_ongoing;
 			return response;
 		}
 		$.each($( '.ur-selected-item select.ur-settings-selected-countries' ), function () {
@@ -1092,7 +1113,7 @@ jQuery(function ($) {
 				( Array.isArray( selected_countries ) && selected_countries.length === 0 )
 			) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_select_countries;
+				response.message = user_registration_admin_data.i18n_admin.i18n_select_countries;
 				return response;
 			}
 		});
@@ -1104,17 +1125,17 @@ jQuery(function ($) {
 				var field_value = $field.val();
 				var length = $('.ur-input-grids .ur-general-setting-block').find('input[data-field="field_name"][value="' + field_value + '"]').length;
 				if (length > 1) {
-					throw i18n_admin.i18n_duplicate_field_name;
+					throw user_registration_admin_data.i18n_admin.i18n_duplicate_field_name;
 				}
 				if ($field.closest('.ur-general-setting-block').find('input[data-field="label"]').val() === '') {
 					$field = $field.closest('.ur-general-setting-block').find('input[data-field="label"]');
-					throw i18n_admin.i18n_empty_field_label;
+					throw user_registration_admin_data.i18n_admin.i18n_empty_field_label;
 				}
 				var field_regex = /[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/gm;
 				var regex_result = field_value.match(field_regex);
 				if (regex_result !== null && regex_result.length === 1 && regex_result[0] === field_value) {
 				} else {
-					throw i18n_admin.i18n_invald_field_name;
+					throw user_registration_admin_data.i18n_admin.i18n_invald_field_name;
 				}
 			} catch (err) {
 				response.validation_status = false;
@@ -1134,7 +1155,7 @@ jQuery(function ($) {
 		for (var single_field = 0; single_field < only_one_field_index.length; single_field++) {
 			if ($('.ur-input-grids').find('.ur-field[data-field-key="' + only_one_field_index[single_field] + '"]').length > 1) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_multiple_field_key + only_one_field_index[single_field];
+				response.message = user_registration_admin_data.i18n_admin.i18n_multiple_field_key + only_one_field_index[single_field];
 				break;
 			}
 		}
@@ -1144,12 +1165,12 @@ jQuery(function ($) {
 				response.validation_status = false;
 
 				if (required_index === 0) {
-					var field = i18n_admin.i18n_user_email;
+					var field = user_registration_admin_data.i18n_admin.i18n_user_email;
 				} else if (required_index === 1) {
-					var field = i18n_admin.i18n_user_password;
+					var field = user_registration_admin_data.i18n_admin.i18n_user_password;
 				}
 
-				response.message = field + ' ' + i18n_admin.i18n_field_is_required;
+				response.message = field + ' ' + user_registration_admin_data.i18n_admin.i18n_field_is_required;
 				break;
 			}
 		}
@@ -1908,8 +1929,8 @@ function ur_confirmation( message, options ) {
 		text: message,
 		type: ( 'undefined' !== typeof options.type ) ? options.type : 'warning',
 		showCancelButton: ( 'undefined' !== typeof options.showCancelButton ) ? options.showCancelButton : true,
-		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : 'OK',
-		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText :'Cancel',
+		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : user_registration_admin_data.i18n_admin.i18n_choice_ok,
+		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText : user_registration_admin_data.i18n_admin.i18n_choice_cancel,
 	}).then( function(result) {
 		if (result.value) {
 			options.confirm();
