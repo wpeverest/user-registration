@@ -87,7 +87,7 @@ class UR_AJAX {
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
-		if ( 'yes' === $recaptcha_enabled ) {
+		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 
 				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );

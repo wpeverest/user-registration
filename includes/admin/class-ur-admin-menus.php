@@ -121,6 +121,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'label' => 'Multi Select2',
 							'icon'  => 'ur-icon ur-icon-multi-select',
 						),
+						array(
+							'id'    => 'user_registration_profile_picture',
+							'label' => 'Profile Picture',
+							'icon'  => 'ur-icon ur-icon-user-display-name',
+						),
 					),
 				),
 				array(

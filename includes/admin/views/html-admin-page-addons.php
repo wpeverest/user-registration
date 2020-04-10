@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<div class="wrap restaurantpress ur_addons_wrap">
+<div class="wrap ur_addons_wrap">
 	<nav class="nav-tab-wrapper ur-nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'user-registration' ); ?></a>
 	</nav>

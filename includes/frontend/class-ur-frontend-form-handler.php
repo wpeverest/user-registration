@@ -105,7 +105,7 @@ class UR_Frontend_Form_Handler {
 				}
 
 				$success_params['form_login_option'] = $login_option;
-				$success_params = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
+				$success_params                      = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
 				wp_send_json_success( $success_params );
 			}
@@ -164,7 +164,26 @@ class UR_Frontend_Form_Handler {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
 
+		// Check if a required field is missing.
+		$missing_item = array_diff( $form_key_list, $form_data_field );
+
+		if ( count( $missing_item ) > 0 ) {
+
+			foreach ( $missing_item as $key => $value ) {
+
+				if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
+
+					if ( 'yes' === $form_field_data[ $key ]->general_setting->required ) {
+						$field_label = $form_field_data[ $key ]->general_setting->label;
+						$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+						array_push( self::$response_array, $response );
+					}
+				}
+			}
+		}
+
 		foreach ( $form_data as $data ) {
+
 			if ( in_array( $data->field_name, $form_key_list ) ) {
 				$form_data_index                            = array_search( $data->field_name, $form_key_list );
 				$single_form_field                          = $form_field_data[ $form_data_index ];
@@ -178,6 +197,7 @@ class UR_Frontend_Form_Handler {
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$hook                                       = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook                                = $hook . '_message';
+
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {
