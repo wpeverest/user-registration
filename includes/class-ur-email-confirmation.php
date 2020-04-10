@@ -182,7 +182,7 @@ class UR_Email_Confirmation {
 
 	// Resend verification email error message.
 	public function custom_resend_email_token_error_message() {
-		return ur_print_notice( __( 'User doesnot exist!', 'user-registration' ), 'error' );
+		return ur_print_notice( __( 'User does not exist!', 'user-registration' ), 'error' );
 	}
 
 	/**
