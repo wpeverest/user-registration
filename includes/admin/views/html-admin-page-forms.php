@@ -113,8 +113,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="ur-selected-inputs">
 									<div class="ur-builder-wrapper-content">
 										<div class="ur-form-name-wrapper" >
-											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>">
-											<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>" data-editing="false">
+											<span id="ur-form-name-edit-button" class="ur-edit-form-name dashicons dashicons-edit"></span>
 										</div>
 										<div class="ur-input-grids">
 
