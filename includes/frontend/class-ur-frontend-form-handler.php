@@ -167,6 +167,17 @@ class UR_Frontend_Form_Handler {
 		// Check if a required field is missing.
 		$missing_item = array_diff( $form_key_list, $form_data_field );
 
+		// Since confirm password and confirm email are not included in $form_data. We have to check manually.
+		if ( in_array( 'user_confirm_password', $form_key_list ) ) {
+			$index = array_search( 'user_confirm_password', $missing_item );
+			unset( $missing_item[ $index ] );
+		}
+
+		if ( array_key_exists( 'confirm_user_email', $form_key_list ) ) {
+			$index = array_search( 'confirm_user_email', $missing_item );
+			unset( $missing_item[ $index ] );
+		}
+
 		if ( count( $missing_item ) > 0 ) {
 
 			foreach ( $missing_item as $key => $value ) {
