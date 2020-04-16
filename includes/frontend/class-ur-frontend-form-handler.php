@@ -173,8 +173,8 @@ class UR_Frontend_Form_Handler {
 			unset( $missing_item[ $index ] );
 		}
 
-		if ( array_key_exists( 'confirm_user_email', $form_key_list ) ) {
-			$index = array_search( 'confirm_user_email', $missing_item );
+		if ( in_array( 'user_confirm_email', $form_key_list ) ) {
+			$index = array_search( 'user_confirm_email', $missing_item );
 			unset( $missing_item[ $index ] );
 		}
 
