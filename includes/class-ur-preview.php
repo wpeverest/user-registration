@@ -124,10 +124,14 @@ class UR_Preview {
 	 * @return string
 	 */
 	public function form_preview_content( $content ) {
-		$form_id = absint( $_GET['form_id'] );
+		$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 
 		remove_filter( 'the_content', array( $this, 'form_preview_content_filter' ) );
-		$content = apply_shortcodes( '[user_registration_form id="' . $form_id . '"]' );
+		if ( function_exists( 'apply_shortcodes' ) ) {
+			$content = apply_shortcodes( '[user_registration_form id="' . $form_id . '"]' );
+		} else {
+			$content = do_shortcode( '[user_registration_form id="' . $form_id . '"]' );
+		}
 
 		return $content;
 	}
