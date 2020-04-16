@@ -92,6 +92,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
 
+* [Customize My Account](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
