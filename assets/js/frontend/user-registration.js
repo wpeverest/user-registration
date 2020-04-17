@@ -350,6 +350,8 @@
 					$('form.register').on('submit', function (event) {
 						var $this = $(this);
 
+						event.stopImmediatePropagation();
+
 						// Validator messages.
 						$.extend($.validator.messages, {
 							required: user_registration_params.message_required_fields,
