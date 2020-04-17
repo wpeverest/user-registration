@@ -501,6 +501,7 @@ function ur_exclude_profile_details_fields() {
 			'user_confirm_password',
 			'user_confirm_email',
 			'profile_picture',
+			'invite_code',
 		)
 	);
 }
@@ -1026,6 +1027,11 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	$post_meta = get_post_meta( $post_id, $meta_key );
 
 	if ( isset( $post_meta[0] ) ) {
+		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key ) {
+			if ( 'yes' === $post_meta[0] ) {
+				$post_meta[0] = 1;
+			}
+		}
 		return $post_meta[0];
 	}
 

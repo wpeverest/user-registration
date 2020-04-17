@@ -771,8 +771,18 @@
 			width: 100%;
 			margin-bottom: 0.5em;
 		}
+
  		.components-base-control {
 			width: 100%;
+			text-align: center;
+		}
+
+		.components-placeholder__fieldset {
+			text-align: center;
+
+			img {
+				margin: 0 auto;
+			}
 		}
 	}
 }

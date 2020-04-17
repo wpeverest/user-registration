@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.3.2
-Stable tag: 1.8.2.1
+Tested up to: 5.4
+Stable tag: 1.8.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,8 @@ User Registration can be easily extended with some premium addons.
 
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
 
+* [Customize My Account](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs.
+
 == Installation ==
 
 1. Install the plugin either via the WordPress.org plugin directory, or by uploading the files to your server (in the /wp-content/plugins/ directory).
@@ -140,6 +142,23 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.3 - 17/04/2020
+* Security - Form field validation for missing required fields.
+* Enhance - Toggle out on clicking out of form name edit box.
+* Enhance - Confirmation message on field deletion.
+* Enhance - Form live changes for conditional logic.
+* Enhance - Registered At column to display registered log.
+* Dev - WordPress v5.4 Compatibility.
+* Dev - WPML compatibility for Select2 and Multi Select2 fields.
+* Dev - Invite code compatibility with the conditional logic addon.
+* Fix - Section division issue in form builder.
+* Fix - Multiple date field.
+* Fix - User approval status.
+* Fix - Enable Recaptcha and password strength checkbox backward compatibility.
+* Fix - Placeholder conflict with the value of the select field.
+* Fix - User Registration component placeholder design on Gutenblock.
+* Fix - Form event submit conflict in presence of popup creator plugins.
 
 = 1.8.2.1 - 20/03/2020
 * Fix - Unable to Login User Due to Pending Status.
