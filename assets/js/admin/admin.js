@@ -882,6 +882,30 @@ jQuery(function ($) {
 						return "Selected " + length + " country(s)";
 					},
 				})
+				.on( 'change', function( e ) {
+					$( '.urcl-rules, .urcl-conditional-group' ).each( function() {
+						var $urcl_field = $( this ).find( '.urcl-field' ).length ? $( this ).find( '.urcl-field' ) : $( this ).find( '.urcl-form-group' );
+						var type = $urcl_field.find( 'select option:selected' ).data( 'type' );
+
+						if ( 'country' === type || 'billing_country' === type || 'shipping_country' === type ) {
+							var field_name = $urcl_field.find( 'select option:selected' ).val();
+							var selected_value = $( this ).find( '.urcl-value select' ).val();
+							var countries = $( '.ur-general-setting-field-name input[value="' + field_name + '"' ).closest( '.ur-selected-item' ).find( '.ur-advance-selected_countries select option:selected' );
+							var options_html = [];
+
+							$( this ).find( '.urcl-value select' ).html( '<option value="">--select--</option>' );
+							countries.each( function() {
+								var country_iso = $( this ).val();
+								var country_name = $( this ).text();
+
+								options_html.push( '<option value="' + country_iso + '">' + country_name + '</option>' );
+							});
+							$( this ).find( '.urcl-value select' ).append( options_html.join('') );
+							$( this ).find( '.urcl-value select' ).val( selected_value );
+							$( this ).find( '.urcl-value select option[value="' + selected_value + '"]' ).attr( 'selected', 'selected' );
+						}
+					});
+				})
 				/**
 				 * The following block of code is required to fix the following issue:
 				 * - When the dropdown is open, if the contents of this option's container changes, for example when a different field is
@@ -1789,13 +1813,18 @@ jQuery(function ($) {
 
 				var field_name = $(this).find("[data-field='field_name']").val();
 				if (typeof field_name !== 'undefined') {
+
+					var select_value_for_user_role = $(".urcl-field-conditional-field-select option[value='" + field_name + "']").length > 0;
+					if ( select_value_for_user_role === false) {
+						// Append Field in Form Setting Conditionally Assign User Role.
+						$('[class*="urcl-field-conditional-field-select"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					}
 					//check if option exist in the given select
 					var select_value = $(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
 					if ( select_value === false) {
 						// Append Field in Field Options
 						$('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
-						// Append Field in Form Setting Conditionally Assign User Role.
-						$('[class*="urcl-field-conditional-field-select"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+
 						if (field_name == populated_item) {
 							$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
 						}
