@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.3.2
-Stable tag: 1.8.2.1
+Tested up to: 5.4
+Stable tag: 1.8.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -142,6 +142,23 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.3 - 17/03/2020
+* Enhance - Toggle out on clicking out of form name edit box.
+* Enhance - Confirmation message on field deletion.
+* Enhance - Form live changes for conditional logic.
+* Enhance - Registered At column to display registered log.
+* Dev - WordPress v5.4 Compatibility.
+* Dev - WPML compatibility for Select2 and Multi Select2 fields.
+* Dev - Invite code compatibility with the conditional logic addon.
+* Fix - Section division issue in form builder.
+* Fix - Multiple date field.
+* Fix - User approval status.
+* Fix - Form field validation for missing required fields.
+* Fix - Enable Recaptcha and password strength checkbox backward compatibility.
+* Fix - Placeholder conflict with the value of the select field.
+* Fix - User Registration component placeholder design on Gutenblock.
+* Fix - Form event submit conflict in presence of popup creator plugins.
 
 = 1.8.2.1 - 20/03/2020
 * Fix - Unable to Login User Due to Pending Status.
