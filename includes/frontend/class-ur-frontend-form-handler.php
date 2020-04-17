@@ -331,8 +331,7 @@ class UR_Frontend_Form_Handler {
 
 		// Check if the missing field is required confirm password field.
 		if ( in_array( 'user_confirm_password', $missing_item ) ) {
-			$key = array_search( 'user_confirm_password', $missing_item );
-			self::ur_missing_field_validation( $form_field_data, $key, 'user_confirm_password' );
+				$has_confirm_password = true;
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
@@ -377,8 +376,7 @@ class UR_Frontend_Form_Handler {
 
 		// Check if the missing field is required confirm email field.
 		if ( in_array( 'user_confirm_email', $missing_item ) ) {
-			$key = array_search( 'user_confirm_email', $missing_item );
-			self::ur_missing_field_validation( $form_field_data, $key, 'user_confirm_email' );
+			$has_confirm_email = true;
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
