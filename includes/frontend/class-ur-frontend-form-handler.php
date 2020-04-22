@@ -194,6 +194,10 @@ class UR_Frontend_Form_Handler {
 				$hook                                       = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook                                = $hook . '_message';
 
+				if ( 'user_email' === $single_form_field->field_key ) {
+					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook );
+				}
+
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {
