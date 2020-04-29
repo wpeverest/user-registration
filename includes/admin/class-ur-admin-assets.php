@@ -302,6 +302,8 @@ class UR_Admin_Assets {
 	public static function get_i18n_admin_data() {
 
 		$i18n = array(
+			'i18n_choice_ok'                         => esc_html__( 'Ok', 'user-registration' ),
+			'i18n_choice_cancel'                     => esc_html__( 'Cancel', 'user-registration' ),
 			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
 			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete'       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
@@ -311,6 +313,7 @@ class UR_Admin_Assets {
 			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
 			'i18n_success'                           => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                             => _x( 'Error', 'user registration admin', 'user-registration' ),
+			'i18n_msg_delete'                        => esc_html__( 'Confirm Deletion', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select' => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                   => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'      => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),

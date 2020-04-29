@@ -501,6 +501,7 @@ function ur_exclude_profile_details_fields() {
 			'user_confirm_password',
 			'user_confirm_email',
 			'profile_picture',
+			'invite_code',
 		)
 	);
 }

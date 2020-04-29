@@ -53,10 +53,10 @@ class UR_Frontend_Form_Handler {
 			$form_data = array();
 		}
 
-		self::match_email( $form_data );
-		self::match_password( $form_data );
-
 		$form_field_data = self::get_form_field_data( $post_content_array );
+
+		self::match_email( $form_field_data, $form_data );
+		self::match_password( $form_field_data, $form_data );
 
 		self::add_hook( $form_field_data, $form_data );
 		self::validate_form_data( $form_field_data, $form_data );
@@ -164,7 +164,22 @@ class UR_Frontend_Form_Handler {
 			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
 		}
 
+		// Check if a required field is missing.
+		$missing_item = array_diff( $form_key_list, $form_data_field );
+
+		if ( count( $missing_item ) > 0 ) {
+
+			foreach ( $missing_item as $key => $value ) {
+
+				// Ignoring confirm password and confirm email field, since they are handled separately.
+				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value ) {
+					self::ur_missing_field_validation( $form_field_data, $key, $value );
+				}
+			}
+		}
+
 		foreach ( $form_data as $data ) {
+
 			if ( in_array( $data->field_name, $form_key_list ) ) {
 				$form_data_index                            = array_search( $data->field_name, $form_key_list );
 				$single_form_field                          = $form_field_data[ $form_data_index ];
@@ -178,6 +193,7 @@ class UR_Frontend_Form_Handler {
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$hook                                       = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook                                = $hook . '_message';
+
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {
@@ -298,13 +314,25 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Match password and confirm password field
 	 *
-	 * @param  obj $form_data Form data submitted.
+	 * @param  array $form_field_data Form Field Data.
+	 * @param  obj   $form_data Form data submitted.
 	 * @return obj $form_data
 	 */
-	private static function match_password( &$form_data ) {
+	private static function match_password( $form_field_data, &$form_data ) {
 		$confirm_password     = '';
 		$has_confirm_password = false;
 		$password             = '';
+
+		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
+		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		// Check if a required field is missing.
+		$missing_item = array_diff( $form_key_list, $form_data_field );
+
+		// Check if the missing field is required confirm password field.
+		if ( in_array( 'user_confirm_password', $missing_item ) ) {
+				$has_confirm_password = true;
+		}
 
 		foreach ( $form_data as $index => $single_data ) {
 			if ( 'user_confirm_password' == $single_data->field_name ) {
@@ -330,14 +358,26 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Match email and confirm email field.
 	 *
-	 * @param  obj $form_data Form data submitted.
+	 * @param  array $form_field_data Form Field Data.
+	 * @param  obj   $form_data Form data submitted.
 	 * @return obj $form_data
 	 */
-	private static function match_email( &$form_data ) {
+	private static function match_email( $form_field_data, &$form_data ) {
 
 		$confirm_email_value = '';
 		$has_confirm_email   = false;
 		$email               = '';
+
+		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
+		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		// Check if a required field is missing.
+		$missing_item = array_diff( $form_key_list, $form_data_field );
+
+		// Check if the missing field is required confirm email field.
+		if ( in_array( 'user_confirm_email', $missing_item ) ) {
+			$has_confirm_email = true;
+		}
 
 		foreach ( $form_data as $index => $single_data ) {
 			if ( 'user_confirm_email' == $single_data->field_name ) {
@@ -360,6 +400,26 @@ class UR_Frontend_Form_Handler {
 		return $form_data;
 	}
 
+	/**
+	 * Validate missing required fields.
+	 *
+	 * @param  array  $form_field_data Form Field Data.
+	 * @param int    $key index of missing field in Form Field Data.
+	 * @param string $value field name of missing field.
+	 * @return obj $form_data
+	 */
+	private static function ur_missing_field_validation( $form_field_data, $key, $value ) {
+
+		if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
+
+			if ( 'yes' === $form_field_data[ $key ]->general_setting->required ) {
+				$field_label = $form_field_data[ $key ]->general_setting->label;
+				$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+				array_push( self::$response_array, $response );
+			}
+		}
+
+	}
 	/**
 	 * Validate password to check if match username or email address.
 	 *

@@ -20,12 +20,18 @@ class UR_Frontend {
 
 	private static $_instance;
 
+	/**
+	 * Class Constructor.
+	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
 	}
 
+	/**
+	 * Set instance.
+	 */
 	public static function instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -35,12 +41,18 @@ class UR_Frontend {
 		return self::$_instance;
 	}
 
+	/**
+	 * Includes files.
+	 */
 	public function includes() {
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php';
 	}
 
 	/**
 	 * Includes any classes we need within admin.
+	 *
+	 * @param mixed $field_object Field Object.
+	 * @param int   $form_id Form ID.
 	 */
 	public function user_registration_frontend_form( $field_object, $form_id ) {
 
@@ -58,7 +70,7 @@ class UR_Frontend {
 	/**
 	 * My Account layouts(vertical/horizontal) by adding class.
 	 *
-	 * @param $attributes
+	 * @param array $attributes Attributes.
 	 * @since  1.4.2
 	 * @return  $attributes
 	 */
