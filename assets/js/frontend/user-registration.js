@@ -511,6 +511,10 @@
 											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 										}
 
+										if( 'undefined' !== typeof( response.data.auto_password_generation_success_message ) ) {
+											message.append('<li>' + response.data.auto_password_generation_success_message + '</li>');
+										}
+
 										$this[0].reset();
 										jQuery('#billing_country').trigger('change');
 										jQuery('#shipping_country').trigger('change');
@@ -556,7 +560,7 @@
 		$('form.register').ur_form_submission();
 
 		var date_flatpickrs = {};
-		
+
 		$( document.body ).on( 'click', '#load_flatpickr', function() {
 			var field_id = $( this ).data( 'id' );
 			var date_flatpickr = date_flatpickrs[ field_id ];

@@ -56,12 +56,20 @@ class UR_Frontend_Form_Handler {
 		$form_field_data = self::get_form_field_data( $post_content_array );
 
 		self::match_email( $form_field_data, $form_data );
-		self::match_password( $form_field_data, $form_data );
 
 		self::add_hook( $form_field_data, $form_data );
-		self::validate_form_data( $form_field_data, $form_data );
+		$activated_form_list = get_option( 'ur_extras_auto_password_activated_forms', array() );
 
-		self::validate_password_data( $form_field_data, $form_data );
+		if ( in_array( $form_id, $activated_form_list ) ) {
+			do_action( 'user_registration_auto_generate_password' );
+			$user_pass = wp_slash( apply_filters( 'ur_extras_auto_generated_password', 'user_pass' ) );
+			self::validate_form_data( $form_field_data, $form_data, $form_id );
+		} else {
+			self::match_password( $form_field_data, $form_data );
+			self::validate_form_data( $form_field_data, $form_data, $form_id );
+			self::validate_password_data( $form_field_data, $form_data );
+			$user_pass = wp_slash( self::$valid_form_data['user_pass']->value );
+		}
 
 		self::$response_array = apply_filters( 'user_registration_response_array', self::$response_array, $form_data, $form_id );
 
@@ -70,7 +78,7 @@ class UR_Frontend_Form_Handler {
 			$user_role = apply_filters( 'user_registration_user_role', $user_role, self::$valid_form_data, $form_id );
 			$userdata  = array(
 				'user_login'   => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
-				'user_pass'    => wp_slash( self::$valid_form_data['user_pass']->value ),
+				'user_pass'    => $user_pass,
 				'user_email'   => self::$valid_form_data['user_email']->value,
 				'display_name' => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
 				'user_url'     => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
@@ -150,7 +158,7 @@ class UR_Frontend_Form_Handler {
 	 * @param  array $form_field_data Form Field Data.
 	 * @param  array $form_data  Form data to validate.
 	 */
-	private static function validate_form_data( $form_field_data = array(), $form_data = array() ) {
+	private static function validate_form_data( $form_field_data = array(), $form_data = array(), $form_id ) {
 		$form_data_field     = wp_list_pluck( $form_data, 'field_name' );
 		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
@@ -172,7 +180,7 @@ class UR_Frontend_Form_Handler {
 			foreach ( $missing_item as $key => $value ) {
 
 				// Ignoring confirm password and confirm email field, since they are handled separately.
-				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value ) {
+				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value && 'user_pass' !== $value ) {
 					self::ur_missing_field_validation( $form_field_data, $key, $value );
 				}
 			}
