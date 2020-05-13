@@ -30,7 +30,7 @@ class UR_Admin {
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
-		
+
 	}
 
 	/**
@@ -186,8 +186,7 @@ class UR_Admin {
 	 * Mark the read time of the user list table.
 	 */
 	public function live_user_read() {
-
-		$now = date( 'Y-m-d h:i:s' );
+		$now = current_time( 'mysql' );
 		update_option( 'user_registration_users_listing_viewed', $now );
 	}
 	/**
@@ -204,7 +203,7 @@ class UR_Admin {
 
 		$read_time = get_option( 'user_registration_users_listing_viewed' );
 		if ( ! $read_time ) {
-			$now = date( 'Y-m-d h:i:s' );
+			$now = current_time( 'mysql' );
 			update_option( 'user_registration_users_listing_viewed', $now );
 			$read_time = $now;
 		}
