@@ -1645,3 +1645,31 @@ function ur_get_form_id_by_userid( $user_id ) {
 	}
 	return $form_id;
 }
+
+/**
+ * Get Post Content By Form ID.
+ *
+ * @param int $form_id Form Id.
+ *
+ * @return array|mixed|null|object
+ */
+function ur_get_post_content( $form_id ) {
+
+	$args      = array(
+		'post_type'   => 'user_registration',
+
+		'post_status' => 'publish',
+
+		'post__in'    => array( $form_id ),
+	);
+	$post_data = get_posts( $args );
+
+	if ( isset( $post_data[0]->post_content ) ) {
+
+		return json_decode( $post_data[0]->post_content );
+
+	} else {
+
+		return array();
+	}
+}
