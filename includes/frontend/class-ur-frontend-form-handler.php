@@ -172,7 +172,7 @@ class UR_Frontend_Form_Handler {
 			foreach ( $missing_item as $key => $value ) {
 
 				// Ignoring confirm password and confirm email field, since they are handled separately.
-				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value ) {
+				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value && 'invite_code' !== $value ) {
 					self::ur_missing_field_validation( $form_field_data, $key, $value );
 				}
 			}
@@ -410,6 +410,9 @@ class UR_Frontend_Form_Handler {
 	 */
 	private static function ur_missing_field_validation( $form_field_data, $key, $value ) {
 
+		error_log( print_r( $form_field_data, true ) );
+		error_log( print_r( $key, true ) );
+		error_log( print_r( $value, true ) );
 		if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
 			if ( 'yes' === $form_field_data[ $key ]->general_setting->required ) {
