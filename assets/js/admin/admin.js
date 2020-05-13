@@ -96,7 +96,27 @@ jQuery(function ($) {
 			$input.focus();
 		}
 		$input.toggleClass( 'ur-editing' );
+		$input.attr('data-editing', $input.attr('data-editing') == 'true' ? 'false' : 'true');
 	} );
+
+	// In case the user goes out of focus from title edit state.
+	$( document.body ).not( $( '.ur-form-name-wrapper' ) ).click( function( e ) {
+		var field = $( '#ur-form-name' );
+
+		// Both of these controls should in no way allow stopping event propagation.
+		if( 'ur-form-name' === e.target.id || 'ur-form-name-edit-button' === e.target.id ) {
+			return;
+		}
+
+		if ( ! field.attr('hidden') && field.hasClass('ur-editing') ) {
+			e.stopPropagation();
+
+			// Only allow flipping state if currently editing.
+			if ( 'true' !== field.data( 'data-editing' ) && field.val() && '' !== field.val().trim() ) {
+				field.toggleClass( 'ur-editing' ).trigger( 'blur' ).attr('data-editing', field.attr('data-editing') == 'true' ? 'false' : 'true');
+			}
+		}
+	});
 
 	$( document ).on( 'init_perfect_scrollbar update_perfect_scrollbar', function() {
 
@@ -457,7 +477,7 @@ jQuery(function ($) {
 						$('body').on('click', '.ur-remove-row', function () {
 							if ($('.ur-input-grids').find('.ur-single-row:visible').length > 1) {
 								var $this_row = $( this );
-								ur_confirmation( i18n_admin.i18n_are_you_sure_want_to_delete, {
+								ur_confirmation( user_registration_admin_data.i18n_admin.i18n_are_you_sure_want_to_delete, {
 									confirm: function() {
 										var btn = $this_row.prev();
 										var new_btn;
@@ -471,9 +491,32 @@ jQuery(function ($) {
 										}
 										var single_row = $this_row.closest('.ur-single-row');
 										$( document ).trigger( 'user_registration_row_deleted', [ single_row ] );
+
+										// Remove Row Fields from Conditional Select Dropdown.
+										var row_fields = single_row.find('.ur-grid-lists .ur-selected-item .ur-general-setting');
+										$( row_fields ).each( function () {
+											var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+											var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
+
+											//strip certain fields
+											if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
+												return;
+											}
+
+											var field_name = $(this).find("[data-field='field_name']").val();
+
+											if (typeof field_name !== 'undefined') {
+												// Remove item from conditional logic options
+												$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').remove();
+
+												// Remove Field from Form Setting Conditionally Assign User Role.
+												$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').remove();
+											}
+										});
 										single_row.remove();
 										$this.check_grid();
 										manage_draggable_users_fields();
+
 										Swal.fire({
 											type: 'success',
 											title: 'Successfully deleted!',
@@ -481,9 +524,12 @@ jQuery(function ($) {
 											timer: 1000
 										});
 									},
+									reject: function() {
+										// Do Nothing.
+									}
 								} );
 							} else {
-								ur_alert( i18n_admin.i18n_at_least_one_row_need_to_select )
+								ur_alert( user_registration_admin_data.i18n_admin.i18n_at_least_one_row_need_to_select )
 							}
 						});
 					},
@@ -501,7 +547,9 @@ jQuery(function ($) {
 						$( document ).on( 'click', '.ur-grids .ur-toggle-grid-content .ur-grid-selector', function() {
 							var $this_single_row = $( this ).closest( '.ur-single-row' ),
 								grid_num = $( this ).attr( 'data-grid' ),
-								$grids = builder.get_grid_lists(grid_num);
+								grid_comp = $this_single_row.find('.ur-grid-lists .ur-grid-list-item').length,
+								$grids = builder.get_grid_lists(grid_num),
+								iterator = 0;
 
 							// Prevent from selecting same grid.
 							if( $this_single_row.find( '.ur-grid-lists .ur-grid-list-item' ).length === parseInt( grid_num ) ) {
@@ -512,9 +560,21 @@ jQuery(function ($) {
 
 							$.each($this_single_row.find('.ur-grid-lists .ur-grid-list-item'), function () {
 								$(this).children('*').each(function () {
-									$grids.find('.ur-grid-list-item').eq(0).append($(this).clone());  // "this" is the current element in the loop
+									$grids.find('.ur-grid-list-item').eq(iterator).append($(this).clone());  // "this" is the current element in the loop.
+
+									// In case the fields have to be redistributed into 2 columns - prioritizes left column first, if 3rd column is going away.
+									if ( 3 === parseInt( $(this).parent().attr('ur-grid-id') ) && 3 === parseInt( grid_comp ) && 2 === parseInt( grid_num ) ) {
+										iterator = Math.abs( --iterator ); // Alternates between 0 and 1.
+									}
 								});
+
+								// Decides to check if it's trying to push into lower amount of columns.
+								// If so, it simply resets the index to 0 to disallow elements from removed rows.
+								if( ( parseInt( grid_num ) > grid_comp ) || ( ( $(this).children('*').length ) && ( 2 <= parseInt( grid_num ) ) ) ) {
+									iterator =  parseInt( grid_num ) <= ( ++iterator ) ? 0 : iterator;
+								}
 							});
+
 							$this_single_row.find('.ur-grid-lists').eq(0).hide();
 							$grids.clone().insertAfter($this_single_row.find('.ur-grid-lists'));
 							$this_single_row.find('.ur-grid-lists').eq(0).remove();
@@ -566,7 +626,7 @@ jQuery(function ($) {
 								var length_of_required = $('.ur-input-grids').find('.ur-field[data-field-key="' + data_field_id + '"]').length;
 								var only_one_field_index = $.makeArray(user_registration_admin_data.form_one_time_draggable_fields);
 								if (length_of_required > 0 && $.inArray(data_field_id, only_one_field_index) >= 0) {
-									show_message(i18n_admin.i18n_user_required_field_already_there);
+									show_message(user_registration_admin_data.i18n_admin.i18n_user_required_field_already_there);
 									$(ui.helper).remove();
 									return;
 								}
@@ -582,25 +642,50 @@ jQuery(function ($) {
 					remove_selected_item: function () {
 						var $this = this;
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-trash', function ( e ) {
-							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val();
-							$(this).closest('.ur-selected-item ').remove();
-							$this.check_grid();
-							builder.manage_empty_grid();
-							manage_draggable_users_fields();
+							var removed_item = $(this).closest('.ur-selected-item ').find("[data-field='field_name']").val(),
+								ele = $this,
+								$ele = $(this);
 
-							//remove item from conditional logic options
-							jQuery('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+							ur_confirmation(
+								user_registration_admin_data.i18n_admin.i18n_are_you_sure_want_to_delete,
+								{
+									title:             user_registration_admin_data.i18n_admin.i18n_msg_delete,
+									showCancelButton:  true,
+									confirmButtonText: user_registration_admin_data.i18n_admin.i18n_choice_ok,
+									cancelButtonText:  user_registration_admin_data.i18n_admin.i18n_choice_cancel,
+									ele:               ele,
+									$ele:              $ele,
+									removed_item:      removed_item,
+									confirm: function() {
+										$ele.closest('.ur-selected-item ').remove();
+										ele.check_grid();
+										builder.manage_empty_grid();
+										manage_draggable_users_fields();
 
-							return false; // To prevent click on whole item.
+										// Remove item from conditional logic options
+										$('[class*="urcl-settings-rules_field_"] option[value="' + removed_item + '"]').remove();
+
+										// Remove Field from Form Setting Conditionally Assign User Role.
+										$('[class*="urcl-field-conditional-field-select"] option[value="' + removed_item + '"]').remove();
+
+										// To prevent click on whole item.
+										return false;
+									},
+									reject: function() {
+										return false;
+									}
+								}
+							);
 						});
 					},
+
 					clone_selected_item: function () {
 						$('body').on('click', '.ur-selected-item .ur-action-buttons  .ur-clone', function () {
 							var data_field_key = $(this).closest('.ur-selected-item ').find('.ur-field').attr('data-field-key');
 							var selected_node = $('.ur-input-grids').find('.ur-field[data-field-key="' + data_field_key + '"]');
 							var length_of_required = selected_node.length;
 							if (length_of_required > 0 && $.inArray(data_field_key, user_registration_admin_data.form_one_time_draggable_fields) > -1) {
-								show_message(i18n_admin.i18n_user_required_field_already_there_could_not_clone);
+								show_message(user_registration_admin_data.i18n_admin.i18n_user_required_field_already_there_could_not_clone);
 								return;
 							}
 							var clone = $(this).closest('.ur-selected-item ').clone();
@@ -611,6 +696,9 @@ jQuery(function ($) {
 							var label_string = label_node.val().replace(find_string, '');
 							clone.find('input[data-field="field_name"]').attr('value', label_string + new Date().getTime());
 							$(this).closest('.ur-grid-list-item').append(clone);
+
+							var populated_item = clone.find("[data-field='field_name']").val();
+								manage_conditional_field_options(populated_item);
 						});
 					},
 					check_grid: function () {
@@ -794,6 +882,30 @@ jQuery(function ($) {
 						return "Selected " + length + " country(s)";
 					},
 				})
+				.on( 'change', function( e ) {
+					$( '.urcl-rules, .urcl-conditional-group' ).each( function() {
+						var $urcl_field = $( this ).find( '.urcl-field' ).length ? $( this ).find( '.urcl-field' ) : $( this ).find( '.urcl-form-group' );
+						var type = $urcl_field.find( 'select option:selected' ).data( 'type' );
+
+						if ( 'country' === type || 'billing_country' === type || 'shipping_country' === type ) {
+							var field_name = $urcl_field.find( 'select option:selected' ).val();
+							var selected_value = $( this ).find( '.urcl-value select' ).val();
+							var countries = $( '.ur-general-setting-field-name input[value="' + field_name + '"' ).closest( '.ur-selected-item' ).find( '.ur-advance-selected_countries select option:selected' );
+							var options_html = [];
+
+							$( this ).find( '.urcl-value select' ).html( '<option value="">--select--</option>' );
+							countries.each( function() {
+								var country_iso = $( this ).val();
+								var country_name = $( this ).text();
+
+								options_html.push( '<option value="' + country_iso + '">' + country_name + '</option>' );
+							});
+							$( this ).find( '.urcl-value select' ).append( options_html.join('') );
+							$( this ).find( '.urcl-value select' ).val( selected_value );
+							$( this ).find( '.urcl-value select option[value="' + selected_value + '"]' ).attr( 'selected', 'selected' );
+						}
+					});
+				})
 				/**
 				 * The following block of code is required to fix the following issue:
 				 * - When the dropdown is open, if the contents of this option's container changes, for example when a different field is
@@ -947,7 +1059,7 @@ jQuery(function ($) {
 			complete: function (response) {
 				$('.ur_save_form_action_button').find('.ur-spinner').remove();
 				if (response.responseJSON.success === true) {
-					var success_message = i18n_admin.i18n_form_successfully_saved;
+					var success_message = user_registration_admin_data.i18n_admin.i18n_form_successfully_saved;
 
 					if ( user_registration_admin_data.is_edit_form !== '1' ) {
 						var title = "Form successfully created."
@@ -994,9 +1106,9 @@ jQuery(function ($) {
 		}
 
 		if( 'success' === type ) {
-			message_string = '<div class="ur-message"><div class="ur-success"><p><strong>' + i18n_admin.i18n_success + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+			message_string = '<div class="ur-message"><div class="ur-success"><p><strong>' + user_registration_admin_data.i18n_admin.i18n_success + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 		} else {
-			message_string = '<div class="ur-message"><div class="ur-error"><p><strong>' + i18n_admin.i18n_error + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
+			message_string = '<div class="ur-message"><div class="ur-error"><p><strong>' + user_registration_admin_data.i18n_admin.i18n_error + '! </strong>' + message + '</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 		}
 
 		var $message = $( message_string ).prependTo( $message_container );
@@ -1025,17 +1137,17 @@ jQuery(function ($) {
 		};
 		if ($('.ur-selected-item').length === 0) {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_at_least_one_field_need_to_select;
+			response.message = user_registration_admin_data.i18n_admin.i18n_at_least_one_field_need_to_select;
 			return response;
 		}
 		if ($('#ur-form-name').val() === '') {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_empty_form_name;
+			response.message = user_registration_admin_data.i18n_admin.i18n_empty_form_name;
 			return response;
 		}
 		if ($('.ur_save_form_action_button').find('.ur-spinner').length > 0) {
 			response.validation_status = false;
-			response.message = i18n_admin.i18n_previous_save_action_ongoing;
+			response.message = user_registration_admin_data.i18n_admin.i18n_previous_save_action_ongoing;
 			return response;
 		}
 		$.each($( '.ur-selected-item select.ur-settings-selected-countries' ), function () {
@@ -1045,7 +1157,7 @@ jQuery(function ($) {
 				( Array.isArray( selected_countries ) && selected_countries.length === 0 )
 			) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_select_countries;
+				response.message = user_registration_admin_data.i18n_admin.i18n_select_countries;
 				return response;
 			}
 		});
@@ -1057,17 +1169,17 @@ jQuery(function ($) {
 				var field_value = $field.val();
 				var length = $('.ur-input-grids .ur-general-setting-block').find('input[data-field="field_name"][value="' + field_value + '"]').length;
 				if (length > 1) {
-					throw i18n_admin.i18n_duplicate_field_name;
+					throw user_registration_admin_data.i18n_admin.i18n_duplicate_field_name;
 				}
 				if ($field.closest('.ur-general-setting-block').find('input[data-field="label"]').val() === '') {
 					$field = $field.closest('.ur-general-setting-block').find('input[data-field="label"]');
-					throw i18n_admin.i18n_empty_field_label;
+					throw user_registration_admin_data.i18n_admin.i18n_empty_field_label;
 				}
 				var field_regex = /[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/gm;
 				var regex_result = field_value.match(field_regex);
 				if (regex_result !== null && regex_result.length === 1 && regex_result[0] === field_value) {
 				} else {
-					throw i18n_admin.i18n_invald_field_name;
+					throw user_registration_admin_data.i18n_admin.i18n_invald_field_name;
 				}
 			} catch (err) {
 				response.validation_status = false;
@@ -1078,7 +1190,7 @@ jQuery(function ($) {
 				setTimeout(function () {
 					$('#ur-setting-form').find('input[data-field="' + field_attribute + '"]').removeAttr('style');
 				}, 2000);
-				need_to_break = true;  //console.log('User registration console ' + $field.closest('.ur-selected-item').find('.ur-label label').text());
+				need_to_break = true;
 			}
 			if (need_to_break) {
 				return false;
@@ -1087,7 +1199,7 @@ jQuery(function ($) {
 		for (var single_field = 0; single_field < only_one_field_index.length; single_field++) {
 			if ($('.ur-input-grids').find('.ur-field[data-field-key="' + only_one_field_index[single_field] + '"]').length > 1) {
 				response.validation_status = false;
-				response.message = i18n_admin.i18n_multiple_field_key + only_one_field_index[single_field];
+				response.message = user_registration_admin_data.i18n_admin.i18n_multiple_field_key + only_one_field_index[single_field];
 				break;
 			}
 		}
@@ -1097,12 +1209,12 @@ jQuery(function ($) {
 				response.validation_status = false;
 
 				if (required_index === 0) {
-					var field = i18n_admin.i18n_user_email;
+					var field = user_registration_admin_data.i18n_admin.i18n_user_email;
 				} else if (required_index === 1) {
-					var field = i18n_admin.i18n_user_password;
+					var field = user_registration_admin_data.i18n_admin.i18n_user_password;
 				}
 
-				response.message = field + ' ' + i18n_admin.i18n_field_is_required;
+				response.message = field + ' ' + user_registration_admin_data.i18n_admin.i18n_field_is_required;
 				break;
 			}
 		}
@@ -1345,42 +1457,37 @@ jQuery(function ($) {
 					break;
 			}
 		});
-		var advance_settings = $('.ur_advance_setting');
+		var advance_settings = $('#ur-setting-form .ur_advance_setting');
 
 		$('.ur-settings-enable-min-max').on('change', function () {
 			if('true' === $(this).val()){
-				$('.ur-advance-min_date').show();
-				$('.ur-advance-max_date').show();
-				if('' === $('.ur-settings-min-date').val()){
-					$('.ur-settings-min-date').addClass('flatpickr-field').flatpickr({
-						disableMobile : true,
-						static        : true,
-						onChange      : function(selectedDates, dateStr, instance) {
-							$('.ur-settings-min-date').val(dateStr);
-						},
-						onOpen: function(selectedDates, dateStr, instance) {
-							instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
-						},
-					});
-				}
-				if('' === $('.ur-settings-max-date').val()){
-					$('.ur-settings-max-date').addClass('flatpickr-field').flatpickr({
-						disableMobile : true,
-						static        : true,
-						onChange      : function(selectedDates, dateStr, instance) {
-							$('.ur-settings-max-date').val(dateStr);
-						},
-						onOpen: function(selectedDates, dateStr, instance) {
-							instance.set('minDate', new Date($('.ur-settings-min-date').val()));
-						},
-					});
-				}
+				$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').show();
+				$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').show();
 
+				$('#ur-setting-form .ur-settings-min-date').addClass('flatpickr-field').flatpickr({
+					disableMobile : true,
+					static        : true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('.ur-item-active .ur-settings-min-date').val(dateStr);
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						instance.set('maxDate', new Date($('.ur-item-active .ur-settings-max-date').val()));
+					},
+				});
+
+				$('#ur-setting-form .ur-settings-max-date').addClass('flatpickr-field').flatpickr({
+					disableMobile : true,
+					static        : true,
+					onChange      : function(selectedDates, dateStr, instance) {
+						$('.ur-item-active .ur-settings-max-date').val(dateStr);
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						instance.set('minDate', new Date($('.ur-item-active .ur-settings-min-date').val()));
+					},
+				});
 			}else{
-				$('.ur-advance-min_date').hide();
-				$('.ur-advance-max_date').hide();
-				$('.ur-settings-min-date').val('');
-				$('.ur-settings-max-date').val('');
+				$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').hide();
+				$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').hide();
 			}
 		});
 
@@ -1393,39 +1500,37 @@ jQuery(function ($) {
 					});
 					break;
 				case 'min_date':
-					if('true' === $('.ur-settings-enable-min-max').val()){
+					if('true' === $('.ur-item-active').find('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
-							defaultDate   : new Date($('.ur-settings-min-date').val()),
+							defaultDate   : new Date($('.ur-item-active').find('.ur-settings-min-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-min-date').val(dateStr);
+								$('.ur-item-active').find('.ur-settings-min-date').val(dateStr);
 							},
 							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('maxDate', new Date($('.ur-settings-max-date').val()));
+								instance.set('maxDate', new Date($('.ur-item-active').find('.ur-settings-max-date').val()));
 							},
 						});
 					}else{
-						$('.ur-advance-min_date').hide();
-						$('.ur-settings-min-date').val('');
+						$('.ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date').hide();
 					}
 					break;
 				case 'max_date':
-					if('true' === $('.ur-settings-enable-min-max').val()){
+					if('true' === $('.ur-item-active').find('.ur-settings-enable-min-max').val()){
 						$(this).addClass('flatpickr-field').flatpickr({
 							disableMobile : true,
 							static        : true,
-							defaultDate   : new Date($('.ur-settings-max-date').val()),
+							defaultDate   : new Date($('.ur-item-active').find('.ur-settings-max-date').val()),
 							onChange      : function(selectedDates, dateStr, instance) {
-								$('.ur-settings-max-date').val(dateStr);
+								$('.ur-item-active').find('.ur-settings-max-date').val(dateStr);
 							},
 							onOpen: function(selectedDates, dateStr, instance) {
-								instance.set('minDate', new Date($('.ur-settings-min-date').val()));
+								instance.set('minDate', new Date($('.ur-item-active .ur-settings-min-date').val()));
 							},
 						});
 					}else{
-						$('.ur-advance-max_date').hide();
-						$('.ur-settings-max-date').val('');
+						$('.ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date').hide();
 					}
 					break;
 			}
@@ -1584,7 +1689,14 @@ jQuery(function ($) {
 
 	function trigger_general_setting_field_name($label) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
+		var old_field_name =  wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + old_field_name + '"]').attr('value', $label.val());
+
+		// Change Field Name of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + old_field_name + '"]').attr('value', $label.val());
 	}
 
 	function trigger_general_setting_options($label) {
@@ -1600,8 +1712,14 @@ jQuery(function ($) {
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-label').find('label').text($label.val());
 
-		var wrapper = $('.ur-selected-item.ur-item-active');
 		wrapper.find('.ur-general-setting-block').find('input[data-field="' + $label.attr('data-field') + '"]').attr('value', $label.val());
+
+		var field_name = $('.ur-selected-item.ur-item-active .ur-general-setting').find("[data-field='field_name']").val();
+		// Change label of field in conditional logic options
+		$('[class*="urcl-settings-rules_field_"] option[value="' + field_name + '"]').text($label.val());
+
+		// Change label of field in Form Setting Conditionally Assign User Role.
+		$('[class*="urcl-field-conditional-field-select"] option[value="' + field_name + '"]').text($label.val());
 
 	}
 
@@ -1684,34 +1802,40 @@ jQuery(function ($) {
 
 	function manage_conditional_field_options(populated_item) {
 
-		jQuery('.ur-grid-lists .ur-selected-item .ur-admin-template').each(function () {
-			var field_label = jQuery(this).find('.ur-label label').text();
-			var field_key = jQuery(this).find('.ur-field').attr('data-field-key');
+		$('.ur-grid-lists .ur-selected-item .ur-general-setting').each(function () {
+
+			var field_label = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-label label').text();
+			var field_key = $(this).closest('.ur-selected-item').find(' .ur-admin-template .ur-field').data('field-key');
 
 			//strip certain fields
 			if ('section_title' == field_key || 'html' == field_key || 'wysiwyg' == field_key || 'billing_address_title' == field_key || 'shipping_address_title' == field_key) {
 				return;
 			}
 
-			var general_setting = jQuery(this).find('.ur-general-setting-block .ur-general-setting');
-			general_setting.each(function () {
-				var field_name = jQuery(this).find("[data-field='field_name']").val();
+				var field_name = $(this).find("[data-field='field_name']").val();
 				if (typeof field_name !== 'undefined') {
 
+					var select_value_for_user_role = $(".urcl-field-conditional-field-select option[value='" + field_name + "']").length > 0;
+					if ( select_value_for_user_role === false) {
+						// Append Field in Form Setting Conditionally Assign User Role.
+						$('[class*="urcl-field-conditional-field-select"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					}
 					//check if option exist in the given select
-					var select_value = jQuery(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
-					if (!select_value == true) {
-						jQuery('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+					var select_value = $(".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" + field_name + "']").length > 0;
+					if ( select_value === false) {
+						// Append Field in Field Options
+						$('[class*="urcl-settings-rules_field_"]').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+
 						if (field_name == populated_item) {
-							jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
+							$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' + populated_item + '"]').remove();
 						}
 					} else {
-						jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
+						$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').append('<option value ="' + field_name + '" data-type="' + field_key + '">' + field_label + ' </option>');
 					}
 				}
-			});
+
 		});
-		jQuery('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
+		$('.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields').removeClass('empty-fields');
 	}
 
 	function ur_math_ceil(value) {
@@ -1722,32 +1846,34 @@ jQuery(function ($) {
 		return parseInt(value, 0);
 	}
 
-	$(document).ready(function () {
+	$( document ).ready( function() {
+		var date_flatpickrs = {};
 
-		var flatpickr_loaded = false;
+		$( document.body ).on( 'click', '#load_flatpickr', function() {
+			var field_id = $( this ).data( 'id' );
+			var date_flatpickr = date_flatpickrs[ field_id ];
 
-		$('#load_flatpickr').click( function() {
-			var date_selector = $('#profile-page form#your-profile  input[type="date"]');
-			date_selector.attr('type', 'text');
-			date_selector.val( $('#formated_date').val() );
+			// Load a flatpicker for the field, if hasn't been loaded.
+			if ( ! date_flatpickr ) {
+				var formated_date = $( this ).siblings( '#formated_date' ).val() ? $( this ).siblings( '#formated_date' ).val() : $( this ).closest( '.ur-field-item' ).find( '#formatted_date' ).val();
+				var date_selector = $( '.ur-frontend-form #' + field_id + ', #fieldset-user_registration #' + field_id ).attr( 'type', 'text' ).val( formated_date );
 
-			var date_field = date_selector.attr('id');
-			var date_flatpickr;
-
-			if ( ! flatpickr_loaded ) {
-				$(this).attr('data-date-format', date_selector.data('date-format'));
-				$(this).attr('data-mode', date_selector.data('mode'));
-				$(this).attr('data-min-date', date_selector.data('min-date'));
-				$(this).attr('data-max-date', date_selector.data('max-date'));
-				$(this).attr('data-default-date', $('#formated_date').val());
-				date_flatpickr = $(this).flatpickr({
-					disableMobile: true,
-					onChange      : function(selectedDates, dateStr, instance) {
-						$('#'+ date_field).val(dateStr);
+				$( this ).attr( 'data-date-format', date_selector.data( 'date-format') );
+				$( this ).attr( 'data-mode', date_selector.data( 'mode' ) );
+				$( this ).attr( 'data-min-date', date_selector.data( 'min-date') );
+				$( this ).attr( 'data-max-date', date_selector.data( 'max-date') );
+				$( this ).attr( 'data-default-date', formated_date );
+				date_flatpickr = $( this ).flatpickr({
+					disableMobile : true,
+					onChange : function( selectedDates, dateString, instance ) {
+						$( '#' + field_id ).val( dateString );
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						instance.set( 'minDate', date_selector.data( 'min-date') );
+						instance.set( 'maxDate', date_selector.data( 'max-date') );
 					},
 				});
-
-				flatpickr_loaded = true;
+				date_flatpickrs[ field_id ] = date_flatpickr;
 			}
 
 			if ( date_flatpickr ) {
@@ -1853,8 +1979,8 @@ function ur_confirmation( message, options ) {
 		text: message,
 		type: ( 'undefined' !== typeof options.type ) ? options.type : 'warning',
 		showCancelButton: ( 'undefined' !== typeof options.showCancelButton ) ? options.showCancelButton : true,
-		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : 'OK',
-		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText :'Cancel',
+		confirmButtonText: ( 'undefined' !== typeof options.confirmButtonText ) ? options.confirmButtonText : user_registration_admin_data.i18n_admin.i18n_choice_ok,
+		cancelButtonText: ( 'undefined' !== typeof options.cancelButtonText ) ? options.cancelButtonText : user_registration_admin_data.i18n_admin.i18n_choice_cancel,
 	}).then( function(result) {
 		if (result.value) {
 			options.confirm();

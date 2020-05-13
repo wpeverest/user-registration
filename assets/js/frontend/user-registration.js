@@ -209,7 +209,14 @@
 						var single_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
 						if (single_field.length < 2) {
 							var single_data = this_instance.get_fieldwise_data($(this));
-							form_data.push(single_data);
+							const invite_code = document.querySelector('.field-invite_code')
+							if( 'invite_code' === single_data.field_name ) {
+								if( 'block' === invite_code.style.display ) {
+									form_data.push(single_data);
+								}
+							} else {
+								form_data.push(single_data);
+							}
 						} else {
 							if ($.inArray(field_name, multi_value_field) < 0) {
 								multi_value_field.push(field_name);
@@ -349,6 +356,8 @@
 
 					$('form.register').on('submit', function (event) {
 						var $this = $(this);
+
+						event.stopImmediatePropagation();
 
 						// Validator messages.
 						$.extend($.validator.messages, {
@@ -543,32 +552,32 @@
 		});
 	};
 
-	$(function () {
+	$( function () {
 		$('form.register').ur_form_submission();
 
-		var flatpickr_loaded = false;
-		var date_field = $('#load_flatpickr').attr('data-id');
-		var date_selector = $('.ur-frontend-form #' + date_field);
-			date_selector.attr('type', 'text');
-			date_selector.val( $('#formated_date').val() );
-		$('#load_flatpickr').click( function() {
+		var date_flatpickrs = {};
+		
+		$( document.body ).on( 'click', '#load_flatpickr', function() {
+			var field_id = $( this ).data( 'id' );
+			var date_flatpickr = date_flatpickrs[ field_id ];
 
-			var date_flatpickr;
+			// Load a flatpicker for the field, if hasn't been loaded.
+			if ( ! date_flatpickr ) {
+				var formated_date = $( this ).closest( '.ur-field-item' ).find( '#formated_date' ).val();
+				var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
 
-			if ( ! flatpickr_loaded ) {
-				$(this).attr('data-date-format', date_selector.data('date-format'));
-				$(this).attr('data-mode', date_selector.data('mode'));
-				$(this).attr('data-min-date', date_selector.data('min-date'));
-				$(this).attr('data-max-date', date_selector.data('max-date'));
-				$(this).attr('data-default-date', $('#formated_date').val());
-				date_flatpickr = $(this).flatpickr({
-					disableMobile: true,
-					onChange      : function(selectedDates, dateStr, instance) {
-						$('#'+ date_field).val(dateStr);
-					},
+				$( this ).attr( 'data-date-format', date_selector.data( 'date-format') );
+				$( this ).attr( 'data-mode', date_selector.data( 'mode') );
+				$( this ).attr( 'data-min-date', date_selector.data( 'min-date') );
+				$( this ).attr( 'data-max-date', date_selector.data( 'max-date') );
+				$( this ).attr( 'data-default-date', formated_date );
+				date_flatpickr = $( this ).flatpickr({
+					disableMobile : true,
+					onChange : function( selectedDates, dateString, instance ) {
+						$( '#' + field_id ).val( dateString );
+					}
 				});
-
-				flatpickr_loaded = true;
+				date_flatpickrs[ field_id ] = date_flatpickr;
 			}
 
 			if ( date_flatpickr ) {
