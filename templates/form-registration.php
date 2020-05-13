@@ -79,7 +79,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 										if ( isset( $single_item->field_key ) ) {
 											?>
-															<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>">
+															<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
