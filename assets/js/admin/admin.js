@@ -1401,6 +1401,7 @@ jQuery(function ($) {
 					});
 					break;
 				case 'field_name':
+				case 'max_files':
 				case 'input_mask':
 					$this_obj.on('change', function () {
 						trigger_general_setting_field_name($(this));
