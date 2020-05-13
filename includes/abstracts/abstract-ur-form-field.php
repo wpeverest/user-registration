@@ -421,7 +421,13 @@ abstract class UR_Form_Field {
 					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
-						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '">';
+						$disabled = '';
+							// To make invite code required field non editable.
+						if ( 'required' === $setting_key && 'invite_code' === $strip_prefix ) {
+							$disabled = 'disabled';
+						}
+
+						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" ' . $disabled . '>';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
 							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
