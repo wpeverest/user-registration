@@ -652,6 +652,41 @@ function ur_get_registered_form_fields() {
 }
 
 /**
+ * All registered form fields with default labels
+ *
+ * @return mixed|array
+ */
+function ur_get_registered_form_fields_with_default_labels() {
+	return apply_filters(
+		'user_registration_registered_form_fields_with_default_labels',
+		array(
+			'user_email'            => __( 'User Email', 'user-registration' ),
+			'user_confirm_email'    => __( 'User Confirm Email', 'user-registration' ),
+			'user_pass'             => __( 'User Pass', 'user-registration' ),
+			'user_confirm_password' => __( 'User Confirm Password', 'user-registration' ),
+			'user_login'            => __( 'User Login', 'user-registration' ),
+			'nickname'              => __( 'Nickname', 'user-registration' ),
+			'first_name'            => __( 'First Name', 'user-registration' ),
+			'last_name'             => __( 'Last Name', 'user-registration' ),
+			'user_url'              => __( 'User URL', 'user-registration' ),
+			'display_name'          => __( 'Display Name', 'user-registration' ),
+			'description'           => __( 'Description', 'user-registration' ),
+			'text'                  => __( 'Text', 'user-registration' ),
+			'password'              => __( 'Password', 'user-registration' ),
+			'email'                 => __( 'Email', 'user-registration' ),
+			'select'                => __( 'Select', 'user-registration' ),
+			'country'               => __( 'Country', 'user-registration' ),
+			'textarea'              => __( 'Textarea', 'user-registration' ),
+			'number'                => __( 'Number', 'user-registration' ),
+			'date'                  => __( 'Date', 'user-registration' ),
+			'checkbox'              => __( 'Checkbox', 'user-registration' ),
+			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
+			'radio'                 => __( 'Radio', 'user-registration' ),
+		)
+	);
+}
+
+/**
  * General settings for each fields
  *
  * @param string $id id for each field.
