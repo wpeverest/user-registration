@@ -1,5 +1,14 @@
+= 1.8.4 - 14/05/2020
+* Enhance - Add custom CSS class in fields.
+* Dev - MailChimp add-on compatibility changes.
+* Dev - File upload addon compatibility changes
+* Dev - Invite code add-on compatibility changes.
+* Fix - Display of new users count even after the all users page refresh
+* Fix - Enable/Disable checkbox backward compatibility
+* Fix - Elementor plugin nav menu title conflict.
 
-= 1.8.3 - 17/03/2020
+= 1.8.3 - 17/04/2020
+* Security - Form field validation for missing required fields.
 * Enhance - Toggle out on clicking out of form name edit box.
 * Enhance - Confirmation message on field deletion.
 * Enhance - Form live changes for conditional logic.
@@ -10,7 +19,6 @@
 * Fix - Section division issue in form builder.
 * Fix - Multiple date field.
 * Fix - User approval status.
-* Fix - Form field validation for missing required fields.
 * Fix - Enable Recaptcha and password strength checkbox backward compatibility.
 * Fix - Placeholder conflict with the value of the select field.
 * Fix - User Registration component placeholder design on Gutenblock.
@@ -19,7 +27,6 @@
 = 1.8.2.1 - 20/03/2020
 * Fix - Unable to Login User Due to Pending Status.
 * Fix - Recaptcha Backward compatibility
-
 
 = 1.8.2 - 18/03/2020
 * Feature - Search Field introduced in form builder.

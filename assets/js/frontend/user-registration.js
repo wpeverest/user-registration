@@ -209,7 +209,7 @@
 						var single_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
 						if (single_field.length < 2) {
 							var single_data = this_instance.get_fieldwise_data($(this));
-							const invite_code = document.querySelector('.field-invite_code')
+							var invite_code = document.querySelector('.field-invite_code')
 							if( 'invite_code' === single_data.field_name ) {
 								if( 'none' !== invite_code.style.display ) {
 									form_data.push(single_data);
