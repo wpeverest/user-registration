@@ -45,7 +45,7 @@ function ur_page_endpoint_title( $title ) {
 	return $title;
 }
 
-add_filter( 'the_title', 'ur_page_endpoint_title', 20 );
+add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
 
 
 /**

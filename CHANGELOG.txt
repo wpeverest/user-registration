@@ -1,3 +1,11 @@
+= 1.8.4 - 14/05/2020
+* Enhance - Add custom CSS class in fields.
+* Dev - MailChimp add-on compatibility changes.
+* Dev - File upload addon compatibility changes
+* Dev - Invite code add-on compatibility changes.
+* Fix - Display of new users count even after the all users page refresh
+* Fix - Enable/Disable checkbox backward compatibility
+* Fix - Elementor plugin nav menu title conflict.
 
 = 1.8.3 - 17/04/2020
 * Security - Form field validation for missing required fields.

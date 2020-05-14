@@ -211,7 +211,7 @@
 							var single_data = this_instance.get_fieldwise_data($(this));
 							var invite_code = document.querySelector('.field-invite_code')
 							if( 'invite_code' === single_data.field_name ) {
-								if( 'block' === invite_code.style.display ) {
+								if( 'none' !== invite_code.style.display ) {
 									form_data.push(single_data);
 								}
 							} else {
