@@ -343,11 +343,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
 				break;
 
@@ -369,7 +369,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
-						
+
 						if ( empty( $args['placeholder'] ) ) {
 							$selected_attribute = selected( $value, trim( $option_key ), false );
 						}
