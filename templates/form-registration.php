@@ -75,9 +75,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 										<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
 											 style="width:<?php echo $width; ?>%">
 									<?php
-									if ( has_filter( 'user_registration_handle_form_fields' ) ) {
-										$grid_data = apply_filters( 'user_registration_handle_form_fields', $form_id, $grid_data );
-									}
+										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 										if ( isset( $single_item->field_key ) ) {
 											?>

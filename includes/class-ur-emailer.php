@@ -559,8 +559,8 @@ class UR_Emailer {
 			'auto_pass'   => '',
 		);
 
-		if ( has_filter( 'ur_extras_auto_generated_password' ) ) {
-			$user_pass                   = apply_filters( 'ur_extras_auto_generated_password', 'user_pass' );
+		if ( has_filter( 'user_registration_extras_auto_generated_password' ) ) {
+			$user_pass                   = apply_filters( 'user_registration_extras_auto_generated_password', 'user_pass' );
 			$default_values['auto_pass'] = $user_pass;
 		}
 		$values = wp_parse_args( $values, $default_values );
