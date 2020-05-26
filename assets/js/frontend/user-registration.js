@@ -49,8 +49,10 @@
 					/**
 					 * For real time email matching
 					 */
+					var form_id = $this.closest('.ur-frontend-form').attr('id');
+
 					rules.user_confirm_email = {
-						equalTo: '.user-registration #user_email',
+						equalTo: '#' + form_id + ' #user_email',
 					};
 					messages.user_confirm_email = user_registration_params.message_confirm_email_fields;
 				}
@@ -67,8 +69,10 @@
 					/**
 					 * Password matching for registration form
 					 */
+					var form_id = $this.closest('.ur-frontend-form').attr('id');
+
 					rules.user_confirm_password = {
-						equalTo: '.user-registration #user_pass',
+						equalTo:  '#' + form_id + ' #user_pass',
 					};
 					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
 				}
@@ -188,25 +192,26 @@
 	var ursL10n = user_registration_params.ursL10n;
 
 	$.fn.ur_form_submission = function () {
-
 		// traverse all nodes
 		return this.each(function () {
 			// express a single node as a jQuery object
 			var $this = $(this);
 			var available_field = [];
 			var required_fields = user_registration_params.form_required_fields;
+
 			var form = {
 				init: function () {
-
 				},
-				get_form_data: function () {
+				get_form_data: function ( form_id ) {
+					if( form_id === $this.closest('.ur-frontend-form').attr('id') ) {
 					var this_instance = this;
 					var form_data = [];
-					var frontend_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field');
+					var frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
 					var multi_value_field = new Array();
 					$.each(frontend_field, function () {
 						var field_name = $(this).attr('name');
-						var single_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+
+						var single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
 						if (single_field.length < 2) {
 							var single_data = this_instance.get_fieldwise_data($(this));
 							var invite_code = document.querySelector('.field-invite_code')
@@ -285,6 +290,7 @@
 
 					$(document).trigger("user_registration_frontend_form_data_filter", [form_data]);
 					return form_data;
+				}
 				},
 				get_fieldwise_data: function (field) {
 					var formwise_data = {};
@@ -354,195 +360,198 @@
 				},
 				form_submit_event: function () {
 
-					$('form.register').on('submit', function (event) {
-						var $this = $(this);
+					$('.ur-frontend-form').each( function () {
+						var $registration_form = $(this);
 
-						event.stopImmediatePropagation();
+						$registration_form.find('form.register').off('submit').on('submit', function (event) {
+							var $this = $(this);
 
-						// Validator messages.
-						$.extend($.validator.messages, {
-							required: user_registration_params.message_required_fields,
-							url: user_registration_params.message_url_fields,
-							email: user_registration_params.message_email_fields,
-							number: user_registration_params.message_number_fields,
-							confirmpassword: user_registration_params.message_confirm_password_fields,
-						});
+							// Validator messages.
+							$.extend($.validator.messages, {
+								required: user_registration_params.message_required_fields,
+								url: user_registration_params.message_url_fields,
+								email: user_registration_params.message_email_fields,
+								number: user_registration_params.message_number_fields,
+								confirmpassword: user_registration_params.message_confirm_password_fields,
+							});
 
-						if ($this.find('.user-registration-password-strength').length > 0) {
+							if ($this.find('.user-registration-password-strength').length > 0) {
 
-							var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
-							var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
+								var current_strength = $this.find('.user-registration-password-strength').attr('data-current-strength');
+								var min_strength = $this.find('.user-registration-password-strength').attr('data-min-strength');
 
-							if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
+								if (parseInt(current_strength, 0) < parseInt(min_strength, 0)) {
 
-								if ( $this.find('#user_pass').val() != "" ) {
-									$this.find( '#user_pass_error' ).remove();
+									if ( $this.find('#user_pass').val() != "" ) {
+										$this.find( '#user_pass_error' ).remove();
 
-									var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
-									$this.find('.user-registration-password-hint').after( error_msg_dom );
-									$this.find('#user_pass').attr('aria-invalid',true);
-									$this.find('#user_pass').focus();
-								}
-
-								return false;
-							}
-						}
-
-						var $el = $( '.ur-smart-phone-field' );
-
-						if( 'true' === $el.attr('aria-invalid')){
-							var wrapper = $el.closest('p.form-row');
-							wrapper.find('#' + $el.data('id') + '-error').remove();
-							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
-							wrapper.append(phone_error_msg_dom);
-							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
-							return true;
-						}
-
-						var exist_detail = $('.uraf-profile-picture-upload').find('.user-registration-error').length;
-
-						if( 1 === exist_detail ){
-							var profile = $('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
-							var wrapper = $('.uraf-profile-picture-upload');
-							wrapper.find('#' + profile.attr('name') + '-error').remove();
-							wrapper.find('.uraf-profile-picture-file-error').remove();
-							var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
-							wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
-						}
-
-						if ( !$this.valid() ) {
-							return;
-						}
-
-						event.preventDefault();
-						$this.find( '.ur-submit-button' ).prop( 'disabled', true );
-						var form_data;
-						var form_id = 0;
-						var form_nonce = '0';
-						var captchaResponse = $this.find('#g-recaptcha-response').val();
-
-						try {
-							form_data = JSON.stringify(form.get_form_data());
-						} catch (ex) {
-							form_data = '';
-						}
-
-						if ($(this).closest('form').find('input[name="ur-user-form-id"]').length === 1) {
-							form_id = $(this).closest('form').find('input[name="ur-user-form-id"]').val();
-						}
-
-						if ($(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1) {
-							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
-						}
-
-						var data = {
-							action: 'user_registration_user_form_submit',
-							security: user_registration_params.user_registration_form_data_save,
-							form_data: form_data,
-							captchaResponse: captchaResponse,
-							form_id: form_id,
-							ur_frontend_form_nonce: form_nonce
-						};
-
-						$(document).trigger("user_registration_frontend_before_form_submit", [data, $this]);
-
-						if ( 'undefined' !== typeof ( ur_google_recaptcha_code ) ) {
-
-							if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
-
-								var captchaResponse = $this.find('#g-recaptcha-response').val();
-
-								if (0 === captchaResponse.length) {
-
-									form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
-									return;
-								}
-
-								if (ur_google_recaptcha_code.version == 'v3') {
-									request_recaptcha_token();
-								} else {
-									grecaptcha.reset();
-								}
-							}
-						}
-
-						$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
-
-						$.ajax({
-							url: user_registration_params.ajax_url,
-							data: data,
-							type: 'POST',
-							async: true,
-							complete: function ( ajax_response ) {
-
-								$this.find('.ur-submit-button').find('span').removeClass('ur-front-spinner');
-								var redirect_url = $this.find('input[name="ur-redirect-url"]').val();
-
-								var message = $('<ul class=""/>');
-								var type = 'error';
-
-								try {
-
-									var response = $.parseJSON(ajax_response.responseText);
-
-									if (typeof response.success !== 'undefined' && response.success === true && typeof response.data.paypal_redirect !== 'undefined') {
-										window.location = response.data.paypal_redirect;
+										var error_msg_dom = '<label id="user_pass_error" class="user-registration-error" for="user_pass">' + ursL10n.password_strength_error + '.</label>';
+										$this.find('.user-registration-password-hint').after( error_msg_dom );
+										$this.find('#user_pass').attr('aria-invalid',true);
+										$this.find('#user_pass').focus();
 									}
 
-									if (typeof response.success !== 'undefined' && response.success === true) {
-										type = 'message';
+									return false;
+								}
+							}
+
+							var $el = $this.find( '.ur-smart-phone-field' );
+
+							if( 'true' === $el.attr('aria-invalid')){
+								var wrapper = $el.closest('p.form-row');
+								wrapper.find('#' + $el.data('id') + '-error').remove();
+								var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+								wrapper.append(phone_error_msg_dom);
+								wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+								return true;
+							}
+
+							var exist_detail = $this.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+							if( 1 === exist_detail ){
+								var profile = $this.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+								var wrapper = $this.find('.uraf-profile-picture-upload');
+								wrapper.find('#' + profile.attr('name') + '-error').remove();
+								wrapper.find('.uraf-profile-picture-file-error').remove();
+								var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+								wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+							}
+
+							if ( !$this.valid() ) {
+								return;
+							}
+
+							event.preventDefault();
+							$this.find( '.ur-submit-button' ).prop( 'disabled', true );
+							var form_data;
+							var form_id = 0;
+							var form_nonce = '0';
+							var captchaResponse = $this.find('#g-recaptcha-response').val();
+
+							try {
+								form_data = JSON.stringify(form.get_form_data($this.closest('.ur-frontend-form').attr('id')));
+							} catch (ex) {
+								form_data = '';
+							}
+
+							if ($(this).closest('form').find('input[name="ur-user-form-id"]').length === 1) {
+								form_id = $(this).closest('form').find('input[name="ur-user-form-id"]').val();
+							}
+
+							if ($(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1) {
+								form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
+							}
+
+							// event.stopImmediatePropagation();
+							var data = {
+								action: 'user_registration_user_form_submit',
+								security: user_registration_params.user_registration_form_data_save,
+								form_data: form_data,
+								captchaResponse: captchaResponse,
+								form_id: form_id,
+								ur_frontend_form_nonce: form_nonce
+							};
+
+							$(document).trigger("user_registration_frontend_before_form_submit", [data, $this]);
+
+							if ( 'undefined' !== typeof ( ur_google_recaptcha_code ) ) {
+
+								if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
+
+									var captchaResponse = $this.find('#g-recaptcha-response').val();
+
+									if (0 === captchaResponse.length) {
+
+										form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
+										return;
 									}
 
-									if (type === 'message') {
+									if (ur_google_recaptcha_code.version == 'v3') {
+										request_recaptcha_token();
+									} else {
+										grecaptcha.reset();
+									}
+								}
+							}
 
-										$('.user-registration-password-hint').remove();
-										$('.user-registration-password-strength').remove();
+							$this.find('.ur-submit-button').find('span').addClass('ur-front-spinner');
 
-										if ( response.data.form_login_option == 'admin_approval') {
-											message.append('<li>' + ursL10n.user_under_approval + '</li>');
+							$.ajax({
+								url: user_registration_params.ajax_url,
+								data: data,
+								type: 'POST',
+								async: true,
+								complete: function ( ajax_response ) {
+
+									$this.find('.ur-submit-button').find('span').removeClass('ur-front-spinner');
+									var redirect_url = $this.find('input[name="ur-redirect-url"]').val();
+
+									var message = $('<ul class=""/>');
+									var type = 'error';
+
+									try {
+
+										var response = $.parseJSON(ajax_response.responseText);
+
+										if (typeof response.success !== 'undefined' && response.success === true && typeof response.data.paypal_redirect !== 'undefined') {
+											window.location = response.data.paypal_redirect;
 										}
-										else if ( response.data.form_login_option == 'email_confirmation') {
-											message.append('<li>' + ursL10n.user_email_pending + '</li>');
-										}
-										else if ( response.data.form_login_option == 'payment') {
-											message.append('<li>' + response.data.message + '</li>');
-										}
-										else {
-											message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
+
+										if (typeof response.success !== 'undefined' && response.success === true) {
+											type = 'message';
 										}
 
-										$this[0].reset();
-										jQuery('#billing_country').trigger('change');
-										jQuery('#shipping_country').trigger('change');
+										if (type === 'message') {
 
-										if ( 'undefined' !== typeof redirect_url && redirect_url !== '') {
-											window.setTimeout(function () {
-												window.location = redirect_url;
-											}, 1000);
-										} else {
+											$this.find('.user-registration-password-hint').remove();
+											$this.find('.user-registration-password-strength').remove();
 
-											if (typeof response.data.auto_login !== 'undefined' && response.data.auto_login) {
-												location.reload();
+											if ( response.data.form_login_option == 'admin_approval') {
+												message.append('<li>' + ursL10n.user_under_approval + '</li>');
+											}
+											else if ( response.data.form_login_option == 'email_confirmation') {
+												message.append('<li>' + ursL10n.user_email_pending + '</li>');
+											}
+											else if ( response.data.form_login_option == 'payment') {
+												message.append('<li>' + response.data.message + '</li>');
+											}
+											else {
+												message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
+											}
+
+											$this[0].reset();
+											jQuery('#billing_country').trigger('change');
+											jQuery('#shipping_country').trigger('change');
+
+											if ( 'undefined' !== typeof redirect_url && redirect_url !== '') {
+												window.setTimeout(function () {
+													window.location = redirect_url;
+												}, 1000);
+											} else {
+
+												if (typeof response.data.auto_login !== 'undefined' && response.data.auto_login) {
+													location.reload();
+												}
+											}
+										} else if (type === 'error') {
+											if (typeof response.data.message === 'object') {
+												$.each(response.data.message, function (index, value) {
+													message.append('<li>' + value + '</li>');
+												});
+											} else {
+												message.append('<li>' + response.data.message + '</li>');
 											}
 										}
-									} else if (type === 'error') {
-										if (typeof response.data.message === 'object') {
-											$.each(response.data.message, function (index, value) {
-												message.append('<li>' + value + '</li>');
-											});
-										} else {
-											message.append('<li>' + response.data.message + '</li>');
-										}
+									} catch (e) {
+										message.append('<li>' + e.message + '</li>');
 									}
-								} catch (e) {
-									message.append('<li>' + e.message + '</li>');
+
+									form.show_message(message, type, $this);
+
+									$(document).trigger("user_registration_frontend_after_ajax_complete", [ajax_response.responseText, type, $this]);
+									$this.find( '.ur-submit-button' ).prop( 'disabled', false );
 								}
-
-								form.show_message(message, type, $this);
-
-								$(document).trigger("user_registration_frontend_after_ajax_complete", [ajax_response.responseText, type, $this]);
-								$this.find( '.ur-submit-button' ).prop( 'disabled', false );
-							}
+							});
 						});
 					});
 				}
@@ -553,7 +562,10 @@
 	};
 
 	$( function () {
-		$('form.register').ur_form_submission();
+
+		$('.ur-submit-button').on( 'click', function () {
+			$(this).closest('form.register').ur_form_submission();
+		});
 
 		var date_flatpickrs = {};
 
@@ -585,35 +597,39 @@
 			}
 		});
 
-		$("form.register, form.edit-password").on("focusout", "#user_pass, #password_1", function() {
-			$this = $(this);
-			var this_name = $(this).attr( 'name' );
-			var this_data_id = $(this).data( 'id' );
-			var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
+		$('.ur-frontend-form').each( function (){
+			var $registration_form = $(this).find('form.register');
 
-			if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
-				var wrapper                   = $this.closest('form');
-				var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
-				var blacklistArray            = wp.passwordStrength.userInputBlacklist();
+			$registration_form.on("focusout", "#user_pass, #password_1", function() {
+				$this = $(this);
+				var this_name = $(this).attr( 'name' );
+				var this_data_id = $(this).data( 'id' );
+				var enable_strength_password  = $this.closest( 'form' ).attr( 'data-enable-strength-password' );
 
-				blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
-				blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+				if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
+					var wrapper                   = $this.closest('form');
+					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
+					var blacklistArray            = wp.passwordStrength.userInputBlacklist();
 
-				var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
-				if( strength < minimum_password_strength ) {
-					if( $this.val() !== "" ){
-						wrapper.find( '#' + this_data_id + '_error' ).remove();
-						var error_msg_dom = '<label id="' + this_data_id + '_error" class="user-registration-error" for="' + this_name + '">' + ursL10n.password_strength_error +'.</label>';
-						wrapper.find('.user-registration-password-hint').after( error_msg_dom );
+					blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
+					blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+
+					var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
+					if( strength < minimum_password_strength ) {
+						if( $this.val() !== "" ){
+							wrapper.find( '#' + this_data_id + '_error' ).remove();
+							var error_msg_dom = '<label id="' + this_data_id + '_error" class="user-registration-error" for="' + this_name + '">' + ursL10n.password_strength_error +'.</label>';
+							wrapper.find('.user-registration-password-hint').after( error_msg_dom );
+						}
 					}
 				}
-			}
+			});
 		});
 	});
 
-	$(function () {
-		request_recaptcha_token();
-	});
+	// $(function () {
+	// 	request_recaptcha_token();
+	// });
 
 	/**
 	 * Append a country option and Remove it on click, if the country is not allowed.
@@ -682,42 +698,50 @@
 var google_recaptcha_user_registration;
 var onloadURCallback = function () {
 
-	var node_recaptcha_register = jQuery('.ur-frontend-form').find('form.register #ur-recaptcha-node #node_recaptcha_register').length;
+	jQuery('.ur-frontend-form').each( function(){
+		$this = jQuery(this);
+		var node_recaptcha_register = $this.find('form.register #ur-recaptcha-node #node_recaptcha_register').length;
 
-	if (node_recaptcha_register !== 0) {
-		google_recaptcha_user_registration = grecaptcha.render('node_recaptcha_register', {
-			'sitekey': ur_google_recaptcha_code.site_key,
-			'theme': 'light',
-			'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
-		});
-	}
+		if (node_recaptcha_register !== 0) {
+			google_recaptcha_user_registration = grecaptcha.render('node_recaptcha_register', {
+				'sitekey': ur_google_recaptcha_code.site_key,
+				'theme': 'light',
+				'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
+			});
+		}
 
-	var node_recaptcha_login = jQuery('.ur-frontend-form').find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login').length;
+		var node_recaptcha_login = $this.find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login').length;
 
-	if (node_recaptcha_login !== 0) {
-		grecaptcha.render('node_recaptcha_login', {
-			'sitekey': ur_google_recaptcha_code.site_key,
-			'theme': 'light',
-			'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
-		});
-	}
+		if (node_recaptcha_login !== 0) {
+			grecaptcha.render('node_recaptcha_login', {
+				'sitekey': ur_google_recaptcha_code.site_key,
+				'theme': 'light',
+				'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
+			});
+		}
+	});
 };
 
 function request_recaptcha_token() {
-	var node_recaptcha_register = jQuery('.ur-frontend-form').find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
-	if (node_recaptcha_register !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
-				jQuery('form.register').find('#g-recaptcha-response').text(token);
+	jQuery('.ur-frontend-form').each( function(){
+		$this = jQuery(this);
+		var node_recaptcha_register = $this.find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
+
+		if (node_recaptcha_register !== 0) {
+			grecaptcha.ready(function () {
+				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
+					$this.find('form.register').find('#g-recaptcha-response').text(token);
+				});
 			});
-		});
-	}
-	var node_recaptcha_login = jQuery('.ur-frontend-form').find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
-	if (node_recaptcha_login !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
-				jQuery('form.login').find('#g-recaptcha-response').text(token);
+		}
+		var node_recaptcha_login = $this.find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
+
+		if (node_recaptcha_login !== 0) {
+			grecaptcha.ready(function () {
+				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
+					$this.find('form.login').find('#g-recaptcha-response').text(token);
+				});
 			});
-		});
-	}
+		}
+	});
 };
