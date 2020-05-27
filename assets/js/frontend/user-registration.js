@@ -426,7 +426,7 @@
 							var form_data;
 							var form_id = 0;
 							var form_nonce = '0';
-							var captchaResponse = $this.find('#g-recaptcha-response').val();
+							var captchaResponse = $this.find('[name="g-recaptcha-response"]').val();
 
 							try {
 								form_data = JSON.stringify(form.get_form_data($this.closest('.ur-frontend-form').attr('id')));
@@ -442,7 +442,6 @@
 								form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
 							}
 
-							// event.stopImmediatePropagation();
 							var data = {
 								action: 'user_registration_user_form_submit',
 								security: user_registration_params.user_registration_form_data_save,
@@ -458,7 +457,7 @@
 
 								if ( '1' === ur_google_recaptcha_code.is_captcha_enable ) {
 
-									var captchaResponse = $this.find('#g-recaptcha-response').val();
+									var captchaResponse = $this.find('[name="g-recaptcha-response"]').val();
 
 									if (0 === captchaResponse.length) {
 
@@ -627,9 +626,9 @@
 		});
 	});
 
-	// $(function () {
-	// 	request_recaptcha_token();
-	// });
+	$(function () {
+		request_recaptcha_token();
+	});
 
 	/**
 	 * Append a country option and Remove it on click, if the country is not allowed.
@@ -700,10 +699,12 @@ var onloadURCallback = function () {
 
 	jQuery('.ur-frontend-form').each( function(){
 		$this = jQuery(this);
+		var form_id = $this.attr('id');
 		var node_recaptcha_register = $this.find('form.register #ur-recaptcha-node #node_recaptcha_register').length;
 
 		if (node_recaptcha_register !== 0) {
-			google_recaptcha_user_registration = grecaptcha.render('node_recaptcha_register', {
+			$this.find('form.register #ur-recaptcha-node .g-recaptcha').attr('id', 'node_recaptcha_register_' + form_id);
+			google_recaptcha_user_registration = grecaptcha.render('node_recaptcha_register_' + form_id, {
 				'sitekey': ur_google_recaptcha_code.site_key,
 				'theme': 'light',
 				'style': 'transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;'
@@ -723,25 +724,21 @@ var onloadURCallback = function () {
 };
 
 function request_recaptcha_token() {
-	jQuery('.ur-frontend-form').each( function(){
-		$this = jQuery(this);
-		var node_recaptcha_register = $this.find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
+	var node_recaptcha_register = jQuery('.ur-frontend-form').find('form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3').length;
 
-		if (node_recaptcha_register !== 0) {
-			grecaptcha.ready(function () {
-				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
-					$this.find('form.register').find('#g-recaptcha-response').text(token);
-				});
+	if (node_recaptcha_register !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'register' }).then(function (token) {
+				jQuery('form.register').find('#g-recaptcha-response').text(token);
 			});
-		}
-		var node_recaptcha_login = $this.find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
-
-		if (node_recaptcha_login !== 0) {
-			grecaptcha.ready(function () {
-				grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
-					$this.find('form.login').find('#g-recaptcha-response').text(token);
-				});
+		});
+	}
+	var node_recaptcha_login = jQuery('.ur-frontend-form').find('form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3').length;
+	if (node_recaptcha_login !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha.execute(ur_google_recaptcha_code.site_key, { action: 'login' }).then(function (token) {
+				jQuery('form.login').find('#g-recaptcha-response').text(token);
 			});
-		}
-	});
+		});
+	}
 };
