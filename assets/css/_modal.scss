@@ -4,10 +4,13 @@
 	position: fixed;
 	top: 0;
 	left: 0;
+	right: 0;
 	height: 100%;
 	width: 100%;
+	margin: 0 auto !important;
 	overflow-x: hidden;
 	overflow-y: auto;
+	z-index: 99999;
 
 	.user-registration-modal__backdrop {
 		position: fixed;
