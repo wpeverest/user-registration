@@ -37,7 +37,7 @@ class UR_Shortcode_My_Account {
 	 *
 	 * @since 1.8.5
 	 *
-	 * @param mixed  $return Content to return. If return false, the shortcode will be rendered.
+	 * @param mixed  $return Content to return. If returned false, the shortcode will be rendered.
 	 * @param string $tag Current shortocode tag.
 	 * @param array  $attr List of shortcode attributes
 	 * @param array  $matches List of matches obtained while doing regex for shortcodes.
