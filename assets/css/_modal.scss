@@ -1,8 +1,14 @@
 @import 'variables';
 
 
-.user-registration-modal-open {
-	overflow: hidden; // Hide scrollbar on body when modal is open.
+.user-registration-page{
+	&.user-registration-modal-open {
+		overflow: hidden; // Hide scrollbar on body when modal is open.
+
+		.user-registration-modal {
+			max-width: 100%;
+		}
+	}
 }
 
 .user-registration-modal {
