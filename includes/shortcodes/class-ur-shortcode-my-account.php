@@ -31,6 +31,33 @@ class UR_Shortcode_My_Account {
 	}
 
 	/**
+	 * Determine whether the shortcode should be rendered or not.
+	 * For example: we don't need to render shortcode when a page containing this shortcode
+	 * is being edited by Elementor.
+	 *
+	 * @since 1.8.5
+	 *
+	 * @param mixed  $return Content to return. If return false, the shortcode will be rendered.
+	 * @param string $tag Current shortocode tag.
+	 * @param array  $attr List of shortcode attributes
+	 * @param array  $matches List of matches obtained while doing regex for shortcodes.
+	 */
+	public static function pre_do_shortcode_tag( $return, $tag, $attr, $matches ) {
+		// Prevent shortcode rendering for Elementor.
+		if (
+			( 'user_registration_my_account' === $tag ) &&
+			(
+				( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) ||
+				! empty( $_GET['elementor-preview'] ) ||
+				( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] )
+			) ) {
+			$return = $matches[0];
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Output the shortcode.
 	 *
 	 * @param array $atts

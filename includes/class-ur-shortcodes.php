@@ -29,6 +29,7 @@ class UR_Shortcodes {
 			'user_registration_my_account' => __CLASS__ . '::my_account',
 			'user_registration_login'      => __class__ . '::login',
 		);
+		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 );
 
 		foreach ( $shortcodes as $shortcode => $function ) {
 			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ), $function );
