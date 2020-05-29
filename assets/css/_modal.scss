@@ -1,5 +1,10 @@
 @import 'variables';
 
+
+.user-registration-modal-open {
+	overflow: hidden; // Hide scrollbar on body when modal is open.
+}
+
 .user-registration-modal {
 	position: fixed;
 	top: 0;
@@ -10,7 +15,7 @@
 	margin: 0 auto !important;
 	overflow-x: hidden;
 	overflow-y: auto;
-	z-index: 99999;
+	z-index: 999999;
 
 	.user-registration-modal__backdrop {
 		position: fixed;
@@ -58,6 +63,7 @@
 			font-size: 20px;
 			line-height: 1.4;
 			margin: 0;
+			padding: 0;
 		}
 
 		.user-registration-modal__close-icon {
@@ -98,7 +104,10 @@
 		padding: 16px;
 
 		// Customize UR form for modal
-		.user-registration {
+		#user-registration,
+		.user-registration,
+		.login {
+			margin: 0;
 			padding: 0;
 			border: none;
 		}
