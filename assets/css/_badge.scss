@@ -1,0 +1,67 @@
+.user-registration-badge {
+	display: inline-block;
+	font-size: 1em;
+	line-height: 1;
+	padding: 4px 8px;
+	border-radius: 10px;
+
+	&.user-registration-badge--primary {
+		background: $primary_color;
+		color: $white;
+	}
+
+	&.user-registration-badge--primary-subtle {
+		background: lighten($primary_color, +35);
+		color: $primary_color;
+	}
+
+	&.user-registration-badge--secondary {
+		background: $color_gray_two;
+		color: $white;
+	}
+
+	&.user-registration-badge--secondary-subtle {
+		background: lighten($color_gray_two, +35);
+		color: $color_gray_two;
+	}
+
+	&.user-registration-badge--success {
+		background: $green;
+		color: $white;
+	}
+
+	&.user-registration-badge--success-subtle {
+		background: lighten($green, +35);
+		color: darken($green, 10%);
+	}
+
+	&.user-registration-badge--danger {
+		background: $red;
+		color: $white;
+	}
+
+	&.user-registration-badge--danger-subtle {
+		background: lighten($red, +30);
+		color: $red;
+	}
+
+	&.user-registration-badge--warning {
+		background: $orange;
+		color: $white;
+	}
+
+	&.user-registration-badge--warning-subtle {
+		background: lighten($orange, +35);
+		color: darken($orange, 15%);
+	}
+
+	&.user-registration-badge--info {
+		background: $blue;
+		color: $white;
+	}
+
+	&.user-registration-badge--info-subtle {
+		background: lighten($blue, +35);
+		color: darken($blue, 5%);
+	}
+}
