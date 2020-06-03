@@ -160,6 +160,7 @@ class UR_Frontend_Form_Handler {
 	 */
 	private static function validate_form_data( $form_field_data = array(), $form_data = array(), $form_id ) {
 		$form_data_field     = wp_list_pluck( $form_data, 'field_name' );
+		$form_field_data     = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );
 		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
 		if ( count( $duplicate_field_key ) > 0 ) {

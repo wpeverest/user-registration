@@ -280,16 +280,16 @@ class UR_Admin_Settings {
 
 				// Card Header and Body.
 				case 'cardheader':
-					echo '<div class="' . $value['card_class'] . '">';
-					echo '<div class="' . $value['header_class'] . '">';
+					echo '<div class="user-registration-card">';
+					echo '<div class="user-registration-card__header">';
 					if ( ! empty( $value['card_title'] ) ) {
-						echo '<h3  class="' . $value['title_class'] . '">' . esc_html( $value['card_title'] ) . '</h3>';
+						echo '<h3  class="user-registration-card__title">' . esc_html( $value['card_title'] ) . '</h3>';
 					}
 					echo '</div>';
 					if ( ! empty( $value['desc'] ) ) {
 						echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
 					}
-					echo '<div class="' . $value['body_class'] . '">';
+					echo '<div class="user-registration-card__body">';
 					echo '<table class="form-table">' . "\n\n";
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) );
