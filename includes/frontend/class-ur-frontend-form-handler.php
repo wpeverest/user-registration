@@ -207,6 +207,10 @@ class UR_Frontend_Form_Handler {
 					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook );
 				}
 
+				if ( 'honeypot' === $single_form_field->field_key ) {
+					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
+				}
+
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {
