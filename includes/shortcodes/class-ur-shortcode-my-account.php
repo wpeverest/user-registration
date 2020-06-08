@@ -44,13 +44,7 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function pre_do_shortcode_tag( $return, $tag, $attr, $matches ) {
 		// Prevent shortcode rendering for Elementor.
-		if (
-			( 'user_registration_my_account' === $tag ) &&
-			(
-				( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) ||
-				! empty( $_GET['elementor-preview'] ) ||
-				( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] )
-			) ) {
+		if ( 'user_registration_my_account' === $tag && is_elementor_editing_page() ) {
 			$return = $matches[0];
 		}
 

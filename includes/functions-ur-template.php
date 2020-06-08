@@ -59,7 +59,7 @@ function ur_login_template_redirect() {
 		$redirect_url = trim( $redirect_url, '"' );
 		$redirect_url = trim( $redirect_url, "'" );
 
-		if ( ! empty( $redirect_url ) ) {
+		if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
 			wp_redirect( $redirect_url );
 			exit();
 		}
@@ -102,7 +102,7 @@ function ur_registration_template_redirect() {
 			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
 
-			if ( ! empty( $redirect_url ) ) {
+			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
 				wp_redirect( $redirect_url );
 				exit();
 			}
@@ -372,7 +372,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
-						
+
 						if ( empty( $args['placeholder'] ) ) {
 							$selected_attribute = selected( $value, trim( $option_key ), false );
 						}
@@ -714,4 +714,17 @@ function ur_logout_url( $redirect = '' ) {
 	} else {
 		return wp_logout_url( $redirect );
 	}
+}
+
+/**
+ * See if current page elementor page for editing.
+ *
+ * @since 1.8.5
+ *
+ * @return bool
+ */
+function is_elementor_editing_page() {
+	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) ||
+			! empty( $_GET['elementor-preview'] ) ||
+			( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] );
 }
