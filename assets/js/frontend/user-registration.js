@@ -364,6 +364,8 @@
 						var $registration_form = $(this);
 
 						$registration_form.find('form.register').off('submit').on('submit', function (event) {
+							event.preventDefault();
+
 							var $this = $(this);
 
 							// Validator messages.
@@ -421,7 +423,6 @@
 								return;
 							}
 
-							event.preventDefault();
 							$this.find( '.ur-submit-button' ).prop( 'disabled', true );
 							var form_data;
 							var form_id = 0;
@@ -468,7 +469,9 @@
 									if (ur_google_recaptcha_code.version == 'v3') {
 										request_recaptcha_token();
 									} else {
-										grecaptcha.reset();
+										for( var i = 0; i <= google_recaptcha_user_registration; i++ ) {
+											grecaptcha.reset(i);
+										}
 									}
 								}
 							}
@@ -697,7 +700,7 @@
 var google_recaptcha_user_registration;
 var onloadURCallback = function () {
 
-	jQuery('.ur-frontend-form').each( function(){
+	jQuery('.ur-frontend-form').each( function(i){
 		$this = jQuery(this);
 		var form_id = $this.attr('id');
 		var node_recaptcha_register = $this.find('form.register #ur-recaptcha-node #node_recaptcha_register').length;
