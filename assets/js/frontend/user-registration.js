@@ -207,10 +207,13 @@
 					$.each(frontend_field, function () {
 						var field_name = $(this).attr('name');
 						var single_field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+
 						if (single_field.length < 2) {
 							var single_data = this_instance.get_fieldwise_data($(this));
 							var invite_code = document.querySelector('.field-invite_code')
+
 							if( 'invite_code' === single_data.field_name ) {
+
 								if( 'none' !== invite_code.style.display ) {
 									form_data.push(single_data);
 								}
@@ -218,6 +221,7 @@
 								form_data.push(single_data);
 							}
 						} else {
+
 							if ($.inArray(field_name, multi_value_field) < 0) {
 								multi_value_field.push(field_name);
 							}
@@ -289,6 +293,11 @@
 				get_fieldwise_data: function (field) {
 					var formwise_data = {};
 					var node_type = field.get(0).tagName.toLowerCase();
+					var field_name = 'undefined' !== field.attr('name') ? field.attr('name') : 'null';
+					var phone_id = [];
+					$('.field-phone').each( function() {
+						phone_id.push( $(this).find('.form-row').attr('id') );
+					});
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
 					var textarea_type = field.get(0).className.split(" ")[0];
 					formwise_data.value = '';
@@ -301,6 +310,10 @@
 									break;
 								default:
 									formwise_data.value = field.val();
+							}
+
+							if( phone_id.includes( field_name ) ) {
+								formwise_data.value = field.siblings( 'input[type="hidden"]' ).val();
 							}
 							break;
 						case 'select':
