@@ -1,0 +1,52 @@
+// User Registration Switch
+.user-registration-switch {
+	display: inline-flex;
+	align-items: center;
+
+	input[type="checkbox"] {
+		display: none;
+
+		&.user-registration-switch__control {
+			background: $color_gray_two;
+			width: 28px;
+			height: 18px;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			flex: 0 0 28px;
+			margin: 0;
+			position: relative;
+			border: 2px solid $color_gray_two;
+			transition: 0.1s transform ease;
+			box-sizing: border-box;
+
+			&::before {
+				content: none;
+			}
+
+			&::after{
+				display: inline-block;
+				content: '';
+				height: 14px;
+				width: 14px;
+				background: $white;
+				border-radius: 50%;
+				position: absolute;
+				transition: 0.1s transform ease;
+			}
+		}
+
+		&:checked {
+			background: $green;
+			border-color: $green;
+
+			&::after {
+				transform: translateX(10px);
+			}
+		}
+	}
+
+	label {
+		margin: 0 0 0 8px;
+	}
+}
