@@ -9,6 +9,8 @@
 	}
 }
 
+.ur-col,
+.ur-col-auto,
 .ur-col-1,
 .ur-col-2,
 .ur-col-3,
@@ -40,4 +42,16 @@
 .ur-col-9 {
 	flex: 0 0 75%;
 	max-width: 75%;
+}
+
+.ur-col {
+	flex-basis: 0;
+	flex-grow: 1;
+	max-width: 100%;
+}
+
+.ur-col-auto {
+	flex: 0 0 auto;
+	width: auto;
+	max-width: 100%;
 }
