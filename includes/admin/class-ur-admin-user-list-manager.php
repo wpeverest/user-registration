@@ -332,24 +332,41 @@ class UR_Admin_User_List_Manager {
 		}
 
 		$meta_query = array(
+			'relation' => 'OR',
 			array(
 				'key'     => 'ur_user_status',
 				'value'   => $status,
 				'compare' => '=',
 			),
-
+			array(
+				'key'     => 'ur_confirm_email',
+				'value'   => $status,
+				'compare' => '=',
+			),
 		);
 
-		if ( $status == UR_Admin_User_Manager::APPROVED ) {
+		if ( $status === UR_Admin_User_Manager::APPROVED ) {
 			$meta_query = array(
 				'relation' => 'OR',
 				array(
-					'key'     => 'ur_user_status',
-					'compare' => 'NOT EXISTS', // works!
-					'value'   => '', // This is ignored, but is necessary...
+					'relation' => 'AND',
+					array(
+						'key'     => 'ur_user_status',
+						'compare' => 'NOT EXISTS', // works!
+						'value'   => '', // This is ignored, but is necessary...
+					),
+					array(
+						'key'     => 'ur_confirm_email',
+						'compare' => 'NOT EXISTS', // works!
+						'value'   => '', // This is ignored, but is necessary...
+					),
 				),
 				array(
 					'key'   => 'ur_user_status',
+					'value' => UR_Admin_User_Manager::APPROVED,
+				),
+				array(
+					'key'   => 'ur_confirm_email',
 					'value' => UR_Admin_User_Manager::APPROVED,
 				),
 			);
