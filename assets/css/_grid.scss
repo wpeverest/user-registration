@@ -39,6 +39,11 @@
 	max-width: 33.333333%;
 }
 
+.ur-col-6 {
+	flex: 0 0 50%;
+	max-width: 50%;
+}
+
 .ur-col-9 {
 	flex: 0 0 75%;
 	max-width: 75%;
@@ -54,4 +59,9 @@
 	flex: 0 0 auto;
 	width: auto;
 	max-width: 100%;
+}
+
+.ur-no-gutter {
+	margin-left: 0px;
+	margin-right: 0px;
 }

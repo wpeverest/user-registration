@@ -23,6 +23,14 @@
 			background: $primary_color;
 			color: $white;
 			border-color: $primary_color;
+
+			&:hover,
+			&:active,
+			&:focus {
+				background: $primary_color;
+				color: $white;
+				border-color: $primary_color;
+			}
 		}
 
 		.ur-spinner {

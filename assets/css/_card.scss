@@ -3,8 +3,13 @@
 .user-registration-card {
 	background: $white;
 	border-radius: 4px;
+	display: block;
 	margin-bottom: 20px;
 	border: 1px solid $border-color;
+
+	a {
+		text-decoration: none;
+	}
 
 	.user-registration-card__header {
 		padding: 16px 20px;

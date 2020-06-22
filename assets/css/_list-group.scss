@@ -1,0 +1,19 @@
+.ur-list-group {
+	display: flex;
+	flex-direction: column;
+	padding-left: 0;
+	margin-bottom: 0;
+
+	.ur-list-group__item {
+		position: relative;
+		display: block;
+		padding: 1rem 1.25rem;
+		background-color: transparent;
+		border: 1px solid $border-color;
+
+		&:first-child {
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
+		}
+	}
+}
