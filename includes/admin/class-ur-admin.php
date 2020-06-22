@@ -30,7 +30,7 @@ class UR_Admin {
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
-		
+		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
 	}
 
 	/**
@@ -190,6 +190,7 @@ class UR_Admin {
 		$now = date( 'Y-m-d h:i:s' );
 		update_option( 'user_registration_users_listing_viewed', $now );
 	}
+
 	/**
 	 * Check for new user by read time.
 	 *
@@ -225,6 +226,21 @@ class UR_Admin {
 		$response['user_registration_new_user_message'] = sprintf( __( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
 		$response['user_registration_new_user_count']   = $user_count;
 		return $response;
+	}
+
+	/**
+	 * Add user-registration class to body in admin.
+	 *
+	 * @param string $classes Class to add to body.
+	 */
+	public function user_registration_add_body_classes( $classes ) {
+		global $current_screen;
+
+		// Check if the screen contains user-registration_page_ as prefix inorder to make sure the page is user registration plugin's page.
+		if ( strpos( $current_screen->id, 'user-registration_page_' ) !== false ) {
+			$classes = 'user-registration';
+		};
+		return $classes;
 	}
 }
 
