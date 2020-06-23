@@ -429,7 +429,7 @@ class UR_Frontend_Form_Handler {
 
 		if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
-			if ( 'yes' === $form_field_data[ $key ]->general_setting->required ) {
+			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
 				$field_label = $form_field_data[ $key ]->general_setting->label;
 				$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
 				array_push( self::$response_array, $response );
@@ -450,14 +450,16 @@ class UR_Frontend_Form_Handler {
 
 		// Find email, username and password value.
 		foreach ( $form_data as $data ) {
-			if ( 'user_email' === $data->extra_params['field_key'] ) {
-				$email_value = strtolower( $data->value );
-			}
-			if ( 'user_login' === $data->extra_params['field_key'] ) {
-				$username_value = strtolower( $data->value );
-			}
-			if ( 'user_pass' === $data->extra_params['field_key'] ) {
-				$password_value = strtolower( $data->value );
+			if ( isset( $data->extra_params['field_key'] ) ) {
+				if ( 'user_email' === $data->extra_params['field_key'] ) {
+					$email_value = strtolower( $data->value );
+				}
+				if ( 'user_login' === $data->extra_params['field_key'] ) {
+					$username_value = strtolower( $data->value );
+				}
+				if ( 'user_pass' === $data->extra_params['field_key'] ) {
+					$password_value = strtolower( $data->value );
+				}
 			}
 		}
 
