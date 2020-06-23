@@ -1027,7 +1027,8 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	$post_meta = get_post_meta( $post_id, $meta_key );
 
 	if ( isset( $post_meta[0] ) ) {
-		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key ) {
+		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
+		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ) {
 			if ( 'yes' === $post_meta[0] ) {
 				$post_meta[0] = 1;
 			}
@@ -1669,12 +1670,41 @@ function user_registration_get_form_visits( $form_id ) {
 function user_registration_set_form_visits( $form_id ) {
 	$count_key = 'ur_form_views_count';
 	$count     = get_post_meta( $form_id, $count_key, true );
-	if ( '' === $count ) {
+	
+  if ( '' === $count ) {
 		$count = 0;
 		delete_post_meta( $form_id, $count_key );
 		add_post_meta( $form_id, $count_key, '0' );
 	} else {
 		$count++;
 		update_post_meta( $form_id, $count_key, $count );
+  }
+}
+
+/**
+ * Get Post Content By Form ID.
+ *
+ * @param int $form_id Form Id.
+ *
+ * @return array|mixed|null|object
+ */
+function ur_get_post_content( $form_id ) {
+
+	$args      = array(
+		'post_type'   => 'user_registration',
+
+		'post_status' => 'publish',
+
+		'post__in'    => array( $form_id ),
+	);
+	$post_data = get_posts( $args );
+
+	if ( isset( $post_data[0]->post_content ) ) {
+
+		return json_decode( $post_data[0]->post_content );
+
+	} else {
+
+		return array();
 	}
 }

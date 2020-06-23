@@ -312,20 +312,28 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$save_fields = $this->get_user_meta_by_form_fields( $user_id );
 
-			foreach ( $save_fields as $fieldset ) {
-				foreach ( $fieldset['fields'] as $key => $field ) {
-					if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] ) ) {
-						if ( isset( $_POST[ $key ] ) ) {
-							$value = $_POST[ $key ];
-							if ( is_array( $_POST[ $key ] ) ) {
-								$value = array_map( 'sanitize_text_field', $value );
+			if ( ! empty( $save_fields ) ) {
+
+				$form_id = ur_get_form_id_by_userid( $user_id );
+
+				$profile = user_registration_form_data( $user_id, $form_id );
+				do_action( 'user_registration_after_admin_save_profile_validation', $user_id, $profile );
+
+				foreach ( $save_fields as $fieldset ) {
+					foreach ( $fieldset['fields'] as $key => $field ) {
+						if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] || 'wysiwyg' === $field['type'] ) ) {
+							if ( isset( $_POST[ $key ] ) ) {
+								$value = $_POST[ $key ];
+								if ( is_array( $_POST[ $key ] ) ) {
+									$value = array_map( 'sanitize_text_field', $value );
+								}
+								update_user_meta( $user_id, $key, $value );
+							} else {
+								update_user_meta( $user_id, $key, '' );
 							}
-							update_user_meta( $user_id, $key, $value );
-						} else {
-							update_user_meta( $user_id, $key, '' );
+						} elseif ( isset( $_POST[ $key ] ) ) {
+							update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 						}
-					} elseif ( isset( $_POST[ $key ] ) ) {
-						update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
 					}
 				}
 			}
