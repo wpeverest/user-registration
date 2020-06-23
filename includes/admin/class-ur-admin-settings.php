@@ -278,6 +278,36 @@ class UR_Admin_Settings {
 			// Switch based on type.
 			switch ( $value['type'] ) {
 
+				// Card Header and Body.
+				case 'cardheader':
+					echo '<div class="user-registration-card">';
+					echo '<div class="user-registration-card__header">';
+					if ( ! empty( $value['card_title'] ) ) {
+						echo '<h3  class="user-registration-card__title">' . esc_html( $value['card_title'] ) . '</h3>';
+					}
+					echo '</div>';
+					if ( ! empty( $value['desc'] ) ) {
+						echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
+					}
+					echo '<div class="user-registration-card__body">';
+					echo '<table class="form-table">' . "\n\n";
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) );
+					}
+					break;
+
+				// Card End.
+				case 'cardend':
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_end' );
+					}
+					echo '</table>';
+					echo '</div>';
+					echo '</div>';
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_after' );
+					}
+					break;
 				// Section Titles.
 				case 'title':
 					if ( ! empty( $value['title'] ) ) {
@@ -311,8 +341,9 @@ class UR_Admin_Settings {
 				case 'date':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
-						<th scope="row" class="titledesc">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+							<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>

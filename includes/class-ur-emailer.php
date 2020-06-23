@@ -184,13 +184,13 @@ class UR_Emailer {
 	 * @since 1.6.3
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
-		$profile     = user_registration_form_data( $user_id, $form_id );
-		$name_value  = array();
-		$data_html   = '';
-		$smart_data  = array();
-		$email       = '';
-		$user_data   = get_userdata( $user_id );
-		$username    = $user_data->user_login;
+		$profile    = user_registration_form_data( $user_id, $form_id );
+		$name_value = array();
+		$data_html  = '';
+		$smart_data = array();
+		$email      = '';
+		$user_data  = get_userdata( $user_id );
+		$username   = $user_data->user_login;
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $profile as $key => $form_data ) {
@@ -224,8 +224,8 @@ class UR_Emailer {
 		}
 
 		// Smart tag process for extra fields.
-		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data,  $form_id, $user_id );
-		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
+		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data, $form_id, $user_id );
+		$name_value  = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
 
@@ -541,6 +541,7 @@ class UR_Emailer {
 			'{{ur_login}}',
 			'{{key}}',
 			'{{all_fields}}',
+			'{{auto_pass}}',
 		);
 
 		$ur_login = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
@@ -555,8 +556,14 @@ class UR_Emailer {
 			'ur_login'    => $ur_login,
 			'key'         => '',
 			'all_fields'  => '',
+			'auto_pass'   => '',
 		);
-		$values         = wp_parse_args( $values, $default_values );
+
+		if ( has_filter( 'user_registration_extras_auto_generated_password' ) ) {
+			$user_pass                   = apply_filters( 'user_registration_extras_auto_generated_password', 'user_pass' );
+			$default_values['auto_pass'] = $user_pass;
+		}
+		$values = wp_parse_args( $values, $default_values );
 
 		if ( ! empty( $values['email'] ) ) {
 			$user_data = self::user_data_smart_tags( $values['email'] );

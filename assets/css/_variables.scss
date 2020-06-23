@@ -9,7 +9,7 @@ $primary_dark: 		darken($primary_color, 10% ); // #217dbb
 $primary_light: 	lighten($primary_color, 40%); // #e1f0fa
 
 // Alerts
-$green:		#7ad03a;
+$green:		#37b24d;
 $red:		#ff4149;
 $orange:	#ffba00;
 $blue:		#2ea2cc;
@@ -24,8 +24,11 @@ $color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63
 $color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
 $color_sortable_background: #f7f7f7;
 
-// Other Color variables
+// Border variables
+$border_width:				1px;
 $border_color:				$color_gray_four;
+
+// Other Color variables
 $label_color:				$color_gray_two;
 $border_color_input: 		darken($border_color, 10%);
 $input_background_color: 	$color_gray_five;

@@ -60,6 +60,7 @@ class UR_Form_Handler {
 		if ( $user_id <= 0 ) {
 			return;
 		}
+
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
@@ -156,6 +157,10 @@ class UR_Form_Handler {
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+			}
+
+			if ( 'user_email' === $field['field_key'] ) {
+				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
 			}
 
 			if ( ! empty( $_POST[ $key ] ) ) {

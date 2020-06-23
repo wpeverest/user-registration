@@ -33,6 +33,7 @@ $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
 $redirect_url   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_options', '' );
 $template_class = '';
+user_registration_set_form_visits( $form_id );
 
 if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--bordered';
@@ -75,8 +76,8 @@ do_action( 'user_registration_before_registration_form', $form_id );
 										<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
 											 style="width:<?php echo $width; ?>%">
 									<?php
+										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
-
 										if ( isset( $single_item->field_key ) ) {
 											?>
 															<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">

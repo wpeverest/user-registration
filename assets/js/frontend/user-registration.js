@@ -533,9 +533,14 @@
 												message.append('<li>' + ursL10n.user_successfully_saved + '</li>');
 											}
 
-											$this[0].reset();
-											jQuery('#billing_country').trigger('change');
-											jQuery('#shipping_country').trigger('change');
+										if( 'undefined' !== typeof( response.data.auto_password_generation_success_message ) ) {
+											message.append('<li>' + response.data.auto_password_generation_success_message + '</li>');
+										}
+
+										$this[0].reset();
+										jQuery('#billing_country').trigger('change');
+										jQuery('#shipping_country').trigger('change');
+
 
 											if ( 'undefined' !== typeof redirect_url && redirect_url !== '') {
 												window.setTimeout(function () {
