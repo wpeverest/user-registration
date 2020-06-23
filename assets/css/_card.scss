@@ -1,0 +1,28 @@
+@import 'variables';
+
+.user-registration-card {
+	background: $white;
+	border-radius: 4px;
+	display: block;
+	margin-bottom: 20px;
+	border: 1px solid $border-color;
+
+	a {
+		text-decoration: none;
+	}
+
+	.user-registration-card__header {
+		padding: 16px 20px;
+		border-bottom: 1px solid $border-color;
+
+		.user-registration-card__title {
+			font-size: 1.25em;
+			line-height: 1.3;
+			margin: 0;
+		}
+	}
+
+	.user-registration-card__body {
+		padding: 20px;
+	}
+}

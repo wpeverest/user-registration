@@ -63,6 +63,11 @@ class UR_Frontend {
 			$setting['general_setting'] = $field_object->general_setting;
 			$setting['advance_setting'] = $field_object->advance_setting;
 			$field_type                 = ur_get_field_type( $field_object->field_key );
+
+			// Force drop the custom class because it has been addressed in prior container.
+			if ( ! empty( $setting['advance_setting']->custom_class ) ) {
+				unset( $setting['advance_setting']->custom_class );
+			}
 			$instance->frontend_includes( $setting, $form_id, $field_type, $field_object->field_key );
 		}
 	}

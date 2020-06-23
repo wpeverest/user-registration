@@ -119,8 +119,8 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-		$this->form_id = $form_id;
 
+		$this->form_id     = $form_id;
 		$form_data         = (array) $data['general_setting'];
 		$form_data['type'] = $field_type;
 
@@ -152,6 +152,10 @@ abstract class UR_Form_Field {
 
 		if ( isset( $data['advance_setting']->default_value ) ) {
 			$form_data['default'] = $data['advance_setting']->default_value;
+		}
+
+		if ( isset( $data['general_setting']->max_files ) ) {
+			$form_data['max_files'] = $data['general_setting']->max_files;
 		}
 
 		$form_data['input_class'] = array( 'ur-frontend-field ' );
@@ -421,7 +425,13 @@ abstract class UR_Form_Field {
 					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
 
-						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '">';
+						$disabled = '';
+							// To make invite code required field non editable.
+						if ( 'required' === $setting_key && 'invite_code' === $strip_prefix ) {
+							$disabled = 'disabled';
+						}
+
+						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" ' . $disabled . '>';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
 							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
@@ -444,16 +454,26 @@ abstract class UR_Form_Field {
 
 				case 'hidden':
 					$value = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
-					if ( ! empty( $value ) ) {
 
-						$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
 
-						if ( true == $setting_value['required'] ) {
-							$general_setting_wrapper .= ' required ';
-						}
-
-						$general_setting_wrapper .= '/>';
+					if ( true == $setting_value['required'] ) {
+						$general_setting_wrapper .= ' required ';
 					}
+
+					$general_setting_wrapper .= '/>';
+
+					break;
+				case 'number':
+					$val                      = $this->get_general_setting_data( $setting_key );
+					$value                    = ! empty( $val ) ? $val : $setting_value['default'];
+					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="number" name="' . $setting_value['name'] . '" min = "1"';
+
+					if ( true == $setting_value['required'] ) {
+						$general_setting_wrapper .= ' required ';
+					}
+
+					$general_setting_wrapper .= '/>';
 					break;
 
 				default:

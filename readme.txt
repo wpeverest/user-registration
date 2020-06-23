@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.4
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -143,7 +143,17 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 1.8.3 - 17/03/2020
+= 1.8.4 - 14/05/2020
+* Enhance - Add custom CSS class in fields.
+* Dev - MailChimp add-on compatibility changes.
+* Dev - File upload addon compatibility changes
+* Dev - Invite code add-on compatibility changes.
+* Fix - Display of new users count even after the all users page refresh
+* Fix - Enable/Disable checkbox backward compatibility
+* Fix - Elementor plugin nav menu title conflict.
+
+= 1.8.3 - 17/04/2020
+* Security - Form field validation for missing required fields.
 * Enhance - Toggle out on clicking out of form name edit box.
 * Enhance - Confirmation message on field deletion.
 * Enhance - Form live changes for conditional logic.
@@ -154,7 +164,6 @@ Yes, the plugin has a shortcode for the login form.
 * Fix - Section division issue in form builder.
 * Fix - Multiple date field.
 * Fix - User approval status.
-* Fix - Form field validation for missing required fields.
 * Fix - Enable Recaptcha and password strength checkbox backward compatibility.
 * Fix - Placeholder conflict with the value of the select field.
 * Fix - User Registration component placeholder design on Gutenblock.

@@ -1744,3 +1744,66 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 		return false;
 	}
 }
+
+/**
+ * Get count of form visits from Form ID.
+ *
+ * @param int $form_id Form ID.
+ */
+function user_registration_get_form_visits( $form_id ) {
+	$count_key = 'ur_form_views_count';
+	$count     = get_post_meta( $form_id, $count_key, true );
+	if ( '' === $count ) {
+		delete_post_meta( $form_id, $count_key );
+		add_post_meta( $form_id, $count_key, '0' );
+		return '0';
+	}
+	return $count;
+}
+
+/**
+ * Set count of form visits from Form ID.
+ *
+ * @param int $form_id Form ID.
+ */
+function user_registration_set_form_visits( $form_id ) {
+	$count_key = 'ur_form_views_count';
+	$count     = get_post_meta( $form_id, $count_key, true );
+
+	if ( '' === $count ) {
+		$count = 0;
+		delete_post_meta( $form_id, $count_key );
+		add_post_meta( $form_id, $count_key, '0' );
+	} else {
+		$count++;
+		update_post_meta( $form_id, $count_key, $count );
+	}
+}
+
+/**
+ * Get Post Content By Form ID.
+ *
+ * @param int $form_id Form Id.
+ *
+ * @return array|mixed|null|object
+ */
+function ur_get_post_content( $form_id ) {
+
+	$args      = array(
+		'post_type'   => 'user_registration',
+
+		'post_status' => 'publish',
+
+		'post__in'    => array( $form_id ),
+	);
+	$post_data = get_posts( $args );
+
+	if ( isset( $post_data[0]->post_content ) ) {
+
+		return json_decode( $post_data[0]->post_content );
+
+	} else {
+
+		return array();
+	}
+}

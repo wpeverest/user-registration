@@ -139,6 +139,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												if ( 'file' === $single_item->field_key ) {
+													if ( isset( $single_item->general_setting->max_files ) ) {
+														$field['max_files'] = $single_item->general_setting->max_files;
+													} else {
+														$field['max_files'] = 1;
+													}
+												}
+
 												$filter_data = array(
 													'form_data' => $field,
 													'data' => $advance_data,
