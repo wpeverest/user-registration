@@ -847,7 +847,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			echo '<div class="ur-builder-wrapper-content">';
 			?>
 			<div class="ur-builder-header">
-				<div class="user-registration-editable-title ur-form-name-wrapper">
+				<div class="user-registration-editable-title ur-form-name-wrapper ur-my-2">
 					<?php
 					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 					?>
