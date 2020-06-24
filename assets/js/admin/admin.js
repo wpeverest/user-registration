@@ -1224,9 +1224,19 @@ jQuery(function ($) {
 	function get_ur_data($this_node) {
 		var node_type = $this_node.get(0).tagName.toLowerCase();
 		var value = '';
+
 		switch (node_type) {
 			case 'input':
-				value = $this_node.val();
+				// Check input type.
+				switch ( $this_node.attr( 'type' ) ) {
+					case 'checkbox':
+						value = $this_node.is( ':checked' );
+						break;
+
+					default:
+						value = $this_node.val();
+						break;
+				}
 				break;
 			case 'select':
 				value = $this_node.val();
