@@ -17,7 +17,6 @@
 		justify-content: center;
 		border-radius: 3px;
 		margin-bottom: 0;
-		border: 1px solid transparent;
 
 		&::after {
 			content: '';
@@ -37,10 +36,12 @@
 		font-size: 16px;
 		font-weight: 500;
 		width: auto;
+		height: 32px;
 		padding: 4px 8px;
 		pointer-events: none;
-		z-index: 1;
 		border: 1px solid transparent !important;
+		border-radius: 0 4px 4px 0;
+		z-index: 1;
 
 		&.is-editing {
 			border-color: transparent;
@@ -50,7 +51,6 @@
 				color: $white;
 				background: $primary_color;
 				border-radius: 3px 0 0 3px;
-				border: 1px solid $primary_color;
 
 				&::after {
 					top: 0;
@@ -58,6 +58,10 @@
 					border: 1px solid $primary_color;
 				}
 			}
+		}
+
+		&:focus {
+			box-shadow: none;
 		}
 	}
 }
