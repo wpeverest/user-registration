@@ -1,3 +1,67 @@
+// Editable Title
+.user-registration-editable-title {
+	display: inline-flex;
+	flex-direction: row-reverse;
+	margin: 16px 0;
+	position: relative;
+
+	.user-registration-editable-title__icon {
+		background: $color_gray_four;
+		color: $color_gray_one;
+		width: 32px;
+		height: 32px;
+		flex: 0 0 32px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 3px;
+		margin-bottom: 0;
+		border: 1px solid transparent;
+
+		&::after {
+			content: '';
+			border-radius: 3px;
+			position: absolute;
+			left: 32px;
+			right: calc(100% - 32px);
+			height: 30px;
+			border-radius: 0 3px 3px 0;
+			transition: all 0.3s ease 0s;
+		}
+	}
+
+	.user-registration-editable-title__input {
+		color: $gray_base;
+		background: none;
+		font-size: 16px;
+		font-weight: 500;
+		width: auto;
+		padding: 4px 8px;
+		pointer-events: none;
+		z-index: 1;
+		border: 1px solid transparent !important;
+
+		&.is-editing {
+			border-color: transparent;
+			pointer-events: all;
+
+			+ .user-registration-editable-title__icon {
+				color: $white;
+				background: $primary_color;
+				border-radius: 3px 0 0 3px;
+				border: 1px solid $primary_color;
+
+				&::after {
+					top: 0;
+					right: 0;
+					border: 1px solid $primary_color;
+				}
+			}
+		}
+	}
+}
+
 // User Registration Switch
 .user-registration-switch {
 	display: inline-flex;
