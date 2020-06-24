@@ -41,6 +41,7 @@ class UR_AJAX {
 			'form_save_action'       => true,
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
+			'profile_pic_upload'     => true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -201,6 +202,10 @@ class UR_AJAX {
 			}
 		}
 
+		if ( isset( $single_field['user_registration_profile_pic_url'] ) && ! empty( $single_field['user_registration_profile_pic_url'] ) ) {
+			update_user_meta( $user_id, 'user_registration_profile_pic_url', $single_field['user_registration_profile_pic_url'] );
+		}
+
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
@@ -280,6 +285,104 @@ class UR_AJAX {
 	}
 
 	/**
+	 * Get Post data on frontend form submit
+	 *
+	 * @return void
+	 */
+	public static function profile_pic_upload() {
+
+		check_ajax_referer( 'user_registration_profile_picture_upload_nonce', 'security' );
+
+		$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+
+		$flag = wp_verify_nonce( $nonce, 'user_registration_profile_picture_upload_nonce' );
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+		$user_id = get_current_user_id();
+
+		if ( $user_id <= 0 ) {
+			return;
+		}
+
+		if ( isset( $_FILES['file'] ) && $_FILES['file']['size'] ) {
+
+			if ( ! function_exists( 'wp_handle_upload' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+
+			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array();
+
+			$post_overrides = array(
+				'post_status' => 'publish',
+				'post_title'  => $upload['name'],
+			);
+			$attachment_id  = media_handle_sideload( $upload, (int) 0, $post_overrides['post_title'], $post_overrides );
+
+			if ( is_wp_error( $attachment_id ) ) {
+
+				wp_send_json_error(
+					array(
+
+						'message' => $attachment_id->get_error_message(),
+					)
+				);
+			}
+
+			$url = wp_get_attachment_thumb_url( $attachment_id );
+			if ( empty( $url ) ) {
+				$url = home_url() . '/wp-includes/images/media/text.png';
+			}
+
+			wp_send_json_success(
+				array(
+					'url' => $url,
+				)
+			);
+
+		} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['file']['error'] ) {
+
+			switch ( $_FILES['file']['error'] ) {
+				case UPLOAD_ERR_INI_SIZE:
+					wp_send_json_error(
+						array(
+							'message' => __( 'File size exceed, please check your file size.', 'user-registration' ),
+						)
+					);
+					break;
+				default:
+					wp_send_json_error(
+						array(
+							'message' => __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ),
+						)
+					);
+					break;
+			}
+		} elseif ( empty( $_POST['profile-pic-url'] ) ) {
+			$upload_dir  = wp_upload_dir();
+			$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
+
+			// Check if profile already set?
+			if ( $profile_url ) {
+
+				// Then delete file and user meta.
+				$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
+
+				if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
+					@unlink( $profile_url );
+				}
+				delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
+			}
+		}
+	}
+
+	/**
 	 * user input dropped function
 	 */
 	public static function user_input_dropped() {
@@ -348,8 +451,8 @@ class UR_AJAX {
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 
 			} elseif ( ! isset( $_POST['data']['form_data'] )
-				|| ( isset( $_POST['data']['form_data'] )
-				&& gettype( $_POST['data']['form_data'] ) != 'string' ) ) {
+			|| ( isset( $_POST['data']['form_data'] )
+			&& gettype( $_POST['data']['form_data'] ) != 'string' ) ) {
 
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
@@ -485,7 +588,7 @@ class UR_AJAX {
 				return true;
 			}
 
-		endif;
+			endif;
 
 		return false;
 	}

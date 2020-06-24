@@ -63,17 +63,28 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<?php
 						} else {
 							?>
-						<input type="hidden" name="profile-pic-url" value="<?php echo $profile_picture_url; ?>" />
+						<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo $profile_picture_url; ?>" />
 						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 							<?php
+							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+								?>
+						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo isset( $profile_picture_url ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
+						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
+								<?php
+							} else {
+								?>
+							<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+								<?php
+							}
 						}
 						?>
 						 </div>
-						 <?php if ( ! $profile_picture_url ) { ?>
+							<?php
+							if ( ! $profile_picture_url ) {
+								?>
 							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-						<?php } ?>
+							<?php } ?>
 					</header>
 					</div>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>

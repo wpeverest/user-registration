@@ -212,7 +212,6 @@ class UR_Emailer {
 
 			// Check if value contains array.
 			// @codingStandardsIgnoreStart
-			error_log( print_r( $single_field, true ) );
 			$value = ur_clean( $single_field[ $key ] );
 			if ( is_array( $single_field[ $key ] ) ) {
 				$value = implode( ',', $single_field[ $key ] );

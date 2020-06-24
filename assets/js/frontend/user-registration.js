@@ -633,11 +633,22 @@
 						$this.find( '.user-registration-submit-Button' ).prop( 'disabled', true );
 
 						var form_data;
-						var form_id = 0;
 						var form_nonce = '0';
 
 						try {
-							form_data = JSON.stringify(form.get_form_data());
+							form_data = form.get_form_data();
+
+							// Handle profile picture
+							var profile_picture_url = $('#profile_pic_url').val();
+
+							if( profile_picture_url ) {
+								form_data.push( {
+									'value': profile_picture_url,
+									'field_name': 'user_registration_profile_pic_url'
+								});
+							}
+
+							form_data = JSON.stringify(form_data);
 						} catch (ex) {
 							form_data = '';
 						}
@@ -650,17 +661,16 @@
 							action: 'user_registration_update_profile_details',
 							security: user_registration_params.user_registration_profile_details_save,
 							form_data: form_data,
-							form_id: form_id,
 							ur_frontend_form_nonce: form_nonce
 						};
 
 						$this.find( '.user-registration-submit-Button' ).find('span').addClass('ur-front-spinner');
 
 						$.ajax({
-							url: user_registration_params.ajax_url,
-							data: data,
 							type: 'POST',
-							async: true,
+							url: user_registration_params.ajax_url,
+							dataType: "JSON",
+							data: data,
 							complete: function ( ajax_response ) {
 
 								$this.find('span.ur-front-spinner').removeClass('ur-front-spinner');
@@ -705,7 +715,6 @@
 		$('.ur-submit-button').on( 'click', function () {
 			$(this).closest('form.register').ur_form_submission();
 		});
-
 
 		$('.user-registration-submit-Button').on( 'click', function () {
 			if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') && 'yes' === user_registration_params.ajax_submission_on_edit_profile ){
