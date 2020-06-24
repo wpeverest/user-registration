@@ -184,13 +184,27 @@ class UR_Emailer {
 	 * @since 1.6.3
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
-		$profile    = user_registration_form_data( $user_id, $form_id );
-		$name_value = array();
-		$data_html  = '';
-		$smart_data = array();
-		$email      = '';
-		$user_data  = get_userdata( $user_id );
-		$username   = $user_data->user_login;
+		$profile      = user_registration_form_data( $user_id, $form_id );
+		$name_value   = array();
+		$data_html    = '';
+		$smart_data   = array();
+		$email        = '';
+		$user_data    = get_userdata( $user_id );
+		$username     = $user_data->user_login;
+		$single_field = array();
+
+		if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+
+			if ( isset( $_POST['form_data'] ) ) {
+				$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+				foreach ( $form_data as $data ) {
+					$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
+					$data->field_name                  = substr( $data->field_name, 18 );
+				}
+			}
+		} else {
+			$single_field = $_POST;
+		}
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $profile as $key => $form_data ) {
@@ -198,9 +212,10 @@ class UR_Emailer {
 
 			// Check if value contains array.
 			// @codingStandardsIgnoreStart
-			$value = ur_clean( $_POST[ $key ] );
-			if ( is_array( $_POST[ $key ] ) ) {
-				$value = implode( ',', $_POST[ $key ] );
+			error_log( print_r( $single_field, true ) );
+			$value = ur_clean( $single_field[ $key ] );
+			if ( is_array( $single_field[ $key ] ) ) {
+				$value = implode( ',', $single_field[ $key ] );
 			}
 			// @codingStandardsIgnoreEnd
 

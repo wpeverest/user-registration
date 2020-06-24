@@ -345,8 +345,10 @@ class UR_Frontend_Scripts {
 				return array(
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
 					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
+					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', '' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
 					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),

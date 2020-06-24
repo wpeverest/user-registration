@@ -20,7 +20,11 @@ class UR_Form_Handler {
 	 */
 	public static function init() {
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
-		add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
+
+		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
+		}
+
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
@@ -47,6 +51,7 @@ class UR_Form_Handler {
 	 * @return mixed
 	 */
 	public static function save_profile_details() {
+
 		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}

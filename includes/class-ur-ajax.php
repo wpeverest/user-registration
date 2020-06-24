@@ -37,14 +37,15 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 
-			'user_input_dropped'    => true,
-			'form_save_action'      => true,
-			'user_form_submit'      => true,
-			'deactivation_notice'   => false,
-			'rated'                 => false,
-			'dashboard_widget'      => false,
-			'dismiss_review_notice' => false,
-			'import_form_action'    => false,
+			'user_input_dropped'     => true,
+			'form_save_action'       => true,
+			'user_form_submit'       => true,
+			'update_profile_details' => true,
+			'deactivation_notice'    => false,
+			'rated'                  => false,
+			'dashboard_widget'       => false,
+			'dismiss_review_notice'  => false,
+			'import_form_action'     => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -155,6 +156,127 @@ class UR_AJAX {
 		}
 
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
+	}
+
+
+	/**
+	 * Get Post data on frontend form submit
+	 *
+	 * @return void
+	 */
+	public static function update_profile_details() {
+
+		if ( ! check_ajax_referer( 'user_registration_profile_details_save_nonce', 'security', false ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+
+		// Current user id.
+		$user_id = get_current_user_id();
+
+		if ( $user_id <= 0 ) {
+			return;
+		}
+
+		// Get form id of the form from which current user is registered.
+		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
+		$form_id       = 0;
+
+		if ( isset( $form_id_array[0] ) ) {
+			$form_id = $form_id_array[0];
+		}
+
+		// Make the schema of form data compatible with processing below.
+		$form_data    = array();
+		$single_field = array();
+
+		if ( isset( $_POST['form_data'] ) ) {
+			$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+			foreach ( $form_data as $data ) {
+				$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
+				$data->field_name                  = substr( $data->field_name, 18 );
+			}
+		}
+
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		foreach ( $profile as $key => $field ) {
+
+			if ( ! isset( $field['type'] ) ) {
+				$field['type'] = 'text';
+			}
+			// Get Value.
+			switch ( $field['type'] ) {
+				case 'checkbox':
+					if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = $single_field[ $key ];
+					} else {
+						$single_field[ $key ] = (int) isset( $single_field[ $key ] );
+					}
+					break;
+				default:
+					$single_field[ $key ] = isset( $single_field[ $key ] ) ? ur_clean( $single_field[ $key ] ) : '';
+					break;
+			}
+
+			// Hook to allow modification of value.
+			$single_field[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $single_field[ $key ] );
+
+			$disabled = false;
+			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
+				if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
+					$disabled = true;
+				}
+			}
+		}// End foreach().
+
+		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
+
+		if ( 0 === ur_notice_count( 'error' ) ) {
+			$user_data = array();
+
+			foreach ( $profile as $key => $field ) {
+				$new_key = str_replace( 'user_registration_', '', $key );
+
+				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+
+					if ( $new_key === 'display_name' ) {
+						$user_data['display_name'] = $single_field[ $key ];
+					} else {
+						$user_data[ $new_key ] = $single_field[ $key ];
+					}
+				} else {
+					$update_key = $key;
+
+					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+						$update_key = str_replace( 'user_', '', $new_key );
+					}
+					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+
+					if ( $disabled !== 'disabled' ) {
+						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
+					}
+				}
+			}
+
+			if ( count( $user_data ) > 0 ) {
+				$user_data['ID'] = get_current_user_id();
+				wp_update_user( $user_data );
+			}
+
+			$messaage = __( 'User profile updated successfully.', 'user-registration' );
+			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
+
+			wp_send_json_success(
+				array(
+					'message' => $messaage,
+				)
+			);
+
+		}
 	}
 
 	/**

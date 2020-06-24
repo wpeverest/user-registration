@@ -2,8 +2,14 @@
 /* global  ur_google_recaptcha_code */
 /* global  grecaptcha */
 (function ($) {
+	var user_registration_class_selector;
+	if( 'yes' === user_registration_params.ajax_submission_on_edit_profile ) {
+		user_registration_class_selector = $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password, .ur-frontend-form form.edit-profile');
+	} else {
+		user_registration_class_selector = $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password');
+	}
 	var user_registration = {
-		$user_registration: $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password'),
+		$user_registration: user_registration_class_selector,
 		init: function () {
 			this.load_validation();
 			this.init_inputMask();
@@ -203,10 +209,18 @@
 				init: function () {
 				},
 				get_form_data: function ( form_id ) {
-					if( form_id === $this.closest('.ur-frontend-form').attr('id') ) {
+
+					if( form_id === $this.closest('.ur-frontend-form').attr('id') || $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
 					var this_instance = this;
 					var form_data = [];
-					var frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
+					var frontend_field = '';
+
+					if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+						frontend_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field');
+					} else {
+						frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
+					}
+
 					var multi_value_field = new Array();
 					$.each(frontend_field, function () {
 						var field_name = $(this).attr('name');
@@ -369,6 +383,7 @@
 			var events = {
 				init: function () {
 					this.form_submit_event();
+					this.edit_profile_event();
 				},
 				form_submit_event: function () {
 
@@ -573,6 +588,111 @@
 							});
 						});
 					});
+				},
+				edit_profile_event: function () {
+
+					$('form.user-registration-EditProfileForm').on('submit', function (event) {
+
+						var $this = $(this);
+
+						// Validator messages.
+						$.extend($.validator.messages, {
+							required: user_registration_params.message_required_fields,
+							url: user_registration_params.message_url_fields,
+							email: user_registration_params.message_email_fields,
+							number: user_registration_params.message_number_fields,
+						});
+
+						var $el = $( '.ur-smart-phone-field' );
+
+						if( 'true' === $el.attr('aria-invalid')){
+							var wrapper = $el.closest('p.form-row');
+							wrapper.find('#' + $el.data('id') + '-error').remove();
+							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+							wrapper.append(phone_error_msg_dom);
+							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
+						}
+
+						var exist_detail = $('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+						if( 1 === exist_detail ){
+							var profile = $('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+							var wrapper = $('.uraf-profile-picture-upload');
+							wrapper.find('#' + profile.attr('name') + '-error').remove();
+							wrapper.find('.uraf-profile-picture-file-error').remove();
+							var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+							wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+						}
+
+						if ( !$this.valid() ) {
+							return;
+						}
+
+						event.preventDefault();
+						$this.find( '.user-registration-submit-Button' ).prop( 'disabled', true );
+
+						var form_data;
+						var form_id = 0;
+						var form_nonce = '0';
+
+						try {
+							form_data = JSON.stringify(form.get_form_data());
+						} catch (ex) {
+							form_data = '';
+						}
+
+						if ($(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1) {
+							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
+						}
+
+						var data = {
+							action: 'user_registration_update_profile_details',
+							security: user_registration_params.user_registration_profile_details_save,
+							form_data: form_data,
+							form_id: form_id,
+							ur_frontend_form_nonce: form_nonce
+						};
+
+						$this.find( '.user-registration-submit-Button' ).find('span').addClass('ur-front-spinner');
+
+						$.ajax({
+							url: user_registration_params.ajax_url,
+							data: data,
+							type: 'POST',
+							async: true,
+							complete: function ( ajax_response ) {
+
+								$this.find('span.ur-front-spinner').removeClass('ur-front-spinner');
+
+								var message = $('<ul class=""/>');
+								var type = 'error';
+
+								try {
+
+									var response = $.parseJSON(ajax_response.responseText);
+
+									if (typeof response.success !== 'undefined' && response.success === true) {
+										type = 'message';
+									}
+
+									if (typeof response.data.message === 'object') {
+										$.each(response.data.message, function (index, value) {
+											message.append('<li>' + value + '</li>');
+										});
+									} else {
+										message.append('<li>' + response.data.message + '</li>');
+									}
+								} catch (e) {
+									message.append('<li>' + e.message + '</li>');
+								}
+
+								form.show_message(message, type, $this);
+
+								$this.find( '.user-registration-submit-Button' ).prop( 'disabled', false );
+							}
+						});
+					});
 				}
 			};
 			form.init();
@@ -584,6 +704,13 @@
 
 		$('.ur-submit-button').on( 'click', function () {
 			$(this).closest('form.register').ur_form_submission();
+		});
+
+
+		$('.user-registration-submit-Button').on( 'click', function () {
+			if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') && 'yes' === user_registration_params.ajax_submission_on_edit_profile ){
+				$('form.user-registration-EditProfileForm').ur_form_submission();
+			}
 		});
 
 		var date_flatpickrs = {};
