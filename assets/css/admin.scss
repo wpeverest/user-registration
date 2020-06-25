@@ -12,8 +12,6 @@
 @import "display";
 @import "fonts";
 @import "tables";
-@import "spacing";
-@import "border";
 @import "forms";
 
 // Components
@@ -23,6 +21,9 @@
 'components/card',
 'components/list-group',
 'components/modal';
+
+@import "border";
+@import "spacing";
 
 // Layout-related sections
 @import
