@@ -60,6 +60,7 @@ class UR_Form_Handler {
 		if ( $user_id <= 0 ) {
 			return;
 		}
+
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
@@ -156,6 +157,10 @@ class UR_Form_Handler {
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+			}
+
+			if ( 'user_email' === $field['field_key'] ) {
+				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
 			}
 
 			if ( ! empty( $_POST[ $key ] ) ) {
@@ -328,7 +333,7 @@ class UR_Form_Handler {
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
-				if ( 'yes' === $recaptcha_enabled ) {
+				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					if ( ! empty( $recaptcha_value ) ) {
 
 						$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
@@ -506,7 +511,7 @@ class UR_Form_Handler {
 
 			do_action( 'user_request_action_confirmed', $request_id );
 
-			$request = wp_get_user_request_data( $request_id );
+			$request = wp_get_user_request( $request_id );
 
 			if ( $request && in_array( $request->action_name, _wp_privacy_action_request_types(), true ) ) {
 				if ( 'export_personal_data' === $request->action_name ) {

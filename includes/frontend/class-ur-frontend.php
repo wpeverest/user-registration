@@ -20,12 +20,18 @@ class UR_Frontend {
 
 	private static $_instance;
 
+	/**
+	 * Class Constructor.
+	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
 	}
 
+	/**
+	 * Set instance.
+	 */
 	public static function instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -35,12 +41,18 @@ class UR_Frontend {
 		return self::$_instance;
 	}
 
+	/**
+	 * Includes files.
+	 */
 	public function includes() {
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'frontend' . UR_DS . 'class-ur-frontend-form-handler.php';
 	}
 
 	/**
 	 * Includes any classes we need within admin.
+	 *
+	 * @param mixed $field_object Field Object.
+	 * @param int   $form_id Form ID.
 	 */
 	public function user_registration_frontend_form( $field_object, $form_id ) {
 
@@ -51,6 +63,11 @@ class UR_Frontend {
 			$setting['general_setting'] = $field_object->general_setting;
 			$setting['advance_setting'] = $field_object->advance_setting;
 			$field_type                 = ur_get_field_type( $field_object->field_key );
+
+			// Force drop the custom class because it has been addressed in prior container.
+			if ( ! empty( $setting['advance_setting']->custom_class ) ) {
+				unset( $setting['advance_setting']->custom_class );
+			}
 			$instance->frontend_includes( $setting, $form_id, $field_type, $field_object->field_key );
 		}
 	}
@@ -58,7 +75,7 @@ class UR_Frontend {
 	/**
 	 * My Account layouts(vertical/horizontal) by adding class.
 	 *
-	 * @param $attributes
+	 * @param array $attributes Attributes.
 	 * @since  1.4.2
 	 * @return  $attributes
 	 */
@@ -78,10 +95,21 @@ class UR_Frontend {
 	 */
 	public function prevent_core_login_page() {
 		global $action;
+		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
+		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+		$matched        = 0;
 
-		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+		if ( ! empty( $login_page ) ) {
+			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
+			$page_id = $login_page->ID;
+		} elseif ( ! empty( $myaccount_page ) ) {
+			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+			$page_id = $myaccount_page->ID;
+		}
+
+		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
 			if ( 'register' === $action || 'login' === $action ) {
-				$myaccount_page = add_query_arg( $_GET, ur_get_page_permalink( 'myaccount' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$myaccount_page = get_permalink( $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
 			}

@@ -368,8 +368,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
-
-						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						$selected_attribute = '';
+						
+						if ( empty( $args['placeholder'] ) ) {
+							$selected_attribute = selected( $value, trim( $option_key ), false );
+						}
+						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
 					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
@@ -554,9 +558,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
 								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
 								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
-								$extra_params['custom_attributes']['data-date-format']  = $date_format;
-								$extra_params['custom_attributes']['data-min-date']     = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
-								$extra_params['custom_attributes']['data-max-date']     = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+								$extra_params['custom_attributes']['data-date-format'] = $date_format;
+
+								if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
+									$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
+									$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+								}
 								$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
 								$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
 								break;

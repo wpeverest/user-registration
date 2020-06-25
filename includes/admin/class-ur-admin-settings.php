@@ -255,6 +255,9 @@ class UR_Admin_Settings {
 			if ( ! isset( $value['desc_tip'] ) ) {
 				$value['desc_tip'] = false;
 			}
+			if ( ! isset( $value['desc_field'] ) ) {
+				$value['desc_field'] = false;
+			}
 			if ( ! isset( $value['placeholder'] ) ) {
 				$value['placeholder'] = '';
 			}
@@ -275,6 +278,36 @@ class UR_Admin_Settings {
 			// Switch based on type.
 			switch ( $value['type'] ) {
 
+				// Card Header and Body.
+				case 'cardheader':
+					echo '<div class="user-registration-card">';
+					echo '<div class="user-registration-card__header">';
+					if ( ! empty( $value['card_title'] ) ) {
+						echo '<h3  class="user-registration-card__title">' . esc_html( $value['card_title'] ) . '</h3>';
+					}
+					echo '</div>';
+					if ( ! empty( $value['desc'] ) ) {
+						echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
+					}
+					echo '<div class="user-registration-card__body">';
+					echo '<table class="form-table">' . "\n\n";
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) );
+					}
+					break;
+
+				// Card End.
+				case 'cardend':
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_end' );
+					}
+					echo '</table>';
+					echo '</div>';
+					echo '</div>';
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_after' );
+					}
+					break;
 				// Section Titles.
 				case 'title':
 					if ( ! empty( $value['title'] ) ) {
@@ -308,8 +341,9 @@ class UR_Admin_Settings {
 				case 'date':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
-						<th scope="row" class="titledesc">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+							<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
@@ -522,6 +556,7 @@ class UR_Admin_Settings {
 					if ( ! isset( $value['checkboxgroup'] ) || 'end' === $value['checkboxgroup'] ) {
 						?>
 									</fieldset>
+									<?php echo $desc_field; ?>
 								</td>
 							</tr>
 						<?php
@@ -529,6 +564,7 @@ class UR_Admin_Settings {
 						?>
 							</fieldset>
 						<?php
+						echo $desc_field;
 					}
 					break;
 
@@ -612,6 +648,8 @@ class UR_Admin_Settings {
 		$description  = '';
 		$tooltip_html = '';
 
+		$desc_field = '';
+
 		if ( true === $value['desc_tip'] ) {
 			$tooltip_html = $value['desc'];
 		} elseif ( ! empty( $value['desc_tip'] ) ) {
@@ -619,6 +657,10 @@ class UR_Admin_Settings {
 			$tooltip_html = $value['desc_tip'];
 		} elseif ( ! empty( $value['desc'] ) ) {
 			$description = $value['desc'];
+		}
+
+		if ( ! empty( $value['desc_field'] ) ) {
+			$desc_field = $value['desc_field'];
 		}
 
 		if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
@@ -629,12 +671,19 @@ class UR_Admin_Settings {
 			$description = '<span class="description">' . wp_kses_post( $description ) . '</span>';
 		}
 
+		if ( $desc_field && in_array( $value['type'], array( 'textarea', 'radio', 'checkbox' ) ) ) {
+			$desc_field = '<p class="description">' . wp_kses_post( $desc_field ) . '</p>';
+		} elseif ( $desc_field ) {
+			$desc_field = '<span class="description">' . wp_kses_post( $desc_field ) . '</span>';
+		}
+
 		if ( $tooltip_html ) {
 			$tooltip_html = ur_help_tip( $tooltip_html );
 		}
 
 		return array(
 			'description'  => $description,
+			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
 	}

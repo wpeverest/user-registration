@@ -33,6 +33,7 @@ $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
 $redirect_url   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_options', '' );
 $template_class = '';
+user_registration_set_form_visits( $form_id );
 
 if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--bordered';
@@ -72,9 +73,10 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 						foreach ( $data as $grid_key => $grid_data ) {
 							?>
-										<div class="ur-form-grid ur-grid-<?php echo( $grid_key + 1 ); ?>"
+										<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
 											 style="width:<?php echo $width; ?>%">
 									<?php
+										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 										$cl_map = '';
 
@@ -132,14 +134,15 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
 					?>
-					<div class="ur-button-container <?php echo esc_html( implode( ' ', $btn_container_class ) ); ?>" >
+					<div class="ur-button-container <?php echo esc_attr( implode( ' ', $btn_container_class ) ); ?>" >
 						<?php
 						do_action( 'user_registration_before_form_buttons', $form_id );
 
 						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
+						$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 						?>
 
-						<button type="submit" class="btn button ur-submit-button <?php echo esc_html( implode( ' ', $submit_btn_class ) ); ?>">
+						<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
 							<?php
 							$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );

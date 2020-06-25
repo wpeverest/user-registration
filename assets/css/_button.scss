@@ -3,6 +3,7 @@
 	button,
 	.button {
 		transition: all 0.25s ease 0s;
+		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
 		&.button-icon {
 			width: 32px;
@@ -16,6 +17,20 @@
 
 		&.button-icon-round {
 			border-radius: 50%;
+		}
+
+		&.is-active {
+			background: $primary_color;
+			color: $white;
+			border-color: $primary_color;
+
+			&:hover,
+			&:active,
+			&:focus {
+				background: $primary_color;
+				color: $white;
+				border-color: $primary_color;
+			}
 		}
 
 		.ur-spinner {
@@ -50,7 +65,7 @@
 	}
 
 	.button-secondary {
-		color: $color_gray_base;
+		color: $gray_base;
 		background: $color_gray_four;
 		border-color: $color_gray_four;
 		box-shadow: 0 1px 0 $color_gray_four;
@@ -58,26 +73,39 @@
 		&:hover,
 		&:active,
 		&:focus {
-			color: $color_gray_base;
+			color: $gray_base;
 			background: $color_gray_three;
 			border-color: $color_gray_three;
 			box-shadow: 0 1px 0 $color_gray_three;
 		}
 	}
 
+	.button-tertiary {
+		background: $white;
+		color: $gray_base;
+		border: 1px solid $border-color;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: $color_gray_five;
+			border-color: $border-color;
+		}
+	}
+
 	.button-danger {
 		color: $white;
-		background: $color_danger;
-		border-color: $color_danger;
-		box-shadow: 0 1px 0 $color_danger;
+		background: $red;
+		border-color: $red;
+		box-shadow: 0 1px 0 $red;
 
 		&:hover,
 		&:active,
 		&:focus {
 			color: $white;
-			background: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
-			border-color: adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
-			box-shadow: 0 1px 0 adjust-color($color_danger, $saturation: -15%, $lightness: -8% );
+			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
 		}
 	}
 
@@ -88,6 +116,34 @@
 		.button {
 			margin-right: 5px;
 		}
+	}
+}
+
+.user-registration-button-group {
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+
+	> button,
+	.button {
+		&:not(:first-child) {
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	> button,
+	.button {
+		&:not(:last-child) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	button,
+	.button {
+		margin-right: 0 !important;
 	}
 }
 

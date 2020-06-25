@@ -13,7 +13,7 @@ jQuery(function ( $ ) {
 			var $this = this;
 			$(document.body).on('keyup change', 'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password', function () {
 				var enable_strength_password  = $(this).closest('form').attr('data-enable-strength-password');
-				if ( 'no' === enable_strength_password ) {
+				if ( '' === enable_strength_password ) {
 					return;
 				}
 
@@ -50,7 +50,7 @@ jQuery(function ( $ ) {
 			} else if ( 0 === meter.length ) {
 				var html = '<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' + minimum_password_strength + '"></div>';
 				password_field.closest( '.field-user_pass' ).after( html );
-				$( '#password_1' ).after( html );
+				$( '#password_1' ).closest('.password-input-group').after( html );
 				$(document.body).trigger('ur-password-strength-added');
 			}
 		},
@@ -83,6 +83,8 @@ jQuery(function ( $ ) {
 
 			if( strength >= minimum_password_strength ) {
 				submit_button.removeAttr('disabled');
+			} else {
+				submit_button.attr('disabled', 'disabled');
 			}
 
 			switch ( strength ) {

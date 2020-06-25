@@ -1,0 +1,19 @@
+
+.ur-bg-light		{background-color: $color_gray_five}
+
+//
+// Border
+//
+
+.ur-border			{ border: $border_width solid $border_color !important; }
+.ur-border-top		{ border-top: $border_width solid $border_color !important; }
+.ur-border-right	{ border-right: $border_width solid $border_color !important; }
+.ur-border-bottom	{ border-bottom: $border_width solid $border_color !important; }
+.ur-border-left		{ border-left: $border_width solid $border_color !important; }
+
+.ur-border-0		{ border: 0 !important; }
+.ur-border-top-0	{ border-top: 0 !important; }
+.ur-border-right-0	{ border-right: 0 !important; }
+.ur-border-bottom-0 { border-bottom: 0 !important; }
+.ur-border-left-0	{ border-left: 0 !important; }
+

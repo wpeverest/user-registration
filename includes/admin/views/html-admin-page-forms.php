@@ -66,6 +66,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 								<div class="ur-tab-contents" >
 									<div id="ur-tab-registered-fields" class="ur-tab-content">
+										<div class="ur-search-input ur-search-fields">
+											<input id="ur-search-fields" class="ur-type-text" type="text" placeholder="Search Fields..." />
+											<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"/></svg>
+										</div>
+										<div class="ur-fields-not-found" hidden>
+											<img src="<?php echo esc_attr( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/not-found.png' ); ?>" />
+											<h3 class="ur-fields-not-found-title">Whoops!</h3>
+											<span>There is not any field that you were searching for.</span>
+										</div>
 										<h2 class='ur-toggle-heading'><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_user_form_fields(); ?>
@@ -104,8 +113,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="ur-selected-inputs">
 									<div class="ur-builder-wrapper-content">
 										<div class="ur-form-name-wrapper" >
-											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>">
-											<span class="ur-edit-form-name dashicons dashicons-edit"></span>
+											<input name="ur-form-name" id="ur-form-name" type="text" class="ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>" data-editing="false">
+											<span id="ur-form-name-edit-button" class="ur-edit-form-name dashicons dashicons-edit"></span>
 										</div>
 										<div class="ur-input-grids">
 
