@@ -11,13 +11,23 @@
 @import "grid";
 @import "display";
 @import "fonts";
-@import "button";
-@import "badge";
-@import "card";
 @import "tables";
 @import "spacing";
 @import "border";
-@import "list-group";
+@import "forms";
+
+// Components
+@import
+'components/badge',
+'components/button',
+'components/card',
+'components/list-group',
+'components/modal';
+
+// Layout-related sections
+@import
+'layout/header';
+
 
 /**
  * Styling begins
@@ -967,69 +977,6 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-		}
-
-		.ur-form-name-wrapper {
-			display: inline-flex;
-			flex-direction: row-reverse;
-			margin: 16px 0;
-			position: relative;
-
-			.ur-edit-form-name {
-				width: 32px;
-				height: 32px;
-				cursor: pointer;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border-radius: 3px;
-				margin-bottom: 0;
-				color: $color_gray_one;
-				background: $color_gray_four;
-				border: 1px solid transparent;
-
-				&::after {
-					content: '';
-					border-radius: 3px;
-					position: absolute;
-					left: 32px;
-					right: calc(100% - 32px);
-					height: 30px;
-					border-radius: 0 3px 3px 0;
-					transition: all 0.3s ease 0s;
-				}
-			}
-
-			input {
-				color: $gray_base;
-				background: none;
-				font-size: 16px;
-				font-weight: 500;
-				width: auto;
-				padding: 4px 8px;
-				border-color: transparent;
-				pointer-events: none;
-				z-index: 1;
-				border: 1px solid transparent;
-
-				&.ur-editing {
-					border-color: transparent;
-					pointer-events: all;
-
-					+ .ur-edit-form-name {
-						color: $white;
-						background: $primary_color;
-						border-radius: 3px 0 0 3px;
-						border: 1px solid $primary_color;
-
-						&::after {
-							top: 0;
-							right: 0;
-							border: 1px solid $primary_color;
-						}
-					}
-				}
-			}
 		}
 
 		&.ur-multipart {

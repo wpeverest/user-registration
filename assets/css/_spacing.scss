@@ -1,39 +1,55 @@
 /**
  * Margins
  **/
-.ur-mb-0 {
+// Margin Bottom
+.ur-mb-0, .ur-my-0 {
 	margin-bottom: 0;
 }
 
-.ur-mb-1 {
+.ur-mb-1, .ur-my-1 {
 	margin-bottom: 8px;
 }
 
-.ur-mb-2 {
+.ur-mb-2, .ur-my-2 {
 	margin-bottom: 16px;
 }
 
-.ur-mt-0 {
+// Margin Top
+.ur-mt-0, .ur-my-0 {
 	margin-top: 0;
 }
 
-.ur-mt-1 {
+.ur-mt-1, .ur-my-1 {
 	margin-top: 8px;
 }
 
-.ur-mt-2 {
+.ur-mt-2, .ur-my-2 {
 	margin-top: 16px;
 }
 
-.ur-mr-0 {
+// Margin Left
+.ur-ml-0, .ur-mx-0 {
 	margin-right: 0;
 }
 
-.ur-mr-1 {
+.ur-ml-1, .ur-mx-1 {
 	margin-right: 8px;
 }
 
-.ur-mr-2 {
+.ur-ml-2, .ur-mx-2 {
+	margin-right: 16px;
+}
+
+// Margin Right
+.ur-mr-0, .ur-mx-0 {
+	margin-right: 0;
+}
+
+.ur-mr-1, .ur-mx-1 {
+	margin-right: 8px;
+}
+
+.ur-mr-2, .ur-mx-2 {
 	margin-right: 16px;
 }
 

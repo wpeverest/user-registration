@@ -1,0 +1,119 @@
+// Editable Title
+.user-registration-editable-title {
+	display: inline-flex;
+	flex-direction: row-reverse;
+	position: relative;
+
+	.user-registration-editable-title__icon {
+		background: $color_gray_four;
+		color: $color_gray_one;
+		width: 32px;
+		height: 32px;
+		flex: 0 0 32px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 3px;
+		margin-bottom: 0;
+
+		&::after {
+			content: '';
+			border-radius: 3px;
+			position: absolute;
+			left: 32px;
+			right: calc(100% - 32px);
+			height: 30px;
+			border-radius: 0 3px 3px 0;
+			transition: all 0.3s ease 0s;
+		}
+	}
+
+	.user-registration-editable-title__input {
+		color: $gray_base;
+		background: none;
+		font-size: 16px;
+		font-weight: 500;
+		width: auto;
+		height: 32px;
+		padding: 4px 8px;
+		pointer-events: none;
+		border: 1px solid transparent !important;
+		border-radius: 0 4px 4px 0;
+		z-index: 1;
+
+		&.is-editing {
+			border-color: transparent;
+			pointer-events: all;
+
+			+ .user-registration-editable-title__icon {
+				color: $white;
+				background: $primary_color;
+				border-radius: 3px 0 0 3px;
+
+				&::after {
+					top: 0;
+					right: 0;
+					border: 1px solid $primary_color;
+				}
+			}
+		}
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+}
+
+// User Registration Switch
+.user-registration-switch {
+	display: inline-flex;
+	align-items: center;
+
+	input[type="checkbox"] {
+		display: none;
+
+		&.user-registration-switch__control {
+			background: $color_gray_two;
+			width: 28px;
+			height: 18px;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			flex: 0 0 28px;
+			margin: 0;
+			position: relative;
+			border: 2px solid $color_gray_two;
+			transition: 0.1s transform ease;
+			box-sizing: border-box;
+
+			&::before {
+				content: none;
+			}
+
+			&::after{
+				display: inline-block;
+				content: '';
+				height: 14px;
+				width: 14px;
+				background: $white;
+				border-radius: 50%;
+				position: absolute;
+				transition: 0.1s transform ease;
+			}
+		}
+
+		&:checked {
+			background: $green;
+			border-color: $green;
+
+			&::after {
+				transform: translateX(10px);
+			}
+		}
+	}
+
+	label {
+		margin: 0 0 0 8px;
+	}
+}

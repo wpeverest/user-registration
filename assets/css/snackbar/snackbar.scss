@@ -1,0 +1,43 @@
+body {
+	position: relative;
+}
+
+.snackbar {
+	display: flex;
+    position: fixed;
+    right: -600px;
+    bottom: 30px;
+    z-index: 99999;
+    color: white;
+    background-color: rgb(50, 50, 50);
+    padding: 10px 16px;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.14994px;
+    font-weight: 400;
+	transition: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0s;
+    max-width: 450px;
+    min-width: 100px;
+
+	.icon {
+		margin-right: 10px;
+		font-weight: bold;
+		user-select: none;
+	}
+
+	&.success .icon::before {
+		content: '✓',
+	}
+	&.failure .icon::before {
+		content: '⤫',
+	}
+
+	&.success {
+		background-color: rgb(50, 50, 50);
+	}
+	&.failure {
+		background-color: rgb(244, 67, 54);
+	}
+}

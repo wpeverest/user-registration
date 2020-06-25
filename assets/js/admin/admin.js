@@ -90,30 +90,30 @@ jQuery(function ($) {
 	}).trigger( 'ur_adjust_builder_width' );
 
 	// Form name edit.
-	$( document.body ).on( 'click', '.ur-form-container .ur-registered-from .ur-form-name-wrapper .ur-edit-form-name', function() {
-		var $input = $(this).siblings( '#ur-form-name' );
-		if( ! $input.hasClass( 'ur-editing' ) ) {
+	$( document.body ).on( 'click', '.user-registration-editable-title__icon', function() {
+		var $input = $(this).siblings( '.user-registration-editable-title__input' );
+		if( ! $input.hasClass( 'is-editing' ) ) {
 			$input.focus();
 		}
-		$input.toggleClass( 'ur-editing' );
+		$input.toggleClass( 'is-editing' );
 		$input.attr('data-editing', $input.attr('data-editing') == 'true' ? 'false' : 'true');
 	} );
 
 	// In case the user goes out of focus from title edit state.
-	$( document.body ).not( $( '.ur-form-name-wrapper' ) ).click( function( e ) {
-		var field = $( '#ur-form-name' );
+	$( document.body ).not( $( '.user-registration-editable-title' ) ).click( function( e ) {
+		var field = $( '.user-registration-editable-title__input' );
 
 		// Both of these controls should in no way allow stopping event propagation.
 		if( 'ur-form-name' === e.target.id || 'ur-form-name-edit-button' === e.target.id ) {
 			return;
 		}
 
-		if ( ! field.attr('hidden') && field.hasClass('ur-editing') ) {
+		if ( ! field.attr('hidden') && field.hasClass('is-editing') ) {
 			e.stopPropagation();
 
 			// Only allow flipping state if currently editing.
 			if ( 'true' !== field.data( 'data-editing' ) && field.val() && '' !== field.val().trim() ) {
-				field.toggleClass( 'ur-editing' ).trigger( 'blur' ).attr('data-editing', field.attr('data-editing') == 'true' ? 'false' : 'true');
+				field.toggleClass( 'is-editing' ).trigger( 'blur' ).attr('data-editing', field.attr('data-editing') == 'true' ? 'false' : 'true');
 			}
 		}
 	});
