@@ -769,6 +769,8 @@ jQuery(function ($) {
 					}, 1 );
 				});
 			}
+
+			$( document.body ).trigger( 'ur_rendered_field_options' );
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
