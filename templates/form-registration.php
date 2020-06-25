@@ -78,34 +78,20 @@ do_action( 'user_registration_before_registration_form', $form_id );
 									<?php
 										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
-										$cl_map = '';
-
-										// 'children' => 'conditions'.
-
-										if ( 'check_box_1592809686' === $single_item->general_setting->field_name ) {
-											$cl_map = array(
-												'action' => 'show',
-												'rule'   => array(
-													'type' => 'group',
-													'logic_gate' => 'AND',
-													'children' => array(
-														array(
-															'type' => 'field',
-															'triggerer_id' => 'select_1592826470',
-															'operator' => '===',
-															'value' => 'Second Choice',
-														),
-													),
-												),
-											);
-											$cl_map = json_encode( $cl_map );
-											// $cl_map = '{"action":"show","rule":{"type":"group","logic_gate":"AND","children":[{"id":"root","type":"field","triggerer_id":"input_box_1592809711","operator":"===","value":"123"},{"id":"root","type":"field","triggerer_id":"user_email","operator":"===","value":"abc"},{"type":"group","logic_gate":"OR","children":[{"id":"root","type":"field","triggerer_id":"user_pass","operator":"===","value":"hello"},{"id":"root","type":"field","triggerer_id":"nickname","operator":"===","value":"desu"}]}]}}';
-											$cl_map = esc_attr( $cl_map );
-										}
 
 										if ( isset( $single_item->field_key ) ) {
+											$field_id   = $single_item->general_setting->field_name;
+											$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
+											$cl_rule    = '';
+											$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+											if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->logic_map ) ) {
+												$cl_rule  = esc_attr( $single_item->advance_setting->logic_map );
+												$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_rule ) );
+											}
+
 											?>
-															<div data-conditional-logic-map="<?php echo $cl_map; ?>" data-field-id="<?php echo $single_item->general_setting->field_name; ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
+															<div <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
