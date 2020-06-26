@@ -240,6 +240,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
 		switch ( $args['type'] ) {
 
+			case 'title':
+				$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
+				break;
+
 			case 'textarea':
 				$field .= '<textarea data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 				break;
@@ -369,7 +373,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$custom_attributes[] = 'data-allow_clear="true"';
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
-						
+
 						if ( empty( $args['placeholder'] ) ) {
 							$selected_attribute = selected( $value, trim( $option_key ), false );
 						}
