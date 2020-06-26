@@ -429,6 +429,8 @@ jQuery(function ($) {
 								manage_conditional_field_options(populated_item);
 
 								$( '.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select' ).selectWoo();
+
+								$( document.body ).trigger( 'ur_new_field_created' );
 							}
 						});
 					},
