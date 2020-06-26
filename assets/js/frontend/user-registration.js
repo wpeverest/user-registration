@@ -3,11 +3,14 @@
 /* global  grecaptcha */
 (function ($) {
 	var user_registration_class_selector;
+
+	// Check if the ajax submission on edit profile is enabled.
 	if( 'yes' === user_registration_params.ajax_submission_on_edit_profile ) {
 		user_registration_class_selector = $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password, .ur-frontend-form form.edit-profile');
 	} else {
 		user_registration_class_selector = $('.ur-frontend-form form.register, .ur-frontend-form form.edit-password');
 	}
+
 	var user_registration = {
 		$user_registration: user_registration_class_selector,
 		init: function () {
@@ -83,6 +86,7 @@
 					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
 				}
 
+				// Override default jquery validator messages with our plugin's validation messages.
 				$.validator.messages.required = user_registration_params.message_required_fields;
 				$.validator.messages.url = user_registration_params.message_url_fields;
 				$.validator.messages.email = user_registration_params.message_email_fields;
@@ -174,8 +178,6 @@
 						$parent.removeClass('user-registration-validated').addClass('user-registration-invalid user-registration-invalid-required-field');
 						validated = false;
 					} else if ($this.val() === '') {
-						console.log( 'hello' );
-
 						$parent.removeClass('user-registration-validated').addClass('user-registration-invalid user-registration-invalid-required-field');
 						validated = false;
 					}
@@ -220,24 +222,13 @@
 					if( form_id === $this.closest('.ur-frontend-form').attr('id') || $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
 						var this_instance = this;
 						var form_data = [];
-						var frontend_field = '';
-
-						if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-							frontend_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field');
-						} else {
-							frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
-						}
+						var frontend_field  = form.separate_form_handler( '' );
 
 						var multi_value_field = new Array();
 						$.each(frontend_field, function () {
 							var field_name = $(this).attr('name');
-							var single_field = '';
+							var single_field = form.separate_form_handler( '[name="' + field_name + '"]' );
 
-							if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-								single_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + field_name + '"]');
-							} else {
-								single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
-							}
 							if (single_field.length < 2) {
 								var single_data = this_instance.get_fieldwise_data($(this));
 								var invite_code = document.querySelector('.field-invite_code')
@@ -258,13 +249,7 @@
 						});
 
 						for (var multi_start = 0; multi_start < multi_value_field.length; multi_start++) {
-							var field = '';
-
-							if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-								field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + multi_value_field[multi_start] + '"]');
-							} else {
-								field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[multi_start] + '"]');
-							}
+							var field = form.separate_form_handler( '[name="' + multi_value_field[multi_start] + '"]' );
 
 							var node_type = field.get(0).tagName.toLowerCase();
 							var field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
@@ -399,13 +384,68 @@
 					wrapper.append(message);
 					$submit_node.append(wrapper);
 
+				},
+				/**
+				 * Handles registration form submit and edit-profile form submit instances separately.
+			  	 *
+				 * @since  1.8.5
+				 *
+				 * @param element Element to search for in the template.
+				 */
+				separate_form_handler: function ( element ) {
+					var field ='';
+
+					// Check if the form is edit-profile form.
+					if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+						field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field' + element );
+					} else {
+						field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field' + element );
+					}
+
+					return field;
+				},
+				/**
+				 * Handles extras validations for phone and profile picture field.
+			  	 *
+				 * @since  1.8.5
+				 *
+				 * @param element Element to search for in the template.
+				 */
+				extra_validation: function ( element ) {
+					var $element = element;
+					var $el = $element.find( '.ur-smart-phone-field' );
+
+					if( 'true' === $el.attr('aria-invalid')){
+						var wrapper = $el.closest('p.form-row');
+						wrapper.find('#' + $el.data('id') + '-error').remove();
+						var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+						wrapper.append(phone_error_msg_dom);
+						wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+						return true;
+					}
+
+					var exist_detail = $element.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+					if( 1 === exist_detail ){
+						var profile = $element.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+						var wrapper = $element.find('.uraf-profile-picture-upload');
+						wrapper.find('#' + profile.attr('name') + '-error').remove();
+						wrapper.find('.uraf-profile-picture-file-error').remove();
+						var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+						wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+					}
 				}
 			};
+
 			var events = {
 				init: function () {
 					this.form_submit_event();
 					this.edit_profile_event();
 				},
+				/**
+				 * Handles registration ajax form submission event.
+			  	 *
+				 */
 				form_submit_event: function () {
 
 					$('.ur-frontend-form').each( function () {
@@ -445,27 +485,7 @@
 								}
 							}
 
-							var $el = $this.find( '.ur-smart-phone-field' );
-
-							if( 'true' === $el.attr('aria-invalid')){
-								var wrapper = $el.closest('p.form-row');
-								wrapper.find('#' + $el.data('id') + '-error').remove();
-								var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
-								wrapper.append(phone_error_msg_dom);
-								wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
-								return true;
-							}
-
-							var exist_detail = $this.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
-
-							if( 1 === exist_detail ){
-								var profile = $this.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
-								var wrapper = $this.find('.uraf-profile-picture-upload');
-								wrapper.find('#' + profile.attr('name') + '-error').remove();
-								wrapper.find('.uraf-profile-picture-file-error').remove();
-								var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
-								wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
-							}
+							form.extra_validation( $this );
 
 							if ( !$this.valid() ) {
 								return;
@@ -610,6 +630,11 @@
 						});
 					});
 				},
+				/**
+				 * Handles edit-profile ajax form submission event.
+			  	 *
+				 * @since  1.8.5
+				 */
 				edit_profile_event: function () {
 
 					$('form.user-registration-EditProfileForm').on('submit', function (event) {
@@ -624,27 +649,7 @@
 							number: user_registration_params.message_number_fields,
 						});
 
-						var $el = $( '.ur-smart-phone-field' );
-
-						if( 'true' === $el.attr('aria-invalid')){
-							var wrapper = $el.closest('p.form-row');
-							wrapper.find('#' + $el.data('id') + '-error').remove();
-							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
-							wrapper.append(phone_error_msg_dom);
-							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
-							return true;
-						}
-
-						var exist_detail = $('.uraf-profile-picture-upload').find('.user-registration-error').length;
-
-						if( 1 === exist_detail ){
-							var profile = $('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
-							var wrapper = $('.uraf-profile-picture-upload');
-							wrapper.find('#' + profile.attr('name') + '-error').remove();
-							wrapper.find('.uraf-profile-picture-file-error').remove();
-							var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
-							wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
-						}
+						form.extra_validation( $this );
 
 						if ( !$this.valid() ) {
 							return;
@@ -674,15 +679,10 @@
 							form_data = '';
 						}
 
-						if ($(this).closest('form').find('input[name="ur_frontend_form_nonce"]').length === 1) {
-							form_nonce = $(this).closest('form').find('input[name="ur_frontend_form_nonce"]').val();
-						}
-
 						var data = {
 							action: 'user_registration_update_profile_details',
 							security: user_registration_params.user_registration_profile_details_save,
 							form_data: form_data,
-							ur_frontend_form_nonce: form_nonce
 						};
 
 						$this.find( '.user-registration-submit-Button' ).find('span').addClass('ur-front-spinner');
@@ -702,6 +702,7 @@
 								try {
 
 									var response = $.parseJSON(ajax_response.responseText);
+									console.log( $.parseJSON(ajax_response.responseText) );
 
 									if (typeof response.success !== 'undefined' && response.success === true) {
 										type = 'message';
@@ -733,11 +734,15 @@
 
 	$( function () {
 
+		// Handle user registration form submit event.
 		$('.ur-submit-button').on( 'click', function () {
 			$(this).closest('form.register').ur_form_submission();
 		});
 
+		// Handle edit-profile form submit event.
 		$('.user-registration-submit-Button').on( 'click', function () {
+
+			// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 			if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') && 'yes' === user_registration_params.ajax_submission_on_edit_profile ){
 				$('form.user-registration-EditProfileForm').ur_form_submission();
 			}

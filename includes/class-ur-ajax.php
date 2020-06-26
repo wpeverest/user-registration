@@ -217,6 +217,7 @@ class UR_AJAX {
 			switch ( $field['type'] ) {
 				case 'checkbox':
 					if ( isset( $single_field[ $key ] ) ) {
+						// Serialize values fo checkbox field.
 						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : $single_field[ $key ];
 					}
 					break;
@@ -227,6 +228,17 @@ class UR_AJAX {
 
 			// Hook to allow modification of value.
 			$single_field[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $single_field[ $key ] );
+
+			if ( 'user_registration_user_email' === $key ) {
+				// Check if email already exists before updating user details.
+				if ( email_exists( $single_field[ $key ] ) === 1 ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Email already exists.', 'user-registration' ),
+						)
+					);
+				}
+			}
 
 			$disabled = false;
 			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {

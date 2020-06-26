@@ -166,6 +166,11 @@ class UR_Form_Handler {
 
 			if ( 'user_email' === $field['field_key'] ) {
 				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
+
+				// Check if email already exists before updating user details.
+				if ( email_exists( $single_field[ $key ] ) === 1 ) {
+					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
+				}
 			}
 
 			if ( ! empty( $_POST[ $key ] ) ) {
@@ -180,6 +185,7 @@ class UR_Form_Handler {
 								if ( ! is_email( $_POST[ $key ] ) ) {
 									ur_add_notice( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
+
 								break;
 						}
 					}
