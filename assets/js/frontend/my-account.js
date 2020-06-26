@@ -34,8 +34,8 @@ jQuery(function ( $ ) {
 		}
 	});
 
-		// Check if ajax submission on edit profile is enabled.
-	if( 'yes' === user_registration_params.ajax_submission_on_edit_profile ) {
+	// Check if ajax submission on edit profile is enabled.
+	if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') && 'yes' === user_registration_params.ajax_submission_on_edit_profile ){
 
 		// Trigger profile picture through ajax submission.
 		$('.user_registration_profile_picture_upload').on('click', function () {

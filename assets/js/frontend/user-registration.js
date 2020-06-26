@@ -16,7 +16,7 @@
 			this.init_tiptip();
 
 			// Inline validation
-			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field);
+			this.$user_registration.on('input validate change', '.input-text, select, input:checkbox input:radio', this.validate_field );
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== 'undefined') {
@@ -113,7 +113,6 @@
 						var $element = $(element),
 							$parent = $element.closest('.form-row'),
 							inputName = $element.attr('name');
-
 					},
 					unhighlight: function (element, errorClass, validClass) {
 						var $element = $(element),
@@ -224,8 +223,13 @@
 					var multi_value_field = new Array();
 					$.each(frontend_field, function () {
 						var field_name = $(this).attr('name');
+						var single_field = '';
 
-						var single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+						if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+							single_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + field_name + '"]');
+						} else {
+							single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+						}
 						if (single_field.length < 2) {
 							var single_data = this_instance.get_fieldwise_data($(this));
 							var invite_code = document.querySelector('.field-invite_code')
@@ -239,7 +243,6 @@
 								form_data.push(single_data);
 							}
 						} else {
-
 							if ($.inArray(field_name, multi_value_field) < 0) {
 								multi_value_field.push(field_name);
 							}
@@ -247,8 +250,13 @@
 					});
 
 					for (var multi_start = 0; multi_start < multi_value_field.length; multi_start++) {
+						var field = '';
 
-						var field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[multi_start] + '"]');
+						if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+							field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + multi_value_field[multi_start] + '"]');
+						} else {
+							field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[multi_start] + '"]');
+						}
 
 						var node_type = field.get(0).tagName.toLowerCase();
 						var field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
@@ -314,8 +322,13 @@
 					var node_type = field.get(0).tagName.toLowerCase();
 					var field_name = 'undefined' !== field.attr('name') ? field.attr('name') : 'null';
 					var phone_id = [];
+
 					$('.field-phone').each( function() {
-						phone_id.push( $(this).find('.form-row').attr('id') );
+						var phone_field_id = $(this).find('.form-row').attr('id');
+						// Check if smart phone field is enabled.
+						if( $(this).find('.form-row').find('#' + phone_field_id ).hasClass('ur-smart-phone-field') ) {
+							phone_id.push( $(this).find('.form-row').attr('id') );
+						}
 					});
 					var field_type = 'undefined' !== field.attr('type') ? field.attr('type') : 'null';
 					var textarea_type = field.get(0).className.split(" ")[0];

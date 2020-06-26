@@ -216,10 +216,8 @@ class UR_AJAX {
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox':
-					if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
-						$single_field[ $key ] = $single_field[ $key ];
-					} else {
-						$single_field[ $key ] = (int) isset( $single_field[ $key ] );
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : $single_field[ $key ];
 					}
 					break;
 				default:
@@ -262,6 +260,7 @@ class UR_AJAX {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if ( $disabled !== 'disabled' ) {
+
 						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
 					}
 				}
@@ -272,12 +271,12 @@ class UR_AJAX {
 				wp_update_user( $user_data );
 			}
 
-			$messaage = __( 'User profile updated successfully.', 'user-registration' );
+			$message = __( 'User profile updated successfully.', 'user-registration' );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_send_json_success(
 				array(
-					'message' => $messaage,
+					'message' => $message,
 				)
 			);
 

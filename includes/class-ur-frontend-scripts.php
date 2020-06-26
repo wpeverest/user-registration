@@ -350,7 +350,7 @@ class UR_Frontend_Scripts {
 					'form_required_fields'             => ur_get_required_fields(),
 					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
 					'user_registration_profile_picture_uploading' => __( 'Uploading...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', '' ),
+					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
 					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', __( 'Please enter a valid URL.', 'user-registration' ) ),
