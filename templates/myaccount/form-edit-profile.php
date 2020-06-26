@@ -158,6 +158,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												if ( isset( $advance_data['general_setting']->required ) ) {
+													if ( in_array( $single_item->field_key, ur_get_required_fields() )
+													|| 'yes' === $advance_data['general_setting']->required ) {
+														$field['required']                      = true;
+														$field['custom_attributes']['required'] = 'required';
+													}
+												}
+
 												$filter_data = array(
 													'form_data' => $field,
 													'data' => $advance_data,

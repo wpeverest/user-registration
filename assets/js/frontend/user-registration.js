@@ -83,6 +83,12 @@
 					messages.user_confirm_password = user_registration_params.message_confirm_password_fields;
 				}
 
+				$.validator.messages.required = user_registration_params.message_required_fields;
+				$.validator.messages.url = user_registration_params.message_url_fields;
+				$.validator.messages.email = user_registration_params.message_email_fields;
+				$.validator.messages.number = user_registration_params.message_number_fields;
+				$.validator.messages.confirmpassword = user_registration_params.message_confirm_password_fields;
+
 				$this.validate({
 					errorClass: 'user-registration-error',
 					validClass: 'user-registration-valid',
@@ -168,6 +174,8 @@
 						$parent.removeClass('user-registration-validated').addClass('user-registration-invalid user-registration-invalid-required-field');
 						validated = false;
 					} else if ($this.val() === '') {
+						console.log( 'hello' );
+
 						$parent.removeClass('user-registration-validated').addClass('user-registration-invalid user-registration-invalid-required-field');
 						validated = false;
 					}
@@ -210,112 +218,112 @@
 				get_form_data: function ( form_id ) {
 
 					if( form_id === $this.closest('.ur-frontend-form').attr('id') || $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-					var this_instance = this;
-					var form_data = [];
-					var frontend_field = '';
-
-					if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-						frontend_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field');
-					} else {
-						frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
-					}
-
-					var multi_value_field = new Array();
-					$.each(frontend_field, function () {
-						var field_name = $(this).attr('name');
-						var single_field = '';
+						var this_instance = this;
+						var form_data = [];
+						var frontend_field = '';
 
 						if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-							single_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + field_name + '"]');
+							frontend_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field');
 						} else {
-							single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+							frontend_field = $this.find('.ur-form-grid').find('.ur-frontend-field');
 						}
-						if (single_field.length < 2) {
-							var single_data = this_instance.get_fieldwise_data($(this));
-							var invite_code = document.querySelector('.field-invite_code')
 
-							if( 'invite_code' === single_data.field_name ) {
+						var multi_value_field = new Array();
+						$.each(frontend_field, function () {
+							var field_name = $(this).attr('name');
+							var single_field = '';
 
-								if( 'none' !== invite_code.style.display ) {
+							if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+								single_field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + field_name + '"]');
+							} else {
+								single_field = $this.find('.ur-form-grid').find('.ur-frontend-field[name="' + field_name + '"]');
+							}
+							if (single_field.length < 2) {
+								var single_data = this_instance.get_fieldwise_data($(this));
+								var invite_code = document.querySelector('.field-invite_code')
+
+								if( 'invite_code' === single_data.field_name ) {
+
+									if( 'none' !== invite_code.style.display ) {
+										form_data.push(single_data);
+									}
+								} else {
 									form_data.push(single_data);
 								}
 							} else {
-								form_data.push(single_data);
-							}
-						} else {
-							if ($.inArray(field_name, multi_value_field) < 0) {
-								multi_value_field.push(field_name);
-							}
-						}
-					});
-
-					for (var multi_start = 0; multi_start < multi_value_field.length; multi_start++) {
-						var field = '';
-
-						if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-							field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + multi_value_field[multi_start] + '"]');
-						} else {
-							field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[multi_start] + '"]');
-						}
-
-						var node_type = field.get(0).tagName.toLowerCase();
-						var field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
-						var field_value = new Array();
-						$.each(field, function () {
-							var this_field = $(this);
-
-							var this_field_value = '';
-
-							switch (this_field.get(0).tagName.toLowerCase()) {
-
-								case 'input':
-									switch (field_type) {
-										case 'checkbox':
-										case 'radio':
-											this_field_value = this_field.prop('checked') ? this_field.val() : '';
-											break;
-										default:
-											this_field_value = this_field.val();
-									}
-									break;
-								case 'select':
-									this_field_value = this_field.val();
-									break;
-								case 'textarea':
-									this_field_value = this_field.val();
-									break;
-								default:
-							}
-							if (this_field_value !== '') {
-								field_value.push(this_field_value);
+								if ($.inArray(field_name, multi_value_field) < 0) {
+									multi_value_field.push(field_name);
+								}
 							}
 						});
 
-						if (field_type == 'checkbox') {
-							var field_value_json = JSON.stringify(field_value);
+						for (var multi_start = 0; multi_start < multi_value_field.length; multi_start++) {
+							var field = '';
+
+							if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+								field = $this.find('.user-registration-profile-fields').find('.ur-edit-profile-field[name="' + multi_value_field[multi_start] + '"]');
+							} else {
+								field = $this.closest('.ur-frontend-form').find('.ur-form-grid').find('.ur-frontend-field[name="' + multi_value_field[multi_start] + '"]');
+							}
+
+							var node_type = field.get(0).tagName.toLowerCase();
+							var field_type = 'undefined' !== field.eq(0).attr('type') ? field.eq(0).attr('type') : 'null';
+							var field_value = new Array();
+							$.each(field, function () {
+								var this_field = $(this);
+
+								var this_field_value = '';
+
+								switch (this_field.get(0).tagName.toLowerCase()) {
+
+									case 'input':
+										switch (field_type) {
+											case 'checkbox':
+											case 'radio':
+												this_field_value = this_field.prop('checked') ? this_field.val() : '';
+												break;
+											default:
+												this_field_value = this_field.val();
+										}
+										break;
+									case 'select':
+										this_field_value = this_field.val();
+										break;
+									case 'textarea':
+										this_field_value = this_field.val();
+										break;
+									default:
+								}
+								if (this_field_value !== '') {
+									field_value.push(this_field_value);
+								}
+							});
+
+							if (field_type == 'checkbox') {
+								var field_value_json = JSON.stringify(field_value);
+							}
+							else if (field_type == 'radio') {
+								var field_value_json = field_value[0];
+							} else {
+								var field_value_json = field.val();
+							}
+
+							var single_form_field_name = multi_value_field[multi_start];
+							single_form_field_name = single_form_field_name.replace('[]', '');
+
+							var field_data = {
+								value: field_value_json,
+								field_type: field_type,
+								label: field.eq(0).attr('data-label'),
+								field_name: single_form_field_name,
+							};
+
+							form_data.push(field_data);
 						}
-						else if (field_type == 'radio') {
-							var field_value_json = field_value[0];
-						} else {
-							var field_value_json = field.val();
-						}
 
-						var single_form_field_name = multi_value_field[multi_start];
-						single_form_field_name = single_form_field_name.replace('[]', '');
-
-						var field_data = {
-							value: field_value_json,
-							field_type: field_type,
-							label: field.eq(0).attr('data-label'),
-							field_name: single_form_field_name,
-						};
-
-						form_data.push(field_data);
+						$(document).trigger("user_registration_frontend_form_data_filter", [form_data]);
+						return form_data;
 					}
-
-					$(document).trigger("user_registration_frontend_form_data_filter", [form_data]);
-					return form_data;
-				}
 				},
 				get_fieldwise_data: function (field) {
 					var formwise_data = {};
