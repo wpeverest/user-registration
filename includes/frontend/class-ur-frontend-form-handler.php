@@ -181,7 +181,7 @@ class UR_Frontend_Form_Handler {
 			foreach ( $missing_item as $key => $value ) {
 
 				// Ignoring confirm password and confirm email field, since they are handled separately.
-				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value && 'invite_code' !== $value ) {
+				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value && 'invite_code' !== $value && 'user_pass' !== $value ) {
 					self::ur_missing_field_validation( $form_field_data, $key, $value );
 				}
 			}
