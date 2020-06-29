@@ -80,16 +80,23 @@ do_action( 'user_registration_before_registration_form', $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 										if ( isset( $single_item->field_key ) ) {
-											$field_id   = $single_item->general_setting->field_name;
-											$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
-											$cl_rule    = '';
-											$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+											$field_id = $single_item->general_setting->field_name;
+											$cl_props = '';
 
-											if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->logic_map ) ) {
-												$cl_rule  = esc_attr( $single_item->advance_setting->logic_map );
-												$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_rule ) );
+											// If the conditional logic addon is installed.
+											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+												// Migrate the conditional logic to logic_map schema.
+												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
+												$cl_map     = '';
+												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+													$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
+													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
+												}
 											}
-
 											?>
 															<div <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
