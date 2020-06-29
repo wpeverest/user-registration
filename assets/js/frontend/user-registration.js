@@ -379,11 +379,19 @@
 				},
 				show_message: function (message, type, $submit_node) {
 					$submit_node.find('.ur-message').remove();
-					var wrapper = $('<div class="ur-message user-registration-' + type + '" id="ur-submit-message-node"/>');
-					//wrapper.addClass(type);
-					wrapper.append(message);
-					$submit_node.append(wrapper);
 
+					// Check if the form is edit-profile form.
+					if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
+						console.log( 'hello' );
+						var wrapper = $('<div class="user-registration-' + type + '"/>');
+						wrapper.append(message);
+						wrapper.insertBefore('.user-registration-MyAccount-navigation');
+					} else {
+						var wrapper = $('<div class="ur-message user-registration-' + type + '" id="ur-submit-message-node"/>');
+						//wrapper.addClass(type);
+						wrapper.append(message);
+						$submit_node.append(wrapper);
+					}
 				},
 				/**
 				 * Handles registration form submit and edit-profile form submit instances separately.
@@ -702,7 +710,6 @@
 								try {
 
 									var response = $.parseJSON(ajax_response.responseText);
-									console.log( $.parseJSON(ajax_response.responseText) );
 
 									if (typeof response.success !== 'undefined' && response.success === true) {
 										type = 'message';
