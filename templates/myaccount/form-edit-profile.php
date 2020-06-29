@@ -102,20 +102,40 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
-											$field                = $profile[ $key ];
-											$field['input_class'] = array( 'ur-edit-profile-field ' );
-											$advance_data         = array(
+											// If the conditional logic addon is installed.
+											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+												// Migrate the conditional logic to logic_map schema.
+												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+											}
+
+											$field                      = $profile[ $key ];
+											$field['input_class']       = array( 'ur-edit-profile-field ur-frontend-field' );
+											$advance_data               = array(
 												'general_setting' => (object) $single_item->general_setting,
 												'advance_setting' => (object) $single_item->advance_setting,
 											);
+											$field['custom_attributes'] = array();
+											$field_id                   = $single_item->general_setting->field_name;
+
+											// If the conditional logic addon is installed.
+											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+												// Migrate the conditional logic to logic_map schema.
+												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
+												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+													$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
+													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
+												}
+											}
 											?>
-											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>">
+											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>">
 												<?php
 												$readonly_fields = ur_readonly_profile_details_fields();
 												if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
-													$field['custom_attributes'] = array(
-														'readonly' => 'readonly',
-													);
+													$field['custom_attributes']['readonly'] = 'readonly';
 													if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
 														$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
 													}
