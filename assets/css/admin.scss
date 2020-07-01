@@ -13,7 +13,6 @@
 @import "fonts";
 @import "tables";
 @import "spacing";
-@import "border";
 @import "forms";
 
 // Components
@@ -23,6 +22,9 @@
 'components/card',
 'components/list-group',
 'components/modal';
+
+
+@import "border";
 
 // Layout-related sections
 @import
@@ -37,6 +39,12 @@
 }
 
 .ur-spinner {
+	width: 16px;
+	height: 16px;
+	margin-left: 6px;
+	margin-bottom: 2px;
+	display: inline-block;
+	vertical-align: middle;
 	@include loader();
 }
 
@@ -471,7 +479,6 @@
 	nav.ur-nav-tab-wrapper {
 		margin: 1.5em 0 1em;
 	}
-
 	// Setting Page Submenu
 	#mainform {
 		> .subsubsub {
