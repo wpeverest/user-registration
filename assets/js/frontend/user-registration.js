@@ -382,7 +382,6 @@
 
 					// Check if the form is edit-profile form.
 					if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') ) {
-						console.log( 'hello' );
 						var wrapper = $('<div class="user-registration-' + type + '"/>');
 						wrapper.append(message);
 						wrapper.insertBefore('.user-registration-MyAccount-navigation');
@@ -729,6 +728,9 @@
 								form.show_message(message, type, $this);
 
 								$this.find( '.user-registration-submit-Button' ).prop( 'disabled', false );
+
+								// Scroll yo the top on ajax submission complete.
+								$(window).scrollTop($('.user-registration-MyAccount-navigation').position());
 							}
 						});
 					});
