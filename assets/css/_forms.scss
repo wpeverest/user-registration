@@ -134,6 +134,9 @@
 }
 
 .user-registration {
+	input {
+		border-color: $border-color;
+	}
 
 	// Customize Select2 style
 	.select2 {
@@ -196,6 +199,7 @@
 			height: 32px;
 
 			.select2-selection__rendered {
+				display: block;
 				line-height: 32px;
 				padding-right: 24px;
 			}
@@ -218,6 +222,16 @@
 
 			.select2-selection__choice {
 				padding: 2px 6px;
+			}
+
+			.select2-selection__rendered {
+				display: block;
+
+				.select2-selection__choice {
+					margin-top: 4px;
+					margin-right: 4px;
+					line-height: 1.4;
+				}
 			}
 		}
 
