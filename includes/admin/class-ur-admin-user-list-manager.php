@@ -510,13 +510,13 @@ class UR_Admin_User_List_Manager {
 							<?php
 	}
 
-						/**
-						 * Update the profile field Status in the user profile, in backend
-						 *
-						 * @param $user_id
-						 *
-						 * @return bool
-						 */
+	/**
+	 * Update the profile field Status in the user profile, in backend
+	 *
+	 * @param $user_id
+	 *
+	 * @return bool
+	 */
 	public function save_profile_field( $user_id ) {
 		$user_manager = new UR_Admin_User_Manager( $user_id );
 
@@ -533,8 +533,6 @@ class UR_Admin_User_List_Manager {
 			$user_manager->save_status( $new_status );
 		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) {
 			$new_status = $_POST['ur_user_email_confirmation_status'];
-			error_log( print_r( $new_status, true ) );
-			error_log( print_r( $user_id, true ) );
 			return update_user_meta( $user_id, 'ur_confirm_email', $new_status );
 		}
 	}
