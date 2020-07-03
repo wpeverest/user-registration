@@ -28,6 +28,8 @@ jQuery(function ( $ ) {
 		}
 	});
 
-
-
+    // Fix - Date field is required error even when the "value" attribute is present in Chrome.
+    $( 'input.flatpickr-input' ).each( function() {
+		$( this ).val( $( this ).attr('value') );
+    });
 });
