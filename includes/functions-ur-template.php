@@ -328,15 +328,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$date_format  = $args['custom_attributes']['data-date-format'];
 					$default_date = isset( $args['custom_attributes']['data-default-date'] ) ? $args['custom_attributes']['data-default-date'] : '';
 					if ( empty( $value ) && 'today' === $default_date ) {
-												$value = date( $date_format );
-						$actual_value                  = date( $date_format );
+						$value        = date_i18n( $date_format );
+						$actual_value = date_i18n( $date_format );
 					} else {
 						$value = str_replace( '/', '-', $value );
 						if ( ! strpos( $value, 'to' ) ) {
-							$value = '' !== $value ? date( $date_format, strtotime( $value ) ) : '';
+							$value = '' !== $value ? date_i18n( $date_format, strtotime( $value ) ) : '';
 						} else {
 							$date_range = explode( 'to', $value );
-							$value      = date( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date( $date_format, strtotime( trim( $date_range[1] ) ) );
+							$value      = date_i18n( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date_i18n( $date_format, strtotime( trim( $date_range[1] ) ) );
 						}
 					}
 				}
@@ -561,8 +561,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
 								if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
-									$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $date_format, strtotime( $min_date ) ) : '';
-									$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $date_format, strtotime( $max_date ) ) : '';
+									$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
+									$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
 								}
 								$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
 								$extra_params['custom_attributes']['data-mode']         = $enable_date_range;

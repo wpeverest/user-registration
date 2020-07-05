@@ -248,7 +248,7 @@ class UR_Admin_User_List_Manager {
 			$registered_log = $user_data->user_registered;
 
 			if ( $user_data ) {
-				$log = date( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
+				$log = date_i18n( 'F j Y , h:i A', strtotime( str_replace( '/', '-', $registered_log ) ) );
 				return $log;
 			} else {
 				return '-';
