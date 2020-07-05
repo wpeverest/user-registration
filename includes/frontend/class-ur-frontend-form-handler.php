@@ -142,7 +142,7 @@ class UR_Frontend_Form_Handler {
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
-					if ( 'confirm_user_pass' != $field->general_setting->field_name ) {
+					if ( isset( $field->general_setting->field_name ) && 'confirm_user_pass' != $field->general_setting->field_name ) {
 						array_push( $form_field_data_array, $field );
 					}
 				}
@@ -428,7 +428,7 @@ class UR_Frontend_Form_Handler {
 	 */
 	private static function ur_missing_field_validation( $form_field_data, $key, $value ) {
 
-		if ( $value == $form_field_data[ $key ]->general_setting->field_name ) {
+		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
 			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
 				$field_label = $form_field_data[ $key ]->general_setting->label;
