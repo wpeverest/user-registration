@@ -1,12 +1,28 @@
+.ur-h2,
+.ur-h3,
+.ur-h4 {
+	font-weight: 600 !important;
+}
+
 .ur-h2 {
-	font-size: 28px;
-	font-weight: 600;
+	font-size: 28px !important;
+}
+
+.ur-h3 {
+	font-size: 20px !important;
+}
+
+.ur-h4 {
+	font-size: 16px !important;
 }
 
 .ur-text-center {
 	text-align: center;
 }
 
+.ur-text-muted {
+	color: $color_gray_three;
+}
 
 // Icon fonts
 @font-face {

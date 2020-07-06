@@ -2,6 +2,10 @@
  * Margins
  **/
 // Margin Bottom
+.ur-m-0 {
+	margin: 0 !important;
+}
+
 .ur-mb-0, .ur-my-0 {
 	margin-bottom: 0 !important;
 }
@@ -56,6 +60,10 @@
 /**
  * Paddings
  **/
+.ur-p-0 {
+	padding: 0 !important;
+}
+
 // Padding Bottom
 .ur-pb-0, .ur-py-0 {
 	padding-bottom: 0 !important;
