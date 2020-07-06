@@ -581,11 +581,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
 
 						if ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
+
 							$fields[ 'user_registration_' . $field_name ] = array(
-								'label'       => $field_label,
-								'description' => $field_description,
+								'label'       => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $field_label ),
+								'description' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_description', $field_description ),
 								'type'        => $field_type,
-								'placeholder' => $placeholder,
+								'placeholder' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_placeholder', $placeholder ),
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
@@ -604,7 +605,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 							'field_name' => $field_name,
 						);
 
-						$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data );
+						$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
 						if ( isset( $filtered_data_array['fields'] ) ) {
 							$fields = $filtered_data_array['fields'];
 						}
