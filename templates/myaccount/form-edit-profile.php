@@ -63,17 +63,28 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<?php
 						} else {
 							?>
-						<input type="hidden" name="profile-pic-url" value="<?php echo $profile_picture_url; ?>" />
+						<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo $profile_picture_url; ?>" />
 						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 							<?php
+							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+								?>
+						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo isset( $profile_picture_url ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
+						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
+								<?php
+							} else {
+								?>
+							<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+								<?php
+							}
 						}
 						?>
 						 </div>
-						 <?php if ( ! $profile_picture_url ) { ?>
+							<?php
+							if ( ! $profile_picture_url ) {
+								?>
 							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-						<?php } ?>
+							<?php } ?>
 					</header>
 					</div>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
@@ -147,6 +158,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												if ( isset( $advance_data['general_setting']->required ) ) {
+													if ( in_array( $single_item->field_key, ur_get_required_fields() )
+													|| 'yes' === $advance_data['general_setting']->required ) {
+														$field['required']                      = true;
+														$field['custom_attributes']['required'] = 'required';
+													}
+												}
+
 												$filter_data = array(
 													'form_data' => $field,
 													'data' => $advance_data,
@@ -182,9 +201,19 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 					$submit_btn_class = apply_filters( 'user_registration_form_update_btn_class', array() );
 					?>
 					<p>
-						<?php wp_nonce_field( 'save_profile_details' ); ?>
-						<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
-						<input type="hidden" name="action" value="save_profile_details" />
+						<?php
+						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+							?>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_attr_e( 'Save changes', 'user-registration' ); ?></button>
+							<?php
+						} else {
+							wp_nonce_field( 'save_profile_details' );
+							?>
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+							<input type="hidden" name="action" value="save_profile_details" />
+							<?php
+						}
+						?>
 					</p>
 				</div>
 			</div>
