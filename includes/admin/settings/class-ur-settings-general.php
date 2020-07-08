@@ -131,6 +131,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip' => true,
 					),
 					array(
+						'title'    => __( 'Ajax submission on edit profile', 'user-registration' ),
+						'desc'     => __( 'Check to enable ajax form submission on edit profile', 'user-registration' ),
+						'id'       => 'user_registration_ajax_form_submission_on_edit_profile',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+					array(
 						'title'    => __( 'Layout', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
 						'id'       => 'user_registration_my_account_layout',

@@ -238,6 +238,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
+
 		switch ( $args['type'] ) {
 
 			case 'textarea':
