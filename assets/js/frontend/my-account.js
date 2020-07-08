@@ -103,6 +103,7 @@ jQuery(function ( $ ) {
 		}
 	});
 
+
 	// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 	if( $('.ur-frontend-form').find('form.edit-profile').hasClass('user-registration-EditProfileForm') && 'yes' === user_registration_params.ajax_submission_on_edit_profile ){
 		user_registration_profile_picture_upload.init();
@@ -121,4 +122,10 @@ jQuery(function ( $ ) {
 			}
 		});
 	}
+
+    // Fix - Date field is required error even when the "value" attribute is present in Chrome.
+    $( 'input.flatpickr-input' ).each( function() {
+		$( this ).val( $( this ).attr('value') );
+    });
+
 });
