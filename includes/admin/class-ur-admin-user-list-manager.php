@@ -87,7 +87,7 @@ class UR_Admin_User_List_Manager {
 
 		$user_status = $user_manager->get_user_status();
 
-		if ( 'admin_approval' === $user_status['login_option'] ) {
+		if ( isset( $user_status['login_option'] ) && 'admin_approval' === $user_status['login_option'] ) {
 			if ( 0 == $user_status['user_status'] ) {
 				$actions['ur_user_deny_action']    = $deny_action;
 				$actions['ur_user_approve_action'] = $approve_action;
@@ -332,24 +332,41 @@ class UR_Admin_User_List_Manager {
 		}
 
 		$meta_query = array(
+			'relation' => 'OR',
 			array(
 				'key'     => 'ur_user_status',
 				'value'   => $status,
 				'compare' => '=',
 			),
-
+			array(
+				'key'     => 'ur_confirm_email',
+				'value'   => $status,
+				'compare' => '=',
+			),
 		);
 
-		if ( $status == UR_Admin_User_Manager::APPROVED ) {
+		if ( $status === UR_Admin_User_Manager::APPROVED ) {
 			$meta_query = array(
 				'relation' => 'OR',
 				array(
-					'key'     => 'ur_user_status',
-					'compare' => 'NOT EXISTS', // works!
-					'value'   => '', // This is ignored, but is necessary...
+					'relation' => 'AND',
+					array(
+						'key'     => 'ur_user_status',
+						'compare' => 'NOT EXISTS', // works!
+						'value'   => '', // This is ignored, but is necessary...
+					),
+					array(
+						'key'     => 'ur_confirm_email',
+						'compare' => 'NOT EXISTS', // works!
+						'value'   => '', // This is ignored, but is necessary...
+					),
 				),
 				array(
 					'key'   => 'ur_user_status',
+					'value' => UR_Admin_User_Manager::APPROVED,
+				),
+				array(
+					'key'   => 'ur_confirm_email',
 					'value' => UR_Admin_User_Manager::APPROVED,
 				),
 			);
@@ -452,27 +469,46 @@ class UR_Admin_User_List_Manager {
 					<th><label for="ur_user_user_status"><?php _e( 'Approval Status', 'user-registration' ); ?></label>
 					</th>
 					<td>
+					<?php
+					if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
+						?>
 						<select id="ur_user_user_status" name="ur_user_user_status">
-							<?php
-							if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-								$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
-								foreach ( $available_statuses as $status ) :
-									?>
-								<option
-									value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
-									<?php
-							endforeach;
-							}
+						<?php
+						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
+						foreach ( $available_statuses as $status ) :
 							?>
+							<option
+								value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
+							<?php
+						endforeach;
+						?>
 						</select>
-
+						<?php
+					} elseif ( 'email_confirmation' === $user_status['login_option'] ) {
+						?>
+						<select id="ur_user_email_confirmation_status" name="ur_user_email_confirmation_status">
+						<?php
+						$available_statuses = array(
+							'Verified' => 1,
+							'Pending'  => 0,
+						);
+						foreach ( $available_statuses as $status_lable => $status ) :
+							?>
+							<option
+								value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( $status_lable ); ?></option>
+							<?php
+						endforeach;
+						?>
+						</select>
+						<?php
+					}
+					?>
 						<span class="description"><?php _e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
 					</td>
 				</tr>
 			</table>
-			<?php
+							<?php
 	}
-
 
 	/**
 	 * Update the profile field Status in the user profile, in backend
@@ -488,12 +524,17 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) {
+		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) {
 			return false;
 		}
 
-		$new_status = $_POST['ur_user_user_status'];
-		$user_manager->save_status( $new_status );
+		if ( isset( $_POST['ur_user_user_status'] ) ) {
+			$new_status = $_POST['ur_user_user_status'];
+			$user_manager->save_status( $new_status );
+		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) {
+			$new_status = $_POST['ur_user_email_confirmation_status'];
+			return update_user_meta( $user_id, 'ur_confirm_email', $new_status );
+		}
 	}
 }
 
