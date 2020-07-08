@@ -58,11 +58,11 @@ class UR_Frontend_Form_Handler {
 		self::match_email( $form_field_data, $form_data );
 
 		self::add_hook( $form_field_data, $form_data );
-		$activated_form_list = get_option( 'user_registration_extras_auto_password_activated_forms', array() );
+		$activated_form_list = get_option( 'user_registration_auto_password_activated_forms', array() );
 
 		if ( in_array( $form_id, $activated_form_list ) ) {
 			do_action( 'user_registration_auto_generate_password' );
-			$user_pass = wp_slash( apply_filters( 'user_registration_extras_auto_generated_password', 'user_pass' ) );
+			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
 			self::validate_form_data( $form_field_data, $form_data, $form_id );
 		} else {
 			self::match_password( $form_field_data, $form_data );
@@ -180,8 +180,10 @@ class UR_Frontend_Form_Handler {
 
 			foreach ( $missing_item as $key => $value ) {
 
+				$ignorable_field = array( 'user_pass', 'user_confirm_password', 'user_confirm_email', 'invite_code' );
+
 				// Ignoring confirm password and confirm email field, since they are handled separately.
-				if ( 'user_confirm_password' !== $value && 'user_confirm_email' !== $value && 'invite_code' !== $value ) {
+				if ( ! in_array( $value, $ignorable_field ) ) {
 					self::ur_missing_field_validation( $form_field_data, $key, $value );
 				}
 			}
