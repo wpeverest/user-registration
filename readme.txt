@@ -143,6 +143,9 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
+= 1.8.5 - xx/xx/2020
+* Fix - My account shortocde with Elementor.
+
 = 1.8.4 - 14/05/2020
 * Enhance - Add custom CSS class in fields.
 * Dev - MailChimp add-on compatibility changes.
