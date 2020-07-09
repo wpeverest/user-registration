@@ -429,6 +429,8 @@ jQuery(function ($) {
 								manage_conditional_field_options(populated_item);
 
 								$( '.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select' ).selectWoo();
+
+								$( document.body ).trigger( 'ur_new_field_created' );
 							}
 						});
 					},
@@ -920,6 +922,8 @@ jQuery(function ($) {
 					}, 1 );
 				});
 			}
+
+			$( document.body ).trigger( 'ur_rendered_field_options' );
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
@@ -1375,9 +1379,19 @@ jQuery(function ($) {
 	function get_ur_data($this_node) {
 		var node_type = $this_node.get(0).tagName.toLowerCase();
 		var value = '';
+
 		switch (node_type) {
 			case 'input':
-				value = $this_node.val();
+				// Check input type.
+				switch ( $this_node.attr( 'type' ) ) {
+					case 'checkbox':
+						value = $this_node.is( ':checked' );
+						break;
+
+					default:
+						value = $this_node.val();
+						break;
+				}
 				break;
 			case 'select':
 				value = $this_node.val();
