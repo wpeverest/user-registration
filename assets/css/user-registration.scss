@@ -8,9 +8,12 @@
 * Imports
 */
 @import "variables";
-@import "button";
 @import "mixins";
-@import "modal";
+
+// Components
+@import
+	'components/button',
+	'components/modal';
 
 /**
 * Utility classes

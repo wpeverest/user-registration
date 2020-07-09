@@ -57,7 +57,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 ?>
 	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
-		<form method='post' class='register'
+		<form method='post' class='register' data-form-id="<?php echo absint( $form_id ); ?>"
 			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
 
 			<?php
@@ -78,9 +78,27 @@ do_action( 'user_registration_before_registration_form', $form_id );
 									<?php
 										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
+
 										if ( isset( $single_item->field_key ) ) {
+											$field_id = $single_item->general_setting->field_name;
+											$cl_props = '';
+
+											// If the conditional logic addon is installed.
+											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+												// Migrate the conditional logic to logic_map schema.
+												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
+												$cl_map     = '';
+												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+													$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
+													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
+												}
+											}
 											?>
-															<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
+															<div <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
