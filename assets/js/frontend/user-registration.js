@@ -702,6 +702,8 @@
 							complete: function ( ajax_response ) {
 
 								$this.find('span.ur-front-spinner').removeClass('ur-front-spinner');
+								$this.closest('.user-registration').find('.user-registration-error').remove();
+								$this.closest('.user-registration').find('.user-registration-message').remove();
 
 								var message = $('<ul class=""/>');
 								var type = 'error';
