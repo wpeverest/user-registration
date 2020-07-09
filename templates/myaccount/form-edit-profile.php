@@ -127,6 +127,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											);
 											$field['custom_attributes'] = array();
 											$field_id                   = $single_item->general_setting->field_name;
+											$cl_props                   = null;
 
 											// If the conditional logic addon is installed.
 											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
