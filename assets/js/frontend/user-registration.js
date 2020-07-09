@@ -530,7 +530,7 @@
 												message.append('<li>' + response.data.message + '</li>');
 											}
 											else {
-												message.append('<li>' +  ( typeof response.data.message != 'undefined') ? response.data.message : ursL10n.user_successfully_saved + '</li>');
+												message.append('<li>' +  ( typeof response.data.message === 'undefined' ) ? ursL10n.user_successfully_saved : response.data.message + '</li>');
 											}
 
 										if( 'undefined' !== typeof( response.data.auto_password_generation_success_message ) ) {
