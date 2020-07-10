@@ -428,6 +428,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 						$field_key         = isset( $field->field_key ) ? $field->field_key : '';
 
+						if ( 'credit_card' === $field_name ) {
+							break;
+						}
+
 						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
 							$field_label_array = explode( '_', $field->general_setting->field_name );
 							$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
