@@ -125,7 +125,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												'general_setting' => (object) $single_item->general_setting,
 												'advance_setting' => (object) $single_item->advance_setting,
 											);
-											$field['custom_attributes'] = array();
+											$field['custom_attributes'] = isset( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ? $field['custom_attributes'] : array();
 											$field_id                   = $single_item->general_setting->field_name;
 											$cl_props                   = null;
 
