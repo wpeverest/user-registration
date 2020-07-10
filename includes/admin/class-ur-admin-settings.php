@@ -187,35 +187,41 @@ class UR_Admin_Settings {
 	 * @return string
 	 */
 	public static function get_option( $option_name, $default = '' ) {
-		// Array value.
-		if ( strstr( $option_name, '[' ) ) {
 
-			parse_str( $option_name, $option_array );
+		global $current_section;
 
-			// Option name is first key
-			$option_name = current( array_keys( $option_array ) );
-
-			// Get value.
-			$option_values = get_option( $option_name, '' );
-
-			$key = key( $option_array[ $option_name ] );
-
-			if ( isset( $option_values[ $key ] ) ) {
-				$option_value = $option_values[ $key ];
-			} else {
-				$option_value = null;
-			}
+		if ( 'add-new-popup' === $current_section ) {
+			return $default;
 		} else {
-			$option_value = get_option( $option_name, null );
-		}
+			// Array value.
+			if ( strstr( $option_name, '[' ) ) {
+				parse_str( $option_name, $option_array );
 
-		if ( is_array( $option_value ) ) {
-			$option_value = array_map( 'stripslashes', $option_value );
-		} elseif ( ! is_null( $option_value ) ) {
-			$option_value = stripslashes( $option_value );
-		}
+				// Option name is first key
+				$option_name = current( array_keys( $option_array ) );
 
-		return null === $option_value ? $default : $option_value;
+				// Get value.
+				$option_values = get_option( $option_name, '' );
+
+				$key = key( $option_array[ $option_name ] );
+
+				if ( isset( $option_values[ $key ] ) ) {
+					$option_value = $option_values[ $key ];
+				} else {
+					$option_value = null;
+				}
+			} else {
+				$option_value = get_option( $option_name, null );
+			}
+
+			if ( is_array( $option_value ) ) {
+				$option_value = array_map( 'stripslashes', $option_value );
+			} elseif ( ! is_null( $option_value ) ) {
+				$option_value = stripslashes( $option_value );
+			}
+
+			return null === $option_value ? $default : $option_value;
+		}
 	}
 
 	/**
@@ -499,7 +505,8 @@ class UR_Admin_Settings {
 
 				// Checkbox input.
 				case 'checkbox':
-					$option_value    = self::get_option( $value['id'], $value['default'] );
+					$option_value = self::get_option( $value['id'], $value['default'] );
+
 					$visbility_class = array();
 
 					if ( ! isset( $value['hide_if_checked'] ) ) {
