@@ -121,6 +121,7 @@ class UR_Shortcode_My_Account {
 
 			if ( ! empty( $form_id ) ) {
 
+				do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
 				$has_date = ur_has_date_field( $form_id );
 
 				if ( true === $has_date ) {
