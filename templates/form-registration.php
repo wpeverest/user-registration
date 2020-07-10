@@ -86,7 +86,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 											// If the conditional logic addon is installed.
 											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
 												// Migrate the conditional logic to logic_map schema.
-												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 
 												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
 												$cl_map     = '';

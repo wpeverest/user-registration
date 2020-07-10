@@ -27,11 +27,11 @@
 // Icon fonts
 @font-face {
 	font-family: 'UserRegistration';
-	src:  url('../fonts/UserRegistration.eot?5hlcw0');
-	src:  url('../fonts/UserRegistration.eot?5hlcw0#iefix') format('embedded-opentype'),
-		url('../fonts/UserRegistration.ttf?5hlcw0') format('truetype'),
-		url('../fonts/UserRegistration.woff?5hlcw0') format('woff'),
-		url('../fonts/UserRegistration.svg?5hlcw0#UserRegistration') format('svg');
+	src:  url('../fonts/UserRegistration.eot?xd12po');
+	src:  url('../fonts/UserRegistration.eot?xd12po#iefix') format('embedded-opentype'),
+		url('../fonts/UserRegistration.ttf?xd12po') format('truetype'),
+		url('../fonts/UserRegistration.woff?xd12po') format('woff'),
+		url('../fonts/UserRegistration.svg?xd12po#UserRegistration') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -93,7 +93,8 @@ $field-icons: (
 	file-upload: "\e024",
 	file-dollar: "\e025",
 	code: "\e026",
-	mailchimp: "\e027"
+	mailchimp: "\e027",
+	credit-card: "\e028"
 );
 
 /* For each key in the map, creating own class */
