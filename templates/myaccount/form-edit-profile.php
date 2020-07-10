@@ -120,7 +120,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											}
 
 											$field                      = $profile[ $key ];
-											$field['input_class']       = array( 'ur-edit-profile-field ur-frontend-field' );
+											$field['input_class']       = array( 'ur-edit-profile-field' );
 											$advance_data               = array(
 												'general_setting' => (object) $single_item->general_setting,
 												'advance_setting' => (object) $single_item->advance_setting,
