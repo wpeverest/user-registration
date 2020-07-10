@@ -652,6 +652,41 @@ function ur_get_registered_form_fields() {
 }
 
 /**
+ * All registered form fields with default labels
+ *
+ * @return mixed|array
+ */
+function ur_get_registered_form_fields_with_default_labels() {
+	return apply_filters(
+		'user_registration_registered_form_fields_with_default_labels',
+		array(
+			'user_email'            => __( 'User Email', 'user-registration' ),
+			'user_confirm_email'    => __( 'User Confirm Email', 'user-registration' ),
+			'user_pass'             => __( 'User Pass', 'user-registration' ),
+			'user_confirm_password' => __( 'User Confirm Password', 'user-registration' ),
+			'user_login'            => __( 'User Login', 'user-registration' ),
+			'nickname'              => __( 'Nickname', 'user-registration' ),
+			'first_name'            => __( 'First Name', 'user-registration' ),
+			'last_name'             => __( 'Last Name', 'user-registration' ),
+			'user_url'              => __( 'User URL', 'user-registration' ),
+			'display_name'          => __( 'Display Name', 'user-registration' ),
+			'description'           => __( 'Description', 'user-registration' ),
+			'text'                  => __( 'Text', 'user-registration' ),
+			'password'              => __( 'Password', 'user-registration' ),
+			'email'                 => __( 'Email', 'user-registration' ),
+			'select'                => __( 'Select', 'user-registration' ),
+			'country'               => __( 'Country', 'user-registration' ),
+			'textarea'              => __( 'Textarea', 'user-registration' ),
+			'number'                => __( 'Number', 'user-registration' ),
+			'date'                  => __( 'Date', 'user-registration' ),
+			'checkbox'              => __( 'Checkbox', 'user-registration' ),
+			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
+			'radio'                 => __( 'Radio', 'user-registration' ),
+		)
+	);
+}
+
+/**
  * General settings for each fields
  *
  * @param string $id id for each field.
@@ -1644,6 +1679,70 @@ function ur_get_form_id_by_userid( $user_id ) {
 		$form_id = $form_id_array[0];
 	}
 	return $form_id;
+}
+
+/**
+ * Get source ID through which the given user was supposedly registered.
+ *
+ * @since 1.9.0
+ *
+ * @param int $user_id
+ *
+ * @return mixed
+ */
+function ur_get_registration_source_id( $user_id ) {
+	$user_metas = get_user_meta( $user_id );
+
+	if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
+		$networks = array( 'facebook', 'linkedin', 'google', 'twitter' );
+
+		foreach ( $networks as $network ) {
+
+			if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
+				return $network;
+			}
+		}
+	} elseif ( isset( $user_metas['ur_form_id'] ) ) {
+		return $user_metas['ur_form_id'][0];
+	} else {
+		return null;
+	}
+}
+
+/**
+ * Check if a datetime falls in a range of time.
+ *
+ * @since 1.9.0
+ *
+ * @param string      $target_date
+ * @param string|null $start_date
+ * @param string|null $end_date
+ *
+ * @return bool
+ */
+function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = null ) {
+	$start_ts       = strtotime( $start_date );
+	$end_ts         = strtotime( $end_date );
+	$target_date_ts = strtotime( $target_date );
+
+	// If the starting and the ending date are set as same.
+	if ( $start_ts === $end_ts ) {
+		$datetime = new DateTime();
+		$datetime->setTimestamp( $end_ts );
+
+		date_add( $datetime, date_interval_create_from_date_string( '23 hours 59 mins 59 secs' ) );
+		$end_ts = $datetime->getTimestamp();
+	}
+
+	if ( $start_date && $end_date ) {
+		return ( $start_ts <= $target_date_ts ) && ( $target_date_ts <= $end_ts );
+	} elseif ( $start_date ) {
+		return ( $start_ts <= $target_date_ts );
+	} elseif ( $end_date ) {
+		return ( $target_date_ts <= $end_ts );
+	} else {
+		return false;
+	}
 }
 
 /**
