@@ -280,7 +280,7 @@ class UR_Admin_Settings {
 
 				// Card Header and Body.
 				case 'cardheader':
-					echo '<div class="user-registration-card">';
+					echo '<div class="user-registration-card ur-mb-2">';
 					echo '<div class="user-registration-card__header">';
 					if ( ! empty( $value['card_title'] ) ) {
 						echo '<h3  class="user-registration-card__title">' . esc_html( $value['card_title'] ) . '</h3>';
