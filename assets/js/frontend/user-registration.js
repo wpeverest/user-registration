@@ -112,7 +112,7 @@
 							wrapper.find('#' + element.data('id') + '-error').remove();
 							wrapper.append(error);
 						} else {
-							if ( element.hasClass('urfu-file-input') ) {
+							if ( element.hasClass('urfu-file-input') || element.closest('.field-multi_select2').length ) {
 								error.insertAfter(element.parent().parent());
 							} else {
 								error.insertAfter(element);
@@ -410,37 +410,6 @@
 					}
 
 					return field;
-				},
-				/**
-				 * Handles extras validations for phone and profile picture field.
-			  	 *
-				 * @since  1.8.5
-				 *
-				 * @param element Element to search for in the template.
-				 */
-				extra_validation: function ( element ) {
-					var $element = element;
-					var $el = $element.find( '.ur-smart-phone-field' );
-
-					if( 'true' === $el.attr('aria-invalid')){
-						var wrapper = $el.closest('p.form-row');
-						wrapper.find('#' + $el.data('id') + '-error').remove();
-						var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
-						wrapper.append(phone_error_msg_dom);
-						wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
-						return true;
-					}
-
-					var exist_detail = $element.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
-
-					if( 1 === exist_detail ){
-						var profile = $element.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
-						var wrapper = $element.find('.uraf-profile-picture-upload');
-						wrapper.find('#' + profile.attr('name') + '-error').remove();
-						wrapper.find('.uraf-profile-picture-file-error').remove();
-						var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
-						wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
-					}
 				}
 			};
 
@@ -492,7 +461,27 @@
 								}
 							}
 
-							form.extra_validation( $this );
+							var $el = $this.find( '.ur-smart-phone-field' );
+
+							if( 'true' === $el.attr('aria-invalid')){
+								var wrapper = $el.closest('p.form-row');
+								wrapper.find('#' + $el.data('id') + '-error').remove();
+								var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+								wrapper.append(phone_error_msg_dom);
+								wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+								return true;
+							}
+
+							var exist_detail = $this.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+							if( 1 === exist_detail ){
+								var profile = $this.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+								var wrapper = $this.find('.uraf-profile-picture-upload');
+								wrapper.find('#' + profile.attr('name') + '-error').remove();
+								wrapper.find('.uraf-profile-picture-file-error').remove();
+								var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+								wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+							}
 
 							if ( !$this.valid() ) {
 								return;
@@ -656,7 +645,27 @@
 							number: user_registration_params.message_number_fields,
 						});
 
-						form.extra_validation( $this );
+						var $el = $this.find( '.ur-smart-phone-field' );
+
+						if( 'true' === $el.attr('aria-invalid')){
+							var wrapper = $el.closest('p.form-row');
+							wrapper.find('#' + $el.data('id') + '-error').remove();
+							var phone_error_msg_dom = '<label id="' + $el.data('id') + '-error' + '" class="user-registration-error" for="' + $el.data('id') + '">' + user_registration_params.message_validate_phone_number + '</label>';
+							wrapper.append(phone_error_msg_dom);
+							wrapper.find('#' + $el.data('id')).attr('aria-invalid', true);
+							return true;
+						}
+
+						var exist_detail = $this.find('.uraf-profile-picture-upload').find('.user-registration-error').length;
+
+						if( 1 === exist_detail ){
+							var profile = $this.find('.uraf-profile-picture-upload').find('.uraf-profile-picture-input')
+							var wrapper = $this.find('.uraf-profile-picture-upload');
+							wrapper.find('#' + profile.attr('name') + '-error').remove();
+							wrapper.find('.uraf-profile-picture-file-error').remove();
+							var error_message = '<label id="' + profile.attr('name') + '-error' + '" class="user-registration-error" for="' + profile.attr('name') + '">' + user_registration_params.message_required_fields + '</label>';
+							wrapper.find('button.wp_uraf_profile_picture_upload').after( error_message );
+						}
 
 						if ( !$this.valid() ) {
 							return;
