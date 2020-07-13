@@ -1,0 +1,129 @@
+@import '../variables';
+
+.user-registration-page{
+	&.user-registration-modal-open {
+		overflow: hidden; // Hide scrollbar on body when modal is open.
+
+		.user-registration-modal {
+			max-width: 100%;
+		}
+	}
+}
+
+.user-registration-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	margin: 0 auto !important;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 999;
+
+	.user-registration-modal__backdrop {
+		position: fixed;
+		left: 0;
+		top: 0;
+		background-color: transparentize($gray_base, 0.5);
+		min-width: 100%;
+		min-height: 100%;
+		z-index: 1;
+	}
+
+	.user-registration-modal__content {
+		background: $white;
+		position: relative;
+		width: auto;
+		margin: 16px;
+		border-radius: 8px;
+		z-index: 99999;
+		box-shadow: 0 3px 25px 0px transparentize($gray_base, 0.6);
+		@media (min-width: 576px) {
+			max-width: 500px;
+			margin: 24px auto;
+		}
+
+		&.user-registration-modal__content--xl,
+		&.user-registration-modal__content--lg {
+			@media (min-width: 992px) {
+				max-width: 800px;
+			}
+		}
+
+		&.user-registration-modal__content--xl {
+			@media (min-width: 1200px) {
+				max-width: 1140px;
+			}
+		}
+	}
+
+	.user-registration-modal__header {
+		display: flex;
+		padding: 16px;
+		border-bottom: 1px solid $border-color;
+
+		.user-registration-modal__title {
+			font-size: 20px;
+			line-height: 1.4;
+			margin: 0;
+			padding: 0;
+		}
+
+		.user-registration-modal__close-icon {
+			position: relative;
+			display: block;
+			width: 32px;
+			height: 32px;
+			flex: 0 0 32px;
+			cursor: pointer;
+			margin-left: auto;
+
+			&::before,
+			&::after {
+				content: '';
+				height: 2px;
+				width: 16px;
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				background: $color_gray_three;
+			}
+
+			&::before {
+				transform: rotate(45deg);
+			}
+
+			&::after {
+				transform: rotate(135deg);
+			}
+		}
+	}
+
+	.user-registration-modal__body {
+		position: relative;
+		padding: 16px;
+
+		// Customize UR form for modal
+		#user-registration,
+		.user-registration,
+		.login {
+			margin: 0;
+			padding: 0;
+			border: none;
+		}
+	}
+
+	.user-registration-modal__footer {
+		padding: 16px;
+		border-top: 1px solid $border-color;
+
+		& * {
+			margin: 4px;
+		}
+	}
+}

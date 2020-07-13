@@ -187,35 +187,41 @@ class UR_Admin_Settings {
 	 * @return string
 	 */
 	public static function get_option( $option_name, $default = '' ) {
-		// Array value.
-		if ( strstr( $option_name, '[' ) ) {
 
-			parse_str( $option_name, $option_array );
+		global $current_section;
 
-			// Option name is first key
-			$option_name = current( array_keys( $option_array ) );
-
-			// Get value.
-			$option_values = get_option( $option_name, '' );
-
-			$key = key( $option_array[ $option_name ] );
-
-			if ( isset( $option_values[ $key ] ) ) {
-				$option_value = $option_values[ $key ];
-			} else {
-				$option_value = null;
-			}
+		if ( 'add-new-popup' === $current_section ) {
+			return $default;
 		} else {
-			$option_value = get_option( $option_name, null );
-		}
+			// Array value.
+			if ( strstr( $option_name, '[' ) ) {
+				parse_str( $option_name, $option_array );
 
-		if ( is_array( $option_value ) ) {
-			$option_value = array_map( 'stripslashes', $option_value );
-		} elseif ( ! is_null( $option_value ) ) {
-			$option_value = stripslashes( $option_value );
-		}
+				// Option name is first key
+				$option_name = current( array_keys( $option_array ) );
 
-		return null === $option_value ? $default : $option_value;
+				// Get value.
+				$option_values = get_option( $option_name, '' );
+
+				$key = key( $option_array[ $option_name ] );
+
+				if ( isset( $option_values[ $key ] ) ) {
+					$option_value = $option_values[ $key ];
+				} else {
+					$option_value = null;
+				}
+			} else {
+				$option_value = get_option( $option_name, null );
+			}
+
+			if ( is_array( $option_value ) ) {
+				$option_value = array_map( 'stripslashes', $option_value );
+			} elseif ( ! is_null( $option_value ) ) {
+				$option_value = stripslashes( $option_value );
+			}
+
+			return null === $option_value ? $default : $option_value;
+		}
 	}
 
 	/**
@@ -278,6 +284,36 @@ class UR_Admin_Settings {
 			// Switch based on type.
 			switch ( $value['type'] ) {
 
+				// Card Header and Body.
+				case 'cardheader':
+					echo '<div class="user-registration-card ur-mb-2">';
+					echo '<div class="user-registration-card__header">';
+					if ( ! empty( $value['card_title'] ) ) {
+						echo '<h3  class="user-registration-card__title">' . esc_html( $value['card_title'] ) . '</h3>';
+					}
+					echo '</div>';
+					if ( ! empty( $value['desc'] ) ) {
+						echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
+					}
+					echo '<div class="user-registration-card__body">';
+					echo '<table class="form-table">' . "\n\n";
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) );
+					}
+					break;
+
+				// Card End.
+				case 'cardend':
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_end' );
+					}
+					echo '</table>';
+					echo '</div>';
+					echo '</div>';
+					if ( ! empty( $value['id'] ) ) {
+						do_action( 'user_registration_settings_' . sanitize_title( $value['id'] ) . '_after' );
+					}
+					break;
 				// Section Titles.
 				case 'title':
 					if ( ! empty( $value['title'] ) ) {
@@ -311,8 +347,9 @@ class UR_Admin_Settings {
 				case 'date':
 					$option_value = self::get_option( $value['id'], $value['default'] );
 
-					?><tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
-						<th scope="row" class="titledesc">
+					?>
+					<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+							<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo $tooltip_html; ?>
 						</th>
@@ -468,7 +505,8 @@ class UR_Admin_Settings {
 
 				// Checkbox input.
 				case 'checkbox':
-					$option_value    = self::get_option( $value['id'], $value['default'] );
+					$option_value = self::get_option( $value['id'], $value['default'] );
+
 					$visbility_class = array();
 
 					if ( ! isset( $value['hide_if_checked'] ) ) {

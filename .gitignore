@@ -29,6 +29,3 @@ Thumbs.db
 
 # Composer
 /vendor/
-
-# Language files
-languages/user-registration.pot

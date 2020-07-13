@@ -55,7 +55,6 @@ function ur_status_widget() {
  * @return array
  */
 function ur_get_user_report( $form_id ) {
-
 	$current_date     = current_time( 'Y-m-d' );
 	$users            = get_users(
 		array(
@@ -120,6 +119,7 @@ function ur_get_screen_ids() {
 	$ur_screen_id = sanitize_title( __( 'User Registration', 'user-registration' ) );
 	$screen_ids   = array(
 		'toplevel_page_' . $ur_screen_id,
+		$ur_screen_id . '_page_user-registration-dashboard',
 		$ur_screen_id . '_page_add-new-registration',
 		$ur_screen_id . '_page_user-registration-settings',
 		$ur_screen_id . '_page_user-registration-mailchimp',

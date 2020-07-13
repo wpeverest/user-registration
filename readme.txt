@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.4
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -142,6 +142,22 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.5 - 13/07/2020
+* Feature- Ajax form submission on edit profile
+* Dev - Added OR Logic Gate in conditional logic.
+* Dev - User Registration Stripe Addon Compatibility.
+* Dev - User Registration Extras Addon Compatibility.
+* Dev - Content Restriction Access Rules.
+* Fix - Form Preview issue.
+* Fix - My account shortcode with Elementor.
+* Fix - User approval status change and filter.
+* Fix - Date field value disappearing from the Profile Details section.
+* Fix - UR script equeued in non UR-Page.
+* Fix - WPML Compatibility in myaccount section.
+* Fix - Multiple forms load and submit.
+* Fix - wysiwyg field value update in admin profile edit.
+* Fix - Phone field country code submission.
 
 = 1.8.4 - 14/05/2020
 * Enhance - Add custom CSS class in fields.

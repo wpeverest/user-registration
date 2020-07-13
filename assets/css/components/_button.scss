@@ -3,19 +3,35 @@
 	button,
 	.button {
 		transition: all 0.25s ease 0s;
+		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
 		&.button-icon {
 			width: 32px;
 			padding: 0;
+			text-align: center;
 
 			.dashicons {
-				line-height: 1;
+				line-height: 0.9;
 				vertical-align: middle;
 			}
 		}
 
 		&.button-icon-round {
 			border-radius: 50%;
+		}
+
+		&.is-active {
+			background: $primary_color;
+			color: $white;
+			border-color: $primary_color;
+
+			&:hover,
+			&:active,
+			&:focus {
+				background: $primary_color;
+				color: $white;
+				border-color: $primary_color;
+			}
 		}
 
 		.ur-spinner {
@@ -61,7 +77,19 @@
 			color: $gray_base;
 			background: $color_gray_three;
 			border-color: $color_gray_three;
-			box-shadow: 0 1px 0 $color_gray_three;
+		}
+	}
+
+	.button-tertiary {
+		background: $white;
+		color: $gray_base;
+		border: 1px solid $border-color;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: $color_gray_five;
+			border-color: $border-color;
 		}
 	}
 
@@ -88,6 +116,34 @@
 		.button {
 			margin-right: 5px;
 		}
+	}
+}
+
+.user-registration-button-group {
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+
+	> button,
+	.button {
+		&:not(:first-child) {
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	> button,
+	.button {
+		&:not(:last-child) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	button,
+	.button {
+		margin-right: 0 !important;
 	}
 }
 

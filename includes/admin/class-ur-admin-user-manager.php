@@ -167,7 +167,7 @@ class UR_Admin_User_Manager {
 				'user_status'  => $user_status,
 			);
 
-		} elseif ( '' === $user_status && '' !== $user_email_status ) {
+		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
 
 			$this->user_status = $user_email_status;
 

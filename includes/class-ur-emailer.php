@@ -184,13 +184,27 @@ class UR_Emailer {
 	 * @since 1.6.3
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
-		$profile     = user_registration_form_data( $user_id, $form_id );
-		$name_value  = array();
-		$data_html   = '';
-		$smart_data  = array();
-		$email       = '';
-		$user_data   = get_userdata( $user_id );
-		$username    = $user_data->user_login;
+		$profile      = user_registration_form_data( $user_id, $form_id );
+		$name_value   = array();
+		$data_html    = '';
+		$smart_data   = array();
+		$email        = '';
+		$user_data    = get_userdata( $user_id );
+		$username     = $user_data->user_login;
+		$single_field = array();
+
+		if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+
+			if ( isset( $_POST['form_data'] ) ) {
+				$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+				foreach ( $form_data as $data ) {
+					$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
+					$data->field_name                  = substr( $data->field_name, 18 );
+				}
+			}
+		} else {
+			$single_field = $_POST;
+		}
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $profile as $key => $form_data ) {
@@ -198,9 +212,9 @@ class UR_Emailer {
 
 			// Check if value contains array.
 			// @codingStandardsIgnoreStart
-			$value = ur_clean( $_POST[ $key ] );
-			if ( is_array( $_POST[ $key ] ) ) {
-				$value = implode( ',', $_POST[ $key ] );
+			$value = ur_clean( $single_field[ $key ] );
+			if ( is_array( $single_field[ $key ] ) ) {
+				$value = implode( ',', $single_field[ $key ] );
 			}
 			// @codingStandardsIgnoreEnd
 
@@ -224,8 +238,8 @@ class UR_Emailer {
 		}
 
 		// Smart tag process for extra fields.
-		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data,  $form_id, $user_id );
-		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
+		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data, $form_id, $user_id );
+		$name_value  = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
 
@@ -541,6 +555,7 @@ class UR_Emailer {
 			'{{ur_login}}',
 			'{{key}}',
 			'{{all_fields}}',
+			'{{auto_pass}}',
 		);
 
 		$ur_login = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
@@ -555,8 +570,16 @@ class UR_Emailer {
 			'ur_login'    => $ur_login,
 			'key'         => '',
 			'all_fields'  => '',
+			'auto_pass'   => '',
 		);
-		$values         = wp_parse_args( $values, $default_values );
+
+		$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
+
+		if ( $user_pass ) {
+			$default_values['auto_pass'] = $user_pass;
+		}
+
+		$values = wp_parse_args( $values, $default_values );
 
 		if ( ! empty( $values['email'] ) ) {
 			$user_data = self::user_data_smart_tags( $values['email'] );

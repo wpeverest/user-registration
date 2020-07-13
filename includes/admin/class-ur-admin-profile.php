@@ -321,7 +321,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 				foreach ( $save_fields as $fieldset ) {
 					foreach ( $fieldset['fields'] as $key => $field ) {
-						if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] ) ) {
+						if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] || 'wysiwyg' === $field['type'] ) ) {
 							if ( isset( $_POST[ $key ] ) ) {
 								$value = $_POST[ $key ];
 								if ( is_array( $_POST[ $key ] ) ) {
@@ -427,6 +427,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 						$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 						$field_key         = isset( $field->field_key ) ? $field->field_key : '';
+
+						if ( 'credit_card' === $field_name ) {
+							break;
+						}
 
 						if ( $field_label == '' && isset( $field->general_setting->field_name ) ) {
 							$field_label_array = explode( '_', $field->general_setting->field_name );

@@ -13,7 +13,7 @@ jQuery(function ( $ ) {
 			var $this = this;
 			$(document.body).on('keyup change', 'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password', function () {
 				var enable_strength_password  = $(this).closest('form').attr('data-enable-strength-password');
-				if ( 'no' === enable_strength_password ) {
+				if ( '' === enable_strength_password ) {
 					return;
 				}
 

@@ -20,7 +20,11 @@ class UR_Form_Handler {
 	 */
 	public static function init() {
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
-		add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
+
+		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
+		}
+
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
@@ -47,6 +51,7 @@ class UR_Form_Handler {
 	 * @return mixed
 	 */
 	public static function save_profile_details() {
+
 		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
@@ -60,6 +65,7 @@ class UR_Form_Handler {
 		if ( $user_id <= 0 ) {
 			return;
 		}
+
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
@@ -158,6 +164,15 @@ class UR_Form_Handler {
 				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
+			if ( 'user_email' === $field['field_key'] ) {
+				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
+
+				// Check if email already exists before updating user details.
+				if ( email_exists( $_POST[ $key ] ) === 1 ) {
+					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
+				}
+			}
+
 			if ( ! empty( $_POST[ $key ] ) ) {
 
 				// Validation rules.
@@ -170,6 +185,7 @@ class UR_Form_Handler {
 								if ( ! is_email( $_POST[ $key ] ) ) {
 									ur_add_notice( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
+
 								break;
 						}
 					}
