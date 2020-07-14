@@ -8,7 +8,7 @@
 * Fix - My account shortcode with Elementor.
 * Fix - User approval status change and filter.
 * Fix - Date field value disappearing from the Profile Details section.
-* Fix - UR script equeued in non UR-Page.
+* Fix - UR script enqueued in non UR-Page.
 * Fix - WPML Compatibility in myaccount section.
 * Fix - Multiple forms load and submit.
 * Fix - wysiwyg field value update in admin profile edit.
