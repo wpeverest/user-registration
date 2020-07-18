@@ -494,15 +494,22 @@ function ur_get_one_time_draggable_fields() {
  * @return array
  */
 function ur_exclude_profile_details_fields() {
+	$fields_to_exclude = array(
+		'user_pass',
+		'user_confirm_password',
+		'user_confirm_email',
+		'invite_code',
+	);
+
+	// Check if the my account page contains [user_registration_my_account] shortcode.
+	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+		// Push profile_picture field to fields_to_exclude array.
+		array_push( $fields_to_exclude, 'profile_picture' );
+	}
+
 	return apply_filters(
 		'user_registration_exclude_profile_fields',
-		array(
-			'user_pass',
-			'user_confirm_password',
-			'user_confirm_email',
-			'profile_picture',
-			'invite_code',
-		)
+		$fields_to_exclude
 	);
 }
 
