@@ -5,40 +5,35 @@
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
   "require": {
-    "composer/installers": "~1.2"
+    "composer/installers": "1.9.0"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "*",
-    "wp-coding-standards/wpcs": "^0.14",
-    "wpeverest/wpeverest-git-hooks": "*",
-    "wpeverest/wpeverest-sniffs": "*",
-    "wimg/php-compatibility": "^8.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+    "wp-cli/i18n-command": "2.2.2",
+    "wpeverest/wpeverest-sniffs": "0.0.4"
   },
   "scripts": {
-    "pre-update-cmd": [
-      "WPEverest\\GitHooks\\Hooks::preHooks"
-    ],
-    "pre-install-cmd": [
-      "WPEverest\\GitHooks\\Hooks::preHooks"
-    ],
-    "post-install-cmd": [
-      "WPEverest\\GitHooks\\Hooks::postHooks"
-    ],
-    "post-update-cmd": [
-      "WPEverest\\GitHooks\\Hooks::postHooks"
-    ],
     "phpcs": [
       "phpcs -s -p"
     ],
+    "phpcs-pre-commit": [
+      "phpcs -s -p -n"
+    ],
     "phpcbf": [
       "phpcbf -p"
+    ],
+    "makepot-audit": [
+      "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,bin,node_modules,vendor\" --slug=user-registration"
+    ],
+    "makepot": [
+      "@makepot-audit --skip-audit"
     ]
   },
   "extra": {
     "scripts-description": {
       "phpcs": "Analyze code against the WordPress coding standard with PHP_CodeSniffer",
-      "phpcbf": "Fix coding standards warnings/errors automattically with PHP Code Beautifier"
+      "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
+      "makepot-audit": "Generate langauges/user-registration.pot file and run audit",
+      "makepot": "Generate langauges/user-registration.pot file"
     }
   }
 }
