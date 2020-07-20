@@ -6,9 +6,8 @@
 /**
  * Imports
  */
-@import "variables";
-@import "mixins";
-@import "grid";
+@import "variables/variables";
+@import "mixins/mixins";
 @import "display";
 @import "fonts";
 @import "tables";
@@ -24,12 +23,11 @@
 
 @import "border";
 @import "spacing";
+@import "grids";
 
 // Layout-related sections
 @import
 'layout/header';
-
-@import 'breakpoint';
 
 
 /**
