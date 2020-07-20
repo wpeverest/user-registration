@@ -1746,41 +1746,6 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 }
 
 /**
- * Get count of form visits from Form ID.
- *
- * @param int $form_id Form ID.
- */
-function user_registration_get_form_visits( $form_id ) {
-	$count_key = 'ur_form_views_count';
-	$count     = get_post_meta( $form_id, $count_key, true );
-	if ( '' === $count ) {
-		delete_post_meta( $form_id, $count_key );
-		add_post_meta( $form_id, $count_key, '0' );
-		return '0';
-	}
-	return $count;
-}
-
-/**
- * Set count of form visits from Form ID.
- *
- * @param int $form_id Form ID.
- */
-function user_registration_set_form_visits( $form_id ) {
-	$count_key = 'ur_form_views_count';
-	$count     = get_post_meta( $form_id, $count_key, true );
-
-	if ( '' === $count ) {
-		$count = 1;
-		delete_post_meta( $form_id, $count_key );
-		add_post_meta( $form_id, $count_key, $count );
-	} else {
-		$count++;
-		update_post_meta( $form_id, $count_key, $count );
-	}
-}
-
-/**
  * Get Post Content By Form ID.
  *
  * @param int $form_id Form Id.
