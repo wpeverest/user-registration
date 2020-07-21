@@ -154,6 +154,10 @@ abstract class UR_Form_Field {
 			$form_data['max'] = $data['advance_setting']->max;
 		}
 
+		if ( isset( $data['advance_setting']->step ) ) {
+			$form_data['step'] = $data['advance_setting']->step;
+		}
+
 		if ( isset( $data['advance_setting']->default_value ) ) {
 			$form_data['default'] = $data['advance_setting']->default_value;
 		}

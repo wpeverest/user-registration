@@ -209,12 +209,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
 		}
 
-		if ( $args['min'] ) {
-			$args['custom_attributes']['min'] = absint( $args['min'] );
+		if ( ! empty( $args['min'] ) ) {
+			$args['custom_attributes']['min'] = $args['min'];
 		}
 
-		if ( $args['max'] ) {
-			$args['custom_attributes']['max'] = absint( $args['max'] );
+		if ( ! empty( $args['max'] ) ) {
+			$args['custom_attributes']['max'] = $args['max'];
+		}
+
+		if ( ! empty( $args['step'] ) ) {
+			$args['custom_attributes']['step'] = $args['step'];
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {
