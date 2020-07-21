@@ -209,15 +209,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
 		}
 
-		if ( ! empty( $args['min'] ) ) {
+		if ( isset( $args['min'] ) ) {
 			$args['custom_attributes']['min'] = $args['min'];
 		}
 
-		if ( ! empty( $args['max'] ) ) {
+		if ( isset( $args['max'] ) ) {
 			$args['custom_attributes']['max'] = $args['max'];
 		}
 
-		if ( ! empty( $args['step'] ) ) {
+		if ( isset( $args['step'] ) ) {
 			$args['custom_attributes']['step'] = $args['step'];
 		}
 
