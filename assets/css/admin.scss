@@ -56,6 +56,15 @@
 	}
 }
 
+.user-registration {
+	&__wrap {
+		*,
+		::before,
+		::after {
+			box-sizing: border-box;
+		}
+	}
+}
 .ur-export-users-page {
 	margin-top: 6px;
 
@@ -233,7 +242,6 @@
 			img {
 				width: 32px;
 				height: 32px;
-				padding: 0 8px;
 				margin-right: 8px;
 				display: flex;
 			}

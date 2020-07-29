@@ -12,7 +12,7 @@
 					#{$prop}-top: $length !important;
 				}
 				.ur-#{$abbrev}r#{$infix}-#{$size},
-				.ur#{$abbrev}x#{$infix}-#{$size} {
+				.ur-#{$abbrev}x#{$infix}-#{$size} {
 					#{$prop}-right: $length !important;
 				}
 				.ur-#{$abbrev}b#{$infix}-#{$size},
@@ -26,45 +26,45 @@
 			}
 		}
 
-		// Negative margins (e.g., where `.mb-n1` is negative version of `.mb-1`)
+		// Negative margins (e.g., where `.ur-mb-n1` is negative version of `.ur-mb-1`)
 		@each $size, $length in $grid-spacers {
 			@if $size != 0 {
-				.m#{$infix}-n#{$size} { margin: -$length !important; }
-				.mt#{$infix}-n#{$size},
-				.my#{$infix}-n#{$size} {
+				.ur-m#{$infix}-n#{$size} { margin: -$length !important; }
+				.ur-mt#{$infix}-n#{$size},
+				.ur-my#{$infix}-n#{$size} {
 					margin-top: -$length !important;
 				}
-				.mr#{$infix}-n#{$size},
-				.mx#{$infix}-n#{$size} {
+				.ur-mr#{$infix}-n#{$size},
+				.ur-mx#{$infix}-n#{$size} {
 					margin-right: -$length !important;
 				}
-				.mb#{$infix}-n#{$size},
-				.my#{$infix}-n#{$size} {
+				.ur-mb#{$infix}-n#{$size},
+				.ur-my#{$infix}-n#{$size} {
 					margin-bottom: -$length !important;
 				}
-				.ml#{$infix}-n#{$size},
-				.mx#{$infix}-n#{$size} {
+				.ur-ml#{$infix}-n#{$size},
+				.ur-mx#{$infix}-n#{$size} {
 					margin-left: -$length !important;
 				}
 			}
 		}
 
 		// Some special margin utils
-		.m#{$infix}-auto { margin: auto !important; }
-		.mt#{$infix}-auto,
-		.my#{$infix}-auto {
+		.ur-m#{$infix}-auto { margin: auto !important; }
+		.ur-mt#{$infix}-auto,
+		.ur-my#{$infix}-auto {
 			margin-top: auto !important;
 		}
-		.mr#{$infix}-auto,
-		.mx#{$infix}-auto {
+		.ur-mr#{$infix}-auto,
+		.ur-mx#{$infix}-auto {
 			margin-right: auto !important;
 		}
-		.mb#{$infix}-auto,
-		.my#{$infix}-auto {
+		.ur-mb#{$infix}-auto,
+		.ur-my#{$infix}-auto {
 			margin-bottom: auto !important;
 		}
-		.ml#{$infix}-auto,
-		.mx#{$infix}-auto {
+		.ur-ml#{$infix}-auto,
+		.ur-mx#{$infix}-auto {
 			margin-left: auto !important;
 		}
 	}
