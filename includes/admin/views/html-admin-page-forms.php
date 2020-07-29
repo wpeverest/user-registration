@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="menu-edit">
 				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $form_id; ?>"/>
 				<div id="nav-menu-header">
-					<div class="ur-brand-logo">
+					<div class="ur-brand-logo ur-px-2">
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
 					</div>
 					<div class="major-publishing-actions wp-clearfix">
@@ -112,7 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								?>
 								<div class="ur-selected-inputs">
 									<div class="ur-builder-wrapper-content">
-										<div class="user-registration-editable-title ur-form-name-wrapper ur-my-2" >
+										<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4" >
 											<input name="ur-form-name" id="ur-form-name" type="text" class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox ur-editing" autofocus="autofocus" onfocus="this.select()" value="<?php esc_html_e( 'Untitled', 'user-registration' ); ?>" data-editing="false">
 											<span id="ur-form-name-edit-button" class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 										</div>
