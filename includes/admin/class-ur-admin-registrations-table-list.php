@@ -79,7 +79,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	/**
 	 * Return title column.
 	 *
-	 * @param  object $registration
+	 * @param  object $registration Registration forms datas.
 	 *
 	 * @return string
 	 */
@@ -89,7 +89,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$post_type_object = get_post_type_object( 'user_registration' );
 		$post_status      = $registration->post_status;
 
-		// Title
+		// Title.
 		$output = '<strong>';
 		if ( 'trash' == $post_status ) {
 			$output .= esc_html( $title );
@@ -98,7 +98,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		}
 		$output .= '</strong>';
 
-		// Get actions
+		// Get actions.
 		$actions = array(
 			'id' => sprintf( __( 'ID: %d', 'user-registration' ), $registration->ID ),
 		);
@@ -150,7 +150,14 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		return $output;
 	}
 
-	function column_author( $registration ) {
+	/**
+	 * Return author column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return string
+	 */
+	public function column_author( $registration ) {
 		$user = get_user_by( 'id', $registration->post_author );
 
 		if ( ! $user ) {
@@ -173,15 +180,35 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		return esc_html( $user_name );
 	}
 
-	function column_shortcode( $registration ) {
+	/**
+	 * Return shortcode column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return void
+	 */
+	public function column_shortcode( $registration ) {
 
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
-
-		return sprintf( '<span class="shortcode"><input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="large-text code"></span>', $shortcode );
+		echo sprintf( '<span class="shortcode"><input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class=" code" size="52"></span>', $shortcode );
+		?>
+		<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user - registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user - registration' ); ?>">
+		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+			<path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/>
+		</svg>
+	</button>
+		<?php
 
 	}
 
-	function column_date( $registration ) {
+	/**
+	 * Return created at date column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return string
+	 */
+	public function column_date( $registration ) {
 		$post = get_post( $registration->ID );
 
 		if ( ! $post ) {
@@ -214,8 +241,8 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	/**
 	 * Get the status label for licenses.
 	 *
-	 * @param  string   $status_name
-	 * @param  stdClass $status
+	 * @param  string   $status_name Status title.
+	 * @param  stdClass $status Status value.
 	 *
 	 * @return array
 	 */

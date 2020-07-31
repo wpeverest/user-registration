@@ -3,20 +3,24 @@
  * @since 1.4.3
  */
 jQuery( function ($){
-	$(document.body).on( 'click', '.ur-copy-shortcode' , function( evt ) {
-		var res = $('.code').val();
-		urSetClipboard(res, $( this ) );
+	$(document.body).find('.ur-copy-shortcode').each( function() {
+		var $this = $(this);
+		$this.on( 'click', function( evt ) {
+			var res = $this.parent().find('.code').val();
+			urSetClipboard(res, $this );
 
-		$( '.ur-copy-shortcode' ).tipTip({
-				'attribute': 'data-copied',
-				'activation': 'focus',
-				'fadeIn': 50,
-				'fadeOut': 50,
-				'delay': 200
-			}).focus();
+			$this.tipTip({
+					'attribute': 'data-copied',
+					'activation': 'focus',
+					'fadeIn': 50,
+					'fadeOut': 50,
+					'delay': 200
+				}).focus();
 
-		evt.preventDefault();
+			evt.preventDefault();
+		});
 	});
+
 });
 
 /**
