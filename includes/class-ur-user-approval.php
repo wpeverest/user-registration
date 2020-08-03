@@ -244,7 +244,6 @@ class UR_User_Approval {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
 			add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
-
 			$status = ur_get_user_approval_status( get_current_user_id() );
 
 			$user_manager = new UR_Admin_User_Manager();

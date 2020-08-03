@@ -120,9 +120,10 @@ abstract class UR_Form_Field {
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
 
-		$this->form_id     = $form_id;
-		$form_data         = (array) $data['general_setting'];
-		$form_data['type'] = $field_type;
+		$this->form_id        = $form_id;
+		$form_data            = (array) $data['general_setting'];
+		$form_data['form_id'] = $form_id;
+		$form_data['type']    = $field_type;
 
 		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
 			unset( $form_data['label'] );

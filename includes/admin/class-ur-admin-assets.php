@@ -60,6 +60,8 @@ class UR_Admin_Assets {
 		wp_enqueue_style( 'user-registration-menu' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
+		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2.css', array(), UR_VERSION );
+
 		$enqueue_review = ur_check_activation_date();
 
 		if ( $enqueue_review === true ) {

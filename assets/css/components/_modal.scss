@@ -1,5 +1,4 @@
-@import 'variables';
-
+@import '../variables';
 
 .user-registration-page{
 	&.user-registration-modal-open {
@@ -21,7 +20,7 @@
 	margin: 0 auto !important;
 	overflow-x: hidden;
 	overflow-y: auto;
-	z-index: 999999;
+	z-index: 999;
 
 	.user-registration-modal__backdrop {
 		position: fixed;

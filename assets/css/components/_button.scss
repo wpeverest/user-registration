@@ -8,9 +8,10 @@
 		&.button-icon {
 			width: 32px;
 			padding: 0;
+			text-align: center;
 
 			.dashicons {
-				line-height: 1;
+				line-height: 0.9;
 				vertical-align: middle;
 			}
 		}
@@ -76,7 +77,6 @@
 			color: $gray_base;
 			background: $color_gray_three;
 			border-color: $color_gray_three;
-			box-shadow: 0 1px 0 $color_gray_three;
 		}
 	}
 

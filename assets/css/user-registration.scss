@@ -8,9 +8,12 @@
 * Imports
 */
 @import "variables";
-@import "button";
 @import "mixins";
-@import "modal";
+
+// Components
+@import
+	'components/button',
+	'components/modal';
 
 /**
 * Utility classes
@@ -194,9 +197,11 @@
 			input[type="timepicker"],
 			input[type="phone"],
 			textarea,
-			select {
+			select,
+			.__PrivateStripeElement {
 				display: block;
 				width: 100%;
+				padding: 4px 8px;
 				border-radius: 0;
 				min-height: 36px;
 				margin-bottom: 10px;
@@ -204,6 +209,20 @@
 
 				&::placeholder {
 					color: #ddd;
+				}
+			}
+
+			.StripeElement {
+				padding: 4px 8px;
+				border: 1px solid $border_color;
+
+				.__PrivateStripeElement {
+					iframe {
+						height: 20px !important;
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+					}
 				}
 			}
 
@@ -352,6 +371,10 @@
 		.ur-submit-button {
 			margin-left: auto;
 		}
+	}
+
+	.user-registration-submit-Button{
+		float: right;
 	}
 
 	.ur-submit-button {

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.4
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -84,6 +84,9 @@ User Registration can be easily extended with some premium addons.
 
 * [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
+* [Stripe]
+(https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to accept one time or recurring payments in your registration forms using Stripe.
+
 * [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Collects and stores users geolocation data along with their form filled information.
 
 * [LearnDash](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows users to view their registered learndash courses, course progresses, expiry date on my account section and more.
@@ -93,6 +96,10 @@ User Registration can be easily extended with some premium addons.
 * [Field Visibility](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to hide registration fields on the registration form but show it in the account profile page and vice versa. Also, make selective fields read-only on profile page, registration form or both.
 
 * [Customize My Account](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs.
+
+* [Extras]
+(https://wpeverest.com/wordpress-plugins/user-registration/extras/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Combines a bunch of smaller features like analytics, popup forms, domain whitelist, auto password generation, and more.
+
 
 == Installation ==
 
@@ -142,6 +149,22 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.5 - 13/07/2020
+* Feature- Ajax form submission on edit profile
+* Dev - Added OR Logic Gate in conditional logic.
+* Dev - User Registration Stripe Addon Compatibility.
+* Dev - User Registration Extras Addon Compatibility.
+* Dev - Content Restriction Access Rules.
+* Fix - Form Preview issue.
+* Fix - My account shortcode with Elementor.
+* Fix - User approval status change and filter.
+* Fix - Date field value disappearing from the Profile Details section.
+* Fix - UR script enqueued in non UR-Page.
+* Fix - WPML Compatibility in myaccount section.
+* Fix - Multiple forms load and submit.
+* Fix - wysiwyg field value update in admin profile edit.
+* Fix - Phone field country code submission.
 
 = 1.8.4 - 14/05/2020
 * Enhance - Add custom CSS class in fields.
@@ -212,19 +235,5 @@ Yes, the plugin has a shortcode for the login form.
 * Fix - Email attachment hook mismatch arguments.
 * Fix - wp_authenticate_user filter mismatch arguments.
 * Fix - Hide/show password enabled in edit profile.
-
-= 1.7.5 - 13/12/2019 =
-* Enhancement - Redirect URL after logout.
-* Enhancement - Password field eye icon.
-* Fix - Escaping attribute in checkbox field.
-* Fix - Remove admin notice from form builder.
-* Fix - Case sensitive in confirm password.
-* Fix - Invite code field name made non editable.
-
-= 1.7.4 - 21/11/2019 =
-* Feature - WPML Plugin Compatibility.
-* Tweak   - Country Field Default Value.
-* Tweak   - Icons alignment to support WordPress v5.3.
-* Fix     - HTML field Form Duplication.
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).

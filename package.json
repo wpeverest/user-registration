@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "homepage": "https://wpeverest.com/wordpress-plugins/user-registration/",
   "repository": {
     "type": "git",
@@ -10,8 +10,9 @@
   "license": "GPL-3.0+",
   "main": "Gruntfile.js",
   "scripts": {
-    "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack",
-    "dev": "cross-env BABEL_ENV=default webpack --watch"
+    "build": "grunt && npm run makepot && cross-env BABEL_ENV=default NODE_ENV=production webpack",
+    "dev": "cross-env BABEL_ENV=default webpack --watch",
+    "makepot": "composer run-script makepot"
   },
   "devDependencies": {
     "autoprefixer": "~7.1.1",
@@ -21,7 +22,6 @@
     "babel-preset-env": "^1.6.0",
     "cross-env": "^5.2.1",
     "grunt": "^1.0.4",
-    "grunt-checktextdomain": "~1.0.1",
     "grunt-contrib-compress": "^1.5.0",
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-cssmin": "~2.2.1",
@@ -33,12 +33,14 @@
     "grunt-rtlcss": "~2.0.1",
     "grunt-sass": "^2.0.0",
     "grunt-stylelint": "~0.9.0",
-    "grunt-wp-i18n": "~1.0.1",
     "stylelint": "^10.1.0",
     "webpack": "^3.1.0"
   },
   "engines": {
     "node": ">=8.9.3",
     "npm": ">=5.5.1"
+  },
+  "dependencies": {
+    "grunt-cli": "^1.3.2"
   }
 }
