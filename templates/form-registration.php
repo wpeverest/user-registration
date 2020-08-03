@@ -33,7 +33,6 @@ $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
 $redirect_url   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_options', '' );
 $template_class = '';
-user_registration_set_form_visits( $form_id );
 
 if ( 'Bordered' === $form_template ) {
 	$template_class = 'ur-frontend-form--bordered';
