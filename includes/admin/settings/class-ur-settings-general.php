@@ -455,6 +455,100 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type' => 'sectionend',
 						'id'   => 'login_options_settings',
 					),
+
+					array(
+						'title' => __( 'Labels', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_labels_settings',
+					),
+
+					array(
+						'title'    => __( 'Username or Email', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Username or Email" field label.', 'user-registration' ),
+						'id'       => 'user_registration_label_username_or_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Username or email address', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Password', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Password" field label.', 'user-registration' ),
+						'id'       => 'user_registration_label_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Password', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Remember me', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Remember me" option label.', 'user-registration' ),
+						'id'       => 'user_registration_label_remember_me',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Remember me', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Login', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Login" button label.', 'user-registration' ),
+						'id'       => 'user_registration_label_login',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Login', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Lost your password?', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Lost your password?" option label.', 'user-registration' ),
+						'id'       => 'user_registration_label_lost_your_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Lost your password?', 'user-registration' ),
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_labels_settings',
+					),
+
+					array(
+						'title' => __( 'Placeholders', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_placeholders_settings',
+					),
+
+					array(
+						'title'    => __( 'Username or Email Field', 'user-registration' ),
+						'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
+						'id'       => 'user_registration_placeholder_username_or_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => '',
+					),
+
+					array(
+						'title'    => __( 'Password Field', 'user-registration' ),
+						'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
+						'id'       => 'user_registration_placeholder_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => '',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_placeholders_settings',
+					),
 				)
 			);
 
