@@ -559,6 +559,82 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'type' => 'sectionend',
 						'id'   => 'login_form_placeholders_settings',
 					),
+
+					array(
+						'title' => __( 'Messages', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_messages_settings',
+					),
+
+					array(
+						'title'    => __( 'Username Required', 'user-registration' ),
+						'desc'     => __( 'Show this message when username is empty.', 'user-registration' ),
+						'id'       => 'user_registration_message_username_required',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'Username is required.',
+					),
+
+					array(
+						'title'       => __( 'Empty Password', 'user-registration' ),
+						'desc'        => __( 'Show this message when password is empty.', 'user-registration' ),
+						'id'          => 'user_registration_message_empty_password',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'       => __( 'Invalid/Unknown Username', 'user-registration' ),
+						'desc'        => __( 'Show this message when username is unknown or invalid.', 'user-registration' ),
+						'id'          => 'user_registration_message_invalid_username',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'    => __( 'Unknown Email', 'user-registration' ),
+						'desc'     => __( 'Show this message when email is unknown.', 'user-registration' ),
+						'id'       => 'user_registration_message_unknown_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'A user could not be found with this email address.',
+					),
+
+					array(
+						'title'       => __( 'Pending Approval', 'user-registration' ),
+						'desc'        => __( 'Show this message when an account is pending approval.', 'user-registration' ),
+						'id'          => 'user_registration_message_pending_approval',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'       => __( 'Denied Account', 'user-registration' ),
+						'desc'        => __( 'Show this message when an account is has been denied.', 'user-registration' ),
+						'id'          => 'user_registration_message_denied_account',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_messages_settings',
+					),
 				)
 			);
 
