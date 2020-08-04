@@ -401,6 +401,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Hide Field Labels', 'user-registration' ),
+						'desc'     => __( 'Hide', 'user-registration' ),
+						'id'       => 'user_registration_login_options_hide_labels',
+						'type'     => 'checkbox',
+						'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+
+					array(
 						'title'    => __( 'Enable google reCaptcha', 'user-registration' ),
 						'desc'     => __( 'Enable', 'user-registration' ),
 						'id'       => 'user_registration_login_options_enable_recaptcha',

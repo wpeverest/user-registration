@@ -47,6 +47,7 @@ $placeholders = array(
 	'username' => get_option( 'user_registration_placeholder_username_or_email', '' ),
 	'password' => get_option( 'user_registration_placeholder_password', '' ),
 );
+$hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
 
 ?>
 
@@ -63,12 +64,19 @@ $placeholders = array(
 					<?php do_action( 'user_registration_login_form_start' ); ?>
 
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
-
-						<label for="username"><?php echo esc_html( $labels['username'] ); ?> <span class="required">*</span></label>
+						<?php
+						if ( ! $hide_labels ) {
+							printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
+						}
+						?>
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( $_POST['username'] ) : ''; ?>" />
 					</p>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) ? ' hide_show_password' : ''; ?>">
-						<label for="password"><?php echo esc_html( $labels['password'] ); ?> <span class="required">*</span></label>
+						<?php
+						if ( ! $hide_labels ) {
+							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
+						}
+						?>
 						<span class="password-input-group">
 						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
 						<?php
