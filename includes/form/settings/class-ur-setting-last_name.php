@@ -39,6 +39,7 @@ class UR_Setting_Last_name extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
+				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
 

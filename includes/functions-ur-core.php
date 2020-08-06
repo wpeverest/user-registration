@@ -295,14 +295,14 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
  *
  * @return string
  */
-function ur_help_tip( $tip, $allow_html = false ) {
+function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration-help-tip' ) {
 	if ( $allow_html ) {
 		$tip = ur_sanitize_tooltip( $tip );
 	} else {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="user-registration-help-tip" data-tip="' . $tip . '"></span>';
+	return sprintf( '<span class="%s" data-tip="%s"></span>', $classname, $tip );
 }
 
 /**
@@ -701,6 +701,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[label]',
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
+			'tip'         => 'Enter label for the field.',
 		),
 		'description' => array(
 			'type'        => 'textarea',
@@ -708,6 +709,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[description]',
 			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
+			'tip'         => 'Enter description for the field.',
 		),
 		'field_name'  => array(
 			'type'        => 'text',
@@ -715,6 +717,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[field_name]',
 			'placeholder' => __( 'Field Name', 'user-registration' ),
 			'required'    => true,
+			'tip'         => 'Unique key for the field.',
 		),
 
 		'placeholder' => array(
@@ -723,6 +726,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[placeholder]',
 			'placeholder' => __( 'Placeholder', 'user-registration' ),
 			'required'    => true,
+			'tip'         => 'Enter placeholder for the field.',
 		),
 		'required'    => array(
 			'type'        => 'select',
@@ -734,6 +738,7 @@ function ur_get_general_settings( $id ) {
 				'no'  => __( 'No', 'user-registration' ),
 				'yes' => __( 'Yes', 'user-registration' ),
 			),
+			'tip'         => 'Whether this field must be filled or not.',
 		),
 		'hide_label'  => array(
 			'type'        => 'select',
@@ -745,6 +750,7 @@ function ur_get_general_settings( $id ) {
 				'no'  => __( 'No', 'user-registration' ),
 				'yes' => __( 'Yes', 'user-registration' ),
 			),
+			'tip'         => 'Whether to hide the label of this field or not.',
 		),
 	);
 

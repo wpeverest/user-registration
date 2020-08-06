@@ -246,17 +246,8 @@ jQuery(function ($) {
 
 	// Tooltips
 	$(document.body).on('init_tooltips', function () {
-		var tiptip_args = {
-			'attribute': 'data-tip',
-			'fadeIn': 50,
-			'fadeOut': 50,
-			'delay': 200,
-			'keepAlive': true
-		};
-		$('.tips, .help_tip, .user-registration-help-tip').tipTip(tiptip_args);
-
-		tiptip_args['keepAlive'] = false;
-		$('.ur-copy-shortcode').tipTip(tiptip_args);
+		ur_init_tooltips( '.tips, .help_tip, .user-registration-help-tip' );
+		ur_init_tooltips( '.ur-copy-shortcode, #ur-setting-form .ur-portal-tooltip', { keepAlive: false });
 
 		// Add tiptip to parent element for widefat tables
 		$('.parent-tips').each(function () {
@@ -924,6 +915,7 @@ jQuery(function ($) {
 			}
 
 			$( document.body ).trigger( 'ur_rendered_field_options' );
+			$( document.body ).trigger( 'init_tooltips' );
 		});
 		function render_advance_setting(selected_obj) {
 			var advance_setting = selected_obj.find('.ur-advance-setting-block').clone();
@@ -1972,6 +1964,36 @@ jQuery(function ($) {
 		cloning_element.replaceWith(cloning_options);
 	}
 }(jQuery, window.user_registration_admin_data));
+
+/**
+ * Set tooltips for specified elements.
+ *
+ * @param {String|jQuery} $elements Elements to set tooltips for.
+ * @param {JSON} options Overriding options for tooltips.
+ */
+function ur_init_tooltips( $elements, options ) {
+	if ( undefined !== $elements && null !== $elements && '' !== $elements ) {
+		var args = {
+			'attribute': 'data-tip',
+			'fadeIn': 50,
+			'fadeOut': 50,
+			'delay': 200,
+			'keepAlive': true,
+		};
+
+		if ( options && 'object' === typeof options ) {
+			Object.keys( options ).forEach( function( key ) {
+				args[ key ] = options[ key ];
+			});
+		}
+
+		if ( 'string' === typeof $elements ) {
+			jQuery( $elements ).tipTip( args );
+		} else {
+			$elements.tipTip( args );
+		}
+	}
+}
 
 function ur_alert( message, options ) {
 	if( 'undefined' === typeof options ) {
