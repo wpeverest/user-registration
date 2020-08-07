@@ -913,6 +913,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'required'          => false,
 				'options'           => ur_login_option(),
+				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -925,6 +926,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
+				'tip'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'checkbox',
@@ -936,6 +938,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
+				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -953,6 +956,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
+				'tip'               => __( 'Set minimum required password strength.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -963,6 +967,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
+				'tip'               => __( 'URL to redirect to after registration.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -974,6 +979,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', '' ),
+				'tip'               => __( 'Custom css class to embed in the submit button. You can enter multiple classes seperated with space.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -985,6 +991,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
+				'tip'               => __( 'Set label for the submit button.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'checkbox',
@@ -996,6 +1003,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
+				'tip'               => __( 'Enable reCaptcha for strong security from spams and bots.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -1014,6 +1022,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
+				'tip'               => __( 'Choose form template to use.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -1025,6 +1034,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
+				'tip'               => __( 'Custom css class to embed in the registration form. You can enter multiple classes seperated with space.', 'user-registration' ),
 			),
 		),
 	);
