@@ -122,16 +122,7 @@ jQuery(function ($) {
 
 		// Init perfect Scrollbar.
 		if ( 'undefined' !== typeof PerfectScrollbar ) {
-			var builder_wrapper = $( '.ur-builder-wrapper' ),
-				tab_content = $( '.ur-tab-contents' );
-
-			if( builder_wrapper.length >= 1 && 'undefined' === typeof window.ur_builder_scrollbar ) {
-				window.ur_builder_scrollbar = new PerfectScrollbar( builder_wrapper.selector, {
-					suppressScrollX: true
-				} );
-			} else if( 'undefined' !== typeof window.ur_builder_scrollbar ) {
-				window.ur_builder_scrollbar.update();
-			}
+			var tab_content = $( '.ur-tab-contents' );
 
 			if( tab_content.length >= 1 && 'undefined' === typeof window.ur_tab_scrollbar ) {
 				window.ur_tab_scrollbar = new PerfectScrollbar( tab_content.selector, {
