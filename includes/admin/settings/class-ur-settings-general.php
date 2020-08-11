@@ -140,6 +140,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'no',
 					),
 					array(
+						'title'    => __( 'Disable logout confirmation', 'user-registration' ),
+						'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
+						'id'       => 'user_registration_disable_logout_confirmation',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+					array(
 						'title'    => __( 'Layout', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
 						'id'       => 'user_registration_my_account_layout',

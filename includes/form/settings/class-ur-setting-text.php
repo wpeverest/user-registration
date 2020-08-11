@@ -36,7 +36,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '20',
 				'placeholder' => __( 'Size', 'user-registration' ),
-
+				'tip'         => __( 'Allowed maximum number of characters.', 'user-registration' ),
 			),
 			'default_value' => array(
 				'label'       => __( 'Default Value', 'user-registration' ),
@@ -47,7 +47,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Default Value', 'user-registration' ),
-
+				'tip'         => __( 'Default value for this field.', 'user-registration' ),
 			),
 			'custom_class'  => array(
 				'label'       => __( 'Custom Class', 'user-registration' ),
@@ -58,6 +58,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
+				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
 
