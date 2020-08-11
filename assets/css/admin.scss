@@ -6,9 +6,8 @@
 /**
  * Imports
  */
-@import "variables";
-@import "mixins";
-@import "grid";
+@import "variables/variables";
+@import "mixins/mixins";
 @import "display";
 @import "fonts";
 @import "tables";
@@ -24,6 +23,7 @@
 
 @import "border";
 @import "spacing";
+@import "grids";
 
 // Layout-related sections
 @import
@@ -35,6 +35,20 @@
  */
 .blockUI.blockOverlay {
 	@include loader();
+}
+
+.toplevel_page_user-registration {
+	// Design customize for shortcode in list table
+	.shortcode {
+		.widefat {
+			width: calc(100% - 40px);
+		}
+
+		.ur-copy-shortcode {
+			padding: 4px;
+			line-height: 1;
+		}
+	}
 }
 
 .ur-spinner {
@@ -56,6 +70,15 @@
 	}
 }
 
+.user-registration {
+	&__wrap {
+		*,
+		::before,
+		::after {
+			box-sizing: border-box;
+		}
+	}
+}
 .ur-export-users-page {
 	margin-top: 6px;
 
@@ -238,7 +261,6 @@
 			img {
 				width: 32px;
 				height: 32px;
-				padding: 0 8px;
 				margin-right: 8px;
 				display: flex;
 			}
