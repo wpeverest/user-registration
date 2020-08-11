@@ -73,6 +73,10 @@
 			.postbox {
 				width: 50%;
 				flex: 1;
+
+				.hndle {
+					border-bottom: 1px solid #ccd0d4;
+				}
 			}
 		}
 
@@ -80,6 +84,10 @@
 		.stuffbox .hndle {
 			margin: 10px;
 			padding-bottom: 10px;
+		}
+
+		.stuffbox {
+			padding: 10px;
 		}
 	}
 }
