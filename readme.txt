@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.4
-Stable tag: 1.8.5
+Tested up to: 5.5
+Stable tag: 1.8.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -85,7 +85,7 @@ User Registration can be easily extended with some premium addons.
 * [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
 * [Stripe]
-(https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to accept one time or recurring payments in your registration forms using Stripe.  
+(https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to accept one time or recurring payments in your registration forms using Stripe.
 
 * [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Collects and stores users geolocation data along with their form filled information.
 
@@ -149,6 +149,19 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.6 - 11/08/2020
+* Enhance - Login form customization
+* Enhance - Introduce tooltips in Form Builder
+* Enhance - Copy icon on shortcode column in registration forms list table
+* Enhance - Option to disable logout confirmation
+* Tweak- Wordpress 5.5 Compatibility
+* Fix - Profile picture, file upload, mailchimp and smart phone field sync with woocommerce
+* Fix - ReCaptcha script loads in lost password page
+* Fix - Cannot auto scroll while dragging fields in the form builder
+* Fix - Required option and Hide Label option conflict
+* Fix - Reset password for other plugin registered users
+* Dev - SASS files
 
 = 1.8.5 - 13/07/2020
 * Feature- Ajax form submission on edit profile

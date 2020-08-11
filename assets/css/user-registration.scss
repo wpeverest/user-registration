@@ -7,8 +7,13 @@
 /**
 * Imports
 */
-@import "variables";
-@import "mixins";
+@import "variables/variables";
+@import "mixins/mixins";
+
+// Components
+@import
+	'components/button',
+	'components/modal';
 
 // Components
 @import

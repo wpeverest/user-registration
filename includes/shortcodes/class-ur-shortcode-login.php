@@ -38,19 +38,20 @@ class UR_Shortcode_Login {
 	public static function output( $atts ) {
 		global $wp, $post;
 
-		$redirect_url      = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-
-		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
-			wp_enqueue_script( 'user-registration' );
-		}
+		$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 
 		if ( ! is_user_logged_in() ) {
-			$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
+				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+
+				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
+					wp_enqueue_script( 'user-registration' );
+				}
+				$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+
 				ur_get_template(
 					'myaccount/form-login.php',
 					array(
