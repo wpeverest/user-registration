@@ -78,7 +78,22 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
+	/**
+	 * Check if the page sent as parameter is My Account page and return the id,
+	 * Else use the page's page_id sent as parameter.
+	 */
+	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+	$page_id            = get_the_ID();
+	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) && $page_id === $my_account_page_id ) {
+		$page = $page_id;
+	} else {
+		$page = apply_filters( 'user_registration_get_myaccount_page_id', get_option( 'user_registration_myaccount_page_id' ) );
+	}
+
+	$permalink = 0 < $page ? get_permalink( $page ) : get_home_url();
+
+	$ur_account_page_url = apply_filters( 'user_registration_get_' . $page . '_page_permalink', $permalink );
+
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 	$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
 
@@ -111,7 +126,7 @@ function ur_get_account_menu_items() {
 	);
 
 	$user_id = get_current_user_id();
-	$form_id       = ur_get_form_id_by_userid( $user_id );
+	$form_id = ur_get_form_id_by_userid( $user_id );
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 
