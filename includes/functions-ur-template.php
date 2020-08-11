@@ -582,6 +582,14 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
 								break;
 
+							case 'file':
+								$extra_params['max_files'] = isset( $field->general_setting->max_files ) ? $field->general_setting->max_files : '';
+								break;
+
+							case 'phone':
+								$extra_params['phone_format'] = isset( $field->general_setting->phone_format ) ? $field->general_setting->phone_format : '';
+								break;
+
 							default:
 								break;
 						}
