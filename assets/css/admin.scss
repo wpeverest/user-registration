@@ -37,6 +37,20 @@
 	@include loader();
 }
 
+.toplevel_page_user-registration {
+	// Design customize for shortcode in list table
+	.shortcode {
+		.widefat {
+			width: calc(100% - 40px);
+		}
+
+		.ur-copy-shortcode {
+			padding: 4px;
+			line-height: 1;
+		}
+	}
+}
+
 .ur-spinner {
 	width: 16px;
 	height: 16px;

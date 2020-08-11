@@ -38,25 +38,25 @@ class UR_Admin_Assets {
 		$screen_id      = $screen ? $screen->id : '';
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
 
-		// Register admin styles
+		// Register admin styles.
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', UR()->plugin_url() . '/assets/css/jquery-ui/jq-smoothness.css', array(), $jquery_version );
-		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.5.1' );
 		wp_register_style( 'perfect-scrollbar', UR()->plugin_url() . '/assets/css/perfect-scrollbar/perfect-scrollbar.css', array(), '1.4.0' );
 		wp_register_style( 'sweetalert2', UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css', array(), '8.17.1' );
 
-		wp_register_style( 'user-registration-dashboard-widget', UR()->plugin_url() . '/assets/css/dashboard.css', UR_VERSION );
+		wp_register_style( 'user-registration-dashboard-widget', UR()->plugin_url() . '/assets/css/dashboard.css', array(), UR_VERSION );
 
 		wp_register_style( 'ur-review', UR()->plugin_url() . '/assets/css/review.css', array(), UR_VERSION );
 
-		// Add RTL support for admin styles
+		// Add RTL support for admin styles.
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
 		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
 
-		// Sitewide menu CSS
+		// Sitewide menu CSS.
 		wp_enqueue_style( 'user-registration-menu' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
@@ -64,11 +64,11 @@ class UR_Admin_Assets {
 
 		$enqueue_review = ur_check_activation_date();
 
-		if ( $enqueue_review === true ) {
+		if ( true === $enqueue_review ) {
 			wp_enqueue_style( 'ur-review' );
 		}
 
-		// Admin styles for UR pages only
+		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
 			wp_enqueue_style( 'user-registration-admin' );
 			wp_enqueue_style( 'jquery-ui-style' );
@@ -96,7 +96,7 @@ class UR_Admin_Assets {
 		$screen_id = $screen ? $screen->id : '';
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Register Scripts
+		// Register Scripts.
 		wp_register_script(
 			'user-registration-admin',
 			UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js',
@@ -160,7 +160,7 @@ class UR_Admin_Assets {
 			)
 		);
 
-		if ( 'user-registration_page_add-new-registration' === $screen_id ) {
+		if ( 'user-registration_page_add-new-registration' === $screen_id || 'toplevel_page_user-registration' === $screen_id ) {
 			wp_enqueue_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
 		}
 
@@ -210,7 +210,7 @@ class UR_Admin_Assets {
 			);
 		}
 
-		// UserRegistration admin pages
+		// UserRegistration admin pages.
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
 			wp_enqueue_script( 'user-registration-admin' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
