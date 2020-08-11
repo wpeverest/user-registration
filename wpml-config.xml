@@ -32,5 +32,19 @@
 		<key name="user_registration_profile_details_changed_email" />
 
 		<key name="user_registration_general_setting_registration_label" />
+
+		<key name="user_registration_label_username_or_email" />
+		<key name="user_registration_label_password" />
+		<key name="user_registration_label_remember_me" />
+		<key name="user_registration_label_login" />
+		<key name="user_registration_label_lost_your_password" />
+		<key name="user_registration_placeholder_username_or_email" />
+		<key name="user_registration_placeholder_password" />
+		<key name="user_registration_message_username_required" />
+		<key name="user_registration_message_empty_password" />
+		<key name="user_registration_message_invalid_username" />
+		<key name="user_registration_message_unknown_email" />
+		<key name="user_registration_message_pending_approval" />
+		<key name="user_registration_message_denied_account" />
 	</admin-texts>
 </wpml-config>
