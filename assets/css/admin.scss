@@ -6,9 +6,8 @@
 /**
  * Imports
  */
-@import "variables";
-@import "mixins";
-@import "grid";
+@import "variables/variables";
+@import "mixins/mixins";
 @import "display";
 @import "fonts";
 @import "tables";
@@ -24,6 +23,7 @@
 
 @import "border";
 @import "spacing";
+@import "grids";
 
 // Layout-related sections
 @import
@@ -70,6 +70,15 @@
 	}
 }
 
+.user-registration {
+	&__wrap {
+		*,
+		::before,
+		::after {
+			box-sizing: border-box;
+		}
+	}
+}
 .ur-export-users-page {
 	margin-top: 6px;
 
@@ -247,7 +256,6 @@
 			img {
 				width: 32px;
 				height: 32px;
-				padding: 0 8px;
 				margin-right: 8px;
 				display: flex;
 			}

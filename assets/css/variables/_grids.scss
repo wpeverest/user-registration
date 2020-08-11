@@ -1,0 +1,45 @@
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+ $grid-breakpoints: (
+	xs: 0,
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1200px
+) !default;
+
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+$container-max-widths: (
+	sm: 540px,
+	md: 720px,
+	lg: 960px,
+	xl: 1140px,
+	xxl: 1320px
+) !default;
+
+$grid-spacer: 4px;
+$grid-spacers: (
+	0: 0,
+	1: $grid-spacer,
+	2: $grid-spacer * 2,
+	3: $grid-spacer * 3,
+	4: $grid-spacer * 4,
+	5: $grid-spacer * 5,
+	6: $grid-spacer * 6,
+	7: $grid-spacer * 7,
+	8: $grid-spacer * 8,
+) !default;
+
+// Define grid variables
+$grid-columns: 12;
+$grid-gutter: 12px;
+$grid-row-columns: 6 !default;

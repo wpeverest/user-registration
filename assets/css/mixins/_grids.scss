@@ -1,0 +1,161 @@
+@import'../variables/variables';
+
+/**
+ * Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
+ * Makes the @content apply to the given breakpoint and wider.
+ **/
+ @mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+	$min: breakpoint-min($name, $breakpoints);
+	@if $min {
+		@media (min-width: $min) {
+		@content;
+		}
+	} @else {
+		@content;
+	}
+}
+
+/**
+ * Grid system
+ *
+ * Generate semantic grid columns with these mixins.
+ **/
+@mixin create-container($gutter: $grid-gutter) {
+	width: 100%;
+	padding-right: $gutter;
+	padding-left: $gutter;
+	margin-right: auto;
+	margin-left: auto;
+
+	*, ::before, ::after {
+		box-sizing: border-box;
+	}
+}
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin create-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
+	@each $breakpoint, $container-max-width in $max-widths {
+		@include media-breakpoint-up($breakpoint, $breakpoints) {
+			max-width: $container-max-width;
+		}
+	}
+}
+
+@mixin create-row($gutter: $grid-gutter) {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -$gutter;
+	margin-left: -$gutter;
+}
+
+@mixin make-col-auto() {
+	flex: 0 0 auto;
+	width: auto;
+}
+
+@mixin make-col($size, $columns: $grid-columns) {
+	flex: 0 0 percentage($size / $columns);
+	// Add a `max-width` to ensure content within each column does not blow out
+	// the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+	// do not appear to require this.
+	max-width: percentage($size / $columns);
+}
+
+@mixin make-col-offset($size, $columns: $grid-columns) {
+	$num: $size / $columns;
+	margin-left: if($num == 0, 0, percentage($num));
+}
+
+// Row columns
+//
+// Specify on a parent element(e.g., .row) to force immediate children into NN
+// numberof columns. Supports wrapping to new lines, but does not do a Masonry
+// style grid.
+@mixin row-cols($count) {
+	& > * {
+		flex: 0 0 auto;
+		width: 100% / $count;
+	}
+}
+
+@mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter, $breakpoints: $grid-breakpoints) {
+	%grid-column {
+		position: relative;
+		width: 100%;
+		padding-right: $gutter;
+		padding-left: $gutter;
+	}
+
+	@each $breakpoint in map-keys($breakpoints) {
+		$infix: breakpoint-infix($breakpoint, $breakpoints);
+
+		@if $columns > 0 {
+			// Allow columns to stretch full width below their breakpoints
+			@for $i from 1 through $columns {
+			.ur-col#{$infix}-#{$i} {
+				@extend %grid-column;
+			}
+			}
+		}
+
+		.ur-col#{$infix},
+		.ur-col#{$infix}-auto {
+			@extend %grid-column;
+		}
+
+		@include media-breakpoint-up($breakpoint, $breakpoints) {
+			// Provide basic `.col-{bp}` classes for equal-width flexbox columns
+			.ur-col#{$infix} {
+				flex: 1 0 0%; // Flexbugs #4: https://github.com/philipwalton/flexbugs#flexbug-4
+			}
+
+			.ur-row-cols#{$infix}-auto > * {
+				@include make-col-auto();
+			}
+
+			@if $grid-row-columns > 0 {
+				@for $i from 1 through $grid-row-columns {
+					.ur-row-cols#{$infix}-#{$i} {
+						@include row-cols($i);
+					}
+				}
+			}
+
+			.ur-col#{$infix}-auto {
+				@include make-col-auto();
+			}
+
+			@if $columns > 0 {
+				@for $i from 1 through $columns {
+					.ur-col#{$infix}-#{$i} {
+						@include make-col($i, $columns);
+					}
+				}
+
+				// `$columns - 1` because offsetting by the width of an entire row isn't possible
+				@for $i from 0 through ($columns - 1) {
+					@if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-0
+						.ur-offset#{$infix}-#{$i} {
+							@include make-col-offset($i, $columns);
+						}
+					}
+				}
+			}
+
+			// Gutters
+			//
+			// Make use of `.g-*`, `.gx-*` or `.gy-*` utilities to change spacing between the columns.
+			@each $key, $value in $grid-spacers {
+				.ur-g#{$infix}-#{$key},
+				.ur-gx#{$infix}-#{$key} {
+					--bs-gutter-x: #{$value};
+				}
+
+				.ur-g#{$infix}-#{$key},
+				.ur-gy#{$infix}-#{$key} {
+					--bs-gutter-y: #{$value};
+				}
+			}
+		}
+	}
+}
