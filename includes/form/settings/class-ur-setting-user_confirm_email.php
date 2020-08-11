@@ -40,6 +40,7 @@ class UR_Setting_User_confirm_email extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
+				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
 

@@ -52,8 +52,9 @@ abstract class UR_Field_Settings {
 
 		foreach ( $fields as $field_key => $field ) {
 
+			$tooltip_html       = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
-			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . '</label>';
+			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
 			$value = $this->get_advance_setting_data( $field_key ) == '' ? $field['default'] : $this->get_advance_setting_data( $field_key );
 
@@ -90,7 +91,7 @@ abstract class UR_Field_Settings {
 						$selected_value = '';
 
 						if ( true === $is_multiple && is_array( $value ) ) {
-							$selected_value = in_array ( $option_key, $value, true ) ? 'selected="selected"' : '';
+							$selected_value = in_array( $option_key, $value, true ) ? 'selected="selected"' : '';
 						} else {
 							$selected_value = ( $value === $option_key ) ? 'selected="selected"' : '';
 						}

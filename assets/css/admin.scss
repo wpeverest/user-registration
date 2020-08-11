@@ -98,6 +98,11 @@
 	}
 }
 
+.ur-label {
+	.user-registration-help-tip {
+		margin-left: 2px;
+	}
+}
 /**
  * Addons page
  **/
@@ -1705,7 +1710,7 @@ img.tips {
 /**
  * Help Tip
  */
-.user-registration-help-tip {
+.user-registration-help-tip, .ur-portal-tooltip {
 	color: $color_gray_two;
 	display: inline-block;
 	font-size: 16px;
