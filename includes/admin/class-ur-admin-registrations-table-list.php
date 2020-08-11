@@ -191,7 +191,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
 		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', $shortcode );
 		?>
-		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user - registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user - registration' ); ?>">
+		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 			<span class="dashicons dashicons-admin-page"></span>
 		</button>
 		<?php
