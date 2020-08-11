@@ -111,6 +111,12 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 		$url = add_query_arg( $endpoint, $value, $permalink );
 	}
 
+	if (
+		$endpoint === get_option( 'user_registration_logout_endpoint', 'user-logout' ) &&
+		'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		$url = wp_nonce_url( $url, 'user-logout' );
+	}
+
 	return apply_filters( 'user_registration_get_endpoint_url', $url, $endpoint, $value, $permalink );
 }
 
