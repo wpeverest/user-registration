@@ -1,3 +1,16 @@
+= 1.8.6 - 11/08/2020
+* Enhance - Login form customization
+* Enhance - Introduce tooltips in Form Builder
+* Enhance - Copy icon on shortcode column in registration forms list table
+* Enhance - Option to disable logout confirmation
+* Tweak- Wordpress 5.5 Compatibility
+* Fix - Profile picture, file upload, mailchimp and smart phone field sync with woocommerce
+* Fix - ReCaptcha script loads in lost password page
+* Fix - Cannot auto scroll while dragging fields in the form builder
+* Fix - Required option and Hide Label option conflict
+* Fix - Reset password for other plugin registered users
+* Dev - SASS files
+
 = 1.8.5 - 13/07/2020
 * Feature- Ajax form submission on edit profile
 * Dev - Added OR Logic Gate in conditional logic.

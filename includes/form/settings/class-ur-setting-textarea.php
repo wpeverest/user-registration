@@ -38,6 +38,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Default Value', 'user-registration' ),
+				'tip'         => __( 'Default value for this field.', 'user-registration' ),
 
 			),
 			'custom_class'  => array(
@@ -49,6 +50,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
+				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
 		$this->render_html( $fields );

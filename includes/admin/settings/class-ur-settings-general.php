@@ -140,6 +140,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => 'no',
 					),
 					array(
+						'title'    => __( 'Disable logout confirmation', 'user-registration' ),
+						'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
+						'id'       => 'user_registration_disable_logout_confirmation',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+					array(
 						'title'    => __( 'Layout', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
 						'id'       => 'user_registration_my_account_layout',
@@ -401,6 +410,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'    => __( 'Hide Field Labels', 'user-registration' ),
+						'desc'     => __( 'Hide', 'user-registration' ),
+						'id'       => 'user_registration_login_options_hide_labels',
+						'type'     => 'checkbox',
+						'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
+
+					array(
 						'title'    => __( 'Enable google reCaptcha', 'user-registration' ),
 						'desc'     => __( 'Enable', 'user-registration' ),
 						'id'       => 'user_registration_login_options_enable_recaptcha',
@@ -454,6 +473,176 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					array(
 						'type' => 'sectionend',
 						'id'   => 'login_options_settings',
+					),
+
+					array(
+						'title' => __( 'Labels', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_labels_settings',
+					),
+
+					array(
+						'title'    => __( 'Username or Email', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Username or Email" field label.', 'user-registration' ),
+						'id'       => 'user_registration_label_username_or_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Username or email address', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Password', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Password" field label.', 'user-registration' ),
+						'id'       => 'user_registration_label_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Password', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Remember me', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Remember me" option label.', 'user-registration' ),
+						'id'       => 'user_registration_label_remember_me',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Remember me', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Login', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Login" button label.', 'user-registration' ),
+						'id'       => 'user_registration_label_login',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Login', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Lost your password?', 'user-registration' ),
+						'desc'     => __( 'This option lets you edit the "Lost your password?" option label.', 'user-registration' ),
+						'id'       => 'user_registration_label_lost_your_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Lost your password?', 'user-registration' ),
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_labels_settings',
+					),
+
+					array(
+						'title' => __( 'Placeholders', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_placeholders_settings',
+					),
+
+					array(
+						'title'    => __( 'Username or Email Field', 'user-registration' ),
+						'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
+						'id'       => 'user_registration_placeholder_username_or_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => '',
+					),
+
+					array(
+						'title'    => __( 'Password Field', 'user-registration' ),
+						'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
+						'id'       => 'user_registration_placeholder_password',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => '',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_placeholders_settings',
+					),
+
+					array(
+						'title' => __( 'Messages', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'login_form_messages_settings',
+					),
+
+					array(
+						'title'    => __( 'Username Required', 'user-registration' ),
+						'desc'     => __( 'Show this message when username is empty.', 'user-registration' ),
+						'id'       => 'user_registration_message_username_required',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'Username is required.',
+					),
+
+					array(
+						'title'       => __( 'Empty Password', 'user-registration' ),
+						'desc'        => __( 'Show this message when password is empty.', 'user-registration' ),
+						'id'          => 'user_registration_message_empty_password',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'       => __( 'Invalid/Unknown Username', 'user-registration' ),
+						'desc'        => __( 'Show this message when username is unknown or invalid.', 'user-registration' ),
+						'id'          => 'user_registration_message_invalid_username',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'    => __( 'Unknown Email', 'user-registration' ),
+						'desc'     => __( 'Show this message when email is unknown.', 'user-registration' ),
+						'id'       => 'user_registration_message_unknown_email',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'A user could not be found with this email address.',
+					),
+
+					array(
+						'title'       => __( 'Pending Approval', 'user-registration' ),
+						'desc'        => __( 'Show this message when an account is pending approval.', 'user-registration' ),
+						'id'          => 'user_registration_message_pending_approval',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'title'       => __( 'Denied Account', 'user-registration' ),
+						'desc'        => __( 'Show this message when an account is has been denied.', 'user-registration' ),
+						'id'          => 'user_registration_message_denied_account',
+						'type'        => 'text',
+						'desc_tip'    => true,
+						'css'         => 'min-width: 350px;',
+						'default'     => '',
+						'placeholder' => 'Default message from WordPress',
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'login_form_messages_settings',
 					),
 				)
 			);

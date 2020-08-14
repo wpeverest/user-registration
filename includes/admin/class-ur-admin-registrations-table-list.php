@@ -79,7 +79,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	/**
 	 * Return title column.
 	 *
-	 * @param  object $registration
+	 * @param  object $registration Registration forms datas.
 	 *
 	 * @return string
 	 */
@@ -89,7 +89,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		$post_type_object = get_post_type_object( 'user_registration' );
 		$post_status      = $registration->post_status;
 
-		// Title
+		// Title.
 		$output = '<strong>';
 		if ( 'trash' == $post_status ) {
 			$output .= esc_html( $title );
@@ -98,7 +98,7 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		}
 		$output .= '</strong>';
 
-		// Get actions
+		// Get actions.
 		$actions = array(
 			'id' => sprintf( __( 'ID: %d', 'user-registration' ), $registration->ID ),
 		);
@@ -150,7 +150,14 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		return $output;
 	}
 
-	function column_author( $registration ) {
+	/**
+	 * Return author column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return string
+	 */
+	public function column_author( $registration ) {
 		$user = get_user_by( 'id', $registration->post_author );
 
 		if ( ! $user ) {
@@ -173,15 +180,32 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 		return esc_html( $user_name );
 	}
 
-	function column_shortcode( $registration ) {
-
+	/**
+	 * Return shortcode column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return void
+	 */
+	public function column_shortcode( $registration ) {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
-
-		return sprintf( '<span class="shortcode"><input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="large-text code"></span>', $shortcode );
+		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', $shortcode );
+		?>
+		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
+			<span class="dashicons dashicons-admin-page"></span>
+		</button>
+		<?php
 
 	}
 
-	function column_date( $registration ) {
+	/**
+	 * Return created at date column.
+	 *
+	 * @param  object $registration Registration forms datas.
+	 *
+	 * @return string
+	 */
+	public function column_date( $registration ) {
 		$post = get_post( $registration->ID );
 
 		if ( ! $post ) {
@@ -214,8 +238,8 @@ class UR_Admin_Registrations_Table_List extends WP_List_Table {
 	/**
 	 * Get the status label for licenses.
 	 *
-	 * @param  string   $status_name
-	 * @param  stdClass $status
+	 * @param  string   $status_name Status title.
+	 * @param  stdClass $status Status value.
 	 *
 	 * @return array
 	 */

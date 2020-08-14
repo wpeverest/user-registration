@@ -37,6 +37,20 @@
 	@include loader();
 }
 
+.toplevel_page_user-registration {
+	// Design customize for shortcode in list table
+	.shortcode {
+		.widefat {
+			width: calc(100% - 40px);
+		}
+
+		.ur-copy-shortcode {
+			padding: 4px;
+			line-height: 1;
+		}
+	}
+}
+
 .ur-spinner {
 	width: 16px;
 	height: 16px;
@@ -73,6 +87,10 @@
 			.postbox {
 				width: 50%;
 				flex: 1;
+
+				.hndle {
+					border-bottom: 1px solid #ccd0d4;
+				}
 			}
 		}
 
@@ -81,9 +99,18 @@
 			margin: 10px;
 			padding-bottom: 10px;
 		}
+
+		.stuffbox {
+			padding: 10px;
+		}
 	}
 }
 
+.ur-label {
+	.user-registration-help-tip {
+		margin-left: 2px;
+	}
+}
 /**
  * Addons page
  **/
@@ -1691,7 +1718,7 @@ img.tips {
 /**
  * Help Tip
  */
-.user-registration-help-tip {
+.user-registration-help-tip, .ur-portal-tooltip {
 	color: $color_gray_two;
 	display: inline-block;
 	font-size: 16px;

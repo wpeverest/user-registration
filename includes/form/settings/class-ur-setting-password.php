@@ -36,6 +36,7 @@ class UR_Setting_Password extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '5',
 				'placeholder' => __( 'Password Size', 'user-registration' ),
+				'tip'         => __( 'Maximum allowed length of password.', 'user-registration' ),
 			),
 		);
 		$this->render_html( $fields );
