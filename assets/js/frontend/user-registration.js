@@ -527,6 +527,7 @@
 									if (0 === captchaResponse.length) {
 
 										form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
+										$this.find( '.ur-submit-button' ).prop( 'disabled', false );
 										return;
 									}
 
