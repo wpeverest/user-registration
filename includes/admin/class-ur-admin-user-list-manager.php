@@ -265,11 +265,12 @@ class UR_Admin_User_List_Manager {
 	public function make_registered_at_column_sortable( $columns ) {
 		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
 	}
-
 	public function add_status_filter( $which ) {
 
-		$id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
-		$filter_value = ( isset( $_GET[ $id ] ) && ! empty( $_GET[ $id ] ) ) ? $_GET[ $id ] : false;
+		$status_id                  = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
+		$specific_form_id           = 'bottom' === $which ? 'ur_specific_form_user2' : 'ur_specific_form_user';
+		$status_filter_value        = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? $_GET[ $status_id ] : false;
+		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? $_GET[ $specific_form_id ] : false;
 
 		$approved_label = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::APPROVED );
 		$pending_label  = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::PENDING );
@@ -279,14 +280,29 @@ class UR_Admin_User_List_Manager {
 		</div><!-- .alignleft.actions opened in extra_tablenav() - class-wp-users-list-table.php:259 -->
 		<div class="alignleft actions">
 
-		<label class="screen-reader-text" for="<?php echo $id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
-		<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
+		<label class="screen-reader-text" for="<?php echo $status_id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
+		<select name="<?php echo $status_id; ?>" id="<?php echo $status_id; ?>">
 			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
 
 		<?php
-		echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
-		echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
-		echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
+		echo '<option value="approved" ' . selected( 'approved', $status_filter_value ) . '>' . $approved_label . '</option>';
+		echo '<option value="pending" ' . selected( 'pending', $status_filter_value ) . '>' . $pending_label . '</option>';
+		echo '<option value="denied" ' . selected( 'denied', $status_filter_value ) . '>' . $denied_label . '</option>';
+		?>
+		</select>
+		<div class="alignleft actions">
+
+		<label class="screen-reader-text" for="<?php echo $specific_form_id; ?>"><?php _e( 'All Forms', 'user-registration' ); ?></label>
+		<select name="<?php echo $specific_form_id; ?>" id="<?php echo $specific_form_id; ?>">
+			<option value=""><?php _e( 'All UR Forms', 'user-registration' ); ?></option>
+
+		<?php
+				$all_forms = ur_get_all_user_registration_form();
+
+		foreach ( $all_forms as $form_id => $form_name ) {
+			echo '<option value="' . $form_id . '" ' . selected( $form_id, $specific_form_filter_value ) . ' >' . $form_name . '</option>';
+		}
+
 		?>
 		</select>
 		<?php
