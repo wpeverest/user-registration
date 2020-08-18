@@ -316,78 +316,100 @@ class UR_Admin_User_List_Manager {
 	 * @param $query
 	 */
 	public function filter_users_by_approval_status( $query ) {
-
 		$ur_user_filter_action    = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
 		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? $_REQUEST['ur_user_approval_status'] : false;
 		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? $_REQUEST['ur_user_approval_status2'] : false;
+		$ur_specific_form_user    = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? $_REQUEST['ur_specific_form_user'] : false;
+		$ur_specific_form_user2   = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? $_REQUEST['ur_specific_form_user2'] : false;
 
-		if ( ! $ur_user_filter_action || ( ! $ur_user_approval_status && ! $ur_user_approval_status2 ) ) {
+		if ( ! $ur_user_filter_action ) {
 			return;
 		}
 
-		$status = null;
-
+		$status     = null;
+		$form_id    = null;
+		$meta_query = null;
 		if ( $ur_user_approval_status2 ) {
 			$status = sanitize_text_field( $ur_user_approval_status2 );
 		} elseif ( $ur_user_approval_status ) {
 			$status = sanitize_text_field( $ur_user_approval_status );
 		}
 
-		switch ( $status ) {
-			case 'approved':
-				$status = UR_Admin_User_Manager::APPROVED;
-				break;
-			case 'pending':
-				$status = UR_Admin_User_Manager::PENDING;
-				break;
-			case 'denied':
-				$status = UR_Admin_User_Manager::DENIED;
-				break;
-			default:
-				return;
+		if ( $ur_specific_form_user2 ) {
+			$form_id = sanitize_text_field( $ur_specific_form_user2 );
+		} elseif ( $ur_specific_form_user ) {
+			$form_id = sanitize_text_field( $ur_specific_form_user );
 		}
 
-		$meta_query = array(
-			'relation' => 'OR',
+		if ( isset( $status ) && '' !== $status ) {
+			switch ( $status ) {
+				case 'approved':
+					$status = UR_Admin_User_Manager::APPROVED;
+					break;
+				case 'pending':
+					$status = UR_Admin_User_Manager::PENDING;
+					break;
+				case 'denied':
+					$status = UR_Admin_User_Manager::DENIED;
+					break;
+				default:
+					return;
+			}
+			$meta_query =
 			array(
-				'key'     => 'ur_user_status',
-				'value'   => $status,
-				'compare' => '=',
-			),
-			array(
-				'key'     => 'ur_confirm_email',
-				'value'   => $status,
-				'compare' => '=',
-			),
-		);
-
-		if ( $status === UR_Admin_User_Manager::APPROVED ) {
-			$meta_query = array(
 				'relation' => 'OR',
 				array(
-					'relation' => 'AND',
-					array(
-						'key'     => 'ur_user_status',
-						'compare' => 'NOT EXISTS', // works!
-						'value'   => '', // This is ignored, but is necessary...
-					),
-					array(
-						'key'     => 'ur_confirm_email',
-						'compare' => 'NOT EXISTS', // works!
-						'value'   => '', // This is ignored, but is necessary...
-					),
+					'key'     => 'ur_user_status',
+					'value'   => $status,
+					'compare' => '=',
 				),
 				array(
-					'key'   => 'ur_user_status',
-					'value' => UR_Admin_User_Manager::APPROVED,
-				),
-				array(
-					'key'   => 'ur_confirm_email',
-					'value' => UR_Admin_User_Manager::APPROVED,
+					'key'     => 'ur_confirm_email',
+					'value'   => $status,
+					'compare' => '=',
 				),
 			);
+
+			if ( $status === UR_Admin_User_Manager::APPROVED ) {
+				$meta_query = array(
+					'relation' => 'OR',
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'ur_user_status',
+							'compare' => 'NOT EXISTS', // works!
+							'value'   => '', // This is ignored, but is necessary...
+						),
+						array(
+							'key'     => 'ur_confirm_email',
+							'compare' => 'NOT EXISTS', // works!
+							'value'   => '', // This is ignored, but is necessary...
+						),
+					),
+					array(
+						'key'   => 'ur_user_status',
+						'value' => UR_Admin_User_Manager::APPROVED,
+					),
+					array(
+						'key'   => 'ur_confirm_email',
+						'value' => UR_Admin_User_Manager::APPROVED,
+					),
+				);
+			}
 		}
 
+		if ( isset( $form_id ) && '' !== $form_id ) {
+			$meta_query = array(
+				'relation' => 'AND',
+				$meta_query,
+				array(
+					'key'     => 'ur_form_id',
+					'value'   => $form_id,
+					'compare' => '=',
+				),
+			);
+
+		}
 		$query->set( 'meta_query', $meta_query );
 	}
 
