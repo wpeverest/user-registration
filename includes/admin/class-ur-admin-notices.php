@@ -161,8 +161,14 @@ class UR_Admin_Notices {
 	public static function hide_unrelated_notices() {
 		global $wp_filter;
 
+		// Array to define pages where notices are to be excluded.
+		$pages_to_exclude = array(
+			'add-new-registration',
+			'user-registration-settings',
+		);
+
 		// Return on other than user registraion builder page.
-		if ( empty( $_REQUEST['page'] ) || 'add-new-registration' !== $_REQUEST['page'] ) {
+		if ( empty( $_REQUEST['page'] ) || ! in_array( $_REQUEST['page'], $pages_to_exclude ) ) {
 			return;
 		}
 
@@ -170,7 +176,16 @@ class UR_Admin_Notices {
 			if ( ! empty( $wp_filter[ $wp_notice ]->callbacks ) && is_array( $wp_filter[ $wp_notice ]->callbacks ) ) {
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
-						unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+
+						// Remove all notices if the page is form builder page.
+						if ( 'add-new-registration' === $_REQUEST['page'] ) {
+							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+						} else {
+							// Remove all notices except user registration plugins notices.
+							if ( ! strpos( $name, 'user_registation_missing_notice' ) ) {
+								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+							}
+						}
 					}
 				}
 			}
