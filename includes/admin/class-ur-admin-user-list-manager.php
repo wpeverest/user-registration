@@ -41,7 +41,7 @@ class UR_Admin_User_List_Manager {
 		add_action( 'show_user_profile', array( $this, 'render_profile_field' ) );
 		add_action( 'edit_user_profile', array( $this, 'render_profile_field' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'save_profile_field' ) );
-		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
+		add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'manage_users_sortable_columns', array( $this, 'make_registered_at_column_sortable' ) );
@@ -56,7 +56,7 @@ class UR_Admin_User_List_Manager {
 	 *
 	 * @return array
 	 */
-	public function ceate_quick_links( $actions, $user ) {
+	public function create_quick_links( $actions, $user ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
 
@@ -265,11 +265,20 @@ class UR_Admin_User_List_Manager {
 	public function make_registered_at_column_sortable( $columns ) {
 		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
 	}
+
+	/**
+	 * Filter user list based upon approval status and specific user registration forms.
+	 *
+	 * @param string $which Used to determine which filter selector i.e. top or bottom is used to filter.
+	 */
 	public function add_status_filter( $which ) {
 
-		$status_id                  = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
+		// Get the filter selector id for approval status and the selected status.
+		$status_id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
+		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? $_GET[ $status_id ] : false;
+
+		// Get the filter selector id for specific forms and the selected form id.
 		$specific_form_id           = 'bottom' === $which ? 'ur_specific_form_user2' : 'ur_specific_form_user';
-		$status_filter_value        = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? $_GET[ $status_id ] : false;
 		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? $_GET[ $specific_form_id ] : false;
 
 		$approved_label = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::APPROVED );
@@ -280,6 +289,7 @@ class UR_Admin_User_List_Manager {
 		</div><!-- .alignleft.actions opened in extra_tablenav() - class-wp-users-list-table.php:259 -->
 		<div class="alignleft actions">
 
+		<!-- Filter for approval status. -->
 		<label class="screen-reader-text" for="<?php echo $status_id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
 		<select name="<?php echo $status_id; ?>" id="<?php echo $status_id; ?>">
 			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
@@ -290,8 +300,8 @@ class UR_Admin_User_List_Manager {
 		echo '<option value="denied" ' . selected( 'denied', $status_filter_value ) . '>' . $denied_label . '</option>';
 		?>
 		</select>
-		<div class="alignleft actions">
 
+		<!-- Filter for specific forms. -->
 		<label class="screen-reader-text" for="<?php echo $specific_form_id; ?>"><?php _e( 'All Forms', 'user-registration' ); ?></label>
 		<select name="<?php echo $specific_form_id; ?>" id="<?php echo $specific_form_id; ?>">
 			<option value=""><?php _e( 'All UR Forms', 'user-registration' ); ?></option>
@@ -316,11 +326,15 @@ class UR_Admin_User_List_Manager {
 	 * @param $query
 	 */
 	public function filter_users_by_approval_status( $query ) {
-		$ur_user_filter_action    = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
+		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
+
+		// Get the selected value of user approval status from top or bottom user approval filter.
 		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? $_REQUEST['ur_user_approval_status'] : false;
 		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? $_REQUEST['ur_user_approval_status2'] : false;
-		$ur_specific_form_user    = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? $_REQUEST['ur_specific_form_user'] : false;
-		$ur_specific_form_user2   = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? $_REQUEST['ur_specific_form_user2'] : false;
+
+		// Get the selected id of specific form from top or bottom user form filter.
+		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? $_REQUEST['ur_specific_form_user'] : false;
+		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? $_REQUEST['ur_specific_form_user2'] : false;
 
 		if ( ! $ur_user_filter_action ) {
 			return;
@@ -341,6 +355,7 @@ class UR_Admin_User_List_Manager {
 			$form_id = sanitize_text_field( $ur_specific_form_user );
 		}
 
+		// Deduct meta_query to filter user according to approve status.
 		if ( isset( $status ) && '' !== $status ) {
 			switch ( $status ) {
 				case 'approved':
@@ -355,8 +370,8 @@ class UR_Admin_User_List_Manager {
 				default:
 					return;
 			}
-			$meta_query =
-			array(
+
+			$meta_query = array(
 				'relation' => 'OR',
 				array(
 					'key'     => 'ur_user_status',
@@ -398,6 +413,7 @@ class UR_Admin_User_List_Manager {
 			}
 		}
 
+		// Deduct meta_query to filter user according to form id and approval status set.
 		if ( isset( $form_id ) && '' !== $form_id ) {
 			$meta_query = array(
 				'relation' => 'AND',
@@ -408,8 +424,8 @@ class UR_Admin_User_List_Manager {
 					'compare' => '=',
 				),
 			);
-
 		}
+
 		$query->set( 'meta_query', $meta_query );
 	}
 
