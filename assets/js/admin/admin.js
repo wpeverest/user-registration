@@ -1345,8 +1345,6 @@ jQuery(function ($) {
 				}
 			}
 		});
-
-
 		return general_setting_data;
 	}
 
@@ -1372,7 +1370,7 @@ jQuery(function ($) {
 						break;
 
 					default:
-						value = $this_node.val();
+						value = $this_node.attr('value');
 						break;
 				}
 				break;
@@ -1901,7 +1899,7 @@ jQuery(function ($) {
 			this_index = $this.parent('li').index(),
 			cloning_element = $this.parent('li').clone(true, true);
 
-		cloning_element.find('input[data-field="options"]').val('');
+		cloning_element.find('input[data-field="options"]').attr('value', '');
 		cloning_element.find('input[data-field="default_value"]').removeAttr('checked');
 
 		$this.parent('li').after( cloning_element );
