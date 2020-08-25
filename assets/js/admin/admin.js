@@ -1370,7 +1370,7 @@ jQuery(function ($) {
 						break;
 
 					default:
-						value = $this_node.attr('value');
+						value = $this_node.val();
 						break;
 				}
 				break;
@@ -1698,7 +1698,7 @@ jQuery(function ($) {
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var index = $label.closest('li').index();
-		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).attr( 'value', $label.val() );
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).val( $label.val() );
 		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="default_value"]' ).val( $label.val() );
 		$label.closest('li').find('[data-field="default_value"]').val( $label.val() );
 	}
@@ -1899,7 +1899,7 @@ jQuery(function ($) {
 			this_index = $this.parent('li').index(),
 			cloning_element = $this.parent('li').clone(true, true);
 
-		cloning_element.find('input[data-field="options"]').attr('value', '');
+		cloning_element.find('input[data-field="options"]').val('');
 		cloning_element.find('input[data-field="default_value"]').removeAttr('checked');
 
 		$this.parent('li').after( cloning_element );
