@@ -49,10 +49,10 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
-	 * Create two quick links Approve and Deny for each user in the users list
+	 * Create two quick links Approve and Deny for each user in the users list.
 	 *
-	 * @param $actions
-	 * @param $user
+	 * @param  array  $actions the approve or pending action.
+	 * @param  string $user The id of the user.
 	 *
 	 * @return array
 	 */
@@ -101,6 +101,16 @@ class UR_Admin_User_List_Manager {
 		return $actions;
 	}
 
+	/**
+	 * @deprecated 1.8.7
+	 *
+	 * @param  array  $actions the approve or pending action.
+	 * @param  string $user The id of the user.
+	 * @return void
+	 */
+	public function ceate_quick_links( $actions, $user ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::ceate_quick_links', '1.8.7', 'UR_Email_Confirmation::create_quick_links' );
+	}
 
 	/**
 	 * Trigger the action query and check if some users have been approved or denied
