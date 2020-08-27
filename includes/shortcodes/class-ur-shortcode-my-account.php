@@ -182,25 +182,30 @@ class UR_Shortcode_My_Account {
 
 		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
-		$form_row_ids_string = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
-		$part_data_string    = ur_get_single_post_meta( $form_id, 'user_registration_multipart_parts' );
+		$multipart_enabled = 'yes' === ur_get_single_post_meta( $form_id, 'user_registration_enable_multipart' );
 
-		$form_row_ids = json_decode( $form_row_ids_string );
-		$parts        = json_decode( $part_data_string, true );
-		$sorted_array = array();
+		// Sort fields according to the arrangements in Multi-Part form.
+		if ( $multipart_enabled ) {
+			$form_row_ids_string = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
+			$part_data_string    = ur_get_single_post_meta( $form_id, 'user_registration_multipart_parts' );
 
-		foreach ( $parts as $part ) {
-			$part_rows = (array) json_decode( $part['rows'] );
+			$form_row_ids = json_decode( $form_row_ids_string );
+			$parts        = json_decode( $part_data_string, true );
+			$sorted_array = array();
 
-			foreach ( $part_rows as $part_row_id ) {
-				$row_index = array_search( $part_row_id, $form_row_ids );
+			foreach ( $parts as $part ) {
+				$part_rows = (array) json_decode( $part['rows'] );
 
-				if ( false !== $row_index ) {
-					$sorted_array[] = $form_data_array[ $row_index ];
+				foreach ( $part_rows as $part_row_id ) {
+					$row_index = array_search( $part_row_id, $form_row_ids );
+
+					if ( false !== $row_index ) {
+						$sorted_array[] = $form_data_array[ $row_index ];
+					}
 				}
 			}
+			$form_data_array = $sorted_array;
 		}
-		$form_data_array = $sorted_array;
 
 		if ( ! empty( $form_data_array ) ) {
 
