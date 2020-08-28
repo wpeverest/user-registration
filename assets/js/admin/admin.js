@@ -1332,14 +1332,13 @@ jQuery(function ($) {
 			} else {
 
 				if( 'default_value' === $(this).attr('data-field') ) {
-
 					if( is_checkbox === true ) {
 						if( $(this).is(":checked") ) {
 							general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
 							general_setting_data['default_value'] = default_values;
 						}
 					} else if( $(this).is(":checked") ) {
-							general_setting_data['default_value'] = get_ur_data($(this) );
+						general_setting_data['default_value'] = get_ur_data($(this) );
 					}
 
 				} else if ( 'html' === $(this).attr('data-field') ) {
@@ -1364,10 +1363,8 @@ jQuery(function ($) {
 	function get_ur_data($this_node) {
 		var node_type = $this_node.get(0).tagName.toLowerCase();
 		var value = '';
-
 		switch (node_type) {
 			case 'input':
-
 				// Check input type.
 				switch ( $this_node.attr( 'type' ) ) {
 					case 'checkbox':
@@ -1683,7 +1680,7 @@ jQuery(function ($) {
 	}
 
 	function render_select_box(this_node) {
-		value = $.trim( this_node.val() );
+		var value = $.trim( this_node.val() );
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var checked_index = this_node.closest('li').index();
 		var select = wrapper.find('.ur-field').find('select');
@@ -1691,8 +1688,15 @@ jQuery(function ($) {
 		select.html('');
 		select.append('<option value=\'' + value + '\'>' + value + '</option>');
 
-		wrapper.find('.ur-general-setting-options li input[data-field="default_value"]').removeAttr( 'checked' );
-		wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
+		// Loop through options in active fields general setting hidden div.
+		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
+			var radio_input = $(element).find( '[data-field="default_value"]' );
+			if( index === checked_index ){
+				radio_input.attr( 'checked', 'checked' );
+			}else{
+				radio_input.removeAttr( 'checked' );
+			}
+		} );
 	}
 
 	function trigger_general_setting_field_name($label) {

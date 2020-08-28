@@ -25,11 +25,13 @@ $options         = array_map( 'trim', $options );
 				echo "<label><input type = 'radio'  value='1' disabled/></label>";
 			}
 
-			$checked = '';
-			if ( ! empty( $option ) ) {
-				$checked = checked( $option, $default_value, false );
-			}
 			foreach ( $options as $option ) {
+				$checked = '';
+
+				if ( ! empty( $option ) ) {
+					$checked = checked( $option, $default_value, false );
+				}
+
 				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' '" . $checked . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
 			}
 			?>
