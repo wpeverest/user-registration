@@ -1323,8 +1323,12 @@ jQuery(function ($) {
 			var is_checkbox = $(this).closest('.ur-general-setting').hasClass('ur-setting-checkbox');
 
 			if( 'options' === $(this).attr('data-field') ) {
-				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );
-				general_setting_data['options'] = option_values;
+				var choice_value = $.trim( get_ur_data($(this)) );
+				if( option_values.every( function(each_value) { return  each_value !== choice_value })){
+					general_setting_data['options'] = option_values.push( choice_value );
+					general_setting_data['options'] = option_values;
+				}
+
 			} else {
 
 				if( 'default_value' === $(this).attr('data-field') ) {
@@ -1363,10 +1367,13 @@ jQuery(function ($) {
 
 		switch (node_type) {
 			case 'input':
+
 				// Check input type.
 				switch ( $this_node.attr( 'type' ) ) {
 					case 'checkbox':
-						value = $this_node.is( ':checked' );
+						if( $this_node.is( ':checked' ) ){
+							value = $this_node.val();
+						}
 						break;
 
 					default:
@@ -1607,12 +1614,15 @@ jQuery(function ($) {
 		var array_value = [];
 		var li_elements = this_node.closest('ul').find('li');
 		var checked_index = this_node.closest('li').index();
-
 		li_elements.each( function( index, element) {
 			var value 	 = $( element ).find('input.ur-type-checkbox-label').val();
 				value 	 = $.trim(value);
 				checkbox = $( element ).find('input.ur-type-checkbox-value').is( ':checked' );
-				array_value.push( {value:value, checkbox:checkbox });
+
+				if( array_value.every( function(each_value) { return  each_value.value !== value })){
+					array_value.push({value:value, checkbox:checkbox });
+				}
+
 		});
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
@@ -1620,7 +1630,7 @@ jQuery(function ($) {
 		checkbox.html('');
 
 		for (var i = 0; i < array_value.length; i++) {
-			if (array_value[i] !== '') {
+			if ( array_value[i] !== '' ) {
 				checkbox.append('<label><input value="' + array_value[i].value.trim() + '" type="checkbox" ' + ( (array_value[i].checkbox) ? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
@@ -1645,7 +1655,10 @@ jQuery(function ($) {
 			if( radio === true) {
 				checked_index = index;
 			}
-			array_value.push({value:value, radio:radio });
+
+			if( array_value.every( function(each_value) { return  each_value.value !== value })){
+				array_value.push({value:value, radio:radio });
+			}
 		});
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
