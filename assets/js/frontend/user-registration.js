@@ -777,7 +777,12 @@
 			// Load a flatpicker for the field, if hasn't been loaded.
 			if ( ! date_flatpickr ) {
 				var formated_date = $( this ).closest( '.ur-field-item' ).find( '#formated_date' ).val();
-				var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+
+				if( 0 < $( '.ur-frontend-form').length ) {
+					var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+				}else{
+					var date_selector = $( '.woocommerce-MyAccount-content #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+				}
 
 				$( this ).attr( 'data-date-format', date_selector.data( 'date-format') );
 				$( this ).attr( 'data-mode', date_selector.data( 'mode') );
