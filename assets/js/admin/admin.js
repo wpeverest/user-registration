@@ -1332,7 +1332,9 @@ jQuery(function ($) {
 			} else {
 
 				if( 'default_value' === $(this).attr('data-field') ) {
+
 					if( is_checkbox === true ) {
+
 						if( $(this).is(":checked") ) {
 							general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
 							general_setting_data['default_value'] = default_values;
@@ -1633,7 +1635,7 @@ jQuery(function ($) {
 		}
 
 		if( this_node.is( ':checked' ) ) {
-			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
+			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').prop("checked", true);
 		} else {
 			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
 		}
@@ -1672,7 +1674,7 @@ jQuery(function ($) {
 		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
 			var radio_input = $(element).find( '[data-field="default_value"]' );
 			if( index === checked_index ){
-				radio_input.attr( 'checked', 'checked' );
+				radio_input.prop("checked", true);
 			}else{
 				radio_input.removeAttr( 'checked' );
 			}
@@ -1692,7 +1694,7 @@ jQuery(function ($) {
 		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
 			var radio_input = $(element).find( '[data-field="default_value"]' );
 			if( index === checked_index ){
-				radio_input.attr( 'checked', 'checked' );
+				radio_input.prop("checked", true);
 			}else{
 				radio_input.removeAttr( 'checked' );
 			}
