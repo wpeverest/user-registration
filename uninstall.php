@@ -34,6 +34,8 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' ===
 
 	// Delete options.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'user_registration\_%';" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'ur\_%';" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'urmc\_%';" );
 
 	// Delete usermeta.
 	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%';" );
