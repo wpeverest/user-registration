@@ -244,8 +244,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   class="regular-text"
 										   data-id = '<?php echo esc_attr( $key ); ?>'
 										   readonly />
-									<input type="hidden" id="formated_date" value="<?php echo esc_attr( $value ); ?>"/>
-									<input type="date" name="<?php echo esc_attr( $key ); ?>"
+										   <input type="hidden" id="formated_date" value="<?php echo esc_attr( $value ); ?>"/>
+										   <input type="text" name="<?php echo esc_attr( $key ); ?>"
 										   id="<?php echo esc_attr( $key ); ?>"
 										   value="<?php echo esc_attr( $value ); ?>"
 										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
