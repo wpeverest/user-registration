@@ -1634,10 +1634,12 @@ jQuery(function ($) {
 			}
 		}
 
-		if( this_node.is( ':checked' ) ) {
-			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').prop("checked", true);
-		} else {
-			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
+		if ( 'checkbox' === this_node.attr( 'type' ) ) {
+			if( this_node.is( ':checked' ) ) {
+				wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').prop("checked", true);
+			} else {
+				wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
+			}
 		}
 	}
 
