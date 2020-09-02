@@ -78,7 +78,8 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
+	$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
+
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 	$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
 
@@ -111,7 +112,7 @@ function ur_get_account_menu_items() {
 	);
 
 	$user_id = get_current_user_id();
-	$form_id       = ur_get_form_id_by_userid( $user_id );
+	$form_id = ur_get_form_id_by_userid( $user_id );
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 
