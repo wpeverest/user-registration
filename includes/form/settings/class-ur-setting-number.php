@@ -36,6 +36,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Min Value', 'user-registration' ),
+				'tip'         => __( 'Minimum allowed number.', 'user-registration' ),
 			),
 			'max'          => array(
 				'label'       => __( 'Maximum Value', 'user-registration' ),
@@ -46,6 +47,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Max Value', 'user-registration' ),
+				'tip'         => __( 'Maximum allowed number.', 'user-registration' ),
 			),
 			'step'         => array(
 				'label'       => __( 'Step', 'user-registration' ),
@@ -56,6 +58,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 1,
 				'placeholder' => __( 'Legal Number Intervals', 'user-registration' ),
+				'tip'         => __( 'Amount to increment or decrement at one step.', 'user-registration' ),
 			),
 			'custom_class' => array(
 				'label'       => __( 'Custom Class', 'user-registration' ),
@@ -66,6 +69,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
+				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
 

@@ -56,9 +56,15 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
  * @return int
  */
 function ur_get_page_id( $page ) {
+	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+	$page_id            = get_the_ID();
 
-	if ( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
-		$page = get_the_ID();
+	/**
+	 * Check if the page sent as parameter is My Account page and return the id,
+	 * Else use the page's page_id sent as parameter.
+	 */
+	if ( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) && $page_id === $my_account_page_id ) {
+		$page = $page_id;
 	} else {
 		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
 	}
@@ -109,6 +115,12 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 		$url = trailingslashit( $permalink ) . $endpoint . '/' . $value . $query_string;
 	} else {
 		$url = add_query_arg( $endpoint, $value, $permalink );
+	}
+
+	if (
+		$endpoint === get_option( 'user_registration_logout_endpoint', 'user-logout' ) &&
+		'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		$url = wp_nonce_url( $url, 'user-logout' );
 	}
 
 	return apply_filters( 'user_registration_get_endpoint_url', $url, $endpoint, $value, $permalink );

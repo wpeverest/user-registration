@@ -237,6 +237,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			}
 		}
 
+		$tooltip_html    = ! empty( $args['tip'] ) ? ur_help_tip( $args['tip'] ) : '';
 		$field           = '';
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
@@ -266,8 +267,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$choices = isset( $options ) ? $options : array();
 
-					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
-					$field .= $args['label'] . $required . '</label>';
+					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '">';
+					$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
 					$checkbox_start = 0;
 
@@ -290,7 +291,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-						. $args['label'] . $required . '</label>';
+						. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
 
@@ -470,7 +471,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						),
 						'span' => array(),
 					)
-				) . $required . '</label>';
+				) . $required . $tooltip_html . '</label>';
 			}
 
 			$field_html     .= $field;
@@ -579,6 +580,14 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 							case 'country':
 								$class_name              = ur_load_form_field_class( $field_key );
 								$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
+								break;
+
+							case 'file':
+								$extra_params['max_files'] = isset( $field->general_setting->max_files ) ? $field->general_setting->max_files : '';
+								break;
+
+							case 'phone':
+								$extra_params['phone_format'] = isset( $field->general_setting->phone_format ) ? $field->general_setting->phone_format : '';
 								break;
 
 							default:

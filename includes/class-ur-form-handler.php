@@ -324,6 +324,16 @@ class UR_Form_Handler {
 	 */
 	public static function process_login() {
 
+		// Custom error messages.
+		$messages = array(
+			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
+			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
+			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
+			'pending_approval'     => get_option( 'user_registration_message_pending_approval', null ),
+			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
+		);
+
 		$nonce_value     = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
 		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
@@ -363,7 +373,7 @@ class UR_Form_Handler {
 				}
 
 				if ( empty( $username ) ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Username is required.', 'user-registration' ) );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['username_is_required'] );
 				}
 
 				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -372,7 +382,7 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'A user could not be found with this email address.', 'user-registration' ) );
+						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				} else {
 					$creds['user_login'] = $username;
@@ -391,6 +401,20 @@ class UR_Form_Handler {
 				$user = wp_signon( apply_filters( 'user_registration_login_credentials', $creds ), is_ssl() );
 
 				if ( is_wp_error( $user ) ) {
+					// Set custom error messages.
+					if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
+						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
+					}
+					if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
+						$user->errors['invalid_username'][0] = $messages['invalid_username'];
+					}
+					if ( ! empty( $user->errors['pending_approval'] ) && ! empty( $messages['pending_approval'] ) ) {
+						$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['pending_approval'] );
+					}
+					if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
+						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
+					}
+
 					$message = $user->get_error_message();
 					$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 					throw new Exception( $message );

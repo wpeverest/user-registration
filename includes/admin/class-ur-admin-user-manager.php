@@ -190,7 +190,7 @@ class UR_Admin_User_Manager {
 
 		if ( is_array( $user_status ) ) {
 
-			if ( 'admin_approval' === $user_status['login_option'] ) {
+			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
 				return ( $user_status['user_status'] == self::APPROVED );
 			}
 		}
@@ -198,7 +198,7 @@ class UR_Admin_User_Manager {
 	}
 
 	/**
-	 * Check if the user is pending
+	 * Check if the user is pending.
 	 *
 	 * @return bool
 	 */
@@ -206,7 +206,7 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			if ( 'admin_approval' === $user_status['login_option'] ) {
+			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
 				return ( $user_status['user_status'] == self::PENDING );
 			}
 		}
@@ -223,7 +223,7 @@ class UR_Admin_User_Manager {
 
 		if ( is_array( $user_status ) ) {
 
-			if ( 'admin_approval' === $user_status['login_option'] ) {
+			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
 				return ( $user_status['user_status'] == self::DENIED );
 			}
 		}

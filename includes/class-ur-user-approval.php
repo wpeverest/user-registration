@@ -300,7 +300,8 @@ class UR_User_Approval {
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
-		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		// Check if the form is our form and the login option is admin approval.
+		if ( 0 !== $form_id && 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 
 			if ( ! $user_manager->is_approved() ) {

@@ -125,6 +125,8 @@ class UR_AddOn_Updater {
 
 				$_transient_data->response[ $this->name ] = $version_info;
 
+			} else {
+				$_transient_data->no_update[ $this->name ] = $version_info;
 			}
 
 			$_transient_data->last_checked           = current_time( 'timestamp' );
