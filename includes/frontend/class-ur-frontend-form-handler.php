@@ -432,9 +432,15 @@ class UR_Frontend_Form_Handler {
 		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
 			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
-				$field_label = $form_field_data[ $key ]->general_setting->label;
-				$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
-				array_push( self::$response_array, $response );
+
+				// Check for the field visibility settings.
+				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
+					return;
+				} else {
+					$field_label = $form_field_data[ $key ]->general_setting->label;
+					$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+					array_push( self::$response_array, $response );
+				}
 			}
 		}
 
