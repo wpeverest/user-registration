@@ -1572,12 +1572,7 @@ jQuery(function ($) {
 
 				if ( $this_node.prop('multiple') ) {
 					var selected_options = $this_node.val();
-
-					if ( Array.isArray( selected_options ) ) {
-						selected_options.forEach( function( value ) {
-							hidden_node.find( 'option[value="' + value + '"]' ).attr( 'selected', 'selected' );
-						});
-					}
+					hidden_node.val( selected_options );
 				} else {
 					hidden_node.find('option[value="' + $this_node.val() + '"]').attr( 'selected', 'selected' );
 				}
