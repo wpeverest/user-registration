@@ -67,7 +67,7 @@ function ur_get_user_report( $form_id ) {
 	$last_month_users = 0;
 
 	foreach ( $users as $user ) {
-		$user_registered = date( 'Y-m-d', strtotime( $user->data->user_registered ) );
+		$user_registered = date_i18n( 'Y-m-d', strtotime( $user->data->user_registered ) );
 		$user_form       = get_user_meta( $user->ID, 'ur_form_id', true );
 
 		if ( (int) $form_id === (int) $user_form ) {
@@ -79,11 +79,11 @@ function ur_get_user_report( $form_id ) {
 
 			// Get last week date.
 			$last_week = strtotime( 'now' ) - WEEK_IN_SECONDS;
-			$last_week = date( 'Y-m-d', $last_week );
+			$last_week = date_i18n( 'Y-m-d', $last_week );
 
 			// Get last month date.
 			$last_month = strtotime( 'now' ) - MONTH_IN_SECONDS;
-			$last_month = date( 'Y-m-d', $last_month );
+			$last_month = date_i18n( 'Y-m-d', $last_month );
 
 			// Get last week users count.
 			if ( $user_registered > $last_week ) {
@@ -534,7 +534,7 @@ function ur_check_activation_date() {
 	// Plugin Activation Time.
 	$activation_date = get_option( 'user_registration_activated' );
 	$last_month      = strtotime( 'now' ) - MONTH_IN_SECONDS;
-	$last_month      = date( 'Y-m-d', $last_month );
+	$last_month      = date_i18n( 'Y-m-d', $last_month );
 
 	if ( ! empty( $activation_date ) ) {
 		if ( $activation_date < $last_month ) {
