@@ -41,7 +41,7 @@ class UR_Admin_User_List_Manager {
 		add_action( 'show_user_profile', array( $this, 'render_profile_field' ) );
 		add_action( 'edit_user_profile', array( $this, 'render_profile_field' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'save_profile_field' ) );
-		add_filter( 'user_row_actions', array( $this, 'ceate_quick_links' ), 10, 2 );
+		add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 		add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
 		add_filter( 'manage_users_custom_column', array( $this, 'add_column_cell' ), 10, 3 );
 		add_filter( 'manage_users_sortable_columns', array( $this, 'make_registered_at_column_sortable' ) );
@@ -49,14 +49,14 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
-	 * Create two quick links Approve and Deny for each user in the users list
+	 * Create two quick links Approve and Deny for each user in the users list.
 	 *
-	 * @param $actions
-	 * @param $user
+	 * @param  array  $actions the approve or pending action.
+	 * @param  string $user The id of the user.
 	 *
 	 * @return array
 	 */
-	public function ceate_quick_links( $actions, $user ) {
+	public function create_quick_links( $actions, $user ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
 
@@ -101,6 +101,16 @@ class UR_Admin_User_List_Manager {
 		return $actions;
 	}
 
+	/**
+	 * @deprecated 1.8.7
+	 *
+	 * @param  array  $actions the approve or pending action.
+	 * @param  string $user The id of the user.
+	 * @return void
+	 */
+	public function ceate_quick_links( $actions, $user ) {
+		ur_deprecated_function( 'UR_Email_Confirmation::ceate_quick_links', '1.8.7', 'UR_Email_Confirmation::create_quick_links' );
+	}
 
 	/**
 	 * Trigger the action query and check if some users have been approved or denied
@@ -266,10 +276,20 @@ class UR_Admin_User_List_Manager {
 		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
 	}
 
+	/**
+	 * Filter user list based upon approval status and specific user registration forms.
+	 *
+	 * @param string $which Used to determine which filter selector i.e. top or bottom is used to filter.
+	 */
 	public function add_status_filter( $which ) {
 
-		$id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
-		$filter_value = ( isset( $_GET[ $id ] ) && ! empty( $_GET[ $id ] ) ) ? $_GET[ $id ] : false;
+		// Get the filter selector id for approval status and the selected status.
+		$status_id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
+		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? $_GET[ $status_id ] : false;
+
+		// Get the filter selector id for specific forms and the selected form id.
+		$specific_form_id           = 'bottom' === $which ? 'ur_specific_form_user2' : 'ur_specific_form_user';
+		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? $_GET[ $specific_form_id ] : false;
 
 		$approved_label = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::APPROVED );
 		$pending_label  = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::PENDING );
@@ -279,14 +299,30 @@ class UR_Admin_User_List_Manager {
 		</div><!-- .alignleft.actions opened in extra_tablenav() - class-wp-users-list-table.php:259 -->
 		<div class="alignleft actions">
 
-		<label class="screen-reader-text" for="<?php echo $id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
-		<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
+		<!-- Filter for approval status. -->
+		<label class="screen-reader-text" for="<?php echo $status_id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
+		<select name="<?php echo $status_id; ?>" id="<?php echo $status_id; ?>">
 			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
 
 		<?php
-		echo '<option value="approved" ' . selected( 'approved', $filter_value ) . '>' . $approved_label . '</option>';
-		echo '<option value="pending" ' . selected( 'pending', $filter_value ) . '>' . $pending_label . '</option>';
-		echo '<option value="denied" ' . selected( 'denied', $filter_value ) . '>' . $denied_label . '</option>';
+		echo '<option value="approved" ' . selected( 'approved', $status_filter_value ) . '>' . $approved_label . '</option>';
+		echo '<option value="pending" ' . selected( 'pending', $status_filter_value ) . '>' . $pending_label . '</option>';
+		echo '<option value="denied" ' . selected( 'denied', $status_filter_value ) . '>' . $denied_label . '</option>';
+		?>
+		</select>
+
+		<!-- Filter for specific forms. -->
+		<label class="screen-reader-text" for="<?php echo $specific_form_id; ?>"><?php _e( 'All Forms', 'user-registration' ); ?></label>
+		<select name="<?php echo $specific_form_id; ?>" id="<?php echo $specific_form_id; ?>">
+			<option value=""><?php _e( 'All UR Forms', 'user-registration' ); ?></option>
+
+		<?php
+				$all_forms = ur_get_all_user_registration_form();
+
+		foreach ( $all_forms as $form_id => $form_name ) {
+			echo '<option value="' . $form_id . '" ' . selected( $form_id, $specific_form_filter_value ) . ' >' . $form_name . '</option>';
+		}
+
 		?>
 		</select>
 		<?php
@@ -300,74 +336,102 @@ class UR_Admin_User_List_Manager {
 	 * @param $query
 	 */
 	public function filter_users_by_approval_status( $query ) {
+		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
 
-		$ur_user_filter_action    = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
+		// Get the selected value of user approval status from top or bottom user approval filter.
 		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? $_REQUEST['ur_user_approval_status'] : false;
 		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? $_REQUEST['ur_user_approval_status2'] : false;
 
-		if ( ! $ur_user_filter_action || ( ! $ur_user_approval_status && ! $ur_user_approval_status2 ) ) {
+		// Get the selected id of specific form from top or bottom user form filter.
+		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? $_REQUEST['ur_specific_form_user'] : false;
+		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? $_REQUEST['ur_specific_form_user2'] : false;
+
+		if ( ! $ur_user_filter_action ) {
 			return;
 		}
 
-		$status = null;
-
+		$status     = null;
+		$form_id    = null;
+		$meta_query = null;
 		if ( $ur_user_approval_status2 ) {
 			$status = sanitize_text_field( $ur_user_approval_status2 );
 		} elseif ( $ur_user_approval_status ) {
 			$status = sanitize_text_field( $ur_user_approval_status );
 		}
 
-		switch ( $status ) {
-			case 'approved':
-				$status = UR_Admin_User_Manager::APPROVED;
-				break;
-			case 'pending':
-				$status = UR_Admin_User_Manager::PENDING;
-				break;
-			case 'denied':
-				$status = UR_Admin_User_Manager::DENIED;
-				break;
-			default:
-				return;
+		if ( $ur_specific_form_user2 ) {
+			$form_id = sanitize_text_field( $ur_specific_form_user2 );
+		} elseif ( $ur_specific_form_user ) {
+			$form_id = sanitize_text_field( $ur_specific_form_user );
 		}
 
-		$meta_query = array(
-			'relation' => 'OR',
-			array(
-				'key'     => 'ur_user_status',
-				'value'   => $status,
-				'compare' => '=',
-			),
-			array(
-				'key'     => 'ur_confirm_email',
-				'value'   => $status,
-				'compare' => '=',
-			),
-		);
+		// Deduct meta_query to filter user according to approve status.
+		if ( isset( $status ) && '' !== $status ) {
+			switch ( $status ) {
+				case 'approved':
+					$status = UR_Admin_User_Manager::APPROVED;
+					break;
+				case 'pending':
+					$status = UR_Admin_User_Manager::PENDING;
+					break;
+				case 'denied':
+					$status = UR_Admin_User_Manager::DENIED;
+					break;
+				default:
+					return;
+			}
 
-		if ( $status === UR_Admin_User_Manager::APPROVED ) {
 			$meta_query = array(
 				'relation' => 'OR',
 				array(
-					'relation' => 'AND',
-					array(
-						'key'     => 'ur_user_status',
-						'compare' => 'NOT EXISTS', // works!
-						'value'   => '', // This is ignored, but is necessary...
-					),
-					array(
-						'key'     => 'ur_confirm_email',
-						'compare' => 'NOT EXISTS', // works!
-						'value'   => '', // This is ignored, but is necessary...
-					),
+					'key'     => 'ur_user_status',
+					'value'   => $status,
+					'compare' => '=',
 				),
 				array(
-					'key'   => 'ur_user_status',
-					'value' => UR_Admin_User_Manager::APPROVED,
+					'key'     => 'ur_confirm_email',
+					'value'   => $status,
+					'compare' => '=',
 				),
+			);
+
+			if ( $status === UR_Admin_User_Manager::APPROVED ) {
+				$meta_query = array(
+					'relation' => 'OR',
+					array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'ur_user_status',
+							'compare' => 'NOT EXISTS', // works!
+							'value'   => '', // This is ignored, but is necessary...
+						),
+						array(
+							'key'     => 'ur_confirm_email',
+							'compare' => 'NOT EXISTS', // works!
+							'value'   => '', // This is ignored, but is necessary...
+						),
+					),
+					array(
+						'key'   => 'ur_user_status',
+						'value' => UR_Admin_User_Manager::APPROVED,
+					),
+					array(
+						'key'   => 'ur_confirm_email',
+						'value' => UR_Admin_User_Manager::APPROVED,
+					),
+				);
+			}
+		}
+
+		// Deduct meta_query to filter user according to form id and approval status set.
+		if ( isset( $form_id ) && '' !== $form_id ) {
+			$meta_query = array(
+				'relation' => 'AND',
+				$meta_query,
 				array(
-					'key'   => 'ur_confirm_email',
-					'value' => UR_Admin_User_Manager::APPROVED,
+					'key'     => 'ur_form_id',
+					'value'   => $form_id,
+					'compare' => '=',
 				),
 			);
 		}
