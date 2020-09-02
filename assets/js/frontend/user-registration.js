@@ -810,7 +810,12 @@
 				if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
 					var wrapper                   = $this.closest('form');
 					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
-					var disallowedListArray            = wp.passwordStrength.userInputDisallowedList();
+					var disallowedListArray = [];
+					if ( 'function' === typeof wp.passwordStrength.userInputDisallowedList ) {
+						disallowedListArray = wp.passwordStrength.userInputDisallowedList();
+					} else {
+						disallowedListArray = wp.passwordStrength.userInputBlacklist();
+					}
 
 					disallowedListArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in disallowedList.
 					disallowedListArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in disallowedList.
