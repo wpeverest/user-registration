@@ -88,7 +88,8 @@ function ur_caught_exception( $exception_object, $function = '', $args = array()
 	$message  = $exception_object->getMessage();
 	$message .= '. Args: ' . print_r( $args, true ) . '.';
 
-	do_action( 'everest_forms_caught_exception', $exception_object, $function, $args );
+	ur_do_deprecated_action( 'everest_forms_caught_exception', array(  $exception_object, $function, $args ), '1.8.6', 'user_registration_caught_exception' );
+	do_action( 'user_registration_caught_exception', $exception_object, $function, $args );
 	error_log( "Exception caught in {$function}. {$message}." );
 	// @codingStandardsIgnoreEnd
 }
