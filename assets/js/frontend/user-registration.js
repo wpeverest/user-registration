@@ -816,12 +816,17 @@
 				if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
 					var wrapper                   = $this.closest('form');
 					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
-					var blacklistArray            = wp.passwordStrength.userInputBlacklist();
+					var disallowedListArray = [];
+					if ( 'function' === typeof wp.passwordStrength.userInputDisallowedList ) {
+						disallowedListArray = wp.passwordStrength.userInputDisallowedList();
+					} else {
+						disallowedListArray = wp.passwordStrength.userInputBlacklist();
+					}
 
-					blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
-					blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+					disallowedListArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in disallowedList.
+					disallowedListArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in disallowedList.
 
-					var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
+					var strength = wp.passwordStrength.meter( $this.val(), disallowedListArray );
 					if( strength < minimum_password_strength ) {
 						if( $this.val() !== "" ){
 							wrapper.find( '#' + this_data_id + '_error' ).remove();
