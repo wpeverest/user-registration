@@ -242,7 +242,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
-
 		switch ( $args['type'] ) {
 
 			case 'title':
@@ -276,10 +275,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
-						if ( is_array( $default ) && in_array( trim( $choice_index ), $default ) ) {
-							$value = 'checked="checked"';
-						} elseif ( $default === $choice_index ) {
-							$value = 'checked="checked"';
+						if ( '' !== $default ) {
+							if ( is_array( $default ) && in_array( trim( $choice_index ), $default ) ) {
+								$value = 'checked="checked"';
+							} elseif ( $default === $choice_index ) {
+								$value = 'checked="checked"';
+							}
 						}
 
 						$field .= '<li class="ur-checkbox-list">';
@@ -434,7 +435,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
 						$field .= '<li class="ur-radio-list">';
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . checked( $value, trim( $option_index ), false ) . ' /> ';
+
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
