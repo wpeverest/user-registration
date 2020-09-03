@@ -62,6 +62,8 @@ class UR_Admin_Import_Export_Forms {
 		$meta_key_prefix = 'user_registration';
 		$form_post_meta  = $this->get_post_meta_by_prefix( $form_id, $meta_key_prefix );
 
+		$form_post->post_content = str_replace( '\\', '\\\\', $form_post->post_content );
+
 		$export_data = array(
 			'form_post'      => array(
 				'post_content' => $form_post->post_content,

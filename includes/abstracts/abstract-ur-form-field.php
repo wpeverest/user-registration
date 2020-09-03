@@ -101,7 +101,10 @@ abstract class UR_Form_Field {
 		ob_start();
 		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
-		include $admin_template_path;
+
+		if ( file_exists( $admin_template_path ) ) {
+			include $admin_template_path;
+		}
 		$template = ob_get_clean();
 
 		$settings = $this->get_setting();

@@ -405,6 +405,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					return false;
 				}
 
+				$post->post_content = str_replace( '\\', '\\\\', $post->post_content );
+
 				/*
 				 * new post data array
 				 */
@@ -824,7 +826,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			try {
-				$form_data_array = json_decode( $form_data_content );
+				$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
+				$form_data_array   = json_decode( $form_data_content );
 
 				if ( json_last_error() != JSON_ERROR_NONE ) {
 					throw new Exception( '' );
