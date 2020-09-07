@@ -682,7 +682,8 @@
 
 	.ur-field {
 		label {
-			font-weight: 400;
+			// font-weight: 400;
+			// word-break: break-all;
 
 			&:last-child {
 				margin-bottom: 0;
