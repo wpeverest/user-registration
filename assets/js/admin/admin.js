@@ -1323,19 +1323,24 @@ jQuery(function ($) {
 			var is_checkbox = $(this).closest('.ur-general-setting').hasClass('ur-setting-checkbox');
 
 			if( 'options' === $(this).attr('data-field') ) {
-				general_setting_data['options'] = option_values.push( get_ur_data($(this) ) );
-				general_setting_data['options'] = option_values;
+				var choice_value = $.trim( get_ur_data($(this)) );
+				if( option_values.every( function(each_value) { return  each_value !== choice_value })){
+					general_setting_data['options'] = option_values.push( choice_value );
+					general_setting_data['options'] = option_values;
+				}
+
 			} else {
 
 				if( 'default_value' === $(this).attr('data-field') ) {
 
 					if( is_checkbox === true ) {
+
 						if( $(this).is(":checked") ) {
 							general_setting_data['default_value'] = default_values.push( get_ur_data( $(this)));
 							general_setting_data['default_value'] = default_values;
 						}
 					} else if( $(this).is(":checked") ) {
-							general_setting_data['default_value'] = get_ur_data($(this) );
+						general_setting_data['default_value'] = get_ur_data($(this) );
 					}
 
 				} else if ( 'html' === $(this).attr('data-field') ) {
@@ -1345,8 +1350,6 @@ jQuery(function ($) {
 				}
 			}
 		});
-
-
 		return general_setting_data;
 	}
 
@@ -1368,7 +1371,9 @@ jQuery(function ($) {
 				// Check input type.
 				switch ( $this_node.attr( 'type' ) ) {
 					case 'checkbox':
-						value = $this_node.is( ':checked' );
+						if( $this_node.is( ':checked' ) ){
+							value = $this_node.val();
+						}
 						break;
 
 					default:
@@ -1572,12 +1577,7 @@ jQuery(function ($) {
 
 				if ( $this_node.prop('multiple') ) {
 					var selected_options = $this_node.val();
-
-					if ( Array.isArray( selected_options ) ) {
-						selected_options.forEach( function( value ) {
-							hidden_node.find( 'option[value="' + value + '"]' ).attr( 'selected', 'selected' );
-						});
-					}
+					hidden_node.val( selected_options );
 				} else {
 					hidden_node.find('option[value="' + $this_node.val() + '"]').attr( 'selected', 'selected' );
 				}
@@ -1609,12 +1609,15 @@ jQuery(function ($) {
 		var array_value = [];
 		var li_elements = this_node.closest('ul').find('li');
 		var checked_index = this_node.closest('li').index();
-
 		li_elements.each( function( index, element) {
 			var value 	 = $( element ).find('input.ur-type-checkbox-label').val();
 				value 	 = $.trim(value);
 				checkbox = $( element ).find('input.ur-type-checkbox-value').is( ':checked' );
-				array_value.push( {value:value, checkbox:checkbox });
+
+				if( array_value.every( function(each_value) { return  each_value.value !== value })){
+					array_value.push({value:value, checkbox:checkbox });
+				}
+
 		});
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
@@ -1622,15 +1625,17 @@ jQuery(function ($) {
 		checkbox.html('');
 
 		for (var i = 0; i < array_value.length; i++) {
-			if (array_value[i] !== '') {
+			if ( array_value[i] !== '' ) {
 				checkbox.append('<label><input value="' + array_value[i].value.trim() + '" type="checkbox" ' + ( (array_value[i].checkbox) ? 'checked' : '' ) + ' disabled>' + array_value[i].value.trim() + '</label>');
 			}
 		}
 
-		if( this_node.is( ':checked' ) ) {
-			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
-		} else {
-			wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
+		if ( 'checkbox' === this_node.attr( 'type' ) ) {
+			if( this_node.is( ':checked' ) ) {
+				wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').prop("checked", true);
+			} else {
+				wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').removeAttr( 'checked' );
+			}
 		}
 	}
 
@@ -1647,7 +1652,10 @@ jQuery(function ($) {
 			if( radio === true) {
 				checked_index = index;
 			}
-			array_value.push({value:value, radio:radio });
+
+			if( array_value.every( function(each_value) { return  each_value.value !== value })){
+				array_value.push({value:value, radio:radio });
+			}
 		});
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
@@ -1664,7 +1672,7 @@ jQuery(function ($) {
 		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
 			var radio_input = $(element).find( '[data-field="default_value"]' );
 			if( index === checked_index ){
-				radio_input.attr( 'checked', 'checked' );
+				radio_input.prop("checked", true);
 			}else{
 				radio_input.removeAttr( 'checked' );
 			}
@@ -1672,7 +1680,7 @@ jQuery(function ($) {
 	}
 
 	function render_select_box(this_node) {
-		value = $.trim( this_node.val() );
+		var value = $.trim( this_node.val() );
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var checked_index = this_node.closest('li').index();
 		var select = wrapper.find('.ur-field').find('select');
@@ -1680,8 +1688,15 @@ jQuery(function ($) {
 		select.html('');
 		select.append('<option value=\'' + value + '\'>' + value + '</option>');
 
-		wrapper.find('.ur-general-setting-options li input[data-field="default_value"]').removeAttr( 'checked' );
-		wrapper.find('.ur-general-setting-options li:nth(' + checked_index + ') input[data-field="default_value"]').attr( 'checked', 'checked' );
+		// Loop through options in active fields general setting hidden div.
+		wrapper.find( '.ur-general-setting-options > ul.ur-options-list > li' ).each( function( index, element ) {
+			var radio_input = $(element).find( '[data-field="default_value"]' );
+			if( index === checked_index ){
+				radio_input.prop("checked", true);
+			}else{
+				radio_input.removeAttr( 'checked' );
+			}
+		} );
 	}
 
 	function trigger_general_setting_field_name($label) {
@@ -1700,7 +1715,7 @@ jQuery(function ($) {
 
 		var wrapper = $('.ur-selected-item.ur-item-active');
 		var index = $label.closest('li').index();
-		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).attr( 'value', $label.val() );
+		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="' + $label.attr('data-field') + '"]' ).val( $label.val() );
 		wrapper.find( '.ur-general-setting-block li:nth(' + index + ') input[data-field="default_value"]' ).val( $label.val() );
 		$label.closest('li').find('[data-field="default_value"]').val( $label.val() );
 	}

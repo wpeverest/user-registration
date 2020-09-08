@@ -101,7 +101,10 @@ abstract class UR_Form_Field {
 		ob_start();
 		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
-		include $admin_template_path;
+
+		if ( file_exists( $admin_template_path ) ) {
+			include $admin_template_path;
+		}
 		$template = ob_get_clean();
 
 		$settings = $this->get_setting();
@@ -173,12 +176,12 @@ abstract class UR_Form_Field {
 		if ( isset( $data['advance_setting']->enable_min_max ) && 'true' === $data['advance_setting']->enable_min_max ) {
 			if ( isset( $data['advance_setting']->min_date ) ) {
 				$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
-				$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
+				$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
 			}
 
 			if ( isset( $data['advance_setting']->max_date ) ) {
 				$max_date                                        = str_replace( '/', '-', $data['advance_setting']->max_date );
-				$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
+				$form_data['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $data['advance_setting']->date_format, strtotime( $max_date ) ) : '';
 			}
 		}
 

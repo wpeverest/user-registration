@@ -8,11 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7
-$default_options 	 = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
-$old_options         = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $default_options;
-$options  			 = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
-$default_value 		 = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : '';
-$options 			 = array_map( 'trim', $options );
+$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+$old_options     = isset( $this->admin_data->advance_setting->options ) ? explode( ',', trim( $this->admin_data->advance_setting->options, ',' ) ) : $default_options;
+$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+$default_value   = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : '';
+$options         = array_map( 'trim', $options );
 ?>
 
 <div class="ur-input-type-select ur-admin-template">
@@ -26,7 +26,13 @@ $options 			 = array_map( 'trim', $options );
 			}
 
 			foreach ( $options as $option ) {
-				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' '" . checked( $option, $default_value, false ) . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
+				$checked = '';
+
+				if ( ! empty( $option ) ) {
+					$checked = checked( $option, $default_value, false );
+				}
+
+				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' '" . $checked . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
 			}
 			?>
 	</div>

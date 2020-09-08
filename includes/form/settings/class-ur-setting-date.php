@@ -57,9 +57,9 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'default'     => 'Y-m-d',
 				'required'    => false,
 				'options'     => array(
-					'Y-m-d'  => date( 'Y-m-d' ) . ' (Y-m-d)',
-					'F j, Y' => date( 'F j, Y' ) . ' (F j, Y)',
-					'd/m/Y'  => date( 'd/m/Y' ) . ' (d/m/Y)',
+					'Y-m-d'  => date_i18n( 'Y-m-d' ) . ' (Y-m-d)',
+					'F j, Y' => date_i18n( 'F j, Y' ) . ' (F j, Y)',
+					'd/m/Y'  => date_i18n( 'd/m/Y' ) . ' (d/m/Y)',
 				),
 				'tip'         => __( 'Which format do you want to use to show date.', 'user-registration' ),
 			),

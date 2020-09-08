@@ -337,7 +337,7 @@
 									formwise_data.value = field.val();
 							}
 
-							if( phone_id.includes( field_name ) ) {
+							if( ur_includes( phone_id, field_name ) ) {
 								formwise_data.value = field.siblings( 'input[type="hidden"]' ).val();
 							}
 							break;
@@ -527,6 +527,7 @@
 									if (0 === captchaResponse.length) {
 
 										form.show_message('<p>' + ursL10n.captcha_error + '</p>', 'error', $this);
+										$this.find( '.ur-submit-button' ).prop( 'disabled', false );
 										return;
 									}
 
@@ -777,7 +778,12 @@
 			// Load a flatpicker for the field, if hasn't been loaded.
 			if ( ! date_flatpickr ) {
 				var formated_date = $( this ).closest( '.ur-field-item' ).find( '#formated_date' ).val();
-				var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+
+				if( 0 < $( '.ur-frontend-form').length ) {
+					var date_selector = $( '.ur-frontend-form #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+				}else{
+					var date_selector = $( '.woocommerce-MyAccount-content #' + field_id ).attr( 'type', 'text' ).val( formated_date );
+				}
 
 				$( this ).attr( 'data-date-format', date_selector.data( 'date-format') );
 				$( this ).attr( 'data-mode', date_selector.data( 'mode') );
@@ -810,12 +816,17 @@
 				if ( 'yes' === enable_strength_password || '1' === enable_strength_password ) {
 					var wrapper                   = $this.closest('form');
 					var minimum_password_strength = wrapper.attr( 'data-minimum-password-strength' );
-					var blacklistArray            = wp.passwordStrength.userInputBlacklist();
+					var disallowedListArray = [];
+					if ( 'function' === typeof wp.passwordStrength.userInputDisallowedList ) {
+						disallowedListArray = wp.passwordStrength.userInputDisallowedList();
+					} else {
+						disallowedListArray = wp.passwordStrength.userInputBlacklist();
+					}
 
-					blacklistArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in blacklist.
-					blacklistArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in blacklist.
+					disallowedListArray.push( wrapper.find( 'input[data-id="user_email"]' ).val() ); // Add email address in disallowedList.
+					disallowedListArray.push( wrapper.find( 'input[data-id="user_login"]' ).val() ); // Add username in disallowedList.
 
-					var strength = wp.passwordStrength.meter( $this.val(), blacklistArray );
+					var strength = wp.passwordStrength.meter( $this.val(), disallowedListArray );
 					if( strength < minimum_password_strength ) {
 						if( $this.val() !== "" ){
 							wrapper.find( '#' + this_data_id + '_error' ).remove();
@@ -944,3 +955,14 @@ function request_recaptcha_token() {
 		});
 	}
 };
+
+function ur_includes( arr, item ) {
+	if ( Array.isArray(arr) ) {
+		for ( var i = 0; i < arr.length; i += 1 ) {
+			if ( arr === item ) {
+				return true;
+			}
+		}
+	}
+	return false;
+}

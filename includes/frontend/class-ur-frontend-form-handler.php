@@ -77,13 +77,14 @@ class UR_Frontend_Form_Handler {
 			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
 			$user_role = apply_filters( 'user_registration_user_role', $user_role, self::$valid_form_data, $form_id );
 			$userdata  = array(
-				'user_login'   => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
-				'user_pass'    => $user_pass,
-				'user_email'   => self::$valid_form_data['user_email']->value,
-				'display_name' => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
-				'user_url'     => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
+				'user_login'      => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
+				'user_pass'       => $user_pass,
+				'user_email'      => self::$valid_form_data['user_email']->value,
+				'display_name'    => isset( self::$valid_form_data['display_name']->value ) ? self::$valid_form_data['display_name']->value : '',
+				'user_url'        => isset( self::$valid_form_data['user_url']->value ) ? self::$valid_form_data['user_url']->value : '',
 				// When creating an user, `user_pass` is expected.
-				'role'         => $user_role,
+				'role'            => $user_role,
+				'user_registered' => current_time( 'Y-m-d H:i:s' ),
 			);
 
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
@@ -432,9 +433,15 @@ class UR_Frontend_Form_Handler {
 		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
 			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
-				$field_label = $form_field_data[ $key ]->general_setting->label;
-				$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
-				array_push( self::$response_array, $response );
+
+				// Check for the field visibility settings.
+				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
+					return;
+				} else {
+					$field_label = $form_field_data[ $key ]->general_setting->label;
+					$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+					array_push( self::$response_array, $response );
+				}
 			}
 		}
 
