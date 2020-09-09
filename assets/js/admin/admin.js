@@ -1365,6 +1365,7 @@ jQuery(function ($) {
 	function get_ur_data($this_node) {
 		var node_type = $this_node.get(0).tagName.toLowerCase();
 		var value = '';
+
 		switch (node_type) {
 			case 'input':
 				// Check input type.
