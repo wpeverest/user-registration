@@ -32,28 +32,37 @@ do_action( 'user_registration_before_change_password_form' );
 					do_action( 'user_registration_change_password_form_start' );
 				?>
 				<fieldset>
-					<legend><?php _e( 'Change Password', 'user-registration' ); ?></legend>
+					<legend><?php
+					echo ur_string_translation( null, 'ur_change_password_title',
+					__( 'Change Password', 'user-registration' ) ); ?></legend>
 
 					<?php if ( apply_filters( 'user_registration_change_password_current_password_display', true ) ) { ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-						<label for="password_current"><?php _e( 'Current password', 'user-registration' ); ?></label>
+						<label for="password_current"><?php
+						echo ur_string_translation( null, 'ur_current_password_label',
+						__( 'Current password', 'user-registration' ) ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' .
+							ur_string_translation( null, 'ur_show_password_attribute',
+							esc_attr__( 'Show Password', 'user-registration' ) ) . '"></a>';
 						}
 						?>
 						</span>
 					</p>
 					<?php } ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-						<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?></label>
+						<label for="password_1"><?php echo ur_string_translation( null, 'ur_current_password_label',
+						__( 'New password', 'user-registration' ) ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" />
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' .
+							ur_string_translation( null, 'ur_show_password_attribute',
+							esc_attr__( 'Show Password', 'user-registration' ) ) . '"></a>';
 						}
 						?>
 						</span>
