@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.8.7\n"
+"Project-Id-Version: User Registration 1.8.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-09-08T18:15:37+05:45\n"
+"POT-Creation-Date: 2020-09-14T12:11:09+05:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
@@ -1391,7 +1391,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:69
-#: includes/class-ur-emailer.php:348
+#: includes/class-ur-emailer.php:347
 msgid "A New User Registered"
 msgstr ""
 
@@ -1447,7 +1447,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:60
-#: includes/class-ur-emailer.php:292
+#: includes/class-ur-emailer.php:291
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -1472,7 +1472,7 @@ msgid "Email sent to the user with a verification link when email confirmation t
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:52
-#: includes/class-ur-emailer.php:283
+#: includes/class-ur-emailer.php:282
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -1501,7 +1501,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:70
-#: includes/class-ur-emailer.php:490
+#: includes/class-ur-emailer.php:489
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -1531,7 +1531,7 @@ msgid "Enable this email sent to the user notifying the registration is approved
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:60
-#: includes/class-ur-emailer.php:415
+#: includes/class-ur-emailer.php:414
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1560,8 +1560,8 @@ msgid "Enable this email sent to the user notifying the registration is denied b
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:60
-#: includes/class-ur-emailer.php:303
-#: includes/class-ur-emailer.php:403
+#: includes/class-ur-emailer.php:302
+#: includes/class-ur-emailer.php:402
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -1590,7 +1590,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:391
+#: includes/class-ur-emailer.php:390
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -1621,7 +1621,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:59
-#: includes/class-ur-emailer.php:446
+#: includes/class-ur-emailer.php:445
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -1654,7 +1654,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:60
-#: includes/class-ur-emailer.php:314
+#: includes/class-ur-emailer.php:313
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -2014,7 +2014,7 @@ msgid "Email not verified! Verify your email by clicking on the link sent to you
 msgstr ""
 
 #: includes/class-ur-emailer.php:146
-#: includes/class-ur-emailer.php:595
+#: includes/class-ur-emailer.php:594
 msgid "Chosen Password"
 msgstr ""
 
@@ -4145,7 +4145,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: templates/form-registration.php:152
+#: templates/form-registration.php:153
 msgid "Form not found, form id :"
 msgstr ""
 

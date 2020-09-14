@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.5.1
-Stable tag: 1.8.7
+Stable tag: 1.8.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -147,6 +147,9 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.7.1 - 14/09/2020
+* Fix - Conditional logic compatibility with WordPress 5.5
 
 = 1.8.7 - 09/09/2020
 * Enhance - Filter Users with approval status and specific UR forms.
