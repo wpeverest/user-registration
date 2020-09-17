@@ -242,6 +242,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
+
 		switch ( $args['type'] ) {
 
 			case 'title':
@@ -266,7 +267,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$choices = isset( $options ) ? $options : array();
 
-					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '">';
+					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
 					$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
 					$checkbox_start = 0;
@@ -731,9 +732,12 @@ function ur_logout_url( $redirect = '' ) {
 	}
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
-	if ( $logout_endpoint ) {
+	if ( $logout_endpoint && !is_front_page()) {
 		return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
 	} else {
+		if ( '' === $redirect ) {
+			$redirect = home_url();
+		}
 		return wp_logout_url( $redirect );
 	}
 }

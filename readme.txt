@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.5
-Stable tag: 1.8.6
+Tested up to: 5.5.1
+Stable tag: 1.8.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -84,8 +84,7 @@ User Registration can be easily extended with some premium addons.
 
 * [Payments (PayPal)](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Integrates PayPal into your forms for registration fee payments, donations, and more.
 
-* [Stripe]
-(https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to accept one time or recurring payments in your registration forms using Stripe.
+* [Stripe](https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to accept one time or recurring payments in your registration forms using Stripe.
 
 * [Geolocation](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Collects and stores users geolocation data along with their form filled information.
 
@@ -97,8 +96,7 @@ User Registration can be easily extended with some premium addons.
 
 * [Customize My Account](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs.
 
-* [Extras]
-(https://wpeverest.com/wordpress-plugins/user-registration/extras/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Combines a bunch of smaller features like analytics, popup forms, domain whitelist, auto password generation, and more.
+* [Extras](https://wpeverest.com/wordpress-plugins/user-registration/extras/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Combines a bunch of smaller features like analytics, popup forms, domain whitelist, auto password generation, and more.
 
 
 == Installation ==
@@ -149,6 +147,26 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.7.1 - 14/09/2020
+* Fix - Conditional logic compatibility with WordPress 5.5
+
+= 1.8.7 - 09/09/2020
+* Enhance - Filter Users with approval status and specific UR forms.
+* Enhance - Add placeholder option in the Date field.
+* Tweak - Choice field option value and default value change and update.
+* Tweak - Delete invite codes and mailchimp date from option table on uninstall.
+* Fix - Import/Export/Duplicate form not working while using html tags in description.
+* Fix - Date Field value disappears on user update by admin and woocommerce compatibility.
+* Fix - Ignore missing field validation based on field visibility settings.
+* Fix - Choice field and country field compatibility with WordPress 5.5
+* Fix - Disabled submit button on ReCaptcha fail.
+* Fix - My account endpoint URLs on the home page.
+* Fix - Registration not working on Internet Explorer browser.
+* Dev - Change date() to date_i18n() function and Timezone Compatibility.
+* Dev - Deprecate Everest Form Hook and introduce new hook instead.
+* Dev - Password Strength Meter compatibility with WordPress 5.5
+* Dev - Remove extra double quotes from checkbox fields label.
 
 = 1.8.6 - 11/08/2020
 * Enhance - Login form customization

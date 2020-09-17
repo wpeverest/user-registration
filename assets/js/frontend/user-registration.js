@@ -337,7 +337,7 @@
 									formwise_data.value = field.val();
 							}
 
-							if( phone_id.includes( field_name ) ) {
+							if( ur_includes( phone_id, field_name ) ) {
 								formwise_data.value = field.siblings( 'input[type="hidden"]' ).val();
 							}
 							break;
@@ -955,3 +955,14 @@ function request_recaptcha_token() {
 		});
 	}
 };
+
+function ur_includes( arr, item ) {
+	if ( Array.isArray(arr) ) {
+		for ( var i = 0; i < arr.length; i += 1 ) {
+			if ( arr === item ) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
