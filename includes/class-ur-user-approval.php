@@ -162,12 +162,16 @@ class UR_User_Approval {
 	/**
 	 * Check the status of an user on login.
 	 *
-	 * @param WP_User $user Users.
+	 * @param mixed $user Users.
 	 * @param string  $password Password.
 	 *
 	 * @return \WP_Error
 	 */
-	public function check_status_on_login( WP_User $user, $password ) {
+	public function check_status_on_login( $user, $password ) {
+
+		if( ! $user instanceof WP_User ) {
+			return $user;
+		 }
 
 		$form_id = ur_get_form_id_by_userid( $user->ID );
 
