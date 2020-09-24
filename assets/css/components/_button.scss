@@ -5,6 +5,11 @@
 		transition: all 0.25s ease 0s;
 		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
+		+ button,
+		.button {
+			margin-left: 8px;
+		}
+
 		&.button-icon {
 			width: 32px;
 			padding: 0;

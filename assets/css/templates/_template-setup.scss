@@ -1,0 +1,56 @@
+.user-registration-template-setup {
+	max-width: 1074px;
+	margin: 40px auto 0;
+
+	*,
+	::before,
+	::after {
+		box-sizing: border-box;
+	}
+}
+
+.user-registration-template-wrap {
+	$self : &;
+	cursor: pointer;
+
+	&__figure {
+		position: relative;
+		margin: 0;
+
+		img {
+			max-width: 100%;
+			display: block;
+		}
+	}
+
+	&__overlay {
+		background: transparentize($gray-base, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		width: 100%;
+		top: 0;
+		bottom: 0;
+		transition: all 0.3s ease 0s;
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	&__title {
+		color: $body-color;
+		font-size: 16px;
+		font-weight: 500;
+
+		&:hover {
+			color: $primary_color;
+		}
+	}
+
+	&:hover {
+		#{$self}__overlay {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}
