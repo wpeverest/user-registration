@@ -115,7 +115,9 @@ class UR_User_Approval {
 		$username  = isset( $user_data->user_login ) ? $user_data->user_login : '';
 		$email     = isset( $user_data->user_email ) ? $user_data->user_email : '';
 
-		UR_Emailer::status_change_email( $email, $username, $status );
+		// Get selected email template id for specific form.
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+		UR_Emailer::status_change_email( $email, $username, $status, $template_id );
 	}
 
 	/**
