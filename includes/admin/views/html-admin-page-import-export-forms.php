@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="user-registration-custom-file">
 								<input type="file" class="user-registration-custom-file__input" name="jsonfile" id="jsonfile" accept=".json"/>
 								<label class="user-registration-custom-file__label" for="csvfile">
-									No file selected..
+									<span class="user-registration-custom-selected-file"><?php esc_html_e( 'No file selected.', 'user_registration_import_users' ); ?></span>
 									<span class="user-registration-custom-file__button">Browse File</span>
 								</label>
 							</div>

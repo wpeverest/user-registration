@@ -962,6 +962,7 @@ jQuery(function ($) {
 
 					$('.ur-export-users-page').prepend(message_string);
 					$('#jsonfile').val("");
+					$( '.user-registration-custom-selected-file' ).html( user_registration_admin_data.no_file_selected );
 				}
 			});
 		});
