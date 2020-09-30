@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 
 						<p>
-							<select name="formid" class="forms-list">
+							<select name="formid" class="ur-input forms-list">
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {
 									echo '<option value ="' . esc_attr( $form_id ) . '">' . esc_html( $form ) . '</option>';
@@ -43,10 +43,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<p class="help">
 							<?php _e( 'Import your forms along with their settings from <strong>JSON</strong> file.', 'user-registration' ); ?>
 						</p>
-						<p>
-							<input type="file" name="jsonfile" id="jsonfile" accept=".json"/>
-							<span class="description">Only JSON file format allowed.</span>
-						</p>
+						<div class="ur-form-group">
+							<div class="user-registration-custom-file">
+								<input type="file" class="user-registration-custom-file__input" name="jsonfile" id="jsonfile" accept=".json"/>
+								<label class="user-registration-custom-file__label" for="csvfile">
+									No file selected..
+									<span class="user-registration-custom-file__button">Browse File</span>
+								</label>
+							</div>
+							<p class="help">Only JSON file format allowed.</p>
+						</div>
 						<div class="publishing-action">
 							<input type="button" class="button button-primary ur_import_form_action_button" name="user_registration_import_form" value="<?php _e( 'Import Forms', 'user-registration' ); ?>">
 						</div>
