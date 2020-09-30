@@ -562,6 +562,10 @@
 			position: relative;
 			padding-right: 24px;
 
+			label {
+				display: inline-block;
+			}
+
 			img.help_tip,
 			.user-registration-help-tip {
 				margin: 0 -24px 0 0;
