@@ -235,6 +235,18 @@ class UR_Admin_Assets {
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+
+			wp_register_script( 'ur-components', UR()->plugin_url() . '/assets/js/ur-components/ur-components' . $suffix . '.js', array( 'jquery' ), 'UR_VERSION', true );
+			wp_enqueue_script( 'ur-components' );
+			wp_localize_script(
+				'ur-components',
+				'ur_components_script_params',
+				array(
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'card_switch_enabled_text'			=> __( 'Enabled', 'user-registration'),
+					'card_switch_disabled_text'			=> __( 'Disabled', 'user-registration')
+				)
+				);
 		}
 
 		// Enqueue flatpickr on user profile screen.
@@ -263,6 +275,7 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION );
 		wp_enqueue_script( 'ur-live-user-notice' );
+
 	}
 
 	/**
