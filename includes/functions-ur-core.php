@@ -1821,3 +1821,32 @@ function ur_parse_args( &$args, $defaults ) {
 	}
 	return $result;
 }
+
+/**
+ * Override email content for specific form.
+ *
+ * @param int $form_id Form Id.
+ * @param object $settings Settings for specific email.
+ * @param string $message Message to be sent in email body.
+ * @param string $subject Subject of the email.
+ *
+ * @return array
+ */
+function user_registration_email_content_overrider($form_id, $settings, $message, $subject) {
+	// Check if email templates addon is active.
+	if( class_exists( 'User_Registration_Email_Templates')) {
+		$email_content_override = ur_get_single_post_meta( $form_id, 'user_registration_email_content_override', '' );
+
+		// Check if the post meta exists and have contents.
+		if( $email_content_override ) {
+
+			// Check if the email override is enabled.
+			if( '1' === $email_content_override[$settings->id]['override']) {
+				$message = $email_content_override[$settings->id]['content'];
+				$subject = $email_content_override[$settings->id]['subject'];
+			}
+		}
+
+	}
+	return array( $message, $subject );
+}

@@ -284,9 +284,12 @@ class UR_Emailer {
 
 		if ( '0' === $email_status ) {
 			$subject = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Email_Confirmation();
-			$message = $message->ur_get_email_confirmation();
+			$settings = new UR_Settings_Email_Confirmation();
+			$message = $settings->ur_get_email_confirmation();
 			$message = get_option( 'user_registration_email_confirmation', $message );
+
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -294,9 +297,11 @@ class UR_Emailer {
 
 		} elseif ( 0 === intval( $status ) ) {
 			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Awaiting_Admin_Approval_Email();
-			$message = $message->ur_get_awaiting_admin_approval_email();
+			$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
+			$message = $settings->ur_get_awaiting_admin_approval_email();
 			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -305,9 +310,11 @@ class UR_Emailer {
 			}
 		} elseif ( -1 === intval( $status ) ) {
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Registration_Denied_Email();
-			$message = $message->ur_get_registration_denied_email();
+			$settings = new UR_Settings_Registration_Denied_Email();
+			$message = $settings->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -316,9 +323,11 @@ class UR_Emailer {
 			}
 		} elseif ( 'default' === $login_option || 'auto_login' === $login_option ) {
 			$subject = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Successfully_Registered_Email();
-			$message = $message->ur_get_successfully_registered_email();
+			$settings = new UR_Settings_Successfully_Registered_Email();
+			$message = $settings->ur_get_successfully_registered_email();
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -350,8 +359,8 @@ class UR_Emailer {
 		$admin_email = array_map( 'trim', $admin_email );
 
 		$subject = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
-		$message = new UR_Settings_Admin_Email();
-		$message = $message->ur_get_admin_email();
+		$settings = new UR_Settings_Admin_Email();
+		$message = $settings->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
 
 		$values  = array(
@@ -359,6 +368,7 @@ class UR_Emailer {
 			'email'      => $user_email,
 			'all_fields' => $data_html,
 		);
+		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject);
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 		$header  = self::parse_smart_tags( $header, $values, $name_value );
@@ -378,7 +388,7 @@ class UR_Emailer {
 	 * @param  int    $status   Stautus of the user.
 	 * @return void
 	 */
-	public static function status_change_email( $email, $username, $status, $template_id ) {
+	public static function status_change_email( $email, $username, $status, $form_id ) {
 
 		// Get name value pair to replace smart tag.
 		$name_value = self::user_data_smart_tags( $email );
@@ -390,12 +400,16 @@ class UR_Emailer {
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
+		// Get selected email template id for specific form.
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+
 		if ( 0 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Registration_Pending_Email();
-			$message = $message->ur_get_registration_pending_email();
+			$settings = new UR_Settings_Registration_Pending_Email();
+			$message = $settings->ur_get_registration_pending_email();
 			$message = get_option( 'user_registration_registration_pending_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -405,9 +419,10 @@ class UR_Emailer {
 		} elseif ( -1 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Registration_Denied_Email();
-			$message = $message->ur_get_registration_denied_email();
+			$settings = new UR_Settings_Registration_Denied_Email();
+			$message = $settings->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -417,9 +432,10 @@ class UR_Emailer {
 		} else {
 
 			$subject = get_option( 'user_registration_registration_approved_email_subject', __( 'Congratulations! Registration approved on {{blog_info}}', 'user-registration' ) );
-			$message = new UR_Settings_Registration_Approved_Email();
-			$message = $message->ur_get_registration_approved_email();
+			$settings = new UR_Settings_Registration_Approved_Email();
+			$message = $settings->ur_get_registration_approved_email();
 			$message = get_option( 'user_registration_registration_approved_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -448,8 +464,8 @@ class UR_Emailer {
 		}
 
 		$subject = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
-		$message = new UR_Settings_Reset_Password_Email();
-		$message = $message->ur_get_reset_password_email();
+		$settings = new UR_Settings_Reset_Password_Email();
+		$message = $settings->ur_get_reset_password_email();
 		$message = get_option( 'user_registration_reset_password_email', $message );
 
 		$values = array(
@@ -457,12 +473,13 @@ class UR_Emailer {
 			'email'    => $email,
 			'key'      => $key,
 		);
+		$form_id = ur_get_form_id_by_userid( $user->ID );
 
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
 		$message = self::parse_smart_tags( $message, $values );
 		$subject = self::parse_smart_tags( $subject, $values );
 
 		if ( 'yes' === get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
-			$form_id = ur_get_form_id_by_userid( $user->ID );
 
 			// Get selected email template id for specific form.
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
@@ -497,8 +514,8 @@ class UR_Emailer {
 		$admin_email = array_map( 'trim', $admin_email );
 
 		$subject = get_option( 'user_registration_profile_details_changed_email_subject', __( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
-		$message = new UR_Settings_Profile_Details_Changed_Email();
-		$message = $message->ur_get_profile_details_changed_email();
+		$settings = new UR_Settings_Profile_Details_Changed_Email();
+		$message = $settings->ur_get_profile_details_changed_email();
 		$message = get_option( 'user_registration_profile_details_changed_email', $message );
 
 		$values  = array(
@@ -506,13 +523,15 @@ class UR_Emailer {
 			'email'      => $user_email,
 			'all_fields' => $data_html,
 		);
+
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 		$header  = self::parse_smart_tags( $header, $values, $name_value );
 
 		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
-				$form_id = ur_get_form_id_by_userid( $user_id );
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
@@ -633,7 +652,8 @@ class UR_Emailer {
 	 * @param  int  $template_id Email Template Identifier.
 	 * @return void
 	 */
-	private static function user_registration_process_and_send_email(  $email, $subject, $message, $header, $attachment, $template_id  ) {
+	public static function user_registration_process_and_send_email(  $email, $subject, $message, $header, $attachment, $template_id  ) {
+
 		if( '' !== $template_id || 'none' !== $template_id ) {
 			$message = apply_filters( 'user_registration_email_template_message', $message, $template_id );
 		}
