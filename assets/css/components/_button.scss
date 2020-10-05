@@ -7,7 +7,7 @@
 
 		+ button,
 		.button {
-			margin-left: 8px;
+			margin-left: 6px;
 		}
 
 		&.button-icon {
@@ -18,6 +18,11 @@
 			.dashicons {
 				line-height: 0.9;
 				vertical-align: middle;
+			}
+
+			svg {
+				display: block;
+				margin: 0 auto;
 			}
 		}
 
@@ -114,14 +119,14 @@
 		}
 	}
 
-	.publishing-action {
-		button,
-		input[type='button'],
-		input[type='submit'],
-		.button {
-			margin-right: 5px;
-		}
-	}
+	// .publishing-action {
+	// 	button,
+	// 	input[type='button'],
+	// 	input[type='submit'],
+	// 	.button {
+	// 		margin-right: 5px;
+	// 	}
+	// }
 }
 
 .user-registration-button-group {
