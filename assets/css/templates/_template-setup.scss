@@ -12,10 +12,14 @@
 .user-registration-template-wrap {
 	$self : &;
 	cursor: pointer;
+	margin-bottom: 24px;
 
 	&__figure {
-		position: relative;
+		background-color: $color_gray_five;
 		margin: 0;
+		position: relative;
+		border-radius: 4px;
+		overflow: hidden;
 
 		img {
 			max-width: 100%;
@@ -29,12 +33,18 @@
 		align-items: center;
 		justify-content: center;
 		position: absolute;
-		width: 100%;
+		left: 0;
+		right: 0;
 		top: 0;
 		bottom: 0;
 		transition: all 0.3s ease 0s;
 		visibility: hidden;
 		opacity: 0;
+
+		.button {
+			border-color: $white;
+
+		}
 	}
 
 	&__title {
