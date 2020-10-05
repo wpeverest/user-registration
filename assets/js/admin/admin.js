@@ -3025,11 +3025,6 @@ jQuery(function ($) {
 				".user-registration-card__header"
 			);
 			var email_body_item = $(this).find(".user-registration-card__body");
-			console.log(
-				email_title_item
-					.find("#uret_override_" + $(this).prop("id"))
-					.hasClass("enabled")
-			);
 
 			specific_email_contents[$(this).prop("id")] = {
 				title: email_title_item

@@ -120,7 +120,7 @@ class UR_Emailer {
 		$attachments     = apply_filters( 'user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 		$name_value      = array();
-		$data_html       = '';
+		$data_html       = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $valid_form_data as $field_meta => $form_data ) {
@@ -151,11 +151,12 @@ class UR_Emailer {
 				$value = implode( ',', $value );
 			}
 
-			$data_html .= $label . ' : ' . $value . '<br/>';
+			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
 
 			$name_value[ $field_name ] = $value;
 		}
 
+		$data_html .= '</tbody></table>';
 		// Smart tag process for extra fields.
 		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
 
