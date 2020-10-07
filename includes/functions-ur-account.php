@@ -50,10 +50,10 @@ function ur_login_error_message( $error ) {
 	// Its the correct username with incorrect password.
 	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {
 
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $_POST['username'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
+		$error = sprintf( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . ur_string_translation( null, 'ur_incorrect_password', __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ) ), $_POST['username'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . ur_string_translation( null, 'ur_lost_your_password', __( 'Lost Your Password?', 'user-registration' ) ) . '</a>' );
 	} // It's invalid username.
 	elseif ( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s', 'user-registration' ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
+		$error = sprintf( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . ur_string_translation( null, 'ur_invalid_username', __( 'Invalid username. %1s', 'user-registration' ) ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . ur_string_translation( null, 'ur_lost_your_password', __( 'Lost Your Password?', 'user-registration' ) ) . '</a>' );
 	}
 
 	return $error;
@@ -105,10 +105,10 @@ function ur_get_account_menu_items() {
 	);
 
 	$items = array(
-		'dashboard'     => __( 'Dashboard', 'user-registration' ),
-		'edit-profile'  => __( 'Profile Details', 'user-registration' ),
-		'edit-password' => __( 'Change Password', 'user-registration' ),
-		'user-logout'   => __( 'Logout', 'user-registration' ),
+		'dashboard'     => ur_string_translation( null, 'ur_dashboard_menu', __( 'Dashboard', 'user-registration' ) ),
+		'edit-profile'  => ur_string_translation( null, 'ur_profile_details_menu', __( 'Profile Details', 'user-registration' ) ),
+		'edit-password' => ur_string_translation( null, 'ur_change_password_menu', __( 'Change Password', 'user-registration' ) ),
+		'user-logout'   => ur_string_translation( null, 'ur_logout_menu', __( 'Logout', 'user-registration' ) ),
 	);
 
 	$user_id = get_current_user_id();

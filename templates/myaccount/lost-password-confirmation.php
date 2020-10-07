@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ur_print_notices();
-ur_print_notice( __( 'Password reset email has been sent.', 'user-registration' ) );
+ur_print_notice( ur_string_translation( null, 'ur_reset_password_sent_notice', __( 'Password reset email has been sent.', 'user-registration' ) ) );
 ?>
 
-<p><?php echo apply_filters( 'user_registration_lost_password_message', __( 'A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset.', 'user-registration' ) ); ?></p>
+<p><?php echo ur_string_translation( null, 'ur_reset_password_sent_message', apply_filters( 'user_registration_lost_password_message', __( 'A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset.', 'user-registration' ) ) ); ?></p>

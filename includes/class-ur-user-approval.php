@@ -184,12 +184,12 @@ class UR_User_Approval {
 					return $user;
 					break;
 				case UR_Admin_User_Manager::PENDING:
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
+					$message = '<strong>' . ur_string_translation( null, 'ur_error', esc_html__( 'ERROR:', 'user-registration' ) ) . '</strong> ' . ur_string_translation( null, 'ur_pending_approval_message', esc_html__( 'Your account is still pending approval.', 'user-registration' ) );
 
 					return new WP_Error( 'pending_approval', $message );
 					break;
 				case UR_Admin_User_Manager::DENIED:
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+					$message = '<strong>' . ur_string_translation( null, 'ur_error', esc_html__( 'ERROR:', 'user-registration' ) ) . '</strong> ' . ur_string_translation( null, 'ur_account_denied_message', esc_html__( 'Your account has been denied.', 'user-registration' ) );
 
 					return new WP_Error( 'denied_access', $message );
 					break;
@@ -204,7 +204,7 @@ class UR_User_Approval {
 			$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $status['user_status'] ) {
-				$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
+				$message = '<strong>' . ur_string_translation( null, 'ur_error', esc_html__( 'ERROR:', 'user-registration' ) ) . '</strong> ' . sprintf( __( ur_string_translation( null, 'ur_verify_email_message', 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s' ), 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . ur_string_translation( null, 'ur_resend_verification_link', __( 'Resend Verification Link', 'user-registration' ) ) . '</a>' );
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
 			return $user;
@@ -218,7 +218,7 @@ class UR_User_Approval {
 				$user_id      = $user->ID;
 				$instance     = new User_Registration_Payments_Process();
 				$redirect_url = $instance->generate_redirect_url( $user_id );
-				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending payment. Process the payment by clicking on this: %s', 'user-registration' ), '<a id="payment-link" href="' . esc_url( $redirect_url ) . '">' . __( 'link', 'user-registration' ) . '</a>' );
+				$message      = '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong> ' . sprintf( __( ur_string_translation( null, 'ur_payment_pending_message', 'Your account is still pending payment. Process the payment by clicking on this: %s' ), 'user-registration' ), '<a id="payment-link" href="' . esc_url( $redirect_url ) . '">' . __( 'link', 'user-registration' ) . '</a>' );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}
@@ -305,7 +305,7 @@ class UR_User_Approval {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 
 			if ( ! $user_manager->is_approved() ) {
-				$error_message = __( 'Your account is still awaiting admin approval. Reset Password is not allowed.', 'user-registration' );
+				$error_message = ur_string_translation( null, 'ur_awaiting_admin_approval_message', __( 'Your account is still awaiting admin approval. Reset Password is not allowed.', 'user-registration' ) );
 				$result        = new WP_Error( 'user_not_approved', $error_message );
 			}
 		}

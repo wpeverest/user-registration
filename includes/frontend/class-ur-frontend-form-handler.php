@@ -120,7 +120,7 @@ class UR_Frontend_Form_Handler {
 			}
 			wp_send_json_error(
 				array(
-					'message' => __( 'Something went wrong! please try again', 'user-registration' ),
+					'message' =>  ur_string_translation( null, 'ur_something_went_wrong', __( 'Something went wrong! please try again', 'user-registration' ) ),
 				)
 			);
 		} else {
@@ -165,13 +165,13 @@ class UR_Frontend_Form_Handler {
 		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
 		if ( count( $duplicate_field_key ) > 0 ) {
-			array_push( self::$response_array, __( 'Duplicate field key in form, please contact site administrator.', 'user-registration' ) );
+			array_push( self::$response_array, ur_string_translation( null, 'ur_duplicate_field_key', __( 'Duplicate field key in form, please contact site administrator.', 'user-registration' ) ) );
 		}
 
 		$contains_search = count( array_intersect( ur_get_required_fields(), $form_data_field ) ) == count( ur_get_required_fields() );
 
 		if ( false === $contains_search ) {
-			array_push( self::$response_array, __( 'Required form field not found.', 'user-registration' ) );
+			array_push( self::$response_array,  ur_string_translation( null, 'ur_required_form_field_not_found', __( 'Required form field not found.', 'user-registration' ) ) );
 		}
 
 		// Check if a required field is missing.
@@ -367,7 +367,7 @@ class UR_Frontend_Form_Handler {
 
 		if ( $has_confirm_password ) {
 			if ( empty( $confirm_password ) ) {
-				array_push( self::$response_array, __( 'Empty confirm password', 'user-registration' ) );
+				array_push( self::$response_array,  ur_string_translation( null, 'ur_empty_confirm_password', __( 'Empty confirm password', 'user-registration' ) ) );
 			} elseif ( strcmp( $confirm_password, $password ) != 0 ) {
 				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
 			}
@@ -412,7 +412,7 @@ class UR_Frontend_Form_Handler {
 
 		if ( $has_confirm_email ) {
 			if ( empty( $confirm_email_value ) ) {
-				array_push( self::$response_array, __( 'Empty confirm email', 'user-registration' ) );
+				array_push( self::$response_array, ur_string_translation( null, 'ur_empty_confirm_email', __( 'Empty confirm email', 'user-registration' ) ) );
 			} elseif ( strcasecmp( $confirm_email_value, $email ) != 0 ) {
 				array_push( self::$response_array, get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched', 'user-registration' ) ) );
 			}
@@ -439,7 +439,7 @@ class UR_Frontend_Form_Handler {
 					return;
 				} else {
 					$field_label = $form_field_data[ $key ]->general_setting->label;
-					$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+					$response    = sprintf( __( ur_string_translation( null, 'ur_field_is_required', '%s is a required field.' ), 'user-registration' ), $field_label );
 					array_push( self::$response_array, $response );
 				}
 			}
@@ -473,7 +473,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		if ( $password_value === $email_value || $password_value === $username_value ) {
-			array_push( self::$response_array, __( 'Password should not match with Username or Email address.', 'user-registration' ) );
+			array_push( self::$response_array, ur_string_translation( null, 'ur_password_username_matched_message', __( 'Password should not match with Username or Email address.', 'user-registration' ) ) );
 		}
 	}
 }

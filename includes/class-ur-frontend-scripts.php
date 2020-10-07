@@ -349,7 +349,7 @@ class UR_Frontend_Scripts {
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
 					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
-					'user_registration_profile_picture_uploading' => __( 'Uploading...', 'user-registration' ),
+					'user_registration_profile_picture_uploading' => ur_string_translation( null, 'ur_uploading', __( 'Uploading...', 'user-registration' ) ),
 					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', __( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', __( 'Please enter a valid email address.', 'user-registration' ) ),
@@ -363,9 +363,9 @@ class UR_Frontend_Scripts {
 						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', __( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
 						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
-						'hide_password_title'     => __( 'Hide Password', 'user-registration' ),
-						'show_password_title'     => __( 'Show Password', 'user-registration' ),
-						'password_strength_error' => __( 'Password strength is not strong enough', 'user-registration' ),
+						'hide_password_title'     => ur_string_translation( null, 'ur_hide_password', __( 'Hide Password', 'user-registration' ) ),
+						'show_password_title'     => ur_string_translation( null, 'ur_show_password',__( 'Show Password', 'user-registration' ) ),
+						'password_strength_error' => ur_string_translation( null, 'ur_password_strength_message', __( 'Password strength is not strong enough', 'user-registration' ) ),
 					),
 				);
 			break;
@@ -373,16 +373,16 @@ class UR_Frontend_Scripts {
 			case 'ur-password-strength-meter':
 				return array(
 					'home_url'            => home_url(),
-					'i18n_password_error' => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
+					'i18n_password_error' => ur_string_translation( null, 'ur_enter_strong_password', esc_attr__( 'Please enter a stronger password.', 'user-registration' ) ),
 					'pwsL10n'             => array(
-						'shortpw'  => __( 'Very Weak', 'user-registration' ),
-						'bad'      => __( 'Weak', 'user-registration' ),
-						'good'     => __( 'Medium', 'user-registration' ),
-						'strong'   => __( 'Strong', 'user-registration' ),
-						'mismatch' => __( 'Password with confirm password not matched.', 'user-registration' ),
+						'shortpw'  => ur_string_translation( null, 'ur_very_weak_password', __( 'Very Weak', 'user-registration' ) ),
+						'bad'      => ur_string_translation( null, 'ur_weak_password',__( 'Weak', 'user-registration' ) ),
+						'good'     => ur_string_translation( null, 'ur_medium_password',__( 'Medium', 'user-registration' ) ),
+						'strong'   => ur_string_translation( null, 'ur_strong_password',__( 'Strong', 'user-registration' ) ),
+						'mismatch' => ur_string_translation( null, 'ur_mismatch_password',__( 'Password with confirm password not matched.', 'user-registration' ) )
 
 					),
-					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint'  => ur_string_translation( null, 'ur_password_hint', apply_filters( 'user_registration_strong_password_message', __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ) ),
 				);
 				break;
 		}

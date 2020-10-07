@@ -26,10 +26,10 @@ ur_print_notices(); ?>
 	<form method="post" class="user-registration-ResetPassword lost_reset_password">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<p><?php echo apply_filters( 'user_registration_lost_password_message', __( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'user-registration' ) ); ?></p>
+				<p><?php echo  ur_string_translation( null, 'ur_lost_password_message',  apply_filters( 'user_registration_lost_password_message', __( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'user-registration' ) ) ); ?></p>
 
 				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="user_login"><?php _e( 'Username or email', 'user-registration' ); ?></label>
+					<label for="user_login"><?php echo  ur_string_translation( null, 'ur_lost_password_username', esc_html__( 'Username or email', 'user-registration' ) ); ?></label>
 					<input class="user-registration-Input user-registration-Input--text input-text" type="text" name="user_login" id="user_login" />
 				</p>
 
@@ -39,7 +39,7 @@ ur_print_notices(); ?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button" value="<?php esc_attr_e( 'Reset password', 'user-registration' ); ?>" />
+					<input type="submit" class="user-registration-Button button" value="<?php echo  ur_string_translation( null, 'ur_reset_password_button', esc_attr__( 'Reset password', 'user-registration' ) ); ?>" />
 				</p>
 
 				<?php wp_nonce_field( 'lost_password' ); ?>

@@ -98,10 +98,10 @@ class UR_Form_Handler {
 
 				switch ( $_FILES['profile-pic']['error'] ) {
 					case UPLOAD_ERR_INI_SIZE:
-						ur_add_notice( __( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
+						ur_add_notice( ur_string_translation( null, 'ur_file_size_exceed', __( 'File size exceed, please check your file size.', 'user-registration' ) ), 'error' );
 						break;
 					default:
-						ur_add_notice( __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
+						ur_add_notice( ur_string_translation( null, 'ur_uploading_error', __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ) ), 'error' );
 						break;
 				}
 			} elseif ( empty( $_POST['profile-pic-url'] ) ) {
@@ -161,7 +161,7 @@ class UR_Form_Handler {
 
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
-				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+				ur_add_notice( sprintf( __( ur_string_translation( null, 'ur_field_is_required', '%s is a required field.', 'user-registration' ) ), $field['label'] ), 'error' );
 			}
 
 			if ( 'user_email' === $field['field_key'] ) {
@@ -169,7 +169,7 @@ class UR_Form_Handler {
 
 				// Check if email already exists before updating user details.
 				if ( email_exists( $_POST[ $key ] ) === 1 ) {
-					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
+					ur_add_notice( ur_string_translation( null, 'ur_email_already_exits', __( 'Email already exists', 'user-registration' ) ), 'error' );
 				}
 			}
 
@@ -183,7 +183,7 @@ class UR_Form_Handler {
 								$_POST[ $key ] = strtolower( $_POST[ $key ] );
 
 								if ( ! is_email( $_POST[ $key ] ) ) {
-									ur_add_notice( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
+									ur_add_notice( sprintf( __( ur_string_translation( null, 'ur_invalid_email', '%s is not a valid email address.' ), 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
 
 								break;
@@ -227,7 +227,7 @@ class UR_Form_Handler {
 				wp_update_user( $user_data );
 			}
 
-			ur_add_notice( __( 'User profile updated successfully.', 'user-registration' ) );
+			ur_add_notice( ur_string_translation( null, 'ur_profile_updated_success', __( 'User profile updated successfully.', 'user-registration' ) ) );
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
@@ -274,22 +274,22 @@ class UR_Form_Handler {
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
 		if ( empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
-			ur_add_notice( __( 'Please fill out all password fields.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_fill_password_field', __( 'Please fill out all password fields.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		} elseif ( ! $bypass_current_password && empty( $pass_cur ) ) {
-			ur_add_notice( __( 'Please enter your current password.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_enter_current_password', __( 'Please enter your current password.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		} elseif ( empty( $pass1 ) ) {
-			ur_add_notice( __( 'Please enter your new password.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_enter_new_password', __( 'Please enter your new password.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		} elseif ( empty( $pass2 ) ) {
-			ur_add_notice( __( 'Please re-enter your password.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_reenter_password', __( 'Please re-enter your password.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		} elseif ( $pass1 !== $pass2 ) {
-			ur_add_notice( __( 'New passwords do not match.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_new_password_not_matched', __( 'New passwords do not match.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		} elseif ( ! $bypass_current_password && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
-			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_current_password_incorrect', __( 'Your current password is incorrect.', 'user-registration' ) ), 'error' );
 			$save_pass = false;
 		}
 
@@ -310,7 +310,7 @@ class UR_Form_Handler {
 
 			wp_update_user( $user );
 
-			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
+			ur_add_notice( ur_string_translation( null, 'ur_password_changed_success', __( 'Password changed successfully.', 'user-registration' ) ) );
 
 			do_action( 'user_registration_save_account_details', $user->ID );
 
@@ -361,19 +361,19 @@ class UR_Form_Handler {
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
-							throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) );
+							throw new Exception( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . ur_string_translation( null, 'ur_google_recaptcha', __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) ) );
 						}
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
+						throw new Exception( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ) );
 					}
 				}
 
 				if ( $validation_error->get_error_code() ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
+					throw new Exception( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . $validation_error->get_error_message() );
 				}
 
 				if ( empty( $username ) ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['username_is_required'] );
+					throw new Exception( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . $messages['username_is_required'] );
 				}
 
 				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -382,7 +382,7 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+						throw new Exception( '<strong>' . ur_string_translation( null, 'ur_error', __( 'ERROR:', 'user-registration' ) ) . '</strong>' . $messages['unknown_email'] );
 					}
 				} else {
 					$creds['user_login'] = $username;
@@ -403,16 +403,16 @@ class UR_Form_Handler {
 				if ( is_wp_error( $user ) ) {
 					// Set custom error messages.
 					if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
-						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
+						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', ur_string_translation( null, 'ur_error', __( 'ERROR', 'user-registration' ) ), $messages['empty_password'] );
 					}
 					if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
 						$user->errors['invalid_username'][0] = $messages['invalid_username'];
 					}
 					if ( ! empty( $user->errors['pending_approval'] ) && ! empty( $messages['pending_approval'] ) ) {
-						$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['pending_approval'] );
+						$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', ur_string_translation( null, 'ur_error', __( 'ERROR', 'user-registration' ) ), $messages['pending_approval'] );
 					}
 					if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
-						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
+						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', ur_string_translation( null, 'ur_error', __( 'ERROR', 'user-registration' ) ), $messages['denied_access'] );
 					}
 
 					$message = $user->get_error_message();
@@ -496,11 +496,11 @@ class UR_Form_Handler {
 
 		if ( $user instanceof WP_User ) {
 			if ( empty( $posted_fields['password_1'] ) ) {
-				ur_add_notice( __( 'Please enter your password.', 'user-registration' ), 'error' );
+				ur_add_notice( ur_string_translation( null, 'ur_enter_password', __( 'Please enter your password.', 'user-registration' ) ), 'error' );
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
+				ur_add_notice( ur_string_translation( null, 'ur_password_mismatch',__( 'Passwords do not match.', 'user-registration' ) ), 'error' );
 			}
 
 			$errors = new WP_Error();

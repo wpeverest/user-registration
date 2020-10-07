@@ -82,7 +82,8 @@ $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labe
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 							?>
-						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
+						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo ur_string_translation( null, 'ur_show_password_attribute',
+							esc_attr__( 'Show Password', 'user-registration' ) ); ?>"></a>
 							<?php
 						}
 						?>

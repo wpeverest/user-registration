@@ -68,7 +68,7 @@ class UR_AJAX {
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You are already logged in.', 'user-registration' ),
+					'message' => ur_string_translation( null, 'ur_already_logged_in', __( 'You are already logged in.', 'user-registration' ) ),
 				)
 			);
 		}
@@ -76,7 +76,7 @@ class UR_AJAX {
 		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+					'message' => ur_string_translation( null, 'ur_nonce_error', __( 'Nonce error, please reload.', 'user-registration' ) ),
 				)
 			);
 		}
@@ -98,7 +98,7 @@ class UR_AJAX {
 				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+							'message' => ur_string_translation( null, 'ur_recatcha_error', __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ) ),
 						)
 					);
 				}
@@ -114,7 +114,7 @@ class UR_AJAX {
 		if ( $flag != true || is_wp_error( $flag ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+					'message' => ur_string_translation( null, 'ur_nonce_error', __( 'Nonce error, please reload.', 'user-registration' ) ),
 				)
 			);
 		}
@@ -126,7 +126,7 @@ class UR_AJAX {
 			if ( ! $users_can_register ) {
 				wp_send_json_error(
 					array(
-						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
+						'message' => ur_string_translation( null, 'ur_only_administrator_can_register', apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ) ),
 					)
 				);
 			}
@@ -144,7 +144,7 @@ class UR_AJAX {
 
 				wp_send_json_error(
 					array(
-						'message' => apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID ),
+						'message' => apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( ur_string_translation( null, 'ur_currently_logged_in', 'You are currently logged in as %1$1s. %2$2s' ), 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . ur_string_translation( null, 'ur_logout_menu',__( 'Logout', 'user-registration' ) ) . '  &raquo;</a>' ) . '</p>', $user_ID ),
 					)
 				);
 			}
@@ -170,7 +170,7 @@ class UR_AJAX {
 		if ( ! check_ajax_referer( 'user_registration_profile_details_save_nonce', 'security', false ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+					'message' => ur_string_translation( null, 'ur_nonce_error', __( 'Nonce error, please reload.', 'user-registration' ) ),
 				)
 			);
 		}
@@ -236,7 +236,7 @@ class UR_AJAX {
 				if ( email_exists( $single_field[ $key ] ) === 1 ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'Email already exists.', 'user-registration' ),
+							'message' => ur_string_translation( null, 'ur_email_already_exist', __( 'Email already exists.', 'user-registration' ) ),
 						)
 					);
 				}
@@ -285,7 +285,7 @@ class UR_AJAX {
 				wp_update_user( $user_data );
 			}
 
-			$message = __( 'User profile updated successfully.', 'user-registration' );
+			$message = ur_string_translation( null, 'ur_profile_updated_successfully', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_send_json_success(
@@ -314,7 +314,7 @@ class UR_AJAX {
 
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+					'message' => ur_string_translation( null, 'ur_nonce_error', __( 'Nonce error, please reload.', 'user-registration' ) ),
 				)
 			);
 		}
@@ -365,14 +365,14 @@ class UR_AJAX {
 				case UPLOAD_ERR_INI_SIZE:
 					wp_send_json_error(
 						array(
-							'message' => __( 'File size exceed, please check your file size.', 'user-registration' ),
+							'message' => ur_string_translation( null, 'ur_file_size_exceed', __( 'File size exceed, please check your file size.', 'user-registration' ) ),
 						)
 					);
 					break;
 				default:
 					wp_send_json_error(
 						array(
-							'message' => __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ),
+							'message' => ur_string_translation( null, 'ur_uploading_error', __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ) ),
 						)
 					);
 					break;

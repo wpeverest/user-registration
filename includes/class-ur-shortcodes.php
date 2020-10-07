@@ -27,7 +27,7 @@ class UR_Shortcodes {
 		$shortcodes = array(
 			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
 			'user_registration_my_account' => __CLASS__ . '::my_account',
-			'user_registration_login'      => __class__ . '::login',
+			'user_registration_login'      => __CLASS__ . '::login',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 );
 
@@ -122,7 +122,7 @@ class UR_Shortcodes {
 
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
-				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only administrators can add new users.', 'user-registration' ) . '</p>' );
+				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . ur_string_translation( null, 'ur_only_administrator_can_register',__( 'Only administrators can add new users.', 'user-registration' ) ) . '</p>' );
 			}
 		} else {
 

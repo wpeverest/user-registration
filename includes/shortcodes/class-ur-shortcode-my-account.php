@@ -75,7 +75,7 @@ class UR_Shortcode_My_Account {
 
 			// After password reset, add confirmation message.
 			if ( ! empty( $_GET['password-reset'] ) ) {
-				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+				ur_add_notice( ur_string_translation( null, 'ur_password_reset_success_notice', __( 'Your password has been reset successfully.', 'user-registration' ) ) );
 			}
 
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
@@ -134,7 +134,7 @@ class UR_Shortcode_My_Account {
 			ob_start();
 
 			if ( isset( $wp->query_vars['user-logout'] ) ) {
-				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
+				ur_add_notice( sprintf( __( ur_string_translation( null, 'ur_are_you_sure_logout', 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>' ), 'user-registration' ), ur_logout_url() ) );
 			}
 
 			do_action( 'before-user-registration-my-account-shortcode' );
@@ -213,7 +213,7 @@ class UR_Shortcode_My_Account {
 				)
 			);
 		} else {
-			echo '<h1>' . esc_html__( 'No profile details found.', 'user-registration' ) . '</h1>';
+			echo '<h1>' . ur_string_translation( null, 'ur_no_profile_details', esc_html__( 'No profile details found.', 'user-registration' ) ) . '</h1>';
 		}
 	}
 
@@ -312,7 +312,7 @@ class UR_Shortcode_My_Account {
 		$login = trim( $_POST['user_login'] );
 
 		if ( empty( $login ) ) {
-			ur_add_notice( __( 'Enter a username or email address.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_enter_username_notice', __( 'Enter a username or email address.', 'user-registration' ) ), 'error' );
 			return false;
 		} else {
 			// Check on username first, as customers can use emails as usernames.
@@ -333,12 +333,12 @@ class UR_Shortcode_My_Account {
 		}
 
 		if ( ! $user_data ) {
-			ur_add_notice( __( 'Invalid username or email.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_invalid_username_notice', __( 'Invalid username or email.', 'user-registration' ) ), 'error' );
 			return false;
 		}
 
 		if ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
-			ur_add_notice( __( 'Invalid username or email.', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_invalid_username_notice', __( 'Invalid username or email.', 'user-registration' ) ), 'error' );
 			return false;
 		}
 
@@ -348,7 +348,8 @@ class UR_Shortcode_My_Account {
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 
 		if ( ! $allow ) {
-			ur_add_notice( __( 'Password reset is not allowed for this user', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_reset_password_not_allowed_notice',
+			__( 'Password reset is not allowed for this user', 'user-registration' ) ), 'error' );
 			return false;
 
 		} elseif ( is_wp_error( $allow ) ) {
@@ -361,7 +362,7 @@ class UR_Shortcode_My_Account {
 
 		// Send email notification.
 		if ( UR_Emailer::lost_password_email( $user_login, $user_data, $key ) == false ) {
-			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
+			ur_add_notice( ur_string_translation( null, 'ur_email_not_sent_notice',__( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ) ), 'error' );
 			return false;
 		}
 

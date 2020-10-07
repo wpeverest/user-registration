@@ -27,7 +27,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
+					<h2><?php echo ur_string_translation( null, 'ur_profile_details', esc_html__( 'Profile Detail', 'user-registration' ) ); ?></h2>
 					<div class="user-registration-profile-header">
 						<div class="user-registration-img-container" style="width:100%">
 							<?php
@@ -40,10 +40,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							$max_size = wp_max_upload_size();
 							$max_size = size_format( $max_size );
 							?>
-							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
+							<p class="user-registration-tips"><?php echo  ur_string_translation( null, 'ur_max_size', esc_html__( 'Max size: ', 'user-registration' ) ) . $max_size; ?></p>
 						</div>
 						<header>
-								<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+								<p><strong><?php echo  ur_string_translation( null, 'ur_upload_new_profile_picture', esc_html__( 'Upload your new profile image.', 'user-registration' )); ?></strong></p>
 							<div class="button-group">
 						<?php
 
@@ -65,11 +65,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							?>
 						<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo $profile_picture_url; ?>" />
 						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
-						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
+						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo ur_string_translation( null, 'ur_remove_profile_pic',  esc_html__( 'Remove', 'user-registration' ) ); ?></php></button>
 							<?php
 							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 								?>
-						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
+						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo ur_string_translation( null, 'ur_upload_picture', esc_html__( 'Upload Picture', 'user-registration' ) ); ?></button>
 						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
 								<?php
 							} else {
@@ -83,7 +83,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<?php
 							if ( ! $profile_picture_url ) {
 								?>
-							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+							<span><i><?php echo ur_string_translation( null, 'ur_profile_picture_message', __( 'You can change your profile picture on', 'user-registration' ) ); ?> <a href="https://en.gravatar.com/"><?php echo ur_string_translation( null, 'ur_gravatar', esc_html__( 'Gravatar', 'user-registration' ) ); ?></a></i></span>
 							<?php } ?>
 					</header>
 					</div>
@@ -225,12 +225,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<?php
 						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_attr_e( 'Save changes', 'user-registration' ); ?></button>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php echo ur_string_translation( null, 'ur_save_account_details', esc_attr__( 'Save changes', 'user-registration' ) ); ?></button>
 							<?php
 						} else {
 							wp_nonce_field( 'save_profile_details' );
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo ur_string_translation( null, 'ur_save_account_details', esc_attr__( 'Save changes', 'user-registration' ) ); ?>" />
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}

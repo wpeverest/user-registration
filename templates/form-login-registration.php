@@ -28,11 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="ur-frontend-form login-registration">
 	<div class="ur-form-row">
 		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo __( 'Login', 'user-registration' ); ?></h2>
+			<h2 class="ur-form-title"><?php echo ur_string_translation( null, 'ur_login', esc_html__( 'Login', 'user-registration' ) ); ?></h2>
 			<?php echo $login_form; ?>
 		</div>
 		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo __( 'Registration', 'user-registration' ); ?></h2>
+			<h2 class="ur-form-title"><?php echo ur_string_translation( null, 'ur_registration', esc_html__( 'Registration', 'user-registration' ) ); ?></h2>
 			<?php echo $registration_form; ?>
 		</div>
 	</div>

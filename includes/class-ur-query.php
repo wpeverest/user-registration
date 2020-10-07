@@ -69,13 +69,13 @@ class UR_Query {
 	public function get_endpoint_title( $endpoint ) {
 		switch ( $endpoint ) {
 			case 'edit-password':
-				$title = __( 'Change Password', 'user-registration' );
+				$title = ur_string_translation( null, 'ur_change_password_menu', __( 'Change Password', 'user-registration' ) );
 				break;
 			case 'edit-profile':
-				$title = __( 'Profile Details', 'user-registration' );
+				$title = ur_string_translation( null, 'ur_profile_details_menu',__( 'Profile Details', 'user-registration' ) );
 				break;
 			case 'ur-lost-password':
-				$title = __( 'Lost password', 'user-registration' );
+				$title = ur_string_translation( null, 'ur_lost_password_menu',__( 'Lost password', 'user-registration' ) );
 				break;
 			default:
 				$title = '';

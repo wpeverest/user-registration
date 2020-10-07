@@ -26,14 +26,14 @@ ur_print_notices(); ?>
 <form method="post" class="user-registration-ResetPassword lost_reset_password" data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<p><?php echo apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ); ?></p>
+				<p><?php echo ur_string_translation( null, 'ur_reset_password_message', apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ) ); ?></p>
 
 				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<label for="password_1"><?php echo ur_string_translation( null, 'ur_reset_new_password', esc_html__( 'New password', 'user-registration' ) ); ?> <span class="required">*</span></label>
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
 				</p>
 				<p class="user-registration-form-row user-registration-form-row--last form-row form-row-last">
-					<label for="password_2"><?php _e( 'Re-enter new password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<label for="password_2"><?php echo ur_string_translation( null, 'ur_reset_reenter_password', esc_html__( 'Re-enter new password', 'user-registration' ) ); ?> <span class="required">*</span></label>
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" />
 				</p>
 
@@ -46,7 +46,7 @@ ur_print_notices(); ?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button" value="<?php esc_attr_e( 'Save', 'user-registration' ); ?>" />
+					<input type="submit" class="user-registration-Button button" value="<?php echo ur_string_translation( null, 'ur_reset_password_save_button', esc_attr__( 'Save', 'user-registration' ) ); ?>" />
 				</p>
 
 				<?php wp_nonce_field( 'reset_password' ); ?>

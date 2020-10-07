@@ -25,11 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <h2>
 	<?php
-	echo ur_string_translation( null, 'ur_dashboard_welcome',
+	echo
 	sprintf(
-		__( 'Welcome, %1$s', 'user-registration' ),
+		__( ur_string_translation( null, 'ur_dashboard_welcome','Welcome, %1$s' ), 'user-registration' ),
 		esc_html( $current_user->display_name )
-	) );
+	);
 	?>
 </h2>
 
@@ -73,24 +73,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 <?php
 	/* translators: 1 profile details url, 2: change password url */
-	echo ur_string_translation( null, 'ur_dashboard_message',
+	echo
 	sprintf(
-		__( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ),
+		__( ur_string_translation( null, 'ur_dashboard_message', 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.' ), 'user-registration' ),
 		esc_url( ur_get_endpoint_url( 'edit-profile' ) ),
 		esc_url( ur_get_endpoint_url( 'edit-password' ) )
-	) );
+	);
 	?>
 </p>
 
 <p>
 	<?php
 		/* translators: 1: user display name 2: logout url */
-		echo ur_string_translation( null, 'ur_dashboard_signout_message',
+		echo
 		sprintf(
-			__( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ),
+			__( ur_string_translation( null, 'ur_dashboard_signout_message', 'Not %1$s? <a href="%2$s">Sign out</a>' ), 'user-registration' ),
 			'<strong>' . esc_html( $current_user->display_name ) . '</strong>',
 			esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) )
-		) );
+		);
 		?>
 </p>
 
