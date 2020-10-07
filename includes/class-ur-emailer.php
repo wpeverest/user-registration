@@ -654,8 +654,8 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function user_registration_process_and_send_email(  $email, $subject, $message, $header, $attachment, $template_id  ) {
-
-		if( '' !== $template_id || 'none' !== $template_id ) {
+		// Check if email template is selected.
+		if( '' !== $template_id && 'none' !== $template_id ) {
 			$message = apply_filters( 'user_registration_email_template_message', $message, $template_id );
 		}
 
