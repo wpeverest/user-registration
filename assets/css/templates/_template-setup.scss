@@ -14,7 +14,7 @@
 	cursor: pointer;
 	margin-bottom: 24px;
 
-	&#user-registration-template-blank {
+	&#user-registration-email-template-blank {
 		#{$self}__figure {
 			&::before {
 				content: '';
