@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							?>
 							<button id="ur-full-screen-mode" class="button button-secondary button-large button-icon closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
 							<?php if ( isset( $preview_link ) ) { ?>
-								<button href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></button>
+								<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
 							<?php } ?>
 							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo $save_label; ?> </button>
 						</div><!-- END .publishing-action -->
