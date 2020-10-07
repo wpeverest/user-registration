@@ -14,9 +14,36 @@
 	cursor: pointer;
 	margin-bottom: 24px;
 
+	&#user-registration-template-blank {
+		#{$self}__figure {
+			&::before {
+				content: '';
+				display: block;
+				background-color: transparentize($gray-base, 0.8);
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				transition: all 0.3s ease 0s;
+				opacity: 0;
+				visibility: none;
+			}
+		}
+
+		&:hover {
+			#{$self}__figure {
+				&::before {
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+		}
+	}
+
 	&__figure {
 		background-color: $color_gray_five;
 		margin: 0;
+		min-height: 260px;
 		position: relative;
 		border-radius: 4px;
 		overflow: hidden;
