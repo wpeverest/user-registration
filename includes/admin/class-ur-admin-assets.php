@@ -242,11 +242,11 @@ class UR_Admin_Assets {
 				'ur-components',
 				'ur_components_script_params',
 				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'card_switch_enabled_text'			=> __( 'Enabled', 'user-registration'),
-					'card_switch_disabled_text'			=> __( 'Disabled', 'user-registration')
+					'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+					'card_switch_enabled_text'  => __( 'Enabled', 'user-registration' ),
+					'card_switch_disabled_text' => __( 'Disabled', 'user-registration' ),
 				)
-				);
+			);
 		}
 
 		// Enqueue flatpickr on user profile screen.
@@ -326,7 +326,8 @@ class UR_Admin_Assets {
 			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
 			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete'       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_row_need_to_select'   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
+			'i18n_cannot_delete_row'                 => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there' => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
 			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),

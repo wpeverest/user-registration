@@ -54,7 +54,7 @@ jQuery(function ($) {
 			icon +
 			'<span class="user-registration-swal2-modal__title">' +
 			label +
-			" is a Premium field.</span>";
+			" is a premium field.</span>";
 		var plan = $(this).data("plan");
 		var message =
 			label +
@@ -786,6 +786,7 @@ jQuery(function ($) {
 											Swal.fire({
 												type: "success",
 												title: "Successfully deleted!",
+												customClass: 'user-registration-swal2-modal user-registration-swal2-modal--center',
 												showConfirmButton: false,
 												timer: 1000,
 											});
@@ -798,7 +799,12 @@ jQuery(function ($) {
 							} else {
 								ur_alert(
 									user_registration_admin_data.i18n_admin
-										.i18n_at_least_one_row_need_to_select
+										.i18n_at_least_one_row_is_required_to_create_a_registration_form,
+										{
+											title:
+												user_registration_admin_data
+													.i18n_admin.i18n_cannot_delete_row,
+										}
 								);
 							}
 						});
@@ -1025,7 +1031,7 @@ jQuery(function ($) {
 						var $this = this;
 						$("body").on(
 							"click",
-							".ur-selected-item .ur-action-buttons  .ur-trash",
+							".ur-selected-item .ur-action-buttons .ur-trash",
 							function (e) {
 								var removed_item = $(this)
 										.closest(".ur-selected-item ")
@@ -3090,6 +3096,7 @@ function ur_alert(message, options) {
 		type: "error",
 		title: options.title,
 		text: message,
+		customClass: 'user-registration-swal2-modal user-registration-swal2-modal--center',
 	});
 }
 
