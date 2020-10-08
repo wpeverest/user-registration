@@ -125,3 +125,48 @@
 		}
 	}
 }
+
+// Customize Sweet alert
+.swal2-container {
+	.user-registration-swal2-modal {
+		padding: 40px;
+
+		.swal2-header {
+			.swal2-title {
+				color: $gray_base;
+				font-size: 24px;
+				flex-wrap: wrap;
+				margin-bottom: 16px;
+
+				.dashicons {
+					color: $red;
+					font-size: 28px;
+					width: 56px;
+					height: 56px;
+					line-height: 56px;
+					margin: 0 auto 16px;
+					border: 2px solid $red;
+					border-radius: 50%;
+				}
+			}
+		}
+
+		&__title {
+			line-height: 1.35;
+			display: block;
+		}
+
+		.swal2-content {
+			color: $color_gray_one;
+			font-size: 1em;
+			line-height: 1.5;
+		}
+
+		// Centered Style
+		&--centered {
+			.swal2-title {
+				flex-direction: column;
+			}
+		}
+	}
+}

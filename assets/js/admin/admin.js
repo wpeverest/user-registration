@@ -52,21 +52,22 @@ jQuery(function ($) {
 		var label = $(this).text();
 		var title =
 			icon +
-			'<div class="ur-swal-title">' +
+			'<span class="user-registration-swal2-modal__title">' +
 			label +
-			" is a Premium field.</div>";
+			" is a Premium field.</span>";
 		var plan = $(this).data("plan");
 		var message =
 			label +
-			" field is not available right now. Please upgrade to <strong>" +
+			" field is locked. Upgrade to <strong>" +
 			plan +
-			"</strong> of the plugin to unlock this field.";
+			"</strong> to unlock this field.";
 
 		Swal.fire({
 			title: title,
 			html: message,
+			customClass: 'user-registration-swal2-modal user-registration-swal2-modal--centered',
 			showCloseButton: true,
-			confirmButtonText: "Let's do it",
+			confirmButtonText: "View Pricing",
 		}).then(function (result) {
 			if (result.value) {
 				var url =
