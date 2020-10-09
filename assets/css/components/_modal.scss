@@ -131,6 +131,11 @@
 	.user-registration-swal2-modal {
 		padding: 40px;
 
+		.swal2-input {
+			@extend .ur-input !optional;
+			font-size: 16px;
+		}
+
 		.swal2-animate-success-icon {
 			& [class^=swal2-success-line],
 			& [class^=swal2-success-circular-line] {
