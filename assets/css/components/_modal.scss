@@ -170,11 +170,6 @@
 				&.swal2-success {
 					& [class^=swal2-success-line] {
 						height: 3px;
-				// 		width: 28px;
-				// 		top: 50%;
-				// 		left: 0;
-				// 		right: 0;
-				// 		margin: 0 auto;
 
 						&[class$=tip] {
 							width: 16px;
@@ -219,6 +214,10 @@
 						bottom: 0;
 						width: 6px;
 					}
+				}
+
+				&::before {
+					font-size: 40px;
 				}
 			}
 

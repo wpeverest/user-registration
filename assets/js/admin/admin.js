@@ -680,8 +680,11 @@ jQuery(function ($) {
 								var $this_row = $(this);
 								ur_confirmation(
 									user_registration_admin_data.i18n_admin
-										.i18n_are_you_sure_want_to_delete,
+										.i18n_are_you_sure_want_to_delete_row,
 									{
+										title:
+											user_registration_admin_data
+												.i18n_admin.i18n_msg_delete,
 										confirm: function () {
 											var btn = $this_row.prev();
 											var new_btn;
@@ -1042,7 +1045,7 @@ jQuery(function ($) {
 
 								ur_confirmation(
 									user_registration_admin_data.i18n_admin
-										.i18n_are_you_sure_want_to_delete,
+										.i18n_are_you_sure_want_to_delete_field,
 									{
 										title:
 											user_registration_admin_data
@@ -3104,10 +3107,15 @@ function ur_confirmation(message, options) {
 	if ("undefined" === typeof options) {
 		options = {};
 	}
+	var icon = '<i class="dashicons dashicons-trash"></i>';
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			options.title;
 	Swal.fire({
-		title: options.title,
+		customClass: 'user-registration-swal2-modal user-registration-swal2-modal--centered',
+		title: title,
 		text: message,
-		type: "undefined" !== typeof options.type ? options.type : "warning",
 		showCancelButton:
 			"undefined" !== typeof options.showCancelButton
 				? options.showCancelButton
@@ -3115,7 +3123,8 @@ function ur_confirmation(message, options) {
 		confirmButtonText:
 			"undefined" !== typeof options.confirmButtonText
 				? options.confirmButtonText
-				: user_registration_admin_data.i18n_admin.i18n_choice_ok,
+				: user_registration_admin_data.i18n_admin.i18n_choice_delete,
+		confirmButtonColor: '#ff4149',
 		cancelButtonText:
 			"undefined" !== typeof options.cancelButtonText
 				? options.cancelButtonText
