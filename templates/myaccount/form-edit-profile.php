@@ -157,6 +157,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												if ( 'number' === $single_item->field_key ) {
+													$field['min']  = isset( $advance_data['advance_setting']->min ) ? $advance_data['advance_setting']->min : '';
+													$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
+													$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
+												}
+
 												if ( 'phone' === $single_item->field_key ) {
 													$field['phone_format'] = $single_item->general_setting->phone_format;
 													if ( 'smart' === $field['phone_format'] ) {
