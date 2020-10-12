@@ -99,7 +99,6 @@ class UR_Frontend_Form_Handler {
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
-			do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
 			if ( $user_id > 0 ) {
 				$login_option   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
@@ -116,6 +115,7 @@ class UR_Frontend_Form_Handler {
 				$success_params['form_login_option'] = $login_option;
 				$success_params                      = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
+				do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 				wp_send_json_success( $success_params );
 			}
 			wp_send_json_error(
