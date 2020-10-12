@@ -488,8 +488,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			$registrations = array_map( 'absint', (array) $_REQUEST['registration'] );
+			$action        = $_REQUEST['action'];
 
-			switch ( $_REQUEST['action'] ) {
+			if( -1 == $_REQUEST['action'] ) {
+				$action = $_REQUEST['action2'];
+			}
+
+			switch ( $action ) {
 				case 'trash':
 					$this->bulk_trash( $registrations );
 					break;
