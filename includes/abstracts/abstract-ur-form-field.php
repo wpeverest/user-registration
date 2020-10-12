@@ -162,6 +162,10 @@ abstract class UR_Form_Field {
 			$form_data['max_files'] = $data['general_setting']->max_files;
 		}
 
+		if ( isset( $data['advance_setting']->max_upload_size ) ) {
+			$form_data['max_upload_size'] = $data['advance_setting']->max_upload_size;
+		}
+
 		$form_data['input_class'] = array( 'ur-frontend-field ' );
 
 		if ( isset( $data['advance_setting']->custom_class ) ) {
