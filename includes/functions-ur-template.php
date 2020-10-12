@@ -241,18 +241,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			}
 		}
 
-		$tooltip_html = ! empty( $args['tip'] ) ? ur_help_tip( $args['tip'] ) : '';
-		$cl_html      = '';
-
-		if ( isset( $args['enable_conditional_logic'] ) && true === $args['enable_conditional_logic'] ) {
-			$cl_map  = isset( $args['cl_map'] ) ? $args['cl_map'] : '';
-			$cl_html = sprintf( 'data-conditional-logic-enabled="yes" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
-		}
-
+		$tooltip_html    = ! empty( $args['tip'] ) ? ur_help_tip( $args['tip'] ) : '';
 		$field           = '';
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
-		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '" ' . $cl_html . '>%3$s</div>';
+		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
 
 		switch ( $args['type'] ) {
 
@@ -543,7 +536,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
 					$required          = 'yes' == $required ? true : false;
-					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && '1' === $field->advance_setting->enable_conditional_logic ? true : false;
+					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
 					$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 
@@ -627,11 +620,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								'field_key'   => $field_key,
 								'required'    => $required,
 							);
+						}
 
-							if ( true === $enable_cl ) {
-								$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
-								$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
-							}
+						if ( true === $enable_cl ) {
+							$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
+							$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
 						}
 
 						if ( count( $custom_attributes ) > 0 ) {
