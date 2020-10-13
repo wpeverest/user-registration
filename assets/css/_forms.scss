@@ -2,6 +2,16 @@
 	margin-bottom: 16px;
 }
 
+.ur-label {
+	display: block;
+	width: 100%;
+	margin-bottom: 8px;
+	color: $color_gray_one;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.25;
+}
+
 /**
 * Form Field
 * Set the class name for all input field
@@ -11,6 +21,47 @@
 	width: 100%;
 	border: 1px solid $border-color;
 	border-radius: 4px;
+}
+
+// Upload file
+.user-registration-custom-file {
+	color: $input_color;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	position: relative;
+
+	input {
+		position: absolute;
+		z-index: 2;
+		width: 100%;
+		margin: 0;
+		opacity: 0;
+	}
+
+	&__label {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		padding: 2px 2px 2px 8px;
+		background-color: $white;
+		border: 1px solid $border-color;
+		border-radius: 4px;
+		z-index: 1;
+	}
+
+	&__button {
+		margin-left: auto;
+		display: inline-block;
+		background: $color_gray_two;
+		color: $white;
+		padding: 6px 15px;
+		border-radius: 4px;
+	}
+
+	& + .help {
+		margin-top: 4px;
+	}
 }
 
 .ur-form-field--sm {
