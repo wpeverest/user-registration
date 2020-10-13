@@ -8,6 +8,10 @@
 	&--flush {
 		>#{$self}__item {
 			border-width: 0 0 1px;
+
+			&:last-child {
+				border-bottom-width: 0;
+			}
 		}
 	}
 
