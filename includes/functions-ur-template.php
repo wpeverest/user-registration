@@ -209,12 +209,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
 		}
 
-		if ( $args['min'] ) {
-			$args['custom_attributes']['min'] = absint( $args['min'] );
+		if ( ! empty( $args['min'] ) || '0' === $args['min'] ) {
+			$args['custom_attributes']['min'] = $args['min'];
 		}
 
-		if ( $args['max'] ) {
-			$args['custom_attributes']['max'] = absint( $args['max'] );
+		if ( ! empty( $args['max'] ) || '0' === $args['max'] ) {
+			$args['custom_attributes']['max'] = $args['max'];
+		}
+
+		if ( ! empty( $args['step'] ) ) {
+			$args['custom_attributes']['step'] = $args['step'];
 		}
 
 		if ( ! empty( $args['autocomplete'] ) ) {
@@ -539,7 +543,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
 					$required          = 'yes' == $required ? true : false;
-					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && '1' === $field->advance_setting->enable_conditional_logic ? true : false;
+					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
 					$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 
@@ -628,6 +632,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
 								$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
 							}
+						}
+
+						if ( true === $enable_cl ) {
+							$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
+							$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
 						}
 
 						if ( count( $custom_attributes ) > 0 ) {
