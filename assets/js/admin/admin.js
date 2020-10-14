@@ -3,6 +3,18 @@
  * global i18n_admin
  */
 jQuery(function ($) {
+
+	// Sync Number field's options with hidden corresponding elements.
+	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-min', function() {
+		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-min' ).val( $(this).val() );
+	});
+	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-max', function() {
+		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-max' ).val( $(this).val() );
+	});
+	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-step', function() {
+		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-step' ).val( $(this).val() );
+	});
+
 	// Bind UI Action handlers for searching fields.
 	$(document.body).on("input", "#ur-search-fields", function () {
 		var search_string = $(this).val().toLowerCase();
@@ -1517,9 +1529,10 @@ jQuery(function ($) {
 							"</strong></p></div>";
 					}
 
-					$(".ur-export-users-page").prepend(message_string);
-					$("#jsonfile").val("");
-				},
+					$('.ur-export-users-page').prepend(message_string);
+					$('#jsonfile').val("");
+					$( '.user-registration-custom-selected-file' ).html( user_registration_admin_data.no_file_selected );
+				}
 			});
 		});
 
