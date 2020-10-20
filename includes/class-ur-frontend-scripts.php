@@ -58,6 +58,12 @@ class UR_Frontend_Scripts {
 		return apply_filters(
 			'user_registration_enqueue_styles',
 			array(
+				'sweetalert2'                         => array(
+					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
+					'deps'    => '',
+					'version' => '8.17.1',
+					'media'   => 'all',
+				),
 				'user-registration-general'           => array(
 					'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
 					'deps'    => '',
@@ -76,12 +82,6 @@ class UR_Frontend_Scripts {
 					'src'     => self::get_asset_url( 'assets/css/my-account-layout.css' ),
 					'deps'    => '',
 					'version' => UR_VERSION,
-					'media'   => 'all',
-				),
-				'sweetalert2'                         => array(
-					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
-					'deps'    => '',
-					'version' => '8.17.1',
 					'media'   => 'all',
 				),
 			)
