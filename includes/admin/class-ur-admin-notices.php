@@ -165,6 +165,7 @@ class UR_Admin_Notices {
 		$pages_to_exclude = array(
 			'add-new-registration',
 			'user-registration-settings',
+			'user-registration-email-templates'
 		);
 
 		// Return on other than user registraion builder page.
@@ -182,7 +183,7 @@ class UR_Admin_Notices {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 						} else {
 							// Remove all notices except user registration plugins notices.
-							if ( ! strpos( $name, 'user_registation_missing_notice' ) ) {
+							if ( ! strstr( $name, 'user_registration_' ) ) {
 								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}
 						}
