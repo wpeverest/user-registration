@@ -165,7 +165,8 @@ class UR_Admin_Notices {
 		$pages_to_exclude = array(
 			'add-new-registration',
 			'user-registration-settings',
-			'user-registration-email-templates'
+			'user-registration-email-templates',
+			'user-registration-mailchimp'
 		);
 
 		// Return on other than user registraion builder page.
