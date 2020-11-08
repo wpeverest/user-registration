@@ -1813,14 +1813,21 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				$value = maybe_unserialize( $value );
 			}
 		}
-		$valid_form_data[ $new_string ]             = new stdClass();
-		$valid_form_data[ $new_string ]->field_name = $new_string;
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
 		$valid_form_data[ $new_string ]->value        = $value;
 		$valid_form_data[ $new_string ]->field_type   = $profile[ $post_key ]['type'];
 		$valid_form_data[ $new_string ]->label        = $profile[ $post_key ]['label'];
 		$valid_form_data[ $new_string ]->extra_params = array(
 			'field_key' => $profile[ $post_key ]['field_key'],
 			'label'     => $profile[ $post_key ]['label'],
+		);
+	} else {
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
+		$valid_form_data[ $new_string ]->value        = $value;
+		$valid_form_data[ $new_string ]->extra_params = array(
+			'field_key' => $new_string
 		);
 	}
 	return $valid_form_data;
