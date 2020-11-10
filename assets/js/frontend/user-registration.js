@@ -120,6 +120,24 @@
 						user_registration_params.message_number_fields;
 					$.validator.messages.confirmpassword =
 						user_registration_params.message_confirm_password_fields;
+					$.validator.messages.max = function (params, element) {
+						return user_registration_params.message_confirm_number_field_max.replace(
+							"%qty%",
+							element.max
+						);
+					};
+					$.validator.messages.min = function (params, element) {
+						return user_registration_params.message_confirm_number_field_min.replace(
+							"%qty%",
+							element.min
+						);
+					};
+					$.validator.messages.step = function (params, element) {
+						return user_registration_params.message_confirm_number_field_step.replace(
+							"%qty%",
+							element.step
+						);
+					};
 
 					$this.validate({
 						errorClass: "user-registration-error",
