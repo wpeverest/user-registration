@@ -29,8 +29,8 @@ class UR_Admin_User_List_Manager {
 
 		// -------------------- ACTIONS & FILTERS --------------------
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
-		add_action( 'admin_notices', array( $this, 'display_admin_notices' ), 99 );
-		add_action( 'admin_notices', array( $this, 'pending_users_notices' ) );
+		add_action( 'admin_notices', array( $this, 'user_registration_display_admin_notices' ), 99 );
+		add_action( 'admin_notices', array( $this, 'user_registration_pending_users_notices' ) );
 
 		// Functions about users listing.
 		add_action( 'restrict_manage_users', array( $this, 'add_status_filter' ) );
@@ -148,7 +148,7 @@ class UR_Admin_User_List_Manager {
 	}
 
 	// Display a notice to admin notifying the pending users.
-	public function pending_users_notices() {
+	public function user_registration_pending_users_notices() {
 		$user_query = new WP_User_Query(
 			array(
 				'meta_key'   => 'ur_user_status',
@@ -164,9 +164,20 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
+	 * Deprecates old plugin missing notice.
+	 *
+	 * @deprecated 1.9.0
+	 *
+	 * @return void
+	*/
+	public function pending_users_notices() {
+		ur_deprecated_function( 'UR_Admin_User_List_Manager::pending_users_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_pending_users_notices' );
+	}
+
+	/**
 	 * Display a notice to admin if some users have been approved or denied
 	 */
-	public function display_admin_notices() {
+	public function user_registration_display_admin_notices() {
 		$screen = get_current_screen();
 
 		if ( $screen->id != 'users' ) {
@@ -186,6 +197,17 @@ class UR_Admin_User_List_Manager {
 		if ( ! empty( $message ) ) {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . $message . '</strong></p></div>';
 		}
+	}
+
+	/**
+	 * Deprecates old plugin missing notice.
+	 *
+	 * @deprecated 1.9.0
+	 *
+	 * @return void
+	*/
+	public function display_admin_notices() {
+		ur_deprecated_function( 'UR_Admin_User_List_Manager::display_admin_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_display_admin_notices' );
 	}
 
 	/**

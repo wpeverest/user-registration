@@ -119,20 +119,38 @@
  * Addons page
  **/
 .ur_addons_wrap {
+	*,
+	::before,
+	::after {
+		box-sizing: border-box;
+	}
+
 	.products {
-		overflow: hidden;
 		display: flex;
 		flex-wrap: wrap;
+		margin-left: -12px;
+		margin-right: -12px;
 
 		li {
-			margin: 0 1% 1% 0 !important;
-			padding: 0;
-			vertical-align: top;
-			width: 19.2%;
-			float: left;
+			width: 20%;
+			padding: 0 12px;
+			flex: 0 0 20%;
+			margin-bottom: 24px;
 
-			&:nth-child(5n) {
-				margin: 0 0 1% 0!important;
+			@media only screen and (max-width: 1599px) {
+				width: 33.333%;
+				flex: 0 0 33.333%;
+			}
+
+			@media only screen and (max-width: 768px) {
+				width: 50%;
+				flex: 0 0 50%;
+			}
+
+			@media only screen and (max-width: 480px) {
+				width: 100%;
+				flex: 0 0 100%;
+				margin-bottom: 12px;
 			}
 
 			a {
@@ -2009,27 +2027,6 @@ body {
 	}
 }
 
-/**
- * Media Queries
- */
-@media only screen and (max-width: 1599px) {
-	.ur_addons_wrap {
-		.products {
-			li {
-				width: 32.66%;
-
-				&:nth-child(3n) {
-					margin: 0 0 1% 0 !important;
-				}
-
-				&:nth-child(5n) {
-					margin: 0 1% 1% 0 !important;
-				}
-			}
-		}
-	}
-}
-
 @media screen and (max-width: 1400px) {
 	.ur-registered-from {
 		.urcl-rules {
@@ -2057,26 +2054,6 @@ body {
 	}
 }
 
-@media only screen and (max-width: 1120px) {
-	.ur_addons_wrap {
-		.products {
-			li {
-				width: 49%;
-				margin: 0 2% 2% 0 !important;
-
-				&:nth-child(2n) {
-					margin: 0 0 2% 0 !important;
-				}
-
-				&:nth-child(3n),
-				&:nth-child(5n) {
-					margin: 0 2% 2% 0 !important;
-				}
-			}
-		}
-	}
-}
-
 @media screen and (max-width: 960px) {
 	.ur-registered-from {
 		.ur-registered-inputs {
@@ -2088,16 +2065,6 @@ body {
 			.ur-single-row .ur-grid-lists .ur-grid-list-item,
 			.ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item {
 				padding: 10px;
-			}
-		}
-	}
-}
-
-@media only screen and (max-width: 900px) {
-	.ur_addons_wrap {
-		.products {
-			li {
-				width: 49%;
 			}
 		}
 	}
@@ -2161,15 +2128,5 @@ body {
 				border-left: 0 none;
 			}
 		}
-	}
-}
-
-@media only screen and (max-width: 480px) {
-	.ur_addons_wrap .products li,
-	.ur_addons_wrap .products li:nth-child(5n),
-	.ur_addons_wrap .products li:nth-child(3n),
-	.ur_addons_wrap .products li:nth-child(2n) {
-		width: 100%;
-		margin: 0 0 3% 0 !important;
 	}
 }
