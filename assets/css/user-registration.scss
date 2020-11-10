@@ -22,6 +22,11 @@
 	clear: both;
 }
 
+.user-registration-page .select2-dropdown,
+.user-registration-swal2-container {
+	z-index: 9999;
+}
+
 /**
 * Main User Registration styles
 */

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.5.1
-Stable tag: 1.8.7.1
+Stable tag: 1.8.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -147,6 +147,14 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.8.8 - 13/10/2020
+* Enhance - Hide signup link on login if users_can_register option is not enabled.
+* Fix - Number fields step option not working.
+* Fix - Send an email after payment validation.
+* Fix - Form List table bottom trash filter button not work.
+* Fix - Unexpected json > 0 error.
+* Tweak - Design changes in file upload of setting page.
 
 = 1.8.7.1 - 14/09/2020
 * Fix - Conditional logic compatibility with WordPress 5.5

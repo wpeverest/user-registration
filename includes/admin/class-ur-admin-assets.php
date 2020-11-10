@@ -232,6 +232,7 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
+				'no_file_selected'               => esc_html( 'No file selected.', 'user-registration' )
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );

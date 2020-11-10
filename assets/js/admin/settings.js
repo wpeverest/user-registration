@@ -115,4 +115,11 @@
 			return ( 'checked' === $url.attr( 'checked' ) ) ? 'required' : false;
 		});
 	});
+
+	// Change span with file name when user selects a file.
+	$( '.user-registration-custom-file__input' ).change( function(e) {
+		var file = $( '.user-registration-custom-file__input' ).prop( 'files' )[0];
+
+		$( '.user-registration-custom-selected-file' ).html( file.name );
+	});
 })(jQuery);

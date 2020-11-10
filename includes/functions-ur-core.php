@@ -1801,7 +1801,7 @@ function ur_get_post_content( $form_id ) {
  *
  * @see https://developer.wordpress.org/reference/functions/wp_parse_args/
  *
- * @since 1.7.0
+ * @since 1.9.0
  *
  * @param array $args       Value to merge with $defaults.
  * @param array $defaults   Array that serves as the defaults.
@@ -1849,4 +1849,40 @@ function user_registration_email_content_overrider($form_id, $settings, $message
 
 	}
 	return array( $message, $subject );
+}
+
+/** Get User Data in particular array format.
+ *
+ * @param string $new_string Field Key.
+ * @param string $post_key Post Key
+ * @param array $profile Form Data.
+ * @param mixed $value Value.
+ */
+function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value ) {
+	$valid_form_data = array();
+	if ( isset( $profile[ $post_key ] ) ) {
+		$field_type = $profile[ $post_key ]['type'];
+		if ( 'checkbox' === $field_type || 'multi_select2' === $field_type ) {
+			if ( ! is_array( $value ) && ! empty( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+		}
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
+		$valid_form_data[ $new_string ]->value        = $value;
+		$valid_form_data[ $new_string ]->field_type   = $profile[ $post_key ]['type'];
+		$valid_form_data[ $new_string ]->label        = $profile[ $post_key ]['label'];
+		$valid_form_data[ $new_string ]->extra_params = array(
+			'field_key' => $profile[ $post_key ]['field_key'],
+			'label'     => $profile[ $post_key ]['label'],
+		);
+	} else {
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
+		$valid_form_data[ $new_string ]->value        = $value;
+		$valid_form_data[ $new_string ]->extra_params = array(
+			'field_key' => $new_string
+		);
+	}
+	return $valid_form_data;
 }
