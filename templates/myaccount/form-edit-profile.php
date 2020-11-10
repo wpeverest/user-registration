@@ -183,6 +183,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													} else {
 														$field['max_files'] = 1;
 													}
+
+													if( isset( $advance_data['advance_setting']->max_upload_size)){
+														$field['max_upload_size'] = $advance_data['advance_setting']->max_upload_size;
+													}
+
+													if( isset( $advance_data['advance_setting']->valid_file_type)){
+														$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
+													}
 												}
 
 												if ( isset( $advance_data['general_setting']->required ) ) {
