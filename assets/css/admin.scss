@@ -24,10 +24,13 @@
 @import "border";
 @import "spacing";
 @import "grids";
+@import "overlay";
 
 // Layout-related sections
 @import
 'layout/header';
+
+@import 'templates/template-setup';
 
 
 /**
@@ -582,6 +585,10 @@
 			position: relative;
 			padding-right: 24px;
 
+			label {
+				display: inline-block;
+			}
+
 			img.help_tip,
 			.user-registration-help-tip {
 				margin: 0 -24px 0 0;
@@ -1085,6 +1092,7 @@
 					height: auto;
 					width: auto;
 					cursor: pointer;
+					margin: 0;
 					padding: 4px 6px;
 					line-height: 1;
 					transition: all 0.1s ease-in-out;

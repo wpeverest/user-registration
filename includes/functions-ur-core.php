@@ -1797,7 +1797,61 @@ function ur_get_post_content( $form_id ) {
 }
 
 /**
- * Get User Data in particular array format.
+ * A wp_parse_args() for multi-dimensional array.
+ *
+ * @see https://developer.wordpress.org/reference/functions/wp_parse_args/
+ *
+ * @since 1.9.0
+ *
+ * @param array $args       Value to merge with $defaults.
+ * @param array $defaults   Array that serves as the defaults.
+ *
+ * @return array    Merged user defined values with defaults.
+ */
+function ur_parse_args( &$args, $defaults ) {
+	$args     = (array) $args;
+	$defaults = (array) $defaults;
+	$result   = $defaults;
+	foreach ( $args as $k => &$v ) {
+		if ( is_array( $v ) && isset( $result[ $k ] ) ) {
+			$result[ $k ] = ur_parse_args( $v, $result[ $k ] );
+		} else {
+			$result[ $k ] = $v;
+		}
+	}
+	return $result;
+}
+
+/**
+ * Override email content for specific form.
+ *
+ * @param int $form_id Form Id.
+ * @param object $settings Settings for specific email.
+ * @param string $message Message to be sent in email body.
+ * @param string $subject Subject of the email.
+ *
+ * @return array
+ */
+function user_registration_email_content_overrider($form_id, $settings, $message, $subject) {
+	// Check if email templates addon is active.
+	if( class_exists( 'User_Registration_Email_Templates')) {
+		$email_content_override = ur_get_single_post_meta( $form_id, 'user_registration_email_content_override', '' );
+
+		// Check if the post meta exists and have contents.
+		if( $email_content_override ) {
+
+			// Check if the email override is enabled.
+			if( '1' === $email_content_override[$settings->id]['override']) {
+				$message = $email_content_override[$settings->id]['content'];
+				$subject = $email_content_override[$settings->id]['subject'];
+			}
+		}
+
+	}
+	return array( $message, $subject );
+}
+
+/** Get User Data in particular array format.
  *
  * @param string $new_string Field Key.
  * @param string $post_key Post Key

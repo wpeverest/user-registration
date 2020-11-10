@@ -115,7 +115,7 @@ class UR_User_Approval {
 		$username  = isset( $user_data->user_login ) ? $user_data->user_login : '';
 		$email     = isset( $user_data->user_email ) ? $user_data->user_email : '';
 
-		UR_Emailer::status_change_email( $email, $username, $status );
+		UR_Emailer::status_change_email( $email, $username, $status, $form_id );
 	}
 
 	/**

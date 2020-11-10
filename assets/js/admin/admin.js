@@ -3,17 +3,34 @@
  * global i18n_admin
  */
 jQuery(function ($) {
-
 	// Sync Number field's options with hidden corresponding elements.
-	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-min', function() {
-		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-min' ).val( $(this).val() );
-	});
-	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-max', function() {
-		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-max' ).val( $(this).val() );
-	});
-	$( document.body ).on( 'input', '.ur_advance_setting.ur-settings-step', function() {
-		$( '.ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-step' ).val( $(this).val() );
-	});
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-min",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-min"
+			).val($(this).val());
+		}
+	);
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-max",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-max"
+			).val($(this).val());
+		}
+	);
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-step",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-step"
+			).val($(this).val());
+		}
+	);
 
 	// Bind UI Action handlers for searching fields.
 	$(document.body).on("input", "#ur-search-fields", function () {
@@ -1529,10 +1546,12 @@ jQuery(function ($) {
 							"</strong></p></div>";
 					}
 
-					$('.ur-export-users-page').prepend(message_string);
-					$('#jsonfile').val("");
-					$( '.user-registration-custom-selected-file' ).html( user_registration_admin_data.no_file_selected );
-				}
+					$(".ur-export-users-page").prepend(message_string);
+					$("#jsonfile").val("");
+					$(".user-registration-custom-selected-file").html(
+						user_registration_admin_data.no_file_selected
+					);
+				},
 			});
 		});
 
@@ -1586,12 +1605,13 @@ jQuery(function ($) {
 		}
 
 		var form_setting_data = $(
-			"#ur-field-settings :not(.urcl-user-role-field)"
+			"#ur-field-settings :not(.urcl-user-role-field, .uret-override-content-field)"
 		).serializeArray();
 
 		var conditional_roles_settings_data = get_form_conditional_role_data();
+		var email_content_override_settings_data = get_form_email_content_override_data();
 
-		/** TODO:: Hanlde from multistep forms add-on if possible. */
+		/** TODO:: Handle from multistep forms add-on if possible. */
 		var multipart_page_setting = $(
 			"#ur-multi-part-page-settings"
 		).serializeArray();
@@ -1607,6 +1627,7 @@ jQuery(function ($) {
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
 				conditional_roles_settings_data: conditional_roles_settings_data,
+				email_content_override_settings_data: email_content_override_settings_data,
 				multipart_page_setting: multipart_page_setting,
 			},
 		};
@@ -3030,6 +3051,40 @@ jQuery(function ($) {
 		);
 		cloning_element.html("");
 		cloning_element.replaceWith(cloning_options);
+	}
+
+	function get_form_email_content_override_data() {
+		var specific_email_contents = {};
+		var single_row = $(".user-registration-email-template-content-wrap");
+
+		$.each(single_row, function () {
+			var email_title_item = $(this).find(
+				".user-registration-card__header"
+			);
+			var email_body_item = $(this).find(".user-registration-card__body");
+
+			specific_email_contents[$(this).prop("id")] = {
+				title: email_title_item
+					.find(".user-registration-card__title ")
+					.text(),
+				description: email_title_item
+					.find(".user-registration-help-tip")
+					.data("description"),
+				override: email_title_item
+					.find("#uret_override_" + $(this).prop("id"))
+					.hasClass("enabled")
+					? 1
+					: 0,
+				subject: email_body_item.find(".uret_subject_input").val(),
+				content: email_body_item
+					.find(
+						"#user_registration_" + $(this).prop("id") + "_content"
+					)
+					.val(),
+			};
+		});
+
+		return specific_email_contents;
 	}
 })(jQuery, window.user_registration_admin_data);
 

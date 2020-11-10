@@ -5,6 +5,11 @@
 		transition: all 0.25s ease 0s;
 		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
+		+ button,
+		+ .button {
+			margin-left: 6px;
+		}
+
 		&.button-icon {
 			width: 32px;
 			padding: 0;
@@ -13,6 +18,11 @@
 			.dashicons {
 				line-height: 0.9;
 				vertical-align: middle;
+			}
+
+			svg {
+				display: block;
+				margin: 0 auto;
 			}
 		}
 
@@ -109,14 +119,14 @@
 		}
 	}
 
-	.publishing-action {
-		button,
-		input[type='button'],
-		input[type='submit'],
-		.button {
-			margin-right: 5px;
-		}
-	}
+	// .publishing-action {
+	// 	button,
+	// 	input[type='button'],
+	// 	input[type='submit'],
+	// 	.button {
+	// 		margin-right: 5px;
+	// 	}
+	// }
 }
 
 .user-registration-button-group {
