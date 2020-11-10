@@ -134,7 +134,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												// Migrate the conditional logic to logic_map schema.
 												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 
-												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && '1' === $single_item->advance_setting->enable_conditional_logic ? 'yes' : 'no';
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ( '1' === $single_item->advance_setting->enable_conditional_logic || 'on' === $single_item->advance_setting->enable_conditional_logic ) ? 'yes' : 'no';
 												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
 
 												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
