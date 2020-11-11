@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 
 						<p>
-							<select name="export_users" class="forms-list">
+							<select name="export_users" class="ur-input forms-list">
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {
 									echo '<option value ="' . esc_attr( $form_id ) . '">' . esc_html( $form ) . '</option>';

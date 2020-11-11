@@ -58,6 +58,12 @@ class UR_Frontend_Scripts {
 		return apply_filters(
 			'user_registration_enqueue_styles',
 			array(
+				'sweetalert2'                         => array(
+					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
+					'deps'    => '',
+					'version' => '8.17.1',
+					'media'   => 'all',
+				),
 				'user-registration-general'           => array(
 					'src'     => self::get_asset_url( 'assets/css/user-registration.css' ),
 					'deps'    => '',
@@ -76,12 +82,6 @@ class UR_Frontend_Scripts {
 					'src'     => self::get_asset_url( 'assets/css/my-account-layout.css' ),
 					'deps'    => '',
 					'version' => UR_VERSION,
-					'media'   => 'all',
-				),
-				'sweetalert2'                         => array(
-					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
-					'deps'    => '',
-					'version' => '8.17.1',
 					'media'   => 'all',
 				),
 			)
@@ -358,6 +358,9 @@ class UR_Frontend_Scripts {
 					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched.', 'user-registration' ) ),
 					'message_validate_phone_number'    => get_option( 'user_registration_form_submission_error_message_phone_number', __( 'Please enter a valid phone number.', 'user-registration' ) ),
 					'message_confirm_email_fields'     => get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched.', 'user-registration' ) ),
+					'message_confirm_number_field_max'     => __( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_min'     => __( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_step'     => __( 'Please enter a multiple of %qty%.', 'user-registration' ),
 					'ursL10n'                          => array(
 						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', __( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', __( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),

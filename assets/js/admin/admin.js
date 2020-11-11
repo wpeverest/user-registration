@@ -3,6 +3,35 @@
  * global i18n_admin
  */
 jQuery(function ($) {
+	// Sync Number field's options with hidden corresponding elements.
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-min",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-min"
+			).val($(this).val());
+		}
+	);
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-max",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-max"
+			).val($(this).val());
+		}
+	);
+	$(document.body).on(
+		"input",
+		".ur_advance_setting.ur-settings-step",
+		function () {
+			$(
+				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-step"
+			).val($(this).val());
+		}
+	);
+
 	// Bind UI Action handlers for searching fields.
 	$(document.body).on("input", "#ur-search-fields", function () {
 		var search_string = $(this).val().toLowerCase();
@@ -65,7 +94,8 @@ jQuery(function ($) {
 		Swal.fire({
 			title: title,
 			html: message,
-			customClass: 'user-registration-swal2-modal user-registration-swal2-modal--centered',
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered",
 			showCloseButton: true,
 			confirmButtonText: "View Pricing",
 		}).then(function (result) {
@@ -789,7 +819,8 @@ jQuery(function ($) {
 											Swal.fire({
 												type: "success",
 												title: "Successfully deleted!",
-												customClass: 'user-registration-swal2-modal user-registration-swal2-modal--center',
+												customClass:
+													"user-registration-swal2-modal user-registration-swal2-modal--center",
 												showConfirmButton: false,
 												timer: 1000,
 											});
@@ -803,11 +834,12 @@ jQuery(function ($) {
 								ur_alert(
 									user_registration_admin_data.i18n_admin
 										.i18n_at_least_one_row_is_required_to_create_a_registration_form,
-										{
-											title:
-												user_registration_admin_data
-													.i18n_admin.i18n_cannot_delete_row,
-										}
+									{
+										title:
+											user_registration_admin_data
+												.i18n_admin
+												.i18n_cannot_delete_row,
+									}
 								);
 							}
 						});
@@ -1529,6 +1561,9 @@ jQuery(function ($) {
 
 					$(".ur-export-users-page").prepend(message_string);
 					$("#jsonfile").val("");
+					$(".user-registration-custom-selected-file").html(
+						user_registration_admin_data.no_file_selected
+					);
 				},
 			});
 		});
@@ -2366,6 +2401,11 @@ jQuery(function ($) {
 				default:
 					event = "change";
 			}
+
+			if ("valid_file_type" === $this_node.attr("data-advance-field")) {
+				$this_node.select2();
+			}
+
 			$(this).on(event, function () {
 				trigger_advance_setting($this_node, node_type);
 			});
@@ -3099,7 +3139,8 @@ function ur_alert(message, options) {
 		type: "error",
 		title: options.title,
 		text: message,
-		customClass: 'user-registration-swal2-modal user-registration-swal2-modal--center',
+		customClass:
+			"user-registration-swal2-modal user-registration-swal2-modal--center",
 	});
 }
 
@@ -3108,12 +3149,13 @@ function ur_confirmation(message, options) {
 		options = {};
 	}
 	var icon = '<i class="dashicons dashicons-trash"></i>';
-		var title =
-			icon +
-			'<span class="user-registration-swal2-modal__title">' +
-			options.title;
+	var title =
+		icon +
+		'<span class="user-registration-swal2-modal__title">' +
+		options.title;
 	Swal.fire({
-		customClass: 'user-registration-swal2-modal user-registration-swal2-modal--centered',
+		customClass:
+			"user-registration-swal2-modal user-registration-swal2-modal--centered",
 		title: title,
 		text: message,
 		showCancelButton:
@@ -3124,7 +3166,7 @@ function ur_confirmation(message, options) {
 			"undefined" !== typeof options.confirmButtonText
 				? options.confirmButtonText
 				: user_registration_admin_data.i18n_admin.i18n_choice_delete,
-		confirmButtonColor: '#ff4149',
+		confirmButtonColor: "#ff4149",
 		cancelButtonText:
 			"undefined" !== typeof options.cancelButtonText
 				? options.cancelButtonText

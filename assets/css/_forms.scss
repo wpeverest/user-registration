@@ -58,6 +58,10 @@
 		padding: 6px 15px;
 		border-radius: 4px;
 	}
+
+	& + .help {
+		margin-top: 4px;
+	}
 }
 
 .ur-form-field--sm {
