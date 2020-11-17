@@ -1,14 +1,46 @@
-table.user-registration-table {
+.user-registration-table {
 	width: 100%;
 	background: $white;
 	border-collapse: collapse;
 
+	&__column-md {
+		width: 40%;
+	}
+
+	&__column-sm {
+		width: 20%;
+	}
+
+	&__column-auto {
+		width: 1%;
+		white-space: nowrap;
+	}
+
+	&__img {
+		height: 40px;
+		width: 40px;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
 	caption,
 	th,
 	td {
-		padding: 1rem;
+		padding: 1rem 0.5rem;
 		text-align: left;
 		border-bottom: 1px solid $border_color;
+
+		&:first-child {
+			padding-left: 1rem;
+		}
+
+		&:last-child {
+			padding-right: 1rem;
+		}
+	}
+
+	td {
+		vertical-align: top;
 	}
 
 	caption,

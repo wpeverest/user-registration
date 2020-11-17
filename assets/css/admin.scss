@@ -499,41 +499,6 @@
 	}
 }
 
-/**
- * Sweet Alert styling
- **/
-.user-registration_page_add-new-registration {
-	.swal2-container {
-		.swal2-title {
-			color: $gray_base;
-			font-size: 24px;
-			flex-wrap: wrap;
-			margin-bottom: 24px;
-		}
-
-		.dashicons {
-			color: $red;
-			font-size: 28px;
-			width: 56px;
-			height: 56px;
-			line-height: 56px;
-			margin: 0 auto 20px;
-			border: 2px solid $red;
-			border-radius: 50%;
-		}
-
-		.ur-swal-title {
-			flex: 100%;
-		}
-
-		.swal2-content,
-		p {
-			color: $color_gray_one;
-			font-size: 1em;
-		}
-	}
-}
-
 .user-registration {
 	nav.ur-nav-tab-wrapper {
 		margin: 1.5em 0 1em;

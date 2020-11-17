@@ -81,21 +81,23 @@ jQuery(function ($) {
 		var label = $(this).text();
 		var title =
 			icon +
-			'<div class="ur-swal-title">' +
+			'<span class="user-registration-swal2-modal__title">' +
 			label +
-			" is a Premium field.</div>";
+			" is a premium field.</span>";
 		var plan = $(this).data("plan");
 		var message =
 			label +
-			" field is not available right now. Please upgrade to <strong>" +
+			" field is locked. Upgrade to <strong>" +
 			plan +
-			"</strong> of the plugin to unlock this field.";
+			"</strong> to unlock this field.";
 
 		Swal.fire({
 			title: title,
 			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered",
 			showCloseButton: true,
-			confirmButtonText: "Let's do it",
+			confirmButtonText: "View Pricing",
 		}).then(function (result) {
 			if (result.value) {
 				var url =
@@ -708,8 +710,11 @@ jQuery(function ($) {
 								var $this_row = $(this);
 								ur_confirmation(
 									user_registration_admin_data.i18n_admin
-										.i18n_are_you_sure_want_to_delete,
+										.i18n_are_you_sure_want_to_delete_row,
 									{
+										title:
+											user_registration_admin_data
+												.i18n_admin.i18n_msg_delete,
 										confirm: function () {
 											var btn = $this_row.prev();
 											var new_btn;
@@ -814,6 +819,8 @@ jQuery(function ($) {
 											Swal.fire({
 												type: "success",
 												title: "Successfully deleted!",
+												customClass:
+													"user-registration-swal2-modal user-registration-swal2-modal--center",
 												showConfirmButton: false,
 												timer: 1000,
 											});
@@ -826,7 +833,13 @@ jQuery(function ($) {
 							} else {
 								ur_alert(
 									user_registration_admin_data.i18n_admin
-										.i18n_at_least_one_row_need_to_select
+										.i18n_at_least_one_row_is_required_to_create_a_registration_form,
+									{
+										title:
+											user_registration_admin_data
+												.i18n_admin
+												.i18n_cannot_delete_row,
+									}
 								);
 							}
 						});
@@ -1053,7 +1066,7 @@ jQuery(function ($) {
 						var $this = this;
 						$("body").on(
 							"click",
-							".ur-selected-item .ur-action-buttons  .ur-trash",
+							".ur-selected-item .ur-action-buttons .ur-trash",
 							function (e) {
 								var removed_item = $(this)
 										.closest(".ur-selected-item ")
@@ -1064,7 +1077,7 @@ jQuery(function ($) {
 
 								ur_confirmation(
 									user_registration_admin_data.i18n_admin
-										.i18n_are_you_sure_want_to_delete,
+										.i18n_are_you_sure_want_to_delete_field,
 									{
 										title:
 											user_registration_admin_data
@@ -3126,6 +3139,8 @@ function ur_alert(message, options) {
 		type: "error",
 		title: options.title,
 		text: message,
+		customClass:
+			"user-registration-swal2-modal user-registration-swal2-modal--center",
 	});
 }
 
@@ -3133,10 +3148,16 @@ function ur_confirmation(message, options) {
 	if ("undefined" === typeof options) {
 		options = {};
 	}
+	var icon = '<i class="dashicons dashicons-trash"></i>';
+	var title =
+		icon +
+		'<span class="user-registration-swal2-modal__title">' +
+		options.title;
 	Swal.fire({
-		title: options.title,
+		customClass:
+			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+		title: title,
 		text: message,
-		type: "undefined" !== typeof options.type ? options.type : "warning",
 		showCancelButton:
 			"undefined" !== typeof options.showCancelButton
 				? options.showCancelButton
@@ -3144,7 +3165,8 @@ function ur_confirmation(message, options) {
 		confirmButtonText:
 			"undefined" !== typeof options.confirmButtonText
 				? options.confirmButtonText
-				: user_registration_admin_data.i18n_admin.i18n_choice_ok,
+				: user_registration_admin_data.i18n_admin.i18n_choice_delete,
+		confirmButtonColor: "#ff4149",
 		cancelButtonText:
 			"undefined" !== typeof options.cancelButtonText
 				? options.cancelButtonText
