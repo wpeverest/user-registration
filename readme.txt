@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.5.1
-Stable tag: 1.8.8
+Tested up to: 5.5.3
+Stable tag: 1.9.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -147,6 +147,20 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.0 - 18/11/2020
+* Feature - Email content override for Email Templates addon.
+* Enhance- Re-initialize form after full page load.
+* Enhance - Max upload size and valid file type settings value save and retrieve.
+* Dev - Zapier add-on compatibility.
+* Refactor - Admin popup UI.
+* Tweak - JS format changed.
+* Tweak - Hide unrelated admin notices from the settings page.
+* Tweak - Number field max, min, and step validation message override and made translatable.
+* Fix - Conditional logic not working in the WooCommerce checkout page.
+* Fix - Conditional Logic required fields conflict.
+* Fix - Conditional Logic in my account.
+* Fix - Grid layout design issue in the extension page.
 
 = 1.8.8 - 13/10/2020
 * Enhance - Hide signup link on login if users_can_register option is not enabled.

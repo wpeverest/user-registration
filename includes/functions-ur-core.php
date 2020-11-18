@@ -1795,3 +1795,94 @@ function ur_get_post_content( $form_id ) {
 		return array();
 	}
 }
+
+/**
+ * A wp_parse_args() for multi-dimensional array.
+ *
+ * @see https://developer.wordpress.org/reference/functions/wp_parse_args/
+ *
+ * @since 1.9.0
+ *
+ * @param array $args       Value to merge with $defaults.
+ * @param array $defaults   Array that serves as the defaults.
+ *
+ * @return array    Merged user defined values with defaults.
+ */
+function ur_parse_args( &$args, $defaults ) {
+	$args     = (array) $args;
+	$defaults = (array) $defaults;
+	$result   = $defaults;
+	foreach ( $args as $k => &$v ) {
+		if ( is_array( $v ) && isset( $result[ $k ] ) ) {
+			$result[ $k ] = ur_parse_args( $v, $result[ $k ] );
+		} else {
+			$result[ $k ] = $v;
+		}
+	}
+	return $result;
+}
+
+/**
+ * Override email content for specific form.
+ *
+ * @param int $form_id Form Id.
+ * @param object $settings Settings for specific email.
+ * @param string $message Message to be sent in email body.
+ * @param string $subject Subject of the email.
+ *
+ * @return array
+ */
+function user_registration_email_content_overrider($form_id, $settings, $message, $subject) {
+	// Check if email templates addon is active.
+	if( class_exists( 'User_Registration_Email_Templates')) {
+		$email_content_override = ur_get_single_post_meta( $form_id, 'user_registration_email_content_override', '' );
+
+		// Check if the post meta exists and have contents.
+		if( $email_content_override ) {
+
+			// Check if the email override is enabled.
+			if( '1' === $email_content_override[$settings->id]['override']) {
+				$message = $email_content_override[$settings->id]['content'];
+				$subject = $email_content_override[$settings->id]['subject'];
+			}
+		}
+
+	}
+	return array( $message, $subject );
+}
+
+/** Get User Data in particular array format.
+ *
+ * @param string $new_string Field Key.
+ * @param string $post_key Post Key
+ * @param array $profile Form Data.
+ * @param mixed $value Value.
+ */
+function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value ) {
+	$valid_form_data = array();
+	if ( isset( $profile[ $post_key ] ) ) {
+		$field_type = $profile[ $post_key ]['type'];
+		if ( 'checkbox' === $field_type || 'multi_select2' === $field_type ) {
+			if ( ! is_array( $value ) && ! empty( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+		}
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
+		$valid_form_data[ $new_string ]->value        = $value;
+		$valid_form_data[ $new_string ]->field_type   = $profile[ $post_key ]['type'];
+		$valid_form_data[ $new_string ]->label        = $profile[ $post_key ]['label'];
+		$valid_form_data[ $new_string ]->extra_params = array(
+			'field_key' => $profile[ $post_key ]['field_key'],
+			'label'     => $profile[ $post_key ]['label'],
+		);
+	} else {
+		$valid_form_data[ $new_string ]               = new stdClass();
+		$valid_form_data[ $new_string ]->field_name   = $new_string;
+		$valid_form_data[ $new_string ]->value        = $value;
+		$valid_form_data[ $new_string ]->extra_params = array(
+			'field_key' => $new_string
+		);
+	}
+	return $valid_form_data;
+}

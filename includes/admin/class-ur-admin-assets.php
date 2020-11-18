@@ -236,6 +236,18 @@ class UR_Admin_Assets {
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+
+			wp_register_script( 'ur-components', UR()->plugin_url() . '/assets/js/ur-components/ur-components' . $suffix . '.js', array( 'jquery' ), 'UR_VERSION', true );
+			wp_enqueue_script( 'ur-components' );
+			wp_localize_script(
+				'ur-components',
+				'ur_components_script_params',
+				array(
+					'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+					'card_switch_enabled_text'  => __( 'Enabled', 'user-registration' ),
+					'card_switch_disabled_text' => __( 'Disabled', 'user-registration' ),
+				)
+			);
 		}
 
 		// Enqueue flatpickr on user profile screen.
@@ -264,6 +276,7 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION );
 		wp_enqueue_script( 'ur-live-user-notice' );
+
 	}
 
 	/**
@@ -309,12 +322,14 @@ class UR_Admin_Assets {
 	public static function get_i18n_admin_data() {
 
 		$i18n = array(
-			'i18n_choice_ok'                         => esc_html__( 'Ok', 'user-registration' ),
+			'i18n_choice_delete'                     => esc_html__( 'Delete', 'user-registration' ),
 			'i18n_choice_cancel'                     => esc_html__( 'Cancel', 'user-registration' ),
 			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
 			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
-			'i18n_are_you_sure_want_to_delete'       => _x( 'Are you sure want to delete?', 'user registration admin', 'user-registration' ),
-			'i18n_at_least_one_row_need_to_select'   => _x( 'At least one row needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete_row'   => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete_field' => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
+			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
+			'i18n_cannot_delete_row'                 => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there' => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
 			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),

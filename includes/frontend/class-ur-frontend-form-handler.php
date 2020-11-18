@@ -214,6 +214,16 @@ class UR_Frontend_Form_Handler {
 					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
 				}
 
+				if (
+					isset( $single_form_field->advance_setting->enable_conditional_logic ) &&
+					(
+						'on' === $single_form_field->advance_setting->enable_conditional_logic ||
+						'yes' === $single_form_field->advance_setting->enable_conditional_logic
+					)
+				) {
+					$single_form_field->advance_setting->enable_conditional_logic = '1';
+				}
+
 				do_action( $hook, $single_form_field, $data, $filter_hook, self::$form_id );
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {

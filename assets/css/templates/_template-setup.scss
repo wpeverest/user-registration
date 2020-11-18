@@ -1,0 +1,92 @@
+.user-registration-template-setup {
+	max-width: 1074px;
+	margin: 40px auto 0;
+
+	*,
+	::before,
+	::after {
+		box-sizing: border-box;
+	}
+}
+
+.user-registration-template-wrap {
+	$self : &;
+	cursor: pointer;
+	margin-bottom: 24px;
+
+	&#user-registration-email-template-blank {
+		#{$self}__figure {
+			&::before {
+				content: '';
+				display: block;
+				background-color: transparentize($gray-base, 0.8);
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				transition: all 0.3s ease 0s;
+				opacity: 0;
+				visibility: none;
+			}
+		}
+
+		&:hover {
+			#{$self}__figure {
+				&::before {
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+		}
+	}
+
+	&__figure {
+		background-color: $color_gray_five;
+		margin: 0;
+		min-height: 260px;
+		position: relative;
+		border-radius: 4px;
+		overflow: hidden;
+
+		img {
+			max-width: 100%;
+			display: block;
+		}
+	}
+
+	&__overlay {
+		background: transparentize($gray-base, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		transition: all 0.3s ease 0s;
+		visibility: hidden;
+		opacity: 0;
+
+		.button {
+			border-color: $white;
+		}
+	}
+
+	&__title {
+		color: $body-color;
+		font-size: 16px;
+		font-weight: 500;
+
+		&:hover {
+			color: $primary_color;
+		}
+	}
+
+	&:hover {
+		#{$self}__overlay {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}

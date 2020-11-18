@@ -1,10 +1,28 @@
-.ur-list-group {
+.user-registration-list-group {
+	$self: &;
 	display: flex;
 	flex-direction: column;
 	padding-left: 0;
 	margin-bottom: 0;
 
-	.ur-list-group__item {
+	&--flush {
+		>#{$self}__item {
+			border-width: 0 0 1px;
+
+			&:last-child {
+				border-bottom-width: 0;
+			}
+		}
+	}
+
+	&--no-gutter {
+		& #{$self}__item {
+			padding-right: 0;
+			padding-left: 0;
+		}
+	}
+
+	&__item {
 		position: relative;
 		display: block;
 		padding: 1rem 1.25rem;

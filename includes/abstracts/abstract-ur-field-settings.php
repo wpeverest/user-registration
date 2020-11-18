@@ -71,13 +71,12 @@ abstract class UR_Field_Settings {
 					break;
 
 				case 'select':
-					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '"';
+					$is_multiple = isset( $field['multiple'] ) && true === $field['multiple'];
+					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '" name="' . esc_attr( $field['name'] ) .  esc_attr( $is_multiple ? '[]' : '' ) . '"';
 
 					if ( true == $field['required'] ) {
 						$this->fields_html .= ' required ';
 					}
-
-					$is_multiple = isset( $field['multiple'] ) && true === $field['multiple'];
 
 					if ( true === $is_multiple ) {
 						$this->fields_html .= ' multiple ';
