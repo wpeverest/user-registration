@@ -1,3 +1,17 @@
+= 1.9.0 - 18/11/2020
+* Feature - Email content override for Email Templates addon.
+* Enhance- Re-initialize form after full page load.
+* Enhance - Max upload size and valid file type settings value save and retrieve.
+* Dev - Zapier add-on compatibility.
+* Refactor - Admin popup UI.
+* Tweak - JS format changed.
+* Tweak - Hide unrelated admin notices from the settings page.
+* Tweak - Number field max, min, and step validation message override and made translatable.
+* Fix - Conditional logic not working in the WooCommerce checkout page.
+* Fix - Conditional Logic required fields conflict.
+* Fix - Conditional Logic in my account.
+* Fix - Grid layout design issue in the extension page.
+
 = 1.8.8 - 13/10/2020
 * Enhance - Hide signup link on login if users_can_register option is not enabled.
 * Fix - Number fields step option not working.
