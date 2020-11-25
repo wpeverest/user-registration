@@ -750,6 +750,25 @@
 										return true;
 									}
 
+									// Remove word added by form filler in file upload field during submission
+									var file_upload = $this.find(
+											".urfu-file-input"
+										),
+										file_upload_val = file_upload
+											.val()
+											.split(",");
+
+									for (
+										var i = file_upload_val.length;
+										i >= 0;
+										i--
+									) {
+										if (!$.isNumeric(file_upload_val[i])) {
+											file_upload_val.splice(i, 1);
+										}
+									}
+									file_upload.val(file_upload_val);
+
 									var exist_detail = $this
 										.find(".uraf-profile-picture-upload")
 										.find(".user-registration-error")
@@ -1219,6 +1238,25 @@
 								$this
 									.find(".user-registration-submit-Button")
 									.prop("disabled", true);
+
+								// Remove word added by form filler in file upload field during submission
+								var file_upload = $this.find(
+										".urfu-file-input"
+									),
+									file_upload_val = file_upload
+										.val()
+										.split(",");
+
+								for (
+									var i = file_upload_val.length;
+									i >= 0;
+									i--
+								) {
+									if (!$.isNumeric(file_upload_val[i])) {
+										file_upload_val.splice(i, 1);
+									}
+								}
+								file_upload.val(file_upload_val);
 
 								var form_data;
 								var form_nonce = "0";
