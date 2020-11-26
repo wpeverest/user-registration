@@ -752,22 +752,28 @@
 
 									// Remove word added by form filler in file upload field during submission
 									var file_upload = $this.find(
-											".urfu-file-input"
-										),
-										file_upload_val = file_upload
+										".urfu-file-input"
+									);
+
+									//Check if file upload field exists.
+									if (1 <= file_upload.length) {
+										var file_upload_val = file_upload
 											.val()
 											.split(",");
 
-									for (
-										var i = file_upload_val.length;
-										i >= 0;
-										i--
-									) {
-										if (!$.isNumeric(file_upload_val[i])) {
-											file_upload_val.splice(i, 1);
+										for (
+											var i = file_upload_val.length;
+											i >= 0;
+											i--
+										) {
+											if (
+												!$.isNumeric(file_upload_val[i])
+											) {
+												file_upload_val.splice(i, 1);
+											}
 										}
+										file_upload.val(file_upload_val);
 									}
-									file_upload.val(file_upload_val);
 
 									var exist_detail = $this
 										.find(".uraf-profile-picture-upload")
@@ -1241,22 +1247,26 @@
 
 								// Remove word added by form filler in file upload field during submission
 								var file_upload = $this.find(
-										".urfu-file-input"
-									),
-									file_upload_val = file_upload
+									".urfu-file-input"
+								);
+
+								//Check if file upload field exists.
+								if (1 <= file_upload.length) {
+									var file_upload_val = file_upload
 										.val()
 										.split(",");
 
-								for (
-									var i = file_upload_val.length;
-									i >= 0;
-									i--
-								) {
-									if (!$.isNumeric(file_upload_val[i])) {
-										file_upload_val.splice(i, 1);
+									for (
+										var i = file_upload_val.length;
+										i >= 0;
+										i--
+									) {
+										if (!$.isNumeric(file_upload_val[i])) {
+											file_upload_val.splice(i, 1);
+										}
 									}
+									file_upload.val(file_upload_val);
 								}
-								file_upload.val(file_upload_val);
 
 								var form_data;
 								var form_nonce = "0";
@@ -1725,7 +1735,7 @@ function request_recaptcha_token() {
 function ur_includes(arr, item) {
 	if (Array.isArray(arr)) {
 		for (var i = 0; i < arr.length; i += 1) {
-			if (arr === item) {
+			if (arr[i] === item) {
 				return true;
 			}
 		}
