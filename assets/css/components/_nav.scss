@@ -1,0 +1,56 @@
+// Base class
+//
+// Kickstart any navigation component with a set of style resets. Works with
+// `<nav>`s, `<ul>`s or `<ol>`s.
+
+.ur-nav {
+	display: flex;
+	flex-wrap: wrap;
+	padding-left: 0;
+	margin-bottom: 0;
+	list-style: none;
+
+	&--tab {
+		display: flex;
+		border-bottom: $border-width solid $border-color;
+
+		.user-registration_page_user-registration-settings & {
+			padding: 0;
+			margin: 0 16px;
+			border-bottom: 0;
+		}
+	}
+
+	&__link {
+		display: block;
+		font-weight: 500;
+		color: $nav-link-color;
+		padding: 8px 12px;
+		text-decoration: none;
+		border: $border_width solid transparent;
+
+		&:hover,
+		&:focus {
+			color: $nav-link-hover-color;
+		}
+
+		&.is-active {
+			background-color: $primary-color;
+			border-color: $border-color $border-color $white;
+			border-radius: 4px 4px 0 0;
+		}
+
+		// Customize setting page nav.
+		.user-registration_page_user-registration-settings & {
+			background-color: transparent;
+			color: $white;
+			margin: 0;
+
+			&.is-active {
+				background-color: $white;
+				color: $gray-base;
+				border-color: $white;
+			}
+		}
+	}
+}

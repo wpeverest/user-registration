@@ -9,4 +9,28 @@
 .user-registration-header {
 	background: $white;
 	padding: 12px 16px;
+
+	// Customize header in settings page.
+	.user-registration_page_user-registration-settings & {
+		background-color: $primary_color;
+		padding: 20px 0 0;
+
+		.subsubsub {
+			background: $white;
+			padding: 0 16px;
+			margin-top: 0;
+			float: none;
+
+			a {
+				color: $gray-base;
+				display: block;
+				font-weight: 500;
+				padding: 8px 12px;
+
+				&.current {
+					color: $primary_color;
+				}
+			}
+		}
+	}
 }
