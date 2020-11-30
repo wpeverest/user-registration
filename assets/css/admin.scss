@@ -20,7 +20,8 @@
 'components/card',
 'components/list-group',
 'components/modal',
-'components/nav';
+'components/nav',
+'components/scroll-ui';
 
 @import "border";
 @import "spacing";
@@ -84,6 +85,7 @@
 		}
 	}
 }
+
 .ur-export-users-page {
 	margin-top: 24px;
 

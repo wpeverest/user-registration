@@ -15,6 +15,16 @@
 		background-color: $primary_color;
 		padding: 20px 0 0;
 
+		.ur-scroll-ui {
+			&__scroll-nav {
+				background-color: $primary_color;
+
+				&__icon {
+					color: $white;
+				}
+			}
+		}
+
 		.subsubsub {
 			background: $white;
 			padding: 0 16px;

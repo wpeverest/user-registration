@@ -3179,3 +3179,32 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
+
+
+jQuery(function($){
+	var scrollBackward, scrollForward, scrollItems, scrollWidth, scrollPos;
+	scrollBackward = $(".ur-scroll-ui__scroll-nav--backward");
+	scrollForward = $(".ur-scroll-ui__scroll-nav--forward");
+	scrollItems = $(".ur-scroll-ui__items");
+
+	scrollBackward.click(function(){
+		scrollWidth = scrollItems.width() - 60;
+		scrollPos = scrollItems.scrollLeft() - scrollWidth;
+		scrollItems.animate({'scrollLeft': scrollPos}, 'slow');
+	});
+	scrollForward.click(function(){
+		scrollWidth = scrollItems.width() - 60;
+		scrollPos = scrollItems.scrollLeft() + scrollWidth;
+		scrollItems.animate({'scrollLeft': scrollPos}, 'slow');
+	});
+
+	scrollItems.scroll(function(){
+		if( $(this).scrollLeft() == 0){
+			$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
+			scrollBackward();
+		}else{
+			$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
+			scrollForward();
+		}
+	});
+});
