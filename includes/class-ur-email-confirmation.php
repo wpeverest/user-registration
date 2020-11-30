@@ -216,8 +216,10 @@ class UR_Email_Confirmation {
 
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
+					// Get selected email template id for specific form.
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
 
-				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments );
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 
 				add_filter( 'login_message', array( $this, 'custom_resend_email_token_message' ) );
 				add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_resend_email_token_message' ) );
