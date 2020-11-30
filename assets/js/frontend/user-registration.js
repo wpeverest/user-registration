@@ -144,6 +144,15 @@
 						validClass: "user-registration-valid",
 						rules: rules,
 						messages: messages,
+						focusInvalid: false,
+						invalidHandler: function (form, validator) {
+							if (!validator.numberOfInvalids()) return;
+
+							// Scroll to first error message on submit..
+							$(window).scrollTop(
+								$(validator.errorList[0].element).offset().top
+							);
+						},
 						errorPlacement: function (error, element) {
 							if (element.is("#password_2")) {
 								element.parent().after(error);
