@@ -3198,24 +3198,33 @@ jQuery(function ($) {
 		scrollItems.animate({ scrollLeft: scrollPos }, "slow");
 	});
 
-	scrollItems.scroll(function () {
-		var $elem = $(this);
-		var newScrollLeft = $elem.scrollLeft(),
-			width = $elem.width(),
-			scrollWidth = $elem.get(0).scrollWidth;
-		var offset = 0;
+	$( window ).resize( handleMenuScroller )
+	scrollItems.scroll( handleMenuScroller );
 
-		if (
-			Math.abs(Math.round(scrollWidth - newScrollLeft - width)) === offset
-		) {
-			$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
-			$(".ur-scroll-ui__scroll-nav--forward").addClass("is-disabled");
-		} else if (newScrollLeft === 0) {
-			$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
-			$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
+	handleMenuScroller();
+
+	function handleMenuScroller() {
+		var scrollLeft = scrollItems.scrollLeft(),
+			width = scrollItems.width(),
+			scrollWidth = scrollItems.get(0).scrollWidth,
+			isLeftOverflow = scrollLeft > 0,
+			isRightOverflow = scrollWidth - scrollLeft - width > 0,
+			isOverflowing = scrollWidth > width;
+
+		if ( isOverflowing ) {
+			if ( isLeftOverflow && isRightOverflow ) {
+				$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
+				$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
+			} else if ( isLeftOverflow ) {
+				$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
+				$(".ur-scroll-ui__scroll-nav--forward").addClass("is-disabled");
+			} else {
+				$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
+				$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
+			}
 		} else {
-			$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
-			$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
+			$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
+			$(".ur-scroll-ui__scroll-nav--forward").addClass("is-disabled");
 		}
-	});
+	}
 });
