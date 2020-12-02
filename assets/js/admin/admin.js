@@ -270,17 +270,18 @@ jQuery(function ($) {
 			});
 	});
 
-	$(document).on("click", '.ur-tab-lists li[role="tab"] a.nav-tab', function (
-		e,
-		$type
-	) {
-		$(document).trigger("update_perfect_scrollbar");
+	$(document).on(
+		"click",
+		'.ur-tab-lists li[role="tab"] a.nav-tab',
+		function (e, $type) {
+			$(document).trigger("update_perfect_scrollbar");
 
-		if ("triggered_click" != $type) {
-			$(".ur-builder-wrapper").scrollTop(0);
-			$(".ur-builder-wrapper-content").scrollTop(0);
+			if ("triggered_click" != $type) {
+				$(".ur-builder-wrapper").scrollTop(0);
+				$(".ur-builder-wrapper-content").scrollTop(0);
+			}
 		}
-	});
+	);
 
 	// Setting Tab.
 	$(document).on(
@@ -3180,31 +3181,41 @@ function ur_confirmation(message, options) {
 	});
 }
 
-
-jQuery(function($){
+jQuery(function ($) {
 	var scrollBackward, scrollForward, scrollItems, scrollWidth, scrollPos;
 	scrollBackward = $(".ur-scroll-ui__scroll-nav--backward");
 	scrollForward = $(".ur-scroll-ui__scroll-nav--forward");
 	scrollItems = $(".ur-scroll-ui__items");
 
-	scrollBackward.click(function(){
+	scrollBackward.click(function () {
 		scrollWidth = scrollItems.width() - 60;
 		scrollPos = scrollItems.scrollLeft() - scrollWidth;
-		scrollItems.animate({'scrollLeft': scrollPos}, 'slow');
+		scrollItems.animate({ scrollLeft: scrollPos }, "slow");
 	});
-	scrollForward.click(function(){
+	scrollForward.click(function () {
 		scrollWidth = scrollItems.width() - 60;
 		scrollPos = scrollItems.scrollLeft() + scrollWidth;
-		scrollItems.animate({'scrollLeft': scrollPos}, 'slow');
+		scrollItems.animate({ scrollLeft: scrollPos }, "slow");
 	});
 
-	scrollItems.scroll(function(){
-		if( $(this).scrollLeft() == 0){
-			$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
-			scrollBackward();
-		}else{
+	scrollItems.scroll(function () {
+		var $elem = $(this);
+		var newScrollLeft = $elem.scrollLeft(),
+			width = $elem.width(),
+			scrollWidth = $elem.get(0).scrollWidth;
+		var offset = 0;
+
+		if (
+			Math.abs(Math.round(scrollWidth - newScrollLeft - width)) === offset
+		) {
 			$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
-			scrollForward();
+			$(".ur-scroll-ui__scroll-nav--forward").addClass("is-disabled");
+		} else if (newScrollLeft === 0) {
+			$(".ur-scroll-ui__scroll-nav--backward").addClass("is-disabled");
+			$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
+		} else {
+			$(".ur-scroll-ui__scroll-nav--backward").removeClass("is-disabled");
+			$(".ur-scroll-ui__scroll-nav--forward").removeClass("is-disabled");
 		}
 	});
 });
