@@ -116,6 +116,7 @@ class UR_Admin_Assets {
 				'ur-enhanced-select',
 				'perfect-scrollbar',
 				'sweetalert2',
+				'user-registration-scroll-ui-js',
 			),
 			UR_VERSION
 		);
@@ -132,6 +133,7 @@ class UR_Admin_Assets {
 			UR_VERSION
 		);
 
+		wp_register_script( 'user-registration-scroll-ui-js', UR()->plugin_url() . '/assets/js/ur-components/scroll-ui.js', 'jquery' );
 		wp_register_script( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'user-registration-dashboard-widget-js', UR()->plugin_url() . '/assets/js/admin/dashboard-widget' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
@@ -232,7 +234,7 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
-				'no_file_selected'               => esc_html( 'No file selected.', 'user-registration' )
+				'no_file_selected'               => esc_html( 'No file selected.', 'user-registration' ),
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
