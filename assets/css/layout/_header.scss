@@ -17,10 +17,16 @@
 
 		.ur-scroll-ui {
 			&__scroll-nav {
-				background-color: $primary_color;
-
 				&__icon {
 					color: $white;
+				}
+
+				&--backward {
+					background: linear-gradient(to left, transparentize($primary_color, 0.7), transparentize($primary_color, 0.15), $primary_color);
+				}
+
+				&--forward {
+					background: linear-gradient(to right, transparentize($primary_color, 0.7), transparentize($primary_color, 0.15), $primary_color);
 				}
 			}
 		}
