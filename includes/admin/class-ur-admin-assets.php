@@ -133,9 +133,7 @@ class UR_Admin_Assets {
 			UR_VERSION
 		);
 
-		// if ( 'user-registration_page_user-registration-settings' === $screen_id ) {
-			wp_register_script( 'user-registration-scroll-ui-js', UR()->plugin_url() . '/assets/js/ur-components/scroll-ui.js', 'jquery' );
-		// }
+		wp_register_script( 'user-registration-scroll-ui-js', UR()->plugin_url() . '/assets/js/ur-components/scroll-ui.js', 'jquery' );
 
 		wp_register_script( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'user-registration-dashboard-widget-js', UR()->plugin_url() . '/assets/js/admin/dashboard-widget' . $suffix . '.js', 'jquery' );
