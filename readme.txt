@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.5.3
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,6 +98,11 @@ User Registration can be easily extended with some premium addons.
 
 * [Extras](https://wpeverest.com/wordpress-plugins/user-registration/extras/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Combines a bunch of smaller features like analytics, popup forms, domain whitelist, auto password generation, and more.
 
+* [Import Users](https://wpeverest.com/wordpress-plugins/user-registration/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - You can easily import users on your WordPress site. Just select the form to which you want to import the user, choose a user data file in CSV format, map the fields, and import.
+
+* [Zapier](https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Connect your user registration forms with Zapier to over 1500 web applications and pass form data. So, you can save your time by quickly automating your work.
+
+* [Email Templates](https://wpeverest.com/wordpress-plugins/user-registration/email-templates/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) - Allows you to choose an email template or create a custom email template. It offers an easy-to-use customizer for you to change the look and feel of your User Registration emails.
 
 == Installation ==
 
@@ -147,6 +152,14 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.1 - 01/12/2020
+* Refactor - Grids and containers sass files.
+* Fix - Fatal error while resend verification link clicked.
+* Fix - Missing attachment for single file upload due to form-filler.
+* Fix - Export users fails due to form name with dash symbol.
+* Fix - Hide/Show password conflict with form reinitialization.
+* Fix - Scroll to first error message on form submit.
 
 = 1.9.0 - 18/11/2020
 * Feature - Email content override for Email Templates addon.
