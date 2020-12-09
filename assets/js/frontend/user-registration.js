@@ -590,7 +590,12 @@
 						}
 						return formwise_data;
 					},
-					show_message: function (message, type, $submit_node) {
+					show_message: function (
+						message,
+						type,
+						$submit_node,
+						position
+					) {
 						$submit_node.find(".ur-message").remove();
 
 						// Check if the form is edit-profile form.
@@ -612,9 +617,14 @@
 									type +
 									'" id="ur-submit-message-node"/>'
 							);
-							//wrapper.addClass(type);
 							wrapper.append(message);
-							$submit_node.append(wrapper);
+
+							// Check the position set by the admin and append message accordingly.
+							if ("1" === position) {
+								$submit_node.append(wrapper);
+							} else {
+								$submit_node.prepend(wrapper);
+							}
 						}
 					},
 					/**
@@ -924,7 +934,8 @@
 														ursL10n.captcha_error +
 														"</p>",
 													"error",
-													$this
+													$this,
+													"1"
 												);
 												$this
 													.find(".ur-submit-button")
@@ -1136,10 +1147,15 @@
 												);
 											}
 
+											var success_message_position = $.parseJSON(
+												ajax_response.responseText
+											).data.success_message_positon;
+
 											form.show_message(
 												message,
 												type,
-												$this
+												$this,
+												success_message_position
 											);
 
 											$(
@@ -1375,7 +1391,12 @@
 											);
 										}
 
-										form.show_message(message, type, $this);
+										form.show_message(
+											message,
+											type,
+											$this,
+											"0"
+										);
 
 										$this
 											.find(
