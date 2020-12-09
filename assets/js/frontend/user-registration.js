@@ -1158,6 +1158,29 @@
 												success_message_position
 											);
 
+											// Check the position set by the admin and scroll to the message postion accordingly.
+											if (
+												"1" === success_message_position
+											) {
+												// Scroll to the bottom on ajax submission complete.
+												$(window).scrollTop(
+													$this
+														.find(
+															".ur-button-container"
+														)
+														.offset().top
+												);
+											} else {
+												// Scroll to the top on ajax submission complete.
+												$(window).scrollTop(
+													$this
+														.closest(
+															".ur-frontend-form"
+														)
+														.offset().top
+												);
+											}
+
 											$(
 												document
 											).trigger(
