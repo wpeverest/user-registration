@@ -203,7 +203,7 @@ jQuery(function ($) {
 					"undefined" === typeof window.ur_tab_scrollbar
 				) {
 					window.ur_tab_scrollbar = new PerfectScrollbar(
-						tab_content.selector,
+						document.querySelector(".ur-tab-contents"),
 						{
 							suppressScrollX: true,
 						}
@@ -270,17 +270,18 @@ jQuery(function ($) {
 			});
 	});
 
-	$(document).on("click", '.ur-tab-lists li[role="tab"] a.nav-tab', function (
-		e,
-		$type
-	) {
-		$(document).trigger("update_perfect_scrollbar");
+	$(document).on(
+		"click",
+		'.ur-tab-lists li[role="tab"] a.nav-tab',
+		function (e, $type) {
+			$(document).trigger("update_perfect_scrollbar");
 
-		if ("triggered_click" != $type) {
-			$(".ur-builder-wrapper").scrollTop(0);
-			$(".ur-builder-wrapper-content").scrollTop(0);
+			if ("triggered_click" != $type) {
+				$(".ur-builder-wrapper").scrollTop(0);
+				$(".ur-builder-wrapper-content").scrollTop(0);
+			}
 		}
-	});
+	);
 
 	// Setting Tab.
 	$(document).on(

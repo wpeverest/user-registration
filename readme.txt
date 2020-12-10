@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.5.3
-Stable tag: 1.9.1
+Tested up to: 5.6
+Stable tag: 1.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -152,6 +152,10 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.2 - 10/12/2020
+* Fix - PerfectScrollbar initialization issue with WordPress 5.6.
+* Fix - Multiple File Upload field conflict.
 
 = 1.9.1 - 01/12/2020
 * Refactor - Grids and containers sass files.

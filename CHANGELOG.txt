@@ -1,3 +1,7 @@
+= 1.9.2 - 10/12/2020
+* Fix - PerfectScrollbar initialization issue with WordPress 5.6.
+* Fix - Multiple File Upload field conflict.
+
 = 1.9.1 - 01/12/2020
 * Refactor - Grids and containers sass files.
 * Fix - Fatal error while resend verification link clicked.
