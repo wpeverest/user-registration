@@ -564,10 +564,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								foreach ( $extra_params['options'] as $key => $value ) {
-									$extra_params['options'][ $value ] = $value;
-									unset( $extra_params['options'][ $key ] );
-								}
+								$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options']);
+
 								break;
 
 							case 'checkbox':
@@ -576,10 +574,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								foreach ( $extra_params['options'] as $key => $value ) {
-									$extra_params['options'][ $value ] = $value;
-									unset( $extra_params['options'][ $key ] );
-								}
+								$extra_params['options'] =  array_combine( $extra_params['options'], $extra_params['options']);
+
 								break;
 
 							case 'date':
