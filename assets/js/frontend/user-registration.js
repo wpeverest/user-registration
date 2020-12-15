@@ -776,7 +776,6 @@
 
 											return false;
 										}
-										file_upload.val(file_upload_val);
 									}
 
 									var $el = $this.find(
