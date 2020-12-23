@@ -54,9 +54,10 @@
 		}
 
 		.user-registration-MyAccount-navigation {
+			border-bottom: 1px solid $border_color;
+
 			ul {
 				justify-content: center;
-				border-bottom: 1px solid $border_color;
 
 				.user-registration-MyAccount-navigation-link {
 					a {
