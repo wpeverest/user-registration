@@ -655,6 +655,52 @@
 
 						return field;
 					},
+					missing_attachment_handler: function name(file_upload) {
+						var file_upload_field_array = [];
+
+						//Check if file upload field exists.
+						if (1 <= file_upload.length) {
+							file_upload.each(function () {
+								var file_upload_id = $(this).attr("id");
+
+								if (
+									$.inArray(
+										file_upload_id,
+										file_upload_field_array
+									) === -1
+								) {
+									file_upload_field_array.push(
+										file_upload_id
+									);
+								}
+							});
+
+							for (
+								var i = 0;
+								i < file_upload_field_array.length;
+								i++
+							) {
+								var file_upload_val = $(
+									"#" + file_upload_field_array[i]
+								)
+									.val()
+									.split(",");
+
+								for (
+									var j = file_upload_val.length;
+									j >= 0;
+									j--
+								) {
+									if (!$.isNumeric(file_upload_val[j])) {
+										file_upload_val.splice(j, 1);
+									}
+								}
+								$("#" + file_upload_field_array[i]).val(
+									file_upload_val
+								);
+							}
+						}
+					},
 				};
 
 				var events = {
@@ -774,25 +820,9 @@
 										".urfu-file-input"
 									);
 
-									//Check if file upload field exists.
-									if (1 <= file_upload.length) {
-										var file_upload_val = file_upload
-											.val()
-											.split(",");
-
-										for (
-											var i = file_upload_val.length;
-											i >= 0;
-											i--
-										) {
-											if (
-												!$.isNumeric(file_upload_val[i])
-											) {
-												file_upload_val.splice(i, 1);
-											}
-										}
-										file_upload.val(file_upload_val);
-									}
+									form.missing_attachment_handler(
+										file_upload
+									);
 
 									var exist_detail = $this
 										.find(".uraf-profile-picture-upload")
@@ -1298,23 +1328,7 @@
 									".urfu-file-input"
 								);
 
-								//Check if file upload field exists.
-								if (1 <= file_upload.length) {
-									var file_upload_val = file_upload
-										.val()
-										.split(",");
-
-									for (
-										var i = file_upload_val.length;
-										i >= 0;
-										i--
-									) {
-										if (!$.isNumeric(file_upload_val[i])) {
-											file_upload_val.splice(i, 1);
-										}
-									}
-									file_upload.val(file_upload_val);
-								}
+								form.missing_attachment_handler(file_upload);
 
 								var form_data;
 								var form_nonce = "0";
