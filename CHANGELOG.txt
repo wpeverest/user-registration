@@ -1,3 +1,18 @@
+= 1.9.2.1 - 15/12/2020
+* Fix - Submit button is not working when strong password enabled.
+
+= 1.9.2 - 10/12/2020
+* Fix - PerfectScrollbar initialization issue with WordPress 5.6.
+* Fix - Multiple File Upload field conflict.
+
+= 1.9.1 - 01/12/2020
+* Refactor - Grids and containers sass files.
+* Fix - Fatal error while resend verification link clicked.
+* Fix - Missing attachment for single file upload due to form-filler.
+* Fix - Export users fails due to form name with dash symbol.
+* Fix - Hide/Show password conflict with form reinitialization.
+* Fix - Scroll to first error message on form submit.
+
 = 1.9.0 - 18/11/2020
 * Feature - Email content override for Email Templates addon.
 * Enhance- Re-initialize form after full page load.

@@ -73,7 +73,9 @@ class UR_Admin_Export_Users {
 		$columns = $this->generate_columns( $form_id );
 		$rows    = $this->generate_rows( $users, $form_id );
 
-		$form_name = strtolower( str_replace( ' ', '-', get_the_title( $form_id ) ) );
+		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
+		$form_name = str_replace( '&#8211;', '-', $form_name );
+		$form_name = strtolower( str_replace( ' ', '-', $form_name) );
 		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
 		if ( ob_get_contents() ) {

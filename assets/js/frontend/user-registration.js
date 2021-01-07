@@ -144,6 +144,15 @@
 						validClass: "user-registration-valid",
 						rules: rules,
 						messages: messages,
+						focusInvalid: false,
+						invalidHandler: function (form, validator) {
+							if (!validator.numberOfInvalids()) return;
+
+							// Scroll to first error message on submit..
+							$(window).scrollTop(
+								$(validator.errorList[0].element).offset().top
+							);
+						},
 						errorPlacement: function (error, element) {
 							if (element.is("#password_2")) {
 								element.parent().after(error);
@@ -636,6 +645,52 @@
 
 						return field;
 					},
+					missing_attachment_handler: function name(file_upload) {
+						var file_upload_field_array = [];
+
+						//Check if file upload field exists.
+						if (1 <= file_upload.length) {
+							file_upload.each(function () {
+								var file_upload_id = $(this).attr("id");
+
+								if (
+									$.inArray(
+										file_upload_id,
+										file_upload_field_array
+									) === -1
+								) {
+									file_upload_field_array.push(
+										file_upload_id
+									);
+								}
+							});
+
+							for (
+								var i = 0;
+								i < file_upload_field_array.length;
+								i++
+							) {
+								var file_upload_val = $(
+									"#" + file_upload_field_array[i]
+								)
+									.val()
+									.split(",");
+
+								for (
+									var j = file_upload_val.length;
+									j >= 0;
+									j--
+								) {
+									if (!$.isNumeric(file_upload_val[j])) {
+										file_upload_val.splice(j, 1);
+									}
+								}
+								$("#" + file_upload_field_array[i]).val(
+									file_upload_val
+								);
+							}
+						}
+					},
 				};
 
 				var events = {
@@ -749,6 +804,15 @@
 											.attr("aria-invalid", true);
 										return true;
 									}
+
+									// Remove word added by form filler in file upload field during submission
+									var file_upload = $this.find(
+										".urfu-file-input"
+									);
+
+									form.missing_attachment_handler(
+										file_upload
+									);
 
 									var exist_detail = $this
 										.find(".uraf-profile-picture-upload")
@@ -1220,6 +1284,13 @@
 									.find(".user-registration-submit-Button")
 									.prop("disabled", true);
 
+								// Remove word added by form filler in file upload field during submission
+								var file_upload = $this.find(
+									".urfu-file-input"
+								);
+
+								form.missing_attachment_handler(file_upload);
+
 								var form_data;
 								var form_nonce = "0";
 
@@ -1538,64 +1609,6 @@
 				});
 			}
 		});
-
-		$(document).on("click", ".password_preview", function (e) {
-			e.preventDefault();
-			var current_task = $(this).hasClass("dashicons-hidden")
-				? "show"
-				: "hide";
-			var $password_field = $(this)
-				.closest(".user-registration-form-row")
-				.find('input[name="password"]');
-
-			// Hide/show password for user registration form
-			if ($password_field.length === 0) {
-				$password_field = $(this)
-					.closest(".field-user_pass")
-					.find('input[name="user_pass"]');
-			}
-			if ($password_field.length === 0) {
-				$password_field = $(this)
-					.closest(".field-user_confirm_password")
-					.find('input[name="user_confirm_password"]');
-			}
-
-			// Hide/show password for edit password form
-			if ($password_field.length === 0) {
-				$password_field = $(this)
-					.closest(".user-registration-form-row")
-					.find('input[name="password_current"]');
-			}
-			if ($password_field.length === 0) {
-				$password_field = $(this)
-					.closest(".user-registration-form-row")
-					.find('input[name="password_1"]');
-			}
-			if ($password_field.length === 0) {
-				$password_field = $(this)
-					.closest(".user-registration-form-row")
-					.find('input[name="password_2"]');
-			}
-
-			if ($password_field.length > 0) {
-				switch (current_task) {
-					case "show":
-						$password_field.attr("type", "text");
-						$(this)
-							.removeClass("dashicons-hidden")
-							.addClass("dashicons-visibility");
-						$(this).attr("title", ursL10n.hide_password_title);
-						break;
-					case "hide":
-						$password_field.attr("type", "password");
-						$(this)
-							.removeClass("dashicons-visibility")
-							.addClass("dashicons-hidden");
-						$(this).attr("title", ursL10n.show_password_title);
-						break;
-				}
-			}
-		});
 	};
 
 	user_registration_form_init();
@@ -1687,10 +1700,72 @@ function request_recaptcha_token() {
 function ur_includes(arr, item) {
 	if (Array.isArray(arr)) {
 		for (var i = 0; i < arr.length; i += 1) {
-			if (arr === item) {
+			if (arr[i] === item) {
 				return true;
 			}
 		}
 	}
 	return false;
 }
+
+(function ($) {
+	$(document).on("click", ".password_preview", function (e) {
+		e.preventDefault();
+		var ursL10n = user_registration_params.ursL10n;
+
+		var current_task = $(this).hasClass("dashicons-hidden")
+			? "show"
+			: "hide";
+		var $password_field = $(this)
+			.closest(".user-registration-form-row")
+			.find('input[name="password"]');
+
+		// Hide/show password for user registration form
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".field-user_pass")
+				.find('input[name="user_pass"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".field-user_confirm_password")
+				.find('input[name="user_confirm_password"]');
+		}
+
+		// Hide/show password for edit password form
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".user-registration-form-row")
+				.find('input[name="password_current"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".user-registration-form-row")
+				.find('input[name="password_1"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".user-registration-form-row")
+				.find('input[name="password_2"]');
+		}
+
+		if ($password_field.length > 0) {
+			switch (current_task) {
+				case "show":
+					$password_field.attr("type", "text");
+					$(this)
+						.removeClass("dashicons-hidden")
+						.addClass("dashicons-visibility");
+					$(this).attr("title", ursL10n.hide_password_title);
+					break;
+				case "hide":
+					$password_field.attr("type", "password");
+					$(this)
+						.removeClass("dashicons-visibility")
+						.addClass("dashicons-hidden");
+					$(this).attr("title", ursL10n.show_password_title);
+					break;
+			}
+		}
+	});
+})(jQuery);

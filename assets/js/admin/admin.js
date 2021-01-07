@@ -203,7 +203,7 @@ jQuery(function ($) {
 					"undefined" === typeof window.ur_tab_scrollbar
 				) {
 					window.ur_tab_scrollbar = new PerfectScrollbar(
-						tab_content.selector,
+						document.querySelector(".ur-tab-contents"),
 						{
 							suppressScrollX: true,
 						}
