@@ -74,7 +74,9 @@ jQuery(function ($) {
 		document.getElementsByClassName(
 			"ur-scroll-ui__items"
 		)[0].scrollLeft = 0;
-		for (var i = 1; i < scrollItem.length; i++) {
+
+		// Implement scroll to the active menu effect only for the menu items starting from the seventh position.
+		for (var i = 6; i < scrollItem.length; i++) {
 			if (scrollItem[i].classList.contains("is-active")) {
 				document.getElementsByClassName(
 					"ur-scroll-ui__items"
