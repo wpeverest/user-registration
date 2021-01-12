@@ -105,6 +105,7 @@ class UR_Shortcode_My_Account {
 					ur_get_template(
 						'form-login-registration.php',
 						array(
+							'form_id'			=> $form_id,
 							'registration_form' => $registration_form,
 							'login_form'        => $login_form,
 						)
