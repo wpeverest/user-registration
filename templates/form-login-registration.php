@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php echo $login_form; ?>
 		</div>
 		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo __( 'Registration', 'user-registration' ); ?></h2>
+			<h2 class="ur-form-title"><?php echo __( get_the_title($form_id), 'user-registration' ); ?></h2>
 			<?php echo $registration_form; ?>
 		</div>
 	</div>

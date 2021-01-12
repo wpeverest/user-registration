@@ -1001,6 +1001,22 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Set label for the submit button.', 'user-registration' ),
 			),
 			array(
+				'type'              => 'select',
+				'label'             => __( 'Success message position', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_success_message_position',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => array(
+					'0' => __( 'Top', 'user-registration' ),
+					'1' => __( 'Bottom', 'user-registration' ),
+				),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' ),
+				'tip'               => __( 'Display success message either at the top or bottom after successful registration.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'checkbox',
 				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',

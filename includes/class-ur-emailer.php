@@ -399,7 +399,8 @@ class UR_Emailer {
 			'email'    => $email,
 		);
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		// Get selected email template id for specific form.
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
 
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
@@ -415,7 +416,7 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, $headers, '', $template_id );
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		} elseif ( -1 === intval( $status ) ) {
 
@@ -428,7 +429,7 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, $headers, '', $template_id );
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		} else {
 
@@ -441,7 +442,7 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( 'yes' === get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, $headers, '', $template_id );
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		}
 	}
