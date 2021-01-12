@@ -179,6 +179,7 @@ class UR_Preview {
 		$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
 
 		ob_start();
+		echo '<div id="user-registration">';
 		ur_get_template(
 			'myaccount/form-login.php',
 			array(
@@ -186,6 +187,7 @@ class UR_Preview {
 				'redirect'       => '',
 			)
 		);
+		echo '</div>';
 		return ob_get_clean();
 	}
 }
