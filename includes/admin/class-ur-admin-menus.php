@@ -929,7 +929,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							$admin_field = $this->get_admin_field( $single_field );
 							echo '<div class="ur-selected-item">';
 							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
-							echo $admin_field['template']; // @codingStandardsIgnoreLine
+							$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
+							echo $template;
 							echo '</div>';
 						}
 					}
