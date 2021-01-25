@@ -276,6 +276,24 @@ abstract class UR_Form_Field {
 				$form_data['options'] = $options;
 			}
 		}
+
+		if( 'range' === $field_key ) {
+			$enable_prefix_postfix = isset( $data['advance_setting']->enable_prefix_postfix) ? $data['advance_setting']->enable_prefix_postfix : "false";
+			$enable_text_prefix_postfix = isset( $data['advance_setting']->enable_text_prefix_postfix) ? $data['advance_setting']->enable_text_prefix_postfix : "false";
+
+			if( $enable_prefix_postfix ) {
+
+				if( "true" === $enable_text_prefix_postfix ) {
+					$form_data['range_prefix'] = isset( $data['advance_setting']->range_prefix) ? $data['advance_setting']->range_prefix : "";
+					$form_data['range_postfix'] = isset( $data['advance_setting']->range_postfix) ? $data['advance_setting']->range_postfix : "";
+				} else {
+
+					$form_data['range_prefix'] = isset( $data['advance_setting']->min) ? $data['advance_setting']->min : "";
+					$form_data['range_postfix'] = isset( $data['advance_setting']->max) ? $data['advance_setting']->max : "";
+				}
+			}
+
+		}
 		/** Redundant Codes End. */
 
 		$filter_data = array(
