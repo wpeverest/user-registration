@@ -276,6 +276,11 @@ abstract class UR_Form_Field {
 				$form_data['options'] = $options;
 			}
 		}
+
+		if( "user_login" === $field_key ) {
+			$form_data['username_length'] = isset( $data['advance_setting']->username_length ) ? $data['advance_setting']->username_length : "";
+		}
+
 		/** Redundant Codes End. */
 
 		$filter_data = array(

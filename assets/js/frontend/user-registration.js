@@ -62,6 +62,19 @@
 					return this.optional(element) || pattern.test(value);
 				};
 
+				/**
+				 * Validation for username length.
+				 *
+				 * @since 1.9.4
+				 */
+				$.validator.addMethod(
+					"lengthValidator",
+					function (value, element, param) {
+						return value.length < param;
+					},
+					$.validator.format("Please enter less than {0} characters.")
+				);
+
 				this.$user_registration.each(function () {
 					var $this = $(this);
 					var rules = {};
@@ -107,6 +120,19 @@
 						};
 						messages.user_confirm_password =
 							user_registration_params.message_confirm_password_fields;
+					}
+
+					/**
+					 * Real time username length validation
+					 */
+					var user_login_div = $this.find("#user_login");
+
+					if (user_login_div.length) {
+						rules.user_login = {
+							lengthValidator: user_login_div.data(
+								"username-length"
+							),
+						};
 					}
 
 					// Override default jquery validator messages with our plugin's validation messages.
