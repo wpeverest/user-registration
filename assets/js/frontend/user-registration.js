@@ -75,6 +75,32 @@
 					$.validator.format("Please enter less than {0} characters.")
 				);
 
+				/**
+				 * Validate checkbox choice limit.
+				 *
+				 * @since 1.9.4
+				 */
+				$.validator.addMethod(
+					"checkLimit",
+					function (value, element, param) {
+						var $ul = $(element).closest("ul"),
+							$checked = $ul.find(
+								'input[type="checkbox"]:checked'
+							),
+							choiceLimit = parseInt(param || 0, 10);
+
+						if (0 === choiceLimit) {
+							return true;
+						}
+
+						return $checked.length <= choiceLimit;
+					},
+
+					$.validator.format(
+						"Please select no more than {0} options."
+					)
+				);
+
 				this.$user_registration.each(function () {
 					var $this = $(this);
 					var rules = {};
@@ -135,6 +161,20 @@
 						};
 					}
 
+					/**
+					 * Real time choice limit validation
+					 */
+					var checkbox_div = $this.find(".field-checkbox");
+					if (checkbox_div.length) {
+						checkbox_div.each(function () {
+							rules[$(this).data("field-id") + "[]"] = {
+								checkLimit: $(this)
+									.find("ul")
+									.data("choice-limit"),
+							};
+						});
+					}
+
 					// Override default jquery validator messages with our plugin's validation messages.
 					$.validator.messages.required =
 						user_registration_params.message_required_fields;
@@ -174,7 +214,7 @@
 						invalidHandler: function (form, validator) {
 							if (!validator.numberOfInvalids()) return;
 
-							// Scroll to first error message on submit..
+							// Scroll to first error message on submit.
 							$(window).scrollTop(
 								$(validator.errorList[0].element).offset().top
 							);

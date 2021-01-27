@@ -269,6 +269,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
 				$default       = ! empty( $value ) ? $value : $default_value;
 				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit = isset( $args['choice_limit'] ) ?  $args['choice_limit'] : "";
+				$choice_limit_attr = "";
+				if( "" !== $choice_limit ){
+					$choice_limit_attr = 'data-choice-limit="' . $choice_limit . '"';
+				}
 
 				if ( isset( $options ) && array_filter( $options ) ) {
 
@@ -283,7 +288,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$checkbox_start = 0;
 
-					$field .= '<ul>';
+					$field .= '<ul ' . $choice_limit_attr . '>';
+
 					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
