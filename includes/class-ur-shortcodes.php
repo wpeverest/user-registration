@@ -181,6 +181,7 @@ class UR_Shortcodes {
 
 		// Enqueue script.
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_script( 'ur-form-validator' );
 
 		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 

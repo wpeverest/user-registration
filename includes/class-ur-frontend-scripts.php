@@ -204,6 +204,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'ur-jquery-validate', 'ur-inputmask' ),
 				'version' => UR_VERSION,
 			),
+			'ur-form-validator'          => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-form-validator' . $suffix . '.js' ),
+				'deps'    => array( 'jquery', 'user-registration' ),
+				'version' => UR_VERSION,
+			),
 			'ur-lost-password'           => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/lost-password' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),

@@ -172,6 +172,7 @@ class UR_Shortcode_My_Account {
 	public static function edit_profile() {
 		wp_enqueue_media();
 		wp_enqueue_script( 'ur-my-account' );
+		wp_enqueue_script( 'ur-form-validator' );
 
 		$user_id = get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -226,6 +227,8 @@ class UR_Shortcode_My_Account {
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
 		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+
+		wp_enqueue_script( 'ur-form-validator' );
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );
