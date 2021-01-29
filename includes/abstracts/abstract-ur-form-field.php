@@ -247,6 +247,10 @@ abstract class UR_Form_Field {
 
 				$form_data['options'] = $options;
 			}
+
+			if( 'multi_select2' === $field_key ){
+				$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+			}
 		}
 
 		if ( 'radio' === $field_key ) {

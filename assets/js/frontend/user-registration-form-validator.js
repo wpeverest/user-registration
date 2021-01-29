@@ -76,9 +76,18 @@
 			$.validator.addMethod(
 				"checkLimit",
 				function (value, element, param) {
-					var $ul = $(element).closest("ul"),
-						$checked = $ul.find('input[type="checkbox"]:checked'),
-						choiceLimit = parseInt(param || 0, 10);
+					var choiceLimit = parseInt(param || 0, 10),
+						$checked = "";
+
+					if ($(element).closest(".field-checkbox").length) {
+						$checked = $(element).find(
+							'input[type="checkbox"]:checked'
+						);
+					} else if (
+						$(element).closest(".field-multi_select2").length
+					) {
+						$checked = $(element).val();
+					}
 
 					if (0 === choiceLimit) {
 						return true;
@@ -186,8 +195,15 @@
 						$parent.removeClass("user-registration-has-error");
 					},
 					submitHandler: function (form) {
-						// Return `true` for `Change Password` form to allow submission
-						if ($(form).hasClass("edit-password")) {
+						/**
+						 * Return `true` for `Change Password` form and `Edit Profile` when ajax submission is off to allow submission
+						 */
+						if (
+							$(form).hasClass("edit-password") ||
+							($(form).hasClass("edit-profile") &&
+								"no" ===
+									user_registration_params.ajax_submission_on_edit_profile)
+						) {
 							return true;
 						}
 
@@ -328,11 +344,21 @@
 			/**
 			 * Real time choice limit validation
 			 */
-			var checkbox_div = this_node.find(".field-checkbox");
+			var checkbox_div = this_node.find(".field-checkbox"),
+				multiselect2_div = this_node.find(".field-multi_select2");
+
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("ul").data("choice-limit"),
+					};
+				});
+			}
+
+			if (multiselect2_div.length) {
+				multiselect2_div.each(function () {
+					rules[field_selector + $(this).data("field-id") + "[]"] = {
+						checkLimit: $(this).find("select").data("choice-limit"),
 					};
 				});
 			}
