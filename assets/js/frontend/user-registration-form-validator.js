@@ -63,7 +63,7 @@
 			$.validator.addMethod(
 				"lengthValidator",
 				function (value, element, param) {
-					return value.length < param;
+					return value.length <= param;
 				},
 				$.validator.format("Please enter less than {0} characters.")
 			);
@@ -80,9 +80,8 @@
 						$checked = "";
 
 					if ($(element).closest(".field-checkbox").length) {
-						$checked = $(element).find(
-							'input[type="checkbox"]:checked'
-						);
+						var ul = $(element).closest("ul");
+						$checked = ul.find('input[type="checkbox"]:checked');
 					} else if (
 						$(element).closest(".field-multi_select2").length
 					) {
@@ -350,7 +349,9 @@
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
-						checkLimit: $(this).find("ul").data("choice-limit"),
+						checkLimit: $(this).find("ul").data("choice-limit")
+							? $(this).find("ul").data("choice-limit")
+							: 0,
 					};
 				});
 			}
@@ -358,7 +359,9 @@
 			if (multiselect2_div.length) {
 				multiselect2_div.each(function () {
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
-						checkLimit: $(this).find("select").data("choice-limit"),
+						checkLimit: $(this).find("select").data("choice-limit")
+							? $(this).find("select").data("choice-limit")
+							: 0,
 					};
 				});
 			}
