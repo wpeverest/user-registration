@@ -1,15 +1,15 @@
-# Copyright (C) 2020 WPEverest
+# Copyright (C) 2021 WPEverest
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.9.2.1\n"
+"Project-Id-Version: User Registration 1.9.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-12-15T10:40:00+05:45\n"
+"POT-Creation-Date: 2021-01-12T06:15:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
@@ -892,7 +892,7 @@ msgid "Success Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:237
-#: includes/functions-ur-core.php:1064
+#: includes/functions-ur-core.php:1080
 msgid "Manual login after registration"
 msgstr ""
 
@@ -906,7 +906,7 @@ msgid "User successfully registered."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:247
-#: includes/functions-ur-core.php:1065
+#: includes/functions-ur-core.php:1081
 msgid "Email confirmation to login"
 msgstr ""
 
@@ -920,7 +920,7 @@ msgid "User registered. Verify your email by clicking on the link sent to your e
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:257
-#: includes/functions-ur-core.php:1067
+#: includes/functions-ur-core.php:1083
 msgid "Admin approval after registration"
 msgstr ""
 
@@ -1033,7 +1033,7 @@ msgid "Captcha code error, please try again."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:376
-#: includes/functions-ur-core.php:1017
+#: includes/functions-ur-core.php:1033
 msgid "Form Template"
 msgstr ""
 
@@ -1042,27 +1042,27 @@ msgid "Choose the login form template."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:384
-#: includes/functions-ur-core.php:1024
+#: includes/functions-ur-core.php:1040
 msgid "Default"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:385
-#: includes/functions-ur-core.php:1025
+#: includes/functions-ur-core.php:1041
 msgid "Bordered"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:386
-#: includes/functions-ur-core.php:1026
+#: includes/functions-ur-core.php:1042
 msgid "Flat"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:387
-#: includes/functions-ur-core.php:1027
+#: includes/functions-ur-core.php:1043
 msgid "Rounded"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:388
-#: includes/functions-ur-core.php:1028
+#: includes/functions-ur-core.php:1044
 msgid "Rounded Edge"
 msgstr ""
 
@@ -1519,7 +1519,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:70
-#: includes/class-ur-emailer.php:517
+#: includes/class-ur-emailer.php:518
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -1549,7 +1549,7 @@ msgid "Enable this email sent to the user notifying the registration is approved
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:60
-#: includes/class-ur-emailer.php:435
+#: includes/class-ur-emailer.php:436
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1579,7 +1579,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:60
 #: includes/class-ur-emailer.php:313
-#: includes/class-ur-emailer.php:422
+#: includes/class-ur-emailer.php:423
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -1608,7 +1608,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:409
+#: includes/class-ur-emailer.php:410
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -1639,7 +1639,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:59
-#: includes/class-ur-emailer.php:467
+#: includes/class-ur-emailer.php:468
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -2032,7 +2032,7 @@ msgid "Email not verified! Verify your email by clicking on the link sent to you
 msgstr ""
 
 #: includes/class-ur-emailer.php:146
-#: includes/class-ur-emailer.php:626
+#: includes/class-ur-emailer.php:627
 msgid "Chosen Password"
 msgstr ""
 
@@ -2053,7 +2053,7 @@ msgid "Form"
 msgstr ""
 
 #: includes/class-ur-form-handler.php:164
-#: includes/frontend/class-ur-frontend-form-handler.php:452
+#: includes/frontend/class-ur-frontend-form-handler.php:453
 msgid "%s is a required field."
 msgstr ""
 
@@ -2295,7 +2295,6 @@ msgid "Registrations"
 msgstr ""
 
 #: includes/class-ur-post-types.php:49
-#: templates/form-login-registration.php:35
 msgid "Registration"
 msgstr ""
 
@@ -3848,35 +3847,35 @@ msgstr ""
 msgid "Allowed maximum number of characters."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:123
+#: includes/frontend/class-ur-frontend-form-handler.php:124
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:168
+#: includes/frontend/class-ur-frontend-form-handler.php:169
 msgid "Duplicate field key in form, please contact site administrator."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:174
+#: includes/frontend/class-ur-frontend-form-handler.php:175
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:380
+#: includes/frontend/class-ur-frontend-form-handler.php:381
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:382
+#: includes/frontend/class-ur-frontend-form-handler.php:383
 msgid "Password and confirm password not matched"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:425
+#: includes/frontend/class-ur-frontend-form-handler.php:426
 msgid "Empty confirm email"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:427
+#: includes/frontend/class-ur-frontend-form-handler.php:428
 msgid "Email and confirm email not matched"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:486
+#: includes/frontend/class-ur-frontend-form-handler.php:487
 msgid "Password should not match with Username or Email address."
 msgstr ""
 
@@ -4057,38 +4056,54 @@ msgid "Set label for the submit button."
 msgstr ""
 
 #: includes/functions-ur-core.php:1005
-msgid "Enable %1$s %2$s reCaptcha %3$s Support"
+msgid "Success message position"
+msgstr ""
+
+#: includes/functions-ur-core.php:1012
+msgid "Top"
 msgstr ""
 
 #: includes/functions-ur-core.php:1013
+msgid "Bottom"
+msgstr ""
+
+#: includes/functions-ur-core.php:1017
+msgid "Display success message either at the top or bottom after successful registration."
+msgstr ""
+
+#: includes/functions-ur-core.php:1021
+msgid "Enable %1$s %2$s reCaptcha %3$s Support"
+msgstr ""
+
+#: includes/functions-ur-core.php:1029
 msgid "Enable reCaptcha for strong security from spams and bots."
 msgstr ""
 
-#: includes/functions-ur-core.php:1032
+#: includes/functions-ur-core.php:1048
 msgid "Choose form template to use."
 msgstr ""
 
-#: includes/functions-ur-core.php:1036
+#: includes/functions-ur-core.php:1052
 msgid "Custom CSS class"
 msgstr ""
 
-#: includes/functions-ur-core.php:1044
+#: includes/functions-ur-core.php:1060
 msgid "Custom css class to embed in the registration form. You can enter multiple classes seperated with space."
 msgstr ""
 
-#: includes/functions-ur-core.php:1066
+#: includes/functions-ur-core.php:1082
 msgid "Auto login after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:1262
+#: includes/functions-ur-core.php:1278
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
-#: includes/functions-ur-core.php:1363
+#: includes/functions-ur-core.php:1379
 msgid "Disable emails"
 msgstr ""
 
-#: includes/functions-ur-core.php:1364
+#: includes/functions-ur-core.php:1380
 msgid "Disable all emails sent after registration."
 msgstr ""
 
@@ -4126,28 +4141,28 @@ msgstr ""
 msgid "Your password has been reset successfully."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:137
+#: includes/shortcodes/class-ur-shortcode-my-account.php:138
 msgid "Are you sure you want to log out?&nbsp;<a href=\"%s\">Confirm and log out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:216
+#: includes/shortcodes/class-ur-shortcode-my-account.php:217
 msgid "No profile details found."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:315
+#: includes/shortcodes/class-ur-shortcode-my-account.php:316
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:336
-#: includes/shortcodes/class-ur-shortcode-my-account.php:341
+#: includes/shortcodes/class-ur-shortcode-my-account.php:337
+#: includes/shortcodes/class-ur-shortcode-my-account.php:342
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:351
+#: includes/shortcodes/class-ur-shortcode-my-account.php:352
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:364
+#: includes/shortcodes/class-ur-shortcode-my-account.php:365
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 

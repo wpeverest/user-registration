@@ -1,0 +1,75 @@
+/**
+* Keyframe animation
+*/
+@keyframes spin {
+	100% {
+		transform: rotate( 360deg );
+	}
+}
+
+@keyframes ur-circle-loading {
+	0%,
+	100% {
+		animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1);
+	}
+
+	50% {
+		animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8);
+	}
+
+	0% {
+		transform: rotate(0deg) translate(0, -20px) scale(0);
+	}
+
+	50% {
+		transform: rotate(180deg) translate(0, -20px) scale(1);
+	}
+
+	100% {
+		transform: rotate(360deg) translate(0, -20px) scale(0);
+	}
+}
+
+@-webkit-keyframes ur-circle-loading-keyframe {
+	0%,
+	100% {
+		animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1);
+	}
+
+	50% {
+		animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8);
+	}
+
+	0% {
+		transform: rotate(0deg) translate(0, -20px) scale(0);
+	}
+
+	50% {
+		transform: rotate(180deg) translate(0, -20px) scale(1);
+	}
+
+	100% {
+		transform: rotate(360deg) translate(0, -20px) scale(0);
+	}
+}
+
+@keyframes open-message {
+	0% {
+		opacity: 0;
+		transform: translateY(-120%);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+@keyframes close-message {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+}

@@ -634,6 +634,33 @@ class UR_Admin_Settings {
 					<?php
 					break;
 
+					case 'link' :
+						?>
+						<tr valign="top" class="<?php echo esc_attr( $value['row_class'] ); ?>">
+							<th scope="row" class="titledesc">
+								<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_attr( $value['title'] ); ?></label>
+								<?php echo $tooltip_html; ?>
+							</th>
+							<td>
+								<?php
+								if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
+									foreach ( $value['buttons'] as $button ) {
+										?>
+										<a
+											href="<?php echo esc_url( $button['href'] ); ?>"
+											class="button <?php echo esc_attr( $button['class'] ); ?>">
+											<?php echo esc_html( $button['title'] ); ?>
+										</a>
+										<?php
+									}
+								}
+								?>
+								<?php echo ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . esc_html( $value['desc'] ) . '</p>' : ''; ?>
+							</td>
+						</tr>
+						<?php
+						break;
+
 				// Default: run an action.
 				default:
 					do_action( 'user_registration_admin_field_' . $value['type'], $value );

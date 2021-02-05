@@ -1,3 +1,12 @@
+= 1.9.3 - 12/01/2021
+* Feature 	- Success Message display position option.
+* Dev 		- Customizer compatibility in Customize My Account addon.
+* Dev 		- Add animation file.
+* Dev		- Add user-registration div in login form preview.
+* Fix 		- Radio, Select, and Checkbox option label and array index conflict.
+* Fix 		- Prevent core login option and save option conflict.
+* Fix 		- Email Header issue.
+
 = 1.9.2.1 - 15/12/2020
 * Fix - Submit button is not working when strong password enabled.
 
