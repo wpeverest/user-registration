@@ -1,5 +1,9 @@
 // Script to scroll menu horizontally for better User experience.
 jQuery(function ($) {
+	$(".user-registration_page_user-registration-settings")
+		.find(".notice")
+		.show();
+
 	if ($(".ur-scroll-ui__items").length !== 0) {
 		var scrollBackward,
 			scrollForward,
