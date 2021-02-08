@@ -353,7 +353,7 @@ abstract class UR_Form_Field {
 					}
 					$disabled = '';
 					// To make invite code field name non editable.
-					if ( 'invite_code' === $value || 'profile_pic_url' === $value ) {
+					if ( 'learndash_course' === $value || 'invite_code' === $value || 'profile_pic_url' === $value ) {
 						$disabled = 'disabled';
 					}
 					$general_setting_wrapper .= $extra_attribute . ' ' . $disabled . '/>';
