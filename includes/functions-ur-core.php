@@ -427,6 +427,7 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'privacy_policy':
 			case 'mailchimp':
+			case 'mailerlite':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -852,7 +853,6 @@ function ur_load_form_field_class( $class_key ) {
 		}
 	}
 	/* Backward compat end*/
-
 	return $class_name;
 }
 

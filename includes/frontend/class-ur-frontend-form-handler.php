@@ -302,6 +302,7 @@ class UR_Frontend_Form_Handler {
 				case 'checkbox':
 				case 'privacy_policy':
 				case 'mailchimp':
+				case 'mailerlite':
 				case 'select':
 				case 'country':
 				case 'file':

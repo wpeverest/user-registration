@@ -314,8 +314,9 @@ abstract class UR_Form_Field {
 			$file_path       = isset( $file_path_array['file_path'] ) ? $file_path_array['file_path'] : $file_path;
 
 			if ( file_exists( $file_path ) ) {
-				$advance_setting_instance = include_once $file_path;
-				return $advance_setting_instance->output( $this->admin_data );
+				include_once $file_path;
+				$instance = new $class_name();
+				return $instance->output( $this->admin_data );
 			}
 		} else {
 
