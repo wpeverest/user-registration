@@ -101,9 +101,15 @@ class UR_Frontend {
 
 		if ( ! empty( $login_page ) ) {
 			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
+			if(1 > absint( $matched )) {
+				$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $login_page->post_content );
+			}
 			$page_id = $login_page->ID;
 		} elseif ( ! empty( $myaccount_page ) ) {
 			$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+			if(1 > absint( $matched )) {
+				$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+			}
 			$page_id = $myaccount_page->ID;
 		}
 
