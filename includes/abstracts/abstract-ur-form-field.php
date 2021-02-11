@@ -247,6 +247,10 @@ abstract class UR_Form_Field {
 
 				$form_data['options'] = $options;
 			}
+
+			if( 'multi_select2' === $field_key ){
+				$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+			}
 		}
 
 		if ( 'radio' === $field_key ) {
@@ -275,6 +279,12 @@ abstract class UR_Form_Field {
 
 				$form_data['options'] = $options;
 			}
+
+			$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+		}
+
+		if( "user_login" === $field_key ) {
+			$form_data['username_length'] = isset( $data['advance_setting']->username_length ) ? $data['advance_setting']->username_length : "";
 		}
 
 		if( 'range' === $field_key ) {

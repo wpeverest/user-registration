@@ -41,6 +41,17 @@ class UR_Setting_User_login extends UR_Field_Settings {
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
+			'username_length'          => array(
+				'label'       => __( 'Limit Username Length', 'user-registration' ),
+				'data-id'     => $this->field_id . '_username_length',
+				'name'        => $this->field_id . '[username_length]',
+				'class'       => $this->default_class . ' ur-settings-min',
+				'type'        => 'number',
+				'required'    => false,
+				'default'     => '',
+				'placeholder' => __( 'Min Value', 'user-registration' ),
+				'tip'         => __( 'Enter minimum number of length of username.', 'user-registration' ),
+			)
 		);
 
 		$this->render_html( $fields );

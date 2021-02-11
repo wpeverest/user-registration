@@ -218,6 +218,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												// Add choice_limit setting valur in order to limit choice fields.
+												if( "checkbox" === $single_item->field_key || "multi_select2" === $single_item->field_key){
+													if( isset( $advance_data["advance_setting"]->choice_limit)) {
+														$field["choice_limit"] = $advance_data["advance_setting"]->choice_limit;
+													}
+												}
 												$filter_data = array(
 													'form_data' => $field,
 													'data' => $advance_data,
