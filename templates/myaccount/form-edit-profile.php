@@ -163,6 +163,23 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 												}
 
+												if( 'range' === $single_item->field_key ) {
+													$field['range_min'] =  ( isset( $advance_data['advance_setting']->range_min) && "" !== $advance_data['advance_setting']->range_min )? $advance_data['advance_setting']->range_min : "0";
+													$field['range_max'] =  ( isset( $advance_data['advance_setting']->range_max) && "" !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : "10";
+													$field['range_step'] =  isset( $advance_data['advance_setting']->range_step) ? $advance_data['advance_setting']->range_step : "1";
+
+													if(  "true" === $advance_data['advance_setting']->enable_prefix_postfix) {
+														if( "true" === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
+															$field['range_prefix'] = isset( $advance_data['advance_setting']->range_prefix) ? $advance_data['advance_setting']->range_prefix : "";
+															$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix) ? $advance_data['advance_setting']->range_postfix : "";
+														} else {
+															$field['range_prefix'] = $field['range_min'];
+															$field['range_postfix'] =  $field['range_max'];
+														}
+													}
+
+												}
+
 												if ( 'phone' === $single_item->field_key ) {
 													$field['phone_format'] = $single_item->general_setting->phone_format;
 													if ( 'smart' === $field['phone_format'] ) {

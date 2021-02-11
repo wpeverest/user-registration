@@ -287,6 +287,26 @@ abstract class UR_Form_Field {
 			$form_data['username_length'] = isset( $data['advance_setting']->username_length ) ? $data['advance_setting']->username_length : "";
 		}
 
+		if( 'range' === $field_key ) {
+			$form_data['range_min'] =  ( isset( $data['advance_setting']->range_min) && "" !== $data['advance_setting']->range_min) ? $data['advance_setting']->range_min : "0";
+			$form_data['range_max'] =  ( isset( $data['advance_setting']->range_max)  && "" !== $data['advance_setting']->range_max ) ? $data['advance_setting']->range_max : "10";
+			$form_data['range_step'] =  isset( $data['advance_setting']->range_step) ? $data['advance_setting']->range_step : "";
+			$enable_prefix_postfix = isset( $data['advance_setting']->enable_prefix_postfix) ? $data['advance_setting']->enable_prefix_postfix : "false";
+			$enable_text_prefix_postfix = isset( $data['advance_setting']->enable_text_prefix_postfix) ? $data['advance_setting']->enable_text_prefix_postfix : "false";
+
+			if( "true" === $enable_prefix_postfix ) {
+
+				if( "true" === $enable_text_prefix_postfix ) {
+					$form_data['range_prefix'] = isset( $data['advance_setting']->range_prefix) ? $data['advance_setting']->range_prefix : "";
+					$form_data['range_postfix'] = isset( $data['advance_setting']->range_postfix) ? $data['advance_setting']->range_postfix : "";
+				} else {
+
+					$form_data['range_prefix'] = $form_data['range_min'];
+					$form_data['range_postfix'] = $form_data['range_max'];
+				}
+			}
+
+		}
 		/** Redundant Codes End. */
 
 		$filter_data = array(

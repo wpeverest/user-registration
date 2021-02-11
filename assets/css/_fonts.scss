@@ -30,15 +30,15 @@
 
 // Icon fonts
 @font-face {
-	font-family: 'UserRegistration';
-	src:  url('../fonts/UserRegistration.eot?xd12po');
-	src:  url('../fonts/UserRegistration.eot?xd12po#iefix') format('embedded-opentype'),
-		url('../fonts/UserRegistration.ttf?xd12po') format('truetype'),
-		url('../fonts/UserRegistration.woff?xd12po') format('woff'),
-		url('../fonts/UserRegistration.svg?xd12po#UserRegistration') format('svg');
-	font-weight: normal;
-	font-style: normal;
-	font-display: block;
+  font-family: 'UserRegistration';
+  src:  url('../fonts/UserRegistration.eot?kjj80c');
+  src:  url('../fonts/UserRegistration.eot?kjj80c#iefix') format('embedded-opentype'),
+    url('../fonts/UserRegistration.ttf?kjj80c') format('truetype'),
+    url('../fonts/UserRegistration.woff?kjj80c') format('woff'),
+    url('../fonts/UserRegistration.svg?kjj80c#UserRegistration') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
 [class^='ur-icon-'],
@@ -98,7 +98,9 @@ $field-icons: (
 	file-dollar: "\e025",
 	code: "\e026",
 	mailchimp: "\e027",
-	credit-card: "\e028"
+	credit-card: "\e028",
+	range: "\e029",
+	course: "\e02a"
 );
 
 /* For each key in the map, creating own class */

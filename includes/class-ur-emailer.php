@@ -609,6 +609,8 @@ class UR_Emailer {
 			$default_values['auto_pass'] = $user_pass;
 		}
 
+		$default_values = apply_filters("user_registration_add_smart_tags", $default_values, $values['email']);
+
 		$values = wp_parse_args( $values, $default_values );
 
 		if ( ! empty( $values['email'] ) ) {
