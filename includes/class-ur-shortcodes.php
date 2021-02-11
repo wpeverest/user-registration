@@ -93,6 +93,8 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function login( $atts ) {
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
