@@ -91,6 +91,11 @@ class UR_Email_Confirmation {
 	 */
 	public function trigger_query_actions() {
 
+		$resend_verification_sent = isset( $_REQUEST['resend_verification_sent'] ) ? sanitize_key( $_REQUEST['resend_verification_sent'] ) : false;
+		if($resend_verification_sent){
+			add_action( 'admin_notices', array( $this, 'ur_admin_notice_resend_verification_sent' ) );
+		}
+
 		$user_id = absint( isset( $_GET['user'] ) ? $_GET['user'] : 0 );
 
 			$action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
@@ -123,7 +128,8 @@ class UR_Email_Confirmation {
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
-				$redirect = add_query_arg( array( 'resend_verification' => 1 ), $redirect );
+				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
+
 			} else {
 				update_user_meta( $user_id, 'ur_confirm_email', '0' );
 				$redirect = add_query_arg( array( 'unverified' => 1 ), $redirect );
@@ -133,6 +139,14 @@ class UR_Email_Confirmation {
 			exit;
 		}
 
+	}
+
+	/**
+	 * Admin notice after resend verification email sent.
+	 * @since 1.9.4
+	 */
+	public function ur_admin_notice_resend_verification_sent() {
+		echo '<div class="notice-success notice is-dismissible"><p>' . esc_html__( 'Verification Email Sent Successfully !! ', 'user-registration' ) . '</p></div>';
 	}
 
 	/**
