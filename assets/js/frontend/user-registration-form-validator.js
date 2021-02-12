@@ -156,6 +156,15 @@
 								.find("#" + element.data("id") + "-error")
 								.remove();
 							wrapper.append(error);
+						} else if (
+							"number" === element.attr("type") &&
+							element.hasClass("ur-range-input")
+						) {
+							error.insertAfter(
+								element
+									.closest(".ur-range-row")
+									.find(".ur-range-number")
+							);
 						} else {
 							if (
 								element.hasClass("urfu-file-input") ||
