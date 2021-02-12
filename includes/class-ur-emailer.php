@@ -402,9 +402,6 @@ class UR_Emailer {
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
 
-		// Get selected email template id for specific form.
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
-
 		if ( 0 === intval( $status ) ) {
 
 			$subject = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
@@ -611,6 +608,8 @@ class UR_Emailer {
 		if ( $user_pass ) {
 			$default_values['auto_pass'] = $user_pass;
 		}
+
+		$default_values = apply_filters("user_registration_add_smart_tags", $default_values, $values['email']);
 
 		$values = wp_parse_args( $values, $default_values );
 

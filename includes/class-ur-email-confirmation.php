@@ -42,6 +42,15 @@ class UR_Email_Confirmation {
 	 */
 	public function create_quick_links( $actions, $user ) {
 
+		$resend_verification_link = add_query_arg(
+			array(
+				'action' => 'resend_verification',
+				'user'   => $user->ID,
+			)
+		);
+		$resend_verification_link = remove_query_arg( array( 'new_role' ), $resend_verification_link );
+		$resend_verification_link = wp_nonce_url( $resend_verification_link, 'ur_user_change_email_status' );
+
 			$verify_link = add_query_arg(
 				array(
 					'action' => 'verify',
@@ -60,6 +69,7 @@ class UR_Email_Confirmation {
 			$unverify_link = remove_query_arg( array( 'new_role' ), $unverify_link );
 			$unverify_link = wp_nonce_url( $unverify_link, 'ur_user_change_email_status' );
 
+			$resend_verification_action   = '<a href="' . esc_url( $resend_verification_link ) . '">' . _x( 'Resend Verification', 'The action on users list page', 'user-registration' ) . '</a>';
 			$verify_action   = '<a style="color:#086512" href="' . esc_url( $verify_link ) . '">' . _x( 'Verify', 'The action on users list page', 'user-registration' ) . '</a>';
 			$unverify_action = '<a style="color:#e20707" href="' . esc_url( $unverify_link ) . '">' . _x( 'Unverify', 'The action on users list page', 'user-registration' ) . '</a>';
 
@@ -67,6 +77,7 @@ class UR_Email_Confirmation {
 			$get_user_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
 			if ( '0' === $get_user_status ) {
 				$actions['ur_user_verify_action'] = $verify_action;
+				$actions['ur_user_resend_verification_action'] = $resend_verification_action;
 			} elseif ( '1' === $get_user_status ) {
 				$actions['ur_user_unverify_action'] = $unverify_action;
 			}
@@ -80,6 +91,11 @@ class UR_Email_Confirmation {
 	 */
 	public function trigger_query_actions() {
 
+		$resend_verification_sent = isset( $_REQUEST['resend_verification_sent'] ) ? sanitize_key( $_REQUEST['resend_verification_sent'] ) : false;
+		if($resend_verification_sent){
+			add_action( 'admin_notices', array( $this, 'ur_admin_notice_resend_verification_sent' ) );
+		}
+
 		$user_id = absint( isset( $_GET['user'] ) ? $_GET['user'] : 0 );
 
 			$action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
@@ -90,7 +106,7 @@ class UR_Email_Confirmation {
 			return;
 		}
 
-		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify' ) ) && ! isset( $_GET['new_role'] ) ) {
+		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify', 'resend_verification' ) ) && ! isset( $_GET['new_role'] ) ) {
 
 			check_admin_referer( 'ur_user_change_email_status' );
 
@@ -100,6 +116,20 @@ class UR_Email_Confirmation {
 			if ( $status == 'verify' ) {
 				update_user_meta( $user_id, 'ur_confirm_email', '1' );
 				$redirect = add_query_arg( array( 'verified' => 1 ), $redirect );
+			} elseif ( $status == 'resend_verification' ) {
+				$user    = get_user_by( 'id', $user_id );
+				$form_id = ur_get_form_id_by_userid( $user_id );
+
+				$this->set_email_status( array(), $form_id, $user_id );
+
+				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
+				$name_value  = ur_get_user_extra_fields( $user_id );
+					// Get selected email template id for specific form.
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+
+				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
+				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
+
 			} else {
 				update_user_meta( $user_id, 'ur_confirm_email', '0' );
 				$redirect = add_query_arg( array( 'unverified' => 1 ), $redirect );
@@ -109,6 +139,14 @@ class UR_Email_Confirmation {
 			exit;
 		}
 
+	}
+
+	/**
+	 * Admin notice after resend verification email sent.
+	 * @since 1.9.4
+	 */
+	public function ur_admin_notice_resend_verification_sent() {
+		echo '<div class="notice-success notice is-dismissible"><p>' . esc_html__( 'Verification Email Sent Successfully !! ', 'user-registration' ) . '</p></div>';
 	}
 
 	/**
@@ -175,6 +213,11 @@ class UR_Email_Confirmation {
 		return ur_print_notice( __( 'Token Mismatch!', 'user-registration' ), 'error' );
 	}
 
+	// Token expired message.
+	public function custom_token_expired_message() {
+		return ur_print_notice( __( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
+	}
+
 	// Resend verification email message.
 	public function custom_resend_email_token_message() {
 		return ur_print_notice( __( 'Verification Email Sent!', 'user-registration' ) );
@@ -203,15 +246,16 @@ class UR_Email_Confirmation {
 				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$user_id = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
-			$user_id = absint( $user_id );
+			$output  = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
+			$output  = explode( '_', $output );
+			$user_id = absint( $output[0] );
+
 			$user    = get_user_by( 'id', $user_id );
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			if ( $user && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
-				$this->get_token( $user_id );
 				$this->set_email_status( array(), '', $user_id );
 
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
@@ -234,22 +278,28 @@ class UR_Email_Confirmation {
 			return;
 		} else {
 
-			$output     = str_split( $_GET['ur_token'], 50 );
-			$user_id    = $this->crypt_the_string( $output[1], 'd' );
-			$user_id    = absint( $user_id );
+			$ur_token   = str_split( $_GET['ur_token'], 50 );
+			$output     = $this->crypt_the_string( $ur_token[1], 'd' );
+			$output     = explode( '_', $output );
+			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			// Check if the token matches the token value stored in db.
 			if ( $user_token === $_GET['ur_token'] && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
-				$user_reg_successful = true;
+				if ( isset( $output[1]) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
+					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
+					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
+				} else {
+					$user_reg_successful = true;
 
-				update_user_meta( $user_id, 'ur_confirm_email', 1 );
-				delete_user_meta( $user_id, 'ur_confirm_email_token' );
+					update_user_meta( $user_id, 'ur_confirm_email', 1 );
+					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
-				add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
-				add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
+					add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
+					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
+				}
 			} else {
 				add_filter( 'login_message', array( $this, 'custom_registration_error_message' ) );
 				add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_error_message' ) );
@@ -306,7 +356,7 @@ class UR_Email_Confirmation {
 			$token .= $codeAlphabet[ random_int( 0, $max - 1 ) ];
 		}
 
-		$token .= $this->crypt_the_string( $user_id, 'e' );
+		$token .= $this->crypt_the_string( $user_id . '_' . time(), 'e' );
 
 		return $token;
 
@@ -348,7 +398,7 @@ class UR_Email_Confirmation {
 
 			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 			$url = substr( $url, 0, strpos( $url, '?' ) );
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID, 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( $email_status === '0' ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
