@@ -500,6 +500,7 @@ function ur_exclude_profile_details_fields() {
 		'user_confirm_password',
 		'user_confirm_email',
 		'invite_code',
+		'learndash_course',
 	);
 
 	// Check if the my account page contains [user_registration_my_account] shortcode.
