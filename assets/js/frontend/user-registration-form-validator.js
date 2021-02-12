@@ -3,6 +3,11 @@
 	var user_registration_form_selector;
 
 	user_registration_form_selector = $(".ur-frontend-form form");
+
+	if (user_registration_form_selector.hasClass("login")) {
+		return;
+	}
+
 	var field_selector = "";
 
 	if (user_registration_form_selector.hasClass("edit-profile")) {
