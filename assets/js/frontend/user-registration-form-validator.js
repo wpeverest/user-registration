@@ -106,14 +106,14 @@
 
 			$this_node.$user_registration.each(function () {
 				var $this = $(this);
-				var { rules, messages } = $this_node.custom_validation($this);
+				var validator_params = $this_node.custom_validation($this);
 				$this_node.custom_validation_messages();
 
 				$this.validate({
 					errorClass: "user-registration-error",
 					validClass: "user-registration-valid",
-					rules: rules,
-					messages: messages,
+					rules: validator_params.rules,
+					messages: validator_params.messages,
 					focusInvalid: false,
 					invalidHandler: function (form, validator) {
 						if (!validator.numberOfInvalids()) return;
@@ -375,7 +375,7 @@
 				});
 			}
 
-			return { rules, messages };
+			return { rules: rules, messages: messages };
 		},
 		/**
 		 * Override default validaton messages and add custom validation messsages.
