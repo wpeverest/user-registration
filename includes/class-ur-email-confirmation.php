@@ -278,8 +278,13 @@ class UR_Email_Confirmation {
 			return;
 		} else {
 
-			$ur_token   = str_split( $_GET['ur_token'], 50 );
-			$output     = $this->crypt_the_string( $ur_token[1], 'd' );
+			$ur_token     = str_split( $_GET['ur_token'], 50 );
+			$token_string = $ur_token[1];
+
+			if ( 2 < count( $ur_token ) ) {
+				$token_string = $ur_token[1] . $ur_token[2];
+			}
+			$output     = $this->crypt_the_string( $token_string, 'd' );
 			$output     = explode( '_', $output );
 			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
