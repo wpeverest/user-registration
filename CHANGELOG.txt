@@ -1,3 +1,6 @@
+= 1.9.4.1 - 12/02/2021
+* Fix - Login button not working on pages with both registration and login forms.
+
 = 1.9.4 - 12/02/2021
 * Enhance - Limit username length.
 * Enhance - Limit Choice in checkbox field.
