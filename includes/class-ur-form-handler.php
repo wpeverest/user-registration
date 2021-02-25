@@ -577,6 +577,7 @@ class UR_Form_Handler {
 
 			if ( $the_post && 'user_registration' === $the_post->post_type ) {
 				$the_post->post_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $the_post->post_content );
+				$the_post->post_content = str_replace( '"noopener"', "'noopener'", $the_post->post_content );
 
 				if ( isset( $args['publish'] ) ) {
 					if ( ( $args['publish'] && 'publish' === $the_post->post_type ) || ( ! $args['publish'] && 'publish' !== $the_post->post_type ) ) {
