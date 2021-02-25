@@ -282,7 +282,8 @@ class UR_Email_Confirmation {
 			$token_string = $ur_token[1];
 
 			if ( 2 < count( $ur_token ) ) {
-				$token_string = $ur_token[1] . $ur_token[2];
+				unset( $ur_token[0] );
+				$token_string = join( '', $ur_token );
 			}
 			$output     = $this->crypt_the_string( $token_string, 'd' );
 			$output     = explode( '_', $output );
