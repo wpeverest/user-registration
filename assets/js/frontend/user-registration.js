@@ -460,7 +460,7 @@
 													.attr("aria-invalid", true);
 												$this
 													.find("#user_pass")
-													.focus();
+													.trigger("focus");
 											}
 
 											return false;

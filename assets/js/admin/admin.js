@@ -145,7 +145,7 @@ jQuery(function ($) {
 				".user-registration-editable-title__input"
 			);
 			if (!$input.hasClass("is-editing")) {
-				$input.focus();
+				$input.trigger("focus");
 			}
 			$input.toggleClass("is-editing");
 			$input.attr(
