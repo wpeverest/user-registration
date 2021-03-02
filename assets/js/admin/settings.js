@@ -2,7 +2,7 @@
 (function ($) {
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
-		.change(function () {
+		.on("change", function () {
 			if ("specific" === $(this).val()) {
 				$(this).closest("tr").next("tr").hide();
 				$(this).closest("tr").next().next("tr").show();
@@ -45,7 +45,7 @@
 	$(function () {
 		var changed = false;
 
-		$("input, textarea, select, checkbox").change(function () {
+		$("input, textarea, select, checkbox").on("change", function () {
 			changed = true;
 		});
 
@@ -75,7 +75,7 @@
 	});
 
 	$(".user-registration").on("click", ".select_none", function () {
-		$(this).closest("td").find("select option").removeAttr("selected");
+		$(this).closest("td").find("select option").prop("selected", false);
 		$(this).closest("td").find("select").trigger("change");
 		return false;
 	});
@@ -141,7 +141,8 @@
 		}
 	});
 
-	$("#user_registration_login_options_prevent_core_login").change(
+	$("#user_registration_login_options_prevent_core_login").on(
+		"change",
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
 
@@ -156,7 +157,7 @@
 	);
 
 	// Change span with file name when user selects a file.
-	$(".user-registration-custom-file__input").change(function (e) {
+	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];
 
 		$(".user-registration-custom-selected-file").html(file.name);

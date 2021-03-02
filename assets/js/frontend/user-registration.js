@@ -697,7 +697,7 @@
 											var type = "error";
 
 											try {
-												var response = $.parseJSON(
+												var response = JSON.parse(
 													ajax_response.responseText
 												);
 
@@ -856,7 +856,7 @@
 												);
 											}
 
-											var success_message_position = $.parseJSON(
+											var success_message_position = JSON.parse(
 												ajax_response.responseText
 											).data.success_message_positon;
 
@@ -1068,7 +1068,7 @@
 										var type = "error";
 
 										try {
-											var response = $.parseJSON(
+											var response = JSON.parse(
 												ajax_response.responseText
 											);
 

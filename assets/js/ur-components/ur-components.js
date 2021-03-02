@@ -81,7 +81,7 @@ jQuery(function ($) {
 				.find("label")
 				.html(ur_components_script_params.card_switch_enabled_text);
 		} else {
-			all_check.removeAttr("checked", checked);
+			all_check.prop("checked", checked);
 			all_check.removeClass("enabled");
 			all_check
 				.closest(".user-registration-switch")
