@@ -158,7 +158,7 @@ jQuery(function ($) {
 	// In case the user goes out of focus from title edit state.
 	$(document.body)
 		.not($(".user-registration-editable-title"))
-		.click(function (e) {
+		.on("click", function (e) {
 			var field = $(".user-registration-editable-title__input");
 
 			// Both of these controls should in no way allow stopping event propagation.
