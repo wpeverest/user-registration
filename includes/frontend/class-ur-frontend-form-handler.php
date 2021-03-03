@@ -334,7 +334,7 @@ class UR_Frontend_Form_Handler {
 					$field_name = 'user_registration_' . $field_name;
 				}
 
-				if ( isset( $data->extra_params['field_key'] ) && $data->extra_params['field_key'] === 'checkbox' ) {
+				if ( isset( $data->extra_params['field_key'] ) && ( $data->extra_params['field_key'] === 'checkbox' || $data->extra_params['field_key'] === 'learndash_course' ) ) {
 					$data->value = ( json_decode( $data->value ) !== null ) ? json_decode( $data->value ) : $data->value;
 				}
 				update_user_meta( $user_id, $field_name, $data->value );

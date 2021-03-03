@@ -501,6 +501,7 @@ function ur_exclude_profile_details_fields() {
 		'user_confirm_password',
 		'user_confirm_email',
 		'invite_code',
+		'learndash_course',
 	);
 
 	// Check if the my account page contains [user_registration_my_account] shortcode.
@@ -1902,3 +1903,21 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	}
 	return $valid_form_data;
 }
+
+/**
+ * Add our login and my account shortcodes to conflicting shortcodes filter of All In One Seo plugin to resolve the conflict
+ *
+ * @param array $conflict_shortcodes Array of shortcodes that All in one Seo is conflicting with.
+ *
+ * @since 1.9.4
+ */
+function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
+	$ur_shortcodes = array(
+		'User Registration My Account' => '[user_registration_my_account]',
+		'User Registration Login' => '[user_registration_login]'
+		);
+
+	$conflict_shortcodes  = array_merge( $conflict_shortcodes, $ur_shortcodes);
+	return $conflict_shortcodes;
+}
+add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );

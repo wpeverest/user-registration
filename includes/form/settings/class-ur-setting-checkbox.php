@@ -41,6 +41,17 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
 				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
+			'choice_limit'          => array(
+				'label'       => __( 'Choice Limit', 'user-registration' ),
+				'data-id'     => $this->field_id . '_choice_limit',
+				'name'        => $this->field_id . '[choice_limit]',
+				'class'       => $this->default_class . ' ur-settings-min',
+				'type'        => 'number',
+				'required'    => false,
+				'default'     => '',
+				'placeholder' => __( 'Choice Limit', 'user-registration' ),
+				'tip'         => __( 'Enter minimum number choices that can be selected.', 'user-registration' ),
+			)
 		);
 
 		$this->render_html( $fields );
