@@ -14,7 +14,7 @@
 				$(this).closest("tr").next().next("tr").hide();
 			}
 		})
-		.change();
+		.trigger("change");
 
 	// Color picker
 	$(".colorpick")
@@ -28,16 +28,16 @@
 			hide: true,
 			border: true,
 		})
-		.click(function () {
+		.on("click", function () {
 			$(".iris-picker").hide();
 			$(this).closest("td").find(".iris-picker").show();
 		});
 
-	$("body").click(function () {
+	$("body").on("click", function () {
 		$(".iris-picker").hide();
 	});
 
-	$(".colorpick").click(function (event) {
+	$(".colorpick").on("click", function (event) {
 		event.stopPropagation();
 	});
 
@@ -49,7 +49,7 @@
 			changed = true;
 		});
 
-		$(".ur-nav-tab-wrapper a").click(function () {
+		$(".ur-nav-tab-wrapper a").on("click", function () {
 			if (changed) {
 				window.onbeforeunload = function () {
 					return user_registration_settings_params.i18n_nav_warning;
@@ -59,7 +59,7 @@
 			}
 		});
 
-		$(".submit input").click(function () {
+		$(".submit input").on("click", function () {
 			window.onbeforeunload = "";
 		});
 	});
@@ -134,7 +134,7 @@
 				"#user_registration_login_options_login_redirect_url"
 			);
 
-		if (!$check.attr("checked")) {
+		if (!$check.prop("checked")) {
 			$url.val("").closest(".single_select_page").css("display", "none");
 		} else {
 			$redirect.prop("required", true);
