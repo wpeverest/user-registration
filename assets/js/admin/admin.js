@@ -1010,11 +1010,10 @@ jQuery(function ($) {
 									) {
 										return;
 									}
-									var data_field_id = String.prototype.trim(
-										$(ui.helper)
-											.attr("data-field-id")
-											.replace("user_registration_", "")
-									);
+									var data_field_id = $(ui.helper)
+										.attr("data-field-id")
+										.replace("user_registration_", "")
+										.trim();
 									var length_of_required = $(
 										".ur-input-grids"
 									).find(
@@ -2031,7 +2030,7 @@ jQuery(function ($) {
 				.hasClass("ur-setting-checkbox");
 
 			if ("options" === $(this).attr("data-field")) {
-				var choice_value = String.prototype.trim(get_ur_data($(this)));
+				var choice_value = get_ur_data($(this)).trim();
 				if (
 					option_values.every(function (each_value) {
 						return each_value !== choice_value;
@@ -2462,7 +2461,7 @@ jQuery(function ($) {
 		var checked_index = this_node.closest("li").index();
 		li_elements.each(function (index, element) {
 			var value = $(element).find("input.ur-type-checkbox-label").val();
-			value = String.prototype.trim(value);
+			value = value.trim();
 			checkbox = $(element)
 				.find("input.ur-type-checkbox-value")
 				.is(":checked");
@@ -2522,7 +2521,7 @@ jQuery(function ($) {
 
 		li_elements.each(function (index, element) {
 			var value = $(element).find("input.ur-type-radio-label").val();
-			value = String.prototype.trim(value);
+			value = value.trim();
 			radio = $(element).find("input.ur-type-radio-value").is(":checked");
 			// Set checked elements index value
 			if (radio === true) {
@@ -2572,7 +2571,7 @@ jQuery(function ($) {
 	}
 
 	function render_select_box(this_node) {
-		var value = String.prototype.trim(this_node.val());
+		var value = this_node.val().trim();
 		var wrapper = $(".ur-selected-item.ur-item-active");
 		var checked_index = this_node.closest("li").index();
 		var select = wrapper.find(".ur-field").find("select");

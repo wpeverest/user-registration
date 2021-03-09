@@ -262,7 +262,7 @@
 						if (
 							$.inArray(
 								formwise_data.field_name,
-								$.trim(required_fields)
+								required_fields.join(",").trim()
 							) >= 0
 						) {
 							available_field.push(formwise_data.field_name);
