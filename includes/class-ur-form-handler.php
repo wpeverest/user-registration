@@ -226,8 +226,6 @@ class UR_Form_Handler {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if ( $disabled !== 'disabled' ) {
-						// error_log( print_r( $_POST[ $key ], true ) );
-
 						update_user_meta( $user_id, $update_key, $_POST[ $key ] );
 					}
 				}
