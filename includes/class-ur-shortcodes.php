@@ -93,6 +93,8 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function login( $atts ) {
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
@@ -181,6 +183,7 @@ class UR_Shortcodes {
 
 		// Enqueue script.
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_script( 'ur-form-validator' );
 
 		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 
