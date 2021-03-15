@@ -16,22 +16,22 @@ jQuery(function ($) {
 		scrollItems = $(".ur-scroll-ui__items");
 		scrollItem = $(".ur-scroll-ui__item");
 
-		scrollBackward.click(function () {
+		scrollBackward.on("click", function () {
 			scrollWidth = scrollItems.width() - 60;
 			scrollPos = scrollItems.scrollLeft() - scrollWidth;
 			scrollItems.animate({ scrollLeft: scrollPos }, "slow");
 		});
 
-		scrollForward.click(function () {
+		scrollForward.on("click", function () {
 			scrollWidth = scrollItems.width() - 60;
 			scrollPos = scrollItems.scrollLeft() + scrollWidth;
 			scrollItems.animate({ scrollLeft: scrollPos }, "slow");
 		});
 
 		// ScrollHandel visibility while window resizing.
-		$(window).resize(handleMenuScroller);
+		$(window).on("resize", handleMenuScroller);
 		// ScrollHandel visibility while scrolling mouse.
-		scrollItems.scroll(handleMenuScroller);
+		scrollItems.on("scroll", handleMenuScroller);
 
 		handleMenuScroller();
 
