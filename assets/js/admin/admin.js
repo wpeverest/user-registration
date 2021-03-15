@@ -145,7 +145,7 @@ jQuery(function ($) {
 				".user-registration-editable-title__input"
 			);
 			if (!$input.hasClass("is-editing")) {
-				$input.focus();
+				$input.trigger("focus");
 			}
 			$input.toggleClass("is-editing");
 			$input.attr(
@@ -158,7 +158,7 @@ jQuery(function ($) {
 	// In case the user goes out of focus from title edit state.
 	$(document.body)
 		.not($(".user-registration-editable-title"))
-		.click(function (e) {
+		.on("click", function (e) {
 			var field = $(".user-registration-editable-title__input");
 
 			// Both of these controls should in no way allow stopping event propagation.
@@ -330,7 +330,7 @@ jQuery(function ($) {
 		minimum_password_strength_wrapper_field.hide();
 	}
 
-	$(strong_password_field).change(function () {
+	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
 		if (
@@ -1010,11 +1010,10 @@ jQuery(function ($) {
 									) {
 										return;
 									}
-									var data_field_id = $.trim(
-										$(ui.helper)
-											.attr("data-field-id")
-											.replace("user_registration_", "")
-									);
+									var data_field_id = $(ui.helper)
+										.attr("data-field-id")
+										.replace("user_registration_", "")
+										.trim();
 									var length_of_required = $(
 										".ur-input-grids"
 									).find(
@@ -1206,14 +1205,10 @@ jQuery(function ($) {
 			});
 		};
 		$(".ur-input-grids").ur_form_builder();
-		$(".ur-tabs .ur-tab-lists")
-			.find("a.nav-tab")
-			.click(function () {
-				$(".ur-tabs .ur-tab-lists")
-					.find("a.nav-tab")
-					.removeClass("active");
-				$(this).addClass("active");
-			});
+		$(".ur-tabs .ur-tab-lists").on("click", "a.nav-tab", function () {
+			$(".ur-tabs .ur-tab-lists").find("a.nav-tab").removeClass("active");
+			$(this).addClass("active");
+		});
 		$(".ur-tabs").tabs();
 		$(".ur-tabs").find("a").eq(0).trigger("click", ["triggered_click"]);
 		$(".ur-tabs").tabs({ disabled: [1] });
@@ -1478,7 +1473,7 @@ jQuery(function ($) {
 					 */
 					.on("select2:close", function (e) {
 						setTimeout(function () {
-							$(":focus").blur();
+							$(":focus").trigger("blur");
 						}, 1);
 					});
 			}
@@ -2042,7 +2037,7 @@ jQuery(function ($) {
 				.hasClass("ur-setting-checkbox");
 
 			if ("options" === $(this).attr("data-field")) {
-				var choice_value = $.trim(get_ur_data($(this)));
+				var choice_value = get_ur_data($(this)).trim();
 				if (
 					option_values.every(function (each_value) {
 						return each_value !== choice_value;
@@ -2434,7 +2429,7 @@ jQuery(function ($) {
 				hidden_node.val($this_node.val());
 				break;
 			case "select":
-				hidden_node.find("option").removeAttr("selected");
+				hidden_node.find("option").prop("selected", false);
 
 				if ($this_node.prop("multiple")) {
 					var selected_options = $this_node.val();
@@ -2473,7 +2468,7 @@ jQuery(function ($) {
 		var checked_index = this_node.closest("li").index();
 		li_elements.each(function (index, element) {
 			var value = $(element).find("input.ur-type-checkbox-label").val();
-			value = $.trim(value);
+			value = value.trim();
 			checkbox = $(element)
 				.find("input.ur-type-checkbox-value")
 				.is(":checked");
@@ -2521,7 +2516,7 @@ jQuery(function ($) {
 							checked_index +
 							') input[data-field="default_value"]'
 					)
-					.removeAttr("checked");
+					.prop("checked", false);
 			}
 		}
 	}
@@ -2533,7 +2528,7 @@ jQuery(function ($) {
 
 		li_elements.each(function (index, element) {
 			var value = $(element).find("input.ur-type-radio-label").val();
-			value = $.trim(value);
+			value = value.trim();
 			radio = $(element).find("input.ur-type-radio-value").is(":checked");
 			// Set checked elements index value
 			if (radio === true) {
@@ -2577,13 +2572,13 @@ jQuery(function ($) {
 				if (index === checked_index) {
 					radio_input.prop("checked", true);
 				} else {
-					radio_input.removeAttr("checked");
+					radio_input.prop("checked", false);
 				}
 			});
 	}
 
 	function render_select_box(this_node) {
-		var value = $.trim(this_node.val());
+		var value = this_node.val().trim();
 		var wrapper = $(".ur-selected-item.ur-item-active");
 		var checked_index = this_node.closest("li").index();
 		var select = wrapper.find(".ur-field").find("select");
@@ -2601,7 +2596,7 @@ jQuery(function ($) {
 				if (index === checked_index) {
 					radio_input.prop("checked", true);
 				} else {
-					radio_input.removeAttr("checked");
+					radio_input.prop("checked", false);
 				}
 			});
 	}
@@ -2748,7 +2743,7 @@ jQuery(function ($) {
 
 		var selected_inputs = $(".ur-input-grids");
 
-		if ($.isArray(required_fields)) {
+		if (Array.isArray(required_fields)) {
 			for (var i = 0; i < required_fields.length; i++) {
 				var field_node = selected_inputs.find(
 					'.ur-field[data-field-key="' + required_fields[i] + '"]'
@@ -2986,7 +2981,7 @@ jQuery(function ($) {
 		cloning_element.find('input[data-field="options"]').val("");
 		cloning_element
 			.find('input[data-field="default_value"]')
-			.removeAttr("checked");
+			.prop("checked", false);
 
 		$this.parent("li").after(cloning_element);
 		$wrapper
@@ -3187,3 +3182,4 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
+

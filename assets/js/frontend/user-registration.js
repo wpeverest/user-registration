@@ -262,7 +262,7 @@
 						if (
 							$.inArray(
 								formwise_data.field_name,
-								$.trim(required_fields)
+								required_fields.join(",").trim()
 							) >= 0
 						) {
 							available_field.push(formwise_data.field_name);
@@ -460,7 +460,7 @@
 													.attr("aria-invalid", true);
 												$this
 													.find("#user_pass")
-													.focus();
+													.trigger("focus");
 											}
 
 											return false;
@@ -697,7 +697,7 @@
 											var type = "error";
 
 											try {
-												var response = $.parseJSON(
+												var response = JSON.parse(
 													ajax_response.responseText
 												);
 
@@ -856,7 +856,7 @@
 												);
 											}
 
-											var success_message_position = $.parseJSON(
+											var success_message_position = JSON.parse(
 												ajax_response.responseText
 											).data.success_message_positon;
 
@@ -1068,7 +1068,7 @@
 										var type = "error";
 
 										try {
-											var response = $.parseJSON(
+											var response = JSON.parse(
 												ajax_response.responseText
 											);
 

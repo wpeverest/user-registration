@@ -2,7 +2,7 @@
 (function ($) {
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
-		.change(function () {
+		.on("change", function () {
 			if ("specific" === $(this).val()) {
 				$(this).closest("tr").next("tr").hide();
 				$(this).closest("tr").next().next("tr").show();
@@ -14,7 +14,7 @@
 				$(this).closest("tr").next().next("tr").hide();
 			}
 		})
-		.change();
+		.trigger("change");
 
 	// Color picker
 	$(".colorpick")
@@ -28,16 +28,16 @@
 			hide: true,
 			border: true,
 		})
-		.click(function () {
+		.on("click", function () {
 			$(".iris-picker").hide();
 			$(this).closest("td").find(".iris-picker").show();
 		});
 
-	$("body").click(function () {
+	$("body").on("click", function () {
 		$(".iris-picker").hide();
 	});
 
-	$(".colorpick").click(function (event) {
+	$(".colorpick").on("click", function (event) {
 		event.stopPropagation();
 	});
 
@@ -45,11 +45,11 @@
 	$(function () {
 		var changed = false;
 
-		$("input, textarea, select, checkbox").change(function () {
+		$("input, textarea, select, checkbox").on("change", function () {
 			changed = true;
 		});
 
-		$(".ur-nav-tab-wrapper a").click(function () {
+		$(".ur-nav-tab-wrapper a").on("click", function () {
 			if (changed) {
 				window.onbeforeunload = function () {
 					return user_registration_settings_params.i18n_nav_warning;
@@ -59,7 +59,7 @@
 			}
 		});
 
-		$(".submit input").click(function () {
+		$(".submit input").on("click", function () {
 			window.onbeforeunload = "";
 		});
 	});
@@ -75,7 +75,7 @@
 	});
 
 	$(".user-registration").on("click", ".select_none", function () {
-		$(this).closest("td").find("select option").removeAttr("selected");
+		$(this).closest("td").find("select option").prop("selected", false);
 		$(this).closest("td").find("select").trigger("change");
 		return false;
 	});
@@ -134,14 +134,15 @@
 				"#user_registration_login_options_login_redirect_url"
 			);
 
-		if (!$check.attr("checked")) {
+		if (!$check.prop("checked")) {
 			$url.val("").closest(".single_select_page").css("display", "none");
 		} else {
 			$redirect.prop("required", true);
 		}
 	});
 
-	$("#user_registration_login_options_prevent_core_login").change(
+	$("#user_registration_login_options_prevent_core_login").on(
+		"change",
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
 
@@ -156,7 +157,7 @@
 	);
 
 	// Change span with file name when user selects a file.
-	$(".user-registration-custom-file__input").change(function (e) {
+	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];
 
 		$(".user-registration-custom-selected-file").html(file.name);

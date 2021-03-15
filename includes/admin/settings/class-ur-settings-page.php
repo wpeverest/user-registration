@@ -111,7 +111,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				echo '<li><a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ' </li>';
 			}
 
-			echo '</ul><br class="clear" />';
+			echo '</ul>';
 		}
 
 		/**

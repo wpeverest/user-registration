@@ -336,6 +336,8 @@ class UR_Frontend_Form_Handler {
 
 				if ( isset( $data->extra_params['field_key'] ) && ( $data->extra_params['field_key'] === 'checkbox' || $data->extra_params['field_key'] === 'learndash_course' ) ) {
 					$data->value = ( json_decode( $data->value ) !== null ) ? json_decode( $data->value ) : $data->value;
+				} else if( isset( $data->extra_params['field_key'] ) && ( $data->extra_params['field_key'] === 'wysiwyg' ) ) {
+					$data->value = sanitize_text_field( htmlentities( $data->value ) );
 				}
 				update_user_meta( $user_id, $field_name, $data->value );
 			}

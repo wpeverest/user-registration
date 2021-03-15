@@ -135,6 +135,7 @@ class UR_Form_Handler {
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
+
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox':
@@ -144,6 +145,14 @@ class UR_Form_Handler {
 						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					}
 					break;
+				case 'wysiwyg' :
+					if ( isset( $_POST[ $key ] ) ) {
+						$_POST[ $key ] = sanitize_text_field( htmlentities( $_POST[$key] ) );
+					} else {
+						$_POST[ $key ] = '';
+					}
+					break;
+
 				default:
 					$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
 					break;
@@ -191,13 +200,13 @@ class UR_Form_Handler {
 					}
 				}
 			}
+
 		}// End foreach().
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
 			$user_data = array();
-
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
 
@@ -577,6 +586,7 @@ class UR_Form_Handler {
 
 			if ( $the_post && 'user_registration' === $the_post->post_type ) {
 				$the_post->post_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $the_post->post_content );
+				$the_post->post_content = str_replace( '"noopener"', "'noopener'", $the_post->post_content );
 
 				if ( isset( $args['publish'] ) ) {
 					if ( ( $args['publish'] && 'publish' === $the_post->post_type ) || ( ! $args['publish'] && 'publish' !== $the_post->post_type ) ) {
