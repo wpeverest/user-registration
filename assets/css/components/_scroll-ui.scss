@@ -1,0 +1,51 @@
+
+.ur-scroll-ui {
+	position: relative;
+	overflow-x: auto;
+	overflow-y: hidden;
+
+	&__items {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+		white-space: nowrap;
+		scroll-behavior: smooth;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	&__item {
+		display: inline-block;
+		height: 100%;
+	}
+
+	&__scroll-nav {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		padding: 8px;
+
+		&--backward {
+			left: 0;
+		}
+
+		&--forward {
+			right: 0;
+		}
+
+		&__icon {
+			color: #333;
+			cursor: pointer;
+		}
+	}
+
+	.is-disabled {
+		display: none;
+	}
+}

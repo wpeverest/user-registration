@@ -498,6 +498,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'mailchimp':
+								case 'mailerlite':
 								case 'checkbox':
 									// Backward compatibility. Modified since 1.5.7.
 									$options      = isset( $field->advance_setting->choices ) ? explode( ',', $field->advance_setting->choices ) : array();

@@ -427,6 +427,7 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'privacy_policy':
 			case 'mailchimp':
+			case 'mailerlite':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -853,7 +854,6 @@ function ur_load_form_field_class( $class_key ) {
 		}
 	}
 	/* Backward compat end*/
-
 	return $class_name;
 }
 
@@ -1857,10 +1857,12 @@ function user_registration_email_content_overrider($form_id, $settings, $message
 		// Check if the post meta exists and have contents.
 		if( $email_content_override ) {
 
+			$auto_password_template_overrider = isset( $email_content_override[$settings->id] ) ?  $email_content_override[$settings->id] : '';
+
 			// Check if the email override is enabled.
-			if( '1' === $email_content_override[$settings->id]['override']) {
-				$message = $email_content_override[$settings->id]['content'];
-				$subject = $email_content_override[$settings->id]['subject'];
+			if( '' !== $auto_password_template_overrider && '1' === $auto_password_template_overrider['override']) {
+				$message = $auto_password_template_overrider['content'];
+				$subject = $auto_password_template_overrider['subject'];
 			}
 		}
 
