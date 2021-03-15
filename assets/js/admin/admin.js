@@ -1613,8 +1613,11 @@ jQuery(function ($) {
 			ur_form_id = 0;
 		}
 
+		var exclude_serialize_setting_classes =
+			".urcl-user-role-field, .uret-override-content-field, .ur_mailerlite_settings";
+
 		var form_setting_data = $(
-			"#ur-field-settings :not(.urcl-user-role-field, .uret-override-content-field)"
+			"#ur-field-settings :not(" + exclude_serialize_setting_classes + ")"
 		).serializeArray();
 
 		var conditional_roles_settings_data = get_form_conditional_role_data();
@@ -1640,6 +1643,10 @@ jQuery(function ($) {
 				multipart_page_setting: multipart_page_setting,
 			},
 		};
+
+		$(document).trigger("user_registration_admin_before_form_submit", [
+			data,
+		]);
 
 		$.ajax({
 			url: user_registration_admin_data.ajax_url,
