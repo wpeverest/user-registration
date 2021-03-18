@@ -949,6 +949,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
 			array(
+				'type'              => 'checkbox',
+				'label'             => __( 'Enable User Validation', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_username_validate_on_submit',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_username_validate_on_submit', 'no' ),
+				'tip'               => __( 'To validate the user.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
 				'description'       => '',
@@ -1103,7 +1115,8 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
 	if ( isset( $post_meta[0] ) ) {
 		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
-		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ) {
+		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ||
+		'user_registration_username_validate_on_submit' === $meta_key ) {
 			if ( 'yes' === $post_meta[0] ) {
 				$post_meta[0] = 1;
 			}
@@ -1932,8 +1945,9 @@ function ur_validate_user_login_field( $single_form_field, $data, $filter_hook, 
    $field_label = isset( $data->label ) ? $data->label : '';
    $username = isset( $data->value ) ? $data->value : '';
 
-   	if ( 'yes' === get_option( 'user_registration_username_validate_on_submit','no' ) ) {
-	$validate =preg_match( "/([%\$#\*\@]+)/",$username );
+   	if ( ur_get_single_post_meta( $form_id, 'user_registration_username_validate_on_submit',get_option( 'user_registration_username_validate_on_submit','default' ) ) ) {
+	
+		$validate =preg_match( "/([%\$#\*\@]+)/",$username );
 
 	if ( $validate ) {
      add_filter( $filter_hook, 
