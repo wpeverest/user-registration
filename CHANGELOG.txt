@@ -1,3 +1,12 @@
+= 1.9.5 - 15/03/2021
+* Enhance 	- Setting page header UI.
+* Dev	  	- MailerLite add-on compatibility.
+* Tweak 	- WordPress 5.7 compatibility.
+* Fix 		- WYSIWYG field value save and sanitization in edit-profile.
+* Fix 		- Email overrider undefined index issue.
+* Fix 		- Form Duplication issue with anchor tag.
+* Fix 		- Token mismatch issue.
+
 = 1.9.4.1 - 12/02/2021
 * Fix - Login button not working on pages with both registration and login forms.
 

@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.6.1
-Stable tag: 1.9.4.1
+Tested up to: 5.7
+Stable tag: 1.9.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -152,6 +152,15 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.5 - 15/03/2021
+* Enhance 	- Setting page header UI.
+* Dev	  	- MailerLite add-on compatibility.
+* Tweak 	- WordPress 5.7 compatibility.
+* Fix 		- WYSIWYG field value save and sanitization in edit-profile.
+* Fix 		- Email overrider undefined index issue.
+* Fix 		- Form Duplication issue with anchor tag.
+* Fix 		- Token mismatch issue.
 
 = 1.9.4.1 - 12/02/2021
 * Fix - Login button not working on pages with both registration and login forms.

@@ -12,7 +12,7 @@ jQuery(function ($) {
 			var $this = this;
 			$(document.body).on(
 				"keyup change",
-				'input[name="user_pass"], .user-registration-ResetPassword input[name="password_1"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password',
+				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password',
 				function () {
 					var enable_strength_password = $(this)
 						.closest("form")
@@ -116,7 +116,7 @@ jQuery(function ($) {
 			if (strength >= minimum_password_strength) {
 				submit_button.prop("disabled", false);
 			} else {
-				submit_button.attr("disabled", "disabled");
+				submit_button.prop("disabled", true);
 			}
 
 			switch (strength) {
