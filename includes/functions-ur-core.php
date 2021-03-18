@@ -1923,3 +1923,24 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
 	return $conflict_shortcodes;
 }
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
+
+
+// Username limit character length.
+add_action( 'user_registration_validate_user_login', 'ur_validate_user_login_field', 10, 4 );
+
+function ur_validate_user_login_field( $single_form_field, $data, $filter_hook, $form_id ) {
+   $field_label = isset( $data->label ) ? $data->label : '';
+   $username = isset( $data->value ) ? $data->value : '';
+
+   	if ( 'yes' === get_option( 'user_registration_username_validate_on_submit','no' ) ) {
+	$validate =preg_match( "/([%\$#\*\@]+)/",$username );
+
+	if ( $validate ) {
+     add_filter( $filter_hook, 
+     function ( $msg ) use ( $field_label ) {
+       return __( $field_label . '  cannot write special character', 'user-registration' );
+     }
+     );
+     }
+	} 
+}

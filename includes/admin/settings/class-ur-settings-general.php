@@ -139,6 +139,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => 'no',
 					),
+						array(
+						'title'    => __( 'User name validate on submit', 'user-registration' ),
+						'desc'     => __( 'Check the username validation on user submit', 'user-registration' ),
+						'id'       => 'user_registration_username_validate_on_submit',
+						'type'     => 'checkbox',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
 					array(
 						'title'    => __( 'Disable logout confirmation', 'user-registration' ),
 						'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
