@@ -1938,7 +1938,7 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
 
 
-// Username limit character length.
+// Disallow the special Character
 add_action( 'user_registration_validate_user_login', 'ur_validate_user_login_field', 10, 4 );
 
 function ur_validate_user_login_field( $single_form_field, $data, $filter_hook, $form_id ) {
