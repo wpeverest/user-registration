@@ -948,18 +948,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
-			array(
-				'type'              => 'checkbox',
-				'label'             => __( 'Enable User Validation', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_username_validate_on_submit',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_username_validate_on_submit', 'no' ),
-				'tip'               => __( 'To validate the user.', 'user-registration' ),
-			),
+			// array(
+			// 	'type'              => 'checkbox',
+			// 	'label'             => __( 'Enable User Validation', 'user-registration' ),
+			// 	'description'       => '',
+			// 	'required'          => false,
+			// 	'id'                => 'user_registration_username_validate_on_submit',
+			// 	'class'             => array( 'ur-enhanced-select' ),
+			// 	'input_class'       => array(),
+			// 	'custom_attributes' => array(),
+			// 	'default'           => ur_get_single_post_meta( $form_id, 'user_registration_username_validate_on_submit', 'no' ),
+			// 	'tip'               => __( 'To validate the user.', 'user-registration' ),
+			// ),
 			array(
 				'type'              => 'select',
 				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
@@ -1938,23 +1938,23 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
 
 
-// Disallow the special Character
-add_action( 'user_registration_validate_user_login', 'ur_validate_user_login_field', 10, 4 );
+// Username limit character length.
+// add_action( 'user_registration_validate_user_login', 'ur_validate_user_login_field', 10, 4 );
 
-function ur_validate_user_login_field( $single_form_field, $data, $filter_hook, $form_id ) {
-   $field_label = isset( $data->label ) ? $data->label : '';
-   $username = isset( $data->value ) ? $data->value : '';
-
-   	if ( ur_get_single_post_meta( $form_id, 'user_registration_username_validate_on_submit',get_option( 'user_registration_username_validate_on_submit','default' ) ) ) {
+// function ur_validate_user_login_field( $single_form_field, $data, $filter_hook, $form_id ) {
+//    $field_label = isset( $data->label ) ? $data->label : '';
+//    $username = isset( $data->value ) ? $data->value : '';
+//    $validate_user = 'yes' === get_option( 'user_login_advance_setting_username_validate', 'no' );
+//    	if ( $validate_user ) {
 	
-		$validate =preg_match( "/([%\$#\*\@]+)/",$username );
+// 		$validate =preg_match( "/([%\$#\*\@]+)/",$username );
 
-	if ( $validate ) {
-     add_filter( $filter_hook, 
-     function ( $msg ) use ( $field_label ) {
-       return __( $field_label . '  cannot write special character', 'user-registration' );
-     }
-     );
-     }
-	} 
-}
+// 	if ( $validate ) {
+//      add_filter( $filter_hook, 
+//      function ( $msg ) use ( $field_label ) {
+//        return __( $field_label . '  cannot write special character', 'user-registration' );
+//      }
+//      );
+//      }
+// 	} 
+// }

@@ -55,8 +55,10 @@ class UR_Frontend_Form_Handler {
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
 
-		self::match_email( $form_field_data, $form_data );
+		
 
+		self::match_email( $form_field_data, $form_data );
+		self::username_character( $form_field_data, $form_data );
 		self::add_hook( $form_field_data, $form_data );
 		$activated_form_list = get_option( 'user_registration_auto_password_activated_forms', array() );
 
@@ -414,6 +416,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
+		
 			if ( 'user_confirm_email' == $single_data->field_name ) {
 				$confirm_email_value = $single_data->value;
 				$has_confirm_email   = true;
@@ -490,6 +493,27 @@ class UR_Frontend_Form_Handler {
 			array_push( self::$response_array, __( 'Password should not match with Username or Email address.', 'user-registration' ) );
 		}
 	}
-}
 
+	private static function username_character( $form_field_data =array(),$form_data =array() ){
+		$username_value = '';
+		$form_data_field = wp_list_pluck( $form_data, 'field_name' );	
+		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+		 $data_username =isset( $form_field_data[0]->advance_setting->username_character) ? $form_field_data[0]->advance_setting->username_character : '';
+
+		foreach ( $form_data as $index => $single_data ) {
+			if ( 'user_login' == $single_data->field_name ) {
+				$username_value = $single_data->value;
+				if($username_value){
+					$validate =preg_match( "/([%\$#\*\@]+)/",$username_value );
+				}
+			}
+		}
+
+		if ( $validate ) {
+			array_push( self::$response_array, __( 'Special Character are not allowed', 'user-registration' ) );
+		}
+
+		 }
+	
+}
 return new UR_Frontend_Form_Handler();
