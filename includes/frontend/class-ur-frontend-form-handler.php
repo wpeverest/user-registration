@@ -503,13 +503,13 @@ class UR_Frontend_Form_Handler {
 		foreach ( $form_data as $index => $single_data ) {
 			if ( 'user_login' == $single_data->field_name ) {
 				$username_value = $single_data->value;
-				if($username_value){
+				if($username_value ){
 					$validate =preg_match( "/([%\$#\*\@]+)/",$username_value );
 				}
 			}
 		}
 
-		if ( $validate ) {
+		if ( $validate && $data_username == 'yes') {
 			array_push( self::$response_array, __( 'Special Character are not allowed', 'user-registration' ) );
 		}
 
