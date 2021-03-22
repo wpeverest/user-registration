@@ -73,14 +73,19 @@
 				$.validator.format("Please enter less than {0} characters.")
 			);
 
+			/**
+			 * Validation for username validation for special character.
+			 *
+			 * @since 1.9.7
+			 */
 			$.validator.addMethod(
 				"SpecialCharacterValidator",
 				function (value, element) {
 					let reg = new RegExp(/([%\$#\*\@]+)/);
-					 return this.optional(element) || !reg.test(value);
-					
+					return this.optional(element) || !reg.test(value);
+
 				},
-				$.validator.format("Please enter valid characters.")
+				user_registration_params.message_usename_character_fields
 
 			);
 
@@ -358,16 +363,19 @@
 			 * Real time username length validation
 			 */
 			var user_login_div = this_node.find("#user_login");
-			
-			if ( user_login_div.length ) {
+
+			if (user_login_div.length) {
 				rules.user_login = {
 					lengthValidator: user_login_div.data("username-length"),
 				};
 			}
 
-			if ( user_login_div && user_login_div.data("username-character") =="yes" ) {
+			var user_login_div_ = this_node.find("#user_login");
+			
+			if (user_login_div_ && user_login_div_.data("username-character") == "yes") {
 				rules.user_login = {
-					SpecialCharacterValidator: user_login_div.data("username-character"),
+					lengthValidator: user_login_div_.data("username-length"),
+					SpecialCharacterValidator: user_login_div_.data("username-character"),
 				};
 			}
 
