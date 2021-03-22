@@ -293,8 +293,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'Please enter the valid username', 'user-registration' ),
 					),
-
-
 					array(
 						'title'    => __( 'Email', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on Email.', 'user-registration' ),
