@@ -73,6 +73,17 @@
 				$.validator.format("Please enter less than {0} characters.")
 			);
 
+			$.validator.addMethod(
+				"SpecialCharacterValidator",
+				function (value, element) {
+					let reg = new RegExp(/([%\$#\*\@]+)/);
+					 return this.optional(element) || !reg.test(value);
+					
+				},
+				$.validator.format("Please enter valid characters.")
+
+			);
+
 			/**
 			 * Validate checkbox choice limit.
 			 *
@@ -215,7 +226,7 @@
 							$(form).hasClass("edit-password") ||
 							($(form).hasClass("edit-profile") &&
 								"no" ===
-									user_registration_params.ajax_submission_on_edit_profile)
+								user_registration_params.ajax_submission_on_edit_profile)
 						) {
 							return true;
 						}
@@ -347,10 +358,16 @@
 			 * Real time username length validation
 			 */
 			var user_login_div = this_node.find("#user_login");
-
-			if (user_login_div.length) {
+			
+			if ( user_login_div.length ) {
 				rules.user_login = {
 					lengthValidator: user_login_div.data("username-length"),
+				};
+			}
+
+			if ( user_login_div && user_login_div.data("username-character") =="yes" ) {
+				rules.user_login = {
+					SpecialCharacterValidator: user_login_div.data("username-character"),
 				};
 			}
 
