@@ -139,15 +139,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => 'no',
 					),
-						array(
-						'title'    => __( 'User name validate on submit', 'user-registration' ),
-						'desc'     => __( 'Check the username validation on user submit', 'user-registration' ),
-						'id'       => 'user_registration_username_validate_on_submit',
-						'type'     => 'checkbox',
-						'desc_tip' => true,
-						'css'      => 'min-width: 350px;',
-						'default'  => 'no',
-					),
 					array(
 						'title'    => __( 'Disable logout confirmation', 'user-registration' ),
 						'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
@@ -294,7 +285,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => __( 'This field is required.', 'user-registration' ),
 					),
 						array(
-						'title'    => __( 'Username-Character', 'user-registration' ),
+						'title'    => __( 'Disallow Special Character in Username', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on username', 'user-registration' ),
 						'id'       => 'user_registration_form_submission_error_message_required_username_character',
 						'type'     => 'text',

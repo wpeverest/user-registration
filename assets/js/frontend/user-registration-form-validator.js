@@ -360,7 +360,7 @@
 			}
 
 			/**
-			 * Real time username length validation
+			 * Real time username length validation and special character validation in username
 			 */
 			var user_login_div = this_node.find("#user_login");
 
