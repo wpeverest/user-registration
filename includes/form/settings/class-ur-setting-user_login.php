@@ -53,7 +53,7 @@ class UR_Setting_User_login extends UR_Field_Settings {
 				'tip'         => __( 'Enter minimum number of length of username.', 'user-registration' ),
 			),
 			'username_character'          => array(
-				'label'       => __( 'Validate The User', 'user-registration' ),
+				'label'       => __( 'Disallow Special Character', 'user-registration' ),
 				'data-id'     => $this->field_id . '_username_character',
 				'name'        => $this->field_id . '[username_character]',
 				'class'       => $this->default_class . ' ur-settings-character',
@@ -65,7 +65,7 @@ class UR_Setting_User_login extends UR_Field_Settings {
 			),
 				'default'     => '',
 				'placeholder' =>'',
-				'tip'         => __( 'Check this option to validate the Username for special character', 'user-registration' ),
+				'tip'         => __( 'Check this option to validate the Username for Special Character', 'user-registration' ),
 			)
 		);
 
