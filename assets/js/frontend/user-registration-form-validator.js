@@ -372,7 +372,7 @@
 
 			var user_login_div_ = this_node.find("#user_login");
 			
-			if (user_login_div_ && user_login_div_.data("username-character") == "yes") {
+			if (user_login_div_.length && user_login_div_.data("username-character") == "yes") {
 				rules.user_login = {
 					lengthValidator: user_login_div_.data("username-length"),
 					SpecialCharacterValidator: user_login_div_.data("username-character"),
