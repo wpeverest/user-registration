@@ -221,6 +221,13 @@ class UR_AJAX {
 						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : $single_field[ $key ];
 					}
 					break;
+				case 'wysiwyg' :
+					if ( isset($single_field[ $key ] ) ) {
+						$single_field[ $key ] = sanitize_text_field( htmlentities( $single_field[ $key ] ) );
+					} else {
+						$single_field[ $key ] = '';
+					}
+					break;
 				default:
 					$single_field[ $key ] = isset( $single_field[ $key ] ) ? ur_clean( $single_field[ $key ] ) : '';
 					break;

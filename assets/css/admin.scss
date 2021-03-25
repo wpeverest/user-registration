@@ -19,7 +19,9 @@
 'components/button',
 'components/card',
 'components/list-group',
-'components/modal';
+'components/modal',
+'components/nav',
+'components/scroll-ui';
 
 @import "border";
 @import "spacing";
@@ -56,6 +58,11 @@
 	}
 }
 
+.user-registration_page_user-registration-settings {
+	.notice {
+		display: none;
+	}
+}
 .ur-spinner {
 	width: 16px;
 	height: 16px;
@@ -75,8 +82,9 @@
 		}
 	}
 }
+
 .ur-export-users-page {
-	margin-top: 6px;
+	margin-top: 24px;
 
 	.nav-tab-content {
 		.nav-tab-inside {
@@ -493,27 +501,6 @@
 }
 
 .user-registration {
-	nav.ur-nav-tab-wrapper {
-		margin: 1.5em 0 1em;
-	}
-	// Setting Page Submenu
-	#mainform {
-		> .subsubsub {
-			background: #e5e5e5;
-			float: none;
-
-			a {
-				display: block;
-				padding: 7px 10px;
-
-				&.current {
-					color: $white;
-					background: $primary_color;
-				}
-			}
-		}
-	}
-
 	textarea[disabled="disabled"] {
 		background: #DFDFDF !important;
 	}
