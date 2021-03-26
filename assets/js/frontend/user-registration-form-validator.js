@@ -4,10 +4,6 @@
 
 	user_registration_form_selector = $(".ur-frontend-form form");
 
-	if (user_registration_form_selector.hasClass("login")) {
-		return;
-	}
-
 	var field_selector = "";
 
 	if (user_registration_form_selector.hasClass("edit-profile")) {
@@ -209,13 +205,14 @@
 					},
 					submitHandler: function (form) {
 						/**
-						 * Return `true` for `Change Password` form and `Edit Profile` when ajax submission is off to allow submission
+						 * Return `true` for `Change Password`, `login` form and `Edit Profile` when ajax submission is off to allow submission
 						 */
 						if (
 							$(form).hasClass("edit-password") ||
 							($(form).hasClass("edit-profile") &&
 								"no" ===
-									user_registration_params.ajax_submission_on_edit_profile)
+									user_registration_params.ajax_submission_on_edit_profile) ||
+							$(form).hasClass("login")
 						) {
 							return true;
 						}
