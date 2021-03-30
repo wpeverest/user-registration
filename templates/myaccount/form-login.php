@@ -49,6 +49,8 @@ $placeholders = array(
 );
 $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
 
+
+
 ?>
 
 <?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
@@ -99,7 +101,11 @@ $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labe
 
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
+						<?php if('yes' === get_option( 'user_registration_login_ajax_submission', 'no' )) { ?>
+						<input type="submit" class="user-registration-Button button" id="user_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+						<?php } else { ?>
 						<input type="submit" class="user-registration-Button button" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+						<?php } ?>
 						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? $redirect : the_permalink(); ?>" />
 
 						<?php

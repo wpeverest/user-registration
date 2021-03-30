@@ -388,7 +388,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'rounded_edge' => __( 'Rounded Edge', 'user-registration' ),
 						),
 					),
-
+					array(
+						'title'    => __( 'Enable Ajax Login', 'user-registration' ),
+						'desc'     => __( 'Enable', 'user-registration' ),
+						'id'       => 'user_registration_login_ajax_submission',
+						'type'     => 'checkbox',
+						'desc_tip' => __( 'Check to field to enable the ajax form submission.', 'user-registration' ),
+						'css'      => 'min-width: 350px;',
+						'default'  => 'no',
+					),
 					array(
 						'title'    => __( 'Enable remember me', 'user-registration' ),
 						'desc'     => __( 'Enable', 'user-registration' ),
