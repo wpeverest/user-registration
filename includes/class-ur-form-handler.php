@@ -30,8 +30,6 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
-		add_action('wp_ajax_ur_login',array(__CLASS__,'ur_login_ajax'));
-		add_action('wp_ajax_nopriv_ur_login',array(__CLASS__,'ur_login_ajax'));
 	}
 
 	/**
@@ -347,6 +345,7 @@ class UR_Form_Handler {
 
 		$nonce_value     = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
+
 		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
 
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
@@ -617,15 +616,9 @@ class UR_Form_Handler {
 		return $forms;
 	}
 
-	public function ur_login_ajax(){
+	public function login_submit(){
 	
-		// if ( ! check_ajax_referer( 'ur_login_form_save_nonce', 'security', false ) ) {
-		// 	wp_send_json_error(
-		// 		array(
-		// 			'message' => __( 'Nonce error, please reload.', 'ur_login' ),
-		// 		)
-		// 	);
-		// }
+	//  check_ajax_referer( 'user-registration-login', 'user-registration-login-nonce' );
 		
     $info = array();
     $info['user_login'] = $_POST['username'];
@@ -633,12 +626,11 @@ class UR_Form_Handler {
     $info['remember'] = true;
     $user_signon = wp_signon( $info, false );
     if ( is_wp_error($user_signon) ){
-        echo json_encode(array('loggedin'=>false, 'message'=>__('Wrong username or password.')));
+        wp_send_json_success(array('loggedin'=>false, 'message'=>__('Wrong username or password.')));
     } else {
-        echo json_encode(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
+  	   wp_send_json_success(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
     }
-
-    die();
+	wp_send_json($user_signon);
 
 	}
 }

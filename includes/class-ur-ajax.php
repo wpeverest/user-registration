@@ -36,12 +36,12 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-
 			'user_input_dropped'     => true,
 			'form_save_action'       => true,
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
+			'login_submit'			 =>true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -54,6 +54,7 @@ class UR_AJAX {
 
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+
 			}
 		}
 	}
