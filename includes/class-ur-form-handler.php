@@ -30,6 +30,8 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
+		add_action('wp_ajax_ur_login',array(__CLASS__,'ur_login_ajax'));
+		add_action('wp_ajax_nopriv_ur_login',array(__CLASS__,'ur_login_ajax'));
 	}
 
 	/**
@@ -613,6 +615,31 @@ class UR_Form_Handler {
 		}
 
 		return $forms;
+	}
+
+	public function ur_login_ajax(){
+	
+		// if ( ! check_ajax_referer( 'ur_login_form_save_nonce', 'security', false ) ) {
+		// 	wp_send_json_error(
+		// 		array(
+		// 			'message' => __( 'Nonce error, please reload.', 'ur_login' ),
+		// 		)
+		// 	);
+		// }
+		
+    $info = array();
+    $info['user_login'] = $_POST['username'];
+    $info['user_password'] = $_POST['password'];
+    $info['remember'] = true;
+    $user_signon = wp_signon( $info, false );
+    if ( is_wp_error($user_signon) ){
+        echo json_encode(array('loggedin'=>false, 'message'=>__('Wrong username or password.')));
+    } else {
+        echo json_encode(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
+    }
+
+    die();
+
 	}
 }
 

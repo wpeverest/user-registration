@@ -209,6 +209,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'user-registration' ),
 				'version' => UR_VERSION,
 			),
+				'ur-login-validator'          => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/ur-login-form-validator' . $suffix . '.js' ),
+				'deps'    => array( 'jquery'),
+				'version' => UR_VERSION,
+			),
 			'ur-lost-password'           => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/lost-password' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),
@@ -348,7 +353,7 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-
+	error_log(print_r($handle,true));
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
@@ -397,12 +402,11 @@ class UR_Frontend_Scripts {
 					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', __( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
-
 				case 'ur-login':
 					return array(
 							'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-							'ur-login-form-save-data' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
-							'ajax_submission_on_ur-login'  => get_option( 			'user_registration_login_ajax_submission', 'no' ),
+							'ur_login_form_save_data' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
+							'ajax_submission_on_ur_login'  => get_option('ur_login_ajax_submission', 'no' ),
 					);
 					break;
 		}

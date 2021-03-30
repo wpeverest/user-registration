@@ -391,7 +391,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					array(
 						'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 						'desc'     => __( 'Enable', 'user-registration' ),
-						'id'       => 'user_registration_login_ajax_submission',
+						'id'       => 'ur_login_ajax_submission',
 						'type'     => 'checkbox',
 						'desc_tip' => __( 'Check to field to enable the ajax form submission.', 'user-registration' ),
 						'css'      => 'min-width: 350px;',
