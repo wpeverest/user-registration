@@ -212,7 +212,9 @@
 							($(form).hasClass("edit-profile") &&
 								"no" ===
 									user_registration_params.ajax_submission_on_edit_profile) ||
-							$(form).hasClass("login")
+							$(form)
+								.hasClass("login")
+								.not(".lost_reset_password")
 						) {
 							return true;
 						}
