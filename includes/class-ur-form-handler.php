@@ -616,23 +616,7 @@ class UR_Form_Handler {
 		return $forms;
 	}
 
-	public function login_submit(){
 	
-	//  check_ajax_referer( 'user-registration-login', 'user-registration-login-nonce' );
-		
-    $info = array();
-    $info['user_login'] = $_POST['username'];
-    $info['user_password'] = $_POST['password'];
-    $info['remember'] = true;
-    $user_signon = wp_signon( $info, false );
-    if ( is_wp_error($user_signon) ){
-        wp_send_json_success(array('loggedin'=>false, 'message'=>__('Wrong username or password.')));
-    } else {
-  	   wp_send_json_success(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
-    }
-	wp_send_json($user_signon);
-
-	}
 }
 
 UR_Form_Handler::init();

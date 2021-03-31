@@ -41,7 +41,7 @@ class UR_AJAX {
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
-			'login_submit'			 =>true,
+			'ajax_login_submit'		 =>true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -401,6 +401,51 @@ class UR_AJAX {
 				delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 			}
 		}
+	}
+
+	public function ajax_login_submit(){
+	// Custom error messages.
+		$messages = array(
+			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
+			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
+			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
+			'pending_approval'     => get_option( 'user_registration_message_pending_approval', null ),
+			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
+		);
+
+	check_ajax_referer( 'ur_login_form_save_nonce', 'security' );
+
+	$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+
+		$flag = wp_verify_nonce( $nonce, 'ur_login_form_save_nonce' );
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+		
+    $info = array();
+    $info['user_login'] = $_POST['username'];
+    $info['user_password'] = $_POST['password'];
+    $info['remember'] = $_POST['remember'];
+    $user= wp_signon($info);
+    if ( is_wp_error($user) ){
+		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
+						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
+			}
+			$message = $user->get_error_message();
+			// $message = str_replace( '<strong>' . esc_html( $info['user_login'] ) . '</strong>', '<strong>' . esc_html( $_POST['username'] ) . '</strong>', $message );
+		wp_send_json_error($message);
+    } else {
+  	   wp_send_json_success(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
+    }
+	wp_send_json($user);
+
 	}
 
 	/**

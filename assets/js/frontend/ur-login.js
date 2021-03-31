@@ -3,18 +3,19 @@ jQuery(function ($) {
         e.preventDefault();
         var username = $('#username').val();
         var password = $('#password').val();
-        // var nonce = $('#user-registration-login-nonce').val()
-        var url = ur_login_params.ajax_url + '?action=user_registration_login_submit&security=' + ur_login_params.ur_login_form_save_data;
+        var rememberme = $('#rememberme').val();
+        var url = ur_login_params.ajax_url + '?action=user_registration_ajax_login_submit&security=' + ur_login_params.ur_login_form_save_nonce;
         $.ajax({
             type: 'POST',
             url: url,
             data: {
                 username: username,
                 password: password,
-                // nonce:user-registration-login,
+                rememberme: rememberme
             },
             success: function (res) {
-                $('#status').text(res.data.message);
+                console.log(res);
+                $('#user-registration .user-registration-error').text(res.data);
                 if (res.data.loggedin == true) {
                     document.location.href = ur_login_params.redirecturl;
                 }

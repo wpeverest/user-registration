@@ -400,7 +400,7 @@ class UR_Frontend_Scripts {
 				case 'ur-login':
 					return array(
 							'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-							'ur_login_form_save_data' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
+							'ur_login_form_save_nonce' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
 							'ajax_submission_on_ur_login'  => get_option('ur_login_ajax_submission', 'no' ),
 					);
 					break;
