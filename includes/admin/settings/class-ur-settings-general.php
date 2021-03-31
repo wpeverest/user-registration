@@ -287,7 +287,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						array(
 						'title'    => __( 'Disallow Special Character in Username', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on username', 'user-registration' ),
-						'id'       => 'user_registration_form_submission_error_message_required_username_character',
+						'id'       => 'user_registration_form_submission_error_message_disallow_username_character',
 						'type'     => 'text',
 						'desc_tip' => true,
 						'css'      => 'min-width: 350px;',

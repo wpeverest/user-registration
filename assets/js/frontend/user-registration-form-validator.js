@@ -85,7 +85,7 @@
 					return this.optional(element) || !reg.test(value);
 
 				},
-				user_registration_params.message_usename_character_fields
+				user_registration_params.message_username_character_fields
 
 			);
 
@@ -363,21 +363,17 @@
 			 * Real time username length validation and special character validation in username
 			 */
 			var user_login_div = this_node.find("#user_login");
-
-			if (user_login_div.length) {
-				rules.user_login = {
-					lengthValidator: user_login_div.data("username-length"),
-				};
+			var username_validator = {};
+			if (user_login_div.length && 'undefined' !== typeof user_login_div.data("username-length")) {
+				username_validator.lengthValidator = user_login_div.data("username-length");
 			}
 
-			var user_login_div_ = this_node.find("#user_login");
-			
-			if (user_login_div_.length && user_login_div_.data("username-character") == "yes") {
-				rules.user_login = {
-					lengthValidator: user_login_div_.data("username-length"),
-					SpecialCharacterValidator: user_login_div_.data("username-character"),
-				};
+			if (user_login_div.data("username-character") == "yes") {
+				username_validator.SpecialCharacterValidator = user_login_div.data("username-character");
 			}
+
+			rules.user_login = username_validator;
+
 
 			/**
 			 * Real time choice limit validation
