@@ -428,13 +428,17 @@ class UR_AJAX {
 				)
 			);
 		}
-		
+
     $info = array();
     $info['user_login'] = $_POST['username'];
     $info['user_password'] = $_POST['password'];
     $info['remember'] = $_POST['remember'];
+	
+	// perform the table login
     $user= wp_signon($info);
+	
     if ( is_wp_error($user) ){
+		// set the custom error message
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 			}
@@ -449,7 +453,7 @@ class UR_AJAX {
 					}
 				$message = $user->get_error_message();
 				wp_send_json_error($message);
-    } else {
+    	} else {
   	   		wp_send_json_success(array('loggedin'=>true));
      }
 	wp_send_json($user);
