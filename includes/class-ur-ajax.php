@@ -403,6 +403,9 @@ class UR_AJAX {
 		}
 	}
 
+	/**
+	 * Login from Using Ajax
+	 */
 	public function ajax_login_submit(){
 	// Custom error messages.
 		$messages = array(
@@ -436,7 +439,7 @@ class UR_AJAX {
 	
 	// perform the table login
     $user= wp_signon($info);
-	
+
     if ( is_wp_error($user) ){
 		// set the custom error message
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
@@ -454,10 +457,20 @@ class UR_AJAX {
 				$message = $user->get_error_message();
 				wp_send_json_error($message);
     	} else {
-  	   		wp_send_json_success(array('loggedin'=>true));
+			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+						$redirect = admin_url();
+					} else {
+						if ( ! empty( $_POST['redirect'] ) ) {
+							$redirect = $_POST['redirect'];
+						} elseif ( wp_get_raw_referer() ) {
+							$redirect = wp_get_raw_referer();
+						} else {
+							$redirect = get_home_url();
+						}
+					}
+  	   		wp_send_json_success($redirect);
      }
 	wp_send_json($user);
-
 	}
 
 	/**
