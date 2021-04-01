@@ -14,13 +14,17 @@ jQuery(function ($) {
                 rememberme: rememberme
             },
             success: function (res) {
-                console.log(res);
-                $('#user-registration .user-registration-error').text(res.data);
-                if (res.data.loggedin == true) {
+
+                if (res.success == false) {
+                    $('#user-registration')
+                        .find(".user-registration-error")
+                        .remove();
+                    $('#user-registration').append('<ul class="user-registration-error">' + res.data + '</ul>');
+
+                } else {
                     document.location.href = ur_login_params.redirecturl;
                 }
             }
-        })
-
+        });
     });
 });

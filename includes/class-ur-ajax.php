@@ -438,12 +438,20 @@ class UR_AJAX {
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 			}
-			$message = $user->get_error_message();
-			// $message = str_replace( '<strong>' . esc_html( $info['user_login'] ) . '</strong>', '<strong>' . esc_html( $_POST['username'] ) . '</strong>', $message );
-		wp_send_json_error($message);
+			if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
+						$user->errors['invalid_username'][0] = $messages['invalid_username'];
+					}
+					if ( ! empty( $user->errors['pending_approval'] ) && ! empty( $messages['pending_approval'] ) ) {
+						$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['pending_approval'] );
+					}
+					if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
+						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
+					}
+				$message = $user->get_error_message();
+				wp_send_json_error($message);
     } else {
-  	   wp_send_json_success(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
-    }
+  	   		wp_send_json_success(array('loggedin'=>true));
+     }
 	wp_send_json($user);
 
 	}

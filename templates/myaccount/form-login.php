@@ -59,7 +59,6 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 <div class="ur-frontend-form login <?php echo $template_class; ?>" id="ur-frontend-form">
 
 	<form class="user-registration-form user-registration-form-login login" method="post">
-	<!-- <p class="user-registration-error"></p> -->
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 					<?php do_action( 'user_registration_login_form_start' ); ?>
