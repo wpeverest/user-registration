@@ -438,9 +438,9 @@ class UR_AJAX {
     $info['remember'] = $_POST['remember'];
 	
 	// perform the table login
-    $user= wp_signon($info);
+    $user= wp_signon( $info );
 
-    if ( is_wp_error($user) ){
+    if ( is_wp_error( $user ) ){
 		// set the custom error message
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
@@ -468,9 +468,9 @@ class UR_AJAX {
 							$redirect = get_home_url();
 						}
 					}
-  	   		wp_send_json_success($redirect);
+  	   		wp_send_json_success( $redirect );
      }
-	wp_send_json($user);
+	wp_send_json( $user );
 	}
 
 	/**
