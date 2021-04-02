@@ -34,6 +34,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+
+							if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+
 							?>
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 							<?php
@@ -84,7 +87,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							if ( ! $profile_picture_url ) {
 								?>
 							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-							<?php } ?>
+							<?php } } ?>
 					</header>
 					</div>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
@@ -111,6 +114,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									}
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
+
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
 											// If the conditional logic addon is installed.
