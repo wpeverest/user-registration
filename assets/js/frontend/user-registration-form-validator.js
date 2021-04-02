@@ -81,8 +81,8 @@
 			$.validator.addMethod(
 				"SpecialCharacterValidator",
 				function (value, element) {
-					let reg = new RegExp(/([%\$#\*\@]+)/);
-					return this.optional(element) || !reg.test(value);
+					let reg = new RegExp(/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/);
+					return this.optional(element) || reg.test(value);
 
 				},
 				user_registration_params.message_username_character_fields
