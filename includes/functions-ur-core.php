@@ -683,7 +683,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'description'           => __( 'Description', 'user-registration' ),
 			'text'                  => __( 'Text', 'user-registration' ),
 			'password'              => __( 'Password', 'user-registration' ),
-			'email'                 => __( 'Email', 'user-registration' ),
+			'email'                 => __( 'Secondary Email', 'user-registration' ),
 			'select'                => __( 'Select', 'user-registration' ),
 			'country'               => __( 'Country', 'user-registration' ),
 			'textarea'              => __( 'Textarea', 'user-registration' ),
