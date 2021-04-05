@@ -28,7 +28,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
 					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
-					<?php if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {  ?>
+					<?php if( 'no' === get_option( 'user_registration_disable_profile_picture', 'yes') ) {  ?>
 					<div class="user-registration-profile-header">
 						<div class="user-registration-img-container" style="width:100%">
 							<?php
@@ -85,9 +85,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							if ( ! $profile_picture_url ) {
 								?>
 							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-							<?php } } ?>
+							<?php }  ?>
 					</header>
 					</div>
+					<?php } ?>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
 
