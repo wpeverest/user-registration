@@ -12,7 +12,7 @@ jQuery(function ($) {
 			var $this = this;
 			$(document.body).on(
 				"keyup change",
-				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password',
+				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password,.user-registration-ResetPassword input[name="password_1"]',
 				function () {
 					var enable_strength_password = $(this)
 						.closest("form")
@@ -32,6 +32,7 @@ jQuery(function ($) {
 			var wrapper = self.closest("form"),
 				field = $(self, wrapper);
 
+
 			ur_password_strength_meter.includeMeter(wrapper, field);
 			ur_password_strength_meter.checkPasswordStrength(wrapper, field);
 		},
@@ -47,7 +48,9 @@ jQuery(function ($) {
 				"data-minimum-password-strength"
 			);
 
+
 			var meter = wrapper.find(".user-registration-password-strength");
+
 			var password_field = wrapper.find(".password-input-group");
 			if ("" === field.val()) {
 				meter.remove();
