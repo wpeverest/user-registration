@@ -153,7 +153,8 @@ function ur_nav_menu_items( $items ) {
 	$customer_logout = get_option( 'user_registration_logout_endpoint', 'user-logout' );
 
 	foreach( $items as $item ) {
-    if( $item->title == "Logout" && $customer_logout && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+
+    if( ! empty( $customer_logout )  && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
          $item->url = wp_nonce_url(  $item->url, 'user-logout' );
     }
   }
