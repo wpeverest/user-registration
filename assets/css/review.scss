@@ -2,6 +2,7 @@
 	&.user-registration-review-notice {
 		padding: 15px 15px 15px 0;
 		background-color: #fff;
+		border-left-color: #475bb2;
 	}
 
 	.notice-dismiss{
@@ -14,11 +15,13 @@
 	.user-registration-review-thumbnail {
 		float: left;
 		text-align: center;
-		margin: 5px 20px;
+		margin: 5px 25px;
+		width: 80px;
 
 		img {
 			border-radius: 5px;
 			vertical-align: middle;
+			width:100%;
 		}
 	}
 
@@ -26,13 +29,18 @@
 		overflow: hidden;
 
 		h3 {
-			font-size: 20px;
-			margin: 0 0 5px;
-			line-height: 1.3;
+			font-size: 18px;
+			margin: 0;
+			line-height: 1;
 		}
 
 		p {
 			font-size: 13px;
+			margin: 0;
+    		padding: 0 0 10px 0;
+		}
+		p.extra-pad{
+			padding-bottom: 20px;
 		}
 	}
 
@@ -51,8 +59,35 @@
 
 				span {
 					margin-right: 5px;
+					margin-top: 4px;
 				}
 			}
 		}
+		.button-primary {
+			background: #475bb2;
+			border-color: #475bb2;
+		}
+		.button-primary:focus, 
+		.button-primary:hover {
+				background: #2e44a1;
+				border-color: #2e44a1;
+			}
+		.button.button-secondary {
+				border-color: #475bb2;
+				color: #475bb2;
+				box-shadow: none;
+			}
 	}
+	
+		#user-registration-review-notice .user-registration-review-ul li a span {
+			padding: 4px 0px;
+		}
+		.user-registration-review-text span.dashicons.dashicons-smiley.smile-icon {
+			background: #f7e143;
+			border-radius: 50%;
+			font-size: 15px;
+			border: 1px solid;
+			width: 17px;
+			height: 17px;
+		}
 }
