@@ -368,7 +368,7 @@
 				username_validator.lengthValidator = user_login_div.data("username-length");
 			}
 
-			if (user_login_div.data("username-character") == "yes") {
+			if (user_login_div.data("username-character") == "no") {
 				username_validator.SpecialCharacterValidator = user_login_div.data("username-character");
 			}
 

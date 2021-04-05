@@ -285,7 +285,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'default'  => __( 'This field is required.', 'user-registration' ),
 					),
 						array(
-						'title'    => __( 'Disallow Special Character in Username', 'user-registration' ),
+						'title'    => __( 'Special Character Validation in Username', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on username', 'user-registration' ),
 						'id'       => 'user_registration_form_submission_error_message_disallow_username_character',
 						'type'     => 'text',
