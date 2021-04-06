@@ -13,6 +13,7 @@ $green:		#37b24d;
 $red:		#ff4149;
 $orange:	#ffba00;
 $blue:		#2ea2cc;
+$black:     #000;
 
 // Gray Shades
 $white: 					#ffffff;
@@ -22,7 +23,9 @@ $color_gray_two: 			adjust-color($gray_base, $saturation: -18%, $lightness: +21%
 $color_gray_three: 			adjust-color($gray_base, $saturation: -13%, $lightness: +50%); // #b6bbcf
 $color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63%); // #dee0e9
 $color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
+$color_gray_six:            #EEF1F8;
 $color_sortable_background: #f7f7f7;
+
 
 $heading-color: 			$gray_base;
 $body-color: 				$color_gray_one;
