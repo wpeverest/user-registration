@@ -48,9 +48,24 @@ class UR_Setting_User_login extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-min',
 				'type'        => 'number',
 				'required'    => false,
-				'default'     => '',
+				'default'     => $this->field_id . '_username_length',
 				'placeholder' => __( 'Min Value', 'user-registration' ),
 				'tip'         => __( 'Enter minimum number of length of username.', 'user-registration' ),
+			),
+			'username_character'          => array(
+				'label'       => __( 'Allow Special Character', 'user-registration' ),
+				'data-id'     => $this->field_id . '_username_character',
+				'name'        => $this->field_id . '[username_character]',
+				'class'       => $this->default_class . ' ur-settings-character',
+				'type'        => 'select',
+				'required'    => false,
+				'options'     => array(
+				'no'  => __( 'No', 'user-registration' ),
+				'yes' => __( 'Yes', 'user-registration' ),
+			),
+				'default'     => 'yes',
+				'placeholder' =>'',
+				'tip'         => __( 'Check this option to validate the Username for Special Character', 'user-registration' ),
 			)
 		);
 

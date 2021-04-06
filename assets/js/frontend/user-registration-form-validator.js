@@ -70,6 +70,22 @@
 			);
 
 			/**
+			 * Validation for username validation for special character.
+			 *
+			 * @since 1.9.7
+			 */
+			$.validator.addMethod(
+				"SpecialCharacterValidator",
+				function (value, element) {
+					let reg = new RegExp(/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/);
+					return this.optional(element) || reg.test(value);
+
+				},
+				user_registration_params.message_username_character_fields
+
+			);
+
+			/**
 			 * Validate checkbox choice limit.
 			 *
 			 * @since 1.9.4
@@ -210,8 +226,7 @@
 						if (
 							$(form).hasClass("edit-password") ||
 							($(form).hasClass("edit-profile") &&
-								"no" ===
-									user_registration_params.ajax_submission_on_edit_profile) ||
+								"no" === user_registration_params.ajax_submission_on_edit_profile) ||
 							$(form)
 								.hasClass("login")
 								.not(".lost_reset_password")
@@ -343,15 +358,20 @@
 			}
 
 			/**
-			 * Real time username length validation
+			 * Real time username length validation and special character validation in username
 			 */
 			var user_login_div = this_node.find("#user_login");
-
-			if (user_login_div.length) {
-				rules.user_login = {
-					lengthValidator: user_login_div.data("username-length"),
-				};
+			var username_validator = {};
+			if (user_login_div.length && 'undefined' !== typeof user_login_div.data("username-length")) {
+				username_validator.lengthValidator = user_login_div.data("username-length");
 			}
+
+			if (user_login_div.data("username-character") == "no") {
+				username_validator.SpecialCharacterValidator = user_login_div.data("username-character");
+			}
+
+			rules.user_login = username_validator;
+
 
 			/**
 			 * Real time choice limit validation
