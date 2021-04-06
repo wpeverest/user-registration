@@ -12,7 +12,7 @@ jQuery(function ($) {
 			var $this = this;
 			$(document.body).on(
 				"keyup change",
-				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password',
+				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password,.user-registration-ResetPassword input[name="password_1"]',
 				function () {
 					var enable_strength_password = $(this)
 						.closest("form")
@@ -48,6 +48,7 @@ jQuery(function ($) {
 			);
 
 			var meter = wrapper.find(".user-registration-password-strength");
+
 			var password_field = wrapper.find(".password-input-group");
 			if ("" === field.val()) {
 				meter.remove();
@@ -57,8 +58,14 @@ jQuery(function ($) {
 					'<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' +
 					minimum_password_strength +
 					'"></div>';
-				password_field.closest(".field-user_pass").after(html);
-				$("#password_1").closest(".password-input-group").after(html);
+
+				if (wrapper.hasClass("register")) {
+					password_field.closest(".field-user_pass").after(html);
+				} else {
+					$("#password_1")
+						.closest(".password-input-group")
+						.after(html);
+				}
 				$(document.body).trigger("ur-password-strength-added");
 			}
 		},

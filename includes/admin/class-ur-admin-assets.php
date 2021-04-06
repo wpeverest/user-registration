@@ -152,6 +152,7 @@ class UR_Admin_Assets {
 		wp_register_script( 'chartjs', UR()->plugin_url() . '/assets/js/chartjs/Chart.min.js', array( 'jquery' ), UR_VERSION );
 		wp_register_script( 'perfect-scrollbar', UR()->plugin_url() . '/assets/js/perfect-scrollbar/perfect-scrollbar.min.js', array( 'jquery' ), '1.4.0' );
 		wp_register_script( 'sweetalert2', UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js', array( 'jquery' ), '8.17.1' );
+		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION );
 		wp_localize_script(
 			'ur-my-account',
@@ -163,9 +164,6 @@ class UR_Admin_Assets {
 			)
 		);
 
-		if ( 'user-registration_page_add-new-registration' === $screen_id || 'toplevel_page_user-registration' === $screen_id ) {
-			wp_enqueue_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery' );
-		}
 
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 
@@ -219,6 +217,7 @@ class UR_Admin_Assets {
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 			wp_enqueue_script( 'jquery-ui-widget' );
+			wp_enqueue_script( 'ur-copy' );
 
 			$params = array(
 				'required_form_html'             => self::get_form_required_html(),

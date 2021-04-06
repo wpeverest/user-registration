@@ -14,14 +14,9 @@
 @import "forms";
 
 // Components
-@import
-'components/badge',
-'components/button',
-'components/card',
-'components/list-group',
-'components/modal',
-'components/nav',
-'components/scroll-ui';
+@import "components/badge", "components/button", "components/card",
+	"components/list-group", "components/modal", "components/nav",
+	"components/scroll-ui";
 
 @import "border";
 @import "spacing";
@@ -30,12 +25,11 @@
 @import "overlay";
 
 // Layout-related sections
-@import
-'layout/header';
+@import "layout/header";
 
-@import 'templates/template-setup';
+@import "templates/template-setup";
 
-@import 'animation';
+@import "animation";
 
 /**
  * Styling begins
@@ -44,7 +38,8 @@
 	@include loader();
 }
 
-.toplevel_page_user-registration {
+.toplevel_page_user-registration,
+.user-registration_page_user-registration-frontend-list {
 	// Design customize for shortcode in list table
 	.shortcode {
 		.widefat {
@@ -165,8 +160,7 @@
 				min-height: 220px;
 				overflow: hidden;
 				background: #f5f5f5;
-				box-shadow:
-					inset 0 1px 0 rgba(255, 255, 255, 0.2),
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
 					inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 
 				.product-image {
@@ -188,7 +182,8 @@
 					display: none;
 				}
 
-				h2, h3 {
+				h2,
+				h3 {
 					margin: 0 !important;
 					padding: 20px !important;
 					background: $white;
@@ -262,13 +257,13 @@
 		#ur-full-screen-mode {
 			&.closed {
 				.ur-fs-close-label {
-					display:none;
+					display: none;
 				}
 			}
 
 			&.opened {
 				.ur-fs-open-label {
-					display:none;
+					display: none;
 				}
 			}
 		}
@@ -302,7 +297,7 @@
 
 		&::before,
 		&::after {
-			content: '';
+			content: "";
 			display: flex;
 			position: absolute;
 			left: 0;
@@ -439,10 +434,10 @@
 			transition: color 0.1s ease-in-out, background 0.1s ease-in-out;
 
 			&::before {
-				font: normal 22px/50px 'dashicons' !important;
+				font: normal 22px/50px "dashicons" !important;
 				color: $color_gray_two;
 				display: block;
-				content: '\f335';
+				content: "\f335";
 				font-weight: 300;
 			}
 
@@ -502,7 +497,7 @@
 
 .user-registration {
 	textarea[disabled="disabled"] {
-		background: #DFDFDF !important;
+		background: #dfdfdf !important;
 	}
 
 	table.form-table {
@@ -645,7 +640,8 @@
 		text-decoration: none;
 	}
 
-	h3, h4 {
+	h3,
+	h4 {
 		color: $gray_base;
 		font-weight: 500;
 	}
@@ -665,8 +661,8 @@
 		}
 
 		input {
-			&[type='radio'],
-			&[type='checkbox'] {
+			&[type="radio"],
+			&[type="checkbox"] {
 				opacity: 1;
 				box-shadow: none;
 				border-color: $border_color;
@@ -791,7 +787,8 @@
 						cursor: pointer;
 
 						&:focus {
-							box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent;
+							box-shadow: 0 0 0 0px transparent,
+								0 0 0px 0px transparent;
 						}
 
 						&.active {
@@ -878,11 +875,11 @@
 			cursor: pointer;
 
 			&:before {
-				content: '\f142';
+				content: "\f142";
 				cursor: pointer;
 				display: block;
 				font: 400 20px/1 Dashicons;
-				line-height: .5!important;
+				line-height: 0.5 !important;
 				padding: 4px;
 				position: relative;
 				right: 0;
@@ -892,25 +889,25 @@
 
 			&.closed {
 				&:before {
-					content: '\f140';
+					content: "\f140";
 				}
 			}
 		}
 	}
 
-	input[type='text'],
-	input[type='date'],
-	input[type='email'],
-	input[type='file'],
-	input[type='month'],
-	input[type='number'],
-	input[type='phone'],
-	input[type='password'],
-	input[type='tel'],
-	input[type='time'],
-	input[type='url'],
-	input[type='week'],
-	input[type='timepicker'],
+	input[type="text"],
+	input[type="date"],
+	input[type="email"],
+	input[type="file"],
+	input[type="month"],
+	input[type="number"],
+	input[type="phone"],
+	input[type="password"],
+	input[type="tel"],
+	input[type="time"],
+	input[type="url"],
+	input[type="week"],
+	input[type="timepicker"],
 	textarea,
 	.ui-widget select,
 	select {
@@ -967,19 +964,19 @@
 		border-left: 1px solid $border_color;
 		overflow-y: auto;
 
-		input[type='text'],
-		input[type='date'],
-		input[type='email'],
-		input[type='file'],
-		input[type='month'],
-		input[type='number'],
-		input[type='phone'],
-		input[type='password'],
-		input[type='tel'],
-		input[type='time'],
-		input[type='url'],
-		input[type='week'],
-		input[type='timepicker'],
+		input[type="text"],
+		input[type="date"],
+		input[type="email"],
+		input[type="file"],
+		input[type="month"],
+		input[type="number"],
+		input[type="phone"],
+		input[type="password"],
+		input[type="tel"],
+		input[type="time"],
+		input[type="url"],
+		input[type="week"],
+		input[type="timepicker"],
 		textarea,
 		select {
 			&:disabled {
@@ -1025,7 +1022,7 @@
 				right: 0;
 				z-index: 1;
 				opacity: 0;
-				transition: all .2s ease-in;
+				transition: all 0.2s ease-in;
 
 				button {
 					display: flex;
@@ -1050,7 +1047,7 @@
 					}
 
 					&:before {
-						font-family: 'dashicons';
+						font-family: "dashicons";
 					}
 
 					&.ur-remove-row {
@@ -1065,7 +1062,7 @@
 
 					&:first-child {
 						border-radius: 3px 0 0 3px;
-						border-right: 1px solid transparentize($white, 0.8)
+						border-right: 1px solid transparentize($white, 0.8);
 					}
 
 					&:nth-child(2) {
@@ -1110,7 +1107,7 @@
 					}
 
 					&::before {
-						content: '';
+						content: "";
 						width: 8px;
 						height: 8px;
 						border: solid $border_color;
@@ -1186,7 +1183,8 @@
 						}
 
 						&.ui-sortable-helper {
-							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
+							box-shadow: 0 0 10px 5px
+								transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
@@ -1283,8 +1281,8 @@
 
 								&::before {
 									position: absolute;
-									font-family: 'Dashicons';
-									content: '\f545';
+									font-family: "Dashicons";
+									content: "\f545";
 									font-size: 22px;
 									left: 0;
 									top: 0;
@@ -1300,7 +1298,7 @@
 							background-color: $color_gray_five;
 
 							&::before {
-								content: '\f132';
+								content: "\f132";
 								font-size: 32px;
 								color: $color_gray_three;
 								width: 32px;
@@ -1329,7 +1327,7 @@
 						border-radius: 0;
 					}
 
-					&:nth-child(3){
+					&:nth-child(3) {
 						border-radius: 0 4px 4px 0;
 					}
 				}
@@ -1537,11 +1535,11 @@
 			border-radius: 3px;
 			border: 1px solid transparent;
 
-			&:active{
+			&:active {
 				padding: 5px;
 				background: $white;
 				border: 1px solid $primary_color;
-				box-shadow: 0 0 20px rgba(0,0,0,.2);
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 			}
 
 			&.ui-sortable-placeholder {
@@ -1678,7 +1676,7 @@ img.tips {
 	z-index: 9999999;
 
 	&::after {
-		content: '';
+		content: "";
 		display: block;
 		border: 8px solid $red;
 		border-right-color: transparent;
@@ -1694,7 +1692,8 @@ img.tips {
 /**
  * Help Tip
  */
-.user-registration-help-tip, .ur-portal-tooltip {
+.user-registration-help-tip,
+.ur-portal-tooltip {
 	color: $color_gray_two;
 	display: inline-block;
 	font-size: 16px;
@@ -1706,7 +1705,7 @@ img.tips {
 	width: 16px;
 
 	&::after {
-		@include icon_dashicons('\f223');
+		@include icon_dashicons("\f223");
 		cursor: help;
 	}
 }
@@ -1730,8 +1729,8 @@ img.tips {
 	}
 }
 
-#profile-page form#your-profile .flatpickr-input[readonly]{
-	background-color:$white
+#profile-page form#your-profile .flatpickr-input[readonly] {
+	background-color: $white;
 }
 
 /**
@@ -1765,13 +1764,13 @@ body {
 						.menu-edit {
 							margin-bottom: 0;
 							box-shadow: none;
-							left: 0!important;
+							left: 0 !important;
 						}
 					}
 				}
 			}
 
-			#adminmenumain{
+			#adminmenumain {
 				display: none;
 			}
 		}
@@ -1803,7 +1802,7 @@ body {
 
 	&::before,
 	&::after {
-		content: '';
+		content: "";
 		position: absolute;
 		top: 70px;
 		left: 70px;
@@ -1897,12 +1896,14 @@ body {
 		&.entered {
 			display: block;
 			height: 50px;
-			animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
+			animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal
+				both open-message;
 		}
 
 		&.exiting {
 			display: block;
-			animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
+			animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both
+				close-message;
 		}
 
 		&:first-child {
@@ -2008,7 +2009,7 @@ body {
 		.ur-grid-list-item {
 			width: 100% !important;
 
-			&:nth-child(1n+2) {
+			&:nth-child(1n + 2) {
 				border-left: 0 none;
 			}
 		}

@@ -681,228 +681,252 @@
 										type: "POST",
 										async: true,
 										complete: function (ajax_response) {
-											$this
-												.find(".ur-submit-button")
-												.find("span")
-												.removeClass(
-													"ur-front-spinner"
-												);
-											var redirect_url = $this
-												.find(
-													'input[name="ur-redirect-url"]'
-												)
-												.val();
-
-											var message = $('<ul class=""/>');
-											var type = "error";
-
-											try {
-												var response = JSON.parse(
-													ajax_response.responseText
-												);
-
-												if (
-													typeof response.success !==
-														"undefined" &&
-													response.success === true &&
-													typeof response.data
-														.paypal_redirect !==
-														"undefined"
-												) {
-													window.location =
-														response.data.paypal_redirect;
-												}
-
-												if (
-													typeof response.success !==
-														"undefined" &&
-													response.success === true
-												) {
-													type = "message";
-												}
-
-												if (type === "message") {
-													$this
-														.find(
-															".user-registration-password-hint"
-														)
-														.remove();
-													$this
-														.find(
-															".user-registration-password-strength"
-														)
-														.remove();
-
-													if (
-														response.data
-															.form_login_option ==
-														"admin_approval"
-													) {
-														message.append(
-															"<li>" +
-																ursL10n.user_under_approval +
-																"</li>"
-														);
-													} else if (
-														response.data
-															.form_login_option ==
-														"email_confirmation"
-													) {
-														message.append(
-															"<li>" +
-																ursL10n.user_email_pending +
-																"</li>"
-														);
-													} else if (
-														response.data
-															.form_login_option ==
-														"payment"
-													) {
-														message.append(
-															"<li>" +
-																response.data
-																	.message +
-																"</li>"
-														);
-													} else {
-														message.append(
-															"<li>" +
-																(typeof response
-																	.data
-																	.message ===
-																	"undefined")
-																? ursL10n.user_successfully_saved
-																: response.data
-																		.message +
-																		"</li>"
-														);
-													}
-
-													if (
-														"undefined" !==
-														typeof response.data
-															.auto_password_generation_success_message
-													) {
-														message.append(
-															"<li>" +
-																response.data
-																	.auto_password_generation_success_message +
-																"</li>"
-														);
-													}
-
-													$this[0].reset();
-													jQuery(
-														"#billing_country"
-													).trigger("change");
-													jQuery(
-														"#shipping_country"
-													).trigger("change");
-
-													if (
-														"undefined" !==
-															typeof redirect_url &&
-														redirect_url !== ""
-													) {
-														window.setTimeout(
-															function () {
-																window.location = redirect_url;
-															},
-															1000
-														);
-													} else {
-														if (
-															typeof response.data
-																.auto_login !==
-																"undefined" &&
-															response.data
-																.auto_login
-														) {
-															location.reload();
-														}
-													}
-												} else if (type === "error") {
-													if (
-														typeof response.data
-															.message ===
-														"object"
-													) {
-														$.each(
-															response.data
-																.message,
-															function (
-																index,
-																value
-															) {
-																message.append(
-																	"<li>" +
-																		value +
-																		"</li>"
-																);
-															}
-														);
-													} else {
-														message.append(
-															"<li>" +
-																response.data
-																	.message +
-																"</li>"
-														);
-													}
-												}
-											} catch (e) {
-												message.append(
-													"<li>" + e.message + "</li>"
-												);
-											}
-
-											var success_message_position = JSON.parse(
-												ajax_response.responseText
-											).data.success_message_positon;
-
-											form.show_message(
-												message,
-												type,
-												$this,
-												success_message_position
-											);
-
-											// Check the position set by the admin and scroll to the message postion accordingly.
-											if (
-												"1" === success_message_position
-											) {
-												// Scroll to the bottom on ajax submission complete.
-												$(window).scrollTop(
-													$this
-														.find(
-															".ur-button-container"
-														)
-														.offset().top
-												);
-											} else {
-												// Scroll to the top on ajax submission complete.
-												$(window).scrollTop(
-													$this
-														.closest(
-															".ur-frontend-form"
-														)
-														.offset().top
-												);
-											}
-
+											var ajaxFlag = [];
+											ajaxFlag["status"] = false;
 											$(
 												document
 											).trigger(
-												"user_registration_frontend_after_ajax_complete",
-												[
-													ajax_response.responseText,
+												"user_registration_frontend_before_ajax_complete_success_message",
+												[ajax_response, ajaxFlag]
+											);
+											if (!ajaxFlag["status"]) {
+												$this
+													.find(".ur-submit-button")
+													.find("span")
+													.removeClass(
+														"ur-front-spinner"
+													);
+												var redirect_url = $this
+													.find(
+														'input[name="ur-redirect-url"]'
+													)
+													.val();
+
+												var message = $(
+													'<ul class=""/>'
+												);
+												var type = "error";
+
+												try {
+													var response = JSON.parse(
+														ajax_response.responseText
+													);
+
+													if (
+														typeof response.success !==
+															"undefined" &&
+														response.success ===
+															true &&
+														typeof response.data
+															.paypal_redirect !==
+															"undefined"
+													) {
+														window.location =
+															response.data.paypal_redirect;
+													}
+
+													if (
+														typeof response.success !==
+															"undefined" &&
+														response.success ===
+															true
+													) {
+														type = "message";
+													}
+
+													if (type === "message") {
+														$this
+															.find(
+																".user-registration-password-hint"
+															)
+															.remove();
+														$this
+															.find(
+																".user-registration-password-strength"
+															)
+															.remove();
+
+														if (
+															response.data
+																.form_login_option ==
+															"admin_approval"
+														) {
+															message.append(
+																"<li>" +
+																	ursL10n.user_under_approval +
+																	"</li>"
+															);
+														} else if (
+															response.data
+																.form_login_option ==
+															"email_confirmation"
+														) {
+															message.append(
+																"<li>" +
+																	ursL10n.user_email_pending +
+																	"</li>"
+															);
+														} else if (
+															response.data
+																.form_login_option ==
+															"payment"
+														) {
+															message.append(
+																"<li>" +
+																	response
+																		.data
+																		.message +
+																	"</li>"
+															);
+														} else {
+															message.append(
+																"<li>" +
+																	(typeof response
+																		.data
+																		.message ===
+																		"undefined")
+																	? ursL10n.user_successfully_saved
+																	: response
+																			.data
+																			.message +
+																			"</li>"
+															);
+														}
+
+														if (
+															"undefined" !==
+															typeof response.data
+																.auto_password_generation_success_message
+														) {
+															message.append(
+																"<li>" +
+																	response
+																		.data
+																		.auto_password_generation_success_message +
+																	"</li>"
+															);
+														}
+
+														$this[0].reset();
+														jQuery(
+															"#billing_country"
+														).trigger("change");
+														jQuery(
+															"#shipping_country"
+														).trigger("change");
+
+														if (
+															"undefined" !==
+																typeof redirect_url &&
+															redirect_url !== ""
+														) {
+															window.setTimeout(
+																function () {
+																	window.location = redirect_url;
+																},
+																1000
+															);
+														} else {
+															if (
+																typeof response
+																	.data
+																	.auto_login !==
+																	"undefined" &&
+																response.data
+																	.auto_login
+															) {
+																location.reload();
+															}
+														}
+													} else if (
+														type === "error"
+													) {
+														if (
+															typeof response.data
+																.message ===
+															"object"
+														) {
+															$.each(
+																response.data
+																	.message,
+																function (
+																	index,
+																	value
+																) {
+																	message.append(
+																		"<li>" +
+																			value +
+																			"</li>"
+																	);
+																}
+															);
+														} else {
+															message.append(
+																"<li>" +
+																	response
+																		.data
+																		.message +
+																	"</li>"
+															);
+														}
+													}
+												} catch (e) {
+													message.append(
+														"<li>" +
+															e.message +
+															"</li>"
+													);
+												}
+
+												var success_message_position = JSON.parse(
+													ajax_response.responseText
+												).data.success_message_positon;
+
+												form.show_message(
+													message,
 													type,
 													$this,
-												]
-											);
-											$this
-												.find(".ur-submit-button")
-												.prop("disabled", false);
+													success_message_position
+												);
+
+												// Check the position set by the admin and scroll to the message postion accordingly.
+												if (
+													"1" ===
+													success_message_position
+												) {
+													// Scroll to the bottom on ajax submission complete.
+													$(window).scrollTop(
+														$this
+															.find(
+																".ur-button-container"
+															)
+															.offset().top
+													);
+												} else {
+													// Scroll to the top on ajax submission complete.
+													$(window).scrollTop(
+														$this
+															.closest(
+																".ur-frontend-form"
+															)
+															.offset().top
+													);
+												}
+
+												$(
+													document
+												).trigger(
+													"user_registration_frontend_after_ajax_complete",
+													[
+														ajax_response.responseText,
+														type,
+														$this,
+													]
+												);
+												$this
+													.find(".ur-submit-button")
+													.prop("disabled", false);
+											}
 										},
 									});
 								});

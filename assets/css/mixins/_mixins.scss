@@ -75,3 +75,21 @@
 		background-size: cover;
 	}
 }
+@mixin box-shadow($top, $left, $blur, $color, $inset:"") {
+    -webkit-box-shadow:$top $left $blur $color #{$inset};
+    -moz-box-shadow:$top $left $blur $color #{$inset};
+    box-shadow:$top $left $blur $color #{$inset};
+}
+@mixin flexbox {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+  }
+  @mixin prefix($property, $value, $prefixes: ()) {
+	@each $prefix in $prefixes {
+	  #{'-' + $prefix + '-' + $property}: $value;
+	}
+	#{$property}: $value;
+  }

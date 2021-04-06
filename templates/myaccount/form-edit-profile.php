@@ -111,6 +111,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									}
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
+
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
 											// If the conditional logic addon is installed.
@@ -185,6 +186,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													if ( 'smart' === $field['phone_format'] ) {
 														unset( $field['input_mask'] );
 													}
+												}
+
+												if( 'yes' === $single_item->general_setting->hide_label ) {
+													unset( $field['label'] );
 												}
 
 												if ( 'select' === $single_item->field_key ) {

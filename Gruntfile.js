@@ -279,5 +279,5 @@ module.exports = function (grunt) {
 	// Only an alias to 'default' task.
 	grunt.registerTask("dev", ["default"]);
 
-	grunt.registerTask("zip", ["dev", "compress"]);
+	grunt.registerTask("zip", ["compress"]);
 };
