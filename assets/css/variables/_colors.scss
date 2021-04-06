@@ -4,52 +4,71 @@
 
 // Color System
 // Primary
-$primary_color: 	#475BB2;
-$primary_dark: 		darken($primary_color, 10% ); // #217dbb
-$primary_light: 	lighten($primary_color, 40%); // #e1f0fa
+$primary_color: #475bb2;
+$primary_dark: darken($primary_color, 10%); // #217dbb
+$primary_light: lighten($primary_color, 40%); // #e1f0fa
 
 // Alerts
-$green:		#37b24d;
-$red:		#ff4149;
-$orange:	#ffba00;
-$blue:		#2ea2cc;
-$black:     #000;
+$green: #37b24d;
+$red: #ff4149;
+$orange: #ffba00;
+$blue: #2ea2cc;
+$black: #000;
 
 // Gray Shades
-$white: 					#ffffff;
-$gray_base: 				#2d3559;
-$color_gray_one: 			adjust-color($gray_base, $saturation: -11%, $lightness: +12%); // #4c5477
-$color_gray_two: 			adjust-color($gray_base, $saturation: -18%, $lightness: +21%); // #676d8a
-$color_gray_three: 			adjust-color($gray_base, $saturation: -13%, $lightness: +50%); // #b6bbcf
-$color_gray_four: 			adjust-color($gray_base, $saturation: -14%, $lightness: +63%); // #dee0e9
-$color_gray_five: 			adjust-color($gray_base, $saturation: -12%, $lightness: +69%); // #f0f1f5
-$color_gray_six:            #EEF1F8;
+$white: #ffffff;
+$gray_base: #2d3559;
+$color_gray_one: adjust-color(
+	$gray_base,
+	$saturation: -11%,
+	$lightness: +12%
+); // #4c5477
+$color_gray_two: adjust-color(
+	$gray_base,
+	$saturation: -18%,
+	$lightness: +21%
+); // #676d8a
+$color_gray_three: adjust-color(
+	$gray_base,
+	$saturation: -13%,
+	$lightness: +50%
+); // #b6bbcf
+$color_gray_four: adjust-color(
+	$gray_base,
+	$saturation: -14%,
+	$lightness: +63%
+); // #dee0e9
+$color_gray_five: adjust-color(
+	$gray_base,
+	$saturation: -12%,
+	$lightness: +69%
+); // #f0f1f5
+$color_gray_six: #eef1f8;
 $color_sortable_background: #f7f7f7;
 
-
-$heading-color: 			$gray_base;
-$body-color: 				$color_gray_one;
+$heading-color: $gray_base;
+$body-color: $color_gray_one;
 
 //Nav variables
-$nav-link-color: 			$gray_base;
-$nav-link-hover-color: 		$primary_color;
+$nav-link-color: $gray_base;
+$nav-link-hover-color: $primary_color;
 
 // Border variables
-$border_width:				1px;
-$border_color:				$color_gray_four;
+$border_width: 1px;
+$border_color: $color_gray_four;
 
 // Other Color variables
-$label_color:				$color_gray_two;
-$border_color_input: 		darken($border_color, 10%);
-$input_background_color: 	$color_gray_five;
-$input_color: 				$color_gray_two;
-$flat_background: 			$color_gray_five;
-$rounded-color: 			darken($border_color, 10%);
-$light-grey:                #94a3a4;
+$label_color: $color_gray_two;
+$border_color_input: darken($border_color, 10%);
+$input_background_color: $color_gray_five;
+$input_color: $color_gray_two;
+$flat_background: $color_gray_five;
+$rounded-color: darken($border_color, 10%);
+$light-grey: #94a3a4;
 
 // Social login Color Variable
 $color_social_default: $primary_color;
 $color_facebook: #4267b2; // Facebook brand color
 $color_twitter: #1da1f2; // Twitter brand color
-$color_google: #4285F4; // Google brand color
+$color_google: #4285f4; // Google brand color
 $color_linkedin: #0077b5; //Linkedin brand color

@@ -32,7 +32,6 @@ jQuery(function ($) {
 			var wrapper = self.closest("form"),
 				field = $(self, wrapper);
 
-
 			ur_password_strength_meter.includeMeter(wrapper, field);
 			ur_password_strength_meter.checkPasswordStrength(wrapper, field);
 		},
@@ -47,7 +46,6 @@ jQuery(function ($) {
 			var minimum_password_strength = wrapper.attr(
 				"data-minimum-password-strength"
 			);
-
 
 			var meter = wrapper.find(".user-registration-password-strength");
 
