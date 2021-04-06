@@ -42,8 +42,9 @@
 	font-style: normal;
 	font-display: block;
 }
+
 [class^="ur-icon-"],
-[class*="ur-icon-"] {
+[class*=" ur-icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: "UserRegistration" !important;
 	speak: none;
