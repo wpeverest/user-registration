@@ -272,7 +272,6 @@ class UR_Shortcode_My_Account {
 
 						// Enqueue script.
 						wp_enqueue_script( 'ur-password-strength-meter' );
-						wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 					}
 
 					// reset key / login is correct, display reset password form with hidden key / login values.

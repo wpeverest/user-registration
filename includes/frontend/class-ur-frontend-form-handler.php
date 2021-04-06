@@ -54,9 +54,8 @@ class UR_Frontend_Form_Handler {
 		}
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
-
+		
 		self::match_email( $form_field_data, $form_data );
-
 		self::add_hook( $form_field_data, $form_data );
 		$activated_form_list = get_option( 'user_registration_auto_password_activated_forms', array() );
 
@@ -422,6 +421,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
+		
 			if ( 'user_confirm_email' == $single_data->field_name ) {
 				$confirm_email_value = $single_data->value;
 				$has_confirm_email   = true;
@@ -497,7 +497,6 @@ class UR_Frontend_Form_Handler {
 		if ( $password_value === $email_value || $password_value === $username_value ) {
 			array_push( self::$response_array, __( 'Password should not match with Username or Email address.', 'user-registration' ) );
 		}
-	}
+	}	
 }
-
 return new UR_Frontend_Form_Handler();

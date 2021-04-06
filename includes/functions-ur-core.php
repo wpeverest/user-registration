@@ -683,7 +683,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'description'           => __( 'Description', 'user-registration' ),
 			'text'                  => __( 'Text', 'user-registration' ),
 			'password'              => __( 'Password', 'user-registration' ),
-			'email'                 => __( 'Email', 'user-registration' ),
+			'email'                 => __( 'Secondary Email', 'user-registration' ),
 			'select'                => __( 'Select', 'user-registration' ),
 			'country'               => __( 'Country', 'user-registration' ),
 			'textarea'              => __( 'Textarea', 'user-registration' ),
@@ -1103,7 +1103,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
 	if ( isset( $post_meta[0] ) ) {
 		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
-		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ) {
+		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key) {
 			if ( 'yes' === $post_meta[0] ) {
 				$post_meta[0] = 1;
 			}

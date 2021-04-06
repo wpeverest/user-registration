@@ -28,7 +28,7 @@ ur_print_notices(); ?>
 			<div class="ur-form-grid">
 				<p><?php echo apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ); ?></p>
 
-				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
+				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first password-input-group">
 					<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
 				</p>

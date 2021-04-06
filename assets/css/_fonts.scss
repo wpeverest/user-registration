@@ -29,21 +29,23 @@
 }
 
 // Icon fonts
-  @font-face {
-	font-family: 'UserRegistration';
-	src:  url('../fonts/UserRegistration.eot?9nlj4z');
-	src:  url('../fonts/UserRegistration.eot?9nlj4z#iefix') format('embedded-opentype'),
-	  url('../fonts/UserRegistration.ttf?9nlj4z') format('truetype'),
-	  url('../fonts/UserRegistration.woff?9nlj4z') format('woff'),
-	  url('../fonts/UserRegistration.svg?9nlj4z#UserRegistration') format('svg');
+@font-face {
+	font-family: "UserRegistration";
+	src: url("../fonts/UserRegistration.eot?nk6vrg");
+	src: url("../fonts/UserRegistration.eot?nk6vrg#iefix")
+			format("embedded-opentype"),
+		url("../fonts/UserRegistration.ttf?nk6vrg") format("truetype"),
+		url("../fonts/UserRegistration.woff?nk6vrg") format("woff"),
+		url("../fonts/UserRegistration.svg?nk6vrg#UserRegistration")
+			format("svg");
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
-  }
-[class^='ur-icon-'],
-[class*='ur-icon-'] {
+}
+[class^="ur-icon-"],
+[class*="ur-icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
-	font-family: 'UserRegistration' !important;
+	font-family: "UserRegistration" !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -101,13 +103,12 @@ $field-icons: (
 	range: "\e029",
 	course: "\e02a",
 	mailerlite: "\e02b",
-	stripe: "\e02f"
 );
 
 /* For each key in the map, creating own class */
 @each $name, $value in $field-icons {
-	.ur-icon-#{$name}{
-		&::before{
+	.ur-icon-#{$name} {
+		&::before {
 			content: $value;
 		}
 	}

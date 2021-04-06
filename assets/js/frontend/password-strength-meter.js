@@ -12,7 +12,7 @@ jQuery(function ($) {
 			var $this = this;
 			$(document.body).on(
 				"keyup change",
-				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password',
+				'input[name="user_pass"], .user-registration-EditAccountForm input[name="password_1"], input[name="password_1"].user-registration-Input--password,.user-registration-ResetPassword input[name="password_1"]',
 				function () {
 					var enable_strength_password = $(this)
 						.closest("form")
@@ -48,6 +48,7 @@ jQuery(function ($) {
 			);
 
 			var meter = wrapper.find(".user-registration-password-strength");
+
 			var password_field = wrapper.find(".password-input-group");
 			if ("" === field.val()) {
 				meter.remove();

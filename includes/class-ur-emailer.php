@@ -575,7 +575,7 @@ class UR_Emailer {
 	 * @param array  $values Data values.
 	 * @param array  $name_value  Extra values.
 	 */
-	private static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
+	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
 		$smart_tags = array(
 			'{{username}}',
 			'{{email}}',
