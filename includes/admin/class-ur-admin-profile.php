@@ -428,7 +428,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
 						$field_key         = isset( $field->field_key ) ? $field->field_key : '';
 
-						if ( 'credit_card' === $field_name ) {
+						if ( 'stripe_gateway' === $field_name ) {
 							break;
 						}
 
