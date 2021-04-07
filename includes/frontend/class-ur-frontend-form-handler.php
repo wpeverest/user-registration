@@ -424,6 +424,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
+
 			if ( 'user_confirm_email' == $single_data->field_name ) {
 				$confirm_email_value = $single_data->value;
 				$has_confirm_email   = true;
