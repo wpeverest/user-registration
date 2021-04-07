@@ -149,16 +149,33 @@ class UR_Admin_User_List_Manager {
 
 	// Display a notice to admin notifying the pending users.
 	public function user_registration_pending_users_notices() {
-		$user_query = new WP_User_Query(
-			array(
-				'meta_key'   => 'ur_user_status',
-				'meta_value' => 0,
-			)
-		);
+		
+		$args = array(
+					'meta_query' => array(
+						'relation' => 'OR',
+							array(
+								'key'   => 'ur_user_status',
+								'value' => 0,
+								'compare'=> '='
+							),
+							array(
+								'key'   => 'ur_confirm_email',
+								'value' => 0,
+								'compare'=>'='
+							)
+					)
+				);
+		$user_query = new WP_User_Query($args);
+
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
 
-		if ( count( $users ) > 0 ) {
+		$current_screen = get_current_screen();
+		// var_dump($current_screen);
+		// die();
+		$ur_pages       = ur_get_screen_ids();
+
+		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . admin_url( 'users.php' ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
