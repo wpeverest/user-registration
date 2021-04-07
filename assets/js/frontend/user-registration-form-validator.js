@@ -77,12 +77,12 @@
 			$.validator.addMethod(
 				"SpecialCharacterValidator",
 				function (value, element) {
-					let reg = new RegExp(/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/);
+					var reg = new RegExp(
+						/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/
+					);
 					return this.optional(element) || reg.test(value);
-
 				},
 				user_registration_params.message_username_character_fields
-
 			);
 
 			/**
@@ -221,20 +221,18 @@
 					},
 					submitHandler: function (form) {
 						/**
-						 * Return `true` for `Change Password`, `login` form and `Edit Profile` when ajax submission is off to allow submission
+						 * Return `false` for `Registration` form and `Edit Profile` when ajax submission is on to allow ajax submission
 						 */
 						if (
-							$(form).hasClass("edit-password") ||
+							$(form).hasClass("register") ||
 							($(form).hasClass("edit-profile") &&
-								"no" === user_registration_params.ajax_submission_on_edit_profile) ||
-							$(form)
-								.hasClass("login")
-								.not(".lost_reset_password")
+								"yes" ===
+									user_registration_params.ajax_submission_on_edit_profile)
 						) {
-							return true;
+							return false;
 						}
 
-						return false;
+						return true;
 					},
 				});
 			});
@@ -362,16 +360,22 @@
 			 */
 			var user_login_div = this_node.find("#user_login");
 			var username_validator = {};
-			if (user_login_div.length && 'undefined' !== typeof user_login_div.data("username-length")) {
-				username_validator.lengthValidator = user_login_div.data("username-length");
+			if (
+				user_login_div.length &&
+				"undefined" !== typeof user_login_div.data("username-length")
+			) {
+				username_validator.lengthValidator = user_login_div.data(
+					"username-length"
+				);
 			}
 
 			if (user_login_div.data("username-character") == "no") {
-				username_validator.SpecialCharacterValidator = user_login_div.data("username-character");
+				username_validator.SpecialCharacterValidator = user_login_div.data(
+					"username-character"
+				);
 			}
 
 			rules.user_login = username_validator;
-
 
 			/**
 			 * Real time choice limit validation
