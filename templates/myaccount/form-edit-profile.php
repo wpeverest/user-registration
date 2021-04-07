@@ -28,14 +28,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
 					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
-					<?php if( 'no' === get_option( 'user_registration_disable_profile_picture', 'yes') ) {  ?>
-					<div class="user-registration-profile-header">
-						<div class="user-registration-img-container" style="width:100%">
-							<?php
+					<?php
 							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-							?>
+						?>
+					<?php if( 'no' === get_option( 'user_registration_disable_profile_picture', 'yes') ) { ?>
+					<div class="user-registration-profile-header">
+						<div class="user-registration-img-container" style="width:100%">
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 							<?php
 							$max_size = wp_max_upload_size();
@@ -68,7 +68,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
 							<?php
-							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) || 'yes' === get_option( 'user_registration_disable_profile_picture', 'no')   ) {
 								?>
 						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
 						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
@@ -88,6 +88,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							<?php }  ?>
 					</header>
 					</div>
+					<?php } else { ?>
+						<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo $profile_picture_url; ?>" />
+						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 					<?php } ?>
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
