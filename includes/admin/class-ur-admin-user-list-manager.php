@@ -165,14 +165,13 @@ class UR_Admin_User_List_Manager {
 							)
 					)
 				);
+				
 		$user_query = new WP_User_Query($args);
 
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
 
 		$current_screen = get_current_screen();
-		// var_dump($current_screen);
-		// die();
 		$ur_pages       = ur_get_screen_ids();
 
 		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
