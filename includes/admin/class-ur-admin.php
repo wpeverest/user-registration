@@ -111,7 +111,7 @@ class UR_Admin {
 
 		
 		// Set only UR pages.
-		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit', 'users' ) );
+		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
 
 		// Check to make sure we're on a User Registration admin page.
 		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {

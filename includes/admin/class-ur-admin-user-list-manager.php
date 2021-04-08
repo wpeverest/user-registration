@@ -173,7 +173,9 @@ class UR_Admin_User_List_Manager {
 
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
-
+		array_push($ur_pages,'users');
+		
+		// Check if Users are Pending and display pending users notice in UR and Users
 		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . admin_url( 'users.php' ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
