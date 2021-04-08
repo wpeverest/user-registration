@@ -68,7 +68,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
 						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
 							<?php
-							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) || 'yes' === get_option( 'user_registration_disable_profile_picture', 'no')   ) {
 								?>
 						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
 						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
