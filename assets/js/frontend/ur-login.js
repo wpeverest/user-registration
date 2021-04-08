@@ -5,14 +5,30 @@ jQuery(function ($) {
 			.find("form.login")
 			.on("click", "#user_registration_ajax_login_submit", function (e) {
 				e.preventDefault();
-
-				var username = $("#username").val();
-				var password = $("#password").val();
-				var rememberme = $("#rememberme").val();
+				var $this = $(this);
+				var username = $this
+					.closest("form")
+					.find('input[name="username"]')
+					.val();
+				var password = $this
+					.closest("form")
+					.find('input[name="password"]')
+					.val();
+				var rememberme = $this
+					.closest("form")
+					.find('input[name="rememberme"]')
+					.val();
 				var url =
 					ur_login_params.ajax_url +
 					"?action=user_registration_ajax_login_submit&security=" +
 					ur_login_params.ur_login_form_save_nonce;
+
+				$this
+					.closest("form")
+					.find(".ur-submit-button")
+					.siblings("span")
+					.addClass("ur-front-spinner");
+
 				$.ajax({
 					type: "POST",
 					url: url,
@@ -22,7 +38,7 @@ jQuery(function ($) {
 						rememberme: rememberme,
 					},
 					success: function (res) {
-						// cutom error message
+						// custom error message
 						if (res.success == false) {
 							$("#user-registration")
 								.find(".user-registration-error")
