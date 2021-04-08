@@ -28,13 +28,15 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
 					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
-					<?php if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {  ?>
 					<div class="user-registration-profile-header">
 						<div class="user-registration-img-container" style="width:100%">
 							<?php
 							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+
+							if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+
 							?>
 							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 							<?php
