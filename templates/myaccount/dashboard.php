@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 
-			if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+			if( 'no' === get_option( 'user_registration_disable_profile_picture', 'yes' ) ) {
 				
 			?>
 				<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>">
