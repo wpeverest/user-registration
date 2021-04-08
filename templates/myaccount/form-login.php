@@ -99,7 +99,9 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<?php if($enable_ajax) { ?>
-						<input type="submit" class="user-registration-Button button" id="user_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+
+						<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+						<!-- <span class="ur-front-spinner"></span> -->
 						<?php } else { ?>
 						<input type="submit" class="user-registration-Button button" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
 						<?php } ?>

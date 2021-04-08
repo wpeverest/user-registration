@@ -433,10 +433,10 @@ class UR_AJAX {
 		}
 
     $info = array();
-    $info['user_login'] = $_POST['username'];
-    $info['user_password'] = $_POST['password'];
-    $info['remember'] = $_POST['remember'];
-	
+    $info['user_login'] = sanitize_user( isset($_POST['username'] ) ? $_POST['username']: '' );
+    $info['user_password'] =sanitize_text_field( isset( $_POST['password'] ) ? $_POST['password'] : '');
+    $info['remember'] =isset( $_POST['rememberme'] );
+
 	// perform the table login
     $user= wp_signon( $info );
 
@@ -455,7 +455,7 @@ class UR_AJAX {
 						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 					}
 				$message = $user->get_error_message();
-				wp_send_json_error($message);
+				wp_send_json_error(array('message' => $message ));
     	} else {
 			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
 						$redirect = admin_url();
@@ -468,7 +468,7 @@ class UR_AJAX {
 							$redirect = get_home_url();
 						}
 					}
-  	   		wp_send_json_success( $redirect );
+  	   		wp_send_json_success( array( 'message' =>$redirect  ));
      }
 	wp_send_json( $user );
 	}
