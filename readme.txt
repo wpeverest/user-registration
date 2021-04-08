@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.7
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -152,6 +152,17 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.6 - 06/04/2021
+* Enhance 	- Password strength meter in reset password page.
+* Enhance 	- Disallow special characters in username field.
+* Enhance 	- Review notice UI and contents.
+* Dev	  	- Frontend listing addon compatibility.
+* Dev	  	- iDEAL payment gateway compatibility.
+* Fix 		- Localization of password strength js params.
+* Fix 		- Disable logout confirmation issue with logout endpoint menu.
+* Fix 		- Reset password button not working.
+* Fix 		- Hide label in edit profile.
 
 = 1.9.5 - 15/03/2021
 * Enhance 	- Setting page header UI.

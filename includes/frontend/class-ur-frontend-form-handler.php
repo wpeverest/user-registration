@@ -54,7 +54,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
-		
+
 		self::match_email( $form_field_data, $form_data );
 		self::add_hook( $form_field_data, $form_data );
 		$activated_form_list = get_option( 'user_registration_auto_password_activated_forms', array() );
@@ -105,14 +105,16 @@ class UR_Frontend_Form_Handler {
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
 
-				if ( 'ideal' !==  sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
+				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' ===  sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
+
+					if ( 'auto_login' === $login_option ) {
+						$success_params['auto_login'] = true;
+					}
+				} else {
+
 					if ( 'auto_login' === $login_option ) {
 						wp_clear_auth_cookie();
 						wp_set_auth_cookie( $user_id );
-						$success_params['auto_login'] = true;
-					}
-				}else{
-					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
 					}
 				}
@@ -120,11 +122,12 @@ class UR_Frontend_Form_Handler {
 				$success_params['form_login_option'] = $login_option;
 				$success_params                      = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				if ( ! isset( $_POST['ur_stripe_payment_method'] ) || 'ideal' !==  sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
-
+				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' ===  sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
+					wp_send_json_success( $success_params );
+				}else{
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
+					wp_send_json_success( $success_params );
 				}
-				wp_send_json_success( $success_params );
 			}
 			wp_send_json_error(
 				array(
@@ -421,7 +424,7 @@ class UR_Frontend_Form_Handler {
 		}
 
 		foreach ( $form_data as $index => $single_data ) {
-		
+
 			if ( 'user_confirm_email' == $single_data->field_name ) {
 				$confirm_email_value = $single_data->value;
 				$has_confirm_email   = true;
@@ -497,6 +500,6 @@ class UR_Frontend_Form_Handler {
 		if ( $password_value === $email_value || $password_value === $username_value ) {
 			array_push( self::$response_array, __( 'Password should not match with Username or Email address.', 'user-registration' ) );
 		}
-	}	
+	}
 }
 return new UR_Frontend_Form_Handler();

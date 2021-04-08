@@ -58,8 +58,14 @@ jQuery(function ($) {
 					'<div class="user-registration-password-strength" aria-live="polite" data-min-strength="' +
 					minimum_password_strength +
 					'"></div>';
-				password_field.closest(".field-user_pass").after(html);
-				$("#password_1").closest(".password-input-group").after(html);
+
+				if (wrapper.hasClass("register")) {
+					password_field.closest(".field-user_pass").after(html);
+				} else {
+					$("#password_1")
+						.closest(".password-input-group")
+						.after(html);
+				}
 				$(document.body).trigger("ur-password-strength-added");
 			}
 		},
