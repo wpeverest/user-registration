@@ -38,6 +38,11 @@ jQuery(function ($) {
 						rememberme: rememberme,
 					},
 					success: function (res) {
+						$this
+							.closest("form")
+							.find(".ur-submit-button")
+							.siblings("span")
+							.removeClass("ur-front-spinner");
 						// custom error message
 						if (res.success == false) {
 							$("#user-registration")
