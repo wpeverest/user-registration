@@ -300,6 +300,9 @@ class UR_Form_Handler {
 		} elseif ( ! $bypass_current_password && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
 			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
 			$save_pass = false;
+		} elseif ( wp_check_password($pass1, $current_user->user_pass,$current_user->ID) && $current_user ) {
+			ur_add_notice( __( 'New password must not be same as old password' ), 'error' );
+			$save_pass = false;
 		}
 
 		if ( $pass1 && $save_pass ) {
