@@ -43,16 +43,21 @@ jQuery(function ($) {
 							.find(".ur-submit-button")
 							.siblings("span")
 							.removeClass("ur-front-spinner");
+
 						// custom error message
 						if (res.success == false) {
-							$("#user-registration")
+							$this
+								.closest("#user-registration")
 								.find(".user-registration-error")
 								.remove();
-							$("#user-registration").prepend(
-								'<ul class="user-registration-error">' +
-									res.data.message +
-									"</ul>"
-							);
+
+							$this
+								.closest("#user-registration")
+								.prepend(
+									'<ul class="user-registration-error">' +
+										res.data.message +
+										"</ul>"
+								);
 						} else {
 							window.location = res.data.message;
 						}
