@@ -515,6 +515,9 @@ class UR_Form_Handler {
 				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
 			}
 
+			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
+				ur_add_notice( __( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+			}
 			$errors = new WP_Error();
 
 			do_action( 'validate_password_reset', $errors, $user );
