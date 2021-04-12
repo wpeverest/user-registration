@@ -28,13 +28,27 @@ ur_print_notices(); ?>
 			<div class="ur-form-grid">
 				<p><?php echo apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ); ?></p>
 
-				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first password-input-group">
+				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 					<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
+					<?php
+						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+						}
+					?>
+					</span>
 				</p>
-				<p class="user-registration-form-row user-registration-form-row--last form-row form-row-last">
+				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 					<label for="password_2"><?php _e( 'Re-enter new password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" />
+					<?php
+						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+						}
+					?>
+					</span>
 				</p>
 
 				<input type="hidden" name="reset_key" value="<?php echo esc_attr( $args['key'] ); ?>" />
