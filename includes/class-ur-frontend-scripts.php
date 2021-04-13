@@ -348,7 +348,6 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-	error_log(print_r($handle,true));
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
