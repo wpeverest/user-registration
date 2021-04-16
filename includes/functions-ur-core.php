@@ -1923,3 +1923,16 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
 	return $conflict_shortcodes;
 }
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
+
+function ur_get_valid_file_type() {
+
+	return apply_filters(
+		'user_registration_edit_profile_picture_valid_file_type',
+		array(
+			'image/jpg'         => __( 'jpg', 'user-registration' ),
+			'image/jpeg'         => __( 'jpeg', 'user-registration' ),
+			'image/gif'          => __( 'gif', 'user-registration' ),
+			'image/png'          => __( 'png', 'user-registration' ),
+		)
+	);
+}
