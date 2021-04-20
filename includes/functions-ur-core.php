@@ -715,7 +715,6 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings.', 'user-registration' ),
 		),
 		'description' => array(
-			'setting_id'  => 'description',
 			'type'        => 'textarea',
 			'label'       => __( 'Description', 'user-registration' ),
 			'name'        => 'ur_general_setting[description]',
@@ -724,7 +723,6 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
 		),
 		'field_name'  => array(
-			'setting_id'  => 'filed name',
 			'type'        => 'text',
 			'label'       => __( 'Field Name', 'user-registration' ),
 			'name'        => 'ur_general_setting[field_name]',
@@ -734,7 +732,6 @@ function ur_get_general_settings( $id ) {
 		),
 
 		'placeholder' => array(
-			'setting_id'  => 'placeholder',
 			'type'        => 'text',
 			'label'       => __( 'Placeholder', 'user-registration' ),
 			'name'        => 'ur_general_setting[placeholder]',
@@ -743,7 +740,6 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Enter placeholder for the field.', 'user-registration' ),
 		),
 		'required'    => array(
-			'setting_id'  => 'required',
 			'type'        => 'select',
 			'label'       => __( 'Required', 'user-registration' ),
 			'name'        => 'ur_general_setting[required]',
@@ -756,7 +752,6 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
 		),
 		'hide_label'  => array(
-			'setting_id'  => 'hide label',
 			'type'        => 'select',
 			'label'       => __( 'Hide Label', 'user-registration' ),
 			'name'        => 'ur_general_setting[hide_label]',
@@ -791,7 +786,7 @@ function ur_get_general_settings( $id ) {
 	if ( in_array( $strip_id, $choices_fields, true ) ) {
 
 		$settings['options'] = array(
-			'setting_id'  => 'options',
+		   'setting_id'   =>  'options',
 			'type'        => 'checkbox' === $strip_id ? 'checkbox' : 'radio',
 			'label'       => __( 'Options', 'user-registration' ),
 			'name'        => 'ur_general_setting[options]',
@@ -809,7 +804,6 @@ function ur_get_general_settings( $id ) {
 
 	if ( 'privacy_policy' === $strip_id ) {
 		$general_settings['required'] = array(
-			'setting_id'  => '',
 			'type'        => 'hidden',
 			'label'       => '',
 			'name'        => 'ur_general_setting[required]',
