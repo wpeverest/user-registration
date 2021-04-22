@@ -301,7 +301,7 @@ class UR_Form_Handler {
 			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
 			$save_pass = false;
 		} elseif ( wp_check_password($pass1, $current_user->user_pass,$current_user->ID) && $current_user ) {
-			ur_add_notice( __( 'New password must not be same as old password' ), 'error' );
+			ur_add_notice( __( 'New password must not be same as old password', 'user-registration' ), 'error' );
 			$save_pass = false;
 		}
 
