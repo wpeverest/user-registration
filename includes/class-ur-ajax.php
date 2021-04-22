@@ -41,7 +41,7 @@ class UR_AJAX {
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
-			'ajax_login_submit'		 =>true,
+			'ajax_login_submit'		 =>	true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -54,7 +54,6 @@ class UR_AJAX {
 
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
-
 			}
 		}
 	}

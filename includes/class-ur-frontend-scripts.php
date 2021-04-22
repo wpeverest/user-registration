@@ -333,7 +333,7 @@ class UR_Frontend_Scripts {
 	private static function localize_script( $handle ) {
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) {
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
-			self::$wp_localize_scripts[] = $handle;;
+			self::$wp_localize_scripts[] = $handle;
 			wp_localize_script( $handle, $name, apply_filters( $name, $data ) );
 		}
 	}
@@ -400,7 +400,7 @@ class UR_Frontend_Scripts {
 					return array(
 							'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 							'ur_login_form_save_nonce' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
-							'ajax_submission_on_ur_login'  => get_option('ur_login_ajax_submission', 'no' ),
+							'ajax_submission_on_ur_login'  	   => get_option('ur_login_ajax_submission', 'no' ),
 					);
 					break;
 		}
