@@ -1414,7 +1414,6 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				'ur_google_recaptcha_code',
 				array(
 					'site_key'          => $recaptcha_site_key,
-					'site_secret'       => $recaptcha_site_secret,
 					'is_captcha_enable' => true,
 					'version'           => $recaptcha_version,
 				)
