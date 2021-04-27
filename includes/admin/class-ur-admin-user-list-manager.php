@@ -149,7 +149,7 @@ class UR_Admin_User_List_Manager {
 
 	// Display a notice to admin notifying the pending users.
 	public function user_registration_pending_users_notices() {
-		
+
 		$args = array(
 					'meta_query' => array(
 						'relation' => 'OR',
@@ -165,7 +165,7 @@ class UR_Admin_User_List_Manager {
 							)
 					)
 				);
-				
+
 		$user_query = new WP_User_Query($args);
 
 		 // Get the results from the query, returning the first user.
@@ -174,10 +174,11 @@ class UR_Admin_User_List_Manager {
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
 		array_push($ur_pages,'users');
-		
+
 		// Check if Users are Pending and display pending users notice in UR and Users
 		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
-			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . admin_url( 'users.php' ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
+			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
+			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
 
