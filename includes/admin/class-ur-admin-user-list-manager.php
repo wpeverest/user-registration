@@ -151,26 +151,27 @@ class UR_Admin_User_List_Manager {
 	public function user_registration_pending_users_notices() {
 
 		$args = array(
-					'meta_query' => array(
-						'relation' => 'OR',
-							array(
-								'key'   => 'ur_user_status',
-								'value' => 0,
-								'compare'=> '='
-							),
-							array(
-								'key'   => 'ur_confirm_email',
-								'value' => 0,
-								'compare'=>'='
-							)
-					)
-				);
+				'meta_query' => array(
+					'relation' => 'OR',
+						array(
+							'key'   => 'ur_user_status',
+							'value' => 0,
+							'compare'=> '='
+						),
+						array(
+							'key'   => 'ur_confirm_email',
+							'value' => 0,
+							'compare'=>'='
+						)
+				)
+			);
 
+		// Remove previously set filter to get exact pending users count.
+		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
 		$user_query = new WP_User_Query($args);
 
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
-
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
 		array_push($ur_pages,'users');
