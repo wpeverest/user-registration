@@ -148,9 +148,9 @@ class UR_User_Approval {
 			if ( $this->is_admin_creation_process() ) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
-           // update user status when login using social connect 
+           // update user status when login using social connect
 			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
-				$status = 1;
+				$status = UR_Admin_User_Manager::APPROVED;
 			}
 
 			$user_manager = new UR_Admin_User_Manager( $user_id );
