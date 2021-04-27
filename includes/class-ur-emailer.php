@@ -119,46 +119,7 @@ class UR_Emailer {
 
 		$attachments     = apply_filters( 'user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
-		$name_value      = array();
-		$data_html       = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
-
-		// Generate $data_html string to replace for {{all_fields}} smart tag.
-		foreach ( $valid_form_data as $field_meta => $form_data ) {
-			if ( 'user_confirm_password' === $field_meta ) {
-				continue;
-			}
-
-			// Donot include privacy policy value.
-			if ( isset( $form_data->extra_params['field_key'] ) && 'privacy_policy' === $form_data->extra_params['field_key'] ) {
-				continue;
-			}
-
-			// Process for file upload.
-			if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
-				$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value ) : '';
-			}
-
-			$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
-			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
-			$value      = isset( $form_data->value ) ? $form_data->value : '';
-
-			if ( 'user_pass' === $field_meta ) {
-				$value = __( 'Chosen Password', 'user-registration' );
-			}
-
-			// Check if value contains array.
-			if ( is_array( $value ) ) {
-				$value = implode( ',', $value );
-			}
-
-			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
-
-			$name_value[ $field_name ] = $value;
-		}
-
-		$data_html .= '</tbody></table>';
-		// Smart tag process for extra fields.
-		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
+		list( $name_value, $data_html ) = ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data );
 
 		$email_object      = isset( $valid_form_data['user_email'] ) ? $valid_form_data['user_email'] : array();
 		$user_login_object = isset( $valid_form_data['user_login'] ) ? $valid_form_data['user_login'] : array();
