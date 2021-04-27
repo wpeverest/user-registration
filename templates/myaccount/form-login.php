@@ -49,6 +49,7 @@ $placeholders = array(
 );
 $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
 
+$enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 ?>
 
 <?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
@@ -58,11 +59,9 @@ $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labe
 <div class="ur-frontend-form login <?php echo $template_class; ?>" id="ur-frontend-form">
 
 	<form class="user-registration-form user-registration-form-login login" method="post">
-
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 					<?php do_action( 'user_registration_login_form_start' ); ?>
-
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<?php
 						if ( ! $hide_labels ) {
@@ -99,9 +98,15 @@ $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labe
 
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
-						<input type="submit" class="user-registration-Button button" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+						<div>
+							<?php if($enable_ajax) { ?>
+							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+							<span></span>
+							<?php } else { ?>
+							<input type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+							<?php } ?>
+						</div>
 						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? $redirect : the_permalink(); ?>" />
-
 						<?php
 							$remember_me_enabled = get_option( 'user_registration_login_options_remember_me', 'yes' );
 

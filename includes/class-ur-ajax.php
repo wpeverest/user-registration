@@ -36,12 +36,12 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-
 			'user_input_dropped'     => true,
 			'form_save_action'       => true,
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
+			'ajax_login_submit'		 =>	true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -407,6 +407,76 @@ class UR_AJAX {
 				delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 			}
 		}
+	}
+
+	/**
+	 * Login from Using Ajax
+	 */
+	public function ajax_login_submit(){
+	// Custom error messages.
+		$messages = array(
+			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
+			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
+			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
+			'pending_approval'     => get_option( 'user_registration_message_pending_approval', null ),
+			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
+		);
+
+	check_ajax_referer( 'ur_login_form_save_nonce', 'security' );
+
+	$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+
+		$flag = wp_verify_nonce( $nonce, 'ur_login_form_save_nonce' );
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+
+    $info = array();
+    $info['user_login'] = sanitize_user( isset($_POST['username'] ) ? $_POST['username']: '' );
+    $info['user_password'] =sanitize_text_field( isset( $_POST['password'] ) ? $_POST['password'] : '');
+    $info['remember'] =isset( $_POST['rememberme'] );
+
+	// perform the table login
+    $user= wp_signon( $info );
+
+    if ( is_wp_error( $user ) ){
+		// set the custom error message
+		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
+						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
+			}
+			if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
+						$user->errors['invalid_username'][0] = $messages['invalid_username'];
+					}
+					if ( ! empty( $user->errors['pending_approval'] ) && ! empty( $messages['pending_approval'] ) ) {
+						$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['pending_approval'] );
+					}
+					if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
+						$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
+					}
+				$message = $user->get_error_message();
+				wp_send_json_error(array('message' => $message ));
+    	} else {
+			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+						$redirect = admin_url();
+					} else {
+						if ( ! empty( $_POST['redirect'] ) ) {
+							$redirect = $_POST['redirect'];
+						} elseif ( wp_get_raw_referer() ) {
+							$redirect = wp_get_raw_referer();
+						} else {
+							$redirect = get_home_url();
+						}
+					}
+  	   		wp_send_json_success( array( 'message' =>$redirect  ));
+     }
+	wp_send_json( $user );
 	}
 
 	/**
