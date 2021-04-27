@@ -141,7 +141,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 					array(
 						'title'    => __( 'Disable profile picture', 'user-registration' ),
-						'desc'     => __( 'Check to disable profile picture.', 'user-registration' ),
+						'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 						'id'       => 'user_registration_disable_profile_picture',
 						'type'     => 'checkbox',
 						'desc_tip' => true,

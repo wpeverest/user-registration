@@ -202,11 +202,17 @@ class UR_AJAX {
 			}
 		}
 
-		if ( isset( $single_field['user_registration_profile_pic_url'] ) && ! empty( $single_field['user_registration_profile_pic_url'] ) ) {
-			update_user_meta( $user_id, 'user_registration_profile_pic_url', $single_field['user_registration_profile_pic_url'] );
+		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
+			if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', $single_field['user_registration_profile_pic_url'] );
+			}
 		}
 
 		$profile = user_registration_form_data( $user_id, $form_id );
+
+		if( isset( $profile['user_registration_profile_pic_url'])) {
+			unset( $profile['user_registration_profile_pic_url'] );
+		}
 
 		foreach ( $profile as $key => $field ) {
 
@@ -384,7 +390,8 @@ class UR_AJAX {
 					);
 					break;
 			}
-		} elseif ( empty( $_POST['profile-pic-url'] ) ) {
+		}
+		elseif ( empty( $_POST['profile-pic-url'] ) ) {
 			$upload_dir  = wp_upload_dir();
 			$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
 
