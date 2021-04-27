@@ -67,7 +67,7 @@ class UR_Form_Handler {
 		}
 
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
+			if ( isset( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
 			}
 		} else {
