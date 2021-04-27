@@ -199,7 +199,6 @@ class UR_Shortcodes {
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );
-			wp_localize_script( 'ur-password-strength-meter', 'enable_strong_password', $enable_strong_password );
 		}
 
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );

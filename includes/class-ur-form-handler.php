@@ -300,6 +300,9 @@ class UR_Form_Handler {
 		} elseif ( ! $bypass_current_password && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
 			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
 			$save_pass = false;
+		} elseif ( wp_check_password($pass1, $current_user->user_pass,$current_user->ID) && $current_user ) {
+			ur_add_notice( __( 'New password must not be same as old password', 'user-registration' ), 'error' );
+			$save_pass = false;
 		}
 
 		if ( $pass1 && $save_pass ) {
@@ -511,6 +514,9 @@ class UR_Form_Handler {
 				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
 			}
 
+			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
+				ur_add_notice( __( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+			}
 			$errors = new WP_Error();
 
 			do_action( 'validate_password_reset', $errors, $user );

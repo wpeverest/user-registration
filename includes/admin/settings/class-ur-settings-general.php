@@ -284,7 +284,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'css'      => 'min-width: 350px;',
 						'default'  => __( 'This field is required.', 'user-registration' ),
 					),
-
+						array(
+						'title'    => __( 'Special Character Validation in Username', 'user-registration' ),
+						'desc'     => __( 'Enter the error message in form submission on username', 'user-registration' ),
+						'id'       => 'user_registration_form_submission_error_message_disallow_username_character',
+						'type'     => 'text',
+						'desc_tip' => true,
+						'css'      => 'min-width: 350px;',
+						'default'  => __( 'Please enter the valid username', 'user-registration' ),
+					),
 					array(
 						'title'    => __( 'Email', 'user-registration' ),
 						'desc'     => __( 'Enter the error message in form submission on Email.', 'user-registration' ),

@@ -1,3 +1,15 @@
+
+= 1.9.6 - 06/04/2021
+* Enhance 	- Password strength meter in reset password page.
+* Enhance 	- Disallow special characters in username field.
+* Enhance 	- Review notice UI and contents.
+* Dev	  	- Frontend listing addon compatibility.
+* Dev	  	- iDEAL payment gateway compatibility.
+* Fix 		- Localization of password strength js params.
+* Fix 		- Disable logout confirmation issue with logout endpoint menu.
+* Fix 		- Reset password button not working.
+* Fix 		- Hide label in edit profile.
+
 = 1.9.5 - 15/03/2021
 * Enhance 	- Setting page header UI.
 * Dev	  	- MailerLite add-on compatibility.

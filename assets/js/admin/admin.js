@@ -2405,7 +2405,10 @@ jQuery(function ($) {
 					event = "change";
 			}
 
-			if ("valid_file_type" === $this_node.attr("data-advance-field")) {
+			if (
+				"valid_file_type" === $this_node.attr("data-advance-field") ||
+				"payment_methods" === $this_node.attr("data-advance-field")
+			) {
 				$this_node.select2();
 			}
 

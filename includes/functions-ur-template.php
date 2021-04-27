@@ -341,9 +341,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 				$username_length = isset( $args['username_length'] ) ?  $args['username_length'] : "";
+				$username_character = isset( $args['username_character'] ) ?  $args['username_character'] : "";
 				$attr = "";
 				if( "" !== $username_length ) {
-					$attr = 'data-username-length="' . $username_length . '"';
+					$attr .= 'data-username-length="' . $username_length . '"';
+				}
+
+				if( $username_character ) {
+					$attr .= 'data-username-character="' . $username_character . '"';
 				}
 
 				if ( empty( $extra_params ) ) {

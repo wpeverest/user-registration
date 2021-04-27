@@ -285,7 +285,11 @@ abstract class UR_Form_Field {
 
 		if( "user_login" === $field_key ) {
 			$form_data['username_length'] = isset( $data['advance_setting']->username_length ) ? $data['advance_setting']->username_length : "";
+
+			$form_data['username_character'] = isset( $data['advance_setting']->username_character ) ? $data['advance_setting']->username_character : "";
 		}
+		
+	
 
 		if( 'range' === $field_key ) {
 			$form_data['range_min'] =  ( isset( $data['advance_setting']->range_min) && "" !== $data['advance_setting']->range_min) ? $data['advance_setting']->range_min : "0";
