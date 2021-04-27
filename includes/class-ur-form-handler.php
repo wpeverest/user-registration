@@ -67,11 +67,13 @@ class UR_Form_Handler {
 		}
 
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
+			if ( isset( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
 			}
 		} else {
-			if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
+			if ( isset( $_FILES['profile-pic'] ) ) {
+
+			  if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
 
 				if ( ! function_exists( 'wp_handle_upload' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -94,7 +96,8 @@ class UR_Form_Handler {
 				} else {
 					ur_add_notice( $uploaded['error'], 'error' );
 				}
-			} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
+			}
+			 elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 
 				switch ( $_FILES['profile-pic']['error'] ) {
 					case UPLOAD_ERR_INI_SIZE:
@@ -121,6 +124,7 @@ class UR_Form_Handler {
 				}
 			}
 		}
+	}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
 		$form_id       = 0;
