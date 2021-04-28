@@ -67,11 +67,13 @@ class UR_Form_Handler {
 		}
 
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			if ( isset( $_POST['profile_pic_url'] ) && ! empty( $_POST['profile_pic_url'] ) ) {
+			if ( isset( $_POST['profile_pic_url'] ) ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
 			}
 		} else {
-			if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
+			if ( isset( $_FILES['profile-pic'] ) ) {
+
+			  if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
 
 				if ( ! function_exists( 'wp_handle_upload' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -94,7 +96,8 @@ class UR_Form_Handler {
 				} else {
 					ur_add_notice( $uploaded['error'], 'error' );
 				}
-			} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
+			}
+			 elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 
 				switch ( $_FILES['profile-pic']['error'] ) {
 					case UPLOAD_ERR_INI_SIZE:
@@ -121,6 +124,7 @@ class UR_Form_Handler {
 				}
 			}
 		}
+	}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
 		$form_id       = 0;
@@ -300,6 +304,9 @@ class UR_Form_Handler {
 		} elseif ( ! $bypass_current_password && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
 			ur_add_notice( __( 'Your current password is incorrect.', 'user-registration' ), 'error' );
 			$save_pass = false;
+		} elseif ( wp_check_password($pass1, $current_user->user_pass,$current_user->ID) && $current_user ) {
+			ur_add_notice( __( 'New password must not be same as old password', 'user-registration' ), 'error' );
+			$save_pass = false;
 		}
 
 		if ( $pass1 && $save_pass ) {
@@ -346,7 +353,6 @@ class UR_Form_Handler {
 		$nonce_value     = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
 		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
-
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
@@ -512,6 +518,9 @@ class UR_Form_Handler {
 				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
 			}
 
+			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
+				ur_add_notice( __( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+			}
 			$errors = new WP_Error();
 
 			do_action( 'validate_password_reset', $errors, $user );

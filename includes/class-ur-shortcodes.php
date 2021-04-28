@@ -71,6 +71,8 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
+		wp_enqueue_script( 'ur-login' );
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_My_Account', 'output' ),
 			$atts,
@@ -94,7 +96,8 @@ class UR_Shortcodes {
 	 */
 	public static function login( $atts ) {
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
-
+		wp_enqueue_script( 'ur-login' );
+		
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,

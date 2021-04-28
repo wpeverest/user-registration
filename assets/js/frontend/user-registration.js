@@ -1044,13 +1044,11 @@
 										"#profile_pic_url"
 									).val();
 
-									if (profile_picture_url) {
-										form_data.push({
-											value: profile_picture_url,
-											field_name:
-												"user_registration_profile_pic_url",
-										});
-									}
+									form_data.push({
+										value: profile_picture_url,
+										field_name:
+											"user_registration_profile_pic_url",
+									});
 
 									form_data = JSON.stringify(form_data);
 								} catch (ex) {
