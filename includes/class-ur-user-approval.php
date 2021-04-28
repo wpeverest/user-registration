@@ -144,9 +144,12 @@ class UR_User_Approval {
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
 			$status = UR_Admin_User_Manager::PENDING;
-
 			// If the user is created by admin in the backend, than automatically approve him.
 			if ( $this->is_admin_creation_process() ) {
+				$status = UR_Admin_User_Manager::APPROVED;
+			}
+           // update user status when login using social connect
+			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
 

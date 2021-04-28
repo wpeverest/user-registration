@@ -383,6 +383,10 @@ class UR_Email_Confirmation {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
+			//update user status when login using social connect
+			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
+				update_user_meta( $user_id, 'ur_confirm_email', 1 );
+			}
 		}
 	}
 
