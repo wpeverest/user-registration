@@ -109,6 +109,7 @@ class UR_Admin {
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
 
+		
 		// Set only UR pages.
 		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
 

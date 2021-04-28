@@ -149,17 +149,37 @@ class UR_Admin_User_List_Manager {
 
 	// Display a notice to admin notifying the pending users.
 	public function user_registration_pending_users_notices() {
-		$user_query = new WP_User_Query(
-			array(
-				'meta_key'   => 'ur_user_status',
-				'meta_value' => 0,
-			)
-		);
+
+		$args = array(
+				'meta_query' => array(
+					'relation' => 'OR',
+						array(
+							'key'   => 'ur_user_status',
+							'value' => 0,
+							'compare'=> '='
+						),
+						array(
+							'key'   => 'ur_confirm_email',
+							'value' => 0,
+							'compare'=>'='
+						)
+				)
+			);
+
+		// Remove previously set filter to get exact pending users count.
+		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
+		$user_query = new WP_User_Query($args);
+
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
+		$current_screen = get_current_screen();
+		$ur_pages       = ur_get_screen_ids();
+		array_push($ur_pages,'users');
 
-		if ( count( $users ) > 0 ) {
-			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . admin_url( 'users.php' ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
+		// Check if Users are Pending and display pending users notice in UR and Users
+		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
+			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
+			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
 
