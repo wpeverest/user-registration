@@ -28,6 +28,7 @@ class UR_Shortcodes {
 			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
 			'user_registration_my_account' => __CLASS__ . '::my_account',
 			'user_registration_login'      => __class__ . '::login',
+			'user_registration_edit_profile' => __class__ . '::edit_profile',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 );
 
@@ -97,7 +98,7 @@ class UR_Shortcodes {
 	public static function login( $atts ) {
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
 		wp_enqueue_script( 'ur-login' );
-		
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
@@ -110,6 +111,29 @@ class UR_Shortcodes {
 				)
 			)
 		);
+	}
+
+	/**
+	 * User Registration Edit profile form shortcode.
+	 *
+	 * @param mixed $atts
+	 */
+	public static function edit_profile( $atts ) {
+		return UR_Shortcodes::shortcode_wrapper( array( __CLASS__, 'render_edit_profile' ), $atts );
+	}
+
+	/**
+	 * Output for Edit-profile form .
+	 *
+	 */
+	private static function render_edit_profile() {
+
+		if ( ! is_user_logged_in() ) {
+			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), wp_login_url() ) );
+		} else {
+			include_once 'shortcodes/class-ur-shortcode-my-account.php';
+			UR_Shortcode_My_Account::edit_profile();
+		}
 	}
 
 	/**
