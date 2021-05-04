@@ -275,7 +275,7 @@
 						$submit_node,
 						position
 					) {
-						$submit_node.find(".ur-message").remove();
+						$submit_node.closest(".user-registration").find(".ur-message").remove();
 
 						// Check if the form is edit-profile form.
 						if (
