@@ -206,6 +206,10 @@ class UR_Shortcode_My_Account {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 				}
 			}
+			
+			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
+			$notices = ur_get_notices();
+			ur_print_notices();
 
 			ur_get_template(
 				'myaccount/form-edit-profile.php',
