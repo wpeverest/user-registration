@@ -113,6 +113,7 @@ class UR_Frontend_Form_Handler {
 				} else {
 
 					if ( 'auto_login' === $login_option ) {
+						update_user_meta( $user_id, 'concurrent_loggedin_meta', 1, );
 						wp_clear_auth_cookie();
 						wp_set_auth_cookie( $user_id );
 						$success_params['auto_login'] = true;
