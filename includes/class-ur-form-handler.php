@@ -411,7 +411,29 @@ class UR_Form_Handler {
 						add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
 					}
 				}
+				//check user already logged in with same account at another device
+				$concurrent_loggedin_option = get_option( 'user_registration_login_options_prevent_concurrent_login', 'no' );
 
+				if ( isset( $concurrent_loggedin_option ) && 'yes' === $concurrent_loggedin_option ) {
+
+					if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
+						$user_data = get_user_by( 'email', $username );
+					} else {
+						$user_data = get_user_by( 'login', $username );
+					}
+					$role = array( 'subscriber','customer' );
+					$concurrent_loggedin_meta = get_user_meta($user_data->ID,'concurrent_loggedin_meta',true);
+
+					if ( in_array( implode( "", $user_data->roles ), $role ) ) {
+
+						if ( $concurrent_loggedin_meta && '1' === $concurrent_loggedin_meta ) {
+							ur_add_notice( apply_filters( 'login_errors', 'User is currently loggedin in another device. Please logout from another device to continue.' ), 'error' );
+							return;
+						} else {
+							update_user_meta( $user_data->ID, 'concurrent_loggedin_meta', 1, );
+						}
+					}
+				}
 				// Perform the login
 				$user = wp_signon( apply_filters( 'user_registration_login_credentials', $creds ), is_ssl() );
 
