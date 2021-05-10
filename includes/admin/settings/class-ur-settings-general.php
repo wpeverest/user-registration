@@ -481,7 +481,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'desc_tip'   => __( 'Check to enable prevent concurrent login.', 'user-registration' ),
 						'css'        => 'min-width: 350px;',
 						'default'    => 'no',
-						'desc_field' => __( 'This options lets you enable to make sure that only one user can login with that user account at a time.', 'user-registration' ),
+						'desc_field' => __( 'This options lets you enable to make sure that only one user can login with that user account at a time.<br><strong>Note: </strong>This option will only work for Subscriber and Customer role.', 'user-registration' ),
 					),
 
 						array(
