@@ -219,7 +219,8 @@ class UR_Session_Handler extends UR_Session {
 		ur_setcookie( $this->_cookie, '', time() - YEAR_IN_SECONDS, apply_filters( 'ur_session_use_secure_cookie', false ) );
 
 		$this->delete_session( $this->_customer_id );
-
+		// update concurrent login meta after logout
+		update_user_meta( $this->_customer_id, 'concurrent_loggedin_meta', 0, );
 		// Clear data
 		$this->_data        = array();
 		$this->_dirty       = false;
