@@ -189,6 +189,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
+		;
 
 		if ( true === $args['required'] ) {
 			$args['class'][] = 'validate-required';
@@ -197,9 +198,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['required'] = $required = '';
 		}
 
-		if ( is_null( $value ) ) {
+		if ( is_null( $value ) || empty($value)) {
 			$value = $args['default'];
 		}
+
+
 
 		// Custom attribute handling
 		$custom_attributes         = array();

@@ -142,8 +142,8 @@ do_action( 'user_registration_before_registration_form', $form_id );
 								echo ur_string_translation( $form_id, 'user_registration_form_setting_form_submit_label', $submit );
 							?>
 						</button>
-
 						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
+						<?php do_action( 'user_registration_after_submit_buttons', $form_id ); ?>
 					</div>
 					<?php
 			}
