@@ -412,7 +412,7 @@ class UR_AJAX {
 	/**
 	 * Login from Using Ajax
 	 */
-	public function ajax_login_submit(){
+	public static function ajax_login_submit(){
 	// Custom error messages.
 		$messages = array(
 			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
