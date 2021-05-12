@@ -459,14 +459,12 @@ class UR_AJAX {
 		}
 		$concurrent_loggedin_meta = get_user_meta($user_data->ID,'concurrent_loggedin_meta',true);
 
-		if ( ! in_array( 'administrator', $user_data->roles, true ) ) {
-			if ( array_intersect( $user_data->roles, $option_roles ) ) {
-				if ( $concurrent_loggedin_meta && '1' === $concurrent_loggedin_meta ) {
-					wp_send_json_error( array( 'message' => 'User is currently loggedin in another device. Please logout from another device to continue.' ) );
-					return;
-				} else {
-					update_user_meta( $user_data->ID, 'concurrent_loggedin_meta', 1, );
-				}
+		if ( array_intersect( $user_data->roles, $option_roles ) ) {
+			if ( $concurrent_loggedin_meta && '1' === $concurrent_loggedin_meta ) {
+				wp_send_json_error( array( 'message' => 'User is currently loggedin in another device. Please logout from another device to continue.' ) );
+				return;
+			} else {
+				update_user_meta( $user_data->ID, 'concurrent_loggedin_meta', 1, );
 			}
 		}
 	}

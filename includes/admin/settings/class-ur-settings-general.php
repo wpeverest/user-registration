@@ -379,8 +379,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_login_options_settings() {
 			$all_roles = ur_get_default_admin_roles();
-			$all_roles_except_admin = $all_roles;
-			unset( $all_roles_except_admin['administrator'] );
 
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
@@ -497,7 +495,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						'class'    => 'ur-enhanced-select',
 						'css'      => 'min-width: 350px;',
 						'desc_tip' => true,
-						'options'  => $all_roles_except_admin,
+						'options'  => $all_roles,
 					),
 
 						array(
