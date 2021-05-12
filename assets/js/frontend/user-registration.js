@@ -1383,16 +1383,17 @@ var onloadURCallback = function () {
 		.find("form.login")
 		.each(function (i) {
 			$this = jQuery(this);
-			var node_recaptcha_login = $this.find(
-				"#ur-recaptcha-node #node_recaptcha_login"
-			).length;
+			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
 
-			if (node_recaptcha_login !== 0) {
-				grecaptcha.render("node_recaptcha_login", {
-					sitekey: ur_google_recaptcha_code.site_key,
-					theme: "light",
-					style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-				});
+			if (ur_recaptcha_node.length !== 0) {
+				grecaptcha.render(
+					ur_recaptcha_node.find(".g-recaptcha").attr("id"),
+					{
+						sitekey: ur_google_recaptcha_code.site_key,
+						theme: "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+					}
+				);
 			}
 		});
 };
