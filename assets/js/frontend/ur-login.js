@@ -22,7 +22,7 @@ jQuery(function ($) {
 							.val(),
 						CaptchaResponse = $this
 							.closest("form")
-							.find("#g-recaptcha-response")
+							.find('[name="g-recaptcha-response"]')
 							.val();
 
 					var url =
