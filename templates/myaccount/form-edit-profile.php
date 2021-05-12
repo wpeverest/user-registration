@@ -174,6 +174,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['range_min'] =  ( isset( $advance_data['advance_setting']->range_min) && "" !== $advance_data['advance_setting']->range_min )? $advance_data['advance_setting']->range_min : "0";
 													$field['range_max'] =  ( isset( $advance_data['advance_setting']->range_max) && "" !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : "10";
 													$field['range_step'] =  isset( $advance_data['advance_setting']->range_step) ? $advance_data['advance_setting']->range_step : "1";
+													$field['enable_payment_slider'] =  isset( $advance_data['advance_setting']->enable_payment_slider) ? $advance_data['advance_setting']->enable_payment_slider : "false";
+
 
 													if(  "true" === $advance_data['advance_setting']->enable_prefix_postfix) {
 														if( "true" === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
