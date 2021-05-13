@@ -129,7 +129,6 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-email-templates',
 		'profile',
 		'user-edit',
-
 	);
 
 	return apply_filters( 'user_registration_screen_ids', $screen_ids );
