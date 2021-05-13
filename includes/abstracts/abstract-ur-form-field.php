@@ -289,8 +289,6 @@ abstract class UR_Form_Field {
 			$form_data['username_character'] = isset( $data['advance_setting']->username_character ) ? $data['advance_setting']->username_character : "";
 		}
 
-
-
 		if( 'range' === $field_key ) {
 			$form_data['range_min'] =  ( isset( $data['advance_setting']->range_min) && "" !== $data['advance_setting']->range_min) ? $data['advance_setting']->range_min : "0";
 			$form_data['range_max'] =  ( isset( $data['advance_setting']->range_max)  && "" !== $data['advance_setting']->range_max ) ? $data['advance_setting']->range_max : "10";
