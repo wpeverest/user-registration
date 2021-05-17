@@ -129,7 +129,19 @@ class UR_Shortcodes {
 	private static function render_edit_profile() {
 
 		if ( ! is_user_logged_in() ) {
-			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), wp_login_url() ) );
+			$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+			$matched        = 0;
+
+			if ( ! empty( $myaccount_page ) ) {
+				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				if(1 > absint( $matched )) {
+					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				}
+				if ( 1 === $matched ) {
+					$page_id = $myaccount_page->ID;
+				}
+			}
+			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), isset($page_id) ? get_permalink($page_id) : wp_login_url() ) );
 		} else {
 			include_once 'shortcodes/class-ur-shortcode-my-account.php';
 			UR_Shortcode_My_Account::edit_profile();
