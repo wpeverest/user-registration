@@ -187,6 +187,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														}
 													}
 
+													// to hide the range as payment slider in edit profile
+													if("true" ===$field['enable_payment_slider']){
+														continue;
+													}
+
 												}
 
 												if ( 'phone' === $single_item->field_key ) {
