@@ -44,7 +44,8 @@
 		}
 	}
 
-	&.horizontal {
+	&.horizontal,
+	& {
 		box-shadow: 0 2px 20px transparentize($gray-base, 0.9);
 
 		.user-registration-message,
@@ -73,7 +74,8 @@
 			}
 		}
 
-		.user-registration-MyAccount-content {
+		.user-registration-MyAccount-content,
+		.ur-frontend-form.login {
 			text-align: center;
 
 			.user-registration-profile-header {
