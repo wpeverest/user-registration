@@ -135,6 +135,22 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					),
 
 					array(
+						'title'             => __( 'Send Test Email', 'user-registration' ),
+						'desc'              => __( 'Sending test emails can help to verify that there are no issues with an email.', 'user-registration' ),
+						'id'                => 'user_registration_email_test',
+						'type'              => 'link',
+						'css'               => 'min-width:300px;',
+						'buttons'  => array(
+							array (
+								'title' => __( 'Send Email', 'user-registration' ),
+								'href'  => '#',
+								'class' => 'button button-primary user_registration_send_email_test',
+							),
+						),
+						'desc_tip' => true,
+					),
+
+					array(
 						'type' => 'sectionend',
 						'id'   => 'sender_option',
 					),

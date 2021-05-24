@@ -42,6 +42,7 @@ class UR_AJAX {
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
 			'ajax_login_submit'		 =>	true,
+			'send_test_email'		 => true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -504,7 +505,24 @@ class UR_AJAX {
      }
 	wp_send_json( $user );
 	}
-
+	/**
+	 * send test email
+	 */
+	public function send_test_email() {
+		$email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
+		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email to %s', 'user-registration' ), $email );
+		$header  = "Reply-To: {{email}} \r\n";
+		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$message =
+		'Congrats, test email was sent successfully!<br>
+		Thank you for trying out User Registration. We are on a mission to make sure your emails actually get delivered.';
+		$status = wp_mail($email,$subject,$message,$header);
+		if ( $status ) {
+			wp_send_json_success( array( 'message' => __('Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
+		} {
+	    	wp_send_json_error( array( 'message' => __('Test email was unsuccessful! Please try Again.', 'user-registration' ) ) );
+		}
+	}
 	/**
 	 * user input dropped function
 	 */
