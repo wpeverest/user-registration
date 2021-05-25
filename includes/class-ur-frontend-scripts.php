@@ -61,7 +61,7 @@ class UR_Frontend_Scripts {
 				'sweetalert2'                         => array(
 					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
 					'deps'    => '',
-					'version' => '8.17.1',
+					'version' => '10.16.7',
 					'media'   => 'all',
 				),
 				'user-registration-general'           => array(
@@ -252,7 +252,7 @@ class UR_Frontend_Scripts {
 			'sweetalert2'                => array(
 				'src'     => UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js',
 				'deps'    => array( 'jquery' ),
-				'version' => '8.17.1',
+				'version' => '10.16.7',
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
