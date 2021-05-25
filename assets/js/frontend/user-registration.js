@@ -618,7 +618,9 @@
 									) {
 										if (
 											"1" ===
-											ur_google_recaptcha_code.is_captcha_enable
+											$registration_form
+												.find("form.register")
+												.data("captcha-enabled")
 										) {
 											var captchaResponse = $this
 												.find(

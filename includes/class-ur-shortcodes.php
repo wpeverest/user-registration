@@ -97,7 +97,7 @@ class UR_Shortcodes {
 	public static function login( $atts ) {
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
 		wp_enqueue_script( 'ur-login' );
-		
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
@@ -220,6 +220,7 @@ class UR_Shortcodes {
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
 				'row_ids'                   => $form_row_ids_array,
+				'recaptcha_enabled'			=> $recaptcha_enabled
 			)
 		);
 	}
