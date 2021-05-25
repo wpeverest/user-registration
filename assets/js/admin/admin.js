@@ -2237,11 +2237,9 @@ jQuery(function ($) {
 						onOpen: function (selectedDates, dateStr, instance) {
 							instance.set(
 								"maxDate",
-								new Date(
-									$(
-										".ur-item-active .ur-settings-max-date"
-									).val()
-								)
+								// new Date(
+								$(".ur-item-active .ur-settings-max-date").val()
+								// )
 							);
 						},
 					});
@@ -2259,11 +2257,9 @@ jQuery(function ($) {
 						onOpen: function (selectedDates, dateStr, instance) {
 							instance.set(
 								"minDate",
-								new Date(
-									$(
-										".ur-item-active .ur-settings-min-date"
-									).val()
-								)
+								// new Date(
+								$(".ur-item-active .ur-settings-min-date").val()
+								// )
 							);
 						},
 					});
@@ -3185,4 +3181,3 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
-

@@ -192,7 +192,7 @@ class UR_Frontend_Scripts {
 			'flatpickr'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '4.5.1',
+				'version' => '4.6.9',
 			),
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
@@ -247,7 +247,7 @@ class UR_Frontend_Scripts {
 			'selectWoo'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/selectWoo/selectWoo.full' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '3.5.4',
+				'version' => '1.0.9',
 			),
 			'sweetalert2'                => array(
 				'src'     => UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js',
@@ -275,14 +275,14 @@ class UR_Frontend_Scripts {
 			'flatpickr'     => array(
 				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
 				'deps'    => array(),
-				'version' => '4.5.1',
+				'version' => '4.6.9',
 				'media'   => 'all',
 				'has_rtl' => false,
 			),
 			'select2'       => array(
-				'src'     => self::get_asset_url( 'assets/css/select2.css' ),
+				'src'     => self::get_asset_url( 'assets/css/select2/select2.css' ),
 				'deps'    => array(),
-				'version' => UR_VERSION,
+				'version' => '4.1.0',
 				'has_rtl' => false,
 			),
 		);
