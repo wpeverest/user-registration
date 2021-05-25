@@ -505,7 +505,7 @@ function ur_exclude_profile_details_fields() {
 	);
 
 	// Check if the my account page contains [user_registration_my_account] shortcode.
-	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) || ur_post_content_has_shortcode( 'user_registration_edit_profile' ) ) {
 		// Push profile_picture field to fields_to_exclude array.
 		array_push( $fields_to_exclude, 'profile_picture' );
 	}

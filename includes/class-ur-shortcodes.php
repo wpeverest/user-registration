@@ -127,7 +127,15 @@ class UR_Shortcodes {
 	 *
 	 */
 	private static function render_edit_profile() {
+		    $user_id = get_current_user_id();
+			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
+			$has_date = ur_has_date_field( $form_id );
 
+			if ( true === $has_date ) {
+				wp_enqueue_style( 'flatpickr' );
+				wp_enqueue_script( 'flatpickr' );
+			}
 		if ( ! is_user_logged_in() ) {
 			$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 			$matched        = 0;
