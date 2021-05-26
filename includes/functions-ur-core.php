@@ -724,7 +724,7 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
 		),
 		'field_name'  => array(
-			'setting_id'  => 'filed name',
+			'setting_id'  => 'field-name',
 			'type'        => 'text',
 			'label'       => __( 'Field Name', 'user-registration' ),
 			'name'        => 'ur_general_setting[field_name]',
@@ -756,7 +756,7 @@ function ur_get_general_settings( $id ) {
 			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
 		),
 		'hide_label'  => array(
-			'setting_id'  => 'hide label',
+			'setting_id'  => 'hide-label',
 			'type'        => 'select',
 			'label'       => __( 'Hide Label', 'user-registration' ),
 			'name'        => 'ur_general_setting[hide_label]',

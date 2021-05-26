@@ -371,7 +371,8 @@ abstract class UR_Form_Field {
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
 			$tooltip_html             = ! empty( $setting_value['tip'] ) ? ur_help_tip( $setting_value['tip'], false, 'ur-portal-tooltip' ) : '';
-			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . str_replace( ' ', '-', $setting_value['setting_id'] ) . '">';
+			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' .$setting_value['setting_id']. '">';
+			error_log(print_r($general_setting_wrapper,true));
 			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . '</label>';
 			$sub_string_key           = substr( $this->id, strlen( 'user_registration_' ), 5 );
 			$strip_prefix             = substr( $this->id, 18 );
