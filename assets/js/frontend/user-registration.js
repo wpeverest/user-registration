@@ -275,7 +275,7 @@
 						$submit_node,
 						position
 					) {
-						$submit_node.find(".ur-message").remove();
+						$submit_node.closest(".user-registration").find(".ur-message").remove();
 
 						// Check if the form is edit-profile form.
 						if (
@@ -287,9 +287,14 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							wrapper.insertBefore(
-								".user-registration-MyAccount-navigation"
-							);
+							var my_account_selector = $(".user-registration").find(".user-registration-MyAccount-navigation");
+							if ( my_account_selector.length ) {
+								wrapper.insertBefore(
+									".user-registration-MyAccount-navigation"
+								);
+							} else {
+								wrapper.insertBefore(".ur-frontend-form");
+							}
 						} else {
 							var wrapper = $(
 								'<div class="ur-message user-registration-' +
@@ -1145,7 +1150,7 @@
 										// Scroll yo the top on ajax submission complete.
 										$(window).scrollTop(
 											$(
-												".user-registration-MyAccount-navigation"
+												".user-registration"
 											).position()
 										);
 									},
