@@ -15,9 +15,14 @@ jQuery(function ($) {
 					.find('input[name="password"]')
 					.val();
 				var rememberme = $this
-					.closest("form")
-					.find('input[name="rememberme"]')
-					.val();
+						.closest("form")
+						.find('input[name="rememberme"]')
+						.val(),
+					CaptchaResponse = $this
+						.closest("form")
+						.find("#g-recaptcha-response")
+						.val();
+
 				var url =
 					ur_login_params.ajax_url +
 					"?action=user_registration_ajax_login_submit&security=" +
@@ -36,6 +41,7 @@ jQuery(function ($) {
 						username: username,
 						password: password,
 						rememberme: rememberme,
+						CaptchaResponse: CaptchaResponse,
 					},
 					success: function (res) {
 						$this

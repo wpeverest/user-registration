@@ -235,6 +235,7 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'ur-form-validator' );
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+			wp_dequeue_script( 'wc-password-strength-meter');
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 

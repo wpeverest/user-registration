@@ -246,7 +246,7 @@ class UR_AJAX {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $single_field[ $key ] ) === 1 ) {
+				if ( email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Email already exists.', 'user-registration' ),
@@ -440,8 +440,34 @@ class UR_AJAX {
 
     $info = array();
     $info['user_login'] = sanitize_user( isset($_POST['username'] ) ? $_POST['username']: '' );
-    $info['user_password'] =sanitize_text_field( isset( $_POST['password'] ) ? $_POST['password'] : '');
+    $info['user_password'] = isset( $_POST['password'] ) ? $_POST['password'] : '';
     $info['remember'] =isset( $_POST['rememberme'] );
+	$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : '';
+	$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+	$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
+	$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+
+	if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
+		if ( ! empty( $captcha_response ) ) {
+
+			$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+			$data = json_decode( wp_remote_retrieve_body( $data ) );
+
+			if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+					)
+				);
+			}
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+				)
+			);
+		}
+	}
 
 	// perform the table login
     $user= wp_signon( $info );
