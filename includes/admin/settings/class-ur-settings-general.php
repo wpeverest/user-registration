@@ -163,17 +163,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						),
 					),
 					array(
-						'title'    => __( 'Valid File Types on edit profile', 'user-registration' ),
-						'desc'     => __( 'This option lets you choose the valid file types in edit profile picture', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_valid_file_types',
-						'default'  => array(),
-						'type'     => 'multiselect',
-						'class'    => 'ur-enhanced-select',
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-						'options'  => ur_get_valid_file_type(),
-					),
-					array(
 						'type' => 'sectionend',
 						'id'   => 'my_account_options',
 					),
