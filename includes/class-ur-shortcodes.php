@@ -264,6 +264,7 @@ class UR_Shortcodes {
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
 				'row_ids'                   => $form_row_ids_array,
+				'recaptcha_enabled'			=> $recaptcha_enabled
 			)
 		);
 	}
