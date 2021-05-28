@@ -37,7 +37,20 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
+								foreach($form_data_array as $data){
+									foreach ( $data as $grid_key => $grid_data ) {
+										foreach ( $grid_data as $grid_data_key => $single_item ) {
+											if("profile_picture" === $single_item->field_key){
+												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
+													$edit_profile_valid_file_type = $single_item->advance_setting->valid_file_type;
+												}
+												$edit_profile_valid_file_type= isset($edit_profile_valid_file_type)  ? implode( ', ', $edit_profile_valid_file_type ) : 'image/jpeg,image/jpg,image/gif,image/png';
+											}
+										}
+									}
 
+								}
 									?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
 									<?php
@@ -56,7 +69,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											<div class="uraf-profile-picture-upload">
 												<p class="form-row " id="profile_pic_url_field" data-priority="">
 													<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
-													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . esc_url( $profile_picture_url ) . '" />'; ?>
 													</span>
 													<?php do_action( 'uraf_profile_picture_buttons' ); ?>
@@ -74,11 +87,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 												?>
 												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
-												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="display:none" />
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="display:none" />
 												<?php
 											} else {
 												?>
-												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 												<?php
 											}
 										}

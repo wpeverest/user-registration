@@ -345,6 +345,27 @@ class UR_AJAX {
 
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array();
 
+			// valid extension for image
+			$valid_extensions = $_REQUEST['valid_extension'];
+			$valid_extension_type = explode(',',$valid_extensions);
+			$valid_ext=array();
+
+			foreach($valid_extension_type as $key=>$value){
+				$image_extension = explode('/',$value);
+				$valid_ext[$key]= $image_extension[1];
+			}
+
+			$src_file_name = isset($upload['name'] ) ? $upload['name'] : '';
+			$file_extension = strtolower(pathinfo($src_file_name, PATHINFO_EXTENSION));
+
+			//Validates if the uploaded file has the acceptable extension.
+			if ( ! in_array( $file_extension, $valid_ext ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration-advanced-fields' ),
+					)
+				);
+			}
 			$post_overrides = array(
 				'post_status' => 'publish',
 				'post_title'  => $upload['name'],
