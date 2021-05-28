@@ -28,6 +28,7 @@ class UR_Shortcodes {
 			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
 			'user_registration_my_account' => __CLASS__ . '::my_account',
 			'user_registration_login'      => __class__ . '::login',
+			'user_registration_edit_profile' => __class__ . '::edit_profile',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 );
 
@@ -71,6 +72,8 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
+		wp_enqueue_script( 'ur-login' );
+
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_My_Account', 'output' ),
 			$atts,
@@ -94,6 +97,7 @@ class UR_Shortcodes {
 	 */
 	public static function login( $atts ) {
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+		wp_enqueue_script( 'ur-login' );
 
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
@@ -107,6 +111,49 @@ class UR_Shortcodes {
 				)
 			)
 		);
+	}
+
+	/**
+	 * User Registration Edit profile form shortcode.
+	 *
+	 * @param mixed $atts
+	 */
+	public static function edit_profile( $atts ) {
+		return UR_Shortcodes::shortcode_wrapper( array( __CLASS__, 'render_edit_profile' ), $atts );
+	}
+
+	/**
+	 * Output for Edit-profile form .
+	 *
+	 */
+	private static function render_edit_profile() {
+		    $user_id = get_current_user_id();
+			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
+			$has_date = ur_has_date_field( $form_id );
+
+			if ( true === $has_date ) {
+				wp_enqueue_style( 'flatpickr' );
+				wp_enqueue_script( 'flatpickr' );
+			}
+		if ( ! is_user_logged_in() ) {
+			$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+			$matched        = 0;
+
+			if ( ! empty( $myaccount_page ) ) {
+				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				if(1 > absint( $matched )) {
+					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				}
+				if ( 1 === $matched ) {
+					$page_id = $myaccount_page->ID;
+				}
+			}
+			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), isset($page_id) ? get_permalink($page_id) : wp_login_url() ) );
+		} else {
+			include_once 'shortcodes/class-ur-shortcode-my-account.php';
+			UR_Shortcode_My_Account::edit_profile();
+		}
 	}
 
 	/**
@@ -217,6 +264,7 @@ class UR_Shortcodes {
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
 				'row_ids'                   => $form_row_ids_array,
+				'recaptcha_enabled'			=> $recaptcha_enabled
 			)
 		);
 	}

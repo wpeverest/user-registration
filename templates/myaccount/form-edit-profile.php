@@ -22,85 +22,91 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 do_action( 'user_registration_before_edit_profile_form' ); ?>
 
-<div class="ur-frontend-form login" id="ur-frontend-form">
+<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
 	<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
 					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
-					<div class="user-registration-profile-header">
-						<div class="user-registration-img-container" style="width:100%">
-							<?php
-							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-							$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
-							foreach($form_data_array as $data){
-								foreach ( $data as $grid_key => $grid_data ) {
-									foreach ( $grid_data as $grid_data_key => $single_item ) {
-										if("profile_picture" === $single_item->field_key){
-											if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
-												$edit_profile_valid_file_type = $single_item->advance_setting->valid_file_type;
+					<?php
+					if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+					?>
+						<div class="user-registration-profile-header">
+							<div class="user-registration-img-container" style="width:100%">
+								<?php
+								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
+								foreach($form_data_array as $data){
+									foreach ( $data as $grid_key => $grid_data ) {
+										foreach ( $grid_data as $grid_data_key => $single_item ) {
+											if("profile_picture" === $single_item->field_key){
+												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
+													$edit_profile_valid_file_type = $single_item->advance_setting->valid_file_type;
+												}
+												$edit_profile_valid_file_type= isset($edit_profile_valid_file_type)  ? implode( ', ', $edit_profile_valid_file_type ) : 'image/jpeg,image/jpg,image/gif,image/png';
 											}
-											$edit_profile_valid_file_type= isset($edit_profile_valid_file_type)  ? implode( ', ', $edit_profile_valid_file_type ) : 'image/jpeg,image/jpg,image/gif,image/png';
 										}
 									}
+
 								}
+									?>
+									<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
+									<?php
+									$max_size = wp_max_upload_size();
+									$max_size = size_format( $max_size );
+									?>
+									<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
+								</div>
+								<header>
+									<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+									<div class="button-group">
+										<?php
 
-							}
-							?>
-							<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
-							<?php
-							$max_size = wp_max_upload_size();
-							$max_size = size_format( $max_size );
-							?>
-							<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
-						</div>
-						<header>
-								<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
-							<div class="button-group">
-						<?php
+										if ( has_action( 'uraf_profile_picture_buttons' ) ) {
+											?>
+											<div class="uraf-profile-picture-upload">
+												<p class="form-row " id="profile_pic_url_field" data-priority="">
+													<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
+													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . esc_url( $profile_picture_url ) . '" />'; ?>
+													</span>
+													<?php do_action( 'uraf_profile_picture_buttons' ); ?>
+												</p>
+												<div style="clear:both; margin-bottom: 20px"></div>
+											</div>
 
-						if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-							?>
-							<div class="uraf-profile-picture-upload">
-								<p class="form-row " id="profile_pic_url_field" data-priority="">
-									<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
-									<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload"  accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
-									<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="" />'; ?>
-								</span>
-								<?php do_action( 'uraf_profile_picture_buttons' ); ?>
-							</p>
-							<div style="clear:both; margin-bottom: 20px"></div>
-						</div>
+										<?php
+										} else {
+											?>
+											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
+											<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
+											<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
+											<?php
+											if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+												?>
+												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="display:none" />
+												<?php
+											} else {
+												?>
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+												<?php
+											}
+										}
+										?>
 
-							<?php
-						} else {
-							?>
-						<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo $profile_picture_url; ?>" />
-						<input type="hidden" name="profile-default-image" value="<?php echo $gravatar_image; ?>" />
-						<button class="button profile-pic-remove" style="<?php echo ( $gravatar_image === $image ) ? 'display:none;' : ''; ?>"><?php echo __( 'Remove', 'user-registration' ); ?></php></button>
-							<?php
-							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
-								?>
-						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
-						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="display:none" />
-								<?php
-							} else {
-								?>
-							<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
-								<?php
-							}
-						}
-						?>
-						 </div>
-							<?php
-							if ( ! $profile_picture_url ) {
-								?>
-							<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-							<?php } ?>
-					</header>
-					</div>
+									</div>
+									<?php
+									if ( ! $profile_picture_url ) {
+									?>
+										<span><i><?php echo __( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php _e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+									<?php }  ?>
+								</header>
+							</div>
+					<?php } ?>
+
 					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
 					<div class="user-registration-profile-fields__field-wrapper">
 
@@ -182,6 +188,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['range_min'] =  ( isset( $advance_data['advance_setting']->range_min) && "" !== $advance_data['advance_setting']->range_min )? $advance_data['advance_setting']->range_min : "0";
 													$field['range_max'] =  ( isset( $advance_data['advance_setting']->range_max) && "" !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : "10";
 													$field['range_step'] =  isset( $advance_data['advance_setting']->range_step) ? $advance_data['advance_setting']->range_step : "1";
+													$field['enable_payment_slider'] =  isset( $advance_data['advance_setting']->enable_payment_slider) ? $advance_data['advance_setting']->enable_payment_slider : "false";
 
 													if(  "true" === $advance_data['advance_setting']->enable_prefix_postfix) {
 														if( "true" === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
@@ -193,6 +200,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														}
 													}
 
+													// to hide the range as payment slider in edit profile
+													if("true" ===$field['enable_payment_slider']){
+														continue;
+													}
 												}
 
 												if ( 'phone' === $single_item->field_key ) {

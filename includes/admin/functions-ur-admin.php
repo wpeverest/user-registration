@@ -116,7 +116,7 @@ function ur_get_user_report( $form_id ) {
  */
 function ur_get_screen_ids() {
 
-	$ur_screen_id = sanitize_title( __( 'User Registration', 'user-registration' ) );
+	$ur_screen_id = sanitize_title( __( 'User Registration' ) );
 	$screen_ids   = array(
 		'toplevel_page_' . $ur_screen_id,
 		$ur_screen_id . '_page_user-registration-dashboard',

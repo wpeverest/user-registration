@@ -795,7 +795,14 @@
 	margin-left: -40px;
 	float: left;
 }
-
+.user-registration-form-login{
+	.ur-front-spinner{
+		margin-left: 0;
+		float: right;
+		margin-top: 15px;
+		margin-right: 20px;
+	}
+}
 .edit-post-visual-editor {
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {

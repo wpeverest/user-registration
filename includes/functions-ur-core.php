@@ -505,7 +505,7 @@ function ur_exclude_profile_details_fields() {
 	);
 
 	// Check if the my account page contains [user_registration_my_account] shortcode.
-	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) || ur_post_content_has_shortcode( 'user_registration_edit_profile' ) ) {
 		// Push profile_picture field to fields_to_exclude array.
 		array_push( $fields_to_exclude, 'profile_picture' );
 	}
@@ -1414,7 +1414,6 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				'ur_google_recaptcha_code',
 				array(
 					'site_key'          => $recaptcha_site_key,
-					'site_secret'       => $recaptcha_site_secret,
 					'is_captcha_enable' => true,
 					'version'           => $recaptcha_version,
 				)
@@ -1923,3 +1922,61 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
 	return $conflict_shortcodes;
 }
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
+
+/**
+ * Parse name values and smart tags
+ *
+ * @param  array $valid_form_data Form filled data.
+ * @param  int   $form_id Form ID.
+ * @param  int   $user_id User ID.
+ *
+ * @since 1.9.6
+ *
+ * @return array
+ */
+function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data ) {
+
+	$name_value = array();
+	$data_html       = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+
+	// Generate $data_html string to replace for {{all_fields}} smart tag.
+	foreach ( $valid_form_data as $field_meta => $form_data ) {
+		if ( 'user_confirm_password' === $field_meta ) {
+			continue;
+		}
+
+		// Donot include privacy policy value.
+		if ( isset( $form_data->extra_params['field_key'] ) && 'privacy_policy' === $form_data->extra_params['field_key'] ) {
+			continue;
+		}
+
+		// Process for file upload.
+		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
+			$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value ) : '';
+		}
+
+		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
+		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
+		$value      = isset( $form_data->value ) ? $form_data->value : '';
+
+		if ( 'user_pass' === $field_meta ) {
+			$value = __( 'Chosen Password', 'user-registration' );
+		}
+
+		// Check if value contains array.
+		if ( is_array( $value ) ) {
+			$value = implode( ',', $value );
+		}
+
+		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+
+		$name_value[ $field_name ] = $value;
+	}
+
+	$data_html .= '</tbody></table>';
+
+	// Smart tag process for extra fields.
+	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
+
+	return array( $name_value, $data_html );
+}

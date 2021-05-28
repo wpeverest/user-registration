@@ -1,3 +1,12 @@
+= 1.9.7 - 28/04/2021
+* Feature - Login Form Using Ajax.
+* Feature - Disable profile picture in my account.
+* Enhance - Pending users approval banner.
+* Tweak   - Not allow old password in reset password.
+* Tweak	  - Global function for smart tag name_value parser.
+* Tweak   - Removed ReCaptcha secret key from localization.
+* Fix     - Disable login confirmation for socially connected users.
+* Fix 	  - Wpnonce in URL.
 
 = 1.9.6 - 06/04/2021
 * Enhance 	- Password strength meter in reset password page.

@@ -206,6 +206,10 @@ class UR_Shortcode_My_Account {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 				}
 			}
+			
+			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
+			$notices = ur_get_notices();
+			ur_print_notices();
 
 			ur_get_template(
 				'myaccount/form-edit-profile.php',
@@ -231,6 +235,7 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'ur-form-validator' );
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+			wp_dequeue_script( 'wc-password-strength-meter');
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
