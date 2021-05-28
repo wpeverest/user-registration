@@ -69,6 +69,11 @@ function ur_get_page_id( $page ) {
 		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
 	}
 
+	if( $page > 0 && function_exists( 'pll_current_language' ) && !empty( pll_current_language() )){
+		$translations = pll_get_post_translations($page);
+		$page = $translations[pll_current_language()];
+	}
+
 	return $page ? absint( $page ) : - 1;
 }
 
