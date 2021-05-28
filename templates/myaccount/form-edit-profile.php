@@ -34,7 +34,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-
+							$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 							foreach($form_data_array as $data){
 								foreach ( $data as $grid_key => $grid_data ) {
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
@@ -84,11 +84,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 							if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 								?>
 						<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" ><?php echo __( 'Upload Picture', 'user-registration-advanced-fields' ); ?></button>
-						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/jpg,image/gif,image/png" style="display:none" />
+						<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="display:none" />
 								<?php
 							} else {
 								?>
-							<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/jpg,image/gif,image/png" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
+							<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo $edit_profile_valid_file_type ?>" style="<?php echo ( $gravatar_image !== $image ) ? 'display:none;' : ''; ?>" />
 								<?php
 							}
 						}
