@@ -246,7 +246,7 @@ class UR_AJAX {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $single_field[ $key ] ) === 1 ) {
+				if ( email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Email already exists.', 'user-registration' ),
@@ -345,6 +345,27 @@ class UR_AJAX {
 
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array();
 
+			// valid extension for image
+			$valid_extensions = $_REQUEST['valid_extension'];
+			$valid_extension_type = explode(',',$valid_extensions);
+			$valid_ext=array();
+
+			foreach($valid_extension_type as $key=>$value){
+				$image_extension = explode('/',$value);
+				$valid_ext[$key]= $image_extension[1];
+			}
+
+			$src_file_name = isset($upload['name'] ) ? $upload['name'] : '';
+			$file_extension = strtolower(pathinfo($src_file_name, PATHINFO_EXTENSION));
+
+			//Validates if the uploaded file has the acceptable extension.
+			if ( ! in_array( $file_extension, $valid_ext ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration-advanced-fields' ),
+					)
+				);
+			}
 			$post_overrides = array(
 				'post_status' => 'publish',
 				'post_title'  => $upload['name'],
@@ -412,7 +433,7 @@ class UR_AJAX {
 	/**
 	 * Login from Using Ajax
 	 */
-	public function ajax_login_submit(){
+	public static function ajax_login_submit(){
 	// Custom error messages.
 		$messages = array(
 			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
@@ -500,6 +521,7 @@ class UR_AJAX {
 							$redirect = get_home_url();
 						}
 					}
+			$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
   	   		wp_send_json_success( array( 'message' =>$redirect  ));
      }
 	wp_send_json( $user );

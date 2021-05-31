@@ -57,7 +57,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 ?>
 	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<form method='post' class='register' data-form-id="<?php echo absint( $form_id ); ?>"
-			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?>>
+			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?> data-captcha-enabled="<?php echo esc_attr( $recaptcha_enabled ) ?>">
 
 			<?php
 			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
@@ -134,7 +134,6 @@ do_action( 'user_registration_before_registration_form', $form_id );
 						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
 						$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 						?>
-
 						<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>">
 							<span></span>
 							<?php
@@ -142,8 +141,8 @@ do_action( 'user_registration_before_registration_form', $form_id );
 								echo ur_string_translation( $form_id, 'user_registration_form_setting_form_submit_label', $submit );
 							?>
 						</button>
-
 						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
+						<?php do_action( 'user_registration_after_submit_buttons', $form_id ); ?>
 					</div>
 					<?php
 			}

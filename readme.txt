@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.7.1
-Stable tag: 1.9.7
+Tested up to: 5.7.2
+Stable tag: 1.9.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -152,6 +152,17 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.8 - 31/05/2021
+* Feature - Edit profile form shortcode.
+* Enhance - Valid file type in my account profile picture.
+* Enhance - Reset Button in UR Form.
+* Enhance - Payment slider in range field.
+* Tweak - Email exists check in edit profile.
+* Tweak - Redirection filter in ajax login.
+* Fix - My Account slug not translate via polylang plugin.
+* Fix - UR not working if dashboard language changed.
+* Fix - Recaptcha issue on login and registration shortcode page.
 
 = 1.9.7 - 28/04/2021
 * Feature - Login Form Using Ajax.

@@ -52,6 +52,7 @@ class UR_Form_Handler {
 	 */
 	public static function save_profile_details() {
 
+		global $wp;
 		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
@@ -181,7 +182,7 @@ class UR_Form_Handler {
 				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $_POST[ $key ] ) === 1 ) {
+				if ( email_exists( $_POST[ $key ] ) !== $user_id ) {
 					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
@@ -244,7 +245,7 @@ class UR_Form_Handler {
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			wp_safe_redirect( ur_get_endpoint_url( 'edit-profile', '', ur_get_page_permalink( 'myaccount' ) ) );
+			wp_safe_redirect(home_url( add_query_arg( array(), $wp->request ) ));
 			exit;
 		}
 	}

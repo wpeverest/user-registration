@@ -197,7 +197,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['required'] = $required = '';
 		}
 
-		if ( is_null( $value ) ) {
+		if ( is_null( $value ) || empty($value)) {
 			$value = $args['default'];
 		}
 

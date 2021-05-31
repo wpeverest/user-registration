@@ -1,3 +1,13 @@
+= 1.9.8 - 31/05/2021
+* Feature - Edit profile form shortcode.
+* Enhance - Valid file type in my account profile picture.
+* Enhance - Reset Button in UR Form.
+* Enhance - Payment slider  in range field.
+* Tweak - Email exists check in edit profile.
+* Fix - My Account slug not translate via polylang plugin.
+* Fix - UR not working if dashboard language changed.
+* Fix - Recaptcha issue on login and registration shortcode page.
+
 = 1.9.7 - 28/04/2021
 * Feature - Login Form Using Ajax.
 * Feature - Disable profile picture in my account.

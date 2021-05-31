@@ -2,23 +2,20 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.9.7\n"
+"Project-Id-Version: User Registration 1.9.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-28T08:38:13+00:00\n"
+"POT-Creation-Date: 2021-05-31T06:35:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
-#: includes/admin/class-ur-admin-menus.php:570
-#: includes/admin/class-ur-admin-menus.php:683
 #: includes/admin/class-ur-admin.php:123
-#: includes/admin/functions-ur-admin.php:119
 #: includes/class-ur-form-block.php:48
 #: includes/class-ur-privacy.php:31
 msgid "User Registration"
@@ -40,12 +37,12 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:555
-#: includes/admin/functions-ur-admin.php:427
+#: includes/abstracts/abstract-ur-form-field.php:554
+#: includes/admin/functions-ur-admin.php:426
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:565
+#: includes/abstracts/abstract-ur-form-field.php:564
 msgid "Advance Settings"
 msgstr ""
 
@@ -706,12 +703,12 @@ msgstr ""
 msgid "loading..."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:151
-#: includes/admin/functions-ur-admin.php:214
+#: includes/admin/functions-ur-admin.php:150
+#: includes/admin/functions-ur-admin.php:213
 msgid "User Extra Information"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:234
+#: includes/admin/functions-ur-admin.php:233
 msgid "WordPress User Extra Information"
 msgstr ""
 
@@ -1060,8 +1057,8 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:362
 #: includes/class-ur-ajax.php:108
-#: includes/class-ur-ajax.php:466
-#: includes/class-ur-form-handler.php:382
+#: includes/class-ur-ajax.php:487
+#: includes/class-ur-form-handler.php:383
 #: includes/class-ur-frontend-scripts.php:377
 msgid "Captcha code error, please try again."
 msgstr ""
@@ -1948,33 +1945,33 @@ msgstr ""
 #: includes/class-ur-ajax.php:117
 #: includes/class-ur-ajax.php:173
 #: includes/class-ur-ajax.php:330
-#: includes/class-ur-ajax.php:436
+#: includes/class-ur-ajax.php:457
 msgid "Nonce error, please reload."
 msgstr ""
 
 #: includes/class-ur-ajax.php:101
-#: includes/class-ur-ajax.php:459
-#: includes/class-ur-form-handler.php:379
+#: includes/class-ur-ajax.php:480
+#: includes/class-ur-form-handler.php:380
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-ajax.php:129
-#: includes/class-ur-shortcodes.php:130
+#: includes/class-ur-shortcodes.php:174
 msgid "Only administrators can add new users."
 msgstr ""
 
 #: includes/class-ur-ajax.php:147
-#: includes/class-ur-shortcodes.php:144
+#: includes/class-ur-shortcodes.php:188
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
 #: includes/class-ur-ajax.php:147
-#: includes/class-ur-shortcodes.php:144
+#: includes/class-ur-shortcodes.php:188
 msgid "Log out of this account."
 msgstr ""
 
 #: includes/class-ur-ajax.php:147
-#: includes/class-ur-shortcodes.php:144
+#: includes/class-ur-shortcodes.php:188
 #: includes/functions-ur-account.php:111
 msgid "Logout"
 msgstr ""
@@ -1985,49 +1982,49 @@ msgid "Email already exists."
 msgstr ""
 
 #: includes/class-ur-ajax.php:301
-#: includes/class-ur-form-handler.php:243
+#: includes/class-ur-form-handler.php:244
 msgid "User profile updated successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:381
-#: includes/class-ur-form-handler.php:104
+#: includes/class-ur-ajax.php:402
+#: includes/class-ur-form-handler.php:105
 msgid "File size exceed, please check your file size."
 msgstr ""
 
-#: includes/class-ur-ajax.php:388
-#: includes/class-ur-form-handler.php:107
+#: includes/class-ur-ajax.php:409
+#: includes/class-ur-form-handler.php:108
 msgid "Something went wrong while uploading, please contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:418
-#: includes/class-ur-form-handler.php:345
+#: includes/class-ur-ajax.php:439
+#: includes/class-ur-form-handler.php:346
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-ajax.php:421
-#: includes/class-ur-form-handler.php:348
+#: includes/class-ur-ajax.php:442
+#: includes/class-ur-form-handler.php:349
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-ajax.php:478
-#: includes/class-ur-ajax.php:484
-#: includes/class-ur-ajax.php:487
-#: includes/class-ur-form-handler.php:421
-#: includes/class-ur-form-handler.php:427
-#: includes/class-ur-form-handler.php:430
+#: includes/class-ur-ajax.php:499
+#: includes/class-ur-ajax.php:505
+#: includes/class-ur-ajax.php:508
+#: includes/class-ur-form-handler.php:422
+#: includes/class-ur-form-handler.php:428
+#: includes/class-ur-form-handler.php:431
 msgid "ERROR"
 msgstr ""
 
-#: includes/class-ur-ajax.php:574
-#: includes/class-ur-ajax.php:580
+#: includes/class-ur-ajax.php:596
+#: includes/class-ur-ajax.php:602
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:597
+#: includes/class-ur-ajax.php:619
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-ajax.php:608
+#: includes/class-ur-ajax.php:630
 msgid "Could not save form, "
 msgstr ""
 
@@ -2083,11 +2080,11 @@ msgid "User does not exist!"
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:414
-#: includes/class-ur-form-handler.php:379
-#: includes/class-ur-form-handler.php:382
-#: includes/class-ur-form-handler.php:387
-#: includes/class-ur-form-handler.php:391
-#: includes/class-ur-form-handler.php:400
+#: includes/class-ur-form-handler.php:380
+#: includes/class-ur-form-handler.php:383
+#: includes/class-ur-form-handler.php:388
+#: includes/class-ur-form-handler.php:392
+#: includes/class-ur-form-handler.php:401
 #: includes/class-ur-user-approval.php:194
 #: includes/class-ur-user-approval.php:199
 #: includes/class-ur-user-approval.php:214
@@ -2132,72 +2129,72 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:177
+#: includes/class-ur-form-handler.php:178
 #: includes/frontend/class-ur-frontend-form-handler.php:467
 msgid "%s is a required field."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:185
+#: includes/class-ur-form-handler.php:186
 msgid "Email already exists"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:199
+#: includes/class-ur-form-handler.php:200
 msgid "%s is not a valid email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:290
+#: includes/class-ur-form-handler.php:291
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:293
+#: includes/class-ur-form-handler.php:294
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:296
+#: includes/class-ur-form-handler.php:297
 msgid "Please enter your new password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:299
+#: includes/class-ur-form-handler.php:300
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:302
+#: includes/class-ur-form-handler.php:303
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:305
+#: includes/class-ur-form-handler.php:306
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:308
+#: includes/class-ur-form-handler.php:309
 msgid "New password must not be same as old password"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:329
+#: includes/class-ur-form-handler.php:330
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:514
+#: includes/class-ur-form-handler.php:515
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:518
+#: includes/class-ur-form-handler.php:519
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:522
+#: includes/class-ur-form-handler.php:523
 msgid "New password must not be same as old password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:556
+#: includes/class-ur-form-handler.php:557
 msgid "Invalid Key"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:571
+#: includes/class-ur-form-handler.php:572
 msgid "Thanks for confirming your export request."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:573
+#: includes/class-ur-form-handler.php:574
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
@@ -2572,6 +2569,10 @@ msgstr ""
 #: includes/class-ur-query.php:75
 #: includes/functions-ur-account.php:109
 msgid "Profile Details"
+msgstr ""
+
+#: includes/class-ur-shortcodes.php:152
+msgid "Please Login to edit profile. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
 #: includes/class-ur-user-approval.php:194
@@ -4254,24 +4255,24 @@ msgstr ""
 msgid "Are you sure you want to log out?&nbsp;<a href=\"%s\">Confirm and log out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:218
+#: includes/shortcodes/class-ur-shortcode-my-account.php:222
 msgid "No profile details found."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:319
+#: includes/shortcodes/class-ur-shortcode-my-account.php:323
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:340
-#: includes/shortcodes/class-ur-shortcode-my-account.php:345
+#: includes/shortcodes/class-ur-shortcode-my-account.php:344
+#: includes/shortcodes/class-ur-shortcode-my-account.php:349
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:355
+#: includes/shortcodes/class-ur-shortcode-my-account.php:359
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:368
+#: includes/shortcodes/class-ur-shortcode-my-account.php:372
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
@@ -4299,7 +4300,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: templates/form-registration.php:153
+#: templates/form-registration.php:152
 msgid "Form not found, form id :"
 msgstr ""
 
@@ -4337,8 +4338,8 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:82
-#: templates/myaccount/form-edit-profile.php:276
-#: templates/myaccount/form-edit-profile.php:281
+#: templates/myaccount/form-edit-profile.php:294
+#: templates/myaccount/form-edit-profile.php:299
 msgid "Save changes"
 msgstr ""
 
@@ -4346,23 +4347,23 @@ msgstr ""
 msgid "Profile Detail"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:47
+#: templates/myaccount/form-edit-profile.php:60
 msgid "Max size: "
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:50
+#: templates/myaccount/form-edit-profile.php:63
 msgid "Upload your new profile image."
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:72
+#: templates/myaccount/form-edit-profile.php:85
 msgid "Remove"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:91
+#: templates/myaccount/form-edit-profile.php:104
 msgid "You can change your profile picture on"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:91
+#: templates/myaccount/form-edit-profile.php:104
 msgid "Gravatar"
 msgstr ""
 

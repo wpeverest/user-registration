@@ -567,7 +567,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( __( 'User Registration' ), __( 'User Registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 		}
@@ -680,7 +680,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$registration_table_list->prepare_items();
 			?>
 			<div class="wrap">
-				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'user-registration' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				<hr class="wp-header-end">
 				<form id="registration-list" method="post">
