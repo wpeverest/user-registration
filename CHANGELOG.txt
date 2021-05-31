@@ -4,6 +4,7 @@
 * Enhance - Reset Button in UR Form.
 * Enhance - Payment slider  in range field.
 * Tweak - Email exists check in edit profile.
+* Tweak - Redirection filter in ajax login.
 * Fix - My Account slug not translate via polylang plugin.
 * Fix - UR not working if dashboard language changed.
 * Fix - Recaptcha issue on login and registration shortcode page.
