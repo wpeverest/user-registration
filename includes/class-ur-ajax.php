@@ -521,6 +521,7 @@ class UR_AJAX {
 							$redirect = get_home_url();
 						}
 					}
+			$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
   	   		wp_send_json_success( array( 'message' =>$redirect  ));
      }
 	wp_send_json( $user );

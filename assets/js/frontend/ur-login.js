@@ -54,6 +54,15 @@ jQuery(function ($) {
 
 							// custom error message
 							if (res.success == false) {
+								var ur_recaptcha_node = $this
+									.closest("form")
+									.find(
+										"#ur-recaptcha-node #node_recaptcha_login.g-recaptcha"
+									).length;
+								if (ur_recaptcha_node !== 0) {
+									grecaptcha.reset();
+								}
+
 								$this
 									.closest("#user-registration")
 									.find(".user-registration-error")
@@ -67,7 +76,7 @@ jQuery(function ($) {
 											"</ul>"
 									);
 							} else {
-								window.location = res.data.message;
+								window.location.href = res.data.message;
 							}
 						},
 					});

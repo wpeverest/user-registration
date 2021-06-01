@@ -41,15 +41,18 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									foreach ( $data as $grid_key => $grid_data ) {
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 
+								foreach($form_data_array as $data){
+									foreach ( $data as $grid_key => $grid_data ) {
+										foreach ( $grid_data as $grid_data_key => $single_item ) {
+											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
+
 											if("profile_picture" === $single_item->field_key){
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
-													$edit_profile_valid_file_type = $single_item->advance_setting->valid_file_type;
+													$edit_profile_valid_file_type = implode(', ', $single_item->advance_setting->valid_file_type);
 												}
-												$edit_profile_valid_file_type = isset($edit_profile_valid_file_type) ? implode( ', ', $edit_profile_valid_file_type ) : 'image/jpeg,image/jpg,image/gif,image/png';
 											}
 										}
 									}
-
 								}
 									?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo $image; ?>" style='max-width:96px; max-height:96px;' >
