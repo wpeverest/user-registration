@@ -72,6 +72,12 @@ class UR_Form_Block {
 					'formId' => array(
 						'type' => 'string',
 					),
+					'formType' => array(
+						'type' => 'string',
+					),
+					'shortcode' =>  array(
+						'type' => 'string',
+					),
 				),
 				'editor_script'   => 'user-registration-block-editor',
 				'editor_style'    => 'user-registration-block-editor',
@@ -88,42 +94,60 @@ class UR_Form_Block {
 	 */
 	function render_callback( $attr ) {
 
-		$form_id = ! empty( $attr['formId'] ) ? absint( $attr['formId'] ) : 0;
+		$formType = ! empty( $attr['formType'] ) ? _sanitize_text_fields( $attr['formType'] ) : 'registration_form';
+		if( 'registration_form' === $formType ){
+			$form_id = ! empty( $attr['formId'] ) ? absint( $attr['formId'] ) : 0;
 
-		if ( empty( $form_id ) ) {
-			return '';
+			if ( empty( $form_id ) ) {
+				return '';
+			}
+
+			$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'];
+
+			if ( $is_gb_editor ) {
+				add_filter(
+					'user_registration_form_custom_class',
+					function( $class ) {
+						return $class . ' ur-gutenberg-editor';
+					}
+				);
+
+				add_action(
+					'user_registration_before_registration_form',
+					function() {
+						echo '<fieldset disabled>';
+					}
+				);
+
+				add_action(
+					'user_registration_form_registration',
+					function() {
+						echo '</fieldset>';
+					}
+				);
+			}
+
+			return UR_Shortcodes::form(
+				array(
+					'id' => $form_id,
+				)
+			);
+		} elseif ( 'login_form' === $formType ){
+			$shortcode = ! empty( $attr['shortcode'] ) ? _sanitize_text_fields( $attr['shortcode'] ) : '';
+
+			if ( empty( $shortcode ) ) {
+				return '';
+			}
+			if('login_shortcode'=== $shortcode ) {
+				return UR_Shortcodes::login(
+					array()
+				);
+			}else{
+				return UR_Shortcodes::my_account(
+					array()
+				);
+			}
 		}
-
-		$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'];
-
-		if ( $is_gb_editor ) {
-			add_filter(
-				'user_registration_form_custom_class',
-				function( $class ) {
-					return $class . ' ur-gutenberg-editor';
-				}
-			);
-
-			add_action(
-				'user_registration_before_registration_form',
-				function() {
-					echo '<fieldset disabled>';
-				}
-			);
-
-			add_action(
-				'user_registration_form_registration',
-				function() {
-					echo '</fieldset>';
-				}
-			);
-		}
-
-		return UR_Shortcodes::form(
-			array(
-				'id' => $form_id,
-			)
-		);
 	}
 }
 
