@@ -509,18 +509,22 @@ class UR_AJAX {
 	 * send test email
 	 */
 	public function send_test_email() {
-		$email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
-		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email to %s', 'user-registration' ), $email );
-		$header  = "Reply-To: {{email}} \r\n";
+		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		$email   = sanitize_email( isset( $_POST['email'] ) ? $_POST['email'] : '' );
+		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );
+		$header  = "Reply-To: {{from}} \r\n";
 		$header .= 'Content-Type: text/html; charset=UTF-8';
 		$message =
-		'Congrats, test email was sent successfully!<br>
-		Thank you for trying out User Registration. We are on a mission to make sure your emails actually get delivered.';
-		$status = wp_mail($email,$subject,$message,$header);
+		'Congratulations,<br>
+		Your test email has been received successfully.<br>
+		We thank you for trying out User Registration and joining our mission to make sure you get your emails delivered.<br>
+		Regards,<br>
+		User Registration Team';
+		$status = wp_mail( $email,$subject,$message,$header );
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __('Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
-	    	wp_send_json_error( array( 'message' => __('Test email was unsuccessful! Please try Again.', 'user-registration' ) ) );
+	    	wp_send_json_error( array( 'message' => __('Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
 		}
 	}
 	/**

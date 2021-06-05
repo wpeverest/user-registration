@@ -135,8 +135,36 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					),
 
 					array(
-						'title'             => __( 'Send Test Email', 'user-registration' ),
-						'desc'              => __( 'Sending test emails can help to verify that there are no issues with an email.', 'user-registration' ),
+						'type' => 'sectionend',
+						'id'   => 'sender_option',
+					),
+
+					array(
+						'title' => __( 'Send a Test Email', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'send_test_email',
+					),
+
+					array(
+						'title'             => __( 'Send To', 'user-registration' ),
+						'desc'              => __( 'Enter email address where test email will be sent.', 'user-registration' ),
+						'id'                => 'user_registration_email_send_to',
+						'type'              => 'email',
+						'custom_attributes' => array(
+							'multiple' => 'multiple',
+						),
+						'css'               => 'min-width:300px;',
+						'default'           => get_option( 'admin_email' ),
+						'autoload'          => false,
+						'desc_tip'          => true,
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'send_test_email',
+					),
+					array(
 						'id'                => 'user_registration_email_test',
 						'type'              => 'link',
 						'css'               => 'min-width:300px;',
@@ -144,16 +172,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							array (
 								'title' => __( 'Send Email', 'user-registration' ),
 								'href'  => '#',
-								'class' => 'button button-primary user_registration_send_email_test',
+								'class' => 'button user_registration_send_email_test',
 							),
 						),
 						'desc_tip' => true,
 					),
 
-					array(
-						'type' => 'sectionend',
-						'id'   => 'sender_option',
-					),
+
 				)
 			);
 				return apply_filters( 'user_registration_get_email_settings_' . $this->id, $settings );
