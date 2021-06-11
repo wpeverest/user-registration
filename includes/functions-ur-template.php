@@ -253,6 +253,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '" ' . $cl_html . '>%3$s</div>';
+		$user_id = get_current_user_id();
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		$enable_field_icon   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_field_icon' );
 
 		switch ( $args['type'] ) {
 
@@ -320,7 +323,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				if ( empty( $extra_params ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
-					$field          .= '<span class="password-input-group">';
+					$field          .= '<span class="password-input-group input-form-field-icons">';
 					$field          .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 						$field .= '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
@@ -328,6 +331,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '</span>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				}
+				if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
+					if(!is_admin(  )){
+						$field .= '<span class="'.$args['icon'].'"></span>';
+					}
 				}
 				break;
 
@@ -350,12 +358,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if( $username_character ) {
 					$attr .= 'data-username-character="' . $username_character . '"';
 				}
-
+				$field .= '<span class="input-form-field-icons">';
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 				}
+				if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
+					if(!is_admin(  ) && 'file' != $args['type']){
+						$field .= '<span class="'.$args['icon'].'"></span>';
+					}
+				}
+				$field .= '</span>';
+
 				break;
 			case 'date':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
@@ -386,6 +401,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '"  class="regular-text" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
+				}
+				if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
+					if(!is_admin(  ) ){
+						$field .= '<span class="'.$args['icon'].'"></span>';
+					}
 				}
 				break;
 
@@ -492,6 +512,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
 		}
+
+
 
 		if ( ! empty( $field ) ) {
 
