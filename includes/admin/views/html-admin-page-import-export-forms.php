@@ -11,11 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
+<h3 class="ur-settings-section-header"><?php _e( 'IMPORT/EXPORT FORMS', 'user-registration'); ?></h3>
 <div class="ur-export-users-page">
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">
 				<div class="postbox">
-					<h3 class="hndle"><?php _e( 'Export forms With Settings', 'user-registration' ); ?></h3>
+					<h3 class="hndle"><?php _e( 'EXPORT FORMS WITH SETTINGS', 'user-registration' ); ?></h3>
 
 					<div class="inside">
 						<p class="help">
@@ -37,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div><!-- .postbox -->
 				<div class="postbox">
-					<h3 class="hndle"><?php _e( 'Import Forms With Settings', 'user-registration' ); ?></h3>
+					<h3 class="hndle"><?php _e( 'IMPORT FORMS WITH SETTINGS', 'user-registration' ); ?></h3>
 
 					<div class="inside">
 						<p class="help">
