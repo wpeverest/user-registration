@@ -69,7 +69,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$settings = apply_filters(
 				'user_registration_email_settings',
 				array(
-					'title' => __( 'General Email Settings', 'user-registration' ),
+					'title' => __( 'Emails', 'user-registration' ),
 					'sections' => array (
 						'email_notification_settings' => array(
 							'title' => __( 'Email notifications', 'user-registration' ),

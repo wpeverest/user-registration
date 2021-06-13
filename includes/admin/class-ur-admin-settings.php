@@ -236,7 +236,19 @@ class UR_Admin_Settings {
 
 		if( is_array( $options ) && !empty( $options ) ){
 
-			$settings .= '<h3 class="ur-settings-section-header">' . esc_html( strtoupper( $options['title'] ) ) . '</h3>';
+			$settings .= '<h3 class="ur-settings-section-header">' . esc_html( ucwords( $options['title'] ) ) . '</h3>';
+			$back_link = isset( $options['back_link'] ) ? $options['back_link'] : '';
+			$back_link_text = isset( $options['back_link_text'] ) ? $options['back_link_text'] : '';
+
+			if( isset( $options['back_link'] ) ) {
+				$settings .= '<a href="' . $back_link . '" class="page-title-action">';
+
+				if( isset( $options['back_link_text'] ) ) {
+					$settings .= $back_link_text;
+				}
+
+				$settings .= '</a>';
+			}
 
 			foreach ( $options['sections'] as $id => $section ) {
 				if ( ! isset( $section['type'] ) ) {
@@ -248,7 +260,13 @@ class UR_Admin_Settings {
 					$settings .=  '<div class="user-registration-card__header">';
 
 					if ( ! empty( $section['title'] ) ) {
-						$settings .= '<h3  class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) ) . '</h3>';
+						$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
+
+						if( isset( $section['back_link'] ) ) {
+							$settings .= $section['back_link'];
+						}
+
+						$settings .= '</h3>';
 					}
 					$settings .= '</div>';
 
@@ -274,6 +292,12 @@ class UR_Admin_Settings {
 					}
 					if ( ! isset( $value['row_class'] ) ) {
 						$value['row_class'] = '';
+					}
+					if ( ! isset( $value['rows'] ) ) {
+						$value['rows'] = '';
+					}
+					if ( ! isset( $value['cols'] ) ) {
+						$value['cols'] = '';
 					}
 					if ( ! isset( $value['title'] ) ) {
 						$value['title'] = isset( $value['name'] ) ? $value['name'] : '';
@@ -378,6 +402,8 @@ class UR_Admin_Settings {
 										id="' . esc_attr( $value['id'] ) . '"
 										style="' . esc_attr( $value['css'] ) .'"
 										class="' . esc_attr( $value['class'] ) . '"
+										rows="' . esc_attr( $value['rows'] ) . '"
+										cols="' . esc_attr( $value['cols'] ) . '"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
 										' . implode( ' ', $custom_attributes ) . '>'
 										. esc_textarea( $option_value ) . '</textarea>';
@@ -564,7 +590,12 @@ class UR_Admin_Settings {
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . sanitize_title( $value['type'] ) . '">';
 							$settings .= $description;
+
+							// Output buffer for tinymce editor
+							ob_start();
 							wp_editor( $option_value, $value['id'], $editor_settings );
+							$settings .= ob_get_clean();
+
 							$settings .= '</td>';
 							$settings .= '</tr>';
 							break;
@@ -677,7 +708,7 @@ class UR_Admin_Settings {
 		// Options to update will be stored here and saved later.
 		$update_options = array();
 
-		if( is_array( $options ) && !empty( $options ) ){
+		if( empty( $options ) ){
 			return false;
 		}
 

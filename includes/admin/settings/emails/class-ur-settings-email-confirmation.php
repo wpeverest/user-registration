@@ -32,43 +32,39 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 		 */
 		public function get_settings() {
 
-			?><h2><?php echo esc_html__( 'Email Confirmation', 'user-registration' ); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
-
-			<?php
 			$settings = apply_filters(
 				'user_registration_email_confirmation',
 				array(
+					'title' => __( 'Emails', 'user-registration' ),
+					'sections' => array (
+						'email_confirmation' => array(
+							'title' => __( 'Confirmation Email', 'user-registration' ),
+							'type'  => 'card',
+							'desc'  => '',
+							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'settings' => array(
+								array(
+									'title'    => __( 'Email Subject', 'user-registration' ),
+									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_email_confirmation_subject',
+									'type'     => 'text',
+									'default'  => __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
 
-					array(
-						'type' => 'title',
-						'desc' => '',
-						'id'   => 'email_confirmation',
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_email_confirmation',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_email_confirmation(),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+							),
+						),
 					),
-					array(
-						'title'    => __( 'Email Subject', 'user-registration' ),
-						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_email_confirmation_subject',
-						'type'     => 'text',
-						'default'  => __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-
-					array(
-						'title'    => __( 'Email Content', 'user-registration' ),
-						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_email_confirmation',
-						'type'     => 'tinymce',
-						'default'  => $this->ur_get_email_confirmation(),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-
-					array(
-						'type' => 'sectionend',
-						'id'   => 'email_confirmation',
-					),
-
 				)
 			);
 
