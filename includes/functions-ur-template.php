@@ -364,8 +364,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 				}
-					if(!is_admin(  ) && 'file' != $args['type']){
-						if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
+					if( !is_admin(  ) ){
+						if('yes' === $enable_field_icon || '1'===$enable_field_icon && 'file' != $args['type']) {
 							$field .= '<span class="'.$args['icon'].'"></span>';
 					}
 				}
