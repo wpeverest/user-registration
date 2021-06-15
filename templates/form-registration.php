@@ -152,9 +152,11 @@ do_action( 'user_registration_before_registration_form', $form_id );
 						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
 					<?php
 			}
+			$enable_field_icon   = ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon' );
 			?>
 
 			<div style="clear:both"></div>
+			<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo $enable_field_icon; ?>"/>
 			<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
 			<input type="hidden" name="ur-redirect-url" value="<?php echo $redirect_url; ?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
