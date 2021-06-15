@@ -37,16 +37,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-								foreach($form_data_array as $data){
-									foreach ( $data as $grid_key => $grid_data ) {
-										foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 								foreach($form_data_array as $data){
 									foreach ( $data as $grid_key => $grid_data ) {
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 
-											if("profile_picture" === $single_item->field_key){
+											if("profile_picture" === $single_item->field_key) {
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode(', ', $single_item->advance_setting->valid_file_type);
 												}
