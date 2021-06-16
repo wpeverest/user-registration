@@ -109,6 +109,7 @@
 		padding: 10px;
 		box-shadow: none;
 		background: none;
+
 		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
@@ -173,6 +174,7 @@
 							}
 
 							input {
+
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 2px;
@@ -261,8 +263,7 @@
 
 			select {
 				-webkit-appearance: none;
-				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-					no-repeat right 5px top 55%;
+				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -396,6 +397,7 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -457,6 +459,7 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -477,6 +480,7 @@
 						color: $label_color;
 						margin-bottom: 10px;
 						height: 45px;
+
 						&:focus {
 							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
 						}
@@ -509,6 +513,7 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -566,6 +571,7 @@
 			form {
 				.ur-form-row {
 					.ur-form-grid {
+
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -712,6 +718,7 @@
 			}
 
 			header {
+
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -783,6 +790,7 @@
 	margin-left: -40px;
 	float: left;
 }
+
 .user-registration-form-login {
 	.ur-front-spinner {
 		margin-left: 0;
@@ -791,7 +799,9 @@
 		margin-right: 20px;
 	}
 }
+
 .edit-post-visual-editor {
+
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -817,6 +827,7 @@
 .ur-frontend-form.ur-gutenberg-editor form button[type="submit"] {
 	cursor: not-allowed;
 }
+
 .ur-frontend-form.ur-gutenberg-editor form .ur-form-row .ur-form-grid input {
 	cursor: not-allowed;
 }
@@ -901,4 +912,22 @@
 
 .ur-hidden {
 	display: none;
+}
+
+.input-text {
+	padding-left: 32px !important;
+}
+
+.without_icon {
+	padding-left: 10px !important;
+}
+
+.input-wrapper {
+	position: relative;
+
+	.ur-icon {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+	}
 }
