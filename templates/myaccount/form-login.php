@@ -50,6 +50,9 @@ $placeholders = array(
 $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
 
 $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
+
+$enable_field_icon = 'yes' === get_option( 'user_registration_extras_general_setting_login_form', 'no' );
+
 ?>
 
 <?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
@@ -68,7 +71,12 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 							printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 						}
 						?>
+						<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( $_POST['username'] ) : ''; ?>" />
+						<?php if($enable_field_icon) { ?>
+						<span class="ur-icon ur-icon-user"></span>
+						<?php } ?>
+						</span>
 					</p>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
@@ -76,12 +84,18 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
 						}
 						?>
+						<span class="input-wrapper">
 						<span class="password-input-group">
 						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
+
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 							?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
+						<?php if($enable_field_icon) { ?>
+						<span class="ur-icon ur-icon-password"></span>
+						<?php } ?>
+						</span>
 							<?php
 						}
 						?>
