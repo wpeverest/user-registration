@@ -211,10 +211,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														unset( $field['input_mask'] );
 													}
 												}
-
+												
+												if ( isset( $single_item->general_setting->hide_label ) ) {
 												if( 'yes' === $single_item->general_setting->hide_label ) {
 													unset( $field['label'] );
 												}
+											   }
 
 												if ( 'select' === $single_item->field_key ) {
 													$field['placeholder'] = $single_item->general_setting->placeholder;
