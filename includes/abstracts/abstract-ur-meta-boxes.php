@@ -50,10 +50,9 @@ abstract class UR_Meta_Boxes {
 
 	public function ur_metabox_select( $field ,$post_meta) {
 
-        wp_enqueue_script( 'select2-js' );
+        wp_enqueue_script( 'selectWoo' );
         wp_enqueue_script( 'custom-js' );
-
-        wp_enqueue_style( 'select2-css' );
+        wp_enqueue_style( 'selectWoo' );
 
         global $thepostid, $post;
 
