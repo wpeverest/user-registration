@@ -40,6 +40,7 @@ class UR_Admin_Assets {
 
 		// Register admin styles.
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-metabox', UR()->plugin_url() . '/assets/css/metabox.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
@@ -58,6 +59,7 @@ class UR_Admin_Assets {
 
 		// Sitewide menu CSS.
 		wp_enqueue_style( 'user-registration-menu' );
+		wp_enqueue_style( 'user-registration-metabox' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
 		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2.css', array(), UR_VERSION );
