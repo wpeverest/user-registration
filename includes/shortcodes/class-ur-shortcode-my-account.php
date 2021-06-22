@@ -65,7 +65,7 @@ class UR_Shortcode_My_Account {
 		if ( ! is_user_logged_in() ) {
 
 			$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
-			$redirect_url      = ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) ? esc_url( wp_unslash( $_GET['redirect_to'] ) ) : ''; // @codingStandardsIgnoreLine
+			$redirect_url      = ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) ? esc_url( wp_unslash( $_GET['redirect_to'] ) ) : $redirect_url; // @codingStandardsIgnoreLine
 			$form_id      = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
 			$message      = apply_filters( 'user_registration_my_account_message', '' );
 
@@ -206,7 +206,7 @@ class UR_Shortcode_My_Account {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 				}
 			}
-			
+
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 			$notices = ur_get_notices();
 			ur_print_notices();

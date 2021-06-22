@@ -78,6 +78,12 @@ class UR_Form_Block {
 					'shortcode' =>  array(
 						'type' => 'string',
 					),
+					'redirectUrl' =>  array(
+						'type' => 'string',
+					),
+					'logoutUrl' =>  array(
+						'type' => 'string',
+					),
 				),
 				'editor_script'   => 'user-registration-block-editor',
 				'editor_style'    => 'user-registration-block-editor',
@@ -138,13 +144,23 @@ class UR_Form_Block {
 			if ( empty( $shortcode ) ) {
 				return '';
 			}
+			$parameters = array();
+
+			if( ! empty( $attr['redirectUrl'] ) ) {
+				$parameters["redirect_url"] = $attr['redirectUrl'];
+			}
+
+			if( ! empty( $attr['logoutUrl'] ) ) {
+				$parameters["logout_redirect"] = $attr['logoutUrl'];
+			}
+
 			if('login_shortcode'=== $shortcode ) {
 				return UR_Shortcodes::login(
-					array()
+					$parameters
 				);
 			}else{
 				return UR_Shortcodes::my_account(
-					array()
+					$parameters
 				);
 			}
 		}
