@@ -1035,8 +1035,7 @@ jQuery(function ($) {
 										return;
 									}
 									var clone = $(ui.helper);
-									var form_field_id =
-										$(clone).attr("data-field-id");
+									var form_field_id = $(clone).attr("data-field-id");
 									if (typeof form_field_id !== "undefined") {
 										var this_clone = $(ui.helper)
 											.closest(".ur-grid-list-item")
@@ -1615,8 +1614,7 @@ jQuery(function ($) {
 		).serializeArray();
 
 		var conditional_roles_settings_data = get_form_conditional_role_data();
-		var email_content_override_settings_data =
-			get_form_email_content_override_data();
+		var email_content_override_settings_data = get_form_email_content_override_data();
 
 		/** TODO:: Handle from multistep forms add-on if possible. */
 		var multipart_page_setting = $(
@@ -1633,10 +1631,8 @@ jQuery(function ($) {
 				form_name: $("#ur-form-name").val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
-				conditional_roles_settings_data:
-					conditional_roles_settings_data,
-				email_content_override_settings_data:
-					email_content_override_settings_data,
+				conditional_roles_settings_data:conditional_roles_settings_data,
+				email_content_override_settings_data:email_content_override_settings_data,
 				multipart_page_setting: multipart_page_setting,
 			},
 		};

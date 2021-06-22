@@ -122,13 +122,12 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-		
 		$this->form_id        = $form_id;
 		$form_data            = (array) $data['general_setting'];
 		$form_data['form_id'] = $form_id;
 		$form_data['type']    = $field_type;
 		$form_data['field_key']	= $field_key;
-		$form_data['icon']		=$data['icon'];
+		$form_data['icon']		= $data['icon'];
 
 
 		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
