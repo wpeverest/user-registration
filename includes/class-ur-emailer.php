@@ -549,6 +549,8 @@ class UR_Emailer {
 			'{{auto_pass}}',
 		);
 
+		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
+
 		$ur_login = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
 		$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
 
@@ -598,8 +600,10 @@ class UR_Emailer {
 			);
 			$smart_tags = array_merge( $smart_tags, $user_smart_tags );
 		}
-		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
-		$content    = str_replace( $smart_tags, array_values( $values ), $content );
+
+		foreach( $values as $key => $value ) {
+			$content    = str_replace( '{{' . $key . '}}', $value, $content );
+		}
 
 		return $content;
 	}
