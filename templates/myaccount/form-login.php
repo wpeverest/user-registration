@@ -92,13 +92,13 @@ $enable_field_icon = 'yes' === get_option( 'user_registration_extras_general_set
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 							?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
-						<?php if($enable_field_icon) { ?>
-						<span class="ur-icon ur-icon-password"></span>
-						<?php } ?>
 						</span>
 							<?php
 						}
 						?>
+						<?php if($enable_field_icon) { ?>
+						<span class="ur-icon ur-icon-password"></span>
+						<?php } ?>
 						</span>
 					</p>
 
