@@ -161,10 +161,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					),
 
 					array(
-						'type' => 'sectionend',
-						'id'   => 'send_test_email',
-					),
-					array(
+						'title'             => __( 'Send Email', 'user-registration' ),
+						'desc'              => __( 'Click to send test email.', 'user-registration' ),
 						'id'                => 'user_registration_email_test',
 						'type'              => 'link',
 						'css'               => 'min-width:300px;',
@@ -178,6 +176,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						'desc_tip' => true,
 					),
 
+					array(
+						'type' => 'sectionend',
+						'id'   => 'send_test_email',
+					),
 
 				)
 			);
