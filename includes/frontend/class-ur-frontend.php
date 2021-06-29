@@ -62,6 +62,7 @@ class UR_Frontend {
 			$instance                   = $class_name::get_instance();
 			$setting['general_setting'] = $field_object->general_setting;
 			$setting['advance_setting'] = $field_object->advance_setting;
+			$setting['icon']			=  isset($field_object->icon) ? $field_object->icon : '';
 			$field_type                 = ur_get_field_type( $field_object->field_key );
 
 			// Force drop the custom class because it has been addressed in prior container.
