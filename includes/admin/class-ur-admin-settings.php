@@ -236,7 +236,7 @@ class UR_Admin_Settings {
 
 		if( is_array( $options ) && !empty( $options ) ){
 
-			$settings .= '<h3 class="ur-settings-section-header">' . esc_html( ucwords( $options['title'] ) ) . '</h3>';
+			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) ) . '</h3>';
 			$back_link = isset( $options['back_link'] ) ? $options['back_link'] : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? $options['back_link_text'] : '';
 
@@ -256,8 +256,8 @@ class UR_Admin_Settings {
 				}
 
 				if( 'card' === $section['type'] ) {
-					$settings .= '<div class="user-registration-card ur-mt-4">';
-					$settings .=  '<div class="user-registration-card__header">';
+					$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
+					$settings .=  '<div class="user-registration-card__header ur-border-0">';
 
 					if ( ! empty( $section['title'] ) ) {
 						$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
@@ -271,9 +271,9 @@ class UR_Admin_Settings {
 					$settings .= '</div>';
 
 					if ( ! empty( $section['desc'] ) ) {
-						$settings .= wpautop( wptexturize( wp_kses_post( $section['desc'] ) ) );
+						$settings .= '<p class="ur-p-tag">' .  wptexturize( wp_kses_post( $section['desc'] ) )  . '</p>';
 					}
-					$settings .= '<div class="user-registration-card__body">';
+					$settings .= '<div class="user-registration-card__body pt-0 pb-0">';
 					$settings .=  '<table class="form-table">' . "\n\n";
 
 					if ( ! empty( $id ) ) {
