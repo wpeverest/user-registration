@@ -495,6 +495,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			if ( 'publish' !== $post->post_status ) {
 				return false;
 			}
+			$post->post_content = str_replace( '\\', '\\\\', $post->post_content );
 
 			/*
 			 * new post data array.
@@ -545,7 +546,8 @@ abstract class UR_List_Table extends WP_List_Table {
 			/*
 			 * Finally, redirect to the edit post screen for the new draft.
 			 */
-			wp_redirect( admin_url( 'admin.php?page='. $this->page .'&action='. $this->addnew_action .'&post-id=' . $new_post_id ) );
+			$duplicate_link = $this->get_duplicate_link($new_post_id);
+			wp_redirect( $duplicate_link );
 			exit;
 		}
 	}
@@ -673,9 +675,8 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_title( $post ) {
-		$edit_link            = admin_url( 'admin.php?page=' . $this->page . '&action='. $this->addnew_action .'&post-id=' . $post->ID );
-		$edit_link = $this->get_edit_links($post);
-		$title                = $post->post_title;
+		$edit_link 			  = $this->get_edit_links($post);
+		$title                = _draft_or_post_title( $post);
 		$post_status          = $post->post_status;
 		$current_status_trash = ( 'trash' === $post_status );
 
@@ -722,6 +723,12 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	abstract public function get_edit_links( $post );
 
+	/**
+	 * @param mixed $post
+	 *
+	 */
+	abstract public function get_duplicate_link( $post );
+
 
 	/**
 	 * Display item counts by status and links.
@@ -752,7 +759,13 @@ abstract class UR_List_Table extends WP_List_Table {
 			number_format_i18n( $total_posts )
 		);
 
-		$allowed_status = array( 'publish', 'draft', 'trash' );
+		$allowed_status = array( 'publish',
+		'draft',
+		'pending',
+		'trash',
+		'future',
+		'private',
+		'auto-draft' );
 		$stati_objects  = get_post_stati(
 			array(
 				'show_in_admin_status_list' => true,
@@ -877,7 +890,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
-	public function display_page() {
+	public function display_page_todo() {
 		$this->prepare_items();
 
 		echo '<div class="wrap">';
