@@ -529,6 +529,8 @@ class UR_AJAX {
 	}
 	/**
 	 * send test email
+	 *
+	 * @since 1.9.9
 	 */
 	public function send_test_email() {
 		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
