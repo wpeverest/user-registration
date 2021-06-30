@@ -1976,7 +1976,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 	$data_html .= '</tbody></table>';
 
 	// Smart tag process for extra fields.
-	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
+	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $valid_form_data, $form_id, $user_id );
 
 	return array( $name_value, $data_html );
 }

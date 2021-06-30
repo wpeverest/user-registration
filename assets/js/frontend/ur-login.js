@@ -20,6 +20,10 @@ jQuery(function ($) {
 							.closest("form")
 							.find('input[name="rememberme"]')
 							.val(),
+						redirect_url = $this
+							.closest("form")
+							.find('input[name="redirect"]')
+							.val(),
 						CaptchaResponse = $this
 							.closest("form")
 							.find('[name="g-recaptcha-response"]')
@@ -44,6 +48,7 @@ jQuery(function ($) {
 							password: password,
 							rememberme: rememberme,
 							CaptchaResponse: CaptchaResponse,
+							redirect: redirect_url,
 						},
 						success: function (res) {
 							$this

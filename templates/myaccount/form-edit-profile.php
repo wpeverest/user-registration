@@ -43,7 +43,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 
-											if("profile_picture" === $single_item->field_key){
+											if("profile_picture" === $single_item->field_key) {
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode(', ', $single_item->advance_setting->valid_file_type);
 												}
@@ -211,10 +211,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														unset( $field['input_mask'] );
 													}
 												}
-
+												
+												if ( isset( $single_item->general_setting->hide_label ) ) {
 												if( 'yes' === $single_item->general_setting->hide_label ) {
 													unset( $field['label'] );
 												}
+											   }
 
 												if ( 'select' === $single_item->field_key ) {
 													$field['placeholder'] = $single_item->general_setting->placeholder;
