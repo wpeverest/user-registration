@@ -491,16 +491,15 @@ class UR_AJAX {
 		}
 	}
 
-	// if("email" === get_option('user_registration_general_setting_login_options_with',array())){
-	// 	$user_data = get_user_by( 'email', $info['user_login'] );
-	// 	$info['user_login'] = $user_data->user_email;
-	//  }elseif ("username" === get_option('user_registration_general_setting_login_options_with',array())) {
-	// 	$user_data = get_user_by( 'login', $info['user_login'] );
-	// 	$info['user_login'] = $user_data->user_login;
-	//  }else{
-	// 	$info['user_login'] = $info['user_login'];
-	//  }
-
+	if("email" === get_option('user_registration_general_setting_login_options_with',array())){
+			$user_data = get_user_by( 'email', $info['user_login'] );
+			$info['user_login'] = isset($user_data->user_email) ? $user_data->user_email : is_email($info['user_login']);
+	  }elseif ("username" === get_option('user_registration_general_setting_login_options_with',array())) {
+		$user_data = get_user_by( 'login', $info['user_login'] );
+		$info['user_login'] = isset($user_data->user_login) ? $user_data->user_login : !is_email($info['user_login']);
+	 }else{
+		$info['user_login'] = $info['user_login'];
+	 }
 	// perform the table login
     $user= wp_signon( $info );
 
