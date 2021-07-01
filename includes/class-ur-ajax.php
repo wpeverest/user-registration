@@ -437,7 +437,7 @@ class UR_AJAX {
 	public static function ajax_login_submit(){
 	// Custom error messages.
 		$messages = array(
-			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_username' 	   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
 			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
 			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
 			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
@@ -491,11 +491,25 @@ class UR_AJAX {
 		}
 	}
 
+	// if("email" === get_option('user_registration_general_setting_login_options_with',array())){
+	// 	$user_data = get_user_by( 'email', $info['user_login'] );
+	// 	$info['user_login'] = $user_data->user_email;
+	//  }elseif ("username" === get_option('user_registration_general_setting_login_options_with',array())) {
+	// 	$user_data = get_user_by( 'login', $info['user_login'] );
+	// 	$info['user_login'] = $user_data->user_login;
+	//  }else{
+	// 	$info['user_login'] = $info['user_login'];
+	//  }
+
 	// perform the table login
     $user= wp_signon( $info );
 
     if ( is_wp_error( $user ) ){
+
 		// set the custom error message
+		if ( ! empty( $user->errors['empty_username'] ) && ! empty( $messages['empty_username'] ) ) {
+			$user->errors['empty_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_username'] );
+		}
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 			}
