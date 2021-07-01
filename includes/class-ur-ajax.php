@@ -491,6 +491,31 @@ class UR_AJAX {
 		}
 	}
 
+	//check user already logged in with same account at another device
+	$concurrent_loggedin_option = get_option( 'user_registration_login_options_prevent_concurrent_login', 'no' );
+
+	if ( isset( $concurrent_loggedin_option ) && 'yes' === $concurrent_loggedin_option ) {
+
+		if ( is_email( $info['user_login'] ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
+			$user_data = get_user_by( 'email', $info['user_login'] );
+		} else {
+			$user_data = get_user_by( 'login', $info['user_login'] );
+		}
+		$option_roles = get_option( 'user_registration_login_options_prevent_concurrent_login_user_roles', array() );
+		if ( ! is_array( $option_roles ) ) {
+			$option_roles = array();
+		}
+		$concurrent_loggedin_meta = get_user_meta($user_data->ID,'concurrent_loggedin_meta',true);
+
+		if ( array_intersect( $user_data->roles, $option_roles ) ) {
+			if ( $concurrent_loggedin_meta && '1' === $concurrent_loggedin_meta ) {
+				wp_send_json_error( array( 'message' => 'User is currently loggedin in another device. Please logout from another device to continue.' ) );
+				return;
+			} else {
+				update_user_meta( $user_data->ID, 'concurrent_loggedin_meta', 1, );
+			}
+		}
+	}
 	// perform the table login
     $user= wp_signon( $info );
 

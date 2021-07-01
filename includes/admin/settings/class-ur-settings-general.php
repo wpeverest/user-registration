@@ -378,6 +378,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * @return array
 		 */
 		public function get_login_options_settings() {
+			$all_roles = ur_get_default_admin_roles();
+
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
 				array(
@@ -474,6 +476,29 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 					),
 
 					array(
+						'title'      => __( 'Prevent Concurrent Login', 'user-registration' ),
+						'desc'       => __( 'Enable Prevent Concurrent Login', 'user-registration' ),
+						'id'         => 'user_registration_login_options_prevent_concurrent_login',
+						'type'       => 'checkbox',
+						'desc_tip'   => __( 'Check to enable prevent concurrent login.', 'user-registration' ),
+						'css'        => 'min-width: 350px;',
+						'default'    => 'no',
+						'desc_field' => __( 'This options lets you enable to make sure that only one user can login with that user account at a time.', 'user-registration' ),
+					),
+
+					array(
+						'title'    => __( 'Select Role to Prevent Concurrent Login', 'user-registration' ),
+						'desc'     => __( 'This option lets you limit which roles you are willing to prevent Concurrent Login.', 'user-registration' ),
+						'id'       => 'user_registration_login_options_prevent_concurrent_login_user_roles',
+						'default'  => array( 'subscriber' ),
+						'type'     => 'multiselect',
+						'class'    => 'ur-enhanced-select',
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+						'options'  => $all_roles,
+					),
+
+						array(
 						'title'      => __( 'Prevent Core Login', 'user-registration' ),
 						'desc'       => __( 'Enable Prevent Core Login', 'user-registration' ),
 						'id'         => 'user_registration_login_options_prevent_core_login',

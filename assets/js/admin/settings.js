@@ -156,6 +156,17 @@
 		}
 	);
 
+	// show select role when prevent concurrent login is enabled
+	$("#user_registration_login_options_prevent_concurrent_login").on("change",function() {
+		$enable = $("#user_registration_login_options_prevent_concurrent_login");
+		if($enable.prop("checked")) {
+			$enable.closest('tr').next('tr').show();
+		} else {
+			$enable.closest('tr').next('tr').hide();
+		}
+	})
+	.trigger("change");
+
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];
