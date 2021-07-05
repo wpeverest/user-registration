@@ -687,12 +687,14 @@ abstract class UR_List_Table extends WP_List_Table {
 		//
 
 		printf( '<strong>' );
+		printf( sprintf( '<div class="ur-edit-title">' ) );
 
 		if ( $current_status_trash ) {
 			echo esc_html( $title );
 		} else {
 			printf( '<a href="%s" class="row-title">%s</a>', esc_url( $edit_link ), esc_html( $title ) );
 		}
+		printf( '</div>' );
 		printf( '</strong>' );
 
 		//
