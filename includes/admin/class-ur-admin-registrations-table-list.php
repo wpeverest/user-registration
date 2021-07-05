@@ -225,52 +225,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	}
 
 	/**
-	 * Get the status label for licenses.
-	 *
-	 * @param  string   $status_name Status title.
-	 * @param  stdClass $status Status value.
-	 *
-	 * @return array
-	 */
-	private function get_status_label( $status_name, $status ) {
-		switch ( $status_name ) {
-			case 'publish':
-				/* translators: %s: count */
-				$label = array(
-					'singular' => __( 'Published <span class="count">(%s)</span>', 'user-registration' ),
-					'plural'   => __( 'Published <span class="count">(%s)</span>', 'user-registration' ),
-					'context'  => '',
-					'domain'   => 'user-registration',
-				);
-				break;
-			case 'draft':
-				/* translators: %s: count */
-				$label = array(
-					'singular' => __( 'Draft <span class="count">(%s)</span>', 'user-registration' ),
-					'plural'   => __( 'Draft <span class="count">(%s)</span>', 'user-registration' ),
-					'context'  => '',
-					'domain'   => 'user-registration',
-				);
-				break;
-			case 'pending':
-				/* translators: %s: count */
-				$label = array(
-					'singular' => __( 'Pending <span class="count">(%s)</span>', 'user-registration' ),
-					'plural'   => __( 'Pending <span class="count">(%s)</span>', 'user-registration' ),
-					'context'  => '',
-					'domain'   => 'user-registration',
-				);
-				break;
-
-			default:
-				$label = $status->label_count;
-				break;
-		}
-
-		return $label;
-	}
-
-	/**
 	 * Define bulk actions.
 	 *
 	 * @return array

@@ -905,6 +905,6 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * Get the text to display in the search box on the list table.
 	 */
 	protected function get_search_box_placeholder() {
-		return esc_html__( 'Search', 'action-scheduler' );
+		return esc_html__( 'Search', 'user-registration' );
 	}
 }
