@@ -4,21 +4,30 @@
 	@include media-breakpoint-up($breakpoint) {
 		$infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
-		@each $prop, $abbrev in (margin: m, padding: p) {
-			@each $size, $length in $grid-spacers {
-				.ur-#{$abbrev}#{$infix}-#{$size} { #{$prop}: $length !important; }
+		@each $prop,
+		$abbrev in (margin: m, padding: p) {
+
+			@each $size,
+			$length in $grid-spacers {
+				.ur-#{$abbrev}#{$infix}-#{$size} {
+					#{$prop}: $length !important;
+				}
+
 				.ur-#{$abbrev}t#{$infix}-#{$size},
 				.ur-#{$abbrev}y#{$infix}-#{$size} {
 					#{$prop}-top: $length !important;
 				}
+
 				.ur-#{$abbrev}r#{$infix}-#{$size},
 				.ur-#{$abbrev}x#{$infix}-#{$size} {
 					#{$prop}-right: $length !important;
 				}
+
 				.ur-#{$abbrev}b#{$infix}-#{$size},
 				.ur-#{$abbrev}y#{$infix}-#{$size} {
 					#{$prop}-bottom: $length !important;
 				}
+
 				.ur-#{$abbrev}l#{$infix}-#{$size},
 				.ur-#{$abbrev}x#{$infix}-#{$size} {
 					#{$prop}-left: $length !important;
@@ -27,21 +36,28 @@
 		}
 
 		// Negative margins (e.g., where `.ur-mb-n1` is negative version of `.ur-mb-1`)
-		@each $size, $length in $grid-spacers {
-			@if $size != 0 {
-				.ur-m#{$infix}-n#{$size} { margin: -$length !important; }
+		@each $size,
+		$length in $grid-spacers {
+			@if $size !=0 {
+				.ur-m#{$infix}-n#{$size} {
+					margin: -$length !important;
+				}
+
 				.ur-mt#{$infix}-n#{$size},
 				.ur-my#{$infix}-n#{$size} {
 					margin-top: -$length !important;
 				}
+
 				.ur-mr#{$infix}-n#{$size},
 				.ur-mx#{$infix}-n#{$size} {
 					margin-right: -$length !important;
 				}
+
 				.ur-mb#{$infix}-n#{$size},
 				.ur-my#{$infix}-n#{$size} {
 					margin-bottom: -$length !important;
 				}
+
 				.ur-ml#{$infix}-n#{$size},
 				.ur-mx#{$infix}-n#{$size} {
 					margin-left: -$length !important;
@@ -50,22 +66,36 @@
 		}
 
 		// Some special margin utils
-		.ur-m#{$infix}-auto { margin: auto !important; }
+		.ur-m#{$infix}-auto {
+			margin: auto !important;
+		}
+
 		.ur-mt#{$infix}-auto,
 		.ur-my#{$infix}-auto {
 			margin-top: auto !important;
 		}
+
 		.ur-mr#{$infix}-auto,
 		.ur-mx#{$infix}-auto {
 			margin-right: auto !important;
 		}
+
 		.ur-mb#{$infix}-auto,
 		.ur-my#{$infix}-auto {
 			margin-bottom: auto !important;
 		}
+
 		.ur-ml#{$infix}-auto,
 		.ur-mx#{$infix}-auto {
 			margin-left: auto !important;
 		}
 	}
+}
+
+.pt-0 {
+	padding-top: 0px;
+}
+
+.pb-0 {
+	padding-bottom: 0px;
 }

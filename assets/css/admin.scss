@@ -15,8 +15,8 @@
 
 // Components
 @import "components/badge", "components/button", "components/card",
-	"components/list-group", "components/modal", "components/nav",
-	"components/scroll-ui";
+"components/list-group", "components/modal", "components/nav",
+"components/scroll-ui";
 
 @import "border";
 @import "spacing";
@@ -40,6 +40,7 @@
 
 .toplevel_page_user-registration,
 .user-registration_page_user-registration-frontend-list {
+
 	// Design customize for shortcode in list table
 	.shortcode {
 		.widefat {
@@ -58,6 +59,7 @@
 		display: none;
 	}
 }
+
 .ur-spinner {
 	width: 16px;
 	height: 16px;
@@ -70,6 +72,7 @@
 
 .user-registration {
 	&__wrap {
+
 		*,
 		::before,
 		::after {
@@ -114,10 +117,12 @@
 		margin-left: 2px;
 	}
 }
+
 /**
  * Addons page
  **/
 .ur_addons_wrap {
+
 	*,
 	::before,
 	::after {
@@ -174,7 +179,7 @@
 					}
 				}
 
-				img.extension-thumb + h3 {
+				img.extension-thumb+h3 {
 					display: none;
 				}
 
@@ -369,6 +374,7 @@
 		top: 50%;
 		transform: translate(-50%, -50%);
 		width: 500px;
+
 		article {
 			overflow: auto;
 		}
@@ -460,6 +466,7 @@
 		p {
 			margin: 1.5em 0;
 		}
+
 		p:first-child {
 			margin-top: 0;
 		}
@@ -467,6 +474,7 @@
 		p:last-child {
 			margin-bottom: 0;
 		}
+
 		.pagination {
 			padding: 10px 0 0;
 			text-align: center;
@@ -661,6 +669,7 @@
 		}
 
 		input {
+
 			&[type="radio"],
 			&[type="checkbox"] {
 				opacity: 1;
@@ -853,7 +862,7 @@
 					font-weight: 500;
 					color: $gray_base;
 
-					~ hr {
+					~hr {
 						border-top: 1px solid $border_color;
 					}
 				}
@@ -1183,8 +1192,7 @@
 						}
 
 						&.ui-sortable-helper {
-							box-shadow: 0 0 10px 5px
-								transparentize($gray_base, 0.9);
+							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
@@ -1250,7 +1258,7 @@
 						}
 					}
 
-					> li.ur-item-dragged {
+					>li.ur-item-dragged {
 						list-style: none;
 						width: 100%;
 						text-align: center;
@@ -1314,6 +1322,7 @@
 						.ur-registered-item {
 							margin-bottom: 0;
 						}
+
 						.user-registration-dragged-me {
 							display: none;
 						}
@@ -1554,7 +1563,7 @@
 		flex-wrap: wrap;
 		margin-bottom: 8px;
 
-		> div {
+		>div {
 			margin-right: 8px;
 		}
 
@@ -1696,7 +1705,7 @@ img.tips {
 .ur-portal-tooltip {
 	color: $color_gray_two;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 22px;
 	font-style: normal;
 	height: 16px;
 	line-height: 16px;
@@ -1847,6 +1856,7 @@ body {
 
 			p {
 				margin: 8px 0;
+
 				&::before,
 				&::after {
 					font-family: dashicons;
@@ -1896,20 +1906,30 @@ body {
 		&.entered {
 			display: block;
 			height: 50px;
-			animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal
-				both open-message;
+			animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
 		}
 
 		&.exiting {
 			display: block;
-			animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both
-				close-message;
+			animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
 		}
 
 		&:first-child {
 			margin-top: 1.5rem;
 		}
 	}
+}
+
+.main_header {
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 27px;
+}
+
+.ur-p-tag {
+	padding: 0px 20px 18px 20px;
+	margin: 0px;
+	font-style: italic;
 }
 
 @media screen and (max-width: 1400px) {
@@ -1946,6 +1966,7 @@ body {
 				float: none;
 				width: 100%;
 			}
+
 			.ur-single-row .ur-grid-lists,
 			.ur-single-row .ur-grid-lists .ur-grid-list-item,
 			.ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item {

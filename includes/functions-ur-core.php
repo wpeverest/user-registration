@@ -1510,7 +1510,7 @@ function ur_get_user_extra_fields( $user_id ) {
  * @param  string $url URL.
  */
 function ur_back_link( $label, $url ) {
-	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+	return '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }
 
 /**
