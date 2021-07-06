@@ -1085,6 +1085,22 @@ function ur_login_option() {
 		)
 	);
 }
+/**
+ * User Login Option
+ *
+ * @return array
+ */
+function ur_login_option_with() {
+
+	return apply_filters(
+		'user_registration_login_options_with',
+		array(
+			'default'            => __( 'Username or Email', 'user-registration' ),
+			'username'			 => __( 'Username', 'user-registration' ),
+			'email'         	 => __( 'Email', 'user-registration' ),
+		)
+	);
+}
 
 /**
  * Get Post meta value by meta key.
