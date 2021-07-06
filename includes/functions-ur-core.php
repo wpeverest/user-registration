@@ -505,7 +505,7 @@ function ur_exclude_profile_details_fields() {
 	);
 
 	// Check if the my account page contains [user_registration_my_account] shortcode.
-	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) ) {
+	if ( ur_post_content_has_shortcode( 'user_registration_my_account' ) || ur_post_content_has_shortcode( 'user_registration_edit_profile' ) ) {
 		// Push profile_picture field to fields_to_exclude array.
 		array_push( $fields_to_exclude, 'profile_picture' );
 	}
@@ -1976,7 +1976,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 	$data_html .= '</tbody></table>';
 
 	// Smart tag process for extra fields.
-	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $form_data, $form_id, $user_id );
+	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $valid_form_data, $form_id, $user_id );
 
 	return array( $name_value, $data_html );
 }

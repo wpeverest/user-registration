@@ -36,12 +36,14 @@
 								);
 
 								if (single_field.length < 2) {
-									var single_data = this_instance.get_fieldwise_data(
-										$(this)
-									);
-									var invite_code = document.querySelector(
-										".field-invite_code"
-									);
+									var single_data =
+										this_instance.get_fieldwise_data(
+											$(this)
+										);
+									var invite_code =
+										document.querySelector(
+											".field-invite_code"
+										);
 
 									if (
 										"invite_code" === single_data.field_name
@@ -97,14 +99,16 @@
 											switch (field_type) {
 												case "checkbox":
 												case "radio":
-													this_field_value = this_field.prop(
-														"checked"
-													)
-														? this_field.val()
-														: "";
+													this_field_value =
+														this_field.prop(
+															"checked"
+														)
+															? this_field.val()
+															: "";
 													break;
 												default:
-													this_field_value = this_field.val();
+													this_field_value =
+														this_field.val();
 											}
 											break;
 										case "select":
@@ -121,9 +125,8 @@
 								});
 
 								if (field_type == "checkbox") {
-									var field_value_json = JSON.stringify(
-										field_value
-									);
+									var field_value_json =
+										JSON.stringify(field_value);
 								} else if (field_type == "radio") {
 									var field_value_json = field_value[0];
 								} else {
@@ -132,10 +135,8 @@
 
 								var single_form_field_name =
 									multi_value_field[multi_start];
-								single_form_field_name = single_form_field_name.replace(
-									"[]",
-									""
-								);
+								single_form_field_name =
+									single_form_field_name.replace("[]", "");
 
 								var field_data = {
 									value: field_value_json,
@@ -147,9 +148,7 @@
 								form_data.push(field_data);
 							}
 
-							$(
-								document
-							).trigger(
+							$(document).trigger(
 								"user_registration_frontend_form_data_filter",
 								[form_data]
 							);
@@ -226,9 +225,7 @@
 							default:
 						}
 
-						$(
-							document
-						).trigger(
+						$(document).trigger(
 							"user_registration_frontend_form_data_render",
 							[field, formwise_data]
 						);
@@ -252,10 +249,8 @@
 							field.attr("name") !== ""
 						) {
 							formwise_data.field_name = field.attr("name");
-							formwise_data.field_name = formwise_data.field_name.replace(
-								"[]",
-								""
-							);
+							formwise_data.field_name =
+								formwise_data.field_name.replace("[]", "");
 						} else {
 							formwise_data.field_name = "";
 						}
@@ -275,7 +270,7 @@
 						$submit_node,
 						position
 					) {
-						$submit_node.find(".ur-message").remove();
+						$submit_node.closest(".user-registration").find(".ur-message").remove();
 
 						// Check if the form is edit-profile form.
 						if (
@@ -287,9 +282,14 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							wrapper.insertBefore(
-								".user-registration-MyAccount-navigation"
-							);
+							var my_account_selector = $(".user-registration").find(".user-registration-MyAccount-navigation");
+							if ( my_account_selector.length ) {
+								wrapper.insertBefore(
+									".user-registration-MyAccount-navigation"
+								);
+							} else {
+								wrapper.insertBefore(".ur-frontend-form");
+							}
 						} else {
 							var wrapper = $(
 								'<div class="ur-message user-registration-' +
@@ -407,12 +407,9 @@
 									$.extend($.validator.messages, {
 										required:
 											user_registration_params.message_required_fields,
-										url:
-											user_registration_params.message_url_fields,
-										email:
-											user_registration_params.message_email_fields,
-										number:
-											user_registration_params.message_number_fields,
+										url: user_registration_params.message_url_fields,
+										email: user_registration_params.message_email_fields,
+										number: user_registration_params.message_number_fields,
 										confirmpassword:
 											user_registration_params.message_confirm_password_fields,
 									});
@@ -495,9 +492,8 @@
 									}
 
 									// Remove word added by form filler in file upload field during submission
-									var file_upload = $this.find(
-										".urfu-file-input"
-									);
+									var file_upload =
+										$this.find(".urfu-file-input");
 
 									form.missing_attachment_handler(
 										file_upload
@@ -505,8 +501,9 @@
 
 									var exist_detail = $this
 										.find(".uraf-profile-picture-upload")
-										.find(".user-registration-error")
-										.length;
+										.find(
+											".user-registration-error"
+										).length;
 
 									if (1 === exist_detail) {
 										var profile = $this
@@ -606,8 +603,7 @@
 									}
 
 									var data = {
-										action:
-											"user_registration_user_form_submit",
+										action: "user_registration_user_form_submit",
 										security:
 											user_registration_params.user_registration_form_data_save,
 										form_data: form_data,
@@ -616,9 +612,7 @@
 										ur_frontend_form_nonce: form_nonce,
 									};
 
-									$(
-										document
-									).trigger(
+									$(document).trigger(
 										"user_registration_frontend_before_form_submit",
 										[data, $this]
 									);
@@ -629,7 +623,9 @@
 									) {
 										if (
 											"1" ===
-											ur_google_recaptcha_code.is_captcha_enable
+											$registration_form
+												.find("form.register")
+												.data("captcha-enabled")
 										) {
 											var captchaResponse = $this
 												.find(
@@ -683,9 +679,7 @@
 										complete: function (ajax_response) {
 											var ajaxFlag = [];
 											ajaxFlag["status"] = false;
-											$(
-												document
-											).trigger(
+											$(document).trigger(
 												"user_registration_frontend_before_ajax_complete_success_message",
 												[ajax_response, ajaxFlag]
 											);
@@ -702,9 +696,8 @@
 													)
 													.val();
 
-												var message = $(
-													'<ul class=""/>'
-												);
+												var message =
+													$('<ul class=""/>');
 												var type = "error";
 
 												try {
@@ -822,7 +815,8 @@
 														) {
 															window.setTimeout(
 																function () {
-																	window.location = redirect_url;
+																	window.location =
+																		redirect_url;
 																},
 																1000
 															);
@@ -878,9 +872,11 @@
 													);
 												}
 
-												var success_message_position = JSON.parse(
-													ajax_response.responseText
-												).data.success_message_positon;
+												var success_message_position =
+													JSON.parse(
+														ajax_response.responseText
+													).data
+														.success_message_positon;
 
 												form.show_message(
 													message,
@@ -913,9 +909,7 @@
 													);
 												}
 
-												$(
-													document
-												).trigger(
+												$(document).trigger(
 													"user_registration_frontend_after_ajax_complete",
 													[
 														ajax_response.responseText,
@@ -947,12 +941,9 @@
 								$.extend($.validator.messages, {
 									required:
 										user_registration_params.message_required_fields,
-									url:
-										user_registration_params.message_url_fields,
-									email:
-										user_registration_params.message_email_fields,
-									number:
-										user_registration_params.message_number_fields,
+									url: user_registration_params.message_url_fields,
+									email: user_registration_params.message_email_fields,
+									number: user_registration_params.message_number_fields,
 								});
 
 								var $el = $this.find(".ur-smart-phone-field");
@@ -1027,9 +1018,8 @@
 									.prop("disabled", true);
 
 								// Remove word added by form filler in file upload field during submission
-								var file_upload = $this.find(
-									".urfu-file-input"
-								);
+								var file_upload =
+									$this.find(".urfu-file-input");
 
 								form.missing_attachment_handler(file_upload);
 
@@ -1040,9 +1030,8 @@
 									form_data = form.get_form_data();
 
 									// Handle profile picture
-									var profile_picture_url = $(
-										"#profile_pic_url"
-									).val();
+									var profile_picture_url =
+										$("#profile_pic_url").val();
 
 									form_data.push({
 										value: profile_picture_url,
@@ -1056,8 +1045,7 @@
 								}
 
 								var data = {
-									action:
-										"user_registration_update_profile_details",
+									action: "user_registration_update_profile_details",
 									security:
 										user_registration_params.user_registration_profile_details_save,
 									form_data: form_data,
@@ -1145,7 +1133,7 @@
 										// Scroll yo the top on ajax submission complete.
 										$(window).scrollTop(
 											$(
-												".user-registration-MyAccount-navigation"
+												".user-registration"
 											).position()
 										);
 									},
@@ -1266,9 +1254,11 @@
 								typeof wp.passwordStrength
 									.userInputDisallowedList
 							) {
-								disallowedListArray = wp.passwordStrength.userInputDisallowedList();
+								disallowedListArray =
+									wp.passwordStrength.userInputDisallowedList();
 							} else {
-								disallowedListArray = wp.passwordStrength.userInputBlacklist();
+								disallowedListArray =
+									wp.passwordStrength.userInputBlacklist();
 							}
 
 							disallowedListArray.push(
@@ -1371,41 +1361,48 @@
 
 var google_recaptcha_user_registration;
 var onloadURCallback = function () {
-	jQuery(".ur-frontend-form").each(function (i) {
-		$this = jQuery(this);
-		var form_id = $this.attr("id");
-		var node_recaptcha_register = $this.find(
-			"form.register #ur-recaptcha-node #node_recaptcha_register"
-		).length;
+	jQuery(".ur-frontend-form")
+		.find("form.register")
+		.each(function (i) {
+			$this = jQuery(this);
+			var form_id = $this.closest(".ur-frontend-form").attr("id");
 
-		if (node_recaptcha_register !== 0) {
-			$this
-				.find("form.register #ur-recaptcha-node .g-recaptcha")
-				.attr("id", "node_recaptcha_register_" + form_id);
-			google_recaptcha_user_registration = grecaptcha.render(
-				"node_recaptcha_register_" + form_id,
-				{
-					sitekey: ur_google_recaptcha_code.site_key,
-					theme: "light",
-					style:
-						"transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-				}
-			);
-		}
+			var node_recaptcha_register = $this.find(
+				"#ur-recaptcha-node #node_recaptcha_register"
+			).length;
 
-		var node_recaptcha_login = $this.find(
-			"form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login"
-		).length;
+			if (node_recaptcha_register !== 0) {
+				$this
+					.find("#ur-recaptcha-node .g-recaptcha")
+					.attr("id", "node_recaptcha_register_" + form_id);
+				google_recaptcha_user_registration = grecaptcha.render(
+					"node_recaptcha_register_" + form_id,
+					{
+						sitekey: ur_google_recaptcha_code.site_key,
+						theme: "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+					}
+				);
+			}
+		});
 
-		if (node_recaptcha_login !== 0) {
-			grecaptcha.render("node_recaptcha_login", {
-				sitekey: ur_google_recaptcha_code.site_key,
-				theme: "light",
-				style:
-					"transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-			});
-		}
-	});
+	jQuery(".ur-frontend-form")
+		.find("form.login")
+		.each(function (i) {
+			$this = jQuery(this);
+			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
+
+			if (ur_recaptcha_node.length !== 0) {
+				grecaptcha.render(
+					ur_recaptcha_node.find(".g-recaptcha").attr("id"),
+					{
+						sitekey: ur_google_recaptcha_code.site_key,
+						theme: "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+					}
+				);
+			}
+		});
 };
 
 function request_recaptcha_token() {

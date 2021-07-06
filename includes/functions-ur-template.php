@@ -197,7 +197,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['required'] = $required = '';
 		}
 
-		if ( is_null( $value ) ) {
+		if ( is_null( $value ) || empty($value)) {
 			$value = $args['default'];
 		}
 
@@ -746,9 +746,10 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 
 function ur_logout_url( $redirect = '' ) {
 	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
+
+	global $post;
+	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		global $post;
-		$post_content = isset( $post->post_content ) ? $post->post_content : '';
 		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 
 		$attributes = shortcode_parse_atts( $matches[3] );
@@ -763,6 +764,14 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = trim( $redirect, '"' );
 			$redirect = trim( $redirect, "'" );
 			$redirect = '' != $redirect ? home_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
+		}
+	}else {
+		$blocks = parse_blocks( $post->post_content );
+
+   		foreach ( $blocks as $block ) {
+			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
+				$redirect = home_url( $block['attrs']['logoutUrl'] );
+			}
 		}
 	}
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
