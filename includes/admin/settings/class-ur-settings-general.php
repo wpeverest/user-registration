@@ -406,7 +406,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						),
 					),
 					array(
-						'title'    => __( 'Login With', 'user-registration' ),
+						'title'    => __( 'Login Only Option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options_with',
 						'default'  => 'default',
