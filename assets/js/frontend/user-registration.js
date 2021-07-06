@@ -270,7 +270,10 @@
 						$submit_node,
 						position
 					) {
-						$submit_node.closest(".user-registration").find(".ur-message").remove();
+						$submit_node
+							.closest(".user-registration")
+							.find(".ur-message")
+							.remove();
 
 						// Check if the form is edit-profile form.
 						if (
@@ -282,8 +285,10 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							var my_account_selector = $(".user-registration").find(".user-registration-MyAccount-navigation");
-							if ( my_account_selector.length ) {
+							var my_account_selector = $(
+								".user-registration"
+							).find(".user-registration-MyAccount-navigation");
+							if (my_account_selector.length) {
 								wrapper.insertBefore(
 									".user-registration-MyAccount-navigation"
 								);
@@ -1132,9 +1137,7 @@
 
 										// Scroll yo the top on ajax submission complete.
 										$(window).scrollTop(
-											$(
-												".user-registration"
-											).position()
+											$(".user-registration").position()
 										);
 									},
 								});
@@ -1508,6 +1511,26 @@ function ur_includes(arr, item) {
 					$(this).attr("title", ursL10n.show_password_title);
 					break;
 			}
+		}
+	});
+
+	$('input[type="checkbox"]#checkall').click(function () {
+		var checkAll = $(this).attr("data-check");
+		$('[data-id = "' + checkAll + '" ]').prop(
+			"checked",
+			$(this).prop("checked")
+		);
+	});
+
+	$(".input-checkbox").change(function () {
+		var checkAll = $(this).attr("data-id");
+		if ($(this).prop("checked") === false) {
+			$('[data-check = "' + checkAll + '" ]').prop("checked", false);
+		}
+		if (
+			$(".input-checkbox:checked").length == $(".input-checkbox").length
+		) {
+			$('[data-check = "' + checkAll + '" ]').prop("checked", true);
 		}
 	});
 })(jQuery);
