@@ -120,6 +120,25 @@ class UR_Admin_Assets {
 			),
 			UR_VERSION
 		);
+
+		wp_register_script( 'user-registration-form-builder', UR()->plugin_url() . '/assets/js/admin/form-builder' . $suffix . '.js', array(
+			'jquery',
+			'selectWoo',
+			'wp-color-picker',
+			'jquery-blockui',
+			'jquery-tiptip',
+			'jquery-ui-sortable',
+			'jquery-ui-widget',
+			'jquery-ui-core',
+			'jquery-ui-tabs',
+			'jquery-ui-draggable',
+			'jquery-ui-droppable',
+			'ur-backbone-modal',
+			'ur-enhanced-select',
+			'perfect-scrollbar',
+			'sweetalert2',
+			'user-registration-scroll-ui-js',
+		), UR_VERSION );
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', UR()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script(
@@ -220,6 +239,7 @@ class UR_Admin_Assets {
 		// UserRegistration admin pages.
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
 			wp_enqueue_script( 'user-registration-admin' );
+			wp_enqueue_script( 'user-registration-form-builder' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 			wp_enqueue_script( 'jquery-ui-widget' );
@@ -244,6 +264,7 @@ class UR_Admin_Assets {
 			);
 
 			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
 
 			wp_register_script( 'ur-components', UR()->plugin_url() . '/assets/js/ur-components/ur-components' . $suffix . '.js', array( 'jquery' ), 'UR_VERSION', true );
 			wp_enqueue_script( 'ur-components' );
