@@ -290,6 +290,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$checkbox_start = 0;
 
 					$field .= '<ul ' . $choice_limit_attr . '>';
+
 					if("yes" ===  $select_all){
 					$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="' . esc_attr( implode( ' ', $args['input_class'] ) ) . '"  data-check="'. esc_attr( $key )	.'"/>';
 					$field .= '<label class="ur-checkbox-label">  Select All</label></li>';
@@ -304,6 +305,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$value = 'checked="checked"';
 							}
 						}
+						
 						$field .= '<li class="ur-checkbox-list">';
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . esc_attr( $value ) . ' /> ';
 						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
