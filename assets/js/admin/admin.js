@@ -3,35 +3,6 @@
  * global i18n_admin
  */
 jQuery(function ($) {
-	// Sync Number field's options with hidden corresponding elements.
-	$(document.body).on(
-		"input",
-		".ur_advance_setting.ur-settings-min",
-		function () {
-			$(
-				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-min"
-			).val($(this).val());
-		}
-	);
-	$(document.body).on(
-		"input",
-		".ur_advance_setting.ur-settings-max",
-		function () {
-			$(
-				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-max"
-			).val($(this).val());
-		}
-	);
-	$(document.body).on(
-		"input",
-		".ur_advance_setting.ur-settings-step",
-		function () {
-			$(
-				".ur-selected-item.ur-item-active .ur_advance_setting.ur-settings-step"
-			).val($(this).val());
-		}
-	);
-
 	// Bind UI Action handlers for searching fields.
 	$(document.body).on("input", "#ur-search-fields", function () {
 		var search_string = $(this).val().toLowerCase();
@@ -522,53 +493,4 @@ function ur_init_tooltips($elements, options) {
 			$elements.tipTip(args);
 		}
 	}
-}
-
-function ur_alert(message, options) {
-	if ("undefined" === typeof options) {
-		options = {};
-	}
-	Swal.fire({
-		type: "error",
-		title: options.title,
-		text: message,
-		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--center",
-	});
-}
-
-function ur_confirmation(message, options) {
-	if ("undefined" === typeof options) {
-		options = {};
-	}
-	var icon = '<i class="dashicons dashicons-trash"></i>';
-	var title =
-		icon +
-		'<span class="user-registration-swal2-modal__title">' +
-		options.title;
-	Swal.fire({
-		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--centered",
-		title: title,
-		text: message,
-		showCancelButton:
-			"undefined" !== typeof options.showCancelButton
-				? options.showCancelButton
-				: true,
-		confirmButtonText:
-			"undefined" !== typeof options.confirmButtonText
-				? options.confirmButtonText
-				: user_registration_admin_data.i18n_admin.i18n_choice_delete,
-		confirmButtonColor: "#ff4149",
-		cancelButtonText:
-			"undefined" !== typeof options.cancelButtonText
-				? options.cancelButtonText
-				: user_registration_admin_data.i18n_admin.i18n_choice_cancel,
-	}).then(function (result) {
-		if (result.value) {
-			options.confirm();
-		} else {
-			options.reject();
-		}
-	});
 }
