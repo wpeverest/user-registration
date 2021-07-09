@@ -374,6 +374,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
+		$this->prepare_column_headers();
 		$per_page     = $this->get_items_per_page( $this->per_page_option );
 		$current_page = $this->get_pagenum();
 
@@ -397,6 +398,16 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created';
 		$args['order']   = isset( $_REQUEST['order'] ) && 'DESC' === strtoupper( $_REQUEST['order'] ) ? 'DESC' : 'ASC';
+
+
+		// $limit   = $this->get_items_query_limit();
+		// $offset  = $this->get_items_query_offset();
+		// $order   = $this->get_items_query_order();
+		// $where   = array_filter(array(
+		// 	$this->get_items_query_search(),
+		// 	$this->get_items_query_filters(),
+		// ));
+
 
 		// Get the registrations
 		$query_posts = new WP_Query( $args );
@@ -439,6 +450,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					break;
 
 				case 'bulk_trash':
+				case 'trash':
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to trash Content Access Posts!', 'user-registration-content-restriction' ) );
 					} else {
@@ -448,6 +460,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					break;
 
 				case 'bulk_untrash':
+				case 'untrash':
 					if ( ! current_user_can( 'edit_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to untrash Content Access Posts!', 'user-registration-content-restriction' ) );
 					} else {
@@ -457,6 +470,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					break;
 
 				case 'bulk_delete':
+				case 'delete':
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to delete Content Access Posts!', 'user-registration-content-restriction' ) );
 					} else {
@@ -676,7 +690,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	public function column_title( $post ) {
 		$edit_link 			  = $this->get_edit_links($post);
-		$title                = _draft_or_post_title( $post);
+		$title                = _draft_or_post_title( $post->ID );
 		$post_status          = $post->post_status;
 		$current_status_trash = ( 'trash' === $post_status );
 
@@ -909,4 +923,15 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function get_search_box_placeholder() {
 		return esc_html__( 'Search', 'user-registration' );
 	}
+
+		/**
+	 * Get a list of hidden columns.
+	 *
+	 * @return array
+	 */
+	protected function get_hidden_columns() {
+		return get_hidden_columns( $this->screen );
+	}
+
+
 }
