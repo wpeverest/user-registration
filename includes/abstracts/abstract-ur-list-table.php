@@ -71,39 +71,14 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected $row_actions = array();
 
 	/**
-	 * The Primary key of our table
-	 */
-	protected $ID = 'ID';
-
-	// protected $page   = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : false;
-	// protected $forms  = ur_get_all_user_registration_form();
-	// protected $latest = key( $forms );
-
-		// @TODO::Verify Nonce
-	protected $form_id = 0;
-
-	/**
 	 * Enables sorting, it expects an array
 	 * of columns (the column names are the values)
 	 */
-	protected $sort_by = array();
-
-	protected $filter_by = array();
-
-	/**
-	 * @var array The status name => count combinations for this table's items. Used to display status filters.
-	 */
-	protected $status_counts = array();
-
-	/**
-	 * @var array Notices to display when loading the table. Array of arrays of form array( 'class' => {updated|error}, 'message' => 'This is the notice text display.' ).
-	 */
-	protected $admin_notices = array();
-
-	/**
-	 * @var string Localised string displayed in the <h1> element above the able.
-	 */
-	protected $table_header;
+	protected $sort_by = array(
+				'title'  => array( 'title', false ),
+				'date'  => array( 'date', false ),
+				'author' => array( 'author', false ),
+	);
 
 	/**
 	 * Enables bulk actions. It must be an array where the key is the action name
@@ -119,22 +94,22 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected $bulk_actions = array();
 
 	/**
-	 * Makes translation easier, it basically just wraps
-	 * `_x` with some default (the package name).
-	 *
-	 * @deprecated 3.0.0
-	 */
-	protected function translate( $text, $context = '' ) {
-		return $text;
-	}
-
-	/**
 	 * Reads `$this->bulk_actions` and returns an array that WP_List_Table understands. It
 	 * also validates that the bulk method handler exists. It throws an exception because
 	 * this is a library meant for developers and missing a bulk method is a development-time error.
 	 */
 	protected function get_bulk_actions() {
-		$actions = array();
+		if ( isset( $_GET['status'] ) && 'trashed' == $_GET['status'] ) {
+			$actions = array(
+				'untrash' => __( 'Restore', 'user-registration-extras' ),
+				'delete'  => __( 'Delete permanently', 'user-registration-extras' ),
+			);
+		}else{
+			$actions = array(
+				'trash' => __( 'Move to trash', 'user-registration-extras' ),
+			);
+		}
+
 		foreach ( $this->bulk_actions as $action => $label ) {
 			if ( ! is_callable( array( $this, 'bulk_' . $action ) ) ) {
 				throw new RuntimeException( "The bulk action $action does not have a callback method" );
@@ -142,7 +117,6 @@ abstract class UR_List_Table extends WP_List_Table {
 
 			$actions[ $action ] = $label;
 		}
-
 		return $actions;
 	}
 
@@ -153,7 +127,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function prepare_column_headers() {
 		$this->_column_headers = array(
 			$this->get_columns(),
-			array(),
+			$this->get_hidden_columns(),
 			$this->get_sortable_columns(),
 		);
 	}
@@ -164,7 +138,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$sort_by = array();
-		foreach ( $this->sort_by as $column ) {
+		foreach ( $this->sort_by as $column => $value ) {
 			$sort_by[ $column ] = array( $column, true );
 		}
 		return $sort_by;
@@ -181,186 +155,6 @@ abstract class UR_List_Table extends WP_List_Table {
 		);
 
 		return $columns;
-	}
-
-	/**
-	 * Get prepared LIMIT clause for items query
-	 *
-	 * @global wpdb $wpdb
-	 *
-	 * @return string Prepared LIMIT clause for items query.
-	 */
-	protected function get_items_query_limit() {
-		global $wpdb;
-
-		$per_page = $this->get_items_per_page( $this->package . '_items_per_page', $this->items_per_page );
-		return $wpdb->prepare( 'LIMIT %d', $per_page );
-	}
-
-	/**
-	 * Returns the number of items to offset/skip for this current view.
-	 *
-	 * @return int
-	 */
-	protected function get_items_offset() {
-		$per_page = $this->get_items_per_page( $this->package . '_items_per_page', $this->items_per_page );
-		$current_page = $this->get_pagenum();
-		if ( 1 < $current_page ) {
-			$offset = $per_page * ( $current_page - 1 );
-		} else {
-			$offset = 0;
-		}
-
-		return $offset;
-	}
-
-	/**
-	 * Get prepared OFFSET clause for items query
-	 *
-	 * @global wpdb $wpdb
-	 *
-	 * @return string Prepared OFFSET clause for items query.
-	 */
-	protected function get_items_query_offset() {
-		global $wpdb;
-
-		return $wpdb->prepare( 'OFFSET %d', $this->get_items_offset() );
-	}
-
-	/**
-	 * Prepares the ORDER BY sql statement. It uses `$this->sort_by` to know which
-	 * columns are sortable. This requests validates the orderby $_GET parameter is a valid
-	 * column and sortable. It will also use order (ASC|DESC) using DESC by default.
-	 */
-	protected function get_items_query_order() {
-		if ( empty( $this->sort_by ) ) {
-			return '';
-		}
-
-		$orderby = esc_sql( $this->get_request_orderby() );
-		$order   = esc_sql( $this->get_request_order() );
-
-		return "ORDER BY {$orderby} {$order}";
-	}
-
-	/**
-	 * Return the sortable column specified for this request to order the results by, if any.
-	 *
-	 * @return string
-	 */
-	protected function get_request_orderby() {
-
-		$valid_sortable_columns = array_values( $this->sort_by );
-
-		if ( ! empty( $_GET['orderby'] ) && in_array( $_GET['orderby'], $valid_sortable_columns ) ) {
-			$orderby = sanitize_text_field( $_GET['orderby'] );
-		} else {
-			$orderby = $valid_sortable_columns[0];
-		}
-
-		return $orderby;
-	}
-
-	/**
-	 * Return the sortable column order specified for this request.
-	 *
-	 * @return string
-	 */
-	protected function get_request_order() {
-
-		if ( ! empty( $_GET['order'] ) && 'desc' === strtolower( $_GET['order'] ) ) {
-			$order = 'DESC';
-		} else {
-			$order = 'ASC';
-		}
-
-		return $order;
-	}
-
-	/**
-	 * Return the status filter for this request, if any.
-	 *
-	 * @return string
-	 */
-	protected function get_request_status() {
-		$status = ( ! empty( $_GET['status'] ) ) ? $_GET['status'] : '';
-		return $status;
-	}
-
-	/**
-	 * Return the search filter for this request, if any.
-	 *
-	 * @return string
-	 */
-	protected function get_request_search_query() {
-		$search_query = ( ! empty( $_GET['s'] ) ) ? $_GET['s'] : '';
-		return $search_query;
-	}
-
-	/**
-	 * Process and return the columns name. This is meant for using with SQL, this means it
-	 * always includes the primary key.
-	 *
-	 * @return array
-	 */
-	protected function get_table_columns() {
-		$columns = array_keys( $this->columns );
-		if ( ! in_array( $this->ID, $columns ) ) {
-			$columns[] = $this->ID;
-		}
-
-		return $columns;
-	}
-
-	/**
-	 * Check if the current request is doing a "full text" search. If that is the case
-	 * prepares the SQL to search texts using LIKE.
-	 *
-	 * If the current request does not have any search or if this list table does not support
-	 * that feature it will return an empty string.
-	 *
-	 * TODO:
-	 *   - Improve search doing LIKE by word rather than by phrases.
-	 *
-	 * @return string
-	 */
-	protected function get_items_query_search() {
-		global $wpdb;
-
-		if ( empty( $_GET['s'] ) || empty( $this->search_by ) ) {
-			return '';
-		}
-
-		$filter  = array();
-		foreach ( $this->search_by as $column ) {
-			$filter[] = $wpdb->prepare('`' . $column . '` like "%%s%"', $wpdb->esc_like( $_GET['s'] ));
-		}
-		return implode( ' OR ', $filter );
-	}
-
-	/**
-	 * Prepares the SQL to filter rows by the options defined at `$this->filter_by`. Before trusting
-	 * any data sent by the user it validates that it is a valid option.
-	 */
-	protected function get_items_query_filters() {
-		global $wpdb;
-
-		if ( ! $this->filter_by || empty( $_GET['filter_by'] ) || ! is_array( $_GET['filter_by'] ) ) {
-			return '';
-		}
-
-		$filter = array();
-
-		foreach ( $this->filter_by as $column => $options ) {
-			if ( empty( $_GET['filter_by'][ $column ] ) || empty( $options[ $_GET['filter_by'][ $column ] ] ) ) {
-				continue;
-			}
-
-			$filter[] = $wpdb->prepare( "`$column` = %s", $_GET['filter_by'][ $column ] );
-		}
-
-		return implode( ' AND ', $filter );
-
 	}
 
 	/**
@@ -400,15 +194,6 @@ abstract class UR_List_Table extends WP_List_Table {
 		$args['order']   = isset( $_REQUEST['order'] ) && 'DESC' === strtoupper( $_REQUEST['order'] ) ? 'DESC' : 'ASC';
 
 
-		// $limit   = $this->get_items_query_limit();
-		// $offset  = $this->get_items_query_offset();
-		// $order   = $this->get_items_query_order();
-		// $where   = array_filter(array(
-		// 	$this->get_items_query_search(),
-		// 	$this->get_items_query_filters(),
-		// ));
-
-
 		// Get the registrations
 		$query_posts = new WP_Query( $args );
 		$this->items       = $query_posts->posts;
@@ -430,7 +215,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @param string $row_action_type The type of action to perform on the action.
 	 */
 	protected function process_row_actions() {
-		if ( isset( $_GET['page'] ) && $this->page === $_GET['page'] ) {
+		if ( isset( $_GET['page'] ) ) {
 			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 			$action = $action ? $action : ( ! empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '' );
 			$action = ( $action && '-1' !== $action ) ? $action : ( ! empty( $_POST['action2'] ) ? sanitize_text_field( $_POST['action2'] ) : '' );
@@ -662,17 +447,6 @@ abstract class UR_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Set the data for displaying. It will attempt to unserialize (There is a chance that some columns
-	 * are serialized). This can be override in child classes for futher data transformation.
-	 */
-	protected function set_items( array $items ) {
-		$this->items = array();
-		foreach ( $items as $item ) {
-			$this->items[ $item[ $this->ID ] ] = array_map( 'maybe_unserialize', $item );
-		}
-	}
-
-	/**
 	 * Renders the checkbox for each row, this is the first column and it is named ID regardless
 	 * of how the primary key is named (to keep the code simpler). The bulk actions will do the proper
 	 * name transformation though using `$this->ID`.
@@ -725,6 +499,73 @@ abstract class UR_List_Table extends WP_List_Table {
 		printf( '<div class="row-actions">%s</div>', implode( ' | ', $row_actions ) );
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Column: Created Date.
+	 *
+	 * @param  object $items
+	 *
+	 * @return string
+	 */
+	public function column_date( $items ) {
+		$post = get_post( $items->ID );
+
+		if ( ! $post ) {
+			return;
+		}
+
+		$t_time = mysql2date(
+			__( 'Y/m/d g:i:s A', 'user-registration' ),
+			$post->post_date,
+			true
+		);
+		$m_time = $post->post_date;
+		$time   = mysql2date( 'G', $post->post_date )
+				  - get_option( 'gmt_offset' ) * 3600;
+
+		$time_diff = time() - $time;
+
+		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
+			$h_time = sprintf(
+				__( '%s ago', 'user-registration-extras' ),
+				human_time_diff( $time )
+			);
+		} else {
+			$h_time = mysql2date( __( 'Y/m/d', 'user-registration' ), $m_time );
+		}
+
+		return '<abbr title="' . $t_time . '">' . $h_time . '</abbr>';
+	}
+
+	/**
+	 * Return author column.
+	 *
+	 * @param  object $items
+	 *
+	 * @return string
+	 */
+	public function column_author( $items ) {
+		$user = get_user_by( 'id', $items->post_author );
+
+		if ( ! $user ) {
+			return '<span class="na">&ndash;</span>';
+		}
+
+		$user_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_login;
+
+		if ( current_user_can( 'edit_user' ) ) {
+			return '<a href="' . esc_url(
+				add_query_arg(
+					array(
+						'user_id' => $user->ID,
+					),
+					admin_url( 'user-edit.php' )
+				)
+			) . '">' . esc_html( $user_name ) . '</a>';
+		}
+
+		return esc_html( $user_name );
 	}
 
 	/**
@@ -810,86 +651,6 @@ abstract class UR_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Display the table heading and search query, if any
-	 */
-	protected function display_header() {
-		echo '<h1 class="wp-heading-inline">' . esc_attr( $this->table_header ) . '</h1>';
-		if ( $this->get_request_search_query() ) {
-			/* translators: %s: search query */
-			echo '<span class="subtitle">' . esc_attr( sprintf( __( 'Search results for "%s"', 'user-registration' ), $this->get_request_search_query() ) ) . '</span>';
-		}
-		echo '<hr class="wp-header-end">';
-	}
-
-	/**
-	 * Display the table heading and search query, if any
-	 */
-	protected function display_admin_notices() {
-		foreach ( $this->admin_notices as $notice ) {
-			echo '<div id="message" class="' . $notice['class'] . '">';
-			echo '	<p>' . wp_kses_post( $notice['message'] ) . '</p>';
-			echo '</div>';
-		}
-	}
-
-	/**
-	 * Prints the available statuses so the user can click to filter.
-	 */
-	protected function display_filter_by_status() {
-
-		$status_list_items = array();
-		$request_status    = $this->get_request_status();
-
-		// Helper to set 'all' filter when not set on status counts passed in
-		if ( ! isset( $this->status_counts['all'] ) ) {
-			$this->status_counts = array( 'all' => array_sum( $this->status_counts ) ) + $this->status_counts;
-		}
-
-		foreach ( $this->status_counts as $status_name => $count ) {
-
-			if ( 0 === $count ) {
-				continue;
-			}
-
-			if ( $status_name === $request_status || ( empty( $request_status ) && 'all' === $status_name ) ) {
-				$status_list_item = '<li class="%1$s"><strong>%3$s</strong> (%4$d)</li>';
-			} else {
-				$status_list_item = '<li class="%1$s"><a href="%2$s">%3$s</a> (%4$d)</li>';
-			}
-
-			$status_filter_url   = ( 'all' === $status_name ) ? remove_query_arg( 'status' ) : add_query_arg( 'status', $status_name );
-			$status_filter_url   = remove_query_arg( array( 'paged', 's' ), $status_filter_url );
-			$status_list_items[] = sprintf( $status_list_item, esc_attr( $status_name ), esc_url( $status_filter_url ), esc_html( ucfirst( $status_name ) ), absint( $count ) );
-		}
-
-		if ( $status_list_items ) {
-			echo '<ul class="subsubsub">';
-			echo implode( " | \n", $status_list_items );
-			echo '</ul>';
-		}
-	}
-
-	/**
-	 * Renders the table list, we override the original class to render the table inside a form
-	 * and to render any needed HTML (like the search box). By doing so the callee of a function can simple
-	 * forget about any extra HTML.
-	 */
-	protected function display_table() {
-		echo '<form id="' . esc_attr( $this->_args['plural'] ) . '-filter" method="get">';
-		foreach ( $_GET as $key => $value ) {
-			if ( '_' === $key[0] || 'paged' === $key ) {
-				continue;
-			}
-			echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
-		}
-		if ( ! empty( $this->search_by ) ) {
-			echo $this->search_box( $this->get_search_box_button_text(), 'plugin' ); // WPCS: XSS OK
-		}
-		parent::display();
-		echo '</form>';
-	}
-
-	/**
 	 * Process any pending actions.
 	 */
 	public function process_actions() {
@@ -904,27 +665,6 @@ abstract class UR_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render the list table page, including header, notices, status filters and table.
-	 */
-	public function display_page_todo() {
-		$this->prepare_items();
-
-		echo '<div class="wrap">';
-		$this->display_header();
-		$this->display_admin_notices();
-		$this->display_filter_by_status();
-		$this->display_table();
-		echo '</div>';
-	}
-
-	/**
-	 * Get the text to display in the search box on the list table.
-	 */
-	protected function get_search_box_placeholder() {
-		return esc_html__( 'Search', 'user-registration' );
-	}
-
-		/**
 	 * Get a list of hidden columns.
 	 *
 	 * @return array
@@ -932,6 +672,5 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function get_hidden_columns() {
 		return get_hidden_columns( $this->screen );
 	}
-
 
 }
