@@ -250,7 +250,6 @@ class UR_Admin_Assets {
 				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'             => wp_create_nonce( 'user_input_dropped_nonce' ),
 				'ur_form_save'                   => wp_create_nonce( 'ur_form_save_nonce' ),
-				'ur_import_form_save'            => wp_create_nonce( 'ur_import_form_save_nonce' ),
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
 				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false,
@@ -260,10 +259,14 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html( 'Add New', 'user-registratoin' ),
-				'no_file_selected'               => esc_html( 'No file selected.', 'user-registration' ),
 			);
 
-			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data', $params );
+			wp_localize_script( 'user-registration-admin', 'user_registration_admin_data',
+					array(
+						'ajax_url'                       => admin_url( 'admin-ajax.php' ),
+						'ur_import_form_save'            => wp_create_nonce( 'ur_import_form_save_nonce' ),
+						'no_file_selected'               => esc_html( 'No file selected.', 'user-registration' ),
+					) );
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
 
 			wp_register_script( 'ur-components', UR()->plugin_url() . '/assets/js/ur-components/ur-components' . $suffix . '.js', array( 'jquery' ), 'UR_VERSION', true );
