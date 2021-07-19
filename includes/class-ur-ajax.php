@@ -242,12 +242,12 @@ class UR_AJAX {
 
 			// Hook to allow modification of value.
 			$single_field[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $single_field[ $key ] );
-
+			
 			if ( 'user_registration_user_email' === $key ) {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
-
+				
 				// Check if email already exists before updating user details.
-				if ( email_exists( $single_field[ $key ] ) !== $user_id ) {
+				if ( email_exists( $single_field[ $key ] ) && email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Email already exists.', 'user-registration' ),
