@@ -211,7 +211,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														unset( $field['input_mask'] );
 													}
 												}
-												
+
 												if ( isset( $single_item->general_setting->hide_label ) ) {
 												if( 'yes' === $single_item->general_setting->hide_label ) {
 													unset( $field['label'] );
@@ -253,6 +253,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												if( "checkbox" === $single_item->field_key || "multi_select2" === $single_item->field_key){
 													if( isset( $advance_data["advance_setting"]->choice_limit)) {
 														$field["choice_limit"] = $advance_data["advance_setting"]->choice_limit;
+													}
+													if( isset( $advance_data["advance_setting"]->select_all)) {
+														$field["select_all"] = $advance_data["advance_setting"]->select_all;
 													}
 												}
 												$filter_data = array(
