@@ -1514,23 +1514,27 @@ function ur_includes(arr, item) {
 		}
 	});
 
-	$('input[type="checkbox"]#checkall').click(function () {
-		var checkAll = $(this).attr("data-check");
-		$('[data-id = "' + checkAll + '" ]').prop(
-			"checked",
-			$(this).prop("checked")
-		);
-	});
+	// To check and uncheck all the checkboxes
+	$(function () {
+		$('input[type="checkbox"]#checkall').click(function () {
+			var checkAll = $(this).attr("data-check");
+			$('[data-id = "' + checkAll + '" ]').prop(
+				"checked",
+				$(this).prop("checked")
+			);
+		});
 
-	$(".input-checkbox").change(function () {
-		var checkAll = $(this).attr("data-id");
-		if ($(this).prop("checked") === false) {
-			$('[data-check = "' + checkAll + '" ]').prop("checked", false);
-		}
-		if (
-			$(".input-checkbox:checked").length == $(".input-checkbox").length
-		) {
-			$('[data-check = "' + checkAll + '" ]').prop("checked", true);
-		}
+		$(".input-checkbox").change(function () {
+			var checkAll = $(this).attr("data-id");
+			if ($(this).prop("checked") === false) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
+			}
+			if (
+				$(".input-checkbox:checked").length ==
+				$(".input-checkbox").length
+			) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			}
+		});
 	});
 })(jQuery);

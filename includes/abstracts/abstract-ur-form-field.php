@@ -250,7 +250,7 @@ abstract class UR_Form_Field {
 
 			if( 'multi_select2' === $field_key ){
 				$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
-				$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
+				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
 			}
 
 
@@ -271,11 +271,11 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'checkbox' === $field_key ) {
-			$select_all  = $form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
-			$choices     = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
-			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
-
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
+			$choices    			 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
+			$option_data 			 = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options = array();
+
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
