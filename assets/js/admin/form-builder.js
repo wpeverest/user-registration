@@ -2903,13 +2903,13 @@
 					confirmButtonText:
 						"undefined" !== typeof options.confirmButtonText
 							? options.confirmButtonText
-							: user_registration_admin_data.i18n_admin
+							: user_registration_form_builder_data.i18n_admin
 									.i18n_choice_delete,
 					confirmButtonColor: "#ff4149",
 					cancelButtonText:
 						"undefined" !== typeof options.cancelButtonText
 							? options.cancelButtonText
-							: user_registration_admin_data.i18n_admin
+							: user_registration_form_builder_data.i18n_admin
 									.i18n_choice_cancel,
 				}).then(function (result) {
 					if (result.value) {
