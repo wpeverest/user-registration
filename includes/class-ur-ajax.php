@@ -242,10 +242,10 @@ class UR_AJAX {
 
 			// Hook to allow modification of value.
 			$single_field[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $single_field[ $key ] );
-			
+
 			if ( 'user_registration_user_email' === $key ) {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
-				
+
 				// Check if email already exists before updating user details.
 				if ( email_exists( $single_field[ $key ] ) && email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
@@ -262,6 +262,10 @@ class UR_AJAX {
 					$disabled = true;
 				}
 			}
+
+			// Action to add extra validation to edit profile fields.
+			do_action( 'user_registration_validate_' . $key, $single_field[ $key ]);
+
 		}// End foreach().
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );

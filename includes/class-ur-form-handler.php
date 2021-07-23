@@ -205,6 +205,8 @@ class UR_Form_Handler {
 					}
 				}
 			}
+			// Action to add extra validation to edit profile fields.
+			do_action( 'user_registration_validate_' . $key, $_POST[ $key ] );
 
 		}// End foreach().
 
