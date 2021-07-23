@@ -413,13 +413,14 @@ class UR_Form_Handler {
 					}
 				}
 
-				if("email" === get_option('user_registration_general_setting_login_options_with',array())){
+				// To check the specific login
+				if ( "email" === get_option('user_registration_general_setting_login_options_with',array()) ) {
 					$user_data = get_user_by( 'email', $username );
-					$creds['user_login'] = isset($user_data->user_email) ? $user_data->user_email : is_email($username);
-			    }elseif ("username" === get_option('user_registration_general_setting_login_options_with',array())) {
+					$creds['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $username );
+			    } elseif ("username" === get_option( 'user_registration_general_setting_login_options_with',array() ) ) {
 					$user_data = get_user_by( 'login', $username );
-					$creds['user_login'] = isset($user_data->user_login) ? $user_data->user_login : !is_email($username);
-			    }else{
+					$creds['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : !is_email( $username );
+			    } else {
 					$creds['user_login'] =  $username;
 			 	}
 
