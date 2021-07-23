@@ -282,7 +282,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$choices     = isset( $advance_data['advance_setting']->choices ) ? explode( ',', $advance_data['advance_setting']->choices ) : array();
 													$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $choices;
 													$options = array();
-													
+
 													if ( is_array( $option_data ) ) {
 														foreach ( $option_data as $index_data => $option ) {
 															$options[ $option ] = ur_string_translation($form_id,'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
