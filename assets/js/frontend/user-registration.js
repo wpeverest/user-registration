@@ -1358,8 +1358,8 @@
 		$(".input-checkbox").each(function () {
 			var checkAll = $(this).attr("data-id");
 			if (
-				$(".input-checkbox:checked").length ==
-				$(".input-checkbox").length
+				$('input[name="' + checkAll + '[]"]:checked').length ==
+				$('[data-id = "' + checkAll + '" ]').length
 			) {
 				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
 			}
@@ -1378,15 +1378,15 @@
 			if ($(this).prop("checked") === false) {
 				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
 			}
+
 			if (
-				$(".input-checkbox:checked").length ==
-				$(".input-checkbox").length
+				$('input[name="' + checkAll + '[]"]:checked').length ==
+				$('[data-id = "' + checkAll + '" ]').length
 			) {
 				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
 			}
 		});
 	});
-	
 	user_registration_form_init();
 
 	/**

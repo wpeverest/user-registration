@@ -292,7 +292,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<ul ' . $choice_limit_attr . '>';
 
 					if("yes" ===  $select_all){
-					$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="' . esc_attr( implode( ' ', $args['input_class'] ) ) . '"  data-check="'. esc_attr( $key )	.'"/>';
+					$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="'. esc_attr( $key )	.'"/>';
 					$field .= '<label class="ur-checkbox-label">  Select All</label></li>';
 					}
 					foreach ( $choices as $choice_index => $choice ) {
