@@ -4,7 +4,6 @@
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
-		handle_multiple_choice_field.select_all();
 
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
@@ -1350,40 +1349,34 @@
 		});
 	};
 
-	// To check and uncheck all the checkboxes
-	var handle_multiple_choice_field = {
-		select_all: function () {
-			console.log("hello");
-			$('input[type="checkbox"]#checkall').on("click", function () {
-				console.log("sdfs");
-				var checkAll = $(this).attr("data-check");
-				$('[data-id = "' + checkAll + '" ]').prop(
-					"checked",
-					$(this).prop("checked")
-				);
-			});
+	/**
+	 * @since 2.0.0
+	 *
+	 * To check and uncheck all the option in checkbox.
+	 */
+	$(function () {
+		$('input[type="checkbox"]#checkall').click(function () {
+			var checkAll = $(this).attr("data-check");
+			$('[data-id = "' + checkAll + '" ]').prop(
+				"checked",
+				$(this).prop("checked")
+			);
+		});
 
-			$(".input-checkbox").on("change", function () {
-				var checkAll = $(this).attr("data-id");
-				if ($(this).prop("checked") === false) {
-					$('[data-check = "' + checkAll + '" ]').prop(
-						"checked",
-						false
-					);
-				}
-				if (
-					$(".input-checkbox:checked").length ==
-					$(".input-checkbox").length
-				) {
-					$('[data-check = "' + checkAll + '" ]').prop(
-						"checked",
-						true
-					);
-				}
-			});
-		},
-	};
-
+		$(".input-checkbox").change(function () {
+			var checkAll = $(this).attr("data-id");
+			if ($(this).prop("checked") === false) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
+			}
+			if (
+				$(".input-checkbox:checked").length ==
+				$(".input-checkbox").length
+			) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			}
+		});
+	});
+	
 	user_registration_form_init();
 
 	/**
