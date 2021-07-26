@@ -65,7 +65,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 			),
 				'default'     => 'no',
 				'placeholder' =>'',
-				'tip'         => __( 'Check this option to select all the checkbox option', 'user-registration' ),
+				'tip'         => __( 'Enable this option to select all the options', 'user-registration' ),
 			)
 		);
 

@@ -1355,7 +1355,17 @@
 	 * To check and uncheck all the option in checkbox.
 	 */
 	$(function () {
-		$('input[type="checkbox"]#checkall').click(function () {
+		$(".input-checkbox").each(function () {
+			var checkAll = $(this).attr("data-id");
+			if (
+				$(".input-checkbox:checked").length ==
+				$(".input-checkbox").length
+			) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			}
+		});
+
+		$('input[type="checkbox"]#checkall').on("click", function () {
 			var checkAll = $(this).attr("data-check");
 			$('[data-id = "' + checkAll + '" ]').prop(
 				"checked",
@@ -1363,7 +1373,7 @@
 			);
 		});
 
-		$(".input-checkbox").change(function () {
+		$(".input-checkbox").on("change", function () {
 			var checkAll = $(this).attr("data-id");
 			if ($(this).prop("checked") === false) {
 				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
