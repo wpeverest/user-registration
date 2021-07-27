@@ -9,6 +9,7 @@
 */
 @import "variables/variables";
 @import "mixins/mixins";
+@import "fonts";
 
 // Components
 @import "components/button", "components/modal";
@@ -121,6 +122,7 @@
 		padding: 10px;
 		box-shadow: none;
 		background: none;
+
 		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
@@ -489,6 +491,7 @@
 						color: $label_color;
 						margin-bottom: 10px;
 						height: 45px;
+
 						&:focus {
 							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
 						}
@@ -795,6 +798,7 @@
 	margin-left: -40px;
 	float: left;
 }
+
 .user-registration-form-login {
 	.ur-front-spinner {
 		margin-left: 0;
@@ -803,6 +807,7 @@
 		margin-right: 20px;
 	}
 }
+
 .edit-post-visual-editor {
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
@@ -829,6 +834,7 @@
 .ur-frontend-form.ur-gutenberg-editor form button[type="submit"] {
 	cursor: not-allowed;
 }
+
 .ur-frontend-form.ur-gutenberg-editor form .ur-form-row .ur-form-grid input {
 	cursor: not-allowed;
 }
@@ -930,4 +936,23 @@
 	border-radius: 3px;
 	white-space: nowrap;
 	box-sizing: border-box;
+}
+
+.input-text,
+.flatpickr-input {
+	padding-left: 32px !important;
+}
+
+.without_icon {
+	padding-left: 10px !important;
+}
+
+span.input-wrapper {
+	position: relative;
+
+	.ur-icon {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+	}
 }

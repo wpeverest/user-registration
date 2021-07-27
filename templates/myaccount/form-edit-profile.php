@@ -162,6 +162,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
 											}
+											// unset invite code
+											if ( 'invite_code' === $single_item->field_key) {
+												continue;
+										    }
 											?>
 											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>">
 												<?php
