@@ -122,7 +122,8 @@
 		padding: 10px;
 		box-shadow: none;
 		background: none;
-		<<<<<<< HEAD =======>>>>>>>develop input[name="rememberme"]#rememberme {
+
+		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
 	}
@@ -186,10 +187,7 @@
 							}
 
 							input {
-								<<<<<<<
-									HEAD
-									=======>>>>>>>develop
-									&[type="checkbox"],
+								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 2px;
 								}
@@ -800,7 +798,8 @@
 	margin-left: -40px;
 	float: left;
 }
-<<<<<<< HEAD =======>>>>>>>develop .user-registration-form-login {
+
+.user-registration-form-login {
 	.ur-front-spinner {
 		margin-left: 0;
 		float: right;
@@ -920,6 +919,23 @@
 
 .ur-hidden {
 	display: none;
+}
+
+.button-check-all {
+	display: inline-block;
+	text-decoration: none;
+	font-size: 13px;
+	line-height: 2.15384615;
+	min-height: 30px;
+	margin: 0;
+	padding: 0 10px;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+	-webkit-appearance: none;
+	border-radius: 3px;
+	white-space: nowrap;
+	box-sizing: border-box;
 }
 
 .input-text,

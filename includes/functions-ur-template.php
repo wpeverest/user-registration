@@ -282,11 +282,12 @@ if (!function_exists('user_registration_form_field')) {
 				break;
 
 			case 'checkbox':
-				$field_key     = isset($args['field_key']) ? $args['field_key'] : '';
-				$default_value = isset($args['default_value']) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
-				$default       = !empty($value) ? $value : $default_value;
-				$options       = isset($args['options']) ? $args['options'] : ($args['choices'] ? $args['choices'] : array()); // $args['choices'] for backward compatibility. Modified since 1.5.7.
-				$choice_limit = isset($args['choice_limit']) ?  $args['choice_limit'] : "";
+				$field_key     = isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
+				$default       = ! empty( $value ) ? $value : $default_value;
+				$select_all    = isset( $args['select_all'] ) ?  $args['select_all'] : "";
+				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit = isset( $args['choice_limit'] ) ?  $args['choice_limit'] : "";
 				$choice_limit_attr = "";
 				if ("" !== $choice_limit) {
 					$choice_limit_attr = 'data-choice-limit="' . $choice_limit . '"';
@@ -307,7 +308,11 @@ if (!function_exists('user_registration_form_field')) {
 
 					$field .= '<ul ' . $choice_limit_attr . '>';
 
-					foreach ($choices as $choice_index => $choice) {
+					if("yes" ===  $select_all){
+					$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="'. esc_attr( $key )	.'"/>';
+					$field .= '<label class="ur-checkbox-label">  Select All</label></li>';
+					}
+					foreach ( $choices as $choice_index => $choice ) {
 
 						$value = '';
 						if ('' !== $default) {
@@ -317,7 +322,6 @@ if (!function_exists('user_registration_form_field')) {
 								$value = 'checked="checked"';
 							}
 						}
-
 						$field .= '<li class="ur-checkbox-list">';
 						$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" ' . implode(' ', $custom_attributes) . ' data-value="' . esc_attr($choice_index) . '" type="' . esc_attr($args['type']) . '" class="input-checkbox ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '[]" id="' . esc_attr($args['id']) . '_' . esc_attr($choice_index) . '" value="' . trim($choice_index) . '"' . esc_attr($value) . ' /> ';
 						$field .= '<label class="ur-checkbox-label" for="' . esc_attr($args['id']) . '_' . esc_attr($choice_index) . '">' . trim($choice) . '</label> </li>';

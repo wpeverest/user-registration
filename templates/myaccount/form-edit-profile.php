@@ -258,6 +258,9 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													if( isset( $advance_data["advance_setting"]->choice_limit)) {
 														$field["choice_limit"] = $advance_data["advance_setting"]->choice_limit;
 													}
+													if( isset( $advance_data["advance_setting"]->select_all)) {
+														$field["select_all"] = $advance_data["advance_setting"]->select_all;
+													}
 												}
 												$filter_data = array(
 													'form_data' => $field,
