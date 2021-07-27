@@ -745,9 +745,8 @@ jQuery(function ($) {
 									user_registration_admin_data.i18n_admin
 										.i18n_are_you_sure_want_to_delete_row,
 									{
-										title:
-											user_registration_admin_data
-												.i18n_admin.i18n_msg_delete,
+										title: user_registration_admin_data
+											.i18n_admin.i18n_msg_delete,
 										confirm: function () {
 											var btn = $this_row.prev();
 											var new_btn;
@@ -774,12 +773,11 @@ jQuery(function ($) {
 													.find(".ur-remove-row")
 													.before(new_btn);
 											}
-											var single_row = $this_row.closest(
-												".ur-single-row"
-											);
-											$(
-												document
-											).trigger(
+											var single_row =
+												$this_row.closest(
+													".ur-single-row"
+												);
+											$(document).trigger(
 												"user_registration_row_deleted",
 												[single_row]
 											);
@@ -868,10 +866,8 @@ jQuery(function ($) {
 									user_registration_admin_data.i18n_admin
 										.i18n_at_least_one_row_is_required_to_create_a_registration_form,
 									{
-										title:
-											user_registration_admin_data
-												.i18n_admin
-												.i18n_cannot_delete_row,
+										title: user_registration_admin_data
+											.i18n_admin.i18n_cannot_delete_row,
 									}
 								);
 							}
@@ -901,9 +897,8 @@ jQuery(function ($) {
 							"click",
 							".ur-grids .ur-toggle-grid-content .ur-grid-selector",
 							function () {
-								var $this_single_row = $(this).closest(
-										".ur-single-row"
-									),
+								var $this_single_row =
+										$(this).closest(".ur-single-row"),
 									grid_num = $(this).attr("data-grid"),
 									grid_comp = $this_single_row.find(
 										".ur-grid-lists .ur-grid-list-item"
@@ -1072,9 +1067,7 @@ jQuery(function ($) {
 										return;
 									}
 									var clone = $(ui.helper);
-									var form_field_id = $(clone).attr(
-										"data-field-id"
-									);
+									var form_field_id = $(clone).attr("data-field-id");
 									if (typeof form_field_id !== "undefined") {
 										var this_clone = $(ui.helper)
 											.closest(".ur-grid-list-item")
@@ -1111,9 +1104,8 @@ jQuery(function ($) {
 									user_registration_admin_data.i18n_admin
 										.i18n_are_you_sure_want_to_delete_field,
 									{
-										title:
-											user_registration_admin_data
-												.i18n_admin.i18n_msg_delete,
+										title: user_registration_admin_data
+											.i18n_admin.i18n_msg_delete,
 										showCancelButton: true,
 										confirmButtonText:
 											user_registration_admin_data
@@ -1421,8 +1413,9 @@ jQuery(function ($) {
 							var length = 0;
 
 							if ($selected_countries_option_field.val()) {
-								length = $selected_countries_option_field.val()
-									.length;
+								length =
+									$selected_countries_option_field.val()
+										.length;
 							}
 
 							return "Selected " + length + " country(s)";
@@ -1670,8 +1663,8 @@ jQuery(function ($) {
 				form_name: $("#ur-form-name").val(),
 				form_id: ur_form_id,
 				form_setting_data: form_setting_data,
-				conditional_roles_settings_data: conditional_roles_settings_data,
-				email_content_override_settings_data: email_content_override_settings_data,
+				conditional_roles_settings_data:conditional_roles_settings_data,
+				email_content_override_settings_data:email_content_override_settings_data,
 				multipart_page_setting: multipart_page_setting,
 			},
 		};
@@ -1861,7 +1854,8 @@ jQuery(function ($) {
 						throw user_registration_admin_data.i18n_admin
 							.i18n_empty_field_label;
 					}
-					var field_regex = /[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/gm;
+					var field_regex =
+						/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/gm;
 					var regex_result = field_value.match(field_regex);
 					if (
 						regex_result !== null &&
@@ -2044,12 +2038,16 @@ jQuery(function ($) {
 		$.each(all_field_item, function () {
 			var $this_item = $(this);
 			var field_key = $this_item.find(".ur-field").attr("data-field-key");
+			var field_id = "user_registration_" + field_key;
+			var icon_class = $("li[data-field-id ='" + field_id + "']")
+				.find(".ur-icon")
+				.attr("class");
 			var single_field_data = {
 				field_key: field_key,
 				general_setting: get_field_general_setting($this_item),
 				advance_setting: get_field_advance_setting($this_item),
+				icon: icon_class,
 			};
-
 			all_field_data.push(single_field_data);
 		});
 		return all_field_data;
@@ -2075,21 +2073,18 @@ jQuery(function ($) {
 						return each_value !== choice_value;
 					})
 				) {
-					general_setting_data["options"] = option_values.push(
-						choice_value
-					);
+					general_setting_data["options"] =
+						option_values.push(choice_value);
 					general_setting_data["options"] = option_values;
 				}
 			} else {
 				if ("default_value" === $(this).attr("data-field")) {
 					if (is_checkbox === true) {
 						if ($(this).is(":checked")) {
-							general_setting_data[
-								"default_value"
-							] = default_values.push(get_ur_data($(this)));
-							general_setting_data[
-								"default_value"
-							] = default_values;
+							general_setting_data["default_value"] =
+								default_values.push(get_ur_data($(this)));
+							general_setting_data["default_value"] =
+								default_values;
 						}
 					} else if ($(this).is(":checked")) {
 						general_setting_data["default_value"] = get_ur_data(
@@ -2097,13 +2092,11 @@ jQuery(function ($) {
 						);
 					}
 				} else if ("html" === $(this).attr("data-field")) {
-					general_setting_data[
-						$(this).attr("data-field")
-					] = get_ur_data($(this)).replace(/"/g, "'");
+					general_setting_data[$(this).attr("data-field")] =
+						get_ur_data($(this)).replace(/"/g, "'");
 				} else {
-					general_setting_data[
-						$(this).attr("data-field")
-					] = get_ur_data($(this));
+					general_setting_data[$(this).attr("data-field")] =
+						get_ur_data($(this));
 				}
 			}
 		});
@@ -2116,9 +2109,8 @@ jQuery(function ($) {
 			.find(".ur_advance_setting");
 		var advance_setting_data = {};
 		$.each(advance_setting_field, function () {
-			advance_setting_data[
-				$(this).attr("data-advance-field")
-			] = get_ur_data($(this));
+			advance_setting_data[$(this).attr("data-advance-field")] =
+				get_ur_data($(this));
 		});
 		return advance_setting_data;
 	}
@@ -3217,4 +3209,3 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
-
