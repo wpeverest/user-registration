@@ -345,7 +345,7 @@ class UR_Form_Handler {
 
 		// Custom error messages.
 		$messages = array(
-			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_username'	   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
 			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
 			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
 			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
@@ -391,7 +391,7 @@ class UR_Form_Handler {
 				}
 
 				if ( empty( $username ) ) {
-					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['username_is_required'] );
+					throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['empty_username'] );
 				}
 
 				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -415,11 +415,25 @@ class UR_Form_Handler {
 					}
 				}
 
+				// To check the specific login
+				if ( "email" === get_option('user_registration_general_setting_login_options_with',array()) ) {
+					$user_data = get_user_by( 'email', $username );
+					$creds['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $username );
+			    } elseif ("username" === get_option( 'user_registration_general_setting_login_options_with',array() ) ) {
+					$user_data = get_user_by( 'login', $username );
+					$creds['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : !is_email( $username );
+			    } else {
+					$creds['user_login'] =  $username;
+			 	}
+
 				// Perform the login
 				$user = wp_signon( apply_filters( 'user_registration_login_credentials', $creds ), is_ssl() );
 
 				if ( is_wp_error( $user ) ) {
 					// Set custom error messages.
+					if ( ! empty( $user->errors['empty_username'] ) && ! empty( $messages['empty_username'] ) ) {
+						$user->errors['empty_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_username'] );
+					}
 					if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 					}
