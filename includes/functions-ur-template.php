@@ -408,21 +408,15 @@ if (!function_exists('user_registration_form_field')) {
 						}
 					}
 				}
-				$field .= ' <span class="input-wrapper"> ';
-				if (empty($extra_params)) {
-					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="text" id="load_flatpickr" value="' . esc_attr($actual_value) . '" class="regular-text '.$class.'" readonly placeholder="' . esc_attr($args['placeholder']) . '" />';
-					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr($value) . '"/>';
-					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="text" data-field-type="' . esc_attr($args['type']) . '" value="' . esc_attr($actual_value) . '" class="input-text input-' . esc_attr($args['type']) . ' ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  ' . implode(' ', $custom_attributes) . ' style="display:none"/>';
-				} else {
-					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="text" id="load_flatpickr" value="' . esc_attr($actual_value) . '"  class="regular-text" readonly placeholder="' . esc_attr($args['placeholder']) . '" />';
-					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr($value) . '"/>';
-					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="text" data-field-type="' . esc_attr($args['type']) . '" value="' . esc_attr($actual_value) . '" class="input-text ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  ' . implode(' ', $custom_attributes) . ' style="display:none" />';
-				}
 
-				if (!is_admin()) {
-					if ('yes' === $enable_field_icon || '1' === $enable_field_icon) {
-						$field .= '<span class="' . $args['icon'] . '"></span>';
-					}
+				if ( empty( $extra_params ) ) {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
+				} else {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '"  class="regular-text" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
 				break;
 
@@ -787,13 +781,13 @@ if (!function_exists('user_registration_account_edit_account')) {
  * @return string
  */
 
-function ur_logout_url($redirect = '')
-{
-	$logout_endpoint = get_option('user_registration_logout_endpoint');
-	if ((ur_post_content_has_shortcode('user_registration_login') || ur_post_content_has_shortcode('user_registration_my_account')) && is_user_logged_in()) {
-		global $post;
-		$post_content = isset($post->post_content) ? $post->post_content : '';
-		preg_match('/' . get_shortcode_regex() . '/s', $post_content, $matches);
+function ur_logout_url( $redirect = '' ) {
+	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
+
+	global $post;
+	$post_content = isset( $post->post_content ) ? $post->post_content : '';
+	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
+		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 
 		$attributes = shortcode_parse_atts($matches[3]);
 		/**
@@ -807,6 +801,14 @@ function ur_logout_url($redirect = '')
 			$redirect = trim($redirect, '"');
 			$redirect = trim($redirect, "'");
 			$redirect = '' != $redirect ? home_url($redirect) : ur_get_page_permalink('myaccount');
+		}
+	}else {
+		$blocks = parse_blocks( $post->post_content );
+
+   		foreach ( $blocks as $block ) {
+			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
+				$redirect = home_url( $block['attrs']['logoutUrl'] );
+			}
 		}
 	}
 	$redirect = apply_filters('user_registration_redirect_after_logout', $redirect);

@@ -392,6 +392,38 @@ jQuery(function ($) {
 	});
 
 	$("input.input-color").wpColorPicker();
+	// send test email message
+		$( '.user_registration_send_email_test' ).on( 'click', function(e) {
+			var email = $( "#user_registration_email_send_to" ).val();
+			e.preventDefault();
+			$.ajax({
+				url: user_registration_send_email.ajax_url,
+			    data: {
+					'action': 'user_registration_send_test_email',
+					 email  : email,
+				},
+				type: 'post',
+				beforeSend: function () {
+					var spinner = '<span class="ur-spinner is-active"></span>';
+					$( '.user_registration_send_email_test' ).append( spinner );
+				},
+				complete: function( response ) {
+						$( '.ur-spinner' ).remove();
+						$( '.user-registration_page_user-registration-settings .notice' ).remove();
+						if( response.responseJSON.success === true ) {
+							message_string = '<div class="success notice notice-success is-dismissible"><p><strong>' + response.responseJSON.data.message + '</strong></p></div>';
+							$( '.user-registration-header' ).after( message_string );
+						} else {
+							message_string = '<div class="error notice notice-success is-dismissible"><p><strong>'+ response.responseJSON.data.message +'</strong></p></div>';
+							$( '.user-registration-header' ).after( message_string );
+						}
+						$( '.user-registration_page_user-registration-settings .notice' ).css( 'display','block' );
+						$( window ).scrollTop(
+							$( ".notice" ).position()
+						);
+				},
+			});
+		});
 });
 
 (function ($, user_registration_admin_data) {

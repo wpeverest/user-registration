@@ -14,6 +14,19 @@
 // Components
 @import "components/button", "components/modal";
 
+.components-radio-control__option {
+	padding-left: 14px;
+	margin-bottom: 20px !important;
+}
+
+.components-base-control__field {
+	display: flex;
+	justify-content: center;
+}
+
+.wp-core-ui select {
+	max-width: 100% !important;
+}
 /**
 * Utility classes
 */
@@ -109,8 +122,7 @@
 		padding: 10px;
 		box-shadow: none;
 		background: none;
-
-		input[name="rememberme"]#rememberme {
+		<<<<<<< HEAD =======>>>>>>>develop input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
 	}
@@ -174,8 +186,10 @@
 							}
 
 							input {
-
-								&[type="checkbox"],
+								<<<<<<<
+									HEAD
+									=======>>>>>>>develop
+									&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 2px;
 								}
@@ -263,7 +277,8 @@
 
 			select {
 				-webkit-appearance: none;
-				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
+					no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -397,7 +412,6 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -459,7 +473,6 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -513,7 +526,6 @@
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -571,7 +583,6 @@
 			form {
 				.ur-form-row {
 					.ur-form-grid {
-
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -718,7 +729,6 @@
 			}
 
 			header {
-
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -790,8 +800,7 @@
 	margin-left: -40px;
 	float: left;
 }
-
-.user-registration-form-login {
+<<<<<<< HEAD =======>>>>>>>develop .user-registration-form-login {
 	.ur-front-spinner {
 		margin-left: 0;
 		float: right;
@@ -801,7 +810,6 @@
 }
 
 .edit-post-visual-editor {
-
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {

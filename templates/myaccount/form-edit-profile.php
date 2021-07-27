@@ -37,16 +37,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-								foreach($form_data_array as $data){
-									foreach ( $data as $grid_key => $grid_data ) {
-										foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 								foreach($form_data_array as $data){
 									foreach ( $data as $grid_key => $grid_data ) {
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 
-											if("profile_picture" === $single_item->field_key){
+											if("profile_picture" === $single_item->field_key) {
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode(', ', $single_item->advance_setting->valid_file_type);
 												}
@@ -165,6 +162,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
 											}
+											// unset invite code
+											if ( 'invite_code' === $single_item->field_key) {
+												continue;
+										    }
 											?>
 											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>">
 												<?php
@@ -215,9 +216,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 												}
 
+												if ( isset( $single_item->general_setting->hide_label ) ) {
 												if( 'yes' === $single_item->general_setting->hide_label ) {
 													unset( $field['label'] );
 												}
+											   }
 
 												if ( 'select' === $single_item->field_key ) {
 													$field['placeholder'] = $single_item->general_setting->placeholder;

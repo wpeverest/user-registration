@@ -182,7 +182,7 @@ class UR_Form_Handler {
 				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $_POST[ $key ] ) !== $user_id ) {
+				if ( email_exists( $_POST[ $key ] ) && email_exists( $_POST[ $key ] ) !== $user_id ) {
 					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
@@ -205,6 +205,8 @@ class UR_Form_Handler {
 					}
 				}
 			}
+			// Action to add extra validation to edit profile fields.
+			do_action( 'user_registration_validate_' . $key, $_POST[ $key ] );
 
 		}// End foreach().
 

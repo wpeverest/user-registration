@@ -42,6 +42,7 @@ class UR_AJAX {
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
 			'ajax_login_submit'		 =>	true,
+			'send_test_email'		 => true,
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
@@ -246,7 +247,7 @@ class UR_AJAX {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $single_field[ $key ] ) !== $user_id ) {
+				if ( email_exists( $single_field[ $key ] ) && email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Email already exists.', 'user-registration' ),
@@ -261,6 +262,10 @@ class UR_AJAX {
 					$disabled = true;
 				}
 			}
+
+			// Action to add extra validation to edit profile fields.
+			do_action( 'user_registration_validate_' . $key, $single_field[ $key ]);
+
 		}// End foreach().
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
@@ -526,7 +531,30 @@ class UR_AJAX {
      }
 	wp_send_json( $user );
 	}
-
+	/**
+	 * send test email
+	 *
+	 * @since 1.9.9
+	 */
+	public function send_test_email() {
+		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		$email   = sanitize_email( isset( $_POST['email'] ) ? $_POST['email'] : '' );
+		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );
+		$header  = "Reply-To: {{from}} \r\n";
+		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$message =
+		'Congratulations,<br>
+		Your test email has been received successfully.<br>
+		We thank you for trying out User Registration and joining our mission to make sure you get your emails delivered.<br>
+		Regards,<br>
+		User Registration Team';
+		$status = wp_mail( $email,$subject,$message,$header );
+		if ( $status ) {
+			wp_send_json_success( array( 'message' => __('Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
+		} {
+	    	wp_send_json_error( array( 'message' => __('Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
+		}
+	}
 	/**
 	 * user input dropped function
 	 */

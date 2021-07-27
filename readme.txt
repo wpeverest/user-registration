@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.7.2
-Stable tag: 1.9.8
+Stable tag: 1.9.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -152,6 +152,15 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 1.9.9   - 30/06/2021
+* Feature - Gutenberg block for login.
+* Feature - Send test email.
+* Tweak   - Add smart tag filter and content mapping.
+* Tweak   - Add filter for login redirect when core login is disabled.
+* Fix 	  - Auto login conflicts with payment.
+* Fix 	  - Hide label in edit profile for section title field.
+* Fix	  - Unexpected end of file in edit profile.
 
 = 1.9.8 - 31/05/2021
 * Feature - Edit profile form shortcode.

@@ -116,7 +116,7 @@ class UR_Frontend {
 
 		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
 			if ( 'register' === $action || 'login' === $action ) {
-				$myaccount_page = get_permalink( $page_id );
+				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
 			}
