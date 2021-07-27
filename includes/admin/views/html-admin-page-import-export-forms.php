@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<h3 class="ur-settings-section-header"><?php _e( 'IMPORT/EXPORT FORMS', 'user-registration'); ?></h3>
+<h3 class="ur-settings-section-header main_header"><?php _e( 'Import/Export Forms', 'user-registration'); ?></h3>
 <div class="ur-export-users-page">
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">

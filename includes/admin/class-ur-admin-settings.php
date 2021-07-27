@@ -236,7 +236,7 @@ class UR_Admin_Settings {
 
 		if( is_array( $options ) && !empty( $options ) ){
 
-			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) ) . '</h3>';
+			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
 			$back_link = isset( $options['back_link'] ) ? $options['back_link'] : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? $options['back_link_text'] : '';
 
@@ -249,6 +249,7 @@ class UR_Admin_Settings {
 
 				$settings .= '</a>';
 			}
+			$settings .= '</h3>';
 
 			foreach ( $options['sections'] as $id => $section ) {
 				if ( ! isset( $section['type'] ) ) {
