@@ -11,10 +11,21 @@
 @import "mixins/mixins";
 
 // Components
-@import
-	'components/button',
-	'components/modal';
+@import "components/button", "components/modal";
 
+.components-radio-control__option {
+	padding-left: 14px;
+	margin-bottom: 20px !important;
+}
+
+.components-base-control__field {
+	display: flex;
+	justify-content: center;
+}
+
+.wp-core-ui select {
+	max-width: 100% !important;
+}
 /**
 * Utility classes
 */
@@ -48,10 +59,10 @@
 	font-size: 14px;
 
 	&::before {
-		content: '\f348';
+		content: "\f348";
 		display: inline-block;
 		vertical-align: middle;
-		font-family: 'Dashicons';
+		font-family: "Dashicons";
 		font-size: calc(100% + 10px);
 		margin-right: 0.875rem;
 	}
@@ -72,16 +83,16 @@
 		margin-left: 0 !important; // Required for default theme compatibility
 	}
 
-	.message{
-		margin:0;
-		padding:0;
+	.message {
+		margin: 0;
+		padding: 0;
 	}
 }
 
 .user-registration-message {
 	border-top-color: #8fae1b;
-	background: rgba( #8fae1b, 0.1 );
-	color: darken( #8fae1b, 15%);
+	background: rgba(#8fae1b, 0.1);
+	color: darken(#8fae1b, 15%);
 }
 
 .user-registration-info {
@@ -91,11 +102,11 @@
 
 .user-registration-error {
 	border-top-color: $red;
-	background: rgba( $red, 0.1 );
-	color: darken( $red, 15%);
+	background: rgba($red, 0.1);
+	color: darken($red, 15%);
 
 	&::before {
-		content: '\f534';
+		content: "\f534";
 	}
 }
 
@@ -110,15 +121,14 @@
 		padding: 10px;
 		box-shadow: none;
 		background: none;
-		input[name="rememberme"]#rememberme{
-
-			vertical-align:middle;
+		input[name="rememberme"]#rememberme {
+			vertical-align: middle;
 		}
 	}
 
 	&.login-registration {
 		margin: 0;
-		border:none;
+		border: none;
 		padding: 0;
 	}
 
@@ -149,7 +159,7 @@
 			flex: 1;
 			padding: 0 10px;
 
-			&:nth-child(1n+2) {
+			&:nth-child(1n + 2) {
 				border-left: 0 none;
 			}
 
@@ -175,8 +185,8 @@
 							}
 
 							input {
-								&[type='checkbox'],
-								&[type='radio'] {
+								&[type="checkbox"],
+								&[type="radio"] {
 									margin-top: 2px;
 								}
 							}
@@ -263,7 +273,8 @@
 
 			select {
 				-webkit-appearance: none;
-				background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E') no-repeat right 5px top 55%
+				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
+					no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -292,7 +303,6 @@
 			}
 
 			.hide_show_password {
-
 				input[type="password"] {
 					padding-right: 50px;
 				}
@@ -301,15 +311,14 @@
 					display: block;
 					position: relative;
 
-						.password_preview {
-							color: $color_gray_two;
-							position: absolute;
-							top: 50%;
-							right: 15px;
-							transform: translateY(-50%);
+					.password_preview {
+						color: $color_gray_two;
+						position: absolute;
+						top: 50%;
+						right: 15px;
+						transform: translateY(-50%);
 
 						&.dashicons {
-
 							&.dashicons-hidden {
 								opacity: 0.6;
 
@@ -342,7 +351,7 @@
 				}
 
 				.select2-search--inline {
-					input[type='text'] {
+					input[type="text"] {
 						margin: 5px;
 						height: inherit;
 					}
@@ -378,7 +387,7 @@
 		}
 	}
 
-	.user-registration-submit-Button{
+	.user-registration-submit-Button {
 		float: right;
 	}
 
@@ -389,7 +398,6 @@
 
 	label {
 		abbr.required {
-
 			text-decoration: none;
 			border: none;
 			color: $red;
@@ -412,7 +420,7 @@
 						border-bottom: 1px solid $border_color_input;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px  15px;
+						padding: 10px 15px;
 						background: $input_background_color;
 						color: $label_color;
 						height: 45px;
@@ -429,7 +437,6 @@
 					}
 
 					.hide_show_password {
-
 						input[type="password"] {
 							padding-right: 50px;
 						}
@@ -483,7 +490,7 @@
 						margin-bottom: 10px;
 						height: 45px;
 						&:focus {
-							box-shadow: 0 0 10px 5px rgba(0,0,0,.05);
+							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
 						}
 					}
 
@@ -526,13 +533,13 @@
 						border-radius: 25px;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px  15px;
+						padding: 10px 15px;
 						background: $white;
 						color: $label_color;
 						height: 45px;
 					}
 
-					button[type="button"]{
+					button[type="button"] {
 						border-radius: 25px;
 					}
 
@@ -547,7 +554,6 @@
 					}
 
 					.hide_show_password {
-
 						input[type="password"] {
 							padding-right: 50px;
 						}
@@ -561,14 +567,14 @@
 			button.user-registration-multi-part-nav-next {
 				border: 0 none;
 				color: $white;
-				border-radius:25px;
+				border-radius: 25px;
 				float: none;
 				display: block;
 				padding: 15px 25px;
 			}
 		}
 
-		&.ur-frontend-form--rounded-edge{
+		&.ur-frontend-form--rounded-edge {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
@@ -584,38 +590,36 @@
 						}
 
 						.hide_show_password {
-
 							input[type="password"] {
 								padding-right: 50px;
 							}
 						}
 
-						button[type="button"]{
+						button[type="button"] {
 							border-radius: 2px;
 						}
 					}
 				}
 
-
 				input[type="submit"],
 				button[type="submit"],
 				button.user-registration-multi-part-nav-prev,
 				button.user-registration-multi-part-nav-next {
-					border-radius:2px;
+					border-radius: 2px;
 				}
 			}
 		}
 	}
 
 	#ur-submit-message-node {
-		margin : 20px 0 0 0;
+		margin: 20px 0 0 0;
 
 		&.ur-error {
 			background: rgba(206, 0, 0, 0.1);
 		}
 
 		&.ur-message.message {
-			background: rgba(143, 174, 27,0.2);
+			background: rgba(143, 174, 27, 0.2);
 		}
 	}
 }
@@ -647,32 +651,31 @@
 			margin: 0;
 			padding: 0;
 			display: -webkit-flex;
-			display:flex;
+			display: flex;
 			flex-wrap: wrap;
 
 			.user-registration-MyAccount-navigation-link {
 				list-style: none;
 				padding: 0;
-				margin:0;
+				margin: 0;
 				display: inline-block;
-				position:relative;
-				box-shadow: 0 0 0 rgba(0,0,0,0);
+				position: relative;
+				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 
 				a {
 					padding: 10px 15px;
 					display: block;
 					font-weight: 400;
 					font-size: 14px;
-					font-family: 'sans-serif';
+					font-family: "sans-serif";
 					text-decoration: none;
 					border-width: 0 0 0 4px;
 					border-style: solid;
 					border-color: transparent;
-					box-shadow: 0 0 0 rgba(0,0,0,0);
+					box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 				}
 
 				&.is-active {
-
 					a {
 						font-weight: 600;
 					}
@@ -688,11 +691,11 @@
 			margin-bottom: 30px;
 		}
 
-		.user-registration-profile-fields__field-wrapper{
+		.user-registration-profile-fields__field-wrapper {
 			margin: 0 -10px;
 		}
 
-		.ur-form-grid{
+		.ur-form-grid {
 			border: 0 none;
 			background: transparent;
 		}
@@ -721,10 +724,9 @@
 			}
 
 			header {
-
 				p,
 				.button-group {
-					 margin-bottom: 10px;
+					margin-bottom: 10px;
 				}
 
 				.profile-pic-remove {
@@ -738,9 +740,7 @@
 		}
 
 		.user-registration-EditProfileForm {
-
 			.user-registration-profile-header {
-
 				.user-registration-img-container {
 					width: auto;
 				}
@@ -785,18 +785,18 @@
 }
 
 .ur-front-spinner {
-	background: url('../images/wpspin_light-2x.gif') no-repeat;
+	background: url("../images/wpspin_light-2x.gif") no-repeat;
 	background-size: 16px 16px;
 	display: block;
-	opacity: .7;
+	opacity: 0.7;
 	filter: alpha(opacity=70);
 	width: 16px;
 	height: 16px;
 	margin-left: -40px;
 	float: left;	
 }
-.user-registration-form-login{
-	.ur-front-spinner{
+.user-registration-form-login {
+	.ur-front-spinner {
 		margin-left: 0;
 		float: right;
 		margin-top: 15px;
@@ -811,7 +811,7 @@
 			margin-bottom: 0.5em;
 		}
 
- 		.components-base-control {
+		.components-base-control {
 			width: 100%;
 			text-align: center;
 		}
@@ -826,7 +826,7 @@
 	}
 }
 
-.ur-frontend-form.ur-gutenberg-editor form button[type=submit] {
+.ur-frontend-form.ur-gutenberg-editor form button[type="submit"] {
 	cursor: not-allowed;
 }
 .ur-frontend-form.ur-gutenberg-editor form .ur-form-row .ur-form-grid input {
@@ -912,5 +912,5 @@
 }
 
 .ur-hidden {
-	display:none;
+	display: none;
 }

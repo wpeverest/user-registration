@@ -26,7 +26,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function __construct() {
 
 			// Add menus.
-			add_action( 'admin_init', array( $this, 'actions' ) );
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
@@ -318,236 +317,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Registration forms admin actions.
-		 */
-		public function actions() {
-
-			if ( isset( $_GET['page'] ) && 'user-registration' === $_GET['page'] ) {
-
-				// Bulk actions
-				if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['registration'] ) ) {
-					$this->bulk_actions();
-				}
-
-				// Empty trash
-				if ( isset( $_GET['empty_trash'] ) ) {
-					$this->empty_trash();
-				}
-
-				$action  = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-				$nonce   = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
-				$form_id = isset( $_GET['form'] ) && is_numeric( $_GET['form'] ) ? $_GET['form'] : '';
-
-				if ( ! empty( $action ) && ! empty( $nonce ) && ! empty( $form_id ) ) {
-					$flag = wp_verify_nonce( $nonce, 'user_registration_form_duplicate' . $form_id );
-
-					if ( $flag == true && ! is_wp_error( $flag ) ) {
-
-						if ( 'duplicate' === $action ) {
-							$this->duplicate( $form_id );
-						}
-					}
-				}
-			}
-		}
-
-		/**
-		 * Bulk trash/delete.
-		 *
-		 * @param array $registrations
-		 * @param bool  $delete
-		 */
-		private function bulk_trash( $registrations, $delete = false ) {
-			foreach ( $registrations as $registration_id ) {
-				if ( $delete ) {
-					wp_delete_post( $registration_id, true );
-				} else {
-					wp_trash_post( $registration_id );
-				}
-			}
-
-			$type   = ! EMPTY_TRASH_DAYS || $delete ? 'deleted' : 'trashed';
-			$qty    = count( $registrations );
-			$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( $_GET['status'] ) : '';
-
-			// Redirect to registrations page
-			wp_redirect( admin_url( 'admin.php?page=user-registration' . $status . '&' . $type . '=' . $qty ) );
-			exit();
-		}
-
-		/**
-		 * Bulk untrash.
-		 *
-		 * @param array $registrations
-		 */
-		private function bulk_untrash( $registrations ) {
-			foreach ( $registrations as $registration_id ) {
-				wp_untrash_post( $registration_id );
-			}
-
-			$qty = count( $registrations );
-
-			// Redirect to registrations page
-			wp_redirect( admin_url( 'admin.php?page=user-registration&status=trash&untrashed=' . $qty ) );
-			exit();
-		}
-
-		/**
-		 * Duplicate form
-		 */
-		private function duplicate( $form_id ) {
-			$post            = get_post( $form_id );
-			$current_user    = wp_get_current_user();
-			$new_post_author = $current_user->ID;
-
-			/*
-			 * if post data exists, create the post duplicate
-			 */
-			if ( isset( $post ) && $post != null ) {
-
-				if ( 'publish' !== $post->post_status ) {
-
-					return false;
-				}
-
-				$post->post_content = str_replace( '\\', '\\\\', $post->post_content );
-
-				/*
-				 * new post data array
-				 */
-				$args = array(
-					'comment_status' => $post->comment_status,
-					'ping_status'    => $post->ping_status,
-					'post_author'    => $new_post_author,
-					'post_content'   => $post->post_content,
-					'post_excerpt'   => $post->post_excerpt,
-					'post_name'      => $post->post_name,
-					'post_parent'    => $post->post_parent,
-					'post_password'  => $post->post_password,
-					'post_status'    => $post->post_status,
-					'post_title'     => __( 'Copy of ', 'user-registration' ) . $post->post_title,
-					'post_type'      => $post->post_type,
-					'to_ping'        => $post->to_ping,
-					'menu_order'     => $post->menu_order,
-				);
-
-				/*
-				 * insert the post by wp_insert_post() function
-				 */
-				$new_post_id = wp_insert_post( $args );
-
-				/*
-				 * duplicate all post meta just in two SQL queries
-				 */
-				global $wpdb;
-				$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $form_id ) );
-
-				if ( count( $post_meta_infos ) != 0 ) {
-					$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-					foreach ( $post_meta_infos as $meta_info ) {
-						$meta_key = $meta_info->meta_key;
-						if ( $meta_key == '_wp_old_slug' ) {
-							continue;
-						}
-						$meta_value      = addslashes( $meta_info->meta_value );
-						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
-					}
-					$sql_query .= implode( ' UNION ALL ', $sql_query_sel );
-					$wpdb->query( $sql_query );
-				}
-
-				/*
-				 * duplicate all post meta just in two SQL queries
-				 */
-				global $wpdb;
-				$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $form_id ) );
-
-				if ( count( $post_meta_infos ) != 0 ) {
-					$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-					foreach ( $post_meta_infos as $meta_info ) {
-						$meta_key = $meta_info->meta_key;
-						if ( $meta_key == '_wp_old_slug' ) {
-							continue;
-						}
-						$meta_value      = addslashes( $meta_info->meta_value );
-						$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
-					}
-					$sql_query .= implode( ' UNION ALL ', $sql_query_sel );
-					$wpdb->query( $sql_query );
-				}
-
-				/*
-				 * finally, redirect to the edit post screen for the new draft
-				 */
-				wp_redirect( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $new_post_id ) );
-				exit;
-			}
-		}
-
-		/**
-		 * Bulk actions.
-		 */
-		private function bulk_actions() {
-			if ( ! current_user_can( 'edit_user_registrations' ) ) {
-				wp_die( __( 'You do not have permissions to edit forms!', 'user-registration' ) );
-			}
-
-			$registrations = array_map( 'absint', (array) $_REQUEST['registration'] );
-			$action        = $_REQUEST['action'];
-
-			if( -1 == $_REQUEST['action'] ) {
-				$action = $_REQUEST['action2'];
-			}
-
-			switch ( $action ) {
-				case 'trash':
-					$this->bulk_trash( $registrations );
-					break;
-				case 'untrash':
-					$this->bulk_untrash( $registrations );
-					break;
-				case 'delete':
-					$this->bulk_trash( $registrations, true );
-					break;
-				default:
-					break;
-			}
-		}
-
-		/**
-		 * Empty Trash.
-		 */
-		private function empty_trash() {
-			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'empty_trash' ) ) {
-				wp_die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
-			}
-
-			if ( ! current_user_can( 'delete_user_registrations' ) ) {
-				wp_die( __( 'You do not have permissions to delete forms!', 'user-registration' ) );
-			}
-
-			$registration = get_posts(
-				array(
-					'post_type'           => 'user_registration',
-					'ignore_sticky_posts' => true,
-					'nopaging'            => true,
-					'post_status'         => 'trash',
-					'fields'              => 'ids',
-				)
-			);
-
-			foreach ( $registration as $webhook_id ) {
-				wp_delete_post( $webhook_id, true );
-			}
-
-			$qty = count( $registration );
-
-			// Redirect to registrations page
-			wp_redirect( admin_url( 'admin.php?page=user-registration&deleted=' . $qty ) );
-			exit();
-		}
-
-		/**
 		 * Returns a base64 URL for the SVG for use in the menu.
 		 *
 		 * @param  bool $base64 Whether or not to return base64-encoded SVG.
@@ -567,7 +336,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration', 'user-registration' ), __( 'User Registration', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( __( 'User Registration' ), __( 'User Registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 		}
@@ -580,6 +349,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			if ( ! isset( $_GET['add-new-registration'] ) ) { // WPCS: input var okay, CSRF ok.
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
+				$registration_table_list->process_actions();
 
 				// Add screen option.
 				add_screen_option(
@@ -676,25 +446,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function registration_page() {
 			global $registration_table_list;
-
-			$registration_table_list->prepare_items();
-			?>
-			<div class="wrap">
-				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'user-registration' ); ?></h1>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
-				<hr class="wp-header-end">
-				<form id="registration-list" method="post">
-					<input type="hidden" name="page" value="user-registration" />
-					<?php
-						$registration_table_list->views();
-						$registration_table_list->search_box( __( 'Search Registration', 'user-registration' ), 'registration' );
-						$registration_table_list->display();
-
-						wp_nonce_field( 'save', 'user_registration_nonce' );
-					?>
-				</form>
-			</div>
-			<?php
+			$registration_table_list->display_page();
 		}
 
 		/**

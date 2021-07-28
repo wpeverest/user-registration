@@ -110,7 +110,12 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
 					}
-				} else {
+				} elseif ( '1' === ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', 'no' ) ) {
+						if ( 'auto_login' === $login_option ) {
+							$success_params['auto_login'] = false;
+						}
+					}
+				 else {
 
 					if ( 'auto_login' === $login_option ) {
 						wp_clear_auth_cookie();

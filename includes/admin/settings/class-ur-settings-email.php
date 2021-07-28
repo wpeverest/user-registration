@@ -113,6 +113,49 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							),
 						),
 					),
+
+					array(
+						'title' => __( 'Send a Test Email', 'user-registration' ),
+						'type'  => 'title',
+						'desc'  => '',
+						'id'    => 'send_test_email',
+					),
+
+					array(
+						'title'             => __( 'Send To', 'user-registration' ),
+						'desc'              => __( 'Enter email address where test email will be sent.', 'user-registration' ),
+						'id'                => 'user_registration_email_send_to',
+						'type'              => 'email',
+						'custom_attributes' => array(
+							'multiple' => 'multiple',
+						),
+						'css'               => 'min-width:300px;',
+						'default'           => get_option( 'admin_email' ),
+						'autoload'          => false,
+						'desc_tip'          => true,
+					),
+
+					array(
+						'title'             => __( 'Send Email', 'user-registration' ),
+						'desc'              => __( 'Click to send test email.', 'user-registration' ),
+						'id'                => 'user_registration_email_test',
+						'type'              => 'link',
+						'css'               => 'min-width:300px;',
+						'buttons'  => array(
+							array (
+								'title' => __( 'Send Email', 'user-registration' ),
+								'href'  => '#',
+								'class' => 'button user_registration_send_email_test',
+							),
+						),
+						'desc_tip' => true,
+					),
+
+					array(
+						'type' => 'sectionend',
+						'id'   => 'send_test_email',
+					),
+
 				)
 			);
 

@@ -40,6 +40,7 @@ class UR_Admin_Assets {
 
 		// Register admin styles.
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-metabox', UR()->plugin_url() . '/assets/css/metabox.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
@@ -58,6 +59,7 @@ class UR_Admin_Assets {
 
 		// Sitewide menu CSS.
 		wp_enqueue_style( 'user-registration-menu' );
+		wp_enqueue_style( 'user-registration-metabox' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
 		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.1.0' );
@@ -279,6 +281,17 @@ class UR_Admin_Assets {
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'deactivation_nonce' => wp_create_nonce( 'deactivation-notice' ),
 				)
+			);
+		}
+		//send test email
+		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( $_REQUEST['tab'] ) : '';
+		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
+			wp_localize_script(
+				'user-registration-admin',
+				'user_registration_send_email',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' )
+					)
 			);
 		}
 

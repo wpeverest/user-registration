@@ -4,6 +4,7 @@ jQuery(function ($) {
 		init: function () {
 			this.init_event();
 		},
+
 		/**
 		 * Sends the picture, the user is willing to upload as an ajax request
 		 * and receives output in order to process any errors occured during profile picture upload
@@ -21,6 +22,10 @@ jQuery(function ($) {
 			var formData = new FormData();
 			var $this = $node;
 			formData.append("file", $this[0].files[0]);
+			formData.append(
+				"valid_extension",
+				$('input[name="profile-pic"]').attr("accept")
+			);
 
 			var upload_node = $this
 				.closest(".button-group")
@@ -160,34 +165,42 @@ jQuery(function ($) {
 
 	// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 	if (
-		$(".ur-frontend-form")
-			.find("form.edit-profile")
-			.hasClass("user-registration-EditProfileForm") &&
-		"yes" === user_registration_params.ajax_submission_on_edit_profile
+		!$(".ur-frontend-form")
+			.find(".user-registration-profile-header")
+			.find(".uraf-profile-picture-upload").length
 	) {
-		user_registration_profile_picture_upload.init();
-	} else {
-		$(".edit-profile").on("submit", function (evt) {
-			var $el = $(".ur-smart-phone-field");
+		if (
+			$(".ur-frontend-form")
+				.find("form.edit-profile")
+				.hasClass("user-registration-EditProfileForm") &&
+			"yes" === user_registration_params.ajax_submission_on_edit_profile
+		) {
+			user_registration_profile_picture_upload.init();
+		} else {
+			$(".edit-profile").on("submit", function (evt) {
+				var $el = $(".ur-smart-phone-field");
 
-			if ("true" === $el.attr("aria-invalid")) {
-				evt.preventDefault();
-				var wrapper = $el.closest("p.form-row");
-				wrapper.find("#" + $el.data("id") + "-error").remove();
-				var phone_error_msg_dom =
-					'<label id="' +
-					$el.data("id") +
-					"-error" +
-					'" class="user-registration-error" for="' +
-					$el.data("id") +
-					'">' +
-					user_registration_params.message_validate_phone_number +
-					"</label>";
-				wrapper.append(phone_error_msg_dom);
-				wrapper.find("#" + $el.data("id")).attr("aria-invalid", true);
-				return true;
-			}
-		});
+				if ("true" === $el.attr("aria-invalid")) {
+					evt.preventDefault();
+					var wrapper = $el.closest("p.form-row");
+					wrapper.find("#" + $el.data("id") + "-error").remove();
+					var phone_error_msg_dom =
+						'<label id="' +
+						$el.data("id") +
+						"-error" +
+						'" class="user-registration-error" for="' +
+						$el.data("id") +
+						'">' +
+						user_registration_params.message_validate_phone_number +
+						"</label>";
+					wrapper.append(phone_error_msg_dom);
+					wrapper
+						.find("#" + $el.data("id"))
+						.attr("aria-invalid", true);
+					return true;
+				}
+			});
+		}
 	}
 
 	// Fix - Date field is required error even when the "value" attribute is present in Chrome.
