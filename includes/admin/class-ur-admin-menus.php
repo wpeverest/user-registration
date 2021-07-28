@@ -26,7 +26,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function __construct() {
 
 			// Add menus.
-			add_action( 'admin_init', array( $this, 'actions' ) );
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
