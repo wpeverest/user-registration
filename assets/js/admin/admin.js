@@ -494,3 +494,47 @@ function ur_init_tooltips($elements, options) {
 		}
 	}
 }
+
+/**
+ * Sweetalert2 alert confirmation modal.
+ *
+ * @param string message Message to be shown in confirmation modal.
+ * @param object options Options for confirmation modal.
+ */
+function ur_confirmation(message, options) {
+	if ("undefined" === typeof options) {
+		options = {};
+	}
+	var icon = '<i class="dashicons dashicons-trash"></i>';
+	var title =
+		icon +
+		'<span class="user-registration-swal2-modal__title">' +
+		options.title;
+	Swal.fire({
+		customClass:
+			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+		title: title,
+		text: message,
+		showCancelButton:
+			"undefined" !== typeof options.showCancelButton
+				? options.showCancelButton
+				: true,
+		confirmButtonText:
+			"undefined" !== typeof options.confirmButtonText
+				? options.confirmButtonText
+				: user_registration_form_builder_data.i18n_admin
+						.i18n_choice_delete,
+		confirmButtonColor: "#ff4149",
+		cancelButtonText:
+			"undefined" !== typeof options.cancelButtonText
+				? options.cancelButtonText
+				: user_registration_form_builder_data.i18n_admin
+						.i18n_choice_cancel,
+	}).then(function (result) {
+		if (result.value) {
+			options.confirm();
+		} else {
+			options.reject();
+		}
+	});
+}
