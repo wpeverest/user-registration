@@ -206,6 +206,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( $this->is_request( 'admin' ) ) {
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin.php';
+				include_once UR_ABSPATH . 'includes/abstracts/abstract-ur-meta-boxes.php';
 			}
 
 			if ( $this->is_request( 'frontend' ) ) {
