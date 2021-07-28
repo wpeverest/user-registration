@@ -99,7 +99,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * this is a library meant for developers and missing a bulk method is a development-time error.
 	 */
 	protected function get_bulk_actions() {
-		if ( isset( $_GET['status'] ) && 'trashed' == $_GET['status'] ) {
+		if ( isset( $_GET['status'] ) && ( 'trashed' == $_GET['status'] || 'trash' == $_GET['status'] ) ) {
 			$actions = array(
 				'untrash' => __( 'Restore', 'user-registration-extras' ),
 				'delete'  => __( 'Delete permanently', 'user-registration-extras' ),

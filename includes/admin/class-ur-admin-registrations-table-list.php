@@ -24,12 +24,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		$this->post_type       = 'user_registration';
 		$this->page            = 'user-registration';
 		$this->per_page_option = 'user_registration_per_page';
-		$this->sort_by         = array(
-			'title'  => array( 'title', false ),
-			'author' => array( 'author', false ),
-			'date'   => array( 'date', false ),
-		);
-		$this->bulk_actions    = $this->ur_bulk_actions();
 		parent::__construct(
 			array(
 				'singular' => 'registration',
@@ -140,36 +134,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	}
 
 	/**
-	 * Return author column.
-	 *
-	 * @param  object $registration Registration forms datas.
-	 *
-	 * @return string
-	 */
-	public function column_author( $registration ) {
-		$user = get_user_by( 'id', $registration->post_author );
-
-		if ( ! $user ) {
-			return '<span class="na">&ndash;</span>';
-		}
-
-		$user_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_login;
-
-		if ( current_user_can( 'edit_user' ) ) {
-			return '<a href="' . esc_url(
-				add_query_arg(
-					array(
-						'user_id' => $user->ID,
-					),
-					admin_url( 'user-edit.php' )
-				)
-			) . '">' . esc_html( $user_name ) . '</a>';
-		}
-
-		return esc_html( $user_name );
-	}
-
-	/**
 	 * Return shortcode column.
 	 *
 	 * @param  object $registration Registration forms datas.
@@ -188,61 +152,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	}
 
 	/**
-	 * Return created at date column.
-	 *
-	 * @param  object $registration Registration forms datas.
-	 *
-	 * @return string
-	 */
-	public function column_date( $registration ) {
-		$post = get_post( $registration->ID );
-
-		if ( ! $post ) {
-			return;
-		}
-
-		$t_time = mysql2date(
-			__( 'Y/m/d g:i:s A', 'user-registration' ),
-			$post->post_date,
-			true
-		);
-		$m_time = $post->post_date;
-		$time   = mysql2date( 'G', $post->post_date )
-				  - get_option( 'gmt_offset' ) * 3600;
-
-		$time_diff = time() - $time;
-
-		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
-			$h_time = sprintf(
-				__( '%s ago', 'user-registration' ),
-				human_time_diff( $time )
-			);
-		} else {
-			$h_time = mysql2date( __( 'Y/m/d', 'user-registration' ), $m_time );
-		}
-
-		return '<abbr title="' . $t_time . '">' . $h_time . '</abbr>';
-	}
-
-	/**
-	 * Define bulk actions.
-	 *
-	 * @return array
-	 */
-	public function ur_bulk_actions() {
-		if ( isset( $_GET['status'] ) && 'trash' == $_GET['status'] ) {
-			return array(
-				'bulk_untrash' => esc_html__( 'Restore', 'user-registration-content-restriction' ),
-				'bulk_delete'  => esc_html__( 'Delete permanently', 'user-registration-content-restriction' ),
-			);
-		}
-
-		return array(
-			'bulk_trash' => esc_html__( 'Move to trash', 'user-registration-content-restriction' ),
-		);
-	}
-
-	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
@@ -252,7 +161,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				<hr class="wp-header-end">
-				<form id="registration-list" method="post">
+				<form id="registration-list" method="get">
 					<input type="hidden" name="page" value="user-registration" />
 					<?php
 						$this->views();
