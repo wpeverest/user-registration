@@ -479,12 +479,17 @@
 					var field_key = $this_item
 						.find(".ur-field")
 						.attr("data-field-key");
+					var field_id = "user_registration_" + field_key;
+					var icon_class = $("li[data-field-id ='" + field_id + "']")
+						.find(".ur-icon")
+						.attr("class");
 					var single_field_data = {
 						field_key: field_key,
 						general_setting:
 							URFormBuilder.get_field_general_setting($this_item),
 						advance_setting:
 							URFormBuilder.get_field_advance_setting($this_item),
+						icon: icon_class,
 					};
 
 					all_field_data.push(single_field_data);

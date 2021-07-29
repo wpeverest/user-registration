@@ -122,11 +122,13 @@ abstract class UR_Form_Field {
 	 * Includes any classes we need within frontend.
 	 */
 	public function frontend_includes( $data = array(), $form_id, $field_type, $field_key ) {
-
 		$this->form_id        = $form_id;
 		$form_data            = (array) $data['general_setting'];
 		$form_data['form_id'] = $form_id;
 		$form_data['type']    = $field_type;
+		$form_data['field_key']	= $field_key;
+		$form_data['icon']		= $data['icon'];
+
 
 		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
 			unset( $form_data['label'] );
@@ -250,7 +252,10 @@ abstract class UR_Form_Field {
 
 			if( 'multi_select2' === $field_key ){
 				$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
 			}
+
+
 		}
 
 		if ( 'radio' === $field_key ) {
@@ -268,10 +273,11 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'checkbox' === $field_key ) {
-			$choices     = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
-			$option_data = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
-
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
+			$choices    			 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
+			$option_data 			 = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options = array();
+
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
@@ -372,7 +378,8 @@ abstract class UR_Form_Field {
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
 			$tooltip_html             = ! empty( $setting_value['tip'] ) ? ur_help_tip( $setting_value['tip'], false, 'ur-portal-tooltip' ) : '';
-			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . str_replace( ' ', '-', strtolower( $setting_value['label'] ) ) . '">';
+			$setting_id 			  = isset($setting_value['setting_id']) ? $setting_value['setting_id']  : str_replace( ' ', '-', strtolower( $setting_value['label'] ) );
+			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' .$setting_id. '">';
 			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . '</label>';
 			$sub_string_key           = substr( $this->id, strlen( 'user_registration_' ), 5 );
 			$strip_prefix             = substr( $this->id, 18 );

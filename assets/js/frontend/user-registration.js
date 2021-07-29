@@ -1314,6 +1314,44 @@
 		});
 	};
 
+	/**
+	 * @since 2.0.0
+	 *
+	 * To check and uncheck all the option in checkbox.
+	 */
+	$(function () {
+		$(".input-checkbox").each(function () {
+			var checkAll = $(this).attr("data-id");
+			if (
+				$('input[name="' + checkAll + '[]"]:checked').length ==
+				$('[data-id = "' + checkAll + '" ]').length
+			) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			}
+		});
+
+		$('input[type="checkbox"]#checkall').on("click", function () {
+			var checkAll = $(this).attr("data-check");
+			$('[data-id = "' + checkAll + '" ]').prop(
+				"checked",
+				$(this).prop("checked")
+			);
+		});
+
+		$(".input-checkbox").on("change", function () {
+			var checkAll = $(this).attr("data-id");
+			if ($(this).prop("checked") === false) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
+			}
+
+			if (
+				$('input[name="' + checkAll + '[]"]:checked').length ==
+				$('[data-id = "' + checkAll + '" ]').length
+			) {
+				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			}
+		});
+	});
 	user_registration_form_init();
 
 	/**

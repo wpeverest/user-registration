@@ -247,7 +247,7 @@ class UR_AJAX {
 				do_action( 'user_registration_validate_email_whitelist', $single_field[ $key ], '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $single_field[ $key ] ) !== $user_id ) {
+				if ( email_exists( $single_field[ $key ] ) && email_exists( $single_field[ $key ] ) !== $user_id ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Email already exists.', 'user-registration' ),
@@ -262,6 +262,10 @@ class UR_AJAX {
 					$disabled = true;
 				}
 			}
+
+			// Action to add extra validation to edit profile fields.
+			do_action( 'user_registration_validate_' . $key, $single_field[ $key ]);
+
 		}// End foreach().
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
@@ -299,7 +303,7 @@ class UR_AJAX {
 				wp_update_user( $user_data );
 			}
 
-			$message = __( 'User profile updated successfully.', 'user-registration' );
+			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_send_json_success(
@@ -437,7 +441,7 @@ class UR_AJAX {
 	public static function ajax_login_submit(){
 	// Custom error messages.
 		$messages = array(
-			'username_is_required' => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_username' 	   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
 			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
 			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
 			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
@@ -491,11 +495,26 @@ class UR_AJAX {
 		}
 	}
 
+	// To check the specific login
+	if ( "email" === get_option('user_registration_general_setting_login_options_with',array()) ) {
+			$user_data = get_user_by( 'email', $info['user_login'] );
+			$info['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $info['user_login'] );
+	} elseif ( "username" === get_option('user_registration_general_setting_login_options_with',array()) ) {
+		$user_data = get_user_by( 'login', $info['user_login'] );
+		$info['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : !is_email( $info['user_login'] );
+	} else {
+		$info['user_login'] = $info['user_login'];
+	 }
+
 	// perform the table login
     $user= wp_signon( $info );
 
     if ( is_wp_error( $user ) ){
+
 		// set the custom error message
+		if ( ! empty( $user->errors['empty_username'] ) && ! empty( $messages['empty_username'] ) ) {
+			$user->errors['empty_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_username'] );
+		}
 		if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
 						$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 			}

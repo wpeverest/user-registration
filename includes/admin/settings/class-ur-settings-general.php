@@ -388,6 +388,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									),
 								),
 								array(
+									'title'    => __( 'Login Only Option', 'user-registration' ),
+									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+									'id'       => 'user_registration_general_setting_login_options_with',
+									'default'  => 'default',
+									'type'     => 'select',
+									'class'    => 'ur-enhanced-select',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+									'options'  => ur_login_option_with(),
+								),
+								array(
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 									'desc'     => __( 'This option lets you to enable the ajax form submission', 'user-registration' ),
 									'id'       => 'ur_login_ajax_submission',

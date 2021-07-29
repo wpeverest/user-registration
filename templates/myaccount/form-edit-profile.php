@@ -60,7 +60,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
 								</div>
 								<header>
-									<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+									<p><strong><?php echo apply_filters( 'user_registration_upload_new_profile_image_message', __( 'Upload your new profile image.', 'user-registration' ) ); ?></strong></p>
 									<div class="button-group">
 										<?php
 
@@ -139,6 +139,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 											}
 
+											$user_id				    = get_current_user_id();
+											$form_id 					= ur_get_form_id_by_userid( $user_id );
 											$field                      = $profile[ $key ];
 											$field['input_class']       = array( 'ur-edit-profile-field ' );
 											$advance_data               = array(
@@ -162,6 +164,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
 											}
+											// unset invite code
+											if ( 'invite_code' === $single_item->field_key) {
+												continue;
+										    }
 											?>
 											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>">
 												<?php
@@ -211,7 +217,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														unset( $field['input_mask'] );
 													}
 												}
-												
+
 												if ( isset( $single_item->general_setting->hide_label ) ) {
 												if( 'yes' === $single_item->general_setting->hide_label ) {
 													unset( $field['label'] );
@@ -219,10 +225,36 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											   }
 
 												if ( 'select' === $single_item->field_key ) {
+													$option_data 		 = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
+													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
+													$options     		 = array();
+
+													if ( is_array( $option_data ) ) {
+														foreach ( $option_data as $index_data => $option ) {
+															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+														}
+														$field['options'] = $options;
+													}
+
 													$field['placeholder'] = $single_item->general_setting->placeholder;
+
 													if ( isset( $field['placeholder'] ) ) {
 														unset( $field['placeholder'] );
 													}
+												}
+
+												if ( 'radio' === $single_item->field_key ) {
+													$option_data 		 = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
+													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
+													$options             = array();
+
+													if ( is_array( $option_data ) ) {
+														foreach ( $option_data as $index_data => $option ) {
+															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+														}
+														$field['options'] = $options;
+													}
+
 												}
 
 												if ( 'file' === $single_item->field_key ) {
@@ -250,9 +282,24 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												}
 
 												// Add choice_limit setting valur in order to limit choice fields.
-												if( "checkbox" === $single_item->field_key || "multi_select2" === $single_item->field_key){
-													if( isset( $advance_data["advance_setting"]->choice_limit)) {
+												if( "checkbox" === $single_item->field_key || "multi_select2" === $single_item->field_key) {
+													$choices     = isset( $advance_data['advance_setting']->choices ) ? explode( ',', $advance_data['advance_setting']->choices ) : array();
+													$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $choices;
+													$options 	 = array();
+
+													if ( is_array( $option_data ) ) {
+														foreach ( $option_data as $index_data => $option ) {
+															$options[ $option ] = ur_string_translation( $form_id,'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+														}
+
+														$field['options'] = $options;
+													}
+
+													if( isset( $advance_data["advance_setting"]->choice_limit) ) {
 														$field["choice_limit"] = $advance_data["advance_setting"]->choice_limit;
+													}
+													if( isset( $advance_data["advance_setting"]->select_all)) {
+														$field["select_all"] = $advance_data["advance_setting"]->select_all;
 													}
 												}
 												$filter_data = array(
