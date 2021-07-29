@@ -173,7 +173,7 @@
 								message_body =
 									"<p>Want to create a login form as well? Check this <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a target='_blank' href='https://docs.wpeverest.com/docs/user-registration/'>docs</a>.</p>";
 								Swal.fire({
-									type: "success",
+									icon: "success",
 									title: title,
 									html: message_body,
 								}).then(function (value) {
@@ -1320,7 +1320,7 @@
 														URFormBuilder.manage_draggable_users_fields();
 
 														Swal.fire({
-															type: "success",
+															icon: "success",
 															title: "Successfully deleted!",
 															customClass:
 																"user-registration-swal2-modal user-registration-swal2-modal--center",
@@ -2869,7 +2869,7 @@
 					options = {};
 				}
 				Swal.fire({
-					type: "error",
+					icon: "error",
 					title: options.title,
 					text: message,
 					customClass:
