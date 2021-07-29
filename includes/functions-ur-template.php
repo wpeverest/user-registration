@@ -261,7 +261,7 @@ if (!function_exists('user_registration_form_field')) {
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr($sort) . '" ' . $cl_html . '>%3$s</div>';
 		$class = '';
 		if (!is_admin()) {
-			$form_id = $args['form_id'];
+			$form_id = isset( $args['form_id'] )? $args['form_id'] : '' ;
 			$enable_field_icon   = ur_get_single_post_meta($form_id, 'user_registration_enable_field_icon');
 
 			if ('1' === $enable_field_icon) {
