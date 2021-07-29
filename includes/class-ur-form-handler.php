@@ -243,7 +243,7 @@ class UR_Form_Handler {
 				wp_update_user( $user_data );
 			}
 
-			ur_add_notice( __( 'User profile updated successfully.', 'user-registration' ) );
+			ur_add_notice( apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) ) );
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 

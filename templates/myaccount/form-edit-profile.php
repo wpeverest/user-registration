@@ -60,7 +60,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									<p class="user-registration-tips"><?php echo __( 'Max size: ', 'user-registration' ) . $max_size; ?></p>
 								</div>
 								<header>
-									<p><strong><?php _e( 'Upload your new profile image.', 'user-registration' ); ?></strong></p>
+									<p><strong><?php echo apply_filters( 'user_registration_upload_new_profile_image_message', __( 'Upload your new profile image.', 'user-registration' ) ); ?></strong></p>
 									<div class="button-group">
 										<?php
 
