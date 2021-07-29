@@ -219,6 +219,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
 				'version' => UR_VERSION,
 			),
+			'ur-recaptcha'              => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-recaptcha' . $suffix . '.js' ),
+				'deps'    => array( 'jquery'),
+				'version' => UR_VERSION,
+			),
 			'ur-google-recaptcha'        => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),

@@ -1408,6 +1408,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 		if ( 0 === $rc_counter ) {
 			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
+			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
 			wp_localize_script(
 				$enqueue_script,
