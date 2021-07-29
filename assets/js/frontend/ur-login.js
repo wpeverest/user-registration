@@ -59,14 +59,10 @@ jQuery(function ($) {
 
 							// custom error message
 							if (res.success == false) {
-								var ur_recaptcha_node = $this
-									.closest("form")
-									.find(
-										"#ur-recaptcha-node #node_recaptcha_login.g-recaptcha"
-									).length;
-								if (ur_recaptcha_node !== 0) {
-									grecaptcha.reset();
-								}
+								$(document).trigger(
+									"user_registration_after_login_failed",
+									[$this]
+								);
 
 								$this
 									.closest("#user-registration")

@@ -61,7 +61,7 @@ class UR_Frontend_Scripts {
 				'sweetalert2'                         => array(
 					'src'     => UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css',
 					'deps'    => '',
-					'version' => '8.17.1',
+					'version' => '10.16.7',
 					'media'   => 'all',
 				),
 				'user-registration-general'           => array(
@@ -192,7 +192,7 @@ class UR_Frontend_Scripts {
 			'flatpickr'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/flatpickr/flatpickr.min.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '4.5.1',
+				'version' => '4.6.9',
 			),
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
@@ -217,6 +217,11 @@ class UR_Frontend_Scripts {
 			'ur-password-strength-meter' => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/password-strength-meter' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
+				'version' => UR_VERSION,
+			),
+			'ur-recaptcha'              => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-recaptcha' . $suffix . '.js' ),
+				'deps'    => array( 'jquery'),
 				'version' => UR_VERSION,
 			),
 			'ur-google-recaptcha'        => array(
@@ -247,12 +252,12 @@ class UR_Frontend_Scripts {
 			'selectWoo'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/selectWoo/selectWoo.full' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '3.5.4',
+				'version' => '1.0.9',
 			),
 			'sweetalert2'                => array(
 				'src'     => UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js',
 				'deps'    => array( 'jquery' ),
-				'version' => '8.17.1',
+				'version' => '10.16.7',
 			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
@@ -275,14 +280,14 @@ class UR_Frontend_Scripts {
 			'flatpickr'     => array(
 				'src'     => self::get_asset_url( 'assets/css/flatpickr/flatpickr.min.css' ),
 				'deps'    => array(),
-				'version' => '4.5.1',
+				'version' => '4.6.9',
 				'media'   => 'all',
 				'has_rtl' => false,
 			),
 			'select2'       => array(
-				'src'     => self::get_asset_url( 'assets/css/select2.css' ),
+				'src'     => self::get_asset_url( 'assets/css/select2/select2.css' ),
 				'deps'    => array(),
-				'version' => UR_VERSION,
+				'version' => '4.1.0',
 				'has_rtl' => false,
 			),
 		);

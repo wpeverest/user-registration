@@ -1,6 +1,4 @@
 /* global  user_registration_params */
-/* global  ur_google_recaptcha_code */
-/* global  grecaptcha */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -617,58 +615,29 @@
 										ur_frontend_form_nonce: form_nonce,
 									};
 
+									var $error_message = {};
 									$(document).trigger(
 										"user_registration_frontend_before_form_submit",
-										[data, $this]
+										[data, $this, $error_message]
 									);
 
 									if (
 										"undefined" !==
-										typeof ur_google_recaptcha_code
+											typeof $error_message.message &&
+										"" !== $error_message.message
 									) {
-										if (
-											"1" ===
-											$registration_form
-												.find("form.register")
-												.data("captcha-enabled")
-										) {
-											var captchaResponse = $this
-												.find(
-													'[name="g-recaptcha-response"]'
-												)
-												.val();
-
-											if (0 === captchaResponse.length) {
-												form.show_message(
-													"<p>" +
-														ursL10n.captcha_error +
-														"</p>",
-													"error",
-													$this,
-													"1"
-												);
-												$this
-													.find(".ur-submit-button")
-													.prop("disabled", false);
-												return;
-											}
-
-											if (
-												ur_google_recaptcha_code.version ==
-												"v3"
-											) {
-												request_recaptcha_token();
-											} else {
-												for (
-													var i = 0;
-													i <=
-													google_recaptcha_user_registration;
-													i++
-												) {
-													grecaptcha.reset(i);
-												}
-											}
-										}
+										form.show_message(
+											"<p>" +
+												$error_message.message +
+												"</p>",
+											"error",
+											$this,
+											"1"
+										);
+										$this
+											.find(".ur-submit-button")
+											.prop("disabled", false);
+										return;
 									}
 
 									$this
@@ -1305,10 +1274,6 @@
 			});
 		});
 
-		$(function () {
-			request_recaptcha_token();
-		});
-
 		/**
 		 * Append a country option and Remove it on click, if the country is not allowed.
 		 */
@@ -1399,86 +1364,6 @@
 		user_registration_form_init();
 	});
 })(jQuery);
-
-var google_recaptcha_user_registration;
-var onloadURCallback = function () {
-	jQuery(".ur-frontend-form")
-		.find("form.register")
-		.each(function (i) {
-			$this = jQuery(this);
-			var form_id = $this.closest(".ur-frontend-form").attr("id");
-
-			var node_recaptcha_register = $this.find(
-				"#ur-recaptcha-node #node_recaptcha_register"
-			).length;
-
-			if (node_recaptcha_register !== 0) {
-				$this
-					.find("#ur-recaptcha-node .g-recaptcha")
-					.attr("id", "node_recaptcha_register_" + form_id);
-				google_recaptcha_user_registration = grecaptcha.render(
-					"node_recaptcha_register_" + form_id,
-					{
-						sitekey: ur_google_recaptcha_code.site_key,
-						theme: "light",
-						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-					}
-				);
-			}
-		});
-
-	jQuery(".ur-frontend-form")
-		.find("form.login")
-		.each(function (i) {
-			$this = jQuery(this);
-			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
-
-			if (ur_recaptcha_node.length !== 0) {
-				grecaptcha.render(
-					ur_recaptcha_node.find(".g-recaptcha").attr("id"),
-					{
-						sitekey: ur_google_recaptcha_code.site_key,
-						theme: "light",
-						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-					}
-				);
-			}
-		});
-};
-
-function request_recaptcha_token() {
-	var node_recaptcha_register = jQuery(".ur-frontend-form").find(
-		"form.register #ur-recaptcha-node #node_recaptcha_register.g-recaptcha-v3"
-	).length;
-
-	if (node_recaptcha_register !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, {
-					action: "register",
-				})
-				.then(function (token) {
-					jQuery("form.register")
-						.find("#g-recaptcha-response")
-						.text(token);
-				});
-		});
-	}
-	var node_recaptcha_login = jQuery(".ur-frontend-form").find(
-		"form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3"
-	).length;
-	if (node_recaptcha_login !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, { action: "login" })
-				.then(function (token) {
-					jQuery("form.login")
-						.find("#g-recaptcha-response")
-						.text(token);
-				});
-		});
-	}
-}
 
 function ur_includes(arr, item) {
 	if (Array.isArray(arr)) {

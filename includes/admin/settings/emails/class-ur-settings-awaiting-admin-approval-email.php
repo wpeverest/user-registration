@@ -33,48 +33,46 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 		 */
 		public function get_settings() {
 
-			?><h2><?php echo esc_html__( 'Awaiting Admin Approval Email', 'user-registration' ); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
-
-			<?php
 			$settings = apply_filters(
 				'user_registration_awaiting_admin_approval',
 				array(
-					array(
-						'type' => 'title',
-						'desc' => '',
-						'id'   => 'awaiting_admin_approval_email',
+					'title' => __( 'Emails', 'user-registration' ),
+					'sections' => array (
+						'awaiting_admin_approval_email' => array(
+							'title' => __( 'Awaiting Admin Approval Email', 'user-registration' ),
+							'type'  => 'card',
+							'desc'  => '',
+							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'settings' => array(
+								array(
+									'title'    => __( 'Enable this email', 'user-registration' ),
+									'desc'     => __( 'Enable this email sent to user notifying the registration is awaiting admin approval.', 'user-registration' ),
+									'id'       => 'user_registration_enable_awaiting_admin_approval_email',
+									'default'  => 'yes',
+									'type'     => 'checkbox',
+									'autoload' => false,
+								),
+								array(
+									'title'    => __( 'Email Subject', 'user-registration' ),
+									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_awaiting_admin_approval_email_subject',
+									'type'     => 'text',
+									'default'  => __( 'Thank you for registration on {{blog_info}}', 'user-registration' ),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_awaiting_admin_approval_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_awaiting_admin_approval_email(),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+							),
+						),
 					),
-					array(
-						'title'    => __( 'Enable this email', 'user-registration' ),
-						'desc'     => __( 'Enable this email sent to user notifying the registration is awaiting admin approval.', 'user-registration' ),
-						'id'       => 'user_registration_enable_awaiting_admin_approval_email',
-						'default'  => 'yes',
-						'type'     => 'checkbox',
-						'autoload' => false,
-					),
-					array(
-						'title'    => __( 'Email Subject', 'user-registration' ),
-						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_awaiting_admin_approval_email_subject',
-						'type'     => 'text',
-						'default'  => __( 'Thank you for registration on {{blog_info}}', 'user-registration' ),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-					array(
-						'title'    => __( 'Email Content', 'user-registration' ),
-						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_awaiting_admin_approval_email',
-						'type'     => 'tinymce',
-						'default'  => $this->ur_get_awaiting_admin_approval_email(),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-					array(
-						'type' => 'sectionend',
-						'id'   => 'awaiting_admin_approval_email',
-					),
-
 				)
 			);
 

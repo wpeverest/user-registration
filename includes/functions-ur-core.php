@@ -1432,6 +1432,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 		if ( 0 === $rc_counter ) {
 			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
+			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
 			wp_localize_script(
 				$enqueue_script,
@@ -1534,7 +1535,7 @@ function ur_get_user_extra_fields( $user_id ) {
  * @param  string $url URL.
  */
 function ur_back_link( $label, $url ) {
-	echo '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+	return '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
 }
 
 /**
