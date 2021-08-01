@@ -33,48 +33,46 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 		 */
 		public function get_settings() {
 
-			?><h2><?php echo esc_html__( 'Registration Approved Email', 'user-registration' ); ?> <?php ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ); ?></h2>
-
-			<?php
 			$settings = apply_filters(
 				'user_registration_registration_approved_email',
 				array(
-					array(
-						'type' => 'title',
-						'desc' => '',
-						'id'   => 'registration_approved_email',
+					'title' => __( 'Emails', 'user-registration' ),
+					'sections' => array (
+						'registration_approved_email' => array(
+							'title' => __( 'Registration Approved Email', 'user-registration' ),
+							'type'  => 'card',
+							'desc'  => '',
+							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'settings' => array(
+								array(
+									'title'    => __( 'Enable this email', 'user-registration' ),
+									'desc'     => __( 'Enable this email sent to the user notifying the registration is approved by site admin.', 'user-registration' ),
+									'id'       => 'user_registration_enable_registration_approved_email',
+									'default'  => 'yes',
+									'type'     => 'checkbox',
+									'autoload' => false,
+								),
+								array(
+									'title'    => __( 'Email Subject', 'user-registration' ),
+									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_registration_approved_email_subject',
+									'type'     => 'text',
+									'default'  => __( 'Congratulations! Registration approved on {{blog_info}}', 'user-registration' ),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_registration_approved_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_registration_approved_email(),
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+							),
+						),
 					),
-					array(
-						'title'    => __( 'Enable this email', 'user-registration' ),
-						'desc'     => __( 'Enable this email sent to the user notifying the registration is approved by site admin.', 'user-registration' ),
-						'id'       => 'user_registration_enable_registration_approved_email',
-						'default'  => 'yes',
-						'type'     => 'checkbox',
-						'autoload' => false,
-					),
-					array(
-						'title'    => __( 'Email Subject', 'user-registration' ),
-						'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_registration_approved_email_subject',
-						'type'     => 'text',
-						'default'  => __( 'Congratulations! Registration approved on {{blog_info}}', 'user-registration' ),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-					array(
-						'title'    => __( 'Email Content', 'user-registration' ),
-						'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-						'id'       => 'user_registration_registration_approved_email',
-						'type'     => 'tinymce',
-						'default'  => $this->ur_get_registration_approved_email(),
-						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
-					),
-					array(
-						'type' => 'sectionend',
-						'id'   => 'registration_approved_email',
-					),
-
 				)
 			);
 

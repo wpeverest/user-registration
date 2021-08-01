@@ -91,15 +91,17 @@ module.exports = function (grunt) {
 					"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
 						"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js",
 					],
-					"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js": [
-						"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js",
-					],
+					"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js":
+						[
+							"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js",
+						],
 					"<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js": [
 						"<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js",
 					],
-					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js": [
-						"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js",
-					],
+					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
+						[
+							"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js",
+						],
 					"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
 						"<%= dirs.js %>/selectWoo/selectWoo.js",
 					],
@@ -279,5 +281,5 @@ module.exports = function (grunt) {
 	// Only an alias to 'default' task.
 	grunt.registerTask("dev", ["default"]);
 
-	grunt.registerTask("zip", ["dev", "compress"]);
+	grunt.registerTask("zip", ["compress"]);
 };

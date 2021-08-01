@@ -1,4 +1,4 @@
-.user-registration-page{
+.user-registration-page {
 	&.user-registration-modal-open {
 		overflow: hidden; // Hide scrollbar on body when modal is open.
 
@@ -80,7 +80,7 @@
 
 			&::before,
 			&::after {
-				content: '';
+				content: "";
 				height: 2px;
 				width: 16px;
 				display: block;
@@ -137,15 +137,14 @@
 		}
 
 		.swal2-animate-success-icon {
-			& [class^=swal2-success-line],
-			& [class^=swal2-success-circular-line] {
+			& [class^="swal2-success-line"],
+			& [class^="swal2-success-circular-line"] {
 				animation: none;
 			}
 		}
 
 		.swal2-header {
 			.swal2-icon {
-				font-size: 28px;
 				width: 56px;
 				height: 56px;
 				line-height: 56px;
@@ -154,7 +153,7 @@
 				border-radius: 50%;
 
 				.swal2-x-mark {
-					& [class^=swal2-x-mark-line] {
+					& [class^="swal2-x-mark-line"] {
 						height: 3px;
 						width: 28px;
 						top: 50%;
@@ -162,43 +161,43 @@
 						right: 0;
 						margin: 0 auto;
 
-						&[class$=left] {
+						&[class$="left"] {
 							transform: translateY(-50%) rotate(45deg);
 						}
 
-						&[class$=right] {
+						&[class$="right"] {
 							transform: translateY(-50%) rotate(-45deg);
 						}
 					}
 				}
 
 				&.swal2-success {
-					& [class^=swal2-success-line] {
+					& [class^="swal2-success-line"] {
 						height: 3px;
 
-						&[class$=tip] {
+						&[class$="tip"] {
 							width: 16px;
 							top: 56%;
 							left: 10px;
 						}
 
-						&[class$=long] {
+						&[class$="long"] {
 							top: 47%;
 							width: 32px;
 							right: 6px;
 						}
 					}
 
-					& [class^=swal2-success-circular-line] {
+					& [class^="swal2-success-circular-line"] {
 						height: 64px;
 						width: 32px;
 
-						&[class$=left] {
+						&[class$="left"] {
 							top: -75px;
 							left: 27px;
 						}
 
-						&[class$=right] {
+						&[class$="right"] {
 							top: -26px;
 							left: 82px;
 						}

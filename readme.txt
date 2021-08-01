@@ -3,10 +3,10 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.7.2
-Stable tag: 1.9.9
+Tested up to: 5.8
+Stable tag: 2.0.0
 License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License URI: http://www.gnu.org/licenses/gpl-3.0.htmlnditional-logic
 
 Drag and drop user registration form and login form builder
 
@@ -152,6 +152,23 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.0.0    - 02/08/2021
+* Feature  - Form field icons in user registration.
+* Feature  - Login with username, email or both option.
+* Enhance  - Select all option in multiple choice field.
+* Refactor - User Registration List table parsing.
+* Refactor - Settings page design and parsing.
+* Refactor - Metabox parsing from core.
+* Refactor - JS libraries.
+* Refactor - JS Codes.
+* Dev      - Introduce new filter hooks for profile update message.
+* Dev      - Introduce a new action to add extra validation to edit profile fields.
+* Fix      - Email updation issue in edit profile.
+* Fix      - Invite code visible in edit profile.
+* Fix      - String translation in edit profile.
+* Fix      - Class translation issue.
+* Fix      - Date field required validation.
 
 = 1.9.9   - 30/06/2021
 * Feature - Gutenberg block for login.
