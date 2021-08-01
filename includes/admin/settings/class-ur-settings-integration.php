@@ -108,7 +108,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 							)
 						),
 					),
-				),
+				)
 			);
 
 			return apply_filters( 'user_registration_get_integration_settings_' . $this->id, $settings );

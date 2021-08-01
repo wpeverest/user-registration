@@ -210,7 +210,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							),
 						),
 					),
-				),
+				)
 			);
 
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );

@@ -219,6 +219,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 			$action = $action ? $action : ( ! empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '' );
 			$action = ( $action && '-1' !== $action ) ? $action : ( ! empty( $_POST['action2'] ) ? sanitize_text_field( $_POST['action2'] ) : '' );
+			$action = ! empty( $action ) ? $action : ( ( isset( $_REQUEST['empty_trash'] ) && ! empty( $_REQUEST['empty_trash'] ) )  ? "empty_trash" : "" );
 			$nonce  = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : null;
 			$nonce  = $nonce ? $nonce : ( isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '' );
 			switch ( $action ) {
@@ -226,7 +227,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					$post_id = isset( $_GET['post-id'] ) && is_numeric( $_GET['post-id'] ) ? $_GET['post-id'] : '';
 
 					if ( ! current_user_can( 'publish_posts' ) ) {
-						wp_die( esc_html__( 'You do not have permission to create Content Access Post!', 'user-registration-content-restriction' ) );
+						wp_die( esc_html__( 'You do not have permission to create post!', 'user-registration' ) );
 					} elseif ( ! wp_verify_nonce( $nonce, 'ur_duplicate_post_' . $post_id ) ) {
 						wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 					} else {
@@ -237,7 +238,7 @@ abstract class UR_List_Table extends WP_List_Table {
 				case 'bulk_trash':
 				case 'trash':
 					if ( ! current_user_can( 'delete_posts' ) ) {
-						wp_die( esc_html__( 'You do not have permission to trash Content Access Posts!', 'user-registration-content-restriction' ) );
+						wp_die( esc_html__( 'You do not have permission to trash posts!', 'user-registration' ) );
 					} else {
 						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
 						$this->bulk_trash( $post_ids );
@@ -247,7 +248,7 @@ abstract class UR_List_Table extends WP_List_Table {
 				case 'bulk_untrash':
 				case 'untrash':
 					if ( ! current_user_can( 'edit_posts' ) ) {
-						wp_die( esc_html__( 'You do not have permission to untrash Content Access Posts!', 'user-registration-content-restriction' ) );
+						wp_die( esc_html__( 'You do not have permission to untrash posts!', 'user-registration' ) );
 					} else {
 						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
 						$this->bulk_untrash( $post_ids );
@@ -257,7 +258,7 @@ abstract class UR_List_Table extends WP_List_Table {
 				case 'bulk_delete':
 				case 'delete':
 					if ( ! current_user_can( 'delete_posts' ) ) {
-						wp_die( esc_html__( 'You do not have permission to delete Content Access Posts!', 'user-registration-content-restriction' ) );
+						wp_die( esc_html__( 'You do not have permission to delete posts!', 'user-registration' ) );
 					} else {
 						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
 						$this->bulk_delete( $post_ids );
@@ -266,7 +267,7 @@ abstract class UR_List_Table extends WP_List_Table {
 
 				case 'empty_trash':
 					if ( ! current_user_can( 'delete_posts' ) ) {
-						wp_die( esc_html__( 'You do not have permission to delete Content Access Posts!', 'user-registration-content-restriction' ) );
+						wp_die( esc_html__( 'You do not have permission to delete posts!', 'user-registration' ) );
 					} elseif ( ! wp_verify_nonce( $nonce, 'empty_trash' ) ) {
 						wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 					} else {
