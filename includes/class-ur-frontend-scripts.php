@@ -252,7 +252,7 @@ class UR_Frontend_Scripts {
 			'selectWoo'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/selectWoo/selectWoo.full' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.0.9',
+				'version' => '5.0.0',
 			),
 			'sweetalert2'                => array(
 				'src'     => UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js',
@@ -287,7 +287,7 @@ class UR_Frontend_Scripts {
 			'select2'       => array(
 				'src'     => self::get_asset_url( 'assets/css/select2/select2.css' ),
 				'deps'    => array(),
-				'version' => '4.1.0',
+				'version' => '4.0.6',
 				'has_rtl' => false,
 			),
 		);

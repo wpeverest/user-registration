@@ -62,7 +62,7 @@ class UR_Admin_Assets {
 		wp_enqueue_style( 'user-registration-metabox' );
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
-		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.1.0' );
+		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 
 		$enqueue_review = ur_check_activation_date();
 
@@ -158,7 +158,7 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'user-registration-form-modal-js', UR()->plugin_url() . '/assets/js/admin/form-modal' . $suffix . '.js', 'jquery' );
 		wp_register_script( 'user-registration-dashboard-widget-js', UR()->plugin_url() . '/assets/js/admin/dashboard-widget' . $suffix . '.js', 'jquery' );
-		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '1.0.9' );
+		wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '5.0.0' );
 		wp_register_script(
 			'wp-color-picker-alpha',
 			UR()->plugin_url() . '/assets/js/wp-color-picker/wp-color-picker-alpha' . $suffix . '.js',
@@ -193,6 +193,7 @@ class UR_Admin_Assets {
 
 
 		wp_enqueue_script( 'user-registration-form-modal-js' );
+		wp_enqueue_script( 'ur-enhanced-select' );
 
 		$enqueue_review = ur_check_activation_date();
 
