@@ -80,6 +80,7 @@
 								var node_type = field
 									.get(0)
 									.tagName.toLowerCase();
+
 								var field_type =
 									"undefined" !== field.eq(0).attr("type")
 										? field.eq(0).attr("type")

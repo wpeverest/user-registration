@@ -551,7 +551,7 @@ class UR_AJAX {
 	 *
 	 * @since 1.9.9
 	 */
-	public function send_test_email() {
+	public static function send_test_email() {
 		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
 		$email   = sanitize_email( isset( $_POST['email'] ) ? $_POST['email'] : '' );
 		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );

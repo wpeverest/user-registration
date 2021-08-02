@@ -77,8 +77,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							'desc'  => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration'),
 							'settings' => array(
 								ur_get_user_login_option(),
-
-								array( 'type' => 'email_notification' ),
+								array(
+									'type' => 'email_notification',
+									'id' => 'user_registration_email_notification_settings',
+								),
 							),
 						),
 						'sender_option' => array(

@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 1.9.9\n"
+"Project-Id-Version: User Registration 2.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-06-30T13:23:45+05:45\n"
+"POT-Creation-Date: 2021-08-02T11:15:16+05:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -37,220 +37,254 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:554
+#: includes/abstracts/abstract-ur-form-field.php:561
 #: includes/admin/functions-ur-admin.php:426
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:564
+#: includes/abstracts/abstract-ur-form-field.php:571
 msgid "Advance Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:161
-msgid "Upload Profile Picture"
+#: includes/abstracts/abstract-ur-list-table.php:230
+msgid "You do not have permission to create post!"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:162
-msgid "Select Image"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:188
-msgctxt "enhanced select"
-msgid "No matches found"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:189
-msgctxt "enhanced select"
-msgid "Loading failed"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:190
-msgctxt "enhanced select"
-msgid "Please enter 1 or more characters"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:191
-msgctxt "enhanced select"
-msgid "Please enter %qty% or more characters"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:192
-msgctxt "enhanced select"
-msgid "Please delete 1 character"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:193
-msgctxt "enhanced select"
-msgid "Please delete %qty% characters"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:194
-msgctxt "enhanced select"
-msgid "You can only select 1 item"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:195
-msgctxt "enhanced select"
-msgid "You can only select %qty% items"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:196
-msgctxt "enhanced select"
-msgid "Loading more results&hellip;"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:197
-msgctxt "enhanced select"
-msgid "Searching&hellip;"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:209
-msgid "Could not install."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:249
-msgid "Enabled"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:250
-msgid "Disabled"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:318
-msgid "Clone"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:318
-#: includes/admin/class-ur-admin-registrations-table-list.php:114
-msgid "Trash"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:338
-msgid "Delete"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:339
-#: includes/admin/class-ur-admin-form-modal.php:90
-msgid "Cancel"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:340
-msgctxt "user-registration admin"
-msgid "User Email"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:341
-msgctxt "user-registration admin"
-msgid "User Password"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:342
-msgctxt "user registration admin"
-msgid "Are you sure want to delete this row?"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:343
-msgctxt "user registration admin"
-msgid "Are you sure want to delete this field?"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:344
-msgctxt "user registration admin"
-msgid "At least one row is required to create a registration form."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:345
-msgctxt "user registration admin"
-msgid "Cannot delete row"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:346
-msgctxt "user registration admin"
-msgid "This field is one time draggable."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:347
-msgctxt "user registration admin"
-msgid "Could not clone this field."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:348
-msgctxt "user registration admin"
-msgid "Form successfully saved."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:349
-msgctxt "user registration admin"
-msgid "Success"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:350
-msgctxt "user registration admin"
-msgid "Error"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:351
-msgid "Confirm Deletion"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:352
-msgctxt "user registration admin"
-msgid "At least one field needs to be selected."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:353
-msgctxt "user registration admin"
-msgid "Empty form name."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:354
-msgctxt "user registration admin"
-msgid "Previous save action on going."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:355
-msgctxt "user registration admin"
-msgid "Duplicate field name."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:356
-msgctxt "user registration admin"
-msgid "Empty field label."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:357
-msgctxt "user registration admin"
-msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:358
-msgctxt "user registration admin"
-msgid "Multiple field key "
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:359
-msgctxt "user registration admin"
-msgid "field is required."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:360
-msgctxt "user registration admin"
-msgid "Drag your first form item here."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:361
-msgctxt "user registration admin"
-msgid "Please select at least one country."
-msgstr ""
-
+#: includes/abstracts/abstract-ur-list-table.php:232
+#: includes/abstracts/abstract-ur-list-table.php:272
 #: includes/admin/class-ur-admin-export-users.php:52
 #: includes/admin/class-ur-admin-import-export-forms.php:51
-#: includes/admin/class-ur-admin-menus.php:522
 #: includes/admin/class-ur-admin-notices.php:121
 #: includes/admin/class-ur-admin-settings.php:68
 #: includes/admin/class-ur-admin-status.php:169
 #: includes/class-ur-email-confirmation.php:246
 msgid "Action failed. Please refresh the page and retry."
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:241
+msgid "You do not have permission to trash posts!"
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:251
+msgid "You do not have permission to untrash posts!"
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:261
+#: includes/abstracts/abstract-ur-list-table.php:270
+msgid "You do not have permission to delete posts!"
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:313
+msgid "Copy of "
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:445
+msgid "Empty trash"
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:520
+msgid "Y/m/d g:i:s A"
+msgstr ""
+
+#: includes/abstracts/abstract-ur-list-table.php:536
+msgid "Y/m/d"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:188
+msgid "Upload Profile Picture"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:189
+msgid "Select Image"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:216
+msgctxt "enhanced select"
+msgid "No matches found"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:217
+msgctxt "enhanced select"
+msgid "Loading failed"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:218
+msgctxt "enhanced select"
+msgid "Please enter 1 or more characters"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:219
+msgctxt "enhanced select"
+msgid "Please enter %qty% or more characters"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:220
+msgctxt "enhanced select"
+msgid "Please delete 1 character"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:221
+msgctxt "enhanced select"
+msgid "Please delete %qty% characters"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:222
+msgctxt "enhanced select"
+msgid "You can only select 1 item"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:223
+msgctxt "enhanced select"
+msgid "You can only select %qty% items"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:224
+msgctxt "enhanced select"
+msgid "Loading more results&hellip;"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:225
+msgctxt "enhanced select"
+msgid "Searching&hellip;"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:237
+msgid "Could not install."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:282
+msgid "Enabled"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:283
+msgid "Disabled"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:351
+msgid "Clone"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:351
+#: includes/admin/class-ur-admin-registrations-table-list.php:107
+msgid "Trash"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:371
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:372
+#: includes/admin/class-ur-admin-form-modal.php:90
+msgid "Cancel"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:373
+msgctxt "user-registration admin"
+msgid "User Email"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:374
+msgctxt "user-registration admin"
+msgid "User Password"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:375
+msgctxt "user registration admin"
+msgid "Are you sure want to delete this row?"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:376
+msgctxt "user registration admin"
+msgid "Are you sure want to delete this field?"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:377
+msgctxt "user registration admin"
+msgid "At least one row is required to create a registration form."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:378
+msgctxt "user registration admin"
+msgid "Cannot delete row"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:379
+msgctxt "user registration admin"
+msgid "This field is one time draggable."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:380
+msgctxt "user registration admin"
+msgid "Could not clone this field."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:381
+msgctxt "user registration admin"
+msgid "Form successfully saved."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:382
+msgctxt "user registration admin"
+msgid "Success"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:383
+msgctxt "user registration admin"
+msgid "Error"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:384
+msgid "Confirm Deletion"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:385
+msgctxt "user registration admin"
+msgid "At least one field needs to be selected."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:386
+msgctxt "user registration admin"
+msgid "Empty form name."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:387
+msgctxt "user registration admin"
+msgid "Previous save action on going."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:388
+msgctxt "user registration admin"
+msgid "Duplicate field name."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:389
+msgctxt "user registration admin"
+msgid "Empty field label."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:390
+msgctxt "user registration admin"
+msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:391
+msgctxt "user registration admin"
+msgid "Multiple field key "
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:392
+msgctxt "user registration admin"
+msgid "field is required."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:393
+msgctxt "user registration admin"
+msgid "Drag your first form item here."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:394
+msgctxt "user registration admin"
+msgid "Please select at least one country."
 msgstr ""
 
 #: includes/admin/class-ur-admin-export-users.php:69
@@ -314,86 +348,70 @@ msgstr ""
 msgid "Please select json file to import form data."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:428
-msgid "Copy of "
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:492
-msgid "You do not have permissions to edit forms!"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:526
-msgid "You do not have permissions to delete forms!"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:601
+#: includes/admin/class-ur-admin-menus.php:371
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:602
+#: includes/admin/class-ur-admin-menus.php:372
 #: includes/class-ur-install.php:638
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:618
+#: includes/admin/class-ur-admin-menus.php:388
 msgid "User Registration Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:619
+#: includes/admin/class-ur-admin-menus.php:389
 #: includes/class-ur-email-confirmation.php:164
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:635
-#: includes/admin/class-ur-admin-menus.php:636
-#: includes/admin/class-ur-admin-menus.php:684
+#: includes/admin/class-ur-admin-menus.php:405
+#: includes/admin/class-ur-admin-menus.php:406
+#: includes/admin/class-ur-admin-registrations-table-list.php:162
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:652
+#: includes/admin/class-ur-admin-menus.php:422
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:653
+#: includes/admin/class-ur-admin-menus.php:423
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:690
-msgid "Search Registration"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:707
+#: includes/admin/class-ur-admin-menus.php:459
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:709
+#: includes/admin/class-ur-admin-menus.php:461
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:753
+#: includes/admin/class-ur-admin-menus.php:505
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:777
-#: includes/admin/settings/class-ur-settings-general.php:202
+#: includes/admin/class-ur-admin-menus.php:529
+#: includes/admin/settings/class-ur-settings-general.php:195
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:815
+#: includes/admin/class-ur-admin-menus.php:567
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:819
+#: includes/admin/class-ur-admin-menus.php:571
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:865
+#: includes/admin/class-ur-admin-menus.php:617
 #: includes/admin/views/html-admin-page-forms.php:116
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:968
+#: includes/admin/class-ur-admin-menus.php:720
 msgid "Empty form data"
 msgstr ""
 
@@ -415,118 +433,77 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:37
+#: includes/admin/class-ur-admin-registrations-table-list.php:40
 msgid "No user registration found."
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:48
+#: includes/admin/class-ur-admin-registrations-table-list.php:51
 msgid "Title"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:49
+#: includes/admin/class-ur-admin-registrations-table-list.php:52
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:50
+#: includes/admin/class-ur-admin-registrations-table-list.php:53
 msgid "Author"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:51
+#: includes/admin/class-ur-admin-registrations-table-list.php:54
 #: includes/form/class-ur-form-field-date.php:37
 #: includes/form/class-ur-form-field-date.php:42
 #: includes/functions-ur-core.php:691
 msgid "Date"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:103
+#: includes/admin/class-ur-admin-registrations-table-list.php:96
 msgid "ID: %d"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:107
+#: includes/admin/class-ur-admin-registrations-table-list.php:100
 #: includes/class-ur-post-types.php:53
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:112
+#: includes/admin/class-ur-admin-registrations-table-list.php:105
 msgid "Restore this item from the Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:112
-#: includes/admin/class-ur-admin-registrations-table-list.php:361
+#: includes/admin/class-ur-admin-registrations-table-list.php:105
 msgid "Restore"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:114
+#: includes/admin/class-ur-admin-registrations-table-list.php:107
 msgid "Move this item to the Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:117
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
 msgid "Delete this item permanently"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:117
-#: includes/admin/class-ur-admin-registrations-table-list.php:362
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
 msgid "Delete permanently"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:134
+#: includes/admin/class-ur-admin-registrations-table-list.php:126
 #: includes/admin/views/html-admin-page-forms.php:40
 msgid "Preview"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:138
+#: includes/admin/class-ur-admin-registrations-table-list.php:130
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:194
+#: includes/admin/class-ur-admin-registrations-table-list.php:147
 msgid "Copy Shortcode ! "
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:194
+#: includes/admin/class-ur-admin-registrations-table-list.php:147
 msgid "Copied ! "
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:216
-msgid "Y/m/d g:i:s A"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:228
-msgid "%s ago"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:232
-msgid "Y/m/d"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:251
-#: includes/admin/class-ur-admin-registrations-table-list.php:252
-msgid "Published <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:260
-#: includes/admin/class-ur-admin-registrations-table-list.php:261
-msgid "Draft <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:269
-#: includes/admin/class-ur-admin-registrations-table-list.php:270
-msgid "Pending <span class=\"count\">(%s)</span>"
-msgstr ""
-
-#. translators: %s: count
-#: includes/admin/class-ur-admin-registrations-table-list.php:308
-msgctxt "posts"
-msgid "All <span class=\"count\">(%s)</span>"
-msgid_plural "All <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:367
-msgid "Move to trash"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:378
-msgid "Empty trash"
+#: includes/admin/class-ur-admin-registrations-table-list.php:168
+msgid "Search Registration"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:79
@@ -537,7 +514,7 @@ msgstr ""
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:599
+#: includes/admin/class-ur-admin-settings.php:565
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -713,101 +690,112 @@ msgid "WordPress User Extra Information"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:36
+#: includes/admin/settings/class-ur-settings-email.php:72
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:38
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:39
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:38
+#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:39
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:39
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:39
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:39
+#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:38
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:39
 msgid "Emails"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:73
-msgid "General Email Settings"
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-email.php:87
+#: includes/admin/settings/class-ur-settings-email.php:75
 msgid "Email notifications"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:88
+#: includes/admin/settings/class-ur-settings-email.php:77
 msgid "Email notifications sent from user registration are listed below. Click on an email to configure it."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:106
+#: includes/admin/settings/class-ur-settings-email.php:87
 msgid "Email Sender Options"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:113
+#: includes/admin/settings/class-ur-settings-email.php:92
 msgid "\"From\" name"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:114
+#: includes/admin/settings/class-ur-settings-email.php:93
 msgid "How the sender name appears in outgoing user registration emails."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:124
+#: includes/admin/settings/class-ur-settings-email.php:103
 msgid "\"From\" address"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:125
+#: includes/admin/settings/class-ur-settings-email.php:104
 msgid "How the sender email appears in outgoing user registration emails."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:143
+#: includes/admin/settings/class-ur-settings-email.php:118
 msgid "Send a Test Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:150
+#: includes/admin/settings/class-ur-settings-email.php:123
 msgid "Send To"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:151
+#: includes/admin/settings/class-ur-settings-email.php:124
 msgid "Enter email address where test email will be sent."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:164
-#: includes/admin/settings/class-ur-settings-email.php:171
+#: includes/admin/settings/class-ur-settings-email.php:136
+#: includes/admin/settings/class-ur-settings-email.php:143
 msgid "Send Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:165
+#: includes/admin/settings/class-ur-settings-email.php:137
 msgid "Click to send test email."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:204
-#: includes/admin/settings/class-ur-settings-general.php:306
+#: includes/admin/settings/class-ur-settings-email.php:173
+#: includes/admin/settings/class-ur-settings-general.php:291
+#: includes/functions-ur-core.php:1108
 msgid "Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:205
-#: includes/admin/settings/class-ur-settings-email.php:224
+#: includes/admin/settings/class-ur-settings-email.php:174
+#: includes/admin/settings/class-ur-settings-email.php:193
 msgid "Configure"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-email.php:273
+#: includes/admin/settings/class-ur-settings-email.php:243
 msgid "Smart Tags Used"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:27
+#: includes/admin/settings/class-ur-settings-general.php:69
+#: includes/admin/settings/class-ur-settings-general.php:370
 msgid "General"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:42
-#: includes/admin/settings/class-ur-settings-general.php:68
+#: includes/admin/settings/class-ur-settings-general.php:66
 msgid "General Options"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:43
-#: includes/admin/settings/class-ur-settings-general.php:386
+#: includes/admin/settings/class-ur-settings-general.php:367
 msgid "Login Options"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:44
+#: includes/admin/settings/class-ur-settings-general.php:229
 msgid "Frontend Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:74
-#: includes/functions-ur-core.php:914
+#: includes/functions-ur-core.php:922
 msgid "User login option"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:75
-#: includes/functions-ur-core.php:915
+#: includes/admin/settings/class-ur-settings-general.php:392
+#: includes/functions-ur-core.php:923
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
@@ -832,518 +820,528 @@ msgid "Uninstall Option"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:106
-msgid "Heads Up! Check this if you would like to remove ALL User Registration data upon plugin deletion."
+msgid "<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:119
+#: includes/admin/settings/class-ur-settings-general.php:116
 msgid "My account Section"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:124
+#: includes/admin/settings/class-ur-settings-general.php:121
 msgid "My account page"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:125
+#: includes/admin/settings/class-ur-settings-general.php:122
 msgid "Select the page which contains your login form: [%s]"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:134
+#: includes/admin/settings/class-ur-settings-general.php:131
 msgid "Ajax submission on edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:135
+#: includes/admin/settings/class-ur-settings-general.php:132
 msgid "Check to enable ajax form submission on edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:143
+#: includes/admin/settings/class-ur-settings-general.php:140
 msgid "Disable profile picture"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:144
+#: includes/admin/settings/class-ur-settings-general.php:141
 msgid "Check to disable profile picture in edit profile page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:152
+#: includes/admin/settings/class-ur-settings-general.php:149
 msgid "Disable logout confirmation"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:153
+#: includes/admin/settings/class-ur-settings-general.php:150
 msgid "Check to disable logout confirmation."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:161
+#: includes/admin/settings/class-ur-settings-general.php:158
 msgid "Layout"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:162
+#: includes/admin/settings/class-ur-settings-general.php:159
 msgid "This option lets you choose layout for user registration my account tab."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:170
+#: includes/admin/settings/class-ur-settings-general.php:167
 msgid "Horizontal"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:171
+#: includes/admin/settings/class-ur-settings-general.php:168
 msgid "Vertical"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:181
+#: includes/admin/settings/class-ur-settings-general.php:174
+msgid "Endpoints Section"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:176
 msgid "Endpoints: "
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:181
+#: includes/admin/settings/class-ur-settings-general.php:176
 msgid "Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:186
+#: includes/admin/settings/class-ur-settings-general.php:179
 msgid "Edit profile"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:187
+#: includes/admin/settings/class-ur-settings-general.php:180
 msgid "Endpoint for the \"My account &rarr; Edit profile\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:194
+#: includes/admin/settings/class-ur-settings-general.php:187
 #: includes/class-ur-query.php:72
 #: includes/functions-ur-account.php:110
 #: templates/myaccount/form-edit-password.php:35
 msgid "Change Password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:195
+#: includes/admin/settings/class-ur-settings-general.php:188
 msgid "Endpoint for the \"My account &rarr; Change Password\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:203
+#: includes/admin/settings/class-ur-settings-general.php:196
 msgid "Endpoint for the \"My account &rarr; Lost password\" page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:210
+#: includes/admin/settings/class-ur-settings-general.php:203
 msgid "User logout"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:211
+#: includes/admin/settings/class-ur-settings-general.php:204
 msgid "Endpoint for the triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:239
+#: includes/admin/settings/class-ur-settings-general.php:232
 msgid "Success Messages"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:246
-#: includes/functions-ur-core.php:1081
+#: includes/admin/settings/class-ur-settings-general.php:237
+#: includes/functions-ur-core.php:1089
 msgid "Manual login after registration"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:247
+#: includes/admin/settings/class-ur-settings-general.php:238
 msgid "Enter the text message after successful form submission on manual login after registration."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:252
-#: includes/class-ur-frontend-scripts.php:374
+#: includes/admin/settings/class-ur-settings-general.php:243
+#: includes/class-ur-frontend-scripts.php:379
 msgid "User successfully registered."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:256
-#: includes/functions-ur-core.php:1082
+#: includes/admin/settings/class-ur-settings-general.php:247
+#: includes/functions-ur-core.php:1090
 msgid "Email confirmation to login"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:257
+#: includes/admin/settings/class-ur-settings-general.php:248
 msgid "Enter the text message after successful form submission on email confirmation to login."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:262
-#: includes/class-ur-frontend-scripts.php:376
+#: includes/admin/settings/class-ur-settings-general.php:253
+#: includes/class-ur-frontend-scripts.php:381
 msgid "User registered. Verify your email by clicking on the link sent to your email."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:266
-#: includes/functions-ur-core.php:1084
+#: includes/admin/settings/class-ur-settings-general.php:257
+#: includes/functions-ur-core.php:1092
 msgid "Admin approval after registration"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:267
+#: includes/admin/settings/class-ur-settings-general.php:258
 msgid "Enter the text message after successful form submission on admin approval after registration."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:272
-#: includes/class-ur-frontend-scripts.php:375
+#: includes/admin/settings/class-ur-settings-general.php:263
+#: includes/class-ur-frontend-scripts.php:380
 msgid "User registered. Wait until admin approves your registration."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:281
+#: includes/admin/settings/class-ur-settings-general.php:268
 msgid "Error Messages"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:288
-#: includes/functions-ur-core.php:743
+#: includes/admin/settings/class-ur-settings-general.php:273
+#: includes/functions-ur-core.php:748
 msgid "Required"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:289
+#: includes/admin/settings/class-ur-settings-general.php:274
 msgid "Enter the error message in form submission on required fields."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:294
-#: includes/class-ur-frontend-scripts.php:362
+#: includes/admin/settings/class-ur-settings-general.php:279
+#: includes/class-ur-frontend-scripts.php:367
 msgid "This field is required."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:297
+#: includes/admin/settings/class-ur-settings-general.php:282
 msgid "Special Character Validation in Username"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:298
+#: includes/admin/settings/class-ur-settings-general.php:283
 msgid "Enter the error message in form submission on username"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:303
+#: includes/admin/settings/class-ur-settings-general.php:288
 msgid "Please enter the valid username"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:307
+#: includes/admin/settings/class-ur-settings-general.php:292
 msgid "Enter the error message in form submission on Email."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:312
-#: includes/class-ur-frontend-scripts.php:363
+#: includes/admin/settings/class-ur-settings-general.php:297
+#: includes/class-ur-frontend-scripts.php:368
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:316
+#: includes/admin/settings/class-ur-settings-general.php:301
 msgid "Website URL"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:317
+#: includes/admin/settings/class-ur-settings-general.php:302
 msgid "Enter the error message in form submission on website/URL."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:322
-#: includes/class-ur-frontend-scripts.php:364
+#: includes/admin/settings/class-ur-settings-general.php:307
+#: includes/class-ur-frontend-scripts.php:369
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:326
+#: includes/admin/settings/class-ur-settings-general.php:311
 #: includes/form/class-ur-form-field-number.php:37
 #: includes/form/class-ur-form-field-number.php:42
 #: includes/functions-ur-core.php:690
 msgid "Number"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:327
+#: includes/admin/settings/class-ur-settings-general.php:312
 msgid "Enter the error message in form submission on Number."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:332
-#: includes/class-ur-frontend-scripts.php:365
+#: includes/admin/settings/class-ur-settings-general.php:317
+#: includes/class-ur-frontend-scripts.php:370
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:336
+#: includes/admin/settings/class-ur-settings-general.php:321
 #: includes/form/class-ur-form-field-user-confirm-email.php:54
 msgid "Confirm Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:337
+#: includes/admin/settings/class-ur-settings-general.php:322
 msgid "Enter the error message in form submission on Confim Email."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:342
-#: includes/class-ur-frontend-scripts.php:369
+#: includes/admin/settings/class-ur-settings-general.php:327
+#: includes/class-ur-frontend-scripts.php:374
 msgid "Email and confirm email not matched."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:346
+#: includes/admin/settings/class-ur-settings-general.php:331
 #: includes/form/class-ur-form-field-user-confirm-password.php:40
 msgid "Confirm Password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:347
+#: includes/admin/settings/class-ur-settings-general.php:332
 msgid "Enter the error message in form submission on Confim Password."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:352
-#: includes/class-ur-frontend-scripts.php:366
+#: includes/admin/settings/class-ur-settings-general.php:337
+#: includes/class-ur-frontend-scripts.php:371
 msgid "Password and confirm password not matched."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:356
+#: includes/admin/settings/class-ur-settings-general.php:341
+#: includes/admin/settings/class-ur-settings-integration.php:49
 msgid "Google reCaptcha"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:357
+#: includes/admin/settings/class-ur-settings-general.php:342
 msgid "Enter the error message in form submission on google recaptcha."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:362
+#: includes/admin/settings/class-ur-settings-general.php:347
 #: includes/class-ur-ajax.php:109
-#: includes/class-ur-ajax.php:488
-#: includes/class-ur-form-handler.php:383
-#: includes/class-ur-frontend-scripts.php:377
+#: includes/class-ur-ajax.php:492
+#: includes/class-ur-form-handler.php:385
+#: includes/class-ur-frontend-scripts.php:382
 msgid "Captcha code error, please try again."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:393
-#: includes/functions-ur-core.php:1034
+#: includes/admin/settings/class-ur-settings-general.php:375
+#: includes/functions-ur-core.php:1042
 msgid "Form Template"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:394
+#: includes/admin/settings/class-ur-settings-general.php:376
 msgid "Choose the login form template."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:401
-#: includes/functions-ur-core.php:1041
+#: includes/admin/settings/class-ur-settings-general.php:383
+#: includes/functions-ur-core.php:1049
 msgid "Default"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:402
-#: includes/functions-ur-core.php:1042
+#: includes/admin/settings/class-ur-settings-general.php:384
+#: includes/functions-ur-core.php:1050
 msgid "Bordered"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:403
-#: includes/functions-ur-core.php:1043
+#: includes/admin/settings/class-ur-settings-general.php:385
+#: includes/functions-ur-core.php:1051
 msgid "Flat"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:404
-#: includes/functions-ur-core.php:1044
+#: includes/admin/settings/class-ur-settings-general.php:386
+#: includes/functions-ur-core.php:1052
 msgid "Rounded"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:405
-#: includes/functions-ur-core.php:1045
+#: includes/admin/settings/class-ur-settings-general.php:387
+#: includes/functions-ur-core.php:1053
 msgid "Rounded Edge"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:409
+#: includes/admin/settings/class-ur-settings-general.php:391
+msgid "Login Only Option"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:402
 msgid "Enable Ajax Login"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:410
+#: includes/admin/settings/class-ur-settings-general.php:403
 msgid "This option lets you to enable the ajax form submission"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:413
+#: includes/admin/settings/class-ur-settings-general.php:406
 msgid "Check to field to enable the ajax form submission."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:418
+#: includes/admin/settings/class-ur-settings-general.php:411
 msgid "Enable remember me"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:419
-#: includes/admin/settings/class-ur-settings-general.php:429
-#: includes/admin/settings/class-ur-settings-general.php:449
+#: includes/admin/settings/class-ur-settings-general.php:412
+#: includes/admin/settings/class-ur-settings-general.php:422
+#: includes/admin/settings/class-ur-settings-general.php:442
 msgid "Enable"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:422
+#: includes/admin/settings/class-ur-settings-general.php:415
 msgid "Check to enable/disable remember me."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:428
+#: includes/admin/settings/class-ur-settings-general.php:421
 msgid "Enable lost password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:432
+#: includes/admin/settings/class-ur-settings-general.php:425
 msgid "Check to enable/disable lost password."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:438
+#: includes/admin/settings/class-ur-settings-general.php:431
 msgid "Hide Field Labels"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:439
+#: includes/admin/settings/class-ur-settings-general.php:432
 msgid "Hide"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:442
+#: includes/admin/settings/class-ur-settings-general.php:435
 msgid "Check to hide field labels."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:448
+#: includes/admin/settings/class-ur-settings-general.php:441
 msgid "Enable google reCaptcha"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:452
+#: includes/admin/settings/class-ur-settings-general.php:445
 msgid "Enable %1$s %2$s reCaptcha %3$s support"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:458
+#: includes/admin/settings/class-ur-settings-general.php:451
 msgid "Registration URL"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:459
+#: includes/admin/settings/class-ur-settings-general.php:452
 msgid "This option lets you enter the registration page url in login form."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:467
+#: includes/admin/settings/class-ur-settings-general.php:460
 msgid "Registration URL label"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:468
+#: includes/admin/settings/class-ur-settings-general.php:461
 msgid "This option lets you enter the label to registration url in login form."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:473
-#: templates/myaccount/form-login.php:151
+#: includes/admin/settings/class-ur-settings-general.php:466
+#: templates/myaccount/form-login.php:165
 msgid "Not a member yet? Register now."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:477
+#: includes/admin/settings/class-ur-settings-general.php:470
 msgid "Prevent Core Login"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:478
+#: includes/admin/settings/class-ur-settings-general.php:471
 msgid "Enable Prevent Core Login"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:481
+#: includes/admin/settings/class-ur-settings-general.php:474
 msgid "Check to disable WordPress default login or registration page."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:484
+#: includes/admin/settings/class-ur-settings-general.php:477
 msgid "Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href=\"https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:488
+#: includes/admin/settings/class-ur-settings-general.php:481
 msgid "Redirect to Login Page"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:489
+#: includes/admin/settings/class-ur-settings-general.php:482
 msgid "Select the login page where you wants to redirect."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:504
+#: includes/admin/settings/class-ur-settings-general.php:493
 msgid "Labels"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:511
+#: includes/admin/settings/class-ur-settings-general.php:498
+#: includes/functions-ur-core.php:1106
 msgid "Username or Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:512
+#: includes/admin/settings/class-ur-settings-general.php:499
 msgid "This option lets you edit the \"Username or Email\" field label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:517
+#: includes/admin/settings/class-ur-settings-general.php:504
 #: templates/myaccount/form-login.php:40
 msgid "Username or email address"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:521
-#: includes/admin/settings/class-ur-settings-general.php:527
+#: includes/admin/settings/class-ur-settings-general.php:508
+#: includes/admin/settings/class-ur-settings-general.php:514
 #: includes/functions-ur-core.php:685
 #: templates/myaccount/form-login.php:41
 msgid "Password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:522
+#: includes/admin/settings/class-ur-settings-general.php:509
 msgid "This option lets you edit the \"Password\" field label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:531
-#: includes/admin/settings/class-ur-settings-general.php:537
+#: includes/admin/settings/class-ur-settings-general.php:518
+#: includes/admin/settings/class-ur-settings-general.php:524
 #: templates/myaccount/form-login.php:42
 msgid "Remember me"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:532
+#: includes/admin/settings/class-ur-settings-general.php:519
 msgid "This option lets you edit the \"Remember me\" option label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:541
-#: includes/admin/settings/class-ur-settings-general.php:547
+#: includes/admin/settings/class-ur-settings-general.php:528
+#: includes/admin/settings/class-ur-settings-general.php:534
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:43
 msgid "Login"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:542
+#: includes/admin/settings/class-ur-settings-general.php:529
 msgid "This option lets you edit the \"Login\" button label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:551
-#: includes/admin/settings/class-ur-settings-general.php:557
+#: includes/admin/settings/class-ur-settings-general.php:538
+#: includes/admin/settings/class-ur-settings-general.php:544
 #: templates/myaccount/form-login.php:44
 msgid "Lost your password?"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:552
+#: includes/admin/settings/class-ur-settings-general.php:539
 msgid "This option lets you edit the \"Lost your password?\" option label."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:566
+#: includes/admin/settings/class-ur-settings-general.php:549
 msgid "Placeholders"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:573
+#: includes/admin/settings/class-ur-settings-general.php:554
 msgid "Username or Email Field"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:574
-#: includes/admin/settings/class-ur-settings-general.php:584
+#: includes/admin/settings/class-ur-settings-general.php:555
+#: includes/admin/settings/class-ur-settings-general.php:565
 msgid "This option lets you set placeholder for the \"Username or Email\" field."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:583
+#: includes/admin/settings/class-ur-settings-general.php:564
 #: includes/form/class-ur-form-field-password.php:35
 #: includes/form/class-ur-form-field-password.php:40
 msgid "Password Field"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:598
+#: includes/admin/settings/class-ur-settings-general.php:575
 msgid "Messages"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:605
+#: includes/admin/settings/class-ur-settings-general.php:580
 msgid "Username Required"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:606
+#: includes/admin/settings/class-ur-settings-general.php:581
 msgid "Show this message when username is empty."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:615
+#: includes/admin/settings/class-ur-settings-general.php:590
 msgid "Empty Password"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:616
+#: includes/admin/settings/class-ur-settings-general.php:591
 msgid "Show this message when password is empty."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:626
+#: includes/admin/settings/class-ur-settings-general.php:601
 msgid "Invalid/Unknown Username"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:627
+#: includes/admin/settings/class-ur-settings-general.php:602
 msgid "Show this message when username is unknown or invalid."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:637
+#: includes/admin/settings/class-ur-settings-general.php:612
 msgid "Unknown Email"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:638
+#: includes/admin/settings/class-ur-settings-general.php:613
 msgid "Show this message when email is unknown."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:647
+#: includes/admin/settings/class-ur-settings-general.php:622
 msgid "Pending Approval"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:648
+#: includes/admin/settings/class-ur-settings-general.php:623
 msgid "Show this message when an account is pending approval."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:658
+#: includes/admin/settings/class-ur-settings-general.php:633
 msgid "Denied Account"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-general.php:659
+#: includes/admin/settings/class-ur-settings-general.php:634
 msgid "Show this message when an account is has been denied."
 msgstr ""
 
@@ -1352,58 +1350,57 @@ msgid "Import/Export"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-import-export.php:42
-#: includes/admin/views/html-admin-page-export-users.php:31
+#: includes/admin/views/html-admin-page-export-users.php:10
+#: includes/admin/views/html-admin-page-export-users.php:32
 msgid "Export Users"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-import-export.php:43
+#: includes/admin/views/html-admin-page-import-export-forms.php:14
 msgid "Import/Export Forms"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:29
+#: includes/admin/settings/class-ur-settings-integration.php:46
 msgid "Integration"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:47
-msgid "Google reCaptcha Integation"
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-integration.php:53
+#: includes/admin/settings/class-ur-settings-integration.php:54
 msgid "Version"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:54
+#: includes/admin/settings/class-ur-settings-integration.php:55
 msgid "Select the google reCaptcha version"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:66
+#: includes/admin/settings/class-ur-settings-integration.php:67
 msgid "Site Key (v2)"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:67
-#: includes/admin/settings/class-ur-settings-integration.php:88
+#: includes/admin/settings/class-ur-settings-integration.php:68
+#: includes/admin/settings/class-ur-settings-integration.php:89
 msgid "Get site key from google %1$s reCaptcha %2$s."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:77
+#: includes/admin/settings/class-ur-settings-integration.php:78
 msgid "Secret Key (v2)"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:78
-#: includes/admin/settings/class-ur-settings-integration.php:99
+#: includes/admin/settings/class-ur-settings-integration.php:79
+#: includes/admin/settings/class-ur-settings-integration.php:100
 msgid "Get secret key from google %1$s reCaptcha %2$s."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:87
+#: includes/admin/settings/class-ur-settings-integration.php:88
 msgid "Site Key (v3)"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-integration.php:98
+#: includes/admin/settings/class-ur-settings-integration.php:99
 msgid "Secret Key (v3)"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
-#: includes/admin/settings/emails/class-ur-settings-admin-email.php:35
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:41
 msgid "Admin Email"
 msgstr ""
 
@@ -1411,15 +1408,15 @@ msgstr ""
 msgid "Email sent to the admin when a new user registers"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-admin-email.php:35
-#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:36
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:35
-#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:36
-#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:36
-#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:36
-#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:36
-#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:35
-#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:44
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:45
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:44
+#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:45
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:45
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:45
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:45
+#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:44
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:45
 msgid "Return to emails"
 msgstr ""
 
@@ -1450,7 +1447,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:65
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:56
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:48
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:47
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:66
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:56
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:56
@@ -1462,7 +1459,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:66
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:57
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:49
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:48
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:67
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:57
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:57
@@ -1479,7 +1476,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:74
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:65
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:58
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:57
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:75
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:65
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:65
@@ -1491,7 +1488,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:75
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:66
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:59
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:58
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:76
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:66
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:66
@@ -1501,7 +1498,7 @@ msgstr ""
 msgid "The email content you want to customize."
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-admin-email.php:100
+#: includes/admin/settings/emails/class-ur-settings-admin-email.php:99
 msgid ""
 "Hi Admin, <br/>\n"
 "\n"
@@ -1520,7 +1517,7 @@ msgstr ""
 msgid "Email sent to the user notifying the registration is awaiting admin approval"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:42
 msgid "Awaiting Admin Approval Email"
 msgstr ""
 
@@ -1533,7 +1530,7 @@ msgstr ""
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:92
+#: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:90
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1545,7 +1542,6 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:24
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:35
 msgid "Email Confirmation"
 msgstr ""
 
@@ -1553,12 +1549,16 @@ msgstr ""
 msgid "Email sent to the user with a verification link when email confirmation to register option is choosen"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:52
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:41
+msgid "Confirmation Email"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
 #: includes/class-ur-emailer.php:248
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:86
+#: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:82
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1570,7 +1570,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:42
 msgid "Profile Details Changed Email"
 msgstr ""
 
@@ -1587,7 +1587,7 @@ msgstr ""
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:103
+#: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:102
 msgid ""
 "User has changed profile information for the following account:<br/>\n"
 "\n"
@@ -1600,7 +1600,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:42
 msgid "Registration Approved Email"
 msgstr ""
 
@@ -1617,7 +1617,7 @@ msgstr ""
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:92
+#: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:90
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1629,7 +1629,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:42
 msgid "Registration Denied Email"
 msgstr ""
 
@@ -1647,7 +1647,7 @@ msgstr ""
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:92
+#: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:90
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1659,7 +1659,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:42
 msgid "Registration Pending Email"
 msgstr ""
 
@@ -1676,7 +1676,7 @@ msgstr ""
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:95
+#: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:92
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1690,7 +1690,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:24
-#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:35
+#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:41
 msgid "Reset Password Email"
 msgstr ""
 
@@ -1707,7 +1707,7 @@ msgstr ""
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:90
+#: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:89
 msgid ""
 "Someone has requested a password reset for the following account: <br/>\n"
 "\n"
@@ -1723,7 +1723,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:36
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:42
 msgid "Successfully Registered Email"
 msgstr ""
 
@@ -1740,7 +1740,7 @@ msgstr ""
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
-#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:91
+#: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:90
 msgid ""
 "Hi {{username}}, <br/>\n"
 "\n"
@@ -1779,11 +1779,11 @@ msgstr ""
 msgid "Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href=\"%s\">User Registration Extensions Catalog</a>"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-export-users.php:14
-msgid "Export Users With Extra Fields"
+#: includes/admin/views/html-admin-page-export-users.php:15
+msgid "GENERAL"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-export-users.php:18
+#: includes/admin/views/html-admin-page-export-users.php:19
 msgid "Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file."
 msgstr ""
 
@@ -1835,27 +1835,27 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:18
-msgid "Export forms With Settings"
+#: includes/admin/views/html-admin-page-import-export-forms.php:19
+msgid "EXPORT FORMS WITH SETTINGS"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:22
+#: includes/admin/views/html-admin-page-import-export-forms.php:23
 msgid "Export your forms along with their settings as <strong>JSON</strong> file."
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:35
+#: includes/admin/views/html-admin-page-import-export-forms.php:36
 msgid "Export Forms"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:40
-msgid "Import Forms With Settings"
+#: includes/admin/views/html-admin-page-import-export-forms.php:41
+msgid "IMPORT FORMS WITH SETTINGS"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:44
+#: includes/admin/views/html-admin-page-import-export-forms.php:45
 msgid "Import your forms along with their settings from <strong>JSON</strong> file."
 msgstr ""
 
-#: includes/admin/views/html-admin-page-import-export-forms.php:57
+#: includes/admin/views/html-admin-page-import-export-forms.php:58
 msgid "Import Forms"
 msgstr ""
 
@@ -1965,14 +1965,14 @@ msgstr ""
 #: includes/class-ur-ajax.php:80
 #: includes/class-ur-ajax.php:118
 #: includes/class-ur-ajax.php:174
-#: includes/class-ur-ajax.php:331
-#: includes/class-ur-ajax.php:458
+#: includes/class-ur-ajax.php:335
+#: includes/class-ur-ajax.php:462
 msgid "Nonce error, please reload."
 msgstr ""
 
 #: includes/class-ur-ajax.php:102
-#: includes/class-ur-ajax.php:481
-#: includes/class-ur-form-handler.php:380
+#: includes/class-ur-ajax.php:485
+#: includes/class-ur-form-handler.php:382
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -2002,62 +2002,64 @@ msgstr ""
 msgid "Email already exists."
 msgstr ""
 
-#: includes/class-ur-ajax.php:302
-#: includes/class-ur-form-handler.php:244
+#: includes/class-ur-ajax.php:306
+#: includes/class-ur-form-handler.php:246
 msgid "User profile updated successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:403
+#: includes/class-ur-ajax.php:407
 #: includes/class-ur-form-handler.php:105
 msgid "File size exceed, please check your file size."
 msgstr ""
 
-#: includes/class-ur-ajax.php:410
+#: includes/class-ur-ajax.php:414
 #: includes/class-ur-form-handler.php:108
 msgid "Something went wrong while uploading, please contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:440
-#: includes/class-ur-form-handler.php:346
+#: includes/class-ur-ajax.php:444
+#: includes/class-ur-form-handler.php:348
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-ajax.php:443
-#: includes/class-ur-form-handler.php:349
+#: includes/class-ur-ajax.php:447
+#: includes/class-ur-form-handler.php:351
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-ajax.php:500
-#: includes/class-ur-ajax.php:506
-#: includes/class-ur-ajax.php:509
-#: includes/class-ur-form-handler.php:422
-#: includes/class-ur-form-handler.php:428
-#: includes/class-ur-form-handler.php:431
+#: includes/class-ur-ajax.php:516
+#: includes/class-ur-ajax.php:519
+#: includes/class-ur-ajax.php:525
+#: includes/class-ur-ajax.php:528
+#: includes/class-ur-form-handler.php:435
+#: includes/class-ur-form-handler.php:438
+#: includes/class-ur-form-handler.php:444
+#: includes/class-ur-form-handler.php:447
 msgid "ERROR"
 msgstr ""
 
-#: includes/class-ur-ajax.php:538
+#: includes/class-ur-ajax.php:557
 msgid "Test email from %s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:549
+#: includes/class-ur-ajax.php:568
 msgid "Test email was sent successfully! Please check your inbox to make sure it is delivered."
 msgstr ""
 
-#: includes/class-ur-ajax.php:551
+#: includes/class-ur-ajax.php:570
 msgid "Test email was unsuccessful! Something went wrong."
 msgstr ""
 
-#: includes/class-ur-ajax.php:620
-#: includes/class-ur-ajax.php:626
+#: includes/class-ur-ajax.php:639
+#: includes/class-ur-ajax.php:645
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:643
+#: includes/class-ur-ajax.php:662
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-ajax.php:654
+#: includes/class-ur-ajax.php:673
 msgid "Could not save form, "
 msgstr ""
 
@@ -2113,11 +2115,11 @@ msgid "User does not exist!"
 msgstr ""
 
 #: includes/class-ur-email-confirmation.php:414
-#: includes/class-ur-form-handler.php:380
-#: includes/class-ur-form-handler.php:383
-#: includes/class-ur-form-handler.php:388
-#: includes/class-ur-form-handler.php:392
-#: includes/class-ur-form-handler.php:401
+#: includes/class-ur-form-handler.php:382
+#: includes/class-ur-form-handler.php:385
+#: includes/class-ur-form-handler.php:390
+#: includes/class-ur-form-handler.php:394
+#: includes/class-ur-form-handler.php:403
 #: includes/class-ur-user-approval.php:194
 #: includes/class-ur-user-approval.php:199
 #: includes/class-ur-user-approval.php:214
@@ -2142,7 +2144,7 @@ msgid "Email not verified! Verify your email by clicking on the link sent to you
 msgstr ""
 
 #: includes/class-ur-emailer.php:589
-#: includes/functions-ur-core.php:1963
+#: includes/functions-ur-core.php:1988
 msgid "Chosen Password"
 msgstr ""
 
@@ -2175,91 +2177,91 @@ msgstr ""
 msgid "%s is not a valid email address."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:291
+#: includes/class-ur-form-handler.php:293
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:294
+#: includes/class-ur-form-handler.php:296
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:297
+#: includes/class-ur-form-handler.php:299
 msgid "Please enter your new password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:300
+#: includes/class-ur-form-handler.php:302
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:303
+#: includes/class-ur-form-handler.php:305
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:306
+#: includes/class-ur-form-handler.php:308
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:309
+#: includes/class-ur-form-handler.php:311
 msgid "New password must not be same as old password"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:330
+#: includes/class-ur-form-handler.php:332
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:515
+#: includes/class-ur-form-handler.php:531
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:519
+#: includes/class-ur-form-handler.php:535
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:523
+#: includes/class-ur-form-handler.php:539
 msgid "New password must not be same as old password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:557
+#: includes/class-ur-form-handler.php:573
 msgid "Invalid Key"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:572
+#: includes/class-ur-form-handler.php:588
 msgid "Thanks for confirming your export request."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:574
+#: includes/class-ur-form-handler.php:590
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:360
+#: includes/class-ur-frontend-scripts.php:365
 msgid "Uploading..."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:367
+#: includes/class-ur-frontend-scripts.php:372
 msgid "Please enter a valid phone number."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:368
+#: includes/class-ur-frontend-scripts.php:373
 msgid "Please enter a valid username."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:370
+#: includes/class-ur-frontend-scripts.php:375
 msgid "Please enter a value less than or equal to %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:371
+#: includes/class-ur-frontend-scripts.php:376
 msgid "Please enter a value greater than or equal to %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:372
+#: includes/class-ur-frontend-scripts.php:377
 msgid "Please enter a multiple of %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:378
+#: includes/class-ur-frontend-scripts.php:383
 msgid "Hide Password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:379
+#: includes/class-ur-frontend-scripts.php:384
 #: templates/myaccount/form-edit-password.php:44
 #: templates/myaccount/form-edit-password.php:56
 #: templates/myaccount/form-edit-password.php:67
@@ -2268,39 +2270,39 @@ msgstr ""
 msgid "Show Password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:380
+#: includes/class-ur-frontend-scripts.php:385
 msgid "Password strength is not strong enough"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:388
+#: includes/class-ur-frontend-scripts.php:393
 msgid "Please enter a stronger password."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:390
-#: includes/functions-ur-core.php:960
+#: includes/class-ur-frontend-scripts.php:395
+#: includes/functions-ur-core.php:968
 msgid "Very Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:391
-#: includes/functions-ur-core.php:961
+#: includes/class-ur-frontend-scripts.php:396
+#: includes/functions-ur-core.php:969
 msgid "Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:392
-#: includes/functions-ur-core.php:962
+#: includes/class-ur-frontend-scripts.php:397
+#: includes/functions-ur-core.php:970
 msgid "Medium"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:393
-#: includes/functions-ur-core.php:963
+#: includes/class-ur-frontend-scripts.php:398
+#: includes/functions-ur-core.php:971
 msgid "Strong"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:394
+#: includes/class-ur-frontend-scripts.php:399
 msgid "Password with confirm password not matched."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:397
+#: includes/class-ur-frontend-scripts.php:402
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
@@ -2637,21 +2639,21 @@ msgstr ""
 #: includes/form/class-ur-form-field-checkbox.php:43
 #: includes/form/class-ur-form-field-radio.php:46
 #: includes/form/class-ur-form-field-select.php:43
-#: includes/functions-ur-core.php:794
+#: includes/functions-ur-core.php:801
 msgid "First Choice"
 msgstr ""
 
 #: includes/form/class-ur-form-field-checkbox.php:44
 #: includes/form/class-ur-form-field-radio.php:47
 #: includes/form/class-ur-form-field-select.php:44
-#: includes/functions-ur-core.php:795
+#: includes/functions-ur-core.php:802
 msgid "Second Choice"
 msgstr ""
 
 #: includes/form/class-ur-form-field-checkbox.php:45
 #: includes/form/class-ur-form-field-radio.php:48
 #: includes/form/class-ur-form-field-select.php:45
-#: includes/functions-ur-core.php:796
+#: includes/functions-ur-core.php:803
 msgid "Third Choice"
 msgstr ""
 
@@ -3744,6 +3746,7 @@ msgstr ""
 
 #: includes/form/class-ur-form-field-user-login.php:35
 #: includes/form/class-ur-form-field-user-login.php:40
+#: includes/functions-ur-core.php:1107
 msgid "Username"
 msgstr ""
 
@@ -3845,6 +3848,28 @@ msgstr ""
 
 #: includes/form/settings/class-ur-setting-checkbox.php:53
 msgid "Enter minimum number choices that can be selected."
+msgstr ""
+
+#: includes/form/settings/class-ur-setting-checkbox.php:56
+msgid "Select All "
+msgstr ""
+
+#: includes/form/settings/class-ur-setting-checkbox.php:63
+#: includes/form/settings/class-ur-setting-user_login.php:63
+#: includes/functions-ur-core.php:753
+#: includes/functions-ur-core.php:766
+msgid "No"
+msgstr ""
+
+#: includes/form/settings/class-ur-setting-checkbox.php:64
+#: includes/form/settings/class-ur-setting-user_login.php:64
+#: includes/functions-ur-core.php:754
+#: includes/functions-ur-core.php:767
+msgid "Yes"
+msgstr ""
+
+#: includes/form/settings/class-ur-setting-checkbox.php:68
+msgid "Enable this option to select all the options"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-country.php:45
@@ -3984,18 +4009,6 @@ msgstr ""
 msgid "Allow Special Character"
 msgstr ""
 
-#: includes/form/settings/class-ur-setting-user_login.php:63
-#: includes/functions-ur-core.php:748
-#: includes/functions-ur-core.php:760
-msgid "No"
-msgstr ""
-
-#: includes/form/settings/class-ur-setting-user_login.php:64
-#: includes/functions-ur-core.php:749
-#: includes/functions-ur-core.php:761
-msgid "Yes"
-msgstr ""
-
 #: includes/form/settings/class-ur-setting-user_login.php:68
 msgid "Check this option to validate the Username for Special Character"
 msgstr ""
@@ -4086,8 +4099,8 @@ msgid "User URL"
 msgstr ""
 
 #: includes/functions-ur-core.php:683
-#: includes/functions-ur-core.php:718
 #: includes/functions-ur-core.php:720
+#: includes/functions-ur-core.php:722
 msgid "Description"
 msgstr ""
 
@@ -4095,158 +4108,158 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: includes/functions-ur-core.php:710
-#: includes/functions-ur-core.php:712
+#: includes/functions-ur-core.php:711
+#: includes/functions-ur-core.php:713
 msgid "Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:714
+#: includes/functions-ur-core.php:715
 msgid "Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings."
 msgstr ""
 
-#: includes/functions-ur-core.php:722
+#: includes/functions-ur-core.php:724
 msgid "Enter text for the form field description."
 msgstr ""
 
-#: includes/functions-ur-core.php:726
-#: includes/functions-ur-core.php:728
+#: includes/functions-ur-core.php:729
+#: includes/functions-ur-core.php:731
 msgid "Field Name"
 msgstr ""
 
-#: includes/functions-ur-core.php:730
+#: includes/functions-ur-core.php:733
 msgid "Unique key for the field."
 msgstr ""
 
-#: includes/functions-ur-core.php:735
-#: includes/functions-ur-core.php:737
+#: includes/functions-ur-core.php:739
+#: includes/functions-ur-core.php:741
 msgid "Placeholder"
 msgstr ""
 
-#: includes/functions-ur-core.php:739
+#: includes/functions-ur-core.php:743
 msgid "Enter placeholder for the field."
 msgstr ""
 
-#: includes/functions-ur-core.php:751
+#: includes/functions-ur-core.php:756
 msgid "Check this option to mark the field required. A form will not submit unless all required fields are provided."
 msgstr ""
 
-#: includes/functions-ur-core.php:755
+#: includes/functions-ur-core.php:761
 msgid "Hide Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:763
+#: includes/functions-ur-core.php:769
 msgid "Check this option to hide the label of this field."
 msgstr ""
 
-#: includes/functions-ur-core.php:789
+#: includes/functions-ur-core.php:796
 msgid "Options"
 msgstr ""
 
-#: includes/functions-ur-core.php:924
+#: includes/functions-ur-core.php:932
 msgid "Login method that should be used by the users registered through this form."
 msgstr ""
 
-#: includes/functions-ur-core.php:928
+#: includes/functions-ur-core.php:936
 msgid "Default User Role"
 msgstr ""
 
-#: includes/functions-ur-core.php:937
+#: includes/functions-ur-core.php:945
 msgid "Default role for the users registered through this form."
 msgstr ""
 
-#: includes/functions-ur-core.php:941
+#: includes/functions-ur-core.php:949
 msgid "Enable Strong Password"
 msgstr ""
 
-#: includes/functions-ur-core.php:949
+#: includes/functions-ur-core.php:957
 msgid "Make strong password compulsary."
 msgstr ""
 
-#: includes/functions-ur-core.php:953
+#: includes/functions-ur-core.php:961
 msgid "Minimum Password Strength"
 msgstr ""
 
-#: includes/functions-ur-core.php:967
+#: includes/functions-ur-core.php:975
 msgid "Set minimum required password strength."
 msgstr ""
 
-#: includes/functions-ur-core.php:971
+#: includes/functions-ur-core.php:979
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:973
+#: includes/functions-ur-core.php:981
 msgid "This option lets you enter redirect path after successful user registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:978
+#: includes/functions-ur-core.php:986
 msgid "URL to redirect to after registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:982
+#: includes/functions-ur-core.php:990
 msgid "Form Submit Button Custom Class"
 msgstr ""
 
-#: includes/functions-ur-core.php:990
+#: includes/functions-ur-core.php:998
 msgid "Custom css class to embed in the submit button. You can enter multiple classes seperated with space."
 msgstr ""
 
-#: includes/functions-ur-core.php:994
+#: includes/functions-ur-core.php:1002
 msgid "Form Submit Button Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:1002
+#: includes/functions-ur-core.php:1010
 msgid "Set label for the submit button."
 msgstr ""
 
-#: includes/functions-ur-core.php:1006
+#: includes/functions-ur-core.php:1014
 msgid "Success message position"
 msgstr ""
 
-#: includes/functions-ur-core.php:1013
+#: includes/functions-ur-core.php:1021
 msgid "Top"
 msgstr ""
 
-#: includes/functions-ur-core.php:1014
+#: includes/functions-ur-core.php:1022
 msgid "Bottom"
 msgstr ""
 
-#: includes/functions-ur-core.php:1018
+#: includes/functions-ur-core.php:1026
 msgid "Display success message either at the top or bottom after successful registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:1022
+#: includes/functions-ur-core.php:1030
 msgid "Enable %1$s %2$s reCaptcha %3$s Support"
 msgstr ""
 
-#: includes/functions-ur-core.php:1030
+#: includes/functions-ur-core.php:1038
 msgid "Enable reCaptcha for strong security from spams and bots."
 msgstr ""
 
-#: includes/functions-ur-core.php:1049
+#: includes/functions-ur-core.php:1057
 msgid "Choose form template to use."
 msgstr ""
 
-#: includes/functions-ur-core.php:1053
+#: includes/functions-ur-core.php:1061
 msgid "Custom CSS class"
 msgstr ""
 
-#: includes/functions-ur-core.php:1061
+#: includes/functions-ur-core.php:1069
 msgid "Custom css class to embed in the registration form. You can enter multiple classes seperated with space."
 msgstr ""
 
-#: includes/functions-ur-core.php:1083
+#: includes/functions-ur-core.php:1091
 msgid "Auto login after registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:1279
+#: includes/functions-ur-core.php:1303
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
-#: includes/functions-ur-core.php:1380
+#: includes/functions-ur-core.php:1404
 msgid "Disable emails"
 msgstr ""
 
-#: includes/functions-ur-core.php:1381
+#: includes/functions-ur-core.php:1405
 msgid "Disable all emails sent after registration."
 msgstr ""
 
@@ -4260,11 +4273,11 @@ msgstr ""
 msgid "This function should not be called before user_registration_init."
 msgstr ""
 
-#: includes/functions-ur-template.php:195
+#: includes/functions-ur-template.php:201
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:438
+#: includes/functions-ur-template.php:473
 msgid "Choose an option"
 msgstr ""
 
@@ -4371,8 +4384,8 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:82
-#: templates/myaccount/form-edit-profile.php:296
-#: templates/myaccount/form-edit-profile.php:301
+#: templates/myaccount/form-edit-profile.php:343
+#: templates/myaccount/form-edit-profile.php:348
 msgid "Save changes"
 msgstr ""
 
@@ -4400,7 +4413,7 @@ msgstr ""
 msgid "Gravatar"
 msgstr ""
 
-#: templates/myaccount/form-login.php:84
+#: templates/myaccount/form-login.php:94
 msgid "Show password"
 msgstr ""
 

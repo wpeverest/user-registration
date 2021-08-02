@@ -89,7 +89,7 @@
 		margin-bottom: 0;
 
 		&::after {
-			content: '';
+			content: "";
 			border-radius: 3px;
 			position: absolute;
 			left: 32px;
@@ -164,7 +164,7 @@
 
 			&::after {
 				display: inline-block;
-				content: '';
+				content: "";
 				height: 14px;
 				width: 14px;
 				background: $white;
@@ -208,7 +208,7 @@
 		padding-right: 10px;
 	}
 
-	.select2-results__option[data-selected=true] .wrap:before {
+	.select2-results__option[data-selected="true"] .wrap:before {
 		content: "\2714";
 	}
 
@@ -272,7 +272,7 @@
 			border-radius: 4px;
 			line-height: 1.5;
 			border: 1px solid #ddd !important;
-			padding-left: 8px;
+			padding-left: 4px;
 
 			li {
 				margin: 0;
@@ -288,13 +288,11 @@
 				margin: 0px;
 
 				.select2-selection__choice {
-					margin-top: 4px;
-					margin-right: 4px;
+					margin: 4px;
 					line-height: 1.4;
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					padding-left: 22px;
 
 					.select2-selection__choice__remove {
 						bottom: 0px;
