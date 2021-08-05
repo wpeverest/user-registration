@@ -105,6 +105,7 @@ function ur_registration_template_redirect()
 
 			$redirect_url = ur_get_single_post_meta($form_id[0][0], 'user_registration_form_setting_redirect_options', '');
 			$redirect_url = apply_filters('user_registration_redirect_from_registration_page', $redirect_url, $current_user);
+			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
 
 			if (!is_elementor_editing_page() && !empty($redirect_url)) {
 				wp_redirect($redirect_url);

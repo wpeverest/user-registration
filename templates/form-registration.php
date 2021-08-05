@@ -160,7 +160,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 			<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo $enable_field_icon; ?>"/>
 			<?php } ?>
 			<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
-			<input type="hidden" name="ur-redirect-url" value="<?php echo $redirect_url; ?>"/>
+			<input type="hidden" name="ur-redirect-url" value="<?php echo ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ); ?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 
 			<?php do_action( 'user_registration_form_registration_end', $form_id ); ?>
