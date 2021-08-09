@@ -71,7 +71,7 @@ function ur_get_page_id( $page ) {
 
 	if( $page > 0 && function_exists( 'pll_current_language' ) && !empty( pll_current_language() )){
 		$translations = pll_get_post_translations($page);
-		$page = $translations[pll_current_language()];
+		$page = isset( $translations[pll_current_language()] ) ? $translations[pll_current_language()] : $page;
 	}
 
 	return $page ? absint( $page ) : - 1;
