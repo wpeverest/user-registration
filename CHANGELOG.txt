@@ -1,4 +1,10 @@
 
+= 2.0.1    - 10/08/2021
+* Enhance  - Notice display method to display review and survey notice.
+* Dev      - Redirect URL string WPML compatibility.
+* Tweak    - Metabox and form icon design changes.
+* Fix      - Undefined index polylang language.
+
 = 2.0.0    - 02/08/2021
 * Feature  - Form field icons in user registration.
 * Feature  - Login with username, email or both option.

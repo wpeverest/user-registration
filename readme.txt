@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.8
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.htmlnditional-logic
 
@@ -152,6 +152,12 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.0.1    - 10/08/2021
+* Enhance  - Notice display method to display review and survey notice.
+* Dev      - Redirect URL string WPML compatibility.
+* Tweak    - Metabox and form icon design changes.
+* Fix      - Undefined index polylang language.
 
 = 2.0.0    - 02/08/2021
 * Feature  - Form field icons in user registration.
