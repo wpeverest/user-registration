@@ -51,7 +51,7 @@ class UR_Admin_Assets {
 
 		wp_register_style( 'user-registration-dashboard-widget', UR()->plugin_url() . '/assets/css/dashboard.css', array(), UR_VERSION );
 
-		wp_register_style( 'ur-review', UR()->plugin_url() . '/assets/css/review.css', array(), UR_VERSION );
+		wp_register_style( 'ur-notice', UR()->plugin_url() . '/assets/css/ur-notice.css', array(), UR_VERSION );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
@@ -64,10 +64,10 @@ class UR_Admin_Assets {
 
 		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 
-		$enqueue_review = ur_check_activation_date();
+		$enqueue_notice = ur_check_activation_date("10");
 
-		if ( true === $enqueue_review ) {
-			wp_enqueue_style( 'ur-review' );
+		if ( true === $enqueue_notice ) {
+			wp_enqueue_style( 'ur-notice' );
 		}
 
 		// Admin styles for UR pages only.
@@ -195,16 +195,17 @@ class UR_Admin_Assets {
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 		wp_enqueue_script( 'ur-enhanced-select' );
 
-		$enqueue_review = ur_check_activation_date();
+		$enqueue_review = ur_check_activation_date("10");
 
 		if ( $enqueue_review === true ) {
-			wp_enqueue_script( 'ur-review', UR()->plugin_url() . '/assets/js/admin/review' . $suffix . '.js', array(), UR_VERSION );
+			wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION );
 			wp_localize_script(
-				'ur-review',
-				'ur_review_params',
+				'ur-notice',
+				'ur_notice_params',
 				array(
 					'ajax_url'     => admin_url( 'admin-ajax.php' ),
 					'review_nonce' => wp_create_nonce( 'review-nonce' ),
+					'survey_nonce' => wp_create_nonce( 'survey-nonce' ),
 				)
 			);
 		}
