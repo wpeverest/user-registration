@@ -524,7 +524,7 @@ function ur_format_setting_data( $setting_data ) {
 /**
  * Check for plugin activation date.
  *
- * True if user registration has been installed 10 and 14 days ago.
+ * True if user registration has been installed for 10 and 14 days ago according to the days supplied in the parameter.
  *
  *
  * @param int $days Number of days to check for activation.
