@@ -105,6 +105,7 @@ function ur_registration_template_redirect()
 
 			$redirect_url = ur_get_single_post_meta($form_id[0][0], 'user_registration_form_setting_redirect_options', '');
 			$redirect_url = apply_filters('user_registration_redirect_from_registration_page', $redirect_url, $current_user);
+			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
 
 			if (!is_elementor_editing_page() && !empty($redirect_url)) {
 				wp_redirect($redirect_url);
@@ -413,15 +414,24 @@ if (!function_exists('user_registration_form_field')) {
 					}
 				}
 
+				$field .= ' <span class="input-wrapper"> ';
+
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text '. $class .'" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
 				} else {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '"  class="regular-text" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '"  class="regular-text '. $class .'" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
+
+				if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
+					if(!is_admin(  ) ){
+						$field .= '<span class="'.$args['icon'].'"></span>';
+					}
+				}
+				$field .= '</span> ';
 				break;
 
 			case 'color':

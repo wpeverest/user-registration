@@ -250,7 +250,12 @@ class UR_User_Approval {
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
-			add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
+			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no');
+
+			if( 'no' === $disable_pre_get ){
+				add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
+			}
+
 			$status = ur_get_user_approval_status( get_current_user_id() );
 
 			$user_manager = new UR_Admin_User_Manager();

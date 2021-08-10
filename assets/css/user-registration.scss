@@ -796,7 +796,7 @@
 	width: 16px;
 	height: 16px;
 	margin-left: -40px;
-	float: left;	
+	float: left;
 }
 
 .user-registration-form-login {
@@ -938,21 +938,21 @@
 	box-sizing: border-box;
 }
 
-.input-text,
-.flatpickr-input {
-	padding-left: 32px !important;
-}
+.ur-form-row {
+	.input-text,
+	.flatpickr-input {
+		padding-left: 32px !important;
+	}
+	.without_icon {
+		padding-left: 10px !important;
+	}
+	span.input-wrapper {
+		position: relative;
 
-.without_icon {
-	padding-left: 10px !important;
-}
-
-span.input-wrapper {
-	position: relative;
-
-	.ur-icon {
-		position: absolute;
-		top: 10px;
-		left: 10px;
+		.ur-icon {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+		}
 	}
 }

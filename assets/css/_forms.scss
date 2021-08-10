@@ -59,7 +59,7 @@
 		border-radius: 4px;
 	}
 
-	& + .help {
+	&+.help {
 		margin-top: 4px;
 	}
 }
@@ -117,7 +117,7 @@
 			border-color: transparent;
 			pointer-events: all;
 
-			+ .user-registration-editable-title__icon {
+			+.user-registration-editable-title__icon {
 				color: $white;
 				background: $primary_color;
 				border-radius: 3px 0 0 3px;

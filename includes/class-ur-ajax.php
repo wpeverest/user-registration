@@ -46,7 +46,7 @@ class UR_AJAX {
 			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
-			'dismiss_review_notice'  => false,
+			'dismiss_notice'  		 => false,
 			'import_form_action'     => false,
 		);
 
@@ -888,18 +888,18 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Dismiss review notice
+	 * Dismiss user registration notices.
 	 *
 	 * @since  1.5.8
 	 *
 	 * @return void
 	 **/
-	public static function dismiss_review_notice() {
-
-		check_admin_referer( 'review-nonce', 'security' );
+	public static function dismiss_notice() {
+		$notice_type = $_POST["notice_type"] ? $_POST["notice_type"] : '';
+		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			update_option( 'user_registration_review_notice_dismissed', 'yes' );
+			update_option( 'user_registration_' . $notice_type .'_notice_dismissed', 'yes' );
 		}
 	}
 }

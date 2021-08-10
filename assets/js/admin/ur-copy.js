@@ -10,7 +10,7 @@ jQuery(function ($) {
 		init: function () {
 			$(".ur-copy-shortcode").each(function () {
 				var $this = $(this);
-				console.log($this);
+
 				$this.on("click", function (evt) {
 					var res = $this.parent().find(".code").val();
 					URCopyShortcode.urSetClipboard(res, $this);
