@@ -818,6 +818,25 @@ function ur_get_general_settings( $id ) {
 			'required'    => true,
 		);
 	}
+
+	if ( 'multiple_choice' === $strip_id ) {
+
+		$settings['options'] = array(
+			'setting_id'  => 'options',
+			'type'        => 'multiple_choice' === $strip_id ? 'checkbox' : 'radio',
+			'label'       => __( 'Options', 'user-registration' ),
+			'name'        => 'ur_general_setting[options]',
+			'placeholder' => '',
+			'required'    => true,
+			'options'     => array(
+				__( 'First Choice', 'user-registration' ),
+				__( 'Second Choice', 'user-registration' ),
+				__( 'Third Choice', 'user-registration' ),
+			),
+		);
+
+		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
+	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 
