@@ -428,6 +428,7 @@ function ur_get_field_type( $field_key ) {
 			case 'privacy_policy':
 			case 'mailchimp':
 			case 'mailerlite':
+			case 'multiple_choice':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -690,6 +691,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'number'                => __( 'Number', 'user-registration' ),
 			'date'                  => __( 'Date', 'user-registration' ),
 			'checkbox'              => __( 'Checkbox', 'user-registration' ),
+			'multiple_choice'       => __( 'Multiple Choice', 'user-registration' ),
 			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
 			'radio'                 => __( 'Radio', 'user-registration' ),
 		)
@@ -819,24 +821,6 @@ function ur_get_general_settings( $id ) {
 		);
 	}
 
-	if ( 'multiple_choice' === $strip_id ) {
-
-		$settings['options'] = array(
-			'setting_id'  => 'options',
-			'type'        => 'multiple_choice' === $strip_id ? 'checkbox' : 'radio',
-			'label'       => __( 'Options', 'user-registration' ),
-			'name'        => 'ur_general_setting[options]',
-			'placeholder' => '',
-			'required'    => true,
-			'options'     => array(
-				__( 'First Choice', 'user-registration' ),
-				__( 'Second Choice', 'user-registration' ),
-				__( 'Third Choice', 'user-registration' ),
-			),
-		);
-
-		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
-	}
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 
