@@ -227,7 +227,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												if ( 'select' === $single_item->field_key ) {
 													$option_data 		 = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
 													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
-													$options     		 = array();
+											 		$options     		 = array();
 
 													if ( is_array( $option_data ) ) {
 														foreach ( $option_data as $index_data => $option ) {
