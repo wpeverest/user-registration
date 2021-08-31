@@ -102,6 +102,7 @@ class UR_Frontend {
 
 		if ( ! empty( $login_page ) ) {
 			$shortcodes = parse_blocks( $login_page->post_content );
+
 			foreach ( $shortcodes as $shortcode ) {
 				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 					$matched = 1;
@@ -115,6 +116,7 @@ class UR_Frontend {
 			$page_id = $login_page->ID;
 		} elseif ( ! empty( $myaccount_page ) ) {
 			$shortcodes = parse_blocks( $myaccount_page->post_content );
+
 			foreach ( $shortcodes as $shortcode ) {
 				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 					$matched = 1;
