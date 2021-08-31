@@ -229,8 +229,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
 											 		$options     		 = array();
 
-													if ( is_array( $option_data ) ) {
-														foreach ( $option_data as $index_data => $option ) {
+													if ( is_array( $option_advance_data ) ) {
+														foreach ( $option_advance_data as $index_data => $option ) {
 															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 														}
 														$field['options'] = $options;
@@ -248,8 +248,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
 													$options             = array();
 
-													if ( is_array( $option_data ) ) {
-														foreach ( $option_data as $index_data => $option ) {
+													if ( is_array( $option_advance_data ) ) {
+														foreach ( $option_advance_data as $index_data => $option ) {
 															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 														}
 														$field['options'] = $options;
