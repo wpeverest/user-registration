@@ -801,6 +801,7 @@ function ur_logout_url( $redirect = '' ) {
 	global $post;
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 	$blocks = parse_blocks( $post_content );
+	
 	foreach( $blocks as $block ) {
 		if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
 			$new_shortcode = $block['innerHTML'];

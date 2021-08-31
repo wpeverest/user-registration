@@ -318,6 +318,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 
 	if( is_object( $post ) ) {
 		$blocks = parse_blocks( $post->post_content );
+
 		foreach( $blocks as $block ) {
 			if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
 				$new_shortcode = $block['innerHTML'];
@@ -325,6 +326,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 				$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
 			}
 		}
+		
 	}
 
 	return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
