@@ -205,7 +205,10 @@ class UR_AJAX {
 
 		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
 			if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', $single_field['user_registration_profile_pic_url'] );
+				if( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] )) {
+					$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url']);
+					update_user_meta( $user_id, 'user_registration_profile_pic_url',  $profile_pic_url );
+				}
 			}
 		}
 

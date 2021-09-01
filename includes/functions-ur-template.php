@@ -800,8 +800,19 @@ function ur_logout_url( $redirect = '' ) {
 
 	global $post;
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
+	$blocks = parse_blocks( $post_content );
+	foreach( $blocks as $block ) {
+
+		if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+			$new_shortcode = $block['innerHTML'];
+		} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
+			$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
+		}
+
+	}
+
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		preg_match( '/' . get_shortcode_regex() . '/s', $new_shortcode, $matches );
 
 		$attributes = shortcode_parse_atts($matches[3]);
 		/**

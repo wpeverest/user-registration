@@ -178,10 +178,10 @@ registerBlockType("user-registration/form-selector", {
 					value: shortcode,
 					options: [{ label: "Select Shortcode", value: "" }, {
 						label: "Login Shortcode",
-						value: "login_shortcode"
+						value: "user_registration_login"
 					}, {
 						label: "My Account Shortcode",
-						value: "myaccount_shortcode"
+						value: "user_registration_my_account"
 					}],
 					onChange: selectLoginForm
 				}), wp.element.createElement(TextControl, {
@@ -235,10 +235,10 @@ registerBlockType("user-registration/form-selector", {
 					selected: shortcode,
 					options: [{ label: "Select Shortcode", value: "" }, {
 						label: "Login Shortcode",
-						value: "login_shortcode"
+						value: "user_registration_login"
 					}, {
 						label: "My Account Shortcode",
-						value: "myaccount_shortcode"
+						value: "user_registration_my_account"
 					}],
 					onChange: selectLoginForm
 				})

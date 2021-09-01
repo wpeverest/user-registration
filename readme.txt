@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.8
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.htmlnditional-logic
 
@@ -152,6 +152,12 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.0.2    - 01/09/2021
+* Fix 	   - Missing sanitization on profile picture url
+* Fix 	   - Choice field issue in edit profile.
+* Fix 	   - Prevent core login in gutenberg login form.
+* Fix 	   - Profile picture field issue in gutenberg my account.
 
 = 2.0.1    - 10/08/2021
 * Enhance  - Notice display method to display review and survey notice.
