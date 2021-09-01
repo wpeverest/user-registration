@@ -102,8 +102,8 @@ class UR_Frontend {
 
 		if ( ! empty( $login_page ) ) {
 			$shortcodes = parse_blocks( $login_page->post_content );
-
 			foreach ( $shortcodes as $shortcode ) {
+
 				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 					$matched = 1;
 				} elseif ( 'core/shortcode' === $shortcode['blockName'] && isset( $shortcode['innerHTML'] ) ) {
@@ -112,12 +112,13 @@ class UR_Frontend {
 						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
 					}
 				}
+
 			}
 			$page_id = $login_page->ID;
 		} elseif ( ! empty( $myaccount_page ) ) {
 			$shortcodes = parse_blocks( $myaccount_page->post_content );
-
 			foreach ( $shortcodes as $shortcode ) {
+
 				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 					$matched = 1;
 				} elseif ( 'core/shortcode' === $shortcode['blockName'] && isset( $shortcode['innerHTML'] ) ) {
@@ -126,6 +127,7 @@ class UR_Frontend {
 						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
 					}
 				}
+				
 			}
 			$page_id = $myaccount_page->ID;
 		}
