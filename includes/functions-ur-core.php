@@ -325,9 +325,8 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 				$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
 			}
-			
-		}
 
+		}
 	}
 
 	return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
