@@ -154,7 +154,7 @@ class UR_Form_Block {
 				$parameters["logout_redirect"] = $attr['logoutUrl'];
 			}
 
-			if('login_shortcode'=== $shortcode ) {
+			if('user_registration_login'=== $shortcode ) {
 				return UR_Shortcodes::login(
 					$parameters
 				);
