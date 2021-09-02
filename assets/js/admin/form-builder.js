@@ -515,9 +515,39 @@
 						.hasClass("ur-setting-checkbox");
 
 					if ("options" === $(this).attr("data-field")) {
-						var choice_value = URFormBuilder.get_ur_data(
-							$(this)
-						).trim();
+						if (
+							"multiple_choice" ===
+							$(this).attr("data-field-name")
+						) {
+							var li_elements = $(this).closest("ul").find("li");
+							var array_value = [];
+
+							li_elements.each(function (index, element) {
+								var label = $(element)
+									.find("input.ur-type-checkbox-label")
+									.val();
+
+								var value = $(element)
+									.find("input.ur-type-checkbox-val")
+									.val();
+								if (
+									array_value.every(function (each_value) {
+										return each_value.value !== value;
+									})
+								) {
+									general_setting_data["options"] =
+										array_value.push({
+											label: label,
+											value: value,
+										});
+								}
+								general_setting_data["options"] = array_value;
+							});
+						} else {
+							var choice_value = URFormBuilder.get_ur_data(
+								$(this)
+							).trim();
+						}
 						if (
 							option_values.every(function (each_value) {
 								return each_value !== choice_value;
@@ -2747,10 +2777,19 @@
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
 				li_elements.each(function (index, element) {
-					var value = $(element)
+					var label = $(element)
 						.find("input.ur-type-checkbox-label")
 						.val();
+					var value = $(element)
+						.find("input.ur-type-checkbox-val")
+						.val();
+					var currency = $(element)
+						.find("input.ur-type-checkbox-val")
+						.attr("data-currency");
+
+					label = label.trim();
 					value = value.trim();
+					currency = currency.trim();
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
 						.is(":checked");
@@ -2760,7 +2799,12 @@
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, checkbox: checkbox });
+						array_value.push({
+							label: label,
+							value: value,
+							currency: currency,
+							checkbox: checkbox,
+						});
 					}
 				});
 
@@ -2772,10 +2816,14 @@
 					if (array_value[i] !== "") {
 						checkbox.append(
 							'<label><input value="' +
-								array_value[i].value.trim() +
+								array_value[i].label.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
 								" disabled>" +
+								array_value[i].label.trim() +
+								" - " +
+								array_value[i].currency.trim() +
+								" " +
 								array_value[i].value.trim() +
 								"</label>"
 						);
@@ -2810,15 +2858,29 @@
 			trigger_general_setting_options: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var index = $label.closest("li").index();
-				wrapper
-					.find(
-						".ur-general-setting-block li:nth(" +
-							index +
-							') input[data-field="' +
-							$label.attr("data-field") +
-							'"]'
-					)
-					.val($label.val());
+				var multiple_choice = $label.attr("data-field-name");
+
+				if ("multiple_choice" === multiple_choice) {
+					wrapper
+						.find(
+							".ur-general-setting-block li:nth(" +
+								index +
+								') input[name="' +
+								$label.attr("name") +
+								'"]'
+						)
+						.val($label.val());
+				} else {
+					wrapper
+						.find(
+							".ur-general-setting-block li:nth(" +
+								index +
+								') input[data-field="' +
+								$label.attr("data-field") +
+								'"]'
+						)
+						.val($label.val());
+				}
 				wrapper
 					.find(
 						".ur-general-setting-block li:nth(" +
@@ -2826,6 +2888,7 @@
 							') input[data-field="default_value"]'
 					)
 					.val($label.val());
+
 				$label
 					.closest("li")
 					.find('[data-field="default_value"]')
