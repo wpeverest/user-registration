@@ -289,6 +289,26 @@ abstract class UR_Form_Field {
 			$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
 		}
 
+		if ( 'multiple_choice' === $field_key ) {
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
+			$choices    			 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
+			$option_data 			 = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
+			$options = array();
+
+			if ( is_array( $option_data ) ) {
+				foreach ( $option_data as $index_data => $option ) {
+					 $options[ $option->value ] = array(
+						 'label' => $option->label,
+						 'value' => $option->value,
+					 );
+				}
+
+				 $form_data['options'] = $options;
+			}
+
+			 $form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+		}
+
 		if( "user_login" === $field_key ) {
 			$form_data['username_length'] = isset( $data['advance_setting']->username_length ) ? $data['advance_setting']->username_length : "";
 
@@ -504,7 +524,7 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
 						$general_setting_wrapper .= '</li>';
-						
+
 					}
 				}
 						$general_setting_wrapper .= '</ul>';

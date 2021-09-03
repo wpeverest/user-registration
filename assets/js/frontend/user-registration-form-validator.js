@@ -364,15 +364,13 @@
 				user_login_div.length &&
 				"undefined" !== typeof user_login_div.data("username-length")
 			) {
-				username_validator.lengthValidator = user_login_div.data(
-					"username-length"
-				);
+				username_validator.lengthValidator =
+					user_login_div.data("username-length");
 			}
 
 			if (user_login_div.data("username-character") == "no") {
-				username_validator.SpecialCharacterValidator = user_login_div.data(
-					"username-character"
-				);
+				username_validator.SpecialCharacterValidator =
+					user_login_div.data("username-character");
 			}
 
 			rules.user_login = username_validator;
@@ -382,6 +380,9 @@
 			 */
 			var checkbox_div = this_node.find(".field-checkbox"),
 				multiselect2_div = this_node.find(".field-multi_select2");
+			multiple_choice_div = this_node.find(".field-multiple_choice");
+			console.log(checkbox_div);
+			console.log(multiple_choice_div);
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
@@ -398,6 +399,17 @@
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("select").data("choice-limit")
 							? $(this).find("select").data("choice-limit")
+							: 0,
+					};
+				});
+			}
+
+			if (multiple_choice_div.length) {
+				multiple_choice_div.each(function () {
+					console.log($(this).find("ul").data("choice-limit"));
+					rules[field_selector + $(this).data("field-id") + "[]"] = {
+						checkLimit: $(this).find("ul").data("choice-limit")
+							? $(this).find("ul").data("choice-limit")
 							: 0,
 					};
 				});
