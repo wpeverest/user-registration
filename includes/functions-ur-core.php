@@ -2019,3 +2019,30 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 	return array( $name_value, $data_html );
 }
+
+/**
+ * Get field data by field_name.
+ *
+ * @param int $form_id Form Id.
+ * @param string $field_name Field Name.
+ *
+ * @return array
+ */
+function ur_get_field_data_by_field_name($form_id,$field_name){
+	$field_data = array();
+
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+
+	foreach ( $post_content_array as $post_content_row ) {
+		foreach ( $post_content_row as $post_content_grid ) {
+			foreach ( $post_content_grid as $field ) {
+				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) &&  $field->general_setting->field_name === $field_name) {
+					$field_data = array(
+						"field_key" => $field->field_key
+					);
+				}
+			}
+		}
+	}
+	return $field_data;
+}

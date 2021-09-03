@@ -189,6 +189,19 @@ class UR_Admin_Export_Users {
 					// Remove the rows value that are not in columns.
 					unset( $user_extra_row[ $user_extra_data_key ] );
 				}
+
+				$field_data = ur_get_field_data_by_field_name($form_id,$user_extra_data_key);
+				if ( 'file' === 	$field_data['field_key'] ) {
+					$attachment_ids = explode( ',', $user_extra_data );
+					$file_link ="";
+					foreach ( $attachment_ids as $attachment_id ) {
+						$file_path = wp_get_attachment_url( $attachment_id );
+						if ( $file_path ) {
+							$file_link .= esc_url($file_path) . ' ; ';
+						}
+					}
+					$user_extra_row[$user_extra_data_key]  = $file_link;
+				}
 			}
 
 			$user_table_data     = ur_get_user_table_fields();
@@ -250,7 +263,7 @@ class UR_Admin_Export_Users {
 	 * @return array
 	 */
 	public static function exclude_field_key( $key_label, $form_id, $post_content_array ) {
-		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'file', 'html', 'section_title' ) );
+		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'html', 'section_title' ) );
 
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
