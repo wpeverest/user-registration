@@ -14,14 +14,17 @@
 // Components
 @import "components/button", "components/modal";
 
-.components-radio-control__option {
-	padding-left: 14px;
-	margin-bottom: 20px !important;
-}
+.ur-gutenberg-form-selector-wrap {
+	
+	.components-radio-control__option {
+		padding-left: 14px;
+		margin-bottom: 20px !important;
+	}
 
-.components-base-control__field {
-	display: flex;
-	justify-content: center;
+	.components-base-control__field {
+		display: flex;
+		justify-content: center;
+	}
 }
 
 .wp-core-ui select {
