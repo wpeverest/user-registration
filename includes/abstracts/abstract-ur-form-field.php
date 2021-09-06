@@ -474,8 +474,8 @@ abstract class UR_Form_Field {
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					$unique                   = uniqid();
 
-					if ('multiple_choice' === $strip_prefix) {
-
+					if ( 'multiple_choice' === $strip_prefix ) {
+						
 						foreach ( $options as $key => $option ) {
 							$label = is_array( $option ) ? $option[ 'label' ] : $option->label;
 							$value = is_array( $option ) ? $option[ 'value' ] : $option->value;
@@ -497,7 +497,7 @@ abstract class UR_Form_Field {
 								$general_setting_wrapper .= '/>';
 							}
 							$general_setting_wrapper .= '<input value="' . $label . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
-							$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-val" type="text" name="' . $setting_value['name'] . '_val" data-currency=" '. $currency .' " >';
+							$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-money-input" type="text" name="' . $setting_value['name'] . '_value" data-currency=" '. $currency .' " >';
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
 							$general_setting_wrapper .= '</li>';

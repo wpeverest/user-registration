@@ -383,9 +383,9 @@
 			/**
 			 * Real time choice limit validation
 			 */
-			var checkbox_div = this_node.find(".field-checkbox"),
-				multiselect2_div = this_node.find(".field-multi_select2");
-			multiple_choice_div = this_node.find(".field-multiple_choice");
+			var checkbox_div 		= this_node.find(".field-checkbox"),
+				multiselect2_div 	= this_node.find(".field-multi_select2");
+			    multiple_choice_div = this_node.find(".field-multiple_choice");
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
@@ -409,7 +409,6 @@
 
 			if (multiple_choice_div.length) {
 				multiple_choice_div.each(function () {
-					console.log($(this).find("ul").data("choice-limit"));
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("ul").data("choice-limit")
 							? $(this).find("ul").data("choice-limit")

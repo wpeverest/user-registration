@@ -273,7 +273,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						),
 						array(
 							'id'    => 'user_registration_multiple_choice',
-							'label' => 'Stripe Gateway',
+							'label' => 'Multiple Choice',
 							'icon'  => 'ur-icon ur-icon-input-checkbox',
 						),
 					),

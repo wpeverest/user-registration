@@ -125,23 +125,14 @@
 								});
 
 								if (field_type == "checkbox") {
-									if (
-										field.eq(0).attr("data-field") ==
-										"multiple_choice"
-									) {
+									if ( field.eq(0).attr("data-field") == "multiple_choice" ) {
 										var multi_choice = field_value;
 										var field_value_json = 0;
-										for (
-											var i = 0;
-											i < multi_choice.length;
-											i++
-										) {
-											field_value_json +=
-												multi_choice[i] << 0;
+										for ( var i = 0; i < multi_choice.length;	i++ ) {
+											field_value_json +=multi_choice[i] << 0;
 										}
 									} else {
-										var field_value_json =
-											JSON.stringify(field_value);
+										var field_value_json = JSON.stringify(field_value);
 									}
 								} else if (field_type == "radio") {
 									var field_value_json = field_value[0];

@@ -528,7 +528,7 @@
 									.val();
 
 								var value = $(element)
-									.find("input.ur-type-checkbox-val")
+									.find("input.ur-type-checkbox-money-input")
 									.val();
 								if (
 									array_value.every(function (each_value) {
@@ -2771,6 +2771,8 @@
 			 * Reflects changes in multiple choice field of field settings into selected field in form builder area.
 			 *
 			 * @param object this_node  multiple choice  field from field settings.
+			 *
+			 * @since 2.0.3
 			 */
 			render_multiple_choice: function (this_node) {
 				var array_value = [];
@@ -2781,10 +2783,10 @@
 						.find("input.ur-type-checkbox-label")
 						.val();
 					var value = $(element)
-						.find("input.ur-type-checkbox-val")
+						.find("input.ur-type-checkbox-money-input")
 						.val();
 					var currency = $(element)
-						.find("input.ur-type-checkbox-val")
+						.find("input.ur-type-checkbox-money-input")
 						.attr("data-currency");
 
 					label = label.trim();
@@ -2889,8 +2891,7 @@
 					)
 					.val($label.val());
 
-				$label
-					.closest("li")
+				$label.closest("li")
 					.find('[data-field="default_value"]')
 					.val($label.val());
 			},

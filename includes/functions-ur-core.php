@@ -428,7 +428,6 @@ function ur_get_field_type( $field_key ) {
 			case 'privacy_policy':
 			case 'mailchimp':
 			case 'mailerlite':
-			case 'multiple_choice':
 			case 'checkbox':
 				$field_type = 'checkbox';
 				break;
@@ -691,7 +690,6 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'number'                => __( 'Number', 'user-registration' ),
 			'date'                  => __( 'Date', 'user-registration' ),
 			'checkbox'              => __( 'Checkbox', 'user-registration' ),
-			'multiple_choice'       => __( 'Multiple Choice', 'user-registration' ),
 			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
 			'radio'                 => __( 'Radio', 'user-registration' ),
 		)
