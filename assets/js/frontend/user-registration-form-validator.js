@@ -103,6 +103,11 @@
 						$(element).closest(".field-multi_select2").length
 					) {
 						$checked = $(element).val();
+					} else if (
+						$(element).closest(".field-multiple_choice").length
+					) {
+						var ul = $(element).closest("ul");
+						$checked = ul.find('input[type="checkbox"]:checked');
 					}
 
 					if (0 === choiceLimit) {
@@ -381,8 +386,6 @@
 			var checkbox_div = this_node.find(".field-checkbox"),
 				multiselect2_div = this_node.find(".field-multi_select2");
 			multiple_choice_div = this_node.find(".field-multiple_choice");
-			console.log(checkbox_div);
-			console.log(multiple_choice_div);
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {

@@ -462,7 +462,10 @@ abstract class UR_Form_Field {
 					$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
 					$old_options     = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
-					// $options = array_map( 'trim', $options );
+
+					if ( 'checkbox' === $strip_prefix ) {
+						$options = array_map( 'trim', $options );
+					}
 
 					$default_values = $this->get_general_setting_data( 'default_value' );
 					$default_values = ! empty( $default_values ) ? $default_values : array();
@@ -471,11 +474,11 @@ abstract class UR_Form_Field {
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					$unique                   = uniqid();
 
-					if('multiple_choice' === $strip_prefix){
+					if ('multiple_choice' === $strip_prefix) {
 
 						foreach ( $options as $key => $option ) {
-							$label = is_array($option) ? $option['label'] : $option->label;
-							$value = is_array($option) ? $option['value'] : $option->value;
+							$label = is_array( $option ) ? $option[ 'label' ] : $option->label;
+							$value = is_array( $option ) ? $option[ 'value' ] : $option->value;
 							$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies = ur_payment_integration_get_currencies();
 							$currency = $currency . ' ' . $currencies[ $currency ]['symbol'];
