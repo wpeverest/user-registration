@@ -1,4 +1,10 @@
 
+= 2.0.2    - 01/09/2021
+* Fix 	   - Missing sanitization on profile picture url
+* Fix 	   - Choice field issue in edit profile.
+* Fix 	   - Prevent core login in gutenberg login form.
+* Fix 	   - Profile picture field issue in gutenberg my account.
+
 = 2.0.1    - 10/08/2021
 * Enhance  - Notice display method to display review and survey notice.
 * Dev      - Redirect URL string WPML compatibility.
