@@ -316,6 +316,14 @@ abstract class UR_Form_Field {
 			}
 
 		}
+
+		if( 'timepicker' == $field_key ){
+			$form_data['current_time']  = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : "";
+			$form_data['time_interval'] =  isset( $data['advance_setting']->time_interval) ? $data['advance_setting']->time_interval : "";
+			$form_data['time_min']	    =  isset( $data['advance_setting']->time_min)  ? $data['advance_setting']->time_min : "";
+			$form_data['time_max'] 		=  isset( $data['advance_setting']->time_max)  ? $data['advance_setting']->time_max : "";
+		}
+
 		/** Redundant Codes End. */
 
 		$filter_data = array(
