@@ -395,15 +395,15 @@ if (!function_exists('user_registration_form_field')) {
 					$attr .= 'data-time-max="' . $time_max . '"';
 				}
 
+				if ($current_time) {
+					$attr .= 'data-current-time="' . $current_time . '"';
+				}
+
 				$field .= ' <span class="input-wrapper"> ';
 				if (empty($extra_params)) {
 					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="' . esc_attr($args['type']) . '" class="input-text ' . $class . ' input-' . esc_attr($args['type']) . ' ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  value="' . esc_attr($value) . '" ' . implode(' ', $custom_attributes) . ' ' . $attr . '/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="' . esc_attr($args['type']) . '" class="input-text ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  value="' . esc_attr($value) . '" ' . implode(' ', $custom_attributes) . ' ' . $attr . ' />';
-				}
-
-				if('timepicker' === $args['type'] && 'yes' === $current_time){
-					$field .= '<a href="javascript:void(0)" class="button" id="setTimeButton">set current time</a>';
 				}
 
 				if (!is_admin()) {
