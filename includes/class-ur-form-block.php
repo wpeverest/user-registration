@@ -37,7 +37,7 @@ class UR_Form_Block {
 		wp_register_script(
 			'user-registration-block-editor',
 			UR()->plugin_url() . '/assets/js/admin/gutenberg/form-block.build.js',
-			array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components' ),
+			array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-components' ),
 			UR_VERSION
 		);
 
