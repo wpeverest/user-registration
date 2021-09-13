@@ -1,0 +1,23 @@
+wpeverest/user-registration-pro@master:
+      - Readme.md
+      - assets
+      - includes
+      - templates
+      - .babelrc
+      - .distignore
+      - .editorconfig
+      - .gitattributes
+      - .gitignore
+      - .jshintrc
+      - composer.json
+      - composer.lock
+      - Gruntfile.js
+      - license.txt
+      - package-lock.json
+      - package.json
+      - phpcs.xml
+      - readme.txt
+      - unistall.php
+      - user-registration.php
+      - webpack.config.js
+      - wpml-config.xml
