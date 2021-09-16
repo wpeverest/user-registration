@@ -274,7 +274,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						array(
 							'id'    => 'user_registration_multiple_choice',
 							'label' => 'Multiple Choice',
-							'icon'  => 'ur-icon ur-icon-input-checkbox',
+							'icon'  => 'ur-icon ur-icon-multichoice',
 						),
 					),
 				),
