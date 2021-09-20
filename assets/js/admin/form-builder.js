@@ -532,7 +532,7 @@
 									.val();
 								if (
 									array_value.every(function (each_value) {
-										return each_value.value !== value;
+										return each_value.label !== label;
 									})
 								) {
 									general_setting_data["options"] =
@@ -2798,7 +2798,7 @@
 
 					if (
 						array_value.every(function (each_value) {
-							return each_value.value !== value;
+							return each_value.label !== label;
 						})
 					) {
 						array_value.push({
@@ -2891,7 +2891,8 @@
 					)
 					.val($label.val());
 
-				$label.closest("li")
+				$label
+					.closest("li")
 					.find('[data-field="default_value"]')
 					.val($label.val());
 			},

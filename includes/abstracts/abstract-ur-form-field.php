@@ -297,7 +297,7 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					 $options[ $option->value ] = array(
+					 $options[ $option->label ] = array(
 						 'label' => $option->label,
 						 'value' => $option->value,
 					 );
@@ -475,7 +475,7 @@ abstract class UR_Form_Field {
 					$unique                   = uniqid();
 
 					if ( 'multiple_choice' === $strip_prefix ) {
-						
+
 						foreach ( $options as $key => $option ) {
 							$label = is_array( $option ) ? $option[ 'label' ] : $option->label;
 							$value = is_array( $option ) ? $option[ 'value' ] : $option->value;
