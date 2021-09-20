@@ -320,8 +320,26 @@ abstract class UR_Form_Field {
 		if( 'timepicker' == $field_key ){
 			$form_data['current_time']  = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : "";
 			$form_data['time_interval'] =  isset( $data['advance_setting']->time_interval) ? $data['advance_setting']->time_interval : "";
-			$form_data['time_min']	    =  isset( $data['advance_setting']->time_min)  ? $data['advance_setting']->time_min : "";
-			$form_data['time_max'] 		=  isset( $data['advance_setting']->time_max)  ? $data['advance_setting']->time_max : "";
+			$form_data['time_min']	    = ( isset( $data['advance_setting']->time_min) && "" !== $data['advance_setting']->time_min) ? $data['advance_setting']->time_min : "";
+			$form_data['time_max'] 		= ( isset( $data['advance_setting']->time_max) && "" !== $data['advance_setting']->time_max) ? $data['advance_setting']->time_max : "";
+			$timemin 					= isset($form_data['time_min']) ? substr( $form_data['time_min'],-2) : "";
+			$timemax					= isset($form_data['time_max']) ? substr( $form_data['time_max'],-2) : "";
+            $minampm 					= intval($timemax) < 12 ? 'AM' : 'PM';
+			$maxampm 					= intval($timemax) < 12 ? 'AM' : 'PM';
+
+			//Handles the time format
+			if( $timemin === 'am' || $timemin === "pm" ){
+				$form_data['time_min'] = $form_data["time_min"];
+			} else {
+				$form_data['time_min'] = $form_data["time_min"] .''. $maxampm;
+			}
+
+			if( $timemax === 'am' || $timemax === "pm" ){
+				$form_data['time_max'] = $form_data["time_max"];
+			} else {
+				$form_data['time_max'] = $form_data["time_max"] .''. $minampm;
+			}
+
 		}
 
 		/** Redundant Codes End. */
