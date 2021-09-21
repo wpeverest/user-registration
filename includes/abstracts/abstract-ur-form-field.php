@@ -324,8 +324,8 @@ abstract class UR_Form_Field {
 			$form_data['time_max'] 		= ( isset( $data['advance_setting']->time_max) && "" !== $data['advance_setting']->time_max) ? $data['advance_setting']->time_max : "";
 			$timemin 					=  isset( $form_data[ 'time_min' ] ) ? strtolower(substr( $form_data['time_min'],-2 )) : "";
 			$timemax					=  isset( $form_data[ 'time_max' ] ) ? strtolower(substr( $form_data['time_max'],-2 )) : "";
-            $minampm 					=  intval( $timemin ) < 12 ? 'AM' : 'PM';
-			$maxampm 					=  intval( $timemax ) < 12 ? 'AM' : 'PM';
+            $minampm 					=  intval( $form_data['time_min'] )  <= 12 ? 'AM' : 'PM';
+			$maxampm 					=  intval( 	$form_data['time_max'] ) <= 12 ? 'AM' : 'PM';
 
 			//Handles the time format
 			if( 'am' === $timemin  || 'pm' === $timemin  ){
