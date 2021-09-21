@@ -125,17 +125,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-
-						<tr>
 						<?php if( 'multiple_choice' === $field['type'] || 'single_item' === $field['type'] || 'total_field' === $field['type'] ) { ?>
-							<?php } else { ?>
-								<th>
-									<label
-										for="<?php echo esc_attr( $key ); ?>"><?php
-										echo esc_html( $field_label ); ?></label>
-										<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
-								</th>
-							<?php } ?>
+						<?php } else { ?>
+						<tr>
+							<th>
+							    <label
+								for="<?php echo esc_attr( $key ); ?>"><?php
+								echo esc_html( $field_label ); ?></label>
+								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
+							</th>
 							<td>
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
@@ -221,8 +219,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
 								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
 								<input checked type="checkbox" disabled="disabled"/>
-								<?php elseif ( ! empty( $field['type'] ) && ( 'multiple_choice' === $field['type']  || 'single_item' === $field['type'] || 'total_field' === $field['type'] ) ) : ?>
-							    <?php continue ?>
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
 											  id="<?php echo esc_attr( $key ); ?>"
@@ -292,6 +288,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							</td>
 						</tr>
 						<?php
+						}
 					endforeach;
 					?>
 				</table>
