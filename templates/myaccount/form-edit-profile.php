@@ -310,7 +310,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['time_max'] 		= ( isset( $advance_data['advance_setting']->time_max) && "" !== $advance_data['advance_setting']->time_max) ? $advance_data['advance_setting']->time_max : "";
 													$timemin 				=  isset(  $field[ 'time_min' ] ) ? strtolower(substr( $field['time_min'],-2 )) : "";
 													$timemax				=  isset(  $field[ 'time_max' ] ) ? strtolower(substr( $field['time_max'],-2 )) : "";
-											$minampm 				=  intval( $field['time_min'] )  <= 12 ? 'AM' : 'PM';
+											        $minampm 				=  intval( $field['time_min'] )  <= 12 ? 'AM' : 'PM';
 													$maxampm 				=  intval(  $field['time_max'] ) <= 12 ? 'AM' : 'PM';
 
 														//Handles the time format
