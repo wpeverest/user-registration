@@ -125,7 +125,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-						<?php if( 'multiple_choice' === $field['type'] || 'single_item' === $field['type'] || 'total_field' === $field['type'] ) { ?>
+						<?php if( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
