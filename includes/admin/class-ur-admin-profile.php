@@ -127,11 +127,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						?>
 
 						<tr>
-							<th>
-								<label
-									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
-								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
-							</th>
+						<?php if( 'multiple_choice' === $field['type'] || 'single_item' === $field['type'] || 'total_field' === $field['type'] ) { ?>
+							<?php } else { ?>
+								<th>
+									<label
+										for="<?php echo esc_attr( $key ); ?>"><?php
+										echo esc_html( $field_label ); ?></label>
+										<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
+								</th>
+							<?php } ?>
 							<td>
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
@@ -216,8 +220,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									<button id="<?php echo esc_attr( $key ); ?>"
 											class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
 								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
-									<input checked type="checkbox" disabled="disabled"/>
-
+								<input checked type="checkbox" disabled="disabled"/>
+								<?php elseif ( ! empty( $field['type'] ) && ( 'multiple_choice' === $field['type']  || 'single_item' === $field['type'] || 'total_field' === $field['type'] ) ) : ?>
+							    <?php continue ?>
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
 											  id="<?php echo esc_attr( $key ); ?>"
@@ -268,6 +273,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									} else {
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
+
 
 										if ( empty( $extra_params ) ) {
 											?>
@@ -540,6 +546,18 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'privacy_policy':
 									$fields[ $field_index ]['type'] = 'privacy_policy';
+									break;
+
+								case 'multiple_choice':
+									$fields[ $field_index ]['type'] = 'multiple_choice';
+									break;
+
+								case 'single_item':
+									$fields[ $field_index ]['type'] = 'single_item';
+									break;
+
+								case 'total_field':
+									$fields[ $field_index ]['type'] = 'total_field';
 									break;
 							}
 						}// End switch().
