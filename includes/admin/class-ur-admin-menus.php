@@ -271,6 +271,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'label' => 'Stripe Gateway',
 							'icon'  => 'ur-icon ur-icon-credit-card',
 						),
+						array(
+							'id'    => 'user_registration_multiple_choice',
+							'label' => 'Multiple Choice',
+							'icon'  => 'ur-icon ur-icon-multichoice',
+						),
 					),
 				),
 			);
