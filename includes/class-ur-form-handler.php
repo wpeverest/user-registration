@@ -69,7 +69,10 @@ class UR_Form_Handler {
 
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) ) {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', $_POST['profile_pic_url'] );
+				if( wp_http_validate_url( $_POST['profile_pic_url'] )) {
+					$profile_pic_url = esc_url_raw( $_POST['profile_pic_url']);
+					update_user_meta( $user_id, 'user_registration_profile_pic_url',  $profile_pic_url );
+				}
 			}
 		} else {
 			if ( isset( $_FILES['profile-pic'] ) ) {
@@ -93,7 +96,10 @@ class UR_Form_Handler {
 						$image->resize( 150, 150, true );
 						$image->save( $uploaded['file'] );
 					}
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', $uploaded['url'] );
+					if( wp_http_validate_url( $uploaded['url'] )) {
+						$profile_pic_url = esc_url_raw( $uploaded['url'] );
+						update_user_meta( $user_id, 'user_registration_profile_pic_url',  $profile_pic_url );
+					}
 				} else {
 					ur_add_notice( $uploaded['error'], 'error' );
 				}

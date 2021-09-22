@@ -113,11 +113,11 @@ registerBlockType("user-registration/form-selector", {
 									{ label: "Select Shortcode", value: "" },
 									{
 										label: "Login Shortcode",
-										value: "login_shortcode",
+										value: "user_registration_login",
 									},
 									{
 										label: "My Account Shortcode",
-										value: "myaccount_shortcode",
+										value: "user_registration_my_account",
 									},
 								]}
 								onChange={selectLoginForm}
@@ -182,11 +182,11 @@ registerBlockType("user-registration/form-selector", {
 								{ label: "Select Shortcode", value: "" },
 								{
 									label: "Login Shortcode",
-									value: "login_shortcode",
+									value: "user_registration_login",
 								},
 								{
 									label: "My Account Shortcode",
-									value: "myaccount_shortcode",
+									value: "user_registration_my_account",
 								},
 							]}
 							onChange={selectLoginForm}

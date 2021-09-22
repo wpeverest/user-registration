@@ -66,7 +66,9 @@ class UR_AJAX {
 	 */
 	public static function user_form_submit() {
 
-		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) ) {
+		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
+
+		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are already logged in.', 'user-registration' ),
@@ -205,7 +207,10 @@ class UR_AJAX {
 
 		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
 			if( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', $single_field['user_registration_profile_pic_url'] );
+				if( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] )) {
+					$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url']);
+					update_user_meta( $user_id, 'user_registration_profile_pic_url',  $profile_pic_url );
+				}
 			}
 		}
 

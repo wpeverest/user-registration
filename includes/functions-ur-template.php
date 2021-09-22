@@ -368,7 +368,11 @@ if (!function_exists('user_registration_form_field')) {
 			case 'timepicker':
 				$extra_params_key = str_replace('user_registration_', 'ur_', $key) . '_params';
 				$extra_params     = json_decode(get_user_meta(get_current_user_id(), $extra_params_key, true));
-				$username_length = isset($args['username_length']) ?  $args['username_length'] : "";
+				$current_time     = isset( $args[ 'current_time' ] ) ?  $args[ 'current_time' ] : "";
+				$time_interval    = isset( $args[ 'time_interval' ] ) ?  $args[ 'time_interval' ] : "";
+				$time_min    = isset( $args[ 'time_min' ] ) ?  $args[ 'time_min' ] : "";
+				$time_max    = isset( $args[ 'time_max' ] ) ?  $args[ 'time_max' ] : "";
+				$username_length  = isset($args['username_length']) ?  $args['username_length'] : "";
 				$username_character = isset($args['username_character']) ?  $args['username_character'] : "";
 				$attr = "";
 				if ("" !== $username_length) {
@@ -378,12 +382,30 @@ if (!function_exists('user_registration_form_field')) {
 				if ($username_character) {
 					$attr .= 'data-username-character="' . $username_character . '"';
 				}
+
+				if( "" !== $time_interval )  {
+					$attr .= 'data-time-interval="' . $time_interval . '"';
+				}
+
+				if( "" !== $time_min )  {
+					$attr .= 'data-time-min="' . $time_min . '"';
+				}
+
+				if( "" !== $time_max )  {
+					$attr .= 'data-time-max="' . $time_max . '"';
+				}
+
+				if ($current_time) {
+					$attr .= 'data-current-time="' . $current_time . '"';
+				}
+
 				$field .= ' <span class="input-wrapper"> ';
 				if (empty($extra_params)) {
 					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="' . esc_attr($args['type']) . '" class="input-text ' . $class . ' input-' . esc_attr($args['type']) . ' ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  value="' . esc_attr($value) . '" ' . implode(' ', $custom_attributes) . ' ' . $attr . '/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr($rules) . '" data-id="' . esc_attr($key) . '" type="' . esc_attr($args['type']) . '" class="input-text ' . esc_attr(implode(' ', $args['input_class'])) . '" name="' . esc_attr($key) . '" id="' . esc_attr($args['id']) . '" placeholder="' . esc_attr($args['placeholder']) . '"  value="' . esc_attr($value) . '" ' . implode(' ', $custom_attributes) . ' ' . $attr . ' />';
 				}
+
 				if (!is_admin()) {
 					if ('yes' === $enable_field_icon || '1' === $enable_field_icon && 'file' != $args['type']) {
 						$field .= '<span class="' . $args['icon'] . '"></span>';
@@ -800,8 +822,19 @@ function ur_logout_url( $redirect = '' ) {
 
 	global $post;
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
+	$blocks = parse_blocks( $post_content );
+	foreach( $blocks as $block ) {
+
+		if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+			$new_shortcode = $block['innerHTML'];
+		} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
+			$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
+		}
+
+	}
+
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		preg_match( '/' . get_shortcode_regex() . '/s', $new_shortcode, $matches );
 
 		$attributes = shortcode_parse_atts($matches[3]);
 		/**
