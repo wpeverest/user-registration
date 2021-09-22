@@ -42,7 +42,17 @@
 	font-style: normal;
 	font-display: block;
 }
-
+@font-face {
+  font-family: 'UserRegistration';
+  src:  url('../fonts/UserRegistration.eot?v5p6f');
+  src:  url('../fonts/UserRegistration.eot?v5p6f#iefix') format('embedded-opentype'),
+    url('../fonts/UserRegistration.ttf?v5p6f') format('truetype'),
+    url('../fonts/UserRegistration.woff?v5p6f') format('woff'),
+    url('../fonts/UserRegistration.svg?v5p6f#UserRegistration') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
 [class^="ur-icon-"],
 [class*=" ur-icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
@@ -104,6 +114,9 @@ $field-icons: (
 	range: "\e029",
 	course: "\e02a",
 	mailerlite: "\e02b",
+	stripe: "\e02d",
+	multichoice: "\e02e",
+	total: "\e02f"
 );
 
 /* For each key in the map, creating own class */

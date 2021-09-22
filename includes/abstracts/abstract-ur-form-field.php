@@ -280,13 +280,33 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					 $options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option);
 				}
 
-				$form_data['options'] = $options;
+				 $form_data['options'] = $options;
 			}
 
 			$form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
+		}
+
+		if ( 'multiple_choice' === $field_key ) {
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : "";
+			$choices    			 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
+			$option_data 			 = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
+			$options = array();
+
+			if ( is_array( $option_data ) ) {
+				foreach ( $option_data as $index_data => $option ) {
+					 $options[ $option->label ] = array(
+						 'label' => $option->label,
+						 'value' => $option->value,
+					 );
+				}
+
+				 $form_data['options'] = $options;
+			}
+
+			 $form_data['choice_limit'] =  isset( $data['advance_setting']->choice_limit ) ?  $data['advance_setting']->choice_limit : "";
 		}
 
 		if( "user_login" === $field_key ) {
@@ -316,6 +336,32 @@ abstract class UR_Form_Field {
 			}
 
 		}
+
+		if( 'timepicker' == $field_key ){
+			$form_data['current_time']  =  isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : "";
+			$form_data['time_interval'] =  isset( $data['advance_setting']->time_interval) ? $data['advance_setting']->time_interval : "";
+			$form_data['time_min']	    = ( isset( $data['advance_setting']->time_min) && "" !== $data['advance_setting']->time_min) ? $data['advance_setting']->time_min : "";
+			$form_data['time_max'] 		= ( isset( $data['advance_setting']->time_max) && "" !== $data['advance_setting']->time_max) ? $data['advance_setting']->time_max : "";
+			$timemin 					=  isset( $form_data[ 'time_min' ] ) ? strtolower(substr( $form_data['time_min'],-2 )) : "";
+			$timemax					=  isset( $form_data[ 'time_max' ] ) ? strtolower(substr( $form_data['time_max'],-2 )) : "";
+            $minampm 					=  intval( $form_data['time_min'] )  <= 12 ? 'AM' : 'PM';
+			$maxampm 					=  intval( $form_data['time_max'] ) <= 12 ? 'AM' : 'PM';
+
+				//Handles the time format
+				if( 'am' === $timemin  || 'pm' === $timemin  ){
+					$form_data[ 'time_min' ] = $form_data[ 'time_min'];
+				} else {
+					$form_data[ 'time_min' ] = $form_data[ 'time_min' ] .''. $minampm ;
+				}
+
+				if( 'am' ===  $timemax || 'pm'  === $timemax  ){
+					$form_data[ 'time_max' ] = $form_data["time_max"];
+				} else {
+					$form_data['time_max'] = $form_data['time_max'] .''. $maxampm;
+				}
+
+		}
+
 		/** Redundant Codes End. */
 
 		$filter_data = array(
@@ -443,7 +489,9 @@ abstract class UR_Form_Field {
 					$old_options     = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
 
-					$options = array_map( 'trim', $options );
+					if ( 'checkbox' === $strip_prefix ) {
+						$options = array_map( 'trim', $options );
+					}
 
 					$default_values = $this->get_general_setting_data( 'default_value' );
 					$default_values = ! empty( $default_values ) ? $default_values : array();
@@ -451,6 +499,36 @@ abstract class UR_Form_Field {
 
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 					$unique                   = uniqid();
+
+					if ( 'multiple_choice' === $strip_prefix ) {
+
+						foreach ( $options as $key => $option ) {
+							$label = is_array( $option ) ? $option[ 'label' ] : $option->label;
+							$value = is_array( $option ) ? $option[ 'value' ] : $option->value;
+							$currency   = get_option( 'user_registration_payment_currency', 'USD' );
+							$currencies = ur_payment_integration_get_currencies();
+							$currency = $currency . ' ' . $currencies[ $currency ]['symbol'];
+							$general_setting_wrapper .= '<li>';
+							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+							</div>';
+							$general_setting_wrapper .= '<input value="' .$label . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="checkbox" name="' . $unique . '_value" ';
+							if ( true == $setting_value['required'] ) {
+								$general_setting_wrapper .= ' required ';
+							}
+
+							if ( in_array( $label, $default_values ) ) {
+								$general_setting_wrapper .= 'checked ="checked" />';
+							} else {
+								$general_setting_wrapper .= '/>';
+							}
+							$general_setting_wrapper .= '<input value="' . $label . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+							$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-money-input" type="text" name="' . $setting_value['name'] . '_value" data-currency=" '. $currency .' " >';
+							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+							$general_setting_wrapper .= '</li>';
+						}
+					} else {
 
 					foreach ( $options as  $option ) {
 
@@ -477,6 +555,7 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '</li>';
 
 					}
+				}
 						$general_setting_wrapper .= '</ul>';
 					break;
 

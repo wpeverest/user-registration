@@ -103,6 +103,11 @@
 						$(element).closest(".field-multi_select2").length
 					) {
 						$checked = $(element).val();
+					} else if (
+						$(element).closest(".field-multiple_choice").length
+					) {
+						var ul = $(element).closest("ul");
+						$checked = ul.find('input[type="checkbox"]:checked');
 					}
 
 					if (0 === choiceLimit) {
@@ -364,15 +369,13 @@
 				user_login_div.length &&
 				"undefined" !== typeof user_login_div.data("username-length")
 			) {
-				username_validator.lengthValidator = user_login_div.data(
-					"username-length"
-				);
+				username_validator.lengthValidator =
+					user_login_div.data("username-length");
 			}
 
 			if (user_login_div.data("username-character") == "no") {
-				username_validator.SpecialCharacterValidator = user_login_div.data(
-					"username-character"
-				);
+				username_validator.SpecialCharacterValidator =
+					user_login_div.data("username-character");
 			}
 
 			rules.user_login = username_validator;
@@ -380,8 +383,9 @@
 			/**
 			 * Real time choice limit validation
 			 */
-			var checkbox_div = this_node.find(".field-checkbox"),
-				multiselect2_div = this_node.find(".field-multi_select2");
+			var checkbox_div 		= this_node.find(".field-checkbox"),
+				multiselect2_div 	= this_node.find(".field-multi_select2");
+			    multiple_choice_div = this_node.find(".field-multiple_choice");
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
@@ -398,6 +402,16 @@
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("select").data("choice-limit")
 							? $(this).find("select").data("choice-limit")
+							: 0,
+					};
+				});
+			}
+
+			if (multiple_choice_div.length) {
+				multiple_choice_div.each(function () {
+					rules[field_selector + $(this).data("field-id") + "[]"] = {
+						checkLimit: $(this).find("ul").data("choice-limit")
+							? $(this).find("ul").data("choice-limit")
 							: 0,
 					};
 				});

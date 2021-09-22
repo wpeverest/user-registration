@@ -515,9 +515,39 @@
 						.hasClass("ur-setting-checkbox");
 
 					if ("options" === $(this).attr("data-field")) {
-						var choice_value = URFormBuilder.get_ur_data(
-							$(this)
-						).trim();
+						if (
+							"multiple_choice" ===
+							$(this).attr("data-field-name")
+						) {
+							var li_elements = $(this).closest("ul").find("li");
+							var array_value = [];
+
+							li_elements.each(function (index, element) {
+								var label = $(element)
+									.find("input.ur-type-checkbox-label")
+									.val();
+
+								var value = $(element)
+									.find("input.ur-type-checkbox-money-input")
+									.val();
+								if (
+									array_value.every(function (each_value) {
+										return each_value.label !== label;
+									})
+								) {
+									general_setting_data["options"] =
+										array_value.push({
+											label: label,
+											value: value,
+										});
+								}
+								general_setting_data["options"] = array_value;
+							});
+						} else {
+							var choice_value = URFormBuilder.get_ur_data(
+								$(this)
+							).trim();
+						}
 						if (
 							option_values.every(function (each_value) {
 								return each_value !== choice_value;
@@ -2154,6 +2184,18 @@
 											)
 									) {
 										URFormBuilder.render_check_box($(this));
+									} else if (
+										$this_obj
+											.closest(
+												".ur-general-setting-block"
+											)
+											.hasClass(
+												"ur-general-setting-multiple_choice"
+											)
+									) {
+										URFormBuilder.render_multiple_choice(
+											$(this)
+										);
 									}
 								}
 							});
@@ -2185,6 +2227,16 @@
 										.hasClass("ur-general-setting-checkbox")
 								) {
 									URFormBuilder.render_check_box($(this));
+								} else if (
+									$this_obj
+										.closest(".ur-general-setting-block")
+										.hasClass(
+											"ur-general-setting-multiple_choice"
+										)
+								) {
+									URFormBuilder.render_multiple_choice(
+										$(this)
+									);
 								}
 
 								URFormBuilder.trigger_general_setting_options(
@@ -2547,6 +2599,9 @@
 					case "radio":
 						URFormBuilder.render_radio(value);
 						break;
+					case "multiple_choice":
+						URFormBuilder.render_multiple_choice(value);
+						break;
 				}
 			},
 			/**
@@ -2713,6 +2768,91 @@
 				}
 			},
 			/**
+			 * Reflects changes in multiple choice field of field settings into selected field in form builder area.
+			 *
+			 * @param object this_node  multiple choice  field from field settings.
+			 *
+			 * @since 2.0.3
+			 */
+			render_multiple_choice: function (this_node) {
+				var array_value = [];
+				var li_elements = this_node.closest("ul").find("li");
+				var checked_index = this_node.closest("li").index();
+				li_elements.each(function (index, element) {
+					var label = $(element)
+						.find("input.ur-type-checkbox-label")
+						.val();
+					var value = $(element)
+						.find("input.ur-type-checkbox-money-input")
+						.val();
+					var currency = $(element)
+						.find("input.ur-type-checkbox-money-input")
+						.attr("data-currency");
+
+					label = label.trim();
+					value = value.trim();
+					currency = currency.trim();
+					checkbox = $(element)
+						.find("input.ur-type-checkbox-value")
+						.is(":checked");
+
+					if (
+						array_value.every(function (each_value) {
+							return each_value.label !== label;
+						})
+					) {
+						array_value.push({
+							label: label,
+							value: value,
+							currency: currency,
+							checkbox: checkbox,
+						});
+					}
+				});
+
+				var wrapper = $(".ur-selected-item.ur-item-active");
+				var checkbox = wrapper.find(".ur-field");
+				checkbox.html("");
+
+				for (var i = 0; i < array_value.length; i++) {
+					if (array_value[i] !== "") {
+						checkbox.append(
+							'<label><input value="' +
+								array_value[i].label.trim() +
+								'" type="checkbox" ' +
+								(array_value[i].checkbox ? "checked" : "") +
+								" disabled>" +
+								array_value[i].label.trim() +
+								" - " +
+								array_value[i].currency.trim() +
+								" " +
+								array_value[i].value.trim() +
+								"</label>"
+						);
+					}
+				}
+
+				if ("checkbox" === this_node.attr("type")) {
+					if (this_node.is(":checked")) {
+						wrapper
+							.find(
+								".ur-general-setting-options li:nth(" +
+									checked_index +
+									') input[data-field="default_value"]'
+							)
+							.prop("checked", true);
+					} else {
+						wrapper
+							.find(
+								".ur-general-setting-options li:nth(" +
+									checked_index +
+									') input[data-field="default_value"]'
+							)
+							.prop("checked", false);
+					}
+				}
+			},
+			/**
 			 * Reflects changes in options of choice fields of field settings into selected field in form builder area.
 			 *
 			 * @param object $label Options of choice fields from field settings.
@@ -2720,15 +2860,29 @@
 			trigger_general_setting_options: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var index = $label.closest("li").index();
-				wrapper
-					.find(
-						".ur-general-setting-block li:nth(" +
-							index +
-							') input[data-field="' +
-							$label.attr("data-field") +
-							'"]'
-					)
-					.val($label.val());
+				var multiple_choice = $label.attr("data-field-name");
+
+				if ("multiple_choice" === multiple_choice) {
+					wrapper
+						.find(
+							".ur-general-setting-block li:nth(" +
+								index +
+								') input[name="' +
+								$label.attr("name") +
+								'"]'
+						)
+						.val($label.val());
+				} else {
+					wrapper
+						.find(
+							".ur-general-setting-block li:nth(" +
+								index +
+								') input[data-field="' +
+								$label.attr("data-field") +
+								'"]'
+						)
+						.val($label.val());
+				}
 				wrapper
 					.find(
 						".ur-general-setting-block li:nth(" +
@@ -2736,6 +2890,7 @@
 							') input[data-field="default_value"]'
 					)
 					.val($label.val());
+
 				$label
 					.closest("li")
 					.find('[data-field="default_value"]')
@@ -2932,6 +3087,12 @@
 						.hasClass("ur-general-setting-checkbox")
 				) {
 					URFormBuilder.render_check_box($this_obj);
+				} else if (
+					$this
+						.closest(".ur-general-setting-block")
+						.hasClass("ur-general-setting-multiple_choice")
+				) {
+					URFormBuilder.render_multiple_choice($this_obj);
 				}
 			},
 			/**
@@ -2984,6 +3145,12 @@
 						.hasClass("ur-general-setting-checkbox")
 				) {
 					URFormBuilder.render_check_box($this);
+				} else if (
+					$this
+						.closest(".ur-general-setting-block")
+						.hasClass("ur-general-setting-multiple_choice")
+				) {
+					URFormBuilder.render_multiple_choice($this);
 				}
 			},
 			/**
@@ -3019,6 +3186,12 @@
 							.hasClass("ur-general-setting-checkbox")
 					) {
 						URFormBuilder.render_check_box($any_siblings);
+					} else if (
+						$any_siblings
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-multiple_choice")
+					) {
+						URFormBuilder.render_multiple_choice($any_siblings);
 					}
 				}
 			},
