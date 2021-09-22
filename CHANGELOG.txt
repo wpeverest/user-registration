@@ -1,4 +1,11 @@
 
+= 2.0.3    - 22/09/2021
+* Enhance  - User creation capability check while registering users.
+* Dev 	   - Multiple choice field compatibility.
+* Dev	   - Time Picker field compatibility.
+* Fix	   - Gutenberg block css issue.
+* Fix 	   - wp editor script enqueued incorrectly in widgets.
+
 = 2.0.2    - 01/09/2021
 * Fix 	   - Missing sanitization on profile picture url
 * Fix 	   - Choice field issue in edit profile.
