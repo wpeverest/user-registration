@@ -6,7 +6,7 @@ Requires PHP: 5.3
 Tested up to: 5.8.1
 Stable tag: 2.0.3
 License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.htmlnditional-logic
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 The best Drag and drop user registration form and login form builder with a user profile page, email notification, user roles assignment, and more.
 
