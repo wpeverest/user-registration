@@ -832,6 +832,7 @@ function ur_get_general_settings( $id ) {
 			'required'    => true,
 		);
 	}
+
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
 

@@ -125,11 +125,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-
+						<?php if( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+						<?php } else { ?>
 						<tr>
 							<th>
-								<label
-									for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field_label ); ?></label>
+							    <label
+								for="<?php echo esc_attr( $key ); ?>"><?php
+								echo esc_html( $field_label ); ?></label>
 								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
 							</th>
 							<td>
@@ -216,8 +218,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									<button id="<?php echo esc_attr( $key ); ?>"
 											class="button <?php echo esc_attr( $field['class'] ); ?>"><?php echo esc_html( $field['text'] ); ?></button>
 								<?php elseif ( ! empty( $field['type'] ) && 'privacy_policy' === $field['type'] ) : ?>
-									<input checked type="checkbox" disabled="disabled"/>
-
+								<input checked type="checkbox" disabled="disabled"/>
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
 											  id="<?php echo esc_attr( $key ); ?>"
@@ -269,6 +270,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
 
+
 										if ( empty( $extra_params ) ) {
 											?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
@@ -286,6 +288,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							</td>
 						</tr>
 						<?php
+						}
 					endforeach;
 					?>
 				</table>
@@ -540,6 +543,18 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'privacy_policy':
 									$fields[ $field_index ]['type'] = 'privacy_policy';
+									break;
+
+								case 'multiple_choice':
+									$fields[ $field_index ]['type'] = 'multiple_choice';
+									break;
+
+								case 'single_item':
+									$fields[ $field_index ]['type'] = 'single_item';
+									break;
+
+								case 'total_field':
+									$fields[ $field_index ]['type'] = 'total_field';
 									break;
 							}
 						}// End switch().

@@ -168,6 +168,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											if ( 'invite_code' === $single_item->field_key) {
 												continue;
 										    }
+
+											// Unset multiple choice and single item.
+											if ( 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key) {
+												continue;
+										    }
+
 											?>
 											<div class="ur-field-item field-<?php echo $single_item->field_key; ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>">
 												<?php
@@ -302,6 +308,32 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														$field["select_all"] = $advance_data["advance_setting"]->select_all;
 													}
 												}
+
+												if( 'timepicker' === $single_item->field_key ) {
+													$field['current_time'] =   isset(  $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : "";
+													$field['time_interval'] =  isset(  $advance_data['advance_setting']->time_interval) ? $advance_data['advance_setting']->time_interval : "";
+													$field['time_min']	    = ( isset( $advance_data['advance_setting']->time_min) && "" !== $advance_data['advance_setting']->time_min) ? $advance_data['advance_setting']->time_min : "";
+													$field['time_max'] 		= ( isset( $advance_data['advance_setting']->time_max) && "" !== $advance_data['advance_setting']->time_max) ? $advance_data['advance_setting']->time_max : "";
+													$timemin 				=  isset(  $field[ 'time_min' ] ) ? strtolower(substr( $field['time_min'],-2 )) : "";
+													$timemax				=  isset(  $field[ 'time_max' ] ) ? strtolower(substr( $field['time_max'],-2 )) : "";
+											        $minampm 				=  intval( $field['time_min'] )  <= 12 ? 'AM' : 'PM';
+													$maxampm 				=  intval(  $field['time_max'] ) <= 12 ? 'AM' : 'PM';
+
+														//Handles the time format
+														if( 'am' === $timemin  || 'pm' === $timemin  ){
+															$field[ 'time_min' ] = $field[ 'time_min'];
+														} else {
+															$field[ 'time_min' ] = $field[ 'time_min' ] .''. $minampm ;
+														}
+
+														if( 'am' ===  $timemax || 'pm'  === $timemax  ){
+															$field[ 'time_max' ] = $field["time_max"];
+														} else {
+															$field['time_max'] = $field['time_max'] .''. $maxampm;
+														}
+
+													}
+
 												$filter_data = array(
 													'form_data' => $field,
 													'data' => $advance_data,
