@@ -2477,7 +2477,7 @@
 					var event = "change";
 					switch (node_type) {
 						case "input":
-							event = "keyup";
+							event = "keyup click";
 							break;
 						case "select":
 							event = "change";
