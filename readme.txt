@@ -108,6 +108,7 @@ The best thing is that there are unlimited customization options for each field 
 
 ### What sets User Registration apart?
 Here’s a brief look at the features that make User Registration one of the best WordPress plugins for user registration and login.
+
 * **[Premium] User Registration Data in Graphs and Charts:** Receive accurate stats on every user registration form through graphs and charts. You can view the total, approved, denied, and pending registrations your website receives in a day, week, month, or a specific period.
 
 * **[Premium] [Live Form Designer Tool:](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, and Button Styles without writing any code.
