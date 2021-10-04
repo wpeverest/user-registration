@@ -191,7 +191,7 @@ class UR_Admin_Export_Users {
 				}
 
 				$field_data = ur_get_field_data_by_field_name($form_id,$user_extra_data_key);
-				if ( 'file' === 	$field_data['field_key'] ) {
+				if ( isset( $field_data['field_key'] ) && 'file' === $field_data['field_key'] ) {
 					$attachment_ids = explode( ',', $user_extra_data );
 					$file_link ="";
 					foreach ( $attachment_ids as $attachment_id ) {
