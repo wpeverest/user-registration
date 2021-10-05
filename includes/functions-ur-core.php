@@ -315,21 +315,24 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 function ur_post_content_has_shortcode( $tag = '' ) {
 	global $post;
 	$new_shortcode = '';
+	$wp_version = '5.0';
+	if ( version_compare($GLOBALS['wp_version'], $wp_version, '>=' ) ) {
+		if( is_object( $post ) ) {
+			$blocks = parse_blocks( $post->post_content );
+			foreach( $blocks as $block ) {
 
-	if( is_object( $post ) ) {
-		$blocks = parse_blocks( $post->post_content );
-		foreach( $blocks as $block ) {
+				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+					$new_shortcode = $block['innerHTML'];
+				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
+					$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
+				}
 
-			if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
-				$new_shortcode = $block['innerHTML'];
-			} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
-				$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
 			}
-
 		}
-	}
-
 	return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
+	} else {
+		return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, $tag );
+	}
 }
 
 /**
