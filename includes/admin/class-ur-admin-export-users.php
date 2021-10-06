@@ -122,6 +122,7 @@ class UR_Admin_Export_Users {
 			'user_registration_csv_export_default_columns',
 			array(
 				'user_role'        => __( 'User Role', 'user-registration' ),
+				'ur_user_status'   => __( 'User Status', 'user-registration' ),
 				'date_created'     => __( 'User Registered', 'user-registration' ),
 				'date_created_gmt' => __( 'User Registered GMT', 'user-registration' ),
 			)
@@ -172,7 +173,9 @@ class UR_Admin_Export_Users {
 			}
 
 			$user_form_id = get_user_meta( $user->data->ID, 'ur_form_id', true );
-
+			$user_status = get_user_meta( $user->data->ID, 'ur_user_status', true );
+			$user_email_status = get_user_meta( $user->data->ID, 'ur_confirm_email', true );
+			$status = ur_get_user_status($user_status,$user_email_status);
 			// If the user is not submitted by selected registration form.
 			if ( $user_form_id !== $form_id ) {
 				continue;
@@ -234,6 +237,7 @@ class UR_Admin_Export_Users {
 			// Get user default row.
 			$user_default_row = array(
 				'user_role'        => is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles,
+				'ur_user_status'   => is_array( $status) ? implode( ',', $status ) : $status,
 				'date_created'     => $user->data->user_registered,
 				'date_created_gmt' => get_gmt_from_date( $user->data->user_registered ),
 			);

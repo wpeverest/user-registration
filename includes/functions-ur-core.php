@@ -1543,6 +1543,24 @@ function ur_get_user_extra_fields( $user_id ) {
 }
 
 /**
+ * Get User status like approved, pending.
+ *
+ * @param  string $user_status.
+ * @param  string $user_email_status.
+ */
+function ur_get_user_status( $user_status,$user_email_status ) {
+	$status = array();
+	if ( $user_status === '0' || $user_email_status === '0'  ) {
+		array_push( $status, 'Pending' );
+	} elseif ($user_status === '-1' || $user_email_status === '-1' ) {
+		array_push( $status, 'Denied' );
+	} else {
+		array_push( $status, 'Approved' );
+	}
+	return $status;
+}
+
+/**
  * Get link for back button used on email settings.
  *
  * @param  string $label Label.
