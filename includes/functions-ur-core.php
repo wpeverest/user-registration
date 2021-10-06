@@ -1555,7 +1555,11 @@ function ur_get_user_status( $user_status,$user_email_status ) {
 	} elseif ($user_status === '-1' || $user_email_status === '-1' ) {
 		array_push( $status, 'Denied' );
 	} else {
-		array_push( $status, 'Approved' );
+		if ( $user_email_status ) {
+		    array_push( $status, 'Verified' );
+		} else {
+			array_push( $status, 'Approved' );
+		}
 	}
 	return $status;
 }
