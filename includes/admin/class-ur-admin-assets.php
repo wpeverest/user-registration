@@ -373,6 +373,8 @@ class UR_Admin_Assets {
 			'i18n_choice_cancel'                     => esc_html__( 'Cancel', 'user-registration' ),
 			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
 			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
+			'i18n_payment_field'                     => _x( 'Payment', 'user-registration admin', 'user-registration' ),
+			'i18n_stripe_field'                      => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_row'   => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_field' => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
@@ -393,6 +395,8 @@ class UR_Admin_Assets {
 			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
 			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
 			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
+			'i18n_input_size'                 		 => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
+			'i18n_min_max_input'                  	 => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
 
 		);
 
