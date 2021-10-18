@@ -381,7 +381,15 @@
 						var single_item = $(".ur-input-grids").find(
 							'.ur-field[data-field-key="single_item"]'
 						).length;
-						if (multiple_choice < 1 && single_item < 1) {
+						var payment_slider = $(".ur-input-grids").find(
+							".ur-payment-slider-sign:visible"
+						).length;
+
+						if (
+							multiple_choice < 1 &&
+							single_item < 1 &&
+							payment_slider < 1
+						) {
 							response.validation_status = false;
 
 							var field =
@@ -567,27 +575,6 @@
 								" " +
 								user_registration_form_builder_data.i18n_admin
 									.i18n_input_size;
-						}
-						var $min = $(this)
-							.closest(".ur-selected-item")
-							.find(
-								".ur-advance-setting-block .ur-settings-time-min"
-							)
-							.val();
-						var $max = $(this)
-							.closest(".ur-selected-item")
-							.find(
-								".ur-advance-setting-block .ur-settings-time-max"
-							)
-							.val();
-
-						if ($min > $max) {
-							response.validation_status = false;
-							response.message =
-								label +
-								" " +
-								user_registration_form_builder_data.i18n_admin
-									.i18n_min_max_input;
 						}
 					}
 				);
