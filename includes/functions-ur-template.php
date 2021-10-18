@@ -821,20 +821,24 @@ function ur_logout_url( $redirect = '' ) {
 	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
 
 	global $post;
+	$wp_version = '5.0';
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
-	$blocks = parse_blocks( $post_content );
-	foreach( $blocks as $block ) {
-
-		if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
-			$new_shortcode = $block['innerHTML'];
-		} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
-			$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
-		}
-
-	}
 
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		preg_match( '/' . get_shortcode_regex() . '/s', $new_shortcode, $matches );
+		if ( version_compare($GLOBALS['wp_version'], $wp_version, '>=' ) ) {
+			$blocks = parse_blocks( $post_content );
+			foreach( $blocks as $block ) {
+				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+					$new_shortcode = $block['innerHTML'];
+				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
+					$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
+				}
+			}
+		 preg_match( '/' . get_shortcode_regex() . '/s', $new_shortcode, $matches );
+
+		} else {
+			preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
+		}
 
 		$attributes = shortcode_parse_atts($matches[3]);
 		/**
