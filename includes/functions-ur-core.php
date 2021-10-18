@@ -1547,6 +1547,28 @@ function ur_get_user_extra_fields( $user_id ) {
 }
 
 /**
+ * Get User status like approved, pending.
+ *
+ * @param  string $user_status.
+ * @param  string $user_email_status.
+ */
+function ur_get_user_status( $user_status,$user_email_status ) {
+	$status = array();
+	if ( $user_status === '0' || $user_email_status === '0'  ) {
+		array_push( $status, 'Pending' );
+	} elseif ($user_status === '-1' || $user_email_status === '-1' ) {
+		array_push( $status, 'Denied' );
+	} else {
+		if ( $user_email_status ) {
+		    array_push( $status, 'Verified' );
+		} else {
+			array_push( $status, 'Approved' );
+		}
+	}
+	return $status;
+}
+
+/**
  * Get link for back button used on email settings.
  *
  * @param  string $label Label.
@@ -2022,4 +2044,31 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $valid_form_data, $form_id, $user_id );
 
 	return array( $name_value, $data_html );
+}
+
+/**
+ * Get field data by field_name.
+ *
+ * @param int $form_id Form Id.
+ * @param string $field_name Field Name.
+ *
+ * @return array
+ */
+function ur_get_field_data_by_field_name($form_id,$field_name){
+	$field_data = array();
+
+	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+
+	foreach ( $post_content_array as $post_content_row ) {
+		foreach ( $post_content_row as $post_content_grid ) {
+			foreach ( $post_content_grid as $field ) {
+				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) &&  $field->general_setting->field_name === $field_name) {
+					$field_data = array(
+						"field_key" => $field->field_key
+					);
+				}
+			}
+		}
+	}
+	return $field_data;
 }
