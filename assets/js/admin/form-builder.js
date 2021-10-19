@@ -586,7 +586,7 @@
 					function () {
 						var $size_field = $(this)
 							.closest(".ur-selected-item")
-							.find(".ur-advance-setting-block .ur-settings-size")
+							.find(".ur-advance-setting-block .ur-settings-step")
 							.val();
 						var label = $(this)
 							.closest(".ur-selected-item")
