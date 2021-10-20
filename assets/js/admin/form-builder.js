@@ -356,17 +356,16 @@
 
 				if (paypal.is(":checked")) {
 					var payment_fields = ["payment_fields"];
-					required_fields = [...required_fields, ...payment_fields];
+
+					required_fields = required_fields.concat(payment_fields);
 				} else {
 					if (stripe.is(":checked")) {
 						var stripe_fields = [
 							"payment_fields",
 							"stripe_gateway",
 						];
-						required_fields = [
-							...required_fields,
-							...stripe_fields,
-						];
+
+						required_fields = required_fields.concat(stripe_fields);
 					}
 				}
 				for (
