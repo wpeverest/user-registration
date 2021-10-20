@@ -20,3 +20,4 @@ wpeverest/user-registration-pro@master:
       - user-registration.php
       - webpack.config.js
       - wpml-config.xml
+      - Gruntfile.js
