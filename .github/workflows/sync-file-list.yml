@@ -17,7 +17,5 @@ wpeverest/user-registration-pro@master:
       - phpcs.xml
       - readme.txt
       - unistall.php
-      - user-registration.php
       - webpack.config.js
       - wpml-config.xml
-      - Gruntfile.js
