@@ -1,4 +1,11 @@
 
+= 2.0.4    - 19/10/2021
+* Enhance  - File and user status in export user csv.
+* Enhance  - Form builder validation.
+* Tweak    - Handle parse_block() before wp5.0.
+* Fix	   - Number field step issue.
+* Fix 	   - Prevent core login not working with classic editor.
+
 = 2.0.3    - 22/09/2021
 * Enhance  - User creation capability check while registering users.
 * Dev 	   - Multiple choice field compatibility.

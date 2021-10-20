@@ -351,38 +351,275 @@
 						break;
 					}
 				}
+				var paypal = $("#user_registration_enable_paypal_standard");
+				var stripe = $("#user_registration_enable_stripe");
+
+				if (paypal.is(":checked")) {
+					var payment_fields = ["payment_fields"];
+
+					required_fields = required_fields.concat(payment_fields);
+				} else {
+					if (stripe.is(":checked")) {
+						var stripe_fields = [
+							"payment_fields",
+
+							"stripe_gateway",
+						];
+
+						required_fields = required_fields.concat(stripe_fields);
+					}
+				}
 				for (
 					var required_index = 0;
 					required_index < required_fields.length;
 					required_index++
 				) {
-					if (
-						$(".ur-input-grids").find(
-							'.ur-field[data-field-key="' +
-								required_fields[required_index] +
-								'"]'
-						).length === 0
-					) {
-						response.validation_status = false;
+					if (required_fields[required_index] === "payment_fields") {
+						var multiple_choice = $(".ur-input-grids").find(
+							'.ur-field[data-field-key="multiple_choice"]'
+						).length;
+						var single_item = $(".ur-input-grids").find(
+							'.ur-field[data-field-key="single_item"]'
+						).length;
+						var payment_slider = $(".ur-input-grids").find(
+							".ur-payment-slider-sign:visible"
+						).length;
 
-						if (required_index === 0) {
+						if (
+							multiple_choice < 1 &&
+							single_item < 1 &&
+							payment_slider < 1
+						) {
+							response.validation_status = false;
+
 							var field =
 								user_registration_form_builder_data.i18n_admin
-									.i18n_user_email;
-						} else if (required_index === 1) {
-							var field =
+									.i18n_payment_field;
+
+							response.message =
+								field +
+								" " +
 								user_registration_form_builder_data.i18n_admin
-									.i18n_user_password;
+									.i18n_field_is_required;
+							break;
 						}
+					} else {
+						if (
+							$(".ur-input-grids").find(
+								'.ur-field[data-field-key="' +
+									required_fields[required_index] +
+									'"]'
+							).length === 0
+						) {
+							response.validation_status = false;
 
-						response.message =
-							field +
-							" " +
-							user_registration_form_builder_data.i18n_admin
-								.i18n_field_is_required;
-						break;
+							if (required_index === 0) {
+								var field =
+									user_registration_form_builder_data
+										.i18n_admin.i18n_user_email;
+							} else if (required_index === 1) {
+								var field =
+									user_registration_form_builder_data
+										.i18n_admin.i18n_user_password;
+							} else {
+								var field =
+									user_registration_form_builder_data
+										.i18n_admin.i18n_stripe_field;
+							}
+
+							response.message =
+								field +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_field_is_required;
+							break;
+						}
 					}
 				}
+
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="text"]'
+					),
+					function () {
+						var $size_field = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-size")
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+
+						if ($size_field < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+					}
+				);
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="password"]'
+					),
+					function () {
+						var $size_field = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-size")
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+						if ($size_field < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="file"]'
+					),
+					function () {
+						var $maximum_number_limit_on_uploads = $(this)
+							.closest(".ur-selected-item")
+							.find(
+								".ur-general-setting-block .ur-general-setting-maximum-number-limit-on-uploads input"
+							)
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+						if ($maximum_number_limit_on_uploads < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="number"]'
+					),
+					function () {
+						var $size_field = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-size")
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+
+						if ($size_field < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+						var $min = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-min")
+							.val();
+						var $max = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-max")
+							.val();
+
+						if ($min > $max) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_min_max_input;
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="timepicker"]'
+					),
+					function () {
+						var $time_interval = $(this)
+							.closest(".ur-selected-item")
+							.find(
+								".ur-advance-setting-block .ur-settings-time_interval"
+							)
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+						if ($time_interval < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="range"]'
+					),
+					function () {
+						var $size_field = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-step")
+							.val();
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+
+						if ($size_field < 1) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_input_size;
+						}
+						var $min = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-min")
+							.val();
+						var $max = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-advance-setting-block .ur-settings-max")
+							.val();
+
+						if ($min > $max) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_min_max_input;
+						}
+					}
+				);
 				return response;
 			},
 			/**
@@ -2477,7 +2714,7 @@
 					var event = "change";
 					switch (node_type) {
 						case "input":
-							event = "keyup";
+							event = "keyup click";
 							break;
 						case "select":
 							event = "change";
@@ -2520,6 +2757,17 @@
 			trigger_general_setting_label: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				wrapper.find(".ur-label").find("label").text($label.val());
+
+				if (
+					$(".ur-selected-item.ur-item-active .ur-general-setting")
+						.find("[data-field='required']")
+						.val() === "yes"
+				) {
+					wrapper
+						.find(".ur-label")
+						.find("label")
+						.append('<span style="color:red">*</span>');
+				}
 
 				wrapper
 					.find(".ur-general-setting-block")
