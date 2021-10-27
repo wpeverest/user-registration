@@ -399,6 +399,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => ur_login_option_with(),
 								),
 								array(
+									'title'    => __( 'Enable Login Title', 'user-registration' ),
+									'desc'     => __( 'This option lets you enable login title in login form.', 'user-registration' ),
+									'id'       => 'user_registration_login_title',
+									'type'     => 'checkbox',
+									'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
+									'css'      => 'min-width: 350px;',
+									'default'  => 'no',
+								),
+								array(
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 									'desc'     => __( 'This option lets you to enable the ajax form submission', 'user-registration' ),
 									'id'       => 'ur_login_ajax_submission',
