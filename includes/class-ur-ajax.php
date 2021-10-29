@@ -834,7 +834,6 @@ class UR_AJAX {
 							'ul'         => array(),
 							'ol'         => array(),
 							'li'         => array(),
-							'br'         => array(),
 							'hr'         => array(),
 							'blockquote' => array(),
 							'del'        => array(),
