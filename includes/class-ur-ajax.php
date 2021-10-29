@@ -816,6 +816,35 @@ class UR_AJAX {
 				}
 				if ( $key === 'description' ) {
 					$value = str_replace( '"', "'", $value );
+					$value = wp_kses(
+						$value,
+						array(
+							'a'      => array(
+								'href'   => array(),
+								'title'  => array(),
+								'target' => array(),
+							),
+							'br'     => array(),
+							'em'     => array(),
+							'strong' => array(),
+							'u'          => array(),
+							'i'          => array(),
+							'q'          => array(),
+							'b'          => array(),
+							'ul'         => array(),
+							'ol'         => array(),
+							'li'         => array(),
+							'br'         => array(),
+							'hr'         => array(),
+							'blockquote' => array(),
+							'del'        => array(),
+							'strike'     => array(),
+							'code'       => array(),
+							'div'        => array(),
+							'span'       => array(),
+							'p'          => array(),
+						)
+					);
 
 				} elseif ( $key == 'html' ) {
 
