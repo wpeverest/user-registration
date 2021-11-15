@@ -3201,7 +3201,7 @@
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", "selected");
+					.prop("selected", true);
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
@@ -3228,7 +3228,7 @@
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", "selected");
+					.prop("selected", true);
 			},
 			/**
 			 * Reflects changes in hide advance settings of field settings into selected field in form builder area.
