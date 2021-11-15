@@ -685,7 +685,7 @@ class UR_AJAX {
 			$post_data = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => ur_clean( $form_name ),
-				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE ),
+				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE |  JSON_UNESCAPED_SLASHES ),
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',   // if you prefer
 				'ping_status'    => 'closed',      // if you prefer
