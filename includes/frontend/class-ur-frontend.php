@@ -106,7 +106,7 @@ class UR_Frontend {
 				if ( ! empty( $shortcode['blockName'] ) ) {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
-					} elseif ( 'core/shortcode' === $shortcode['blockName'] && isset( $shortcode['innerHTML'] ) ) {
+					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
 						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
 						if ( 1 > absint( $matched ) ) {
 							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
@@ -126,7 +126,7 @@ class UR_Frontend {
 				foreach ( $shortcodes as $shortcode ) {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
-					} elseif ( 'core/shortcode' === $shortcode['blockName'] && isset( $shortcode['innerHTML'] ) ) {
+					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
 						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
 						if ( 1 > absint( $matched ) ) {
 							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
