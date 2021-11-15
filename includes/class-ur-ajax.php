@@ -827,6 +827,21 @@ class UR_AJAX {
 							'br'     => array(),
 							'em'     => array(),
 							'strong' => array(),
+							'u'          => array(),
+							'i'          => array(),
+							'q'          => array(),
+							'b'          => array(),
+							'ul'         => array(),
+							'ol'         => array(),
+							'li'         => array(),
+							'hr'         => array(),
+							'blockquote' => array(),
+							'del'        => array(),
+							'strike'     => array(),
+							'code'       => array(),
+							'div'        => array(),
+							'span'       => array(),
+							'p'          => array(),
 						)
 					);
 

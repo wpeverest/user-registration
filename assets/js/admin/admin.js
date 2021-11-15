@@ -127,7 +127,7 @@ jQuery(function ($) {
 	);
 
 	// In case the user goes out of focus from title edit state.
-	$(document.body)
+	$(document)
 		.not($(".user-registration-editable-title"))
 		.on("click", function (e) {
 			var field = $(".user-registration-editable-title__input");
