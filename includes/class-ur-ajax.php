@@ -685,7 +685,7 @@ class UR_AJAX {
 			$post_data = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => ur_clean( $form_name ),
-				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE ),
+				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE |  JSON_UNESCAPED_SLASHES ),
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',   // if you prefer
 				'ping_status'    => 'closed',      // if you prefer
@@ -827,6 +827,27 @@ class UR_AJAX {
 							'br'     => array(),
 							'em'     => array(),
 							'strong' => array(),
+							'u'          => array(),
+							'i'          => array(),
+							'q'          => array(),
+							'b'          => array(),
+							'ul'         => array(),
+							'ol'         => array(),
+							'li'         => array(),
+							'hr'         => array(),
+							'blockquote' => array(),
+							'del'        => array(),
+							'strike'     => array(),
+							'code'       => array(),
+							'div'        => array(),
+							'span'       => array(),
+							'p'          => array(),
+							'h1'          => array(),
+							'h2'          => array(),
+							'h3'          => array(),
+							'h4'          => array(),
+							'h5'          => array(),
+							'h6'          => array(),
 						)
 					);
 

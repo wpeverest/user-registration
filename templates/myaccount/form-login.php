@@ -53,6 +53,8 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 
 $enable_field_icon = 'yes' === get_option( 'user_registration_extras_general_setting_login_form', 'no' );
 
+$login_title = 'yes' === get_option('user_registration_login_title', 'no' );
+
 ?>
 
 <?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
@@ -64,6 +66,9 @@ $enable_field_icon = 'yes' === get_option( 'user_registration_extras_general_set
 	<form class="user-registration-form user-registration-form-login login" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
+				<?php if( $login_title ) {
+					echo apply_filters( 'ur_login_title', __( $labels['login'], 'user-registration' ) );
+				 } ?>
 					<?php do_action( 'user_registration_login_form_start' ); ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<?php
