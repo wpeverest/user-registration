@@ -109,6 +109,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$this->plugin_requests();
 			$this->plugin_license_view();
 		}
+
+		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
+
+		if ( $message ) {
+			add_action( 'admin_notices', array( $this, 'user_registration_failed_extension_install' ) );
+		}
 	}
 
 	/**
@@ -144,97 +150,106 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		}
 	}
 
-	public static function install_extension() {
+	public function install_extension() {
 
-		$slug   = 'user-registration-advanced-fields';
-		$plugin = plugin_basename( sanitize_text_field( wp_unslash( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ) ) );
-		$status = array(
-			'install' => 'plugin',
-			'slug'    => sanitize_key( wp_unslash( $slug ) ),
-		);
+		try {
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
-			$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'everest-forms' );
-			wp_send_json_error( $status );
-		}
+			$slug   = 'user-registration-pro';
+			$plugin = plugin_basename( sanitize_text_field( wp_unslash( 'user-registration-pro/user-registration.php' ) ) );
+			$status = array(
+				'install' => 'plugin',
+				'slug'    => sanitize_key( wp_unslash( $slug ) ),
+			);
 
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			if ( ! current_user_can( 'install_plugins' ) ) {
+				$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'user-registration' );
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
 
-		if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
-			$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
-			$status['plugin']     = $plugin;
-			$status['pluginName'] = $plugin_data['Name'];
+			include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-			if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
-				$result = activate_plugin( $plugin );
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+				$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+				$status['plugin']     = $plugin;
+				$status['pluginName'] = $plugin_data['Name'];
 
-				if ( is_wp_error( $result ) ) {
-					$status['errorCode']    = $result->get_error_code();
-					$status['errorMessage'] = $result->get_error_message();
-					wp_send_json_error( $status );
+				if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+					$result = activate_plugin( $plugin );
+
+					if ( is_wp_error( $result ) ) {
+						$status['errorCode']    = $result->get_error_code();
+						$status['errorMessage'] = $result->get_error_message();
+						throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+					}
+
+					wp_send_json_success( $status );
 				}
-
-				wp_send_json_success( $status );
 			}
-		}
 
-		$api = json_decode(
-			UR_Updater_Key_API::version(
-				array(
-					'license'   => get_option( 'user-registration_license_key' ),
-					'item_name' => 'User Registration-Advanced Fields',
+			$api = json_decode(
+				UR_Updater_Key_API::version(
+					array(
+						'license'   => get_option( 'user-registration_license_key' ),
+						'item_name' => 'User Registration PRO',
+					)
 				)
-			)
-		);
+			);
 
-		if ( is_wp_error( $api ) ) {
-			$status['errorMessage'] = $api->get_error_message();
-			wp_send_json_error( $status );
-		}
-
-		$status['pluginName'] = $api->name;
-
-		$skin     = new WP_Ajax_Upgrader_Skin();
-		$upgrader = new Plugin_Upgrader( $skin );
-		$result   = $upgrader->install( $api->download_link );
-
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$status['debug'] = $skin->get_upgrade_messages();
-		}
-
-		if ( is_wp_error( $result ) ) {
-			$status['errorCode']    = $result->get_error_code();
-			$status['errorMessage'] = $result->get_error_message();
-			wp_send_json_error( $status );
-		} elseif ( is_wp_error( $skin->result ) ) {
-			$status['errorCode']    = $skin->result->get_error_code();
-			$status['errorMessage'] = $skin->result->get_error_message();
-			wp_send_json_error( $status );
-		} elseif ( $skin->get_errors()->get_error_code() ) {
-			$status['errorMessage'] = $skin->get_error_messages();
-
-			wp_send_json_error( $status );
-		} elseif ( is_null( $result ) ) {
-			global $wp_filesystem;
-
-			$status['errorCode']    = 'unable_to_connect_to_filesystem';
-			$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'everest-forms' );
-
-			// Pass through the error from WP_Filesystem if one was raised.
-			if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
-				$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+			if ( is_wp_error( $api ) ) {
+				$status['errorMessage'] = $api->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
 			}
-			wp_send_json_error( $status );
+
+			$status['pluginName'] = $api->name;
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
+			$upgrader = new Plugin_Upgrader( $skin );
+			$result   = $upgrader->install( $api->download_link );
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				$status['debug'] = $skin->get_upgrade_messages();
+			}
+
+			if ( is_wp_error( $result ) ) {
+				$status['errorCode']    = $result->get_error_code();
+				$status['errorMessage'] = $result->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_wp_error( $skin->result ) ) {
+				$status['errorCode']    = $skin->result->get_error_code();
+				$status['errorMessage'] = $skin->result->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( $skin->get_errors()->get_error_code() ) {
+				$status['errorMessage'] = $skin->get_error_messages();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_null( $result ) ) {
+				global $wp_filesystem;
+
+				$status['errorCode']    = 'unable_to_connect_to_filesystem';
+				$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
+
+				// Pass through the error from WP_Filesystem if one was raised.
+				if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+					$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+				}
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			$install_status = install_plugin_install_status( $api );
+
+			if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+				activate_plugin( $install_status['file'] );
+			}
+
+			wp_send_json_success( $status );
+		} catch ( Exception $e ) {
+
+			$message = $e->getMessage();
+			add_option(
+				'user_registration_failed_installing_extensions_message',
+				 $message
+			);
 		}
-
-		$install_status = install_plugin_install_status( $api );
-
-		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-			activate_plugin( $install_status['file'] );
-		}
-
-		wp_send_json_success( $status );
 	}
 
 	/**
@@ -257,7 +272,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
 		}
 
-		add_action( 'admin_notices', array( $this, 'error_notices' ) );
+		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
 	/**
@@ -301,9 +316,16 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	}
 
 	/**
-	 * Output errors
+	 * @deprecated 2.0.6
 	 */
 	public function error_notices() {
+		ur_deprecated_function( 'UR_Admin_Profile::error_notices', '1.4.1', 'UR_Plugin_Updater::user_registration_error_notices' );
+	}
+
+	/**
+	 * Output errors
+	 */
+	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
 				include dirname( __FILE__ ) . '/admin/views/html-notice-error.php';
@@ -356,6 +378,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Try to activate a license.
 	 */
 	public function activate_license( $license_key ) {
+
 		try {
 
 			if ( empty( $license_key ) ) {
@@ -477,6 +500,33 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function deactivated_key_notice() {
 		include dirname( __FILE__ ) . '/admin/views/html-notice-key-deactivated.php';
+	}
+
+	/**
+	 * Display error message when extension installation fails.
+	 *
+	 * @since 2.0.6
+	 */
+	public function user_registration_failed_extension_install() {
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
+
+		if ( ! file_exists ( $ur_pro_plugins_path ) ) {
+			$message = $message . ' Please manually download <strong>User Registration PRO</strong>.';
+			echo '<div class="error updated notice is-dismissible">
+					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
+				</div>';
+
+		} else if ( ! is_plugin_active( 'user-registration-pro/user-registration' ) ) {
+			$message = ' Please manually activate <strong>User Registration PRO</strong>.';
+			echo '<div class="error updated notice is-dismissible">
+					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
+				</div>';
+
+		} else {
+			delete_option( 'user_registration_failed_installing_extensions_message' );
+		}
+
 	}
 }
 
