@@ -356,7 +356,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Show the input form for the license key.
 	 */
 	public function plugin_license_form( $plugin_file ) {
-		if ( strtolower( basename( dirname( $plugin_file ) ) ) === strtolower( $this->plugin_slug ) ) {
+
+		$slug = $this->plugin_slug;
+
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			$slug .= '-pro';
+		}
+
+		if ( strtolower( basename( dirname( $plugin_file ) ) ) === strtolower( $slug ) ) {
 			include_once dirname( __FILE__ ) . '/admin/views/html-license-form.php';
 		}
 	}
@@ -518,7 +525,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
 				</div>';
 
-		} else if ( ! is_plugin_active( 'user-registration-pro/user-registration' ) ) {
+		} else if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 			$message = ' Please manually activate <strong>User Registration PRO</strong>.';
 			echo '<div class="error updated notice is-dismissible">
 					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
