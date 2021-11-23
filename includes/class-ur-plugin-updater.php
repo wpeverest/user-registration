@@ -107,6 +107,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$extensions = $this->get_plugins_with_header( self::VERSION_TESTED_HEADER );
 		if ( ! empty( $extensions ) && current_user_can( 'update_plugins' ) ) {
 			$this->plugin_requests();
+			add_action( "admin_notices", array( $this, "user_registration_upgrade_to_pro_notice" ) );
 			$this->plugin_license_view();
 		}
 
@@ -527,6 +528,42 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			delete_option( 'user_registration_failed_installing_extensions_message' );
 		}
 
+	}
+
+	/**
+	 * Display upgrade to PRO notice.
+	 *
+	 * @since 2.0.6
+	 */
+	public function user_registration_upgrade_to_pro_notice() {
+		$license_key = get_option( $this->plugin_slug . '_license_key' );
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+
+		$link = '';
+
+		if ( $license_key ) {
+			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Download and Install PRO', 'user-registration' ) . '</a>';
+		} else {
+			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License', 'user-registration' ) . '</a>';
+		}
+
+		if ( ! file_exists( $ur_pro_plugins_path ) || ! is_plugin_active( 'user-registration-pro/user-registration' ) ) {
+			?>
+				<div id="user-registration-review-notice" class="notice notice-info user-registration-notice" data-purpose="review">
+					<div class="user-registration-notice-thumbnail">
+						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
+					</div>
+					<div class="user-registration-notice-text">
+						<h3><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
+						<p><?php _e( '<strong>User Registration PRO</strong> will be effective 3 months from today. So If you are a premium user and have a license key then in order to smoothly using our addons please upgrade to PRO', 'user-registration' ); ?></p>
+						<ul class="user-registration-notice-ul">
+							<li><?php echo wp_kses_post( $link ); ?></li>
+							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+						</ul>
+					</div>
+				</div>
+			<?php
+		}
 	}
 }
 

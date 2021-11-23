@@ -63,12 +63,12 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 							'desc'  => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below inorder to use our premium addons smoohly.', 'user-registration' ),
 							'settings' => array(
 								array(
-									'title'    	  => __( 'License Key', 'user-registration' ),
-									'desc'   	=> __( 'Please enter the license key', 'user-registration' ),
-									'id'       	  =>  'user-registration_license_key' ,
-									'default'  => 'default',
-									'type'      => 'text',
-									'css'        => 'min-width: 350px;',
+									'title'    => __( 'License Key', 'user-registration' ),
+									'desc'     => __( 'Please enter the license key', 'user-registration' ),
+									'id'       =>  'user-registration_license_key' ,
+									'default'  => '',
+									'type'     => 'text',
+									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								)
 							)
