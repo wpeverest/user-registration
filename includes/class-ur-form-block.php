@@ -26,7 +26,9 @@ class UR_Form_Block {
 	 * @return void.
 	 */
 	public function enqueue_block_editor_assets() {
-
+		global $pagenow;
+		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-components' );
+		
 		wp_register_style(
 			'user-registration-block-editor',
 			UR()->plugin_url() . '/assets/css/user-registration.css',
@@ -34,12 +36,22 @@ class UR_Form_Block {
 			UR_VERSION
 		);
 
-		wp_register_script(
-			'user-registration-block-editor',
-			UR()->plugin_url() . '/assets/js/admin/gutenberg/form-block.build.js',
-			array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-components' ),
-			UR_VERSION
-		);
+		if ( $pagenow === 'widgets.php' ) {
+			wp_register_script(
+				'user-registration-block-editor',
+				UR()->plugin_url() . '/assets/js/admin/gutenberg/form-block.build.js',
+				$enqueue_script,
+				UR_VERSION
+			);
+	   } else {
+			array_push( $enqueue_script,'wp-editor' );
+			wp_register_script(
+				'user-registration-block-editor',
+				UR()->plugin_url() . '/assets/js/admin/gutenberg/form-block.build.js',
+				$enqueue_script,
+				UR_VERSION
+			);
+	   }
 
 		$form_block_data = array(
 			'forms'    => ur_get_all_user_registration_form(),
