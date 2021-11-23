@@ -135,12 +135,106 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] );
 
 		if ( $this->activate_license( $license_key ) ) {
+			$this->install_extension();
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
 		} else {
 			wp_redirect( remove_query_arg( array( 'activated_license', 'deactivated_license', $this->plugin_slug . '_deactivate_license' ) ) );
 			exit;
 		}
+	}
+
+	public static function install_extension() {
+
+		$slug   = 'user-registration-advanced-fields';
+		$plugin = plugin_basename( sanitize_text_field( wp_unslash( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ) ) );
+		$status = array(
+			'install' => 'plugin',
+			'slug'    => sanitize_key( wp_unslash( $slug ) ),
+		);
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'everest-forms' );
+			wp_send_json_error( $status );
+		}
+
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+			$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+			$status['plugin']     = $plugin;
+			$status['pluginName'] = $plugin_data['Name'];
+
+			if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+				$result = activate_plugin( $plugin );
+
+				if ( is_wp_error( $result ) ) {
+					$status['errorCode']    = $result->get_error_code();
+					$status['errorMessage'] = $result->get_error_message();
+					wp_send_json_error( $status );
+				}
+
+				wp_send_json_success( $status );
+			}
+		}
+
+		$api = json_decode(
+			UR_Updater_Key_API::version(
+				array(
+					'license'   => get_option( 'user-registration_license_key' ),
+					'item_name' => 'User Registration-Advanced Fields',
+				)
+			)
+		);
+
+		if ( is_wp_error( $api ) ) {
+			$status['errorMessage'] = $api->get_error_message();
+			wp_send_json_error( $status );
+		}
+
+		$status['pluginName'] = $api->name;
+
+		$skin     = new WP_Ajax_Upgrader_Skin();
+		$upgrader = new Plugin_Upgrader( $skin );
+		$result   = $upgrader->install( $api->download_link );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$status['debug'] = $skin->get_upgrade_messages();
+		}
+
+		if ( is_wp_error( $result ) ) {
+			$status['errorCode']    = $result->get_error_code();
+			$status['errorMessage'] = $result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( is_wp_error( $skin->result ) ) {
+			$status['errorCode']    = $skin->result->get_error_code();
+			$status['errorMessage'] = $skin->result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( $skin->get_errors()->get_error_code() ) {
+			$status['errorMessage'] = $skin->get_error_messages();
+
+			wp_send_json_error( $status );
+		} elseif ( is_null( $result ) ) {
+			global $wp_filesystem;
+
+			$status['errorCode']    = 'unable_to_connect_to_filesystem';
+			$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'everest-forms' );
+
+			// Pass through the error from WP_Filesystem if one was raised.
+			if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+				$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+			}
+			wp_send_json_error( $status );
+		}
+
+		$install_status = install_plugin_install_status( $api );
+
+		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+			activate_plugin( $install_status['file'] );
+		}
+
+		wp_send_json_success( $status );
 	}
 
 	/**

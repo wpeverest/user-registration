@@ -20,6 +20,62 @@ class UR_Updater_Key_API {
 	private static $endpoint = 'https://wpeverest.com/edd-sl-api/?';
 
 	/**
+	 * Attempt to check a plugin license.
+	 */
+	public static function check( $api_params ) {
+		$defaults = array(
+			'url'        => home_url(),
+			'edd_action' => 'check_license',
+		);
+
+		$api_params = wp_parse_args( $defaults, $api_params );
+
+		// Call the API.
+		$response = wp_remote_post(
+			self::$endpoint,
+			array(
+				'timeout'   => 15,
+				'body'      => $api_params,
+				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+			)
+		);
+
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+			return false;
+		} else {
+			return wp_remote_retrieve_body( $response );
+		}
+	}
+
+	/**
+	 * Attempt to check a plugin version.
+	 */
+	public static function version( $api_params ) {
+		$defaults = array(
+			'url'        => home_url(),
+			'edd_action' => 'get_version',
+		);
+
+		$api_params = wp_parse_args( $defaults, $api_params );
+
+		// Call the API.
+		$response = wp_remote_post(
+			self::$endpoint,
+			array(
+				'timeout'   => 15,
+				'body'      => $api_params,
+				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+			)
+		);
+
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+			return false;
+		} else {
+			return wp_remote_retrieve_body( $response );
+		}
+	}
+
+	/**
 	 * Attempt to activate a plugin license.
 	 *
 	 * @return string JSON response
