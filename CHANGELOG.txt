@@ -1,3 +1,10 @@
+= 2.0.5    - 15/11/2021
+* Enhance  - Allowed more HTML tags in description of field.
+* Enhance  - Login title missing in the Login form.
+* Fix      - Form settings preview not showing after editing form name.
+* Fix      - Prevent core login redirect to login page with different slug.
+* Fix      - Required and Hide Label issue in Safari Browser.
+* Fix      - Empty Form when html field used.
 
 = 2.0.4    - 19/10/2021
 * Enhance  - File and user status in export user csv.
