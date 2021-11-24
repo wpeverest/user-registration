@@ -70,6 +70,17 @@
 	@include loader();
 }
 
+/**
+   * Toggle class.
+   */
+   .userregistration-forms-hidden {
+	display: block;
+}
+
+.userregistration-forms-hidden {
+	display: none;
+}
+
 .user-registration {
 	&__wrap {
 
