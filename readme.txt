@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.8.1
-Stable tag: 2.0.4
+Tested up to: 5.8.2
+Stable tag: 2.0.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -274,6 +274,14 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.0.5    - 15/11/2021
+* Enhance - Allowed more HTML tags in description of field.
+* Enhance - Login title missing in the Login form.
+* Fix - Form settings preview not showing after editing form name.
+* Fix - Prevent core login redirect to login page with different slug.
+* Fix - Required and Hide Label issue in Safari Browser.
+* Fix - Empty Form when html field used.
 
 = 2.0.4    - 19/10/2021
 * Enhance  - File and user status in export user csv.
