@@ -538,6 +538,7 @@ class UR_AJAX {
 			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
 						$redirect = admin_url();
 					} else {
+
 						if ( ! empty( $_POST['redirect'] ) ) {
 							$redirect = $_POST['redirect'];
 						} elseif ( wp_get_raw_referer() ) {
