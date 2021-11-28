@@ -92,7 +92,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			global $current_section;
 			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
-				$GLOBALS['hide_save_button'] = true;
 			} else {
 				$settings = array();
 			}

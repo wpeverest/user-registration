@@ -184,7 +184,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
 					}
 
-					wp_send_json_success( $status );
+					add_action( "admin_notices", array( $this, "user_registration_extension_download_success_notice" ) );
 				}
 			}
 
@@ -242,7 +242,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				activate_plugin( $install_status['file'] );
 			}
 
-			wp_send_json_success( $status );
+			add_action( "admin_notices", array( $this, "user_registration_extension_download_success_notice" ) );
 		} catch ( Exception $e ) {
 
 			$message = $e->getMessage();
@@ -540,7 +540,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	/**
 	 * Display upgrade to PRO notice.
 	 *
-	 * @since 2.0.6
+	 * @since 3.0.0
 	 */
 	public function user_registration_upgrade_to_pro_notice() {
 		$license_key = get_option( $this->plugin_slug . '_license_key' );
@@ -554,7 +554,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License', 'user-registration' ) . '</a>';
 		}
 
-		if ( ! file_exists( $ur_pro_plugins_path ) || ! is_plugin_active( 'user-registration-pro/user-registration' ) ) {
+		if ( ! file_exists( $ur_pro_plugins_path ) ) {
 			?>
 				<div id="user-registration-review-notice" class="notice notice-info user-registration-notice" data-purpose="review">
 					<div class="user-registration-notice-thumbnail">
@@ -571,6 +571,16 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Success notice on PRO installation.
+	 *
+	 * @since 3.0.0
+	 */
+	public function user_registration_extension_download_success_notice() {
+		 $notice_html = __("User Registration PRO has been installed successfully.", 'user-registration' );
+		include dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php';
 	}
 }
 
