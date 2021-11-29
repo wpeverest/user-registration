@@ -69,6 +69,7 @@ class UR_Setting_User_login extends UR_Field_Settings {
 			)
 		);
 
+		$fields = apply_filters( 'user_login_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 }

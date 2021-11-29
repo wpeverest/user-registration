@@ -53,6 +53,8 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
+
+		$fields = apply_filters( 'textarea_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 }

@@ -39,6 +39,8 @@ class UR_Setting_Password extends UR_Field_Settings {
 				'tip'         => __( 'Maximum allowed length of password.', 'user-registration' ),
 			),
 		);
+		
+		$fields = apply_filters( 'password_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 }

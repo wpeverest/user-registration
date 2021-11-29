@@ -73,6 +73,7 @@ class UR_Setting_Number extends UR_Field_Settings {
 			),
 		);
 
+		$fields = apply_filters( 'number_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 }

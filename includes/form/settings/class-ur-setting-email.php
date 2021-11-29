@@ -40,6 +40,7 @@ class UR_Setting_Email extends UR_Field_Settings {
 			),
 		);
 
+		$fields = apply_filters( 'email_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 }

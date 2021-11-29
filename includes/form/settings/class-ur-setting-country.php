@@ -66,6 +66,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 			),
 		);
 
+		$fields = apply_filters( 'country_custom_advance_settings', $this->field_id, $this->default_class, $fields );
 		$this->render_html( $fields );
 	}
 
