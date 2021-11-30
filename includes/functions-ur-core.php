@@ -2137,7 +2137,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 */
 	function user_registration_pro_render_conditional_logic($connection,$integration, $form_id){
 		$output = '<div class="ur_email_marketing_conditional_logic_container">';
-        $output .= '<p class="ur_use_conditional_logic">';
+        $output .= '<div class="ur_use_conditional_logic ur-check">';
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
@@ -2145,12 +2145,12 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			$checked = 'checked=checked';
 		}
         $output .= '<input class="ur-enable-conditional-logic" type="checkbox" name="ur_enable_conditional_logic" id="ur_enable_conditional_logic" '.$checked.'>';
-		$output .= '<label for="ur_enable_conditional_logic">Use conditional logic</label>';
-		$output .= "</p>";
+		$output .= '<label for="ur_enable_conditional_logic">' .esc_html__( "Use conditional logic","user-registration") .'</label>';
+		$output .= "</div>";
 
-        $output .= '<div class="ur_conditional_logic_wrapper" data-source="'.$integration.'">';
-		$output .= "<h4>Conditional Rules</h4>";
-        $output .= '<div class="ur-logic"><p>Send data only if the following matches.</p></div>';
+        $output .= '<div class="ur_conditional_logic_wrapper" data-source="'.esc_attr( $integration ).'">';
+		$output .= '<h4>'. esc_html__( "Conditional Rules", "user-registration") .'</h4>';
+        $output .= '<div class="ur-logic"><p>'. esc_html__("Send data only if the following matches.","user-registration") .'</p></div>';
 		$output .= '<div class="ur-conditional-wrapper">';
 		$output .= '<select class="ur_conditional_field" name="ur_conditional_field">';
 		$get_all_fields       = get_conditional_fields_by_form_id( $form_id, '' );
@@ -2161,11 +2161,11 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			foreach( $get_all_fields as $key => $field ) {
 				$selectedAttr = '';
 
-				if( $connection["conditional_logic_data"]["conditional_field"] === $key ) {
+				if( isset( $connection["conditional_logic_data"]["conditional_field"] ) && $connection["conditional_logic_data"]["conditional_field"] === $key ) {
 					$selectedAttr = 'selected=selected';
 					$selected_ur_field_type = $field['field_key'];
 				}
-				$output .='<option data-type="' . $field["field_key"].  '" data-label="' .  $field["label"]. '" value="' .  $key . '" ' .  $selectedAttr . ">" .   $field["label"] ."</option>";
+				$output .='<option data-type="' . esc_attr( $field["field_key"] ).  '" data-label="' .  esc_attr( $field["label"] ). '" value="' . esc_attr( $key ) . '" ' .  $selectedAttr . ">" .   esc_html( $field["label"] ) ."</option>";
 			}
 		}
         $output .= "</select>";
@@ -2173,24 +2173,26 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<option value="is" '. ("is"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is </option>';
         $output .= '<option value="is_not" '. ("is_not"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is not </option>';
         $output .= "</select>";
+
 		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
 			$choices = get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
 			$output .= '<select  name="ur-conditional-input" class="ur-conditional-input">';
 
 			if ( is_array( $choices ) && array_filter( $choices ) ) {
 				$output .= '<option>--select--</option>';
+
 				foreach ( $choices as $key => $choice ) {
 					$key           = $selected_ur_field_type == 'country' ? $key : $choice;
-					$selectedvalue = $connection["conditional_logic_data"]["conditional_value"] == $key ? 'selected="selected"' : '';
-					$output       .= '<option ' . $selectedvalue . ' value="' . $key . '">' . esc_html( $choice ) . '</option>';
+					$selectedvalue = isset( $connection["conditional_logic_data"]["conditional_value"] ) && $connection["conditional_logic_data"]["conditional_value"] == $key ? 'selected="selected"' : '';
+					$output       .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
 				}
 			} else {
 				$selected = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : 0;
-				$output  .= '<option value="1" ' . ( $selected == '1' ? 'selected="selected"' : '' ) . ' >' . __( 'Checked', 'user-registration-conditional-logic' ) . '</option>';
+				$output  .= '<option value="1" ' . ( $selected == '1' ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
 			}
 			$output .= '</select>';
 		} else {
-			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'.$connection["conditional_logic_data"]["conditional_value"].'">';
+			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'.esc_attr( $connection["conditional_logic_data"]["conditional_value"] ).'">';
 		}
 		$output .= "</div>";
         $output .= "</div>";
