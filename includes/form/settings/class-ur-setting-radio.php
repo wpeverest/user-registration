@@ -37,7 +37,7 @@ class UR_Setting_Radio extends UR_Field_Settings {
 				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
 			),
 		);
-		$fields = apply_filters( 'radio_custom_advance_settings', $this->field_id, $this->default_class, $fields );
+		$fields = apply_filters( 'radio_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}
 }
