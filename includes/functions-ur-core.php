@@ -2170,13 +2170,13 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		}
         $output .= "</select>";
 		$output .= '<select class="ur-conditional-condition" name="ur-conditional-condition">';
-		$output .= '<option value="is" '. ("is"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is </option>';
-        $output .= '<option value="is_not" '. ("is_not"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is not </option>';
+		$output .= '<option value="is" '. ( isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is </option>';
+        $output .= '<option value="is_not" '. (isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is_not"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is not </option>';
         $output .= "</select>";
 
 		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
 			$choices = get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
-			$output .= '<select  name="ur-conditional-input" class="ur-conditional-input">';
+			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
 
 			if ( is_array( $choices ) && array_filter( $choices ) ) {
 				$output .= '<option>--select--</option>';
@@ -2192,7 +2192,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			}
 			$output .= '</select>';
 		} else {
-			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'.esc_attr( $connection["conditional_logic_data"]["conditional_value"] ).'">';
+			$value = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : '';
+			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'. esc_attr( $value ).'">';
 		}
 		$output .= "</div>";
         $output .= "</div>";
