@@ -1,7 +1,10 @@
+#user-registration-review-notice, #user-registration-survey-notice {
+	border-left-color: #475bb2;
+}
+
 .user-registration-notice {
 	padding: 15px 15px 15px 0;
 	background-color: #fff;
-	border-left-color: #475bb2;
 
 	.notice-dismiss {
 		&:before {
@@ -31,16 +34,20 @@
 			line-height: 1;
 		}
 
+		.ur-error {
+			color: #d63638;
+		}
+
 		p {
 			font-size: 13px;
 			margin: 0;
 			padding: 0 0 10px 0;
 		}
-		p.extra-pad {
-			padding-bottom: 20px;
-		}
 	}
 
+	.extra-pad {
+		padding-bottom: 20px;
+	}
 	.user-registration-notice-ul {
 		margin: 0;
 		padding: 0;

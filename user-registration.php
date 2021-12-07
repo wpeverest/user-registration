@@ -351,9 +351,8 @@ if ( ! function_exists( 'UR' ) ) {
 		 * When Pro version is activated, deactivate free version.
 		 */
 		function user_registration_pro_activated() {
-
+			set_transient( 'user_registration_pro_activated', true );
 			user_registration_free_deactivate();
-
 		}
 	}
 	add_action( 'activate_user-registration-pro/user-registration.php', 'user_registration_pro_activated' );
@@ -396,8 +395,8 @@ if ( ! function_exists( 'UR' ) ) {
 			$plugin = 'user-registration/user-registration.php';
 
 			deactivate_plugins( $plugin );
-
 			do_action( 'user_registration_free_deactivate', $plugin );
+			delete_transient( 'user_registration_pro_activated' );
 		}
 	}
 	add_action( 'admin_init', 'user_registration_free_deactivate' );

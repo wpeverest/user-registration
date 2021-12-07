@@ -472,6 +472,10 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Deactivate a license.
 	 */
 	public function deactivate_license() {
+		if( get_transient( 'user_registration_pro_activated' ) ) {
+			return;
+		}
+
 		$reset = UR_Updater_Key_API::deactivate(
 			array(
 				'license' => $this->api_key,
@@ -554,15 +558,18 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License', 'user-registration' ) . '</a>';
 		}
 
-		if ( ! file_exists( $ur_pro_plugins_path ) ) {
+		if ( ! file_exists( $ur_pro_plugins_path ) || ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || ! $license_key ) {
 			?>
-				<div id="user-registration-review-notice" class="notice notice-info user-registration-notice" data-purpose="review">
+				<div id="user-registration-upgrade-notice" class="notice notice-error user-registration-notice" data-purpose="review">
 					<div class="user-registration-notice-thumbnail">
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
 					</div>
 					<div class="user-registration-notice-text">
-						<h3><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
-						<p><?php _e( '<strong>User Registration PRO</strong> will be effective 3 months from today. So If you are a premium user and have a license key then in order to smoothly using our addons please upgrade to PRO', 'user-registration' ); ?></p>
+						<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
+						<p class="extra-pad"><?php _e( '<strong>User Registration PRO</strong> will be effective after certain time( need to specify time frame here ). So If you are a premium user and have a license key then in order to smoothly using our addons please upgrade to PRO.
+    If you are an active user of User Registration Extras addon, then you can deactivate or even delete extras after Pro addon activation as all the features of Extras addon has been shifted to Pro', 'user-registration' ); ?></p>
+						<p class="extra-pad"><?php _e('<strong>What will happen if you do not upgrade to pro ?</strong> <br>
+						If you do not upgrade to pro then after the specified time frame from which Pro will be effective, updates of other      addons may not run properly and you may face a lot of issues regarding other addons updates. So we strongly suggest you to install and activate User Registration Pro.') ?></p>
 						<ul class="user-registration-notice-ul">
 							<li><?php echo wp_kses_post( $link ); ?></li>
 							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>

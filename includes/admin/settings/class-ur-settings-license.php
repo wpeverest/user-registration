@@ -60,7 +60,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 						'license_options' => array(
 							'title' => __( 'License Activation', 'user-registration' ),
 							'type'  => 'card',
-							'desc'  => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below inorder to use our premium addons smoohly.', 'user-registration' ),
+							'desc'  => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below inorder to use our premium addons smoothly.', 'user-registration' ),
 							'settings' => array(
 								array(
 									'title'    => __( 'License Key', 'user-registration' ),
