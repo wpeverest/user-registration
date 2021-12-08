@@ -122,6 +122,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Process plugin requests.
 	 */
 	private function plugin_requests() {
+
 		if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) {
 			$this->activate_license_request();
 		} elseif ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) {
@@ -132,6 +133,10 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$this->add_notice( array( $this, 'activated_key_notice' ) );
 		} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) {
 			$this->add_notice( array( $this, 'deactivated_key_notice' ) );
+		} elseif( !empty( $_POST['download_user_registration_pro'] ) ) {
+			$this->install_extension();
+			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
+			exit;
 		}
 	}
 
@@ -551,11 +556,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
 
 		$link = '';
+		$content = '';
 
 		if ( $license_key ) {
-			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Download and Install PRO', 'user-registration' ) . '</a>';
+			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you have active premium license of User Registration', 'user-registration' ), __( 'please click button below to install and activate User Registration Pro. Going forward User Registration Pro is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$link = '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
-			$link = '<a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings' ) . '&tab=license') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License', 'user-registration' ) . '</a>';
+			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$link = '<a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a>';
 		}
 
 		if ( ! file_exists( $ur_pro_plugins_path ) || ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || ! $license_key ) {
@@ -566,12 +574,10 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					</div>
 					<div class="user-registration-notice-text">
 						<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
-						<p class="extra-pad"><?php _e( '<strong>User Registration PRO</strong> will be effective after certain time( need to specify time frame here ). So If you are a premium user and have a license key then in order to smoothly using our addons please upgrade to PRO.
-    If you are an active user of User Registration Extras addon, then you can deactivate or even delete extras after Pro addon activation as all the features of Extras addon has been shifted to Pro', 'user-registration' ); ?></p>
-						<p class="extra-pad"><?php _e('<strong>What will happen if you do not upgrade to pro ?</strong> <br>
-						If you do not upgrade to pro then after the specified time frame from which Pro will be effective, updates of other      addons may not run properly and you may face a lot of issues regarding other addons updates. So we strongly suggest you to install and activate User Registration Pro.') ?></p>
+						<p class="extra-pad"><?php  _e( 'It seems you are using some premium addons of User Registration plugin. <br>', 'user-registration' ); ?></p>
+						<p class="extra-pad"><?php  echo wp_kses_post( $content ); ?></p>
 						<ul class="user-registration-notice-ul">
-							<li><?php echo wp_kses_post( $link ); ?></li>
+							<li><?php echo $license_key ? '<form method="post">' . wp_kses_post( $link ) . '</form>' : wp_kses_post( $link ); ?></li>
 							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
@@ -586,7 +592,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @since 3.0.0
 	 */
 	public function user_registration_extension_download_success_notice() {
-		 $notice_html = __("User Registration PRO has been installed successfully.", 'user-registration' );
+		$notice_html = __("User Registration Pro has been installed successfully.", 'user-registration' );
 		include dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php';
 	}
 }
