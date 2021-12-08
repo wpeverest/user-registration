@@ -2144,8 +2144,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 
 			$checked = 'checked=checked';
 		}
-        $output .= '<input class="ur-enable-conditional-logic" type="checkbox" name="ur_enable_conditional_logic" id="ur_enable_conditional_logic" '.$checked.'>';
-		$output .= '<label for="ur_enable_conditional_logic">' .esc_html__( "Use conditional logic","user-registration") .'</label>';
+        $output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" '.$checked.'>';
+		$output .= '<label for="ur_use_conditional_logic">' .esc_html__( "Use conditional logic","user-registration") .'</label>';
 		$output .= "</div>";
 
         $output .= '<div class="ur_conditional_logic_wrapper" data-source="'.esc_attr( $integration ).'">';
