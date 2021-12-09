@@ -555,11 +555,16 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = get_option( $this->plugin_slug . '_license_key' );
 		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
 
+		// If Pro is active do not show upgrade to pro notice.
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			return;
+		}
+
 		$link = '';
 		$content = '';
 
 		if ( $license_key ) {
-			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you have active premium license of User Registration', 'user-registration' ), __( 'please click button below to install and activate User Registration Pro. Going forward User Registration Pro is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration') );
 			$link = '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
 			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
@@ -578,7 +583,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<p class="extra-pad"><?php  echo wp_kses_post( $content ); ?></p>
 						<ul class="user-registration-notice-ul">
 							<li><?php echo $license_key ? '<form method="post">' . wp_kses_post( $link ) . '</form>' : wp_kses_post( $link ); ?></li>
-							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
 				</div>
