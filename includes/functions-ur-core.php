@@ -2137,7 +2137,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 */
 	function user_registration_pro_render_conditional_logic($connection,$integration, $form_id){
 		$output = '<div class="ur_email_marketing_conditional_logic_container">';
-        $output .= '<div class="ur_use_conditional_logic ur-check">';
+        $output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
