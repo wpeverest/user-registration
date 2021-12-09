@@ -2072,3 +2072,217 @@ function ur_get_field_data_by_field_name($form_id,$field_name){
 	}
 	return $field_data;
 }
+
+if ( ! function_exists( 'get_conditional_fields_by_form_id' ) ) {
+	/**
+	 * Get form fields by form id
+	 *
+	 * @param int    $form_id Form ID.
+	 * @param string $selected_field_key Field Key.
+	 */
+	function get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
+		$args          = array(
+			'post_type'   => 'user_registration',
+			'post_status' => 'publish',
+			'post__in'    => array( $form_id ),
+		);
+			$post_data = get_posts( $args );
+		// wrap all fields in array.
+		$fields = array();
+		if ( isset( $post_data[0]->post_content ) ) {
+			$post_content_array = json_decode( $post_data[0]->post_content );
+
+			if ( ! is_null( $post_content_array ) ) {
+				foreach ( $post_content_array as $data ) {
+					foreach ( $data as $single_data ) {
+						foreach ( $single_data as $field_data ) {
+							if ( isset( $field_data->general_setting->field_name )
+								&& isset( $field_data->general_setting->label ) ) {
+
+								$strip_fields = array(
+									'section_title',
+									'html',
+									'wysiwyg',
+									'billing_address_title',
+									'shipping_address_title',
+								);
+
+								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
+									continue;
+								}
+
+								$fields[ $field_data->general_setting->field_name ] = array(
+									'label'     => $field_data->general_setting->label,
+									'field_key' => $field_data->field_key,
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+		// Unset selected meta key.
+		unset( $fields[ $selected_field_key ] );
+		return $fields;
+	}
+}
+
+if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
+	/**
+	 * Render Conditional Logic in form settings of form builder.
+	 *
+	 * @param array $connection Connection Data.
+	 * @param string $integration Integration.
+	 * @return string
+	 */
+	function user_registration_pro_render_conditional_logic($connection,$integration, $form_id){
+		$output = '<div class="ur_conditional_logic_container">';
+        $output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
+		$checked = '';
+
+		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
+
+			$checked = 'checked=checked';
+		}
+        $output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" '.$checked.'>';
+		$output .= '<label>' .esc_html__( "Use conditional logic","user-registration") .'</label>';
+		$output .= "</div>";
+
+        $output .= '<div class="ur_conditional_logic_wrapper" data-source="'.esc_attr( $integration ).'">';
+		$output .= '<h4>'. esc_html__( "Conditional Rules", "user-registration") .'</h4>';
+        $output .= '<div class="ur-logic"><p>'. esc_html__("Send data only if the following matches.","user-registration") .'</p></div>';
+		$output .= '<div class="ur-conditional-wrapper">';
+		$output .= '<select class="ur_conditional_field" name="ur_conditional_field">';
+		$get_all_fields       = get_conditional_fields_by_form_id( $form_id, '' );
+		$selected_ur_field_type = '';
+
+		if( isset( $get_all_fields ) ) {
+
+			foreach( $get_all_fields as $key => $field ) {
+				$selectedAttr = '';
+
+				if( isset( $connection["conditional_logic_data"]["conditional_field"] ) && $connection["conditional_logic_data"]["conditional_field"] === $key ) {
+					$selectedAttr = 'selected=selected';
+					$selected_ur_field_type = $field['field_key'];
+				}
+				$output .='<option data-type="' . esc_attr( $field["field_key"] ).  '" data-label="' .  esc_attr( $field["label"] ). '" value="' . esc_attr( $key ) . '" ' .  $selectedAttr . ">" .   esc_html( $field["label"] ) ."</option>";
+			}
+		}
+        $output .= "</select>";
+		$output .= '<select class="ur-conditional-condition" name="ur-conditional-condition">';
+		$output .= '<option value="is" '. ( isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is </option>';
+        $output .= '<option value="is_not" '. (isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is_not"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is not </option>';
+        $output .= "</select>";
+
+		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
+			$choices = get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
+			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
+
+			if ( is_array( $choices ) && array_filter( $choices ) ) {
+				$output .= '<option>--select--</option>';
+
+				foreach ( $choices as $key => $choice ) {
+					$key           = $selected_ur_field_type == 'country' ? $key : $choice;
+					$selectedvalue = isset( $connection["conditional_logic_data"]["conditional_value"] ) && $connection["conditional_logic_data"]["conditional_value"] == $key ? 'selected="selected"' : '';
+					$output       .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
+				}
+			} else {
+				$selected = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : 0;
+				$output  .= '<option value="1" ' . ( $selected == '1' ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
+			}
+			$output .= '</select>';
+		} else {
+			$value = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : '';
+			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'. esc_attr( $value ).'">';
+		}
+		$output .= "</div>";
+        $output .= "</div>";
+        $output .= "</div>";
+		return $output;
+	}
+}
+
+
+if ( ! function_exists( 'get_checkbox_choices' ) ) {
+	/**
+	 * Get Select and Checkbox Fields Choices
+	 *
+	 * @param int    $form_id Form ID.
+	 * @param string $field_name Field Name.
+	 * @return array $choices
+	 */
+	function get_checkbox_choices( $form_id, $field_name ) {
+
+		$form_data = ur_get_field_data( $form_id, $field_name );
+		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
+			$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
+			$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
+		/* Bacward Compatibility end.*/
+
+		$choices = isset( $form_data->general_setting->options ) ? $form_data->general_setting->options : '';
+
+		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
+		if ( ! empty( $advance_setting_choices ) ) {
+			$choices = explode( ',', $advance_setting_choices );
+		} elseif ( ! empty( $advance_setting_options ) ) {
+			$choices = explode( ',', $advance_setting_options );
+			/* Backward Compatibility end. */
+
+		} elseif ( 'country' === $form_data->field_key ) {
+			$country = new UR_Form_Field_Country();
+			$country->get_country();
+			$choices = $country->get_country();
+		}
+
+		return $choices;
+	}
+}
+
+if ( ! function_exists( 'ur_get_field_data' ) ) {
+	/**
+	 * Get all fields data
+	 *
+	 * @param  int    $form_id    Form ID.
+	 * @param  string $field_name Field Name.
+	 * @return array    $field_data.
+	 */
+	function ur_get_field_data( $form_id, $field_name ) {
+		$args      = array(
+			'post_type'   => 'user_registration',
+			'post_status' => 'publish',
+			'post__in'    => array( $form_id ),
+		);
+		$post_data = get_posts( $args );
+
+		if ( isset( $post_data[0]->post_content ) ) {
+			$post_content_array = json_decode( $post_data[0]->post_content );
+
+			foreach ( $post_content_array as $data ) {
+				foreach ( $data as $single_data ) {
+					foreach ( $single_data as $field_data ) {
+						isset( $field_data->general_setting->field_name ) ? $field_data->general_setting->field_name : '';
+						if ( $field_data->general_setting->field_name === $field_name ) {
+								return $field_data;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_string_to_bool' ) ) {
+	/**
+	 * This function return boolean according to string to avoid colision of 1, true, yes.
+	 *
+	 * @param mixed $string String.
+	 * @return bool
+	 */
+	function ur_string_to_bool( $string ) {
+		if ( is_bool( $string ) ) {
+			return $string;
+		}
+		$string = strtolower( $string );
+		return ( 'yes' === $string || 1 === $string || 'true' === $string || '1' === $string );
+	}
+}

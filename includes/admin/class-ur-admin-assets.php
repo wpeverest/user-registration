@@ -63,12 +63,8 @@ class UR_Admin_Assets {
 		wp_enqueue_style( 'user-registration-form-modal-css' );
 
 		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
+		wp_enqueue_style( 'ur-notice' );
 
-		$enqueue_notice = ur_check_activation_date("10");
-
-		if ( true === $enqueue_notice ) {
-			wp_enqueue_style( 'ur-notice' );
-		}
 
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids() ) ) {
@@ -195,20 +191,16 @@ class UR_Admin_Assets {
 		wp_enqueue_script( 'user-registration-form-modal-js' );
 		wp_enqueue_script( 'ur-enhanced-select' );
 
-		$enqueue_review = ur_check_activation_date("10");
-
-		if ( $enqueue_review === true ) {
-			wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION );
-			wp_localize_script(
-				'ur-notice',
-				'ur_notice_params',
-				array(
-					'ajax_url'     => admin_url( 'admin-ajax.php' ),
-					'review_nonce' => wp_create_nonce( 'review-nonce' ),
-					'survey_nonce' => wp_create_nonce( 'survey-nonce' ),
-				)
-			);
-		}
+		wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION );
+		wp_localize_script(
+			'ur-notice',
+			'ur_notice_params',
+			array(
+				'ajax_url'     => admin_url( 'admin-ajax.php' ),
+				'review_nonce' => wp_create_nonce( 'review-nonce' ),
+				'survey_nonce' => wp_create_nonce( 'survey-nonce' ),
+			)
+		);
 
 		wp_localize_script(
 			'ur-enhanced-select',

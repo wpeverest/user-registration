@@ -162,4 +162,26 @@
 
 		$(".user-registration-custom-selected-file").html(file.name);
 	});
+
+	$(document).on(
+		"click",
+		"#user_registration_pro_general_setting_prevent_active_login",
+		function () {
+			if ($(this).prop("checked")) {
+				$(document)
+					.find(
+						"#user_registration_pro_general_setting_limited_login"
+					)
+					.parents("tr")
+					.removeClass("userregistration-forms-hidden");
+			} else {
+				$(document)
+					.find(
+						"#user_registration_pro_general_setting_limited_login"
+					)
+					.parents("tr")
+					.addClass("userregistration-forms-hidden");
+			}
+		}
+	);
 })(jQuery);

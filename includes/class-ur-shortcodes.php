@@ -72,6 +72,7 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
 		wp_enqueue_script( 'ur-login' );
 
 		return self::shortcode_wrapper(
