@@ -101,12 +101,12 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function get_bulk_actions() {
 		if ( isset( $_GET['status'] ) && ( 'trashed' == $_GET['status'] || 'trash' == $_GET['status'] ) ) {
 			$actions = array(
-				'untrash' => __( 'Restore', 'user-registration-extras' ),
-				'delete'  => __( 'Delete permanently', 'user-registration-extras' ),
+				'untrash' => __( 'Restore', 'user-registration' ),
+				'delete'  => __( 'Delete permanently', 'user-registration' ),
 			);
 		}else{
 			$actions = array(
-				'trash' => __( 'Move to trash', 'user-registration-extras' ),
+				'trash' => __( 'Move to trash', 'user-registration' ),
 			);
 		}
 
@@ -529,7 +529,7 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
 			$h_time = sprintf(
-				__( '%s ago', 'user-registration-extras' ),
+				__( '%s ago', 'user-registration' ),
 				human_time_diff( $time )
 			);
 		} else {
