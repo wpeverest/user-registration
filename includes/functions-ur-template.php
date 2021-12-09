@@ -833,6 +833,10 @@ function ur_logout_url( $redirect = '' ) {
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
 				}
+
+				if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
+					$redirect = $block['attrs']['logoutUrl'];
+				}
 			}
 		 preg_match( '/' . get_shortcode_regex() . '/s', $new_shortcode, $matches );
 
