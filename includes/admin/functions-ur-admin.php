@@ -423,7 +423,7 @@ function user_registration_settings_get_option( $option_name, $default = '' ) {
  */
 function ur_admin_form_settings( $form_id = 0 ) {
 
-	echo '<div id="general-settings" ><h3>' . esc_html__( 'General Settings', 'user-registration' ) . '</h3>';
+	echo '<div id="general-settings" ><h3>' . esc_html__( 'General', 'user-registration' ) . '</h3>';
 
 	$arguments = ur_admin_form_settings_fields( $form_id );
 

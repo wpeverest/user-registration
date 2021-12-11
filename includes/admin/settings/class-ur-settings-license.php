@@ -77,10 +77,32 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 				)
 			);
 
+			// Replace license input box and display deactivate license button when license is activated.
 			if ( get_option(  'user-registration_license_key' ) ) {
-				$settings['sections']['license_options']['settings'] = array();
+				$settings['sections']['license_options']['settings'] = array(
+					array(
+						'title'    => __( 'Deactivate License', 'user-registration' ),
+						'desc'     => '',
+						'desc_tip' => __( 'Deactivate the license of User Registration plugin', 'user-registration' ),
+						'type'     => 'link',
+						'id'       => 'user-registration_deactivate-license_key',
+						'css' 	   => 'background:red; border:none; color:white;',
+						'buttons'  => array(
+							array(
+								'title' => __( 'Deactivate License', 'user-registration' ),
+								'href'  => remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( 'user-registration_deactivate_license', 1 ) ),
+								'class' => 'user_registration-deactivate-license-key',
+							),
+						),
+					)
+				);
 				$settings['sections']['license_options']['desc'] = __( 'Your license has already been activated. Enjoy using <strong>User Registration</strong>.' , 'user-registration' );
+
+				// Hide save changes button from settings when license is activated.
+				$GLOBALS['hide_save_button'] = true;
+
 			}
+
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 

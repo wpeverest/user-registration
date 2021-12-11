@@ -614,7 +614,7 @@ class UR_Admin_Settings {
 									foreach ( $value['buttons'] as $button ) {
 										$settings .= '<a
 													href="' . esc_url( $button['href'] ) . '"
-													class="button ' . esc_attr( $button['class'] ) . '">' . esc_html( $button['title'] ) . '</a>';
+													class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '">' . esc_html( $button['title'] ) . '</a>';
 											}
 										}
 
