@@ -46,6 +46,11 @@ class UR_AddOn_Updater {
 		$this->api_data    = $_api_data;
 		$this->name        = plugin_basename( $_plugin_file );
 		$this->slug        = basename( $_plugin_file, '.php' );
+
+		if( strpos( $this->name, 'user-registration-pro' ) !== false ) {
+			$this->slug .= '-pro';
+		}
+
 		$this->version     = $_api_data['version'];
 		$this->wp_override = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
 		$this->beta        = ! empty( $this->api_data['beta'] ) ? true : false;
