@@ -2073,14 +2073,14 @@ function ur_get_field_data_by_field_name($form_id,$field_name){
 	return $field_data;
 }
 
-if ( ! function_exists( 'get_conditional_fields_by_form_id' ) ) {
+if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id' ) ) {
 	/**
 	 * Get form fields by form id
 	 *
 	 * @param int    $form_id Form ID.
 	 * @param string $selected_field_key Field Key.
 	 */
-	function get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
+	function user_registration_pro_get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
 		$args          = array(
 			'post_type'   => 'user_registration',
 			'post_status' => 'publish',
@@ -2153,7 +2153,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
         $output .= '<div class="ur-logic"><p>'. esc_html__("Send data only if the following matches.","user-registration") .'</p></div>';
 		$output .= '<div class="ur-conditional-wrapper">';
 		$output .= '<select class="ur_conditional_field" name="ur_conditional_field">';
-		$get_all_fields       = get_conditional_fields_by_form_id( $form_id, '' );
+		$get_all_fields       = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 		$selected_ur_field_type = '';
 
 		if( isset( $get_all_fields ) ) {
@@ -2175,7 +2175,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
         $output .= "</select>";
 
 		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
-			$choices = get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
+			$choices = user_registration_pro_get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
 			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
 
 			if ( is_array( $choices ) && array_filter( $choices ) ) {
@@ -2203,7 +2203,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 }
 
 
-if ( ! function_exists( 'get_checkbox_choices' ) ) {
+if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 	/**
 	 * Get Select and Checkbox Fields Choices
 	 *
@@ -2211,9 +2211,9 @@ if ( ! function_exists( 'get_checkbox_choices' ) ) {
 	 * @param string $field_name Field Name.
 	 * @return array $choices
 	 */
-	function get_checkbox_choices( $form_id, $field_name ) {
+	function user_registration_pro_get_checkbox_choices( $form_id, $field_name ) {
 
-		$form_data = ur_get_field_data( $form_id, $field_name );
+		$form_data = user_registration_pro_get_field_data( $form_id, $field_name );
 		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
 			$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
 			$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
@@ -2238,7 +2238,7 @@ if ( ! function_exists( 'get_checkbox_choices' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ur_get_field_data' ) ) {
+if ( ! function_exists( 'user_registration_pro_get_field_data' ) ) {
 	/**
 	 * Get all fields data
 	 *
@@ -2246,7 +2246,7 @@ if ( ! function_exists( 'ur_get_field_data' ) ) {
 	 * @param  string $field_name Field Name.
 	 * @return array    $field_data.
 	 */
-	function ur_get_field_data( $form_id, $field_name ) {
+	function user_registration_pro_get_field_data( $form_id, $field_name ) {
 		$args      = array(
 			'post_type'   => 'user_registration',
 			'post_status' => 'publish',
