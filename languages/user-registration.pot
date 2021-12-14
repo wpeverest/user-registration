@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-12-09T08:22:30+00:00\n"
+"POT-Creation-Date: 2021-12-15T06:38:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: user-registration\n"
@@ -38,7 +38,6 @@ msgid "https://wpeverest.com"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:640
-#: includes/admin/functions-ur-admin.php:426
 msgid "General Settings"
 msgstr ""
 
@@ -703,7 +702,8 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:183
 #: includes/admin/class-ur-admin.php:231
-#: includes/class-ur-plugin-updater.php:581
+#: includes/class-ur-plugin-updater.php:620
+#: includes/class-ur-plugin-updater.php:639
 msgid "I have a query"
 msgstr ""
 
@@ -742,6 +742,13 @@ msgstr ""
 
 #: includes/admin/functions-ur-admin.php:233
 msgid "WordPress User Extra Information"
+msgstr ""
+
+#: includes/admin/functions-ur-admin.php:426
+#: includes/admin/settings/class-ur-settings-general.php:27
+#: includes/admin/settings/class-ur-settings-general.php:69
+#: includes/admin/settings/class-ur-settings-general.php:370
+msgid "General"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:36
@@ -820,12 +827,6 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:243
 msgid "Smart Tags Used"
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-general.php:27
-#: includes/admin/settings/class-ur-settings-general.php:69
-#: includes/admin/settings/class-ur-settings-general.php:370
-msgid "General"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:42
@@ -1495,7 +1496,17 @@ msgstr ""
 msgid "Please enter the license key"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:82
+#: includes/admin/settings/class-ur-settings-license.php:84
+#: includes/admin/settings/class-ur-settings-license.php:92
+#: includes/class-ur-plugin-updater.php:384
+msgid "Deactivate License"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-license.php:86
+msgid "Deactivate the license of User Registration plugin"
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-license.php:99
 msgid "Your license has already been activated. Enjoy using <strong>User Registration</strong>."
 msgstr ""
 
@@ -1851,19 +1862,19 @@ msgid ""
 "Thank You!"
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:224
+#: includes/admin/updater/class-ur-addon-updater.php:229
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:232
+#: includes/admin/updater/class-ur-addon-updater.php:237
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:428
+#: includes/admin/updater/class-ur-addon-updater.php:433
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:428
+#: includes/admin/updater/class-ur-addon-updater.php:433
 msgid "Error"
 msgstr ""
 
@@ -2481,10 +2492,6 @@ msgstr ""
 msgid "Deactivate License Key"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:384
-msgid "Deactivate License"
-msgstr ""
-
 #: includes/class-ur-plugin-updater.php:420
 msgid "The provided license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
@@ -2523,39 +2530,43 @@ msgstr ""
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:562
-msgid "If you have active premium license of User Registration"
+#: includes/class-ur-plugin-updater.php:567
+msgid "<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:562
-msgid "please click button below to install and activate User Registration Pro. Going forward User Registration Pro is necessary for smooth running of premium addons of User Registration that you are currently using."
-msgstr ""
-
-#: includes/class-ur-plugin-updater.php:563
+#: includes/class-ur-plugin-updater.php:568
 msgid "Install and Activate User Registration Pro"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:565
+#: includes/class-ur-plugin-updater.php:570
 msgid "If you do not have active premium license of User Registration"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:565
+#: includes/class-ur-plugin-updater.php:570
 msgid "please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:566
+#: includes/class-ur-plugin-updater.php:571
 msgid "Purchase Premium License"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:576
+#: includes/class-ur-plugin-updater.php:617
+msgid "<strong> Update all addons of User Registration!!</strong>"
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:618
+msgid "It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>"
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:634
 msgid "<strong> Upgrade To PRO!!</strong>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:577
+#: includes/class-ur-plugin-updater.php:635
 msgid "It seems you are using some premium addons of User Registration plugin. <br>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:595
+#: includes/class-ur-plugin-updater.php:653
 msgid "User Registration Pro has been installed successfully."
 msgstr ""
 

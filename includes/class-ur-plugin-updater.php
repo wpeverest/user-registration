@@ -551,6 +551,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @since 3.0.0
 	 */
 	public function user_registration_upgrade_to_pro_notice() {
+
+		// Donot show notice on form builder page.
+		if( isset( $_REQUEST['page'] ) && 'add-new-registration' === $_REQUEST['page'] ) {
+			return;
+		}
+
 		$license_key = get_option( $this->plugin_slug . '_license_key' );
 		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
 
@@ -562,7 +568,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$link = '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
 			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link = '<a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a>';
+			$link = '<a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a>';
 		}
 
 		// If Pro is active do not show upgrade to pro notice but show update addons notice if not upto date.
@@ -609,9 +615,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					</div>
 					<div class="user-registration-notice-text">
 						<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
-						<p class="extra-pad"><?php  echo sprintf( __( 'It seems that you have installed <strong>User Registration Pro</strong> and have not updated some addons.<br>', 'user-registration' ) ); ?></p>
+						<p class="extra-pad"><?php  echo sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ); ?></p>
 						<ul class="user-registration-notice-ul">
-							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
 				</div>
@@ -630,7 +636,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<p class="extra-pad"><?php  echo wp_kses_post( $content ); ?></p>
 						<ul class="user-registration-notice-ul">
 							<li><?php echo $license_key ? '<form method="post">' . wp_kses_post( $link ) . '</form>' : wp_kses_post( $link ); ?></li>
-							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
 				</div>
