@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.1.0\n"
+"Project-Id-Version: User Registration 2.1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-12-15T06:38:36+00:00\n"
+"POT-Creation-Date: 2021-12-16T08:14:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: user-registration\n"
@@ -702,8 +702,8 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:183
 #: includes/admin/class-ur-admin.php:231
-#: includes/class-ur-plugin-updater.php:620
-#: includes/class-ur-plugin-updater.php:639
+#: includes/class-ur-plugin-updater.php:627
+#: includes/class-ur-plugin-updater.php:646
 msgid "I have a query"
 msgstr ""
 
@@ -2526,6 +2526,7 @@ msgstr ""
 
 #: includes/class-ur-plugin-updater.php:534
 #: includes/class-ur-plugin-updater.php:540
+#: includes/class-ur-plugin-updater.php:625
 #: templates/myaccount/dashboard.php:61
 msgid "%1$s"
 msgstr ""
@@ -2539,34 +2540,46 @@ msgid "Install and Activate User Registration Pro"
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:570
-msgid "If you do not have active premium license of User Registration"
+msgid "If you already have an active license key."
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:570
-msgid "please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using."
+msgid "please activate the key."
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:571
+msgid "If you do not have active premium license of User Registration"
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:571
+msgid "please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using."
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:572
 msgid "Purchase Premium License"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:617
+#: includes/class-ur-plugin-updater.php:573
+msgid "Activate License Key"
+msgstr ""
+
+#: includes/class-ur-plugin-updater.php:623
 msgid "<strong> Update all addons of User Registration!!</strong>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:618
+#: includes/class-ur-plugin-updater.php:624
 msgid "It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:634
+#: includes/class-ur-plugin-updater.php:641
 msgid "<strong> Upgrade To PRO!!</strong>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:635
+#: includes/class-ur-plugin-updater.php:642
 msgid "It seems you are using some premium addons of User Registration plugin. <br>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:653
+#: includes/class-ur-plugin-updater.php:660
 msgid "User Registration Pro has been installed successfully."
 msgstr ""
 

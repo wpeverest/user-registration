@@ -205,7 +205,7 @@ class UR_Email_Confirmation {
 
 	// Successful registration message.
 	public function custom_registration_message() {
-		return ur_print_notice( __( 'User successfully registered. Login to continue.', 'user-registration' ) );
+		return ur_print_notice( apply_filters("user_registration_success_message_after_email_confirmation", __('User successfully registered. Login to continue.', 'user-registration' ) ) );
 	}
 
 	// Token mismatch message.
