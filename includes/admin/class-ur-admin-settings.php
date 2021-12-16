@@ -51,6 +51,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
+			$settings[] = include 'settings/class-ur-settings-license.php';
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
@@ -361,7 +362,7 @@ class UR_Admin_Settings {
 										value="' . esc_attr( $option_value ) . '"
 										class="' . esc_attr( $value['class'] ) . '"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
-										'. implode( ' ', $custom_attributes ) .' ' . $description . '</td></tr>';
+										' . implode( ' ', $custom_attributes ) .' ' . $description . '</td></tr>';
 							break;
 
 						// Color picker.
@@ -613,7 +614,7 @@ class UR_Admin_Settings {
 									foreach ( $value['buttons'] as $button ) {
 										$settings .= '<a
 													href="' . esc_url( $button['href'] ) . '"
-													class="button ' . esc_attr( $button['class'] ) . '">' . esc_html( $button['title'] ) . '</a>';
+													class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '">' . esc_html( $button['title'] ) . '</a>';
 											}
 										}
 

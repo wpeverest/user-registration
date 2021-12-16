@@ -186,7 +186,13 @@ class UR_Admin_Notices {
 							// Remove all notices except user registration plugins notices.
 							if ( ! strstr( $name, 'user_registration_' ) ) {
 								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+							} else if( strstr( $name, 'user_registration_error_notices' ) ) {
+
+								if( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
+									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+								}
 							}
+
 						}
 					}
 				}

@@ -107,7 +107,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$extensions = $this->get_plugins_with_header( self::VERSION_TESTED_HEADER );
 		if ( ! empty( $extensions ) && current_user_can( 'update_plugins' ) ) {
 			$this->plugin_requests();
+			add_action( "in_admin_header", array( $this, "user_registration_upgrade_to_pro_notice" ) );
 			$this->plugin_license_view();
+		}
+
+		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
+
+		if ( $message ) {
+			add_action( 'admin_notices', array( $this, 'user_registration_failed_extension_install' ) );
 		}
 	}
 
@@ -115,6 +122,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Process plugin requests.
 	 */
 	private function plugin_requests() {
+
 		if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) {
 			$this->activate_license_request();
 		} elseif ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) {
@@ -125,6 +133,10 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$this->add_notice( array( $this, 'activated_key_notice' ) );
 		} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) {
 			$this->add_notice( array( $this, 'deactivated_key_notice' ) );
+		} elseif( !empty( $_POST['download_user_registration_pro'] ) ) {
+			$this->install_extension();
+			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
+			exit;
 		}
 	}
 
@@ -135,11 +147,114 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] );
 
 		if ( $this->activate_license( $license_key ) ) {
+			$this->install_extension();
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
 		} else {
 			wp_redirect( remove_query_arg( array( 'activated_license', 'deactivated_license', $this->plugin_slug . '_deactivate_license' ) ) );
 			exit;
+		}
+	}
+
+	public function install_extension() {
+
+		try {
+
+			$slug   = 'user-registration-pro';
+			$plugin = plugin_basename( sanitize_text_field( wp_unslash( 'user-registration-pro/user-registration.php' ) ) );
+			$status = array(
+				'install' => 'plugin',
+				'slug'    => sanitize_key( wp_unslash( $slug ) ),
+			);
+
+			if ( ! current_user_can( 'install_plugins' ) ) {
+				$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'user-registration' );
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+				$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+				$status['plugin']     = $plugin;
+				$status['pluginName'] = $plugin_data['Name'];
+
+				if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+					$result = activate_plugin( $plugin );
+
+					if ( is_wp_error( $result ) ) {
+						$status['errorCode']    = $result->get_error_code();
+						$status['errorMessage'] = $result->get_error_message();
+						throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+					}
+
+					add_action( "admin_notices", array( $this, "user_registration_extension_download_success_notice" ) );
+				}
+			}
+
+			$api = json_decode(
+				UR_Updater_Key_API::version(
+					array(
+						'license'   => get_option( 'user-registration_license_key' ),
+						'item_name' => 'User Registration PRO',
+					)
+				)
+			);
+
+			if ( is_wp_error( $api ) ) {
+				$status['errorMessage'] = $api->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			$status['pluginName'] = $api->name;
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
+			$upgrader = new Plugin_Upgrader( $skin );
+			$result   = $upgrader->install( $api->download_link );
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				$status['debug'] = $skin->get_upgrade_messages();
+			}
+
+			if ( is_wp_error( $result ) ) {
+				$status['errorCode']    = $result->get_error_code();
+				$status['errorMessage'] = $result->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_wp_error( $skin->result ) ) {
+				$status['errorCode']    = $skin->result->get_error_code();
+				$status['errorMessage'] = $skin->result->get_error_message();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( $skin->get_errors()->get_error_code() ) {
+				$status['errorMessage'] = $skin->get_error_messages();
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_null( $result ) ) {
+				global $wp_filesystem;
+
+				$status['errorCode']    = 'unable_to_connect_to_filesystem';
+				$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
+
+				// Pass through the error from WP_Filesystem if one was raised.
+				if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+					$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+				}
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			$install_status = install_plugin_install_status( $api );
+
+			if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+				activate_plugin( $install_status['file'] );
+			}
+
+			add_action( "admin_notices", array( $this, "user_registration_extension_download_success_notice" ) );
+		} catch ( Exception $e ) {
+
+			$message = $e->getMessage();
+			add_option(
+				'user_registration_failed_installing_extensions_message',
+				 $message
+			);
 		}
 	}
 
@@ -163,7 +278,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
 		}
 
-		add_action( 'admin_notices', array( $this, 'error_notices' ) );
+		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
 	/**
@@ -207,9 +322,16 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	}
 
 	/**
-	 * Output errors
+	 * @deprecated 2.0.6
 	 */
 	public function error_notices() {
+		ur_deprecated_function( 'UR_Admin_Profile::error_notices', '1.4.1', 'UR_Plugin_Updater::user_registration_error_notices' );
+	}
+
+	/**
+	 * Output errors
+	 */
+	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
 				include dirname( __FILE__ ) . '/admin/views/html-notice-error.php';
@@ -239,7 +361,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Show the input form for the license key.
 	 */
 	public function plugin_license_form( $plugin_file ) {
-		if ( strtolower( basename( dirname( $plugin_file ) ) ) === strtolower( $this->plugin_slug ) ) {
+
+		$slug = $this->plugin_slug;
+
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			$slug .= '-pro';
+		}
+
+		if ( strtolower( basename( dirname( $plugin_file ) ) ) === strtolower( $slug ) ) {
 			include_once dirname( __FILE__ ) . '/admin/views/html-license-form.php';
 		}
 	}
@@ -262,6 +391,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Try to activate a license.
 	 */
 	public function activate_license( $license_key ) {
+
 		try {
 
 			if ( empty( $license_key ) ) {
@@ -347,6 +477,10 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Deactivate a license.
 	 */
 	public function deactivate_license() {
+		if( get_transient( 'user_registration_pro_activated' ) ) {
+			return;
+		}
+
 		$reset = UR_Updater_Key_API::deactivate(
 			array(
 				'license' => $this->api_key,
@@ -383,6 +517,141 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function deactivated_key_notice() {
 		include dirname( __FILE__ ) . '/admin/views/html-notice-key-deactivated.php';
+	}
+
+	/**
+	 * Display error message when extension installation fails.
+	 *
+	 * @since 2.0.6
+	 */
+	public function user_registration_failed_extension_install() {
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
+
+		if ( ! file_exists ( $ur_pro_plugins_path ) ) {
+			$message = $message . ' Please manually download <strong>User Registration PRO</strong>.';
+			echo '<div class="error updated notice is-dismissible">
+					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
+				</div>';
+
+		} else if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			$message = ' Please manually activate <strong>User Registration PRO</strong>.';
+			echo '<div class="error updated notice is-dismissible">
+					<p>' . sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) ) . '</p>
+				</div>';
+
+		}
+
+		delete_option( 'user_registration_failed_installing_extensions_message' );
+	}
+
+	/**
+	 * Display upgrade to PRO notice.
+	 *
+	 * @since 3.0.0
+	 */
+	public function user_registration_upgrade_to_pro_notice() {
+
+		// Donot show notice on form builder page.
+		if( isset( $_REQUEST['page'] ) && 'add-new-registration' === $_REQUEST['page'] ) {
+			return;
+		}
+
+		$license_key = get_option( $this->plugin_slug . '_license_key' );
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+
+		$link = '';
+		$content = '';
+
+		if ( $license_key ) {
+			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration') );
+			$link = '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
+		} else {
+			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$link = '<a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a>';
+		}
+
+		// If Pro is active do not show upgrade to pro notice but show update addons notice if not upto date.
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			$updated_addons_list = array(
+				'user-registration-advanced-fields/user-registration-advanced-fields.php' 			=> array( 'version' => '1.4.7', 'notice_slug' => 'user_registration_advanced_fields_admin_notice' ),
+				'user-registration-conditional-logic/user-registration-conditional-logic.php' 		=> array( 'version' => '1.3.0', 'notice_slug' => 'user_registration_conditional_logic_admin_notice' ),
+				'user-registration-content-restriction/user-registration-content-restriction.php' 	=> array( 'version' => '1.1.5', 'notice_slug' => 'user_registration_content_restriction_admin_notice' ),
+				'user-registration-customize-my-account/user-registration-customize-my-account.php' => array( 'version' => '1.1.3', 'notice_slug' => 'user_registration_customize_my_account_admin_notice' ),
+				'user-registration-email-templates/user-registration-email-templates.php' 			=> array( 'version' => '1.0.4', 'notice_slug' => 'user_registration_email_templates_admin_notice' ),
+				'user-registration-file-upload/user-registration-file-upload.php' 					=> array( 'version' => '1.2.4', 'notice_slug' => 'user_registration_file_upload_admin_notice' ),
+				'user-registration-frontend-listing/user-registration-frontend-listing.php' 		=> array( 'version' => '1.0.3', 'notice_slug' => 'ur_frontend_listing_admin_notice' ),
+				'user-registration-mailchimp/user-registration-mailchimp.php'						=> array( 'version' => '1.3.0', 'notice_slug' => 'urmc_admin_notices' ),
+				'user-registration-pdf-form-submission/user-registration-pdf-form-submission.php'	=> array( 'version' => '1.0.8', 'notice_slug' => 'user_registration_pdf_admin_notice' ),
+				'user-registration-social-connect/user-registration-social-connect.php' 			=> array( 'version' => '1.3.7', 'notice_slug' => 'user_registration_social_connect_admin_notice' ),
+				'user-registration-woocommerce/user-registration-woocommerce.php' 					=> array( 'version' => '1.2.7', 'notice_slug' => 'user_registration_woocommerce_admin_notice' ),
+			);
+
+			$plugins =  get_plugins();
+			$show_notice = false;
+
+			// Remove user registration required notice in outdated version of addon when pro is installed.
+			global $wp_filter;
+			foreach ( $updated_addons_list as $addon_file => $addon_detail) {
+				if( is_plugin_active( $addon_file ) && $plugins[ $addon_file ]['Version'] < $addon_detail['version'] ) {
+					$show_notice = true;
+
+					if ( ! empty( $wp_filter[ 'admin_notices' ]->callbacks ) && is_array( $wp_filter[ 'admin_notices' ]->callbacks ) ) {
+						foreach ( $wp_filter[ 'admin_notices' ]->callbacks as $priority => $hooks ) {
+							if( ! empty( $wp_filter[ 'admin_notices' ]->callbacks[ $priority ][ $addon_detail['notice_slug'] ] )  ) {
+								unset( $wp_filter[ 'admin_notices' ]->callbacks[ $priority ][ $addon_detail['notice_slug'] ] );
+							}
+						}
+					}
+				}
+			}
+
+			// Display update addons notice.
+			if( $show_notice ) {
+				?>
+				<div id="user-registration-upgrade-notice" class="notice notice-error user-registration-notice" data-purpose="review">
+					<div class="user-registration-notice-thumbnail">
+						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
+					</div>
+					<div class="user-registration-notice-text">
+						<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
+						<p class="extra-pad"><?php  echo sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ); ?></p>
+						<ul class="user-registration-notice-ul">
+							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+						</ul>
+					</div>
+				</div>
+			<?php
+			}
+
+		} else if ( ! file_exists( $ur_pro_plugins_path ) || ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || ! $license_key ) {
+			?>
+				<div id="user-registration-upgrade-notice" class="notice notice-error user-registration-notice" data-purpose="review">
+					<div class="user-registration-notice-thumbnail">
+						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
+					</div>
+					<div class="user-registration-notice-text">
+						<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
+						<p class="extra-pad"><?php  _e( 'It seems you are using some premium addons of User Registration plugin. <br>', 'user-registration' ); ?></p>
+						<p class="extra-pad"><?php  echo wp_kses_post( $content ); ?></p>
+						<ul class="user-registration-notice-ul">
+							<li><?php echo $license_key ? '<form method="post">' . wp_kses_post( $link ) . '</form>' : wp_kses_post( $link ); ?></li>
+							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+						</ul>
+					</div>
+				</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Success notice on PRO installation.
+	 *
+	 * @since 3.0.0
+	 */
+	public function user_registration_extension_download_success_notice() {
+		$notice_html = __("User Registration Pro has been installed successfully.", 'user-registration' );
+		include dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php';
 	}
 }
 

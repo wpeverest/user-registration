@@ -57,10 +57,10 @@ class UR_Frontend_Form_Handler {
 
 		self::match_email( $form_field_data, $form_data );
 		self::add_hook( $form_field_data, $form_data );
-		$activated_form_list = get_option( 'user_registration_auto_password_activated_forms', array() );
+		$enable_auto_password_generation   = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' );
 
-		if ( in_array( $form_id, $activated_form_list ) ) {
-			do_action( 'user_registration_auto_generate_password' );
+		if( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
+			do_action( 'user_registration_auto_generate_password', $form_id );
 			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
 			self::validate_form_data( $form_field_data, $form_data, $form_id );
 		} else {

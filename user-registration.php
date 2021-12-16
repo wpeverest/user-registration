@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 2.0.5
+ * Version: 2.1.0
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.0.5';
+		public $version = '2.1.0';
 
 		/**
 		 * Session instance.
@@ -325,16 +325,110 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 endif;
 
 /**
- * Main instance of UserRegistration.
+ * Check to see if UR already defined and resolve conflicts while installing PRO version.
  *
- * Returns the main instance of FT to prevent the need to use globals.
- *
- * @since  1.0.0
- * @return UserRegistration
+ * @since 2.0.4
  */
-function UR() {
-	return UserRegistration::instance();
-}
 
+if ( ! function_exists( 'UR' ) ) {
+
+	/**
+	 * Main instance of UserRegistration.
+	 *
+	 * Returns the main instance of FT to prevent the need to use globals.
+	 *
+	 * @since  1.0.0
+	 * @return UserRegistration
+	 */
+	function UR() {
+		return UserRegistration::instance();
+	}
+
+} else {
+
+	if ( ! function_exists( 'user_registration_pro_activated' ) ) {
+		/**
+		 * When Pro version is activated, deactivate free version.
+		 */
+		function user_registration_pro_activated() {
+			set_transient( 'user_registration_pro_activated', true );
+			user_registration_free_deactivate();
+		}
+	}
+	add_action( 'activate_user-registration-pro/user-registration.php', 'user_registration_pro_activated' );
+
+	if ( ! function_exists( 'user_registration_free_activated' ) ) {
+		/**
+		 * When user activates free version, set the value that is to be used to handle both Free and Pro activation conflict.
+		 */
+		function user_registration_free_activated() {
+
+			set_transient( 'user_registration_free_activated', true );
+		}
+	}
+	add_action( 'activate_user-registration/user-registration.php', 'user_registration_free_activated' );
+
+	if ( ! function_exists( 'user_registration_free_deactivated' ) ) {
+		/**
+		 * When user deactivates free version, remove the value that was used to handle both Free and Pro activation conflict.
+		 */
+		function user_registration_free_deactivated() {
+
+			global $user_registration_free_activated, $user_registration_free_deactivated;
+
+			$user_registration_free_activated   = (bool) get_transient( 'user_registration_free_activated' );
+			$user_registration_free_deactivated = true;
+
+			delete_transient( 'user_registration_free_activated' );
+		}
+	}
+	add_action( 'deactivate_user-registration/user-registration.php', 'user_registration_free_deactivated' );
+
+	if ( ! function_exists( 'user_registration_free_deactivate' ) ) {
+		/**
+		 * Deactivate Free version if Pro is already activated.
+		 *
+		 * @since 1.0.0
+		 */
+		function user_registration_free_deactivate() {
+
+			$plugin = 'user-registration/user-registration.php';
+
+			deactivate_plugins( $plugin );
+			do_action( 'user_registration_free_deactivate', $plugin );
+			delete_transient( 'user_registration_pro_activated' );
+		}
+	}
+	add_action( 'admin_init', 'user_registration_free_deactivate' );
+
+	if ( ! function_exists( 'user_registration_free_notice' ) ) {
+		/**
+		 * When user wants to activate Free version alongside Pro, then display the message.
+		 */
+		function user_registration_free_notice() {
+
+			global $user_registration_free_activated, $user_registration_free_deactivated;
+
+			if (
+				empty( $user_registration_free_activated ) ||
+				empty( $user_registration_free_deactivated )
+			) {
+				return;
+			}
+
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( 'As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) . '</p></div>';
+
+			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			}
+
+			unset( $user_registration_free_activated, $user_registration_free_deactivated );
+		}
+	}
+	add_action( 'admin_notices', 'user_registration_free_notice' );
+
+	// Do not process the plugin code further.
+	return;
+}
 // Global for backwards compatibility.
 $GLOBALS['user-registration'] = UR();

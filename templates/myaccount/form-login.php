@@ -51,7 +51,9 @@ $hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labe
 
 $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 
-$enable_field_icon = 'yes' === get_option( 'user_registration_extras_general_setting_login_form', 'no' );
+$enable_field_icon = 'yes' === get_option( 'user_registration_pro_general_setting_login_form', 'no' );
+
+$login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 
 $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 

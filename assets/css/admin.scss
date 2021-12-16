@@ -70,6 +70,17 @@
 	@include loader();
 }
 
+/**
+   * Toggle class.
+   */
+   .userregistration-forms-hidden {
+	display: block;
+}
+
+.userregistration-forms-hidden {
+	display: none;
+}
+
 .user-registration {
 	&__wrap {
 
@@ -1710,7 +1721,7 @@ img.tips {
 	height: 16px;
 	line-height: 16px;
 	position: relative;
-	vertical-align: middle;
+	vertical-align: baseline;
 	width: 16px;
 
 	&::after {
