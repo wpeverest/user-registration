@@ -1384,7 +1384,7 @@
 
 	/**
 	 * Reinitialize the form again after page is fully loaded,
-	 * in order to support third party popup plugins like elementor.
+	 * in order to support third party popup plugins.
 	 *
 	 * @since 1.9.0
 	 */

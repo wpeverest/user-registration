@@ -1,3 +1,7 @@
+= 2.1.0.1  - 16/12/2021
+* Dev 	   - Added filter hook for success message after email confirmation.
+* Tweak    - Upgrade to pro notice.
+
 = 2.1.0    - 13/12/2021
 * Dev      - User Regsitration Pro addon compatibility.
 * Dev 	   - Mailchimp Compatibility.

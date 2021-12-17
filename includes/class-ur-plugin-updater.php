@@ -105,7 +105,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		// Check to make sure we've RP extensions and plugin update capability.
 		$extensions = $this->get_plugins_with_header( self::VERSION_TESTED_HEADER );
-		if ( ! empty( $extensions ) && current_user_can( 'update_plugins' ) ) {
+		if ( ( ! empty( $extensions ) || file_exists( WP_PLUGIN_DIR. '/user-registration-pro/user-registration.php' ) ) && current_user_can( 'update_plugins' ) ) {
 			$this->plugin_requests();
 			add_action( "in_admin_header", array( $this, "user_registration_upgrade_to_pro_notice" ) );
 			$this->plugin_license_view();
@@ -548,7 +548,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	/**
 	 * Display upgrade to PRO notice.
 	 *
-	 * @since 3.0.0
+	 * @since 2.1.0
 	 */
 	public function user_registration_upgrade_to_pro_notice() {
 
@@ -565,26 +565,28 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		if ( $license_key ) {
 			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration') );
-			$link = '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
+			$link .= '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
-			$content .= sprintf( '<strong>%1$s</strong>, %2$s', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link = '<a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a>';
+			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
+			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$link .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0') . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
+			$link .= '<li><a class="button button-secondary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License Key', 'user-registration' ) . '</a></li>';
 		}
 
 		// If Pro is active do not show upgrade to pro notice but show update addons notice if not upto date.
 		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 			$updated_addons_list = array(
-				'user-registration-advanced-fields/user-registration-advanced-fields.php' 			=> array( 'version' => '1.4.7', 'notice_slug' => 'user_registration_advanced_fields_admin_notice' ),
-				'user-registration-conditional-logic/user-registration-conditional-logic.php' 		=> array( 'version' => '1.3.0', 'notice_slug' => 'user_registration_conditional_logic_admin_notice' ),
-				'user-registration-content-restriction/user-registration-content-restriction.php' 	=> array( 'version' => '1.1.5', 'notice_slug' => 'user_registration_content_restriction_admin_notice' ),
-				'user-registration-customize-my-account/user-registration-customize-my-account.php' => array( 'version' => '1.1.3', 'notice_slug' => 'user_registration_customize_my_account_admin_notice' ),
-				'user-registration-email-templates/user-registration-email-templates.php' 			=> array( 'version' => '1.0.4', 'notice_slug' => 'user_registration_email_templates_admin_notice' ),
-				'user-registration-file-upload/user-registration-file-upload.php' 					=> array( 'version' => '1.2.4', 'notice_slug' => 'user_registration_file_upload_admin_notice' ),
-				'user-registration-frontend-listing/user-registration-frontend-listing.php' 		=> array( 'version' => '1.0.3', 'notice_slug' => 'ur_frontend_listing_admin_notice' ),
-				'user-registration-mailchimp/user-registration-mailchimp.php'						=> array( 'version' => '1.3.0', 'notice_slug' => 'urmc_admin_notices' ),
-				'user-registration-pdf-form-submission/user-registration-pdf-form-submission.php'	=> array( 'version' => '1.0.8', 'notice_slug' => 'user_registration_pdf_admin_notice' ),
-				'user-registration-social-connect/user-registration-social-connect.php' 			=> array( 'version' => '1.3.7', 'notice_slug' => 'user_registration_social_connect_admin_notice' ),
-				'user-registration-woocommerce/user-registration-woocommerce.php' 					=> array( 'version' => '1.2.7', 'notice_slug' => 'user_registration_woocommerce_admin_notice' ),
+				'user-registration-advanced-fields/user-registration-advanced-fields.php' 			=> array( 'title' => 'User Registration Advanced Fields', 'version' => '1.4.7', 'notice_slug' => 'user_registration_advanced_fields_admin_notice' ),
+				'user-registration-conditional-logic/user-registration-conditional-logic.php' 		=> array( 'title' => 'User Registration Conditional Logic', 'version' => '1.3.0', 'notice_slug' => 'user_registration_conditional_logic_admin_notice' ),
+				'user-registration-content-restriction/user-registration-content-restriction.php' 	=> array( 'title' => 'User Registration Content Restriction', 'version' => '1.1.5', 'notice_slug' => 'user_registration_content_restriction_admin_notice' ),
+				'user-registration-customize-my-account/user-registration-customize-my-account.php' => array( 'title' => 'User Registration Customize My Account', 'version' => '1.1.4', 'notice_slug' => 'user_registration_customize_my_account_admin_notice' ),
+				'user-registration-email-templates/user-registration-email-templates.php' 			=> array( 'title' => 'User Registration Email Templates', 'version' => '1.0.4', 'notice_slug' => 'user_registration_email_templates_admin_notice' ),
+				'user-registration-file-upload/user-registration-file-upload.php' 					=> array( 'title' => 'User Registration File Upload', 'version' => '1.2.4', 'notice_slug' => 'user_registration_file_upload_admin_notice' ),
+				'user-registration-frontend-listing/user-registration-frontend-listing.php' 		=> array( 'title' => 'User Registration Frontend Listing', 'version' => '1.0.3', 'notice_slug' => 'ur_frontend_listing_admin_notice' ),
+				'user-registration-mailchimp/user-registration-mailchimp.php'						=> array( 'title' => 'User Registration MailChimp', 'version' => '1.3.0', 'notice_slug' => 'urmc_admin_notices' ),
+				'user-registration-pdf-form-submission/user-registration-pdf-form-submission.php'	=> array( 'title' => 'User Registration PDF Form Submission', 'version' => '1.0.8', 'notice_slug' => 'user_registration_pdf_admin_notice' ),
+				'user-registration-social-connect/user-registration-social-connect.php' 			=> array( 'title' => 'User Registration Social Connect', 'version' => '1.3.7', 'notice_slug' => 'user_registration_social_connect_admin_notice' ),
+				'user-registration-woocommerce/user-registration-woocommerce.php' 					=> array( 'title' => 'User Registration WooCommerce', 'version' => '1.2.7', 'notice_slug' => 'user_registration_woocommerce_admin_notice' ),
 			);
 
 			$plugins =  get_plugins();
@@ -592,10 +594,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 			// Remove user registration required notice in outdated version of addon when pro is installed.
 			global $wp_filter;
+			$update_addon_content = '<p>Please update all the listed addons to the latest version.</p><ol style="margin-top:0px; font-size:12px;">';
 			foreach ( $updated_addons_list as $addon_file => $addon_detail) {
 				if( is_plugin_active( $addon_file ) && $plugins[ $addon_file ]['Version'] < $addon_detail['version'] ) {
 					$show_notice = true;
 
+					$update_addon_content .= '<li>' . $addon_detail['title'] . ' <strong>v( ' . $addon_detail['version'] . ' )</strong></li>';
 					if ( ! empty( $wp_filter[ 'admin_notices' ]->callbacks ) && is_array( $wp_filter[ 'admin_notices' ]->callbacks ) ) {
 						foreach ( $wp_filter[ 'admin_notices' ]->callbacks as $priority => $hooks ) {
 							if( ! empty( $wp_filter[ 'admin_notices' ]->callbacks[ $priority ][ $addon_detail['notice_slug'] ] )  ) {
@@ -605,6 +609,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					}
 				}
 			}
+
+			$update_addon_content .= '</ol>';
 
 			// Display update addons notice.
 			if( $show_notice ) {
@@ -616,6 +622,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					<div class="user-registration-notice-text">
 						<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
 						<p class="extra-pad"><?php  echo sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ); ?></p>
+						<?php echo wp_kses_post( sprintf( __( '%1$s', 'user-registration' ), $update_addon_content ) );?>
 						<ul class="user-registration-notice-ul">
 							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
@@ -633,9 +640,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					<div class="user-registration-notice-text">
 						<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
 						<p class="extra-pad"><?php  _e( 'It seems you are using some premium addons of User Registration plugin. <br>', 'user-registration' ); ?></p>
-						<p class="extra-pad"><?php  echo wp_kses_post( $content ); ?></p>
-						<ul class="user-registration-notice-ul">
-							<li><?php echo $license_key ? '<form method="post">' . wp_kses_post( $link ) . '</form>' : wp_kses_post( $link ); ?></li>
+						<?php echo $license_key ?  '<p class="extra-pad">' . wp_kses_post( $content ) .'</p>' :  wp_kses_post( $content ); ?>
+							<ul class="user-registration-notice-ul">
+							<?php echo $license_key ? '<li><form method="post">' . wp_kses_post( $link ) . '</form></li>' : wp_kses_post( $link ); ?>
 							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ) ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
