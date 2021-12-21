@@ -254,6 +254,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
+									'title'    => __( 'Email verification completed', 'user-registration' ),
+									'desc'     => __( 'Enter the text message after email successfully verified and have access to login.', 'user-registration' ),
+									'id'       => 'user_registration_successful_email_verified_message',
+									'type'     => 'textarea',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px; min-height: 100px;',
+									'default'  => __( 'User successfully registered. Login to continue.', 'user-registration' ),
+								),
+
+								array(
 									'title'    => __( 'Admin approval after registration', 'user-registration' ),
 									'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_admin_approval',

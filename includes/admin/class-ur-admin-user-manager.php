@@ -92,7 +92,6 @@ class UR_Admin_User_Manager {
 		if ( ! empty( $action_label ) ) {
 			do_action( 'ur_user_' . $action_label, $this->user->ID );
 		}
-
 		$this->user_status = $status;
 
 		if ( is_super_admin( $this->user->ID ) ) {
@@ -138,6 +137,8 @@ class UR_Admin_User_Manager {
 
 		$user_status       = get_user_meta( $this->user->ID, 'ur_user_status', true );
 		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
+		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true);
+
 		$result            = '';
 
 		if ( '' === $user_status && '' === $user_email_status ) {
@@ -167,6 +168,24 @@ class UR_Admin_User_Manager {
 				'user_status'  => $user_status,
 			);
 
+		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status) {
+			if ( 'denied' === $admin_approval_after_email_confirmation_status )
+			{
+				$admin_approval_after_email_confirmation_status =  self::DENIED;
+			}elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ur_string_to_bool( $user_email_status ) )
+			{
+				$admin_approval_after_email_confirmation_status =  self::PENDING;
+			} elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ! ur_string_to_bool( $user_email_status ) ) {
+				$admin_approval_after_email_confirmation_status =  self::PENDING;
+			} elseif ( $admin_approval_after_email_confirmation_status ) {
+				$admin_approval_after_email_confirmation_status =  self::APPROVED;
+			}
+			$this->user_status = $admin_approval_after_email_confirmation_status;
+
+			$result = array(
+				'login_option' => 'admin_approval_after_email_confirmation',
+				'user_status'  => $admin_approval_after_email_confirmation_status,
+			);
 		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
 
 			$this->user_status = $user_email_status;
@@ -176,7 +195,6 @@ class UR_Admin_User_Manager {
 				'user_status'  => $user_email_status,
 			);
 		}
-
 		return $result;
 	}
 
@@ -189,10 +207,7 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-
-			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-				return ( $user_status['user_status'] == self::APPROVED );
-			}
+			return ( $user_status['user_status'] == self::APPROVED );
 		}
 		return ( $user_status == self::APPROVED );
 	}
@@ -206,9 +221,7 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-				return ( $user_status['user_status'] == self::PENDING );
-			}
+			return ( $user_status['user_status'] == self::PENDING );
 		}
 		return ( $user_status == self::PENDING );
 	}
@@ -222,10 +235,7 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-
-			if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-				return ( $user_status['user_status'] == self::DENIED );
-			}
+			return ( $user_status['user_status'] == self::DENIED );
 		}
 		return ( $user_status == self::DENIED );
 	}
