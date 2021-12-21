@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<ul class="products">
 			<?php foreach ( $addons as $addon ) : ?>
 				<li class="product">
-					<a href="<?php echo esc_attr( $addon->link ); ?>">
+					<a href="<?php echo esc_attr( $addon->link ); ?>" class="product-details">
 						<h2><?php echo esc_html( $addon->title ); ?></h2>
 						<?php if ( ! empty( $addon->image ) ) : ?>
 							<span class="product-image"><img src="<?php echo esc_attr( $addon->image ); ?>"/></span>
@@ -36,6 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<span class="price"><?php echo isset( $addon->price ) ? wp_kses_post( $addon->price ) : ''; ?></span>
 						<p><?php echo wp_kses_post( $addon->excerpt ); ?></p>
 					</a>
+					<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
 				</li>
 			<?php endforeach; ?>
 			</ul>
