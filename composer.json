@@ -22,7 +22,8 @@
     "spatie/phpunit-watcher": "1.23.2",
     "vlucas/phpdotenv": "5.3.0",
     "10up/wp_mock": "dev-enhance/allow-to-enable-disable-mock-constants-functions",
-    "roots/wordpress": "5.8.0"
+    "roots/wordpress": "5.8.0",
+    "yoast/phpunit-polyfills": "1.0.3"
   },
   "repositories": [
     {
