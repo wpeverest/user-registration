@@ -2699,6 +2699,26 @@
 								).hide();
 							}
 							break;
+
+						case "enable_prepopulate":
+							if ("false" === $this_node.val()) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-parameter_name")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
