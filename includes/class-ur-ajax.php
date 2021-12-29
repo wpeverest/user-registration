@@ -86,7 +86,7 @@ class UR_AJAX {
 
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
-		$captcha_response  = isset( $_POST['captchaResponse'] ) ? $_POST['captchaResponse'] : '';
+		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash($_POST['captchaResponse']) ) : '';
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
@@ -473,7 +473,7 @@ class UR_AJAX {
    		$info['user_login'] = sanitize_user( isset($_POST['username'] ) ? $_POST['username']: '' );
     	$info['user_password'] = isset( $_POST['password'] ) ? $_POST['password'] : '';
     	$info['remember'] =isset( $_POST['rememberme'] );
-		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : '';
+		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? ur_clean(wp_unslash($_POST['CaptchaResponse'])) : '';
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );

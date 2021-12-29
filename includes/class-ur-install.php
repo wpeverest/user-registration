@@ -315,12 +315,12 @@ class UR_Install {
 			$pages['registration'] = array(
 				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
-				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . $default_form_page_id . '"]',
+				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 			);
 		}
 
 		foreach ( $pages as $key => $page ) {
-			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', $page['title'], $page['content'] );
+			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post(($page['title'])), wp_kses_post($page['content']) );
 		}
 	}
 
