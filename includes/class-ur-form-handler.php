@@ -108,10 +108,10 @@ class UR_Form_Handler {
 
 				switch ( $_FILES['profile-pic']['error'] ) {
 					case UPLOAD_ERR_INI_SIZE:
-						ur_add_notice( __( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
+						ur_add_notice( esc_html__( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
 						break;
 					default:
-						ur_add_notice( __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
+						ur_add_notice( esc_html__( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
 						break;
 				}
 			} elseif ( empty( $_POST['profile-pic-url'] ) ) {
@@ -165,7 +165,7 @@ class UR_Form_Handler {
 					break;
 
 				default:
-					$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
+					$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field(( $_POST[ $key ] ) ) : '';
 					break;
 			}
 
@@ -181,7 +181,7 @@ class UR_Form_Handler {
 
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
-				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+				ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
 			if ( 'user_email' === $field['field_key'] ) {
@@ -189,7 +189,7 @@ class UR_Form_Handler {
 
 				// Check if email already exists before updating user details.
 				if ( email_exists( $_POST[ $key ] ) && email_exists( $_POST[ $key ] ) !== $user_id ) {
-					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
+					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
 
@@ -203,7 +203,7 @@ class UR_Form_Handler {
 								$_POST[ $key ] = strtolower( $_POST[ $key ] );
 
 								if ( ! is_email( $_POST[ $key ] ) ) {
-									ur_add_notice( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
+									ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
 
 								break;
@@ -374,7 +374,7 @@ class UR_Form_Handler {
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
-				$username         = trim( $_POST['username'] );
+				$username         = trim( sanitize_text_field( $_POST['username'] ) );
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
@@ -534,15 +534,15 @@ class UR_Form_Handler {
 
 		if ( $user instanceof WP_User ) {
 			if ( empty( $posted_fields['password_1'] ) ) {
-				ur_add_notice( __( 'Please enter your password.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'Please enter your password.', 'user-registration' ), 'error' );
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'Passwords do not match.', 'user-registration' ), 'error' );
 			}
 
 			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
-				ur_add_notice( __( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'New password must not be same as old password.', 'user-registration' ), 'error' );
 			}
 			$errors = new WP_Error();
 
