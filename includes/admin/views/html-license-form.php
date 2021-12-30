@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin View: Plugins - License form
+ *
+ * @package UserRegistration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,14 +17,14 @@ $license_key = sanitize_title( $this->plugin_slug . '_license_key' );
 		<?php $this->user_registration_error_notices(); ?>
 		<input type="checkbox" name="checked[]" value="1" checked="checked" style="display: none;">
 		<div class="update-message inline user-registration-updater-license-key">
-			<label for="<?php echo $license_key; ?>"><?php _e( 'License:', 'user-registration' ); ?></label>
-			<input type="text" id="<?php echo $license_key; ?>" name="<?php echo esc_attr( $license_key ); ?>" placeholder="<?php echo esc_attr( 'XXXX-XXXX-XXXX-XXXX', 'user-registration' ); ?>" />
-			<span class="description"><?php _e( 'Enter your license key and hit return. A valid key is required for updates.', 'user-registration' ); ?> <?php printf( 'Lost your key? <a href="%s">Retrieve it here</a>.', esc_url( 'https://wpeverest.com/lost-licence-key/' ) ); ?></span>
+			<label for="<?php echo esc_attr( $license_key ); ?>"><?php esc_html_e( 'License:', 'user-registration' ); ?></label>
+			<input type="text" id="<?php echo esc_attr( $license_key ); ?>" name="<?php echo esc_attr( $license_key ); ?>" placeholder="<?php echo esc_attr__( 'XXXX-XXXX-XXXX-XXXX', 'user-registration' ); ?>" />
+			<span class="description"><?php esc_html_e( 'Enter your license key and hit return. A valid key is required for updates.', 'user-registration' ); ?> <?php printf( 'Lost your key? <a href="%s">Retrieve it here</a>.', esc_url( 'https://wpeverest.com/lost-licence-key/' ) ); ?></span>
 		</div>
 	</td>
 	<script>
 		jQuery( function() {
-			jQuery( 'tr#<?php echo esc_attr( $this->plugin_slug ); ?>-license-row' ).prev().attr( 'id', '<?php echo sanitize_title( $this->plugin_slug ); ?>' ).addClass( 'update user-registration-updater-licensed' );
+			jQuery( 'tr#<?php echo esc_attr( $this->plugin_slug ); ?>-license-row' ).prev().attr( 'id', '<?php echo esc_attr( sanitize_title( $this->plugin_slug ) ); ?>' ).addClass( 'update user-registration-updater-licensed' );
 		});
 	</script>
 </tr>

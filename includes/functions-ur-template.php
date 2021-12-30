@@ -589,7 +589,7 @@ if (!function_exists('user_registration_form_field')) {
 		if ($args['return']) {
 			return $field;
 		} else {
-			echo $field;
+			echo esc_html( $field );
 		}
 	}
 } // End if().

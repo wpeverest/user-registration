@@ -208,7 +208,7 @@ class UR_Admin_Notices {
 	 */
 	public static function add_custom_notice( $name, $notice_html ) {
 		self::add_notice( $name );
-		update_option( 'user_registration_admin_notice_' . $name, wp_kses_post( $notice_html ) );
+		update_option( 'user_registration_admin_notice_' . sanitize_text_field( $name ), wp_kses_post( $notice_html ) );
 	}
 
 	/**

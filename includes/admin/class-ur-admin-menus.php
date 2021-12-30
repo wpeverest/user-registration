@@ -5,8 +5,6 @@
  * @class    UR_Admin_Menus
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +33,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
 			}
 
-			// Set screens
+			// Set screens.
 			add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
 
 			// Add endpoints custom URLs in Appearance > Menus > Pages.
@@ -46,6 +44,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'user_registration_extra_fields', array( $this, 'add_upgradable_extra_fields' ) );
 		}
 
+		/**
+		 * Add Upgradable other fields.
+		 */
 		public function add_upgradable_other_fields() {
 			$fields = array(
 				array(
@@ -78,6 +79,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 		}
 
+		/**
+		 * Add Upgradable extra fields.
+		 */
 		public function add_upgradable_extra_fields() {
 			$field_sections = array(
 				array(
@@ -644,18 +648,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
 				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
 
-				echo '<div class="ur-single-row"  data-row-id="' . absint( $row_id ) . '">';
+				echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
 				?>
 
 				<div class="ur-grids">
 					<button type="button" class="ur-edit-grid">
 						<?php
 						if ( 1 === $grid_count ) {
-							echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput
+							echo esc_html( $grid_one );
 						} elseif ( 2 === $grid_count ) {
-							echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput
+							echo  esc_html( $grid_two );
 						} elseif ( 3 === $grid_count ) {
-							echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput
+							echo  esc_html( $grid_three );
 						}
 						?>
 					</button>
@@ -663,13 +667,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<div class="ur-toggle-grid-content" style="display:none">
 						<small>Select the grid column.</small>
 						<div class="ur-grid-selector" data-grid = "1">
-							<?php echo $grid_one; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							<?php echo esc_html( $grid_one );  ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "2">
-							<?php echo $grid_two; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							<?php echo esc_html( $grid_two );  ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "3">
-							<?php echo $grid_three; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							<?php echo esc_html( $grid_three ); ?>
 						</div>
 					</div>
 				</div>
@@ -683,7 +687,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 					$grid_id ++;
 
-					echo '<div ur-grid-id="' . $grid_id . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
+					echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
 
 					foreach ( $grid_lists as $single_field ) {
 
@@ -695,14 +699,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							echo '<div class="ur-selected-item">';
 							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
 							$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
-							echo $template;
+							echo esc_html( $template );
 							echo '</div>';
 						}
 					}
 
 					if ( count( $grid_lists ) == 0 ) {
 						echo '<div class="user-registration-dragged-me">
-						<div class="user-registration-dragged-me-text"><p>' . esc_html( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
+						<div class="user-registration-dragged-me-text"><p>' . esc_html__( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
 						</div>';
 					}
 
@@ -713,7 +717,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}// End foreach().
-			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . $last_id . '">' . esc_html( 'Add New', 'user-registration' ) . '</button>';
+			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
@@ -722,7 +726,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public static function get_admin_field( $single_field ) {
 
 			if ( empty( $single_field->field_key ) ) {
-				throw new Exception( __( 'Empty form data', 'user-registration' ) );
+				throw new Exception( esc_html__( 'Empty form data', 'user-registration' ) );
 			}
 
 			$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
@@ -772,7 +776,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$class_name = ur_load_form_field_class( $field );
 
 			if ( $class_name !== null ) {
-				echo $class_name::get_instance()->get_registered_admin_fields();
+				echo esc_html( $class_name::get_instance()->get_registered_admin_fields() );
 			}
 
 		}

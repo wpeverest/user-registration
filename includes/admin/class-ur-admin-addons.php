@@ -2,8 +2,6 @@
 /**
  * Addons Page
  *
- * @author   WPEverest
- * @category Admin
  * @package  UserRegistration/Admin
  * @version  1.1.0
  */
@@ -53,7 +51,7 @@ class UR_Admin_Addons {
 	/**
 	 * Get section for the addons screen.
 	 *
-	 * @param  string $section_id
+	 * @param  string $section_id Section Id.
 	 *
 	 * @return object|bool
 	 */
@@ -69,7 +67,7 @@ class UR_Admin_Addons {
 	/**
 	 * Get section content for the addons screen.
 	 *
-	 * @param  string $section_id
+	 * @param  string $section_id Section Id.
 	 *
 	 * @return array
 	 */
@@ -101,7 +99,7 @@ class UR_Admin_Addons {
 		$sections        = self::get_sections();
 		$theme           = wp_get_theme();
 		$section_keys    = array_keys( $sections );
-		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : current( $section_keys );
+		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : current( $section_keys );
 		include_once dirname( __FILE__ ) . '/views/html-admin-page-addons.php';
 	}
 }

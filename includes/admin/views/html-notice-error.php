@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin View: Notice - License Error
+ *
+ * @package UserRegistration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

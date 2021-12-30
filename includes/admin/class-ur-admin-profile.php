@@ -53,7 +53,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					'user_registration_profile_meta_fields',
 					array(
 						'user_registration' => array(
-							'title'  => sprintf( __( 'User Extra Information %s', 'user-registration' ), '' ),
+							'title'  => sprintf( esc_html__( 'User Extra Information %s', 'user-registration' ), '' ),
 							'fields' => $form_fields,
 						),
 					)
@@ -83,7 +83,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$show_fields = $this->get_user_meta_by_form_fields( $user->ID );
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
-				<h2><?php echo $fieldset['title']; ?></h2>
+				<h2><?php echo esc_html( $fieldset['title'] ); ?></h2>
 				<table class="form-table" id="<?php echo esc_attr( 'fieldset-' . $fieldset_key ); ?>">
 
 					<?php
@@ -138,25 +138,25 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php if ( ! empty( $field['type'] ) && 'select' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
-										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
+										<option><?php esc_html_e( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = get_user_meta( $user->ID, $key, true );
 										foreach ( $field['options'] as $option_key => $option_value ) :
 											?>
-											<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, trim( $option_key ), true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
+											<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php esc_attr( selected( $selected, trim( $option_key ), true ) ); ?>><?php echo esc_html( trim( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 
 								<?php elseif ( ! empty( $field['type'] ) && 'country' === $field['type'] ) : ?>
 									<select name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>"
 											class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
-										<option><?php echo __( 'Select', 'user-registration' ); ?></option>
+										<option><?php esc_html_e( 'Select', 'user-registration' ); ?></option>
 										<?php
 										$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
 										foreach ( $field['options'] as $option_key => $option_value ) :
 											?>
 											<option
-												value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php selected( $selected, $option_key, true ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
+												value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php esc_attr( selected( $selected, $option_key, true ) ); ?>><?php echo esc_attr( trim( $option_value ) ); ?></option>
 										<?php endforeach; ?>
 									</select>
 
@@ -170,7 +170,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 															name="<?php echo esc_attr( $key ); ?>"
 															id="<?php echo esc_attr( $key ); ?>"
 															value="<?php echo esc_attr( trim( $option_key ) ); ?>"
-															class="<?php echo esc_attr( $field['class'] ); ?>" <?php checked( $db_value, trim( $option_value ), true ); ?>  ><?php echo trim( $option_value ); ?>
+															class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $option_value ), true ) ); ?>  ><?php echo trim( $option_value ); ?>
 											</label><br/>
 											<?php
 										}
@@ -197,7 +197,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																					echo 'checked="checked"';
 																				}
 																				?>
-											 ><?php echo trim( $choice ); ?></label><br/>
+											 ><?php echo esc_html(trim( $choice ) ); ?></label><br/>
 											<?php
 										}
 									} else {
@@ -251,7 +251,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   value="<?php echo esc_attr( $value ); ?>"
 										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 										   style="display:none"
-												  <?php echo $attribute_string; ?>
+												  <?php echo esc_attr( $attribute_string ); ?>
 											/>
 
 												  <?php
@@ -326,16 +326,17 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					foreach ( $fieldset['fields'] as $key => $field ) {
 						if ( isset( $field['type'] ) && ( 'checkbox' === $field['type'] || 'multi_select2' === $field['type'] || 'wysiwyg' === $field['type'] ) ) {
 							if ( isset( $_POST[ $key ] ) ) {
-								$value = $_POST[ $key ];
 								if ( is_array( $_POST[ $key ] ) ) {
-									$value = array_map( 'sanitize_text_field', $value );
+									$value = array_map( 'sanitize_text_field', $_POST[ $key ] );
+								}else{
+									$value = sanitize_text_field( $_POST[ $key ] );
 								}
-								update_user_meta( $user_id, $key, $value );
+								update_user_meta( absint( $user_id ), sanitize_text_field( $key ), $value );
 							} else {
-								update_user_meta( $user_id, $key, '' );
+								update_user_meta( absint( $user_id ), sanitize_text_field( $key ), '' );
 							}
 						} elseif ( isset( $_POST[ $key ] ) ) {
-							update_user_meta( $user_id, $key, sanitize_text_field( $_POST[ $key ] ) );
+							update_user_meta( absint( $user_id ),  sanitize_text_field( $key ), sanitize_text_field( $_POST[ $key ] ) );
 						}
 					}
 				}

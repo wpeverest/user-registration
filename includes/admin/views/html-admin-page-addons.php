@@ -4,7 +4,9 @@
  *
  * @var string $view
  * @var object $addons
+ * @package UserRegistration
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -12,15 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap ur_addons_wrap">
 	<nav class="nav-tab-wrapper ur-nav-tab-wrapper">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php _e( 'Browse Extensions', 'user-registration' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons' ) ); ?>" class="nav-tab nav-tab-active"><?php esc_html_e( 'Browse Extensions', 'user-registration' ); ?></a>
 	</nav>
 
-	<h1 class="screen-reader-text"><?php _e( 'User Registration Extensions', 'user-registration' ); ?></h1>
+	<h1 class="screen-reader-text"><?php esc_html_e( 'User Registration Extensions', 'user-registration' ); ?></h1>
 
 	<?php if ( $sections ) : ?>
 		<ul class="subsubsub">
 			<?php foreach ( $sections as $section_id => $section ) : ?>
-				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ); ?>"><?php echo esc_html( $section->title ); ?></a><?php echo ( end( $section_keys ) !== $section_id ) ? : ''; ?></li>
+				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ) ); ?>"><?php echo esc_html( $section->title ); ?></a><?php echo ( end( $section_keys ) !== $section_id ) ? : ''; ?></li>
 			<?php endforeach; ?>
 		</ul>
 		<br class="clear" />
@@ -41,6 +43,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</ul>
 		<?php endif; ?>
 	<?php else : ?>
-		<p><?php printf( __( 'Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href="%s">User Registration Extensions Catalog</a>', 'user-registration' ), 'https://wpeverest.com/user-registration-extensions/' ); ?></p>
+		<p><?php printf( esc_html__( 'Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href="%s">User Registration Extensions Catalog</a>', 'user-registration' ), 'https://wpeverest.com/user-registration-extensions/' ); ?></p>
 	<?php endif; ?>
 </div>

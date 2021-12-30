@@ -5,8 +5,6 @@
  * @class    UR_Settings_Email
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -69,24 +67,24 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$settings = apply_filters(
 				'user_registration_email_settings',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'email_notification_settings' => array(
-							'title' => __( 'Email notifications', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration'),
+							'title'    => __( 'Email notifications', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration' ),
 							'settings' => array(
 								ur_get_user_login_option(),
 								array(
 									'type' => 'email_notification',
-									'id' => 'user_registration_email_notification_settings',
+									'id'   => 'user_registration_email_notification_settings',
 								),
 							),
 						),
-						'sender_option' => array(
-							'title' => __( 'Email Sender Options', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+						'sender_option'               => array(
+							'title'    => __( 'Email Sender Options', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( '"From" name', 'user-registration' ),
@@ -114,10 +112,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 								),
 							),
 						),
-						'send_test_email' => array(
-							'title' => __( 'Send a Test Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+						'send_test_email'             => array(
+							'title'    => __( 'Send a Test Email', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'             => __( 'Send To', 'user-registration' ),
@@ -133,13 +131,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'desc_tip'          => true,
 								),
 								array(
-									'title'             => __( 'Send Email', 'user-registration' ),
-									'desc'              => __( 'Click to send test email.', 'user-registration' ),
-									'id'                => 'user_registration_email_test',
-									'type'              => 'link',
-									'css'               => 'min-width:300px;',
+									'title'    => __( 'Send Email', 'user-registration' ),
+									'desc'     => __( 'Click to send test email.', 'user-registration' ),
+									'id'       => 'user_registration_email_test',
+									'type'     => 'link',
+									'css'      => 'min-width:300px;',
 									'buttons'  => array(
-										array (
+										array(
 											'title' => __( 'Send Email', 'user-registration' ),
 											'href'  => '#',
 											'class' => 'button user_registration_send_email_test',
@@ -156,10 +154,19 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			return apply_filters( 'user_registration_get_email_settings_' . $this->id, $settings );
 		}
 
+		/**
+		 * Retrive Email Data.
+		 */
 		public function get_emails() {
 			return $this->emails;
 		}
 
+		/**
+		 * Email Notification Settings.
+		 *
+		 * @param string $settings Settings.
+		 * @param mixed  $value Value.
+		 */
 		public function email_notification_setting( $settings, $value ) {
 			$settings .= '<tr valign="top">';
 			$settings .= '<td class="ur_emails_wrapper" colspan="2">';
@@ -168,12 +175,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$settings .= '<tr>';
 
 			$columns = apply_filters(
-						'user_registration_email_setting_columns',
-						array(
-							'name'    => __( 'Email', 'user-registration' ),
-							'actions' => __( 'Configure', 'user-registration' ),
-						)
-					);
+				'user_registration_email_setting_columns',
+				array(
+					'name'    => __( 'Email', 'user-registration' ),
+					'actions' => __( 'Configure', 'user-registration' ),
+				)
+			);
 
 			foreach ( $columns as $key => $column ) {
 				$settings .= '<th style="padding-left:15px" class="ur-email-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
@@ -185,12 +192,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$emails = $this->get_emails();
 			foreach ( $emails as $email ) {
 				$settings .= '<tr><td class="ur-email-settings-table">';
-				$settings .= '<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) .
-												'">' . __( $email->title, 'user-registration' ) . '</a>';
-				$settings .=  ur_help_tip( __( $email->description, 'user-registration' ) );
+				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
+												'">' . esc_html__( $email->title, 'user-registration' ) . '</a>';
+				$settings .= esc_html( ur_help_tip( __( $email->description, 'user-registration' ) ) );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
+				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
 				$settings .= '</td>';
 				$settings .= '</tr>';
 			}
@@ -203,12 +210,15 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			return $settings;
 		}
 
+		/**
+		 * Save Email Settings.
+		 */
 		public function save() {
 			global $current_section;
 			$emails = $this->get_emails();
 
 			foreach ( $emails as $email ) {
-				if ( $current_section == 'ur_settings_' . $email->id . '' ) {
+				if ( 'ur_settings_' . $email->id . '' === $current_section ) {
 					$settings = new $email();
 					$settings = $settings->get_settings();
 				}
@@ -227,7 +237,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$emails = $this->get_emails();
 
 			foreach ( $emails as $email ) {
-				if ( $current_section == 'ur_settings_' . $email->id . '' ) {
+				if ( 'ur_settings_' . $email->id . '' === $current_section ) {
 					$settings = new $email();
 					$settings = $settings->get_settings();
 				}
