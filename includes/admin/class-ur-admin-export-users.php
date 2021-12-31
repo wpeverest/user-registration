@@ -2,8 +2,6 @@
 /**
  * Export Users
  *
- * @author   WPEverest
- * @category Admin
  * @package  UserRegistration/Admin
  * @since    1.5.0
  */
@@ -38,6 +36,7 @@ class UR_Admin_Export_Users {
 	/**
 	 * Exports users data along with extra information in CSV format.
 	 *
+	 * @param int $form_id Form ID.
 	 * @return void
 	 */
 	public function export_csv( $form_id ) {
@@ -48,11 +47,11 @@ class UR_Admin_Export_Users {
 		}
 
 		// Nonce check.
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
-			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'user-registration-settings' ) ) {
+			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		$form_id = isset( $_POST['export_users'] ) ? $_POST['export_users'] : 0;
+		$form_id = isset( $_POST['export_users'] ) ? absint( wp_unslash( $_POST['export_users'] ) ) : 0;
 
 		// Return if form id is not set and current user doesnot have export capability.
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
@@ -66,7 +65,7 @@ class UR_Admin_Export_Users {
 		);
 
 		if ( count( $users ) === 0 ) {
-			echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . __( 'No users found with this form id.', 'user-registration' ) . '</strong></p></div>';
+			echo '<div id="message" class="updated inline notice notice-error"><p><strong>' . esc_html__( 'No users found with this form id.', 'user-registration' ) . '</strong></p></div>';
 			return;
 		}
 
@@ -75,31 +74,31 @@ class UR_Admin_Export_Users {
 
 		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
 		$form_name = str_replace( '&#8211;', '-', $form_name );
-		$form_name = strtolower( str_replace( ' ', '-', $form_name) );
+		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
 		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
 		if ( ob_get_contents() ) {
 			ob_clean();
 		}
 
-		// Force download
+		// Force download.
 		header( 'Content-Type: application/force-download' );
 		header( 'Content-Type: application/octet-stream' );
 		header( 'Content-Type: application/download' );
 
-		// Disposition / Encoding on response body
+		// Disposition / Encoding on response body.
 		header( "Content-Disposition: attachment;filename={$file_name}" );
 		header( 'Content-Transfer-Encoding: binary' );
 
 		$handle = fopen( 'php://output', 'w' );
 
-		// Handle UTF-8 chars conversion for CSV
+		// Handle UTF-8 chars conversion for CSV.
 		fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
-		// Put the column headers
+		// Put the column headers.
 		fputcsv( $handle, array_values( $columns ) );
 
-		// Put the row values
+		// Put the row values.
 		foreach ( $rows as $row ) {
 			fputcsv( $handle, $row );
 		}
@@ -159,7 +158,8 @@ class UR_Admin_Export_Users {
 	/**
 	 * Generate rows for CSV export
 	 *
-	 * @param  obj $users   Users Data
+	 * @param  obj $users   Users Data.
+	 * @param int $form_id Form ID.
 	 * @return array    $rows    CSV export rows.
 	 */
 	public function generate_rows( $users, $form_id ) {
@@ -172,10 +172,10 @@ class UR_Admin_Export_Users {
 				continue;
 			}
 
-			$user_form_id = get_user_meta( $user->data->ID, 'ur_form_id', true );
-			$user_status = get_user_meta( $user->data->ID, 'ur_user_status', true );
+			$user_form_id      = get_user_meta( $user->data->ID, 'ur_form_id', true );
+			$user_status       = get_user_meta( $user->data->ID, 'ur_user_status', true );
 			$user_email_status = get_user_meta( $user->data->ID, 'ur_confirm_email', true );
-			$status = ur_get_user_status($user_status,$user_email_status);
+			$status            = ur_get_user_status( $user_status, $user_email_status );
 			// If the user is not submitted by selected registration form.
 			if ( $user_form_id !== $form_id ) {
 				continue;
@@ -193,17 +193,17 @@ class UR_Admin_Export_Users {
 					unset( $user_extra_row[ $user_extra_data_key ] );
 				}
 
-				$field_data = ur_get_field_data_by_field_name($form_id,$user_extra_data_key);
+				$field_data = ur_get_field_data_by_field_name( $form_id, $user_extra_data_key );
 				if ( isset( $field_data['field_key'] ) && 'file' === $field_data['field_key'] ) {
 					$attachment_ids = explode( ',', $user_extra_data );
-					$file_link ="";
+					$file_link      = '';
 					foreach ( $attachment_ids as $attachment_id ) {
 						$file_path = wp_get_attachment_url( $attachment_id );
 						if ( $file_path ) {
-							$file_link .= esc_url($file_path) . ' ; ';
+							$file_link .= esc_url( $file_path ) . ' ; ';
 						}
 					}
-					$user_extra_row[$user_extra_data_key]  = $file_link;
+					$user_extra_row[ $user_extra_data_key ] = $file_link;
 				}
 			}
 
@@ -237,7 +237,7 @@ class UR_Admin_Export_Users {
 			// Get user default row.
 			$user_default_row = array(
 				'user_role'        => is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles,
-				'ur_user_status'   => is_array( $status) ? implode( ',', $status ) : $status,
+				'ur_user_status'   => is_array( $status ) ? implode( ',', $status ) : $status,
 				'date_created'     => $user->data->user_registered,
 				'date_created_gmt' => get_gmt_from_date( $user->data->user_registered ),
 			);

@@ -5,8 +5,6 @@
  * @class    UR_Settings_Integration
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,12 +41,12 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 			$settings = apply_filters(
 				'user_registration_integration_settings',
 				array(
-					'title' => __( 'Integration', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Integration', 'user-registration' ),
+					'sections' => array(
 						'integration_options' => array(
-							'title' => __( 'Google reCaptcha', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'    => __( 'Google reCaptcha', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Version', 'user-registration' ),
@@ -105,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
-							)
+							),
 						),
 					),
 				)

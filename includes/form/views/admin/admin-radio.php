@@ -32,9 +32,8 @@ $options         = array_map( 'trim', $options );
 					$checked = checked( $option, $default_value, false );
 				}
 
-				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' '" . $checked . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
+				echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option ) ) . "' '" . esc_attr( $checked ) . "' disabled/>" . esc_html( trim( $option ) ) . '</label>';
 			}
 			?>
 	</div>
 </div>
-
