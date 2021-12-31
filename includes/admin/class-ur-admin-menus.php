@@ -296,7 +296,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$fields[ $i ]['plan'] = $plan;
 					}
 
-					echo '<h2 class="ur-toggle-heading">' . __( $section['section_title'], 'user-registration' ) . '</h2><hr/>';
+					echo '<h2 class="ur-toggle-heading">' . esc_html( $section['section_title'] ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
 					$this->render_upgradable_fields( $fields );
 					echo '</ul >';
@@ -306,6 +306,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		/**
 		 * Render multiple upgradable fields.
+		 *
+		 * @param array $fields Field.
 		 */
 		public function render_upgradable_fields( $fields ) {
 			foreach ( $fields as $field ) {
@@ -315,6 +317,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		/**
 		 * Render an upgradable field.
+		 *
+		 * @param array $args Args Data.
 		 */
 		public function render_upgradable_field( $args ) {
 			$id    = $args['id'];
@@ -322,7 +326,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$label = $args['label'];
 			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
 
-			echo '<li id="' . $id . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . $id . '" data-plan="' . $plan . '"><span class="' . $icon . '"></span>' . $label . '</li>';
+			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-plan="' . esc_attr( $plan ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
 		}
 
 		/**
@@ -345,7 +349,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( __( 'User Registration' ), __( 'User Registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 		}
@@ -356,7 +360,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function registration_page_init() {
 			global $registration_table_list;
 
-			if ( ! isset( $_GET['add-new-registration'] ) ) { // WPCS: input var okay, CSRF ok.
+			if ( ! isset( $_GET['add-new-registration'] ) ) {
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
 				$registration_table_list->process_actions();
 
@@ -441,6 +445,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		/**
 		 * Validate screen options on update.
+		 *
+		 * @param mixed $status Status.
+		 * @param mixed $option Option.
+		 * @param mixed $value Value.
 		 */
 		public function set_screen_option( $status, $option, $value ) {
 			if ( in_array( $option, array( 'user_registration_per_page' ), true ) ) {
@@ -477,7 +485,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			// Forms view
+			// Forms view.
 			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 		}
 
@@ -550,19 +558,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
-										   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-										   value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
+										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+										value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
 								</label>
 								<input type="hidden" class="menu-item-type"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
+									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
 								<input type="hidden" class="menu-item-title"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-									   value="<?php echo esc_html( $value ); ?>"/>
+									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+									value="<?php echo esc_html( $value ); ?>"/>
 								<input type="hidden" class="menu-item-url"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-									   value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
+									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+									value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
 								<input type="hidden" class="menu-item-classes"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
+									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
 							</li>
 							<?php
 							$i --;
@@ -572,13 +580,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</div>
 				<p class="button-controls">
 					<span class="list-controls">
-					<a href="<?php echo admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-user-registration-endpoints' ); ?>"
-					   class="select-all"><?php _e( 'Select all', 'user-registration' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-user-registration-endpoints' ) ); ?>"
+					class="select-all"><?php esc_html_e( 'Select all', 'user-registration' ); ?></a>
 					</span>
 					<span class="add-to-menu">
 					<input type="submit" class="button-secondary submit-add-to-menu right"
-						   value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
-						   name="add-post-type-menu-item" id="submit-posttype-user-registration-endpoints">
+						value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
+						name="add-post-type-menu-item" id="submit-posttype-user-registration-endpoints">
 					<span class="spinner"></span>
 					</span>
 				</p>
@@ -586,6 +594,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<?php
 		}
 
+		/**
+		 * Get Edit Form Field.
+		 *
+		 * @param object $form_data Form Data.
+		 *
+		 * @throws Exception Throws exception if error in json.
+		 */
 		private function get_edit_form_field( $form_data ) {
 
 			if ( ! empty( $form_data ) ) {
@@ -657,9 +672,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						if ( 1 === $grid_count ) {
 							echo esc_html( $grid_one );
 						} elseif ( 2 === $grid_count ) {
-							echo  esc_html( $grid_two );
+							echo esc_html( $grid_two );
 						} elseif ( 3 === $grid_count ) {
-							echo  esc_html( $grid_three );
+							echo esc_html( $grid_three );
 						}
 						?>
 					</button>
@@ -667,10 +682,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<div class="ur-toggle-grid-content" style="display:none">
 						<small>Select the grid column.</small>
 						<div class="ur-grid-selector" data-grid = "1">
-							<?php echo esc_html( $grid_one );  ?>
+							<?php echo esc_html( $grid_one ); ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "2">
-							<?php echo esc_html( $grid_two );  ?>
+							<?php echo esc_html( $grid_two ); ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "3">
 							<?php echo esc_html( $grid_three ); ?>
@@ -716,13 +731,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 				echo '</div>';
 
-			}// End foreach().
+			}
 			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
 		}
 
+		/**
+		 * Get admin field.
+		 *
+		 * @param object $single_field Single field.
+		 * @throws Exception Throw exception if empty form data.
+		 */
 		public static function get_admin_field( $single_field ) {
 
 			if ( empty( $single_field->field_key ) ) {
@@ -743,6 +764,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			/* Backward compat end */
 		}
 
+		/**
+		 * Get registered user form fields.
+		 */
 		private function get_registered_user_form_fields() {
 
 			$registered_form_fields = ur_get_user_field_only();
@@ -756,6 +780,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			echo ' </ul > ';
 		}
 
+		/**
+		 * Get Registered other form field.
+		 */
 		private function get_registered_other_form_fields() {
 
 			$registered_form_fields = ur_get_other_form_fields();
@@ -771,11 +798,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			echo ' </ul > ';
 		}
 
+		/**
+		 * Get Admin field List.
+		 *
+		 * @param mixed $field Fields.
+		 */
 		public function ur_get_list( $field ) {
 
 			$class_name = ur_load_form_field_class( $field );
 
-			if ( $class_name !== null ) {
+			if ( null !== $class_name ) {
 				echo esc_html( $class_name::get_instance()->get_registered_admin_fields() );
 			}
 

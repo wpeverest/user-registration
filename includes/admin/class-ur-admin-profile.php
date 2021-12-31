@@ -2,8 +2,6 @@
 /**
  * Add extra profile fields for users in admin
  *
- * @author   WPEverest
- * @category Admin
  * @package  UserRegistration/Admin
  * @version  1.0.0
  */
