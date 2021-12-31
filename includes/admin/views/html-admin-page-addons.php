@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="plugin-card plugin-card-<?php echo esc_attr( $addon->slug ); ?>">
 								<div class="plugin-card-left">
 									<a href="<?php echo esc_url( $addon->link ); ?>">
-										<img src="<?php echo esc_url( $addon->image ); ?>" class="plugin-icon" alt="" />
+										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/' . $addon->image ); ?>" class="plugin-icon" alt="" />
 									</a>
 								</div>
 								<div class="plugin-card-right">
