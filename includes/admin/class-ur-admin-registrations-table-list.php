@@ -75,7 +75,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 * @return string
 	 */
 	public function get_duplicate_link( $post_id ) {
-		return admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id  );
+		return admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			'id' => sprintf( esc_html__( 'ID: %d', 'user-registration' ), $row->ID ),
 		);
 
-		if ( current_user_can( $post_type_object->cap->edit_post, $row->ID ) && !$current_status_trash  ) {
+		if ( current_user_can( $post_type_object->cap->edit_post, $row->ID ) && ! $current_status_trash ) {
 			$actions['edit'] = '<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>';
 		}
 
@@ -142,7 +142,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 */
 	public function column_shortcode( $registration ) {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
-		echo esc_html( sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', $shortcode ) );
+		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', esc_attr( $shortcode ) );
 		?>
 		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 			<span class="dashicons dashicons-admin-page"></span>

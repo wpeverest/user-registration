@@ -670,11 +670,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<button type="button" class="ur-edit-grid">
 						<?php
 						if ( 1 === $grid_count ) {
-							echo esc_html( $grid_one );
+							echo wp_kses_post( $grid_one );
 						} elseif ( 2 === $grid_count ) {
-							echo esc_html( $grid_two );
+							echo wp_kses_post( $grid_two );
 						} elseif ( 3 === $grid_count ) {
-							echo esc_html( $grid_three );
+							echo wp_kses_post( $grid_three );
 						}
 						?>
 					</button>
@@ -682,13 +682,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<div class="ur-toggle-grid-content" style="display:none">
 						<small>Select the grid column.</small>
 						<div class="ur-grid-selector" data-grid = "1">
-							<?php echo esc_html( $grid_one ); ?>
+							<?php echo wp_kses_post( $grid_one ); ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "2">
-							<?php echo esc_html( $grid_two ); ?>
+							<?php echo wp_kses_post( $grid_two ); ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "3">
-							<?php echo esc_html( $grid_three ); ?>
+							<?php echo wp_kses_post( $grid_three ); ?>
 						</div>
 					</div>
 				</div>
@@ -714,7 +714,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							echo '<div class="ur-selected-item">';
 							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
 							$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
-							echo esc_html( $template );
+							echo $template;
 							echo '</div>';
 						}
 					}
@@ -808,7 +808,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$class_name = ur_load_form_field_class( $field );
 
 			if ( null !== $class_name ) {
-				echo esc_html( $class_name::get_instance()->get_registered_admin_fields() );
+				echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
 			}
 
 		}
