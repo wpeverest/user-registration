@@ -53,7 +53,9 @@ $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 
 $enable_field_icon = 'yes' === get_option( 'user_registration_pro_general_setting_login_form', 'no' );
 
-$login_title = 'yes' === get_option('user_registration_login_title', 'no' );
+$login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
+
+$login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 
 ?>
 
@@ -61,14 +63,16 @@ $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 
 <?php do_action( 'user_registration_before_customer_login_form' ); ?>
 
-<div class="ur-frontend-form login <?php echo $template_class; ?>" id="ur-frontend-form">
+<div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 
 	<form class="user-registration-form user-registration-form-login login" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<?php if( $login_title ) {
-					echo apply_filters( 'ur_login_title', __( $labels['login'], 'user-registration' ) );
-				 } ?>
+				<?php
+				if ( $login_title ) {
+					echo esc_html( apply_filters( 'ur_login_title', esc_html__( $labels['login'], 'user-registration' ) ) );
+				}
+				?>
 					<?php do_action( 'user_registration_login_form_start' ); ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<?php
@@ -78,7 +82,7 @@ $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 						?>
 						<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( $_POST['username'] ) : ''; ?>" />
-						<?php if($enable_field_icon) { ?>
+						<?php if ( $enable_field_icon ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
 						</span>
@@ -101,7 +105,7 @@ $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 							<?php
 						}
 						?>
-						<?php if($enable_field_icon) { ?>
+						<?php if ( $enable_field_icon ) { ?>
 						<span class="ur-icon ur-icon-password"></span>
 						<?php } ?>
 						</span>
@@ -118,7 +122,7 @@ $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<div>
-							<?php if($enable_ajax) { ?>
+							<?php if ( $enable_ajax ) { ?>
 							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
 							<span></span>
 							<?php } else { ?>
@@ -154,28 +158,28 @@ $login_title = 'yes' === get_option('user_registration_login_title', 'no' );
 					<?php
 					$users_can_register = get_option( 'users_can_register', 'yes' );
 
-				if ( $users_can_register ) {
+					if ( $users_can_register ) {
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
 
-					if ( ! empty( $url_options ) ) {
-						echo '<p class="user-registration-register register">';
-						$label = get_option( 'user_registration_general_setting_registration_label' );
+						if ( ! empty( $url_options ) ) {
+							echo '<p class="user-registration-register register">';
+							$label = get_option( 'user_registration_general_setting_registration_label' );
 
-						if ( ! empty( $label ) ) {
-							?>
+							if ( ! empty( $label ) ) {
+								?>
 								<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' ); ?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
 									</a>
 								<?php
-						} else {
-							update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
-							?>
+							} else {
+								update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
+								?>
 									<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' ); ?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
 									</a>
 								<?php
+							}
+							echo '</p>';
 						}
-						echo '</p>';
 					}
-				}
 					?>
 					<?php do_action( 'user_registration_login_form_end' ); ?>
 			</div>

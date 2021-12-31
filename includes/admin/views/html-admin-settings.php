@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin View: Settings
+ *
+ * @package UserRegistration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<nav class="nav-tab-wrapper ur-nav ur-nav--tab ur-nav-tab-wrapper ur-scroll-ui__items">
 					<?php
 					foreach ( $tabs as $name => $label ) {
-						echo '<a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) . '" class="nav-tab ur-nav__link ur-scroll-ui__item ' . ( $current_tab == $name ? 'nav-tab-active is-active' : '' ) . '">' . $label . '</a>';
+						echo '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ) . '" class="nav-tab ur-nav__link ur-scroll-ui__item ' . ( $current_tab === $name ? 'nav-tab-active is-active' : '' ) . '">' . esc_html( $label ) . '</a>';
 					}
 
 						do_action( 'user_registration_settings_tabs' );
@@ -41,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<p class="submit">
 			<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
-				<input name="save" class="button-primary" type="submit" value="<?php echo apply_filters( 'user-registration-setting-save-label', esc_html__( 'Save Changes', 'user-registration' ) ); ?>" />
+				<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) ) ); ?>" />
 			<?php endif; ?>
 			<input type="hidden" name="subtab" id="last_tab" />
 			<?php wp_nonce_field( 'user-registration-settings' ); ?>

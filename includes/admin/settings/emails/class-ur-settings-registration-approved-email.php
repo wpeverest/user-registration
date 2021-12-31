@@ -36,14 +36,14 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 			$settings = apply_filters(
 				'user_registration_registration_approved_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'registration_approved_email' => array(
-							'title' => __( 'Registration Approved Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'     => __( 'Registration Approved Email', 'user-registration' ),
+							'type'      => 'card',
+							'desc'      => '',
 							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'settings'  => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the user notifying the registration is approved by site admin.', 'user-registration' ),

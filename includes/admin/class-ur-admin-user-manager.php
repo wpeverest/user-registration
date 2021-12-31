@@ -99,7 +99,7 @@ class UR_Admin_User_Manager {
 			return;
 		}
 
-		return update_user_meta( $this->user->ID, 'ur_user_status', $status );
+		return update_user_meta( absint( $this->user->ID ), 'ur_user_status', sanitize_text_field( $status ) );
 	}
 
 	/**
@@ -354,15 +354,15 @@ class UR_Admin_User_Manager {
 	 */
 	public static function get_status_label( $status ) {
 		if ( $status == self::APPROVED ) {
-			$label = __( 'approved', 'user-registration' );
+			$label = esc_html__( 'approved', 'user-registration' );
 		}
 
 		if ( $status == self::PENDING ) {
-			$label = __( 'pending', 'user-registration' );
+			$label = esc_html__( 'pending', 'user-registration' );
 		}
 
 		if ( $status == self::DENIED ) {
-			$label = __( 'denied', 'user-registration' );
+			$label = esc_html__( 'denied', 'user-registration' );
 		}
 
 		return ucfirst( $label );

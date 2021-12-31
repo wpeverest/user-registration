@@ -26,10 +26,10 @@ ur_print_notices(); ?>
 	<form method="post" class="user-registration-ResetPassword lost_reset_password">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<p><?php echo apply_filters( 'user_registration_lost_password_message', __( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'user-registration' ) ); ?></p>
+				<p><?php echo esc_html( apply_filters( 'user_registration_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'user-registration' ) ) ); ?></p>
 
 				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="user_login"><?php _e( 'Username or email', 'user-registration' ); ?></label>
+					<label for="user_login"><?php esc_html_e( 'Username or email', 'user-registration' ); ?></label>
 					<input class="user-registration-Input user-registration-Input--text input-text" type="text" name="user_login" id="user_login" />
 				</p>
 

@@ -4,8 +4,6 @@
  *
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -64,7 +62,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		/**
 		 * Add this page to settings.
 		 *
-		 * @param  array $pages
+		 * @param  array $pages Pages.
 		 * @return mixed
 		 */
 		public function add_settings_page( $pages ) {
@@ -108,7 +106,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			$array_keys = array_keys( $sections );
 
 			foreach ( $sections as $id => $label ) {
-				echo '<li><a href="' . admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ' </li>';
+				echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . '">' . esc_html( $label ) . '</a></li>';
 			}
 
 			echo '</ul>';

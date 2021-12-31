@@ -23,30 +23,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 ur_print_notices(); ?>
 
 <div class="ur-frontend-form login" id="ur-frontend-form">
-<form method="post" class="user-registration-ResetPassword lost_reset_password" data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>">
+<form method="post" class="user-registration-ResetPassword lost_reset_password" data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<p><?php echo apply_filters( 'user_registration_reset_password_message', __( 'Enter a new password below.', 'user-registration' ) ); ?></p>
+				<p><?php echo esc_html( apply_filters( 'user_registration_reset_password_message', esc_html__( 'Enter a new password below.', 'user-registration' ) ) ); ?></p>
 
 				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-					<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<label for="password_1"><?php esc_html_e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
 					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
 					<?php
-						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
-						}
+					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+					}
 					?>
 					</span>
 				</p>
 				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-					<label for="password_2"><?php _e( 'Re-enter new password', 'user-registration' ); ?> <span class="required">*</span></label>
+					<label for="password_2"><?php esc_html_e( 'Re-enter new password', 'user-registration' ); ?> <span class="required">*</span></label>
 					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" />
 					<?php
-						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
-						}
+					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+					}
 					?>
 					</span>
 				</p>

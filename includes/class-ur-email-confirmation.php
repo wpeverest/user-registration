@@ -161,7 +161,7 @@ class UR_Email_Confirmation {
 			return $columns;
 		}
 
-		$the_columns['ur_user_user_status'] = __( 'Status', 'user-registration' );
+		$the_columns['ur_user_user_status'] = esc_html__( 'Status', 'user-registration' );
 
 		$newcol  = array_slice( $columns, 0, -1 );
 		$newcol  = array_merge( $newcol, $the_columns );
@@ -183,9 +183,9 @@ class UR_Email_Confirmation {
 		$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
 		if ( '1' === $val ) {
-			$val = __( 'Verified', 'user-registration' );
+			$val = esc_html__( 'Verified', 'user-registration' );
 		} elseif ( $val === '0' && isset( $token ) ) {
-			$val = __( 'Pending', 'user-registration' );
+			$val = esc_html__( 'Pending', 'user-registration' );
 		} else {
 			$val = '-';
 		}
@@ -205,27 +205,27 @@ class UR_Email_Confirmation {
 
 	// Successful registration message.
 	public function custom_registration_message() {
-		return ur_print_notice( apply_filters("user_registration_success_message_after_email_confirmation", __('User successfully registered. Login to continue.', 'user-registration' ) ) );
+		return ur_print_notice( apply_filters("user_registration_success_message_after_email_confirmation", esc_html__('User successfully registered. Login to continue.', 'user-registration' ) ) );
 	}
 
 	// Token mismatch message.
 	public function custom_registration_error_message() {
-		return ur_print_notice( __( 'Token Mismatch!', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'Token Mismatch!', 'user-registration' ), 'error' );
 	}
 
 	// Token expired message.
 	public function custom_token_expired_message() {
-		return ur_print_notice( __( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
 	}
 
 	// Resend verification email message.
 	public function custom_resend_email_token_message() {
-		return ur_print_notice( __( 'Verification Email Sent!', 'user-registration' ) );
+		return ur_print_notice( esc_html__( 'Verification Email Sent!', 'user-registration' ) );
 	}
 
 	// Resend verification email error message.
 	public function custom_resend_email_token_error_message() {
-		return ur_print_notice( __( 'User does not exist!', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'User does not exist!', 'user-registration' ), 'error' );
 	}
 
 	/**
@@ -243,7 +243,7 @@ class UR_Email_Confirmation {
 		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
 
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
-				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
 			$output  = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
@@ -377,7 +377,7 @@ class UR_Email_Confirmation {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = ( $form_id ) ? $form_id : 0;
+		$form_id = isset( $form_id ) ? $form_id : 0;
 
 		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 			$token = $this->get_token( $user_id );

@@ -45,7 +45,7 @@ class UR_Form_Field_Description extends UR_Form_Field {
 
 	public function get_registered_admin_fields() {
 
-		return '<li id="' . $this->id . '_list " class="ur-registered-item draggable" data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
+		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' .esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ). '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
 	}
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
@@ -58,7 +58,7 @@ class UR_Form_Field_Description extends UR_Form_Field {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
-					return __( $field_label . ' is required.', 'user-registration' );
+					return esc_html__( $field_label . ' is required.', 'user-registration' );
 				}
 			);
 		}

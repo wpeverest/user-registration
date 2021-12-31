@@ -48,7 +48,7 @@ class UR_Preview {
 	 * @param string $link Link.
 	 */
 	public function edit_form_link( $link ) {
-		$form_id       = absint( $_GET['form_id'] );
+		$form_id       = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0 ;
 		$edit_form_url = add_query_arg(
 			array(
 				'page'              => 'add-new-registration',
@@ -57,7 +57,7 @@ class UR_Preview {
 			admin_url( 'admin.php' )
 		);
 
-		$link = '<a class="post-edit-link" href="' . $edit_form_url . '">' . __( 'Edit Form', 'user-registration' ) . '</a>';
+		$link = '<a class="post-edit-link" href="' . esc_url( $edit_form_url ) . '">' . __( 'Edit Form', 'user-registration' ) . '</a>';
 		return $link;
 	}
 
@@ -105,7 +105,7 @@ class UR_Preview {
 	 * @return string
 	 */
 	public static function form_preview_title( $title ) {
-		$form_id   = absint( $_GET['form_id'] ); // @codingStandardsIgnoreLine
+		$form_id   = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0 ; // @codingStandardsIgnoreLine
 
 		if ( $form_id && in_the_loop() ) {
 			$form_data = UR()->form->get_form( $form_id );
