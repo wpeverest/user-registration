@@ -316,20 +316,19 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 	global $post;
 	$new_shortcode = '';
 	$wp_version = '5.0';
-	if ( version_compare($GLOBALS['wp_version'], $wp_version, '>=' ) ) {
-		if( is_object( $post ) ) {
+	if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
+		if ( is_object( $post ) ) {
 			$blocks = parse_blocks( $post->post_content );
-			foreach( $blocks as $block ) {
+			foreach ( $blocks as $block ) {
 
 				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
-					$new_shortcode = "[". $block['attrs']['shortcode'] . "]";
+					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
 				}
-
 			}
 		}
-	return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
+		return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
 	} else {
 		return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, $tag );
 	}
@@ -1122,8 +1121,8 @@ function ur_login_option_with() {
 		'user_registration_login_options_with',
 		array(
 			'default'            => __( 'Username or Email', 'user-registration' ),
-			'username'			 => __( 'Username', 'user-registration' ),
-			'email'         	 => __( 'Email', 'user-registration' ),
+			'username'           => __( 'Username', 'user-registration' ),
+			'email'              => __( 'Email', 'user-registration' ),
 		)
 	);
 }
@@ -1145,7 +1144,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
 	if ( isset( $post_meta[0] ) ) {
 		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
-		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key) {
+		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ) {
 			if ( 'yes' === $post_meta[0] ) {
 				$post_meta[0] = 1;
 			}
@@ -1175,7 +1174,7 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 	foreach ( $fields as $field ) {
 
 		if ( isset( $field['id'] ) && $meta_key == $field['id'] ) {
-			$value = isset( $field['default'] ) ? sanitize_text_field ( $field['default'] ) : $default;
+			$value = isset( $field['default'] ) ? sanitize_text_field( $field['default'] ) : $default;
 			break;
 		}
 	}
@@ -1345,7 +1344,7 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
 	$license_key  = trim( get_option( 'user-registration_license_key' ) );
 	if ( class_exists( 'UR_AddOn_Updater' ) ) {
 		new UR_AddOn_Updater(
-			esc_url_raw($api_endpoint),
+			esc_url_raw( $api_endpoint ),
 			$file,
 			array(
 				'version' => $addon_version,
@@ -1552,15 +1551,15 @@ function ur_get_user_extra_fields( $user_id ) {
  * @param  string $user_status.
  * @param  string $user_email_status.
  */
-function ur_get_user_status( $user_status,$user_email_status ) {
+function ur_get_user_status( $user_status, $user_email_status ) {
 	$status = array();
-	if ( $user_status === '0' || $user_email_status === '0'  ) {
+	if ( $user_status === '0' || $user_email_status === '0' ) {
 		array_push( $status, 'Pending' );
-	} elseif ($user_status === '-1' || $user_email_status === '-1' ) {
+	} elseif ( $user_status === '-1' || $user_email_status === '-1' ) {
 		array_push( $status, 'Denied' );
 	} else {
 		if ( $user_email_status ) {
-		    array_push( $status, 'Verified' );
+			array_push( $status, 'Verified' );
 		} else {
 			array_push( $status, 'Approved' );
 		}
@@ -1695,7 +1694,7 @@ function ur_print_js() {
 		 *
 		 * @param string $js JavaScript code.
 		 */
-		echo apply_filters( 'user_registration_queued_js', $js );
+		echo wp_kses( apply_filters( 'user_registration_queued_js', $js ), array( 'script' => array( 'type' => true ) ) );
 
 		unset( $ur_queued_js );
 	}
@@ -1906,30 +1905,29 @@ function ur_parse_args( &$args, $defaults ) {
 /**
  * Override email content for specific form.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param object $settings Settings for specific email.
  * @param string $message Message to be sent in email body.
  * @param string $subject Subject of the email.
  *
  * @return array
  */
-function user_registration_email_content_overrider($form_id, $settings, $message, $subject) {
+function user_registration_email_content_overrider( $form_id, $settings, $message, $subject ) {
 	// Check if email templates addon is active.
-	if( class_exists( 'User_Registration_Email_Templates')) {
+	if ( class_exists( 'User_Registration_Email_Templates' ) ) {
 		$email_content_override = ur_get_single_post_meta( $form_id, 'user_registration_email_content_override', '' );
 
 		// Check if the post meta exists and have contents.
-		if( $email_content_override ) {
+		if ( $email_content_override ) {
 
-			$auto_password_template_overrider = isset( $email_content_override[$settings->id] ) ?  $email_content_override[$settings->id] : '';
+			$auto_password_template_overrider = isset( $email_content_override[ $settings->id ] ) ? $email_content_override[ $settings->id ] : '';
 
 			// Check if the email override is enabled.
-			if( '' !== $auto_password_template_overrider && '1' === $auto_password_template_overrider['override']) {
+			if ( '' !== $auto_password_template_overrider && '1' === $auto_password_template_overrider['override'] ) {
 				$message = $auto_password_template_overrider['content'];
 				$subject = $auto_password_template_overrider['subject'];
 			}
 		}
-
 	}
 	return array( $message, $subject );
 }
@@ -1938,8 +1936,8 @@ function user_registration_email_content_overrider($form_id, $settings, $message
  *
  * @param string $new_string Field Key.
  * @param string $post_key Post Key
- * @param array $profile Form Data.
- * @param mixed $value Value.
+ * @param array  $profile Form Data.
+ * @param mixed  $value Value.
  */
 function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value ) {
 	$valid_form_data = array();
@@ -1964,7 +1962,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
 		$valid_form_data[ $new_string ]->value        = $value;
 		$valid_form_data[ $new_string ]->extra_params = array(
-			'field_key' => $new_string
+			'field_key' => $new_string,
 		);
 	}
 	return $valid_form_data;
@@ -1977,13 +1975,13 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
  *
  * @since 1.9.4
  */
-function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ){
+function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ) {
 	$ur_shortcodes = array(
 		'User Registration My Account' => '[user_registration_my_account]',
-		'User Registration Login' => '[user_registration_login]'
-		);
+		'User Registration Login' => '[user_registration_login]',
+	);
 
-	$conflict_shortcodes  = array_merge( $conflict_shortcodes, $ur_shortcodes);
+	$conflict_shortcodes  = array_merge( $conflict_shortcodes, $ur_shortcodes );
 	return $conflict_shortcodes;
 }
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
@@ -2049,12 +2047,12 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 /**
  * Get field data by field_name.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $field_name Field Name.
  *
  * @return array
  */
-function ur_get_field_data_by_field_name($form_id,$field_name){
+function ur_get_field_data_by_field_name( $form_id, $field_name ) {
 	$field_data = array();
 
 	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
@@ -2062,9 +2060,9 @@ function ur_get_field_data_by_field_name($form_id,$field_name){
 	foreach ( $post_content_array as $post_content_row ) {
 		foreach ( $post_content_row as $post_content_grid ) {
 			foreach ( $post_content_grid as $field ) {
-				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) &&  $field->general_setting->field_name === $field_name) {
+				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) && $field->general_setting->field_name === $field_name ) {
 					$field_data = array(
-						"field_key" => $field->field_key
+						'field_key' => $field->field_key,
 					);
 				}
 			}
@@ -2131,51 +2129,51 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	/**
 	 * Render Conditional Logic in form settings of form builder.
 	 *
-	 * @param array $connection Connection Data.
+	 * @param array  $connection Connection Data.
 	 * @param string $integration Integration.
 	 * @return string
 	 */
-	function user_registration_pro_render_conditional_logic($connection,$integration, $form_id){
+	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
 		$output = '<div class="ur_conditional_logic_container">';
-        $output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
+		$output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
 
 			$checked = 'checked=checked';
 		}
-        $output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" '.$checked.'>';
-		$output .= '<label>' .esc_html__( "Use conditional logic","user-registration") .'</label>';
-		$output .= "</div>";
+		$output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" ' . $checked . '>';
+		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
+		$output .= '</div>';
 
-        $output .= '<div class="ur_conditional_logic_wrapper" data-source="'.esc_attr( $integration ).'">';
-		$output .= '<h4>'. esc_html__( "Conditional Rules", "user-registration") .'</h4>';
-        $output .= '<div class="ur-logic"><p>'. esc_html__("Send data only if the following matches.","user-registration") .'</p></div>';
+		$output .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$output .= '<h4>' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</h4>';
+		$output .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output .= '<div class="ur-conditional-wrapper">';
 		$output .= '<select class="ur_conditional_field" name="ur_conditional_field">';
 		$get_all_fields       = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 		$selected_ur_field_type = '';
 
-		if( isset( $get_all_fields ) ) {
+		if ( isset( $get_all_fields ) ) {
 
-			foreach( $get_all_fields as $key => $field ) {
+			foreach ( $get_all_fields as $key => $field ) {
 				$selectedAttr = '';
 
-				if( isset( $connection["conditional_logic_data"]["conditional_field"] ) && $connection["conditional_logic_data"]["conditional_field"] === $key ) {
+				if ( isset( $connection['conditional_logic_data']['conditional_field'] ) && $connection['conditional_logic_data']['conditional_field'] === $key ) {
 					$selectedAttr = 'selected=selected';
 					$selected_ur_field_type = $field['field_key'];
 				}
-				$output .='<option data-type="' . esc_attr( $field["field_key"] ).  '" data-label="' .  esc_attr( $field["label"] ). '" value="' . esc_attr( $key ) . '" ' .  $selectedAttr . ">" .   esc_html( $field["label"] ) ."</option>";
+				$output .= '<option data-type="' . esc_attr( $field['field_key'] ) . '" data-label="' . esc_attr( $field['label'] ) . '" value="' . esc_attr( $key ) . '" ' . $selectedAttr . '>' . esc_html( $field['label'] ) . '</option>';
 			}
 		}
-        $output .= "</select>";
+		$output .= '</select>';
 		$output .= '<select class="ur-conditional-condition" name="ur-conditional-condition">';
-		$output .= '<option value="is" '. ( isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is </option>';
-        $output .= '<option value="is_not" '. (isset( $connection["conditional_logic_data"]["conditional_operator"] ) && "is_not"===$connection["conditional_logic_data"]["conditional_operator"]?'selected':'').'> is not </option>';
-        $output .= "</select>";
+		$output .= '<option value="is" ' . ( isset( $connection['conditional_logic_data']['conditional_operator'] ) && 'is' === $connection['conditional_logic_data']['conditional_operator'] ? 'selected' : '' ) . '> is </option>';
+		$output .= '<option value="is_not" ' . ( isset( $connection['conditional_logic_data']['conditional_operator'] ) && 'is_not' === $connection['conditional_logic_data']['conditional_operator'] ? 'selected' : '' ) . '> is not </option>';
+		$output .= '</select>';
 
 		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
-			$choices = user_registration_pro_get_checkbox_choices( $form_id, $connection["conditional_logic_data"]["conditional_field"] );
+			$choices = user_registration_pro_get_checkbox_choices( $form_id, $connection['conditional_logic_data']['conditional_field'] );
 			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
 
 			if ( is_array( $choices ) && array_filter( $choices ) ) {
@@ -2183,21 +2181,21 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 
 				foreach ( $choices as $key => $choice ) {
 					$key           = $selected_ur_field_type == 'country' ? $key : $choice;
-					$selectedvalue = isset( $connection["conditional_logic_data"]["conditional_value"] ) && $connection["conditional_logic_data"]["conditional_value"] == $key ? 'selected="selected"' : '';
+					$selectedvalue = isset( $connection['conditional_logic_data']['conditional_value'] ) && $connection['conditional_logic_data']['conditional_value'] == $key ? 'selected="selected"' : '';
 					$output       .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
 				}
 			} else {
-				$selected = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : 0;
+				$selected = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : 0;
 				$output  .= '<option value="1" ' . ( $selected == '1' ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
 			}
 			$output .= '</select>';
 		} else {
-			$value = isset( $connection["conditional_logic_data"]["conditional_value"] ) ? $connection["conditional_logic_data"]["conditional_value"] : '';
-			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="'. esc_attr( $value ).'">';
+			$value = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
+			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="' . esc_attr( $value ) . '">';
 		}
-		$output .= "</div>";
-        $output .= "</div>";
-        $output .= "</div>";
+		$output .= '</div>';
+		$output .= '</div>';
+		$output .= '</div>';
 		return $output;
 	}
 }

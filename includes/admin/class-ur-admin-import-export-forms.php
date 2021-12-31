@@ -82,7 +82,6 @@ class UR_Admin_Import_Export_Forms {
 			ob_clean();
 		}
 
-		$export_json = wp_json_encode( $export_data );
 		// Force download.
 		header( 'Content-Type: application/force-download' );
 
@@ -90,7 +89,7 @@ class UR_Admin_Import_Export_Forms {
 		header( "Content-Disposition: attachment;filename={$file_name}" );
 		header( 'Content-type: application/json' );
 
-		echo $export_json; // phpcs:ignore WordPress.Security.EscapeOutput
+		echo wp_json_encode( $export_data );
 		exit();
 	}
 

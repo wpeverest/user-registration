@@ -57,9 +57,11 @@ class UR_Shortcodes {
 	) {
 		ob_start();
 
-		echo empty( $wrapper['before'] ) ? '<div id="user-registration" class="' . esc_attr( $wrapper['class'] ) . '">' : $wrapper['before'];
+		$wrap_before = empty( $wrapper['before'] ) ? '<div id="user-registration" class="' . esc_attr( $wrapper['class'] ) . '">' : $wrapper['before'];
+		echo wp_kses_post( $wrap_before );
 		call_user_func( $function, $atts );
-		echo empty( $wrapper['after'] ) ? '</div>' : $wrapper['after'];
+		$wrap_after = empty( $wrapper['after'] ) ? '</div>' : $wrapper['after'];
+		echo wp_kses_post( $wrap_after );
 
 		return ob_get_clean();
 	}
@@ -120,37 +122,38 @@ class UR_Shortcodes {
 	 * @param mixed $atts
 	 */
 	public static function edit_profile( $atts ) {
-		return UR_Shortcodes::shortcode_wrapper( array( __CLASS__, 'render_edit_profile' ), $atts );
+		return self::shortcode_wrapper( array( __CLASS__, 'render_edit_profile' ), $atts );
 	}
 
 	/**
 	 * Output for Edit-profile form .
-	 *
 	 */
 	private static function render_edit_profile() {
-		    $user_id = get_current_user_id();
+			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
 			$has_date = ur_has_date_field( $form_id );
 
-			if ( true === $has_date ) {
-				wp_enqueue_style( 'flatpickr' );
-				wp_enqueue_script( 'flatpickr' );
-			}
+		if ( true === $has_date ) {
+			wp_enqueue_style( 'flatpickr' );
+			wp_enqueue_script( 'flatpickr' );
+		}
 		if ( ! is_user_logged_in() ) {
 			$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 			$matched        = 0;
 
 			if ( ! empty( $myaccount_page ) ) {
 				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-				if(1 > absint( $matched )) {
+				if ( 1 > absint( $matched ) ) {
 					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
 				}
 				if ( 1 === $matched ) {
 					$page_id = $myaccount_page->ID;
 				}
 			}
-			echo apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), isset($page_id) ? get_permalink($page_id) : wp_login_url() ) );
+
+			/* translators: %s - Link to login form. */
+			echo wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'Please Login to edit profile. <a href="%s">Login Here?</a>', 'user-registration' ), isset( $page_id ) ? get_permalink( $page_id ) : wp_login_url() ) ) );
 		} else {
 			include_once 'shortcodes/class-ur-shortcode-my-account.php';
 			UR_Shortcode_My_Account::edit_profile();
@@ -265,7 +268,7 @@ class UR_Shortcodes {
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
 				'row_ids'                   => $form_row_ids_array,
-				'recaptcha_enabled'			=> $recaptcha_enabled
+				'recaptcha_enabled'         => $recaptcha_enabled,
 			)
 		);
 	}

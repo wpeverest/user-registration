@@ -235,16 +235,16 @@ class UR_Admin_Settings {
 	public static function output_fields( $options ) {
 		$settings = '';
 
-		if( is_array( $options ) && !empty( $options ) ){
+		if ( is_array( $options ) && ! empty( $options ) ) {
 
 			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
 			$back_link = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
-			$back_link_text = isset( $options['back_link_text'] ) ? esc_html( $options['back_link_text'] ): '';
+			$back_link_text = isset( $options['back_link_text'] ) ? esc_html( $options['back_link_text'] ) : '';
 
-			if( isset( $options['back_link'] ) ) {
+			if ( isset( $options['back_link'] ) ) {
 				$settings .= '<a href="' . esc_url( $back_link ) . '" class="page-title-action">';
 
-				if( isset( $options['back_link_text'] ) ) {
+				if ( isset( $options['back_link_text'] ) ) {
 					$settings .= esc_html( $back_link_text );
 				}
 
@@ -257,14 +257,14 @@ class UR_Admin_Settings {
 					continue;
 				}
 
-				if( 'card' === $section['type'] ) {
+				if ( 'card' === $section['type'] ) {
 					$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
-					$settings .=  '<div class="user-registration-card__header ur-border-0">';
+					$settings .= '<div class="user-registration-card__header ur-border-0">';
 
 					if ( ! empty( $section['title'] ) ) {
 						$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
 
-						if( isset( $section['back_link'] ) ) {
+						if ( isset( $section['back_link'] ) ) {
 							$settings .= esc_html( $section['back_link'] );
 						}
 
@@ -273,17 +273,17 @@ class UR_Admin_Settings {
 					$settings .= '</div>';
 
 					if ( ! empty( $section['desc'] ) ) {
-						$settings .= '<p class="ur-p-tag">' .  wptexturize( wp_kses_post( $section['desc'] ) )  . '</p>';
+						$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 					}
 					$settings .= '<div class="user-registration-card__body pt-0 pb-0">';
-					$settings .=  '<table class="form-table">' . "\n\n";
+					$settings .= '<table class="form-table">' . "\n\n";
 
 					if ( ! empty( $id ) ) {
 						do_action( 'user_registration_settings_' . sanitize_title( $id ) );
 					}
 				}
 
-				foreach( $section['settings'] as $key => $value ) {
+				foreach ( $section['settings'] as $key => $value ) {
 
 					if ( ! isset( $value['type'] ) ) {
 						continue;
@@ -352,17 +352,17 @@ class UR_Admin_Settings {
 
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>'. esc_html( $tooltip_html ) . '</th>';
-							$settings .= '<td class="forminp forminp-' .  esc_attr( sanitize_title( $value['type'] ) ) . '">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>' . esc_html( $tooltip_html ) . '</th>';
+							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
-										id="'. esc_attr( $value['id'] ) . '"
+										id="' . esc_attr( $value['id'] ) . '"
 										type="' . esc_attr( $value['type'] ) . '"
 										style="' . esc_attr( $value['css'] ) . '"
 										value="' . esc_attr( $option_value ) . '"
 										class="' . esc_attr( $value['class'] ) . '"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
-										' . esc_attr( implode( ' ', $custom_attributes ) ) .' ' . esc_html( $description ) . '</td></tr>';
+										' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . esc_html( $description ) . '</td></tr>';
 							break;
 
 						// Color picker.
@@ -370,11 +370,11 @@ class UR_Admin_Settings {
 							$option_value = self::get_option( $value['id'], $value['default'] );
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) .'</label>';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
 							$settings .= esc_html( $tooltip_html );
 							$settings .= '</th>';
-							$settings .= '<td class="forminp forminp-' .  esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
-							$settings .= '<span class="colorpickpreview" style="background: '. esc_attr( $option_value ) . '"></span>';
+							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
+							$settings .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
 							$settings .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
 										id="' . esc_attr( $value['id'] ) . '"
@@ -382,7 +382,7 @@ class UR_Admin_Settings {
 										dir="ltr"
 										style="' . esc_attr( $value['css'] ) . '"
 										value="' . esc_attr( $option_value ) . '"
-										class="' . esc_attr( $value['class'] ) .'colorpick"
+										class="' . esc_attr( $value['class'] ) . 'colorpick"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
 										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . esc_html( $description );
 							$settings .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></td></tr>';
@@ -392,17 +392,17 @@ class UR_Admin_Settings {
 						case 'textarea':
 							$option_value = self::get_option( $value['id'], $value['default'] );
 
-							$settings .= '<tr valign="top" class="'. esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
 							$settings .= esc_html( $tooltip_html );
 							$settings .= '</th>';
-							$settings .= '<td class="forminp forminp-' .  esc_attr( sanitize_title( $value['type'] ) ) . '">';
+							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= esc_html( $description );
 							$settings .= '<textarea
 										name="' . esc_attr( $value['id'] ) . '"
 										id="' . esc_attr( $value['id'] ) . '"
-										style="' . esc_attr( $value['css'] ) .'"
+										style="' . esc_attr( $value['css'] ) . '"
 										class="' . esc_attr( $value['class'] ) . '"
 										rows="' . esc_attr( $value['rows'] ) . '"
 										cols="' . esc_attr( $value['cols'] ) . '"
@@ -417,7 +417,7 @@ class UR_Admin_Settings {
 						case 'multiselect':
 							$option_value = self::get_option( $value['id'], $value['default'] );
 
-							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) .'">';
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
 							$settings .= esc_html( $tooltip_html );
@@ -426,18 +426,18 @@ class UR_Admin_Settings {
 
 							$multiple = '';
 							$type = '';
-							if( 'multiselect' == $value['type'] ) {
+							if ( 'multiselect' == $value['type'] ) {
 								$type = '[]';
 								$multiple = 'multiple="multiple"';
 							}
 
 							$settings .= '<select
-										name="' . esc_attr( $value['id'] ) . '' .$type . '"
+										name="' . esc_attr( $value['id'] ) . '' . $type . '"
 										id="' . esc_attr( $value['id'] ) . '"
 										style="' . esc_attr( $value['css'] ) . '"
-										class="'. esc_attr( $value['class'] ). '"
+										class="' . esc_attr( $value['class'] ) . '"
 										' . esc_attr( implode( ' ', $custom_attributes ) ) . '
-										' .  esc_attr( $multiple ) .'>';
+										' . esc_attr( $multiple ) . '>';
 
 							foreach ( $value['options'] as $key => $val ) {
 								$selected = '';
@@ -461,12 +461,12 @@ class UR_Admin_Settings {
 							$option_value = self::get_option( $value['id'], $value['default'] );
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ). '</label>';
-							$settings .= esc_html(  $tooltip_html );
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
+							$settings .= esc_html( $tooltip_html );
 							$settings .= '</th>';
-							$settings .= '<td class="forminp forminp-' .  esc_attr( sanitize_title( $value['type'] ) ) . '">';
+							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= '<fieldset>';
-							$settings .=  esc_html( $description );
+							$settings .= esc_html( $description );
 							$settings .= '<ul>';
 
 							foreach ( $value['options'] as $key => $val ) {
@@ -474,13 +474,13 @@ class UR_Admin_Settings {
 								$settings .= '<label>';
 								$settings .= '<input
 												name="' . esc_attr( $value['id'] ) . '"
-												value="' .  esc_attr( $key ) . '"
+												value="' . esc_attr( $key ) . '"
 												type="radio"
 												style="' . esc_attr( $value['css'] ) . '"
 												class="' . esc_attr( $value['class'] ) . '"
-												' .  esc_attr( implode( ' ', $custom_attributes ) ) . '
-												' .  esc_attr( checked( $key, $option_value, false ) ) . '
-												/>' .  esc_html( $val ) . '</label>';
+												' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+												' . esc_attr( checked( $key, $option_value, false ) ) . '
+												/>' . esc_html( $val ) . '</label>';
 								$settings .= '</li>';
 							}
 
@@ -513,24 +513,24 @@ class UR_Admin_Settings {
 							}
 
 							if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
-								$settings .= '<tr valign="top" class="' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) .'">';
+								$settings .= '<tr valign="top" class="' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '">';
 								$settings .= '<th scope="row" class="titledesc">';
 								$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-								$settings .=  esc_html( $tooltip_html );
+								$settings .= esc_html( $tooltip_html );
 								$settings .= '</th><td class="forminp forminp-checkbox"><fieldset>';
 							} else {
 								$settings .= '<fieldset class="' . esc_attr( implode( ' ', $visbility_class ) ) . '">';
 							}
 
-							$settings .= '<label for="' .  esc_attr( $value['id'] ) . '">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">';
 							$settings .= '<input
-										name="' . esc_attr( $value['id'] ) .'"
-										id="' . esc_attr( $value['id'] ) .'"
+										name="' . esc_attr( $value['id'] ) . '"
+										id="' . esc_attr( $value['id'] ) . '"
 										type="checkbox"
 										class="' . esc_attr( isset( $value['class'] ) ? $value['class'] : '' ) . '"
 										value="1"
-										'. esc_attr( checked( $option_value, 'yes', false ) ) .'
-										'. esc_attr( implode( ' ', $custom_attributes ) ) .'/>'. esc_html( $description ). '</label>';
+										' . esc_attr( checked( $option_value, 'yes', false ) ) . '
+										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>' . esc_html( $description ) . '</label>';
 
 							if ( ! isset( $value['checkboxgroup'] ) || 'end' === $value['checkboxgroup'] ) {
 								$settings .= '</fieldset>';
@@ -559,7 +559,7 @@ class UR_Admin_Settings {
 								$args = wp_parse_args( $value['args'], $args );
 							}
 
-							$settings .= '<tr valign="top" class="single_select_page '. esc_attr( $value['row_class'] ) .'" ' . ( ( isset( $value['display'] ) && $value['display'] === 'none' ) ? 'style="display:none"' : '' ) . '>';
+							$settings .= '<tr valign="top" class="single_select_page ' . esc_attr( $value['row_class'] ) . '" ' . ( ( isset( $value['display'] ) && $value['display'] === 'none' ) ? 'style="display:none"' : '' ) . '>';
 							$settings .= '<th scope="row" class="titledesc">' . esc_html( $value['title'] ) . ' ' . esc_html( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp">';
@@ -602,35 +602,35 @@ class UR_Admin_Settings {
 							$settings .= '</tr>';
 							break;
 
-							case 'link' :
-								$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
-								$settings .= '<th scope="row" class="titledesc">';
-								$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
-								$settings .= esc_html( $tooltip_html );
-								$settings .= '</th>';
-								$settings .= '<td>';
+						case 'link':
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<th scope="row" class="titledesc">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
+							$settings .= esc_html( $tooltip_html );
+							$settings .= '</th>';
+							$settings .= '<td>';
 
-								if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
-									foreach ( $value['buttons'] as $button ) {
-										$settings .= '<a
+							if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
+								foreach ( $value['buttons'] as $button ) {
+									$settings .= '<a
 													href="' . esc_url( $button['href'] ) . '"
 													class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '">' . esc_html( $button['title'] ) . '</a>';
-											}
-										}
+								}
+							}
 
-									$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . esc_html( $value['desc'] ) . '</p>' : '';
-									$settings .= '</td>';
-									$settings .= '</tr>';
-								break;
+								$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . esc_html( $value['desc'] ) . '</p>' : '';
+								$settings .= '</td>';
+								$settings .= '</tr>';
+							break;
 
 						// Default: run an action.
 						default:
 							$settings = apply_filters( 'user_registration_admin_field_' . $value['type'], $settings, $value );
-						break;
+							break;
 					}// End switch case.
 				}
 				$settings .= '</table>';
-				$settings .=  '</div>';
+				$settings .= '</div>';
 				$settings .= '</div>';
 
 				if ( ! empty( $section['id'] ) ) {
@@ -710,7 +710,7 @@ class UR_Admin_Settings {
 		// Options to update will be stored here and saved later.
 		$update_options = array();
 
-		if( empty( $options ) ){
+		if ( empty( $options ) ) {
 			return false;
 		}
 
@@ -753,7 +753,7 @@ class UR_Admin_Settings {
 							break;
 						}
 						$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
-						$value   = in_array( $raw_value, $allowed_values ) ? sanitize_text_field( $raw_value ) :  sanitize_text_field( $default );
+						$value   = in_array( $raw_value, $allowed_values ) ? sanitize_text_field( $raw_value ) : sanitize_text_field( $default );
 						break;
 					case 'tinymce':
 						$value = wpautop( $raw_value );
