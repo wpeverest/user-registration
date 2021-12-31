@@ -239,13 +239,13 @@ class UR_Admin_Settings {
 
 			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
 			$back_link = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
-			$back_link_text = isset( $options['back_link_text'] ) ? esc_html( $options['back_link_text'] ) : '';
+			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
 
 			if ( isset( $options['back_link'] ) ) {
 				$settings .= '<a href="' . esc_url( $back_link ) . '" class="page-title-action">';
 
 				if ( isset( $options['back_link_text'] ) ) {
-					$settings .= esc_html( $back_link_text );
+					$settings .= wp_kses_post( $back_link_text );
 				}
 
 				$settings .= '</a>';
@@ -265,7 +265,7 @@ class UR_Admin_Settings {
 						$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
 
 						if ( isset( $section['back_link'] ) ) {
-							$settings .= esc_html( $section['back_link'] );
+							$settings .= wp_kses_post( $section['back_link'] );
 						}
 
 						$settings .= '</h3>';
@@ -352,7 +352,7 @@ class UR_Admin_Settings {
 
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>' . ur_help_tip( $tooltip_html ) . '</th>';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>' . wp_kses_post( $tooltip_html ) . '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
@@ -371,7 +371,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
 							$settings .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
@@ -395,7 +395,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= wp_kses_post( $description );
@@ -420,7 +420,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 
@@ -462,7 +462,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= '<fieldset>';
@@ -516,7 +516,7 @@ class UR_Admin_Settings {
 								$settings .= '<tr valign="top" class="' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '">';
 								$settings .= '<th scope="row" class="titledesc">';
 								$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-								$settings .= ur_help_tip( $tooltip_html );
+								$settings .= wp_kses_post( $tooltip_html );
 								$settings .= '</th><td class="forminp forminp-checkbox"><fieldset>';
 							} else {
 								$settings .= '<fieldset class="' . esc_attr( implode( ' ', $visbility_class ) ) . '">';
@@ -560,7 +560,7 @@ class UR_Admin_Settings {
 							}
 
 							$settings .= '<tr valign="top" class="single_select_page ' . esc_attr( $value['row_class'] ) . '" ' . ( ( isset( $value['display'] ) && $value['display'] === 'none' ) ? 'style="display:none"' : '' ) . '>';
-							$settings .= '<th scope="row" class="titledesc">' . esc_html( $value['title'] ) . ' ' . ur_help_tip( $tooltip_html );
+							$settings .= '<th scope="row" class="titledesc">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp">';
 							$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) );
@@ -588,7 +588,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= wp_kses_post( $description );
@@ -606,7 +606,7 @@ class UR_Admin_Settings {
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
-							$settings .= ur_help_tip( $tooltip_html );
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td>';
 
