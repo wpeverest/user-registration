@@ -194,7 +194,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '<tr><td class="ur-email-settings-table">';
 				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
 												'">' . esc_html__( $email->title, 'user-registration' ) . '</a>';
-				$settings .= esc_html( ur_help_tip( __( $email->description, 'user-registration' ) ) );
+				$settings .=  ur_help_tip( __( $email->description, 'user-registration' ) );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
 				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';

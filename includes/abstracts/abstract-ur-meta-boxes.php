@@ -35,7 +35,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo esc_html( ur_help_tip( $field['desc'] ) );
+		echo ur_help_tip( $field['desc'] );
 		echo '</div>';
 
 		echo '<div class="ur-metabox-field-detail">';
