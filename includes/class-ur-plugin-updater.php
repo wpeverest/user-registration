@@ -417,7 +417,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				} elseif ( false === $activate_results->success ) {
 					switch ( $activate_results->error ) {
 						case 'expired':
-							$error_msg = sprintf( esc_html__( 'The provided license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'user-registration' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), 'https://wpeverest.com/checkout/?edd_license_key=' . $license_key . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' );
+							$error_msg = sprintf( __( 'The provided license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'user-registration' ), esc_html( date_i18n( get_option( 'date_format' ) ), esc_html( strtotime( $license->expires, current_time( 'timestamp' ) ) ) ), esc_url( 'https://wpeverest.com/checkout/?edd_license_key=' . $license_key . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' ) );
 							break;
 
 						case 'revoked':
@@ -435,7 +435,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 						case 'invalid_item_id':
 						case 'item_name_mismatch':
-							$error_msg = sprintf( esc_html__( 'This appears to be an invalid license key for <strong>%1$s</strong>.', 'user-registration' ), $this->plugin_data['Name'] );
+							$error_msg = sprintf( __( 'This appears to be an invalid license key for <strong>%1$s</strong>.', 'user-registration' ), esc_html( $this->plugin_data['Name'] ) );
 							break;
 
 						case 'no_activations_left':
@@ -451,7 +451,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							break;
 					}
 
-					throw new Exception( sprintf( esc_html__( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $error_msg ) );
+					throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), esc_html( $error_msg ) ) );
 
 				} elseif ( 'valid' === $activate_results->license ) {
 					$this->api_key = $license_key;
