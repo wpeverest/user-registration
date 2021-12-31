@@ -11,7 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div class="wrap ur_addons_wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration Extensions', 'user-registration'  ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration Extensions', 'user-registration' ); ?></h1>
+
+	<?php if ( apply_filters( 'user_registration_refresh_addons', true ) ) : ?>
+		<a href="<?php echo esc_url( $refresh_url ); ?>" class="page-title-action"><?php esc_html_e( 'Refresh Extensions', 'user-registration' ); ?></a>
+	<?php endif; ?>
+
 	<hr class="wp-header-end">
 	<h2 class="screen-reader-text"><?php esc_html_e( 'Filter extensions list', 'user-registration' ); ?></h2>
 
@@ -46,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<p class="plugin-desc"><?php echo esc_html( $addon->excerpt ); ?></p>
 									</div>
 									<div class="plugin-card-buttons">
-										<?php if( get_option( "user-registration_license_key" ) ) { ?>
+										<?php if ( get_option( 'user-registration_license_key' ) ) { ?>
 												<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">
