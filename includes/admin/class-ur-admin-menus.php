@@ -663,6 +663,24 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
 				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
 
+				$svg_args = array(
+					'svg'   => array(
+						'class'           => true,
+						'aria-hidden'     => true,
+						'aria-labelledby' => true,
+						'role'            => true,
+						'xmlns'           => true,
+						'width'           => true,
+						'height'          => true,
+						'viewbox'         => true, // <= Must be lower case!
+					),
+					'g'     => array( 'fill' => true ),
+					'title' => array( 'title' => true ),
+					'path'  => array(
+						'd'    => true,
+						'fill' => true,
+					),
+				);
 				echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
 				?>
 
@@ -670,11 +688,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<button type="button" class="ur-edit-grid">
 						<?php
 						if ( 1 === $grid_count ) {
-							echo wp_kses_post( $grid_one );
+							echo wp_kses( $grid_one, $svg_args );
 						} elseif ( 2 === $grid_count ) {
-							echo wp_kses_post( $grid_two );
+							echo wp_kses( $grid_two, $svg_args );
 						} elseif ( 3 === $grid_count ) {
-							echo wp_kses_post( $grid_three );
+							echo wp_kses( $grid_three, $svg_args );
 						}
 						?>
 					</button>
@@ -682,13 +700,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<div class="ur-toggle-grid-content" style="display:none">
 						<small>Select the grid column.</small>
 						<div class="ur-grid-selector" data-grid = "1">
-							<?php echo wp_kses_post( $grid_one ); ?>
+							<?php
+
+							echo wp_kses( $grid_one, $svg_args );
+							?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "2">
-							<?php echo wp_kses_post( $grid_two ); ?>
+							<?php echo wp_kses( $grid_two, $svg_args ); ?>
 						</div>
 						<div class="ur-grid-selector" data-grid = "3">
-							<?php echo wp_kses_post( $grid_three ); ?>
+							<?php echo wp_kses( $grid_three, $svg_args ); ?>
 						</div>
 					</div>
 				</div>
