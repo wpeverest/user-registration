@@ -56,7 +56,7 @@ class UR_Shortcode_Login {
 					'myaccount/form-login.php',
 					array(
 						'recaptcha_node' => $recaptcha_node,
-						'redirect'       => $redirect_url,
+						'redirect'       => esc_url_raw($redirect_url),
 					)
 				);
 			}

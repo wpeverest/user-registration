@@ -410,7 +410,7 @@ if (!function_exists('user_registration_form_field')) {
 
 				if (!is_admin()) {
 					if ('yes' === $enable_field_icon || '1' === $enable_field_icon && 'file' != $args['type']) {
-						$field .= '<span class="' . $args['icon'] . '"></span>';
+						$field .= '<span class="' . esc_attr($args['icon']) . '"></span>';
 					}
 					$field .= ' </span> ';
 				}
@@ -441,7 +441,7 @@ if (!function_exists('user_registration_form_field')) {
 				$field .= ' <span class="input-wrapper"> ';
 
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text '. $class .'" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text '. esc_attr($class) .'" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
 				} else {
@@ -452,7 +452,7 @@ if (!function_exists('user_registration_form_field')) {
 
 				if('yes' === $enable_field_icon || '1'===$enable_field_icon) {
 					if(!is_admin(  ) ){
-						$field .= '<span class="'.$args['icon'].'"></span>';
+						$field .= '<span class="'.esc_attr($args['icon']).'"></span>';
 					}
 				}
 				$field .= '</span> ';
