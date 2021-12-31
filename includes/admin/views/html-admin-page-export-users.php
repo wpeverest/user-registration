@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<div class="inside">
 						<p class="help">
-							<?php esc_html_e( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ); ?>
+							<?php echo wp_kses_post( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ); ?>
 						</p>
 
 						<p>

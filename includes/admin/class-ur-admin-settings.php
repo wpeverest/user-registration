@@ -362,7 +362,7 @@ class UR_Admin_Settings {
 										value="' . esc_attr( $option_value ) . '"
 										class="' . esc_attr( $value['class'] ) . '"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
-										' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . esc_html( $description ) . '</td></tr>';
+										' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '</td></tr>';
 							break;
 
 						// Color picker.
@@ -384,7 +384,7 @@ class UR_Admin_Settings {
 										value="' . esc_attr( $option_value ) . '"
 										class="' . esc_attr( $value['class'] ) . 'colorpick"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
-										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . esc_html( $description );
+										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
 							$settings .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></td></tr>';
 							break;
 
@@ -398,7 +398,7 @@ class UR_Admin_Settings {
 							$settings .= ur_help_tip( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
-							$settings .= esc_html( $description );
+							$settings .= wp_kses_post( $description );
 							$settings .= '<textarea
 										name="' . esc_attr( $value['id'] ) . '"
 										id="' . esc_attr( $value['id'] ) . '"
@@ -453,7 +453,7 @@ class UR_Admin_Settings {
 								$settings .= '</option>';
 							}
 
-							$settings .= '</select>' . esc_html( $description ) . '</td></tr>';
+							$settings .= '</select>' . wp_kses_post( $description ) . '</td></tr>';
 							break;
 
 						// Radio inputs.
@@ -466,7 +466,7 @@ class UR_Admin_Settings {
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= '<fieldset>';
-							$settings .= esc_html( $description );
+							$settings .= wp_kses_post( $description );
 							$settings .= '<ul>';
 
 							foreach ( $value['options'] as $key => $val ) {
@@ -530,15 +530,15 @@ class UR_Admin_Settings {
 										class="' . esc_attr( isset( $value['class'] ) ? $value['class'] : '' ) . '"
 										value="1"
 										' . esc_attr( checked( $option_value, 'yes', false ) ) . '
-										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>' . esc_html( $description ) . '</label>';
+										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>' . wp_kses_post( $description ) . '</label>';
 
 							if ( ! isset( $value['checkboxgroup'] ) || 'end' === $value['checkboxgroup'] ) {
 								$settings .= '</fieldset>';
-								$settings .= esc_html( $desc_field );
+								$settings .= wp_kses_post( $desc_field );
 								$settings .= '</td></tr>';
 							} else {
 								$settings .= '</fieldset>';
-								$settings .= esc_html( $desc_field );
+								$settings .= wp_kses_post( $desc_field );
 							}
 							break;
 
@@ -564,7 +564,7 @@ class UR_Admin_Settings {
 							$settings .= '</th>';
 							$settings .= '<td class="forminp">';
 							$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) );
-							$settings .= esc_html( $description );
+							$settings .= wp_kses_post( $description );
 							$settings .= '</td></tr>';
 							break;
 
@@ -591,7 +591,7 @@ class UR_Admin_Settings {
 							$settings .= ur_help_tip( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
-							$settings .= esc_html( $description );
+							$settings .= wp_kses_post( $description );
 
 							// Output buffer for tinymce editor
 							ob_start();
@@ -618,7 +618,7 @@ class UR_Admin_Settings {
 								}
 							}
 
-								$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . esc_html( $value['desc'] ) . '</p>' : '';
+								$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
 								$settings .= '</td>';
 								$settings .= '</tr>';
 							break;
