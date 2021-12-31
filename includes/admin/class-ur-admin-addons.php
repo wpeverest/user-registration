@@ -23,8 +23,10 @@ class UR_Admin_Addons {
 	 * @return array of objects
 	 */
 	public static function get_sections() {
+
 		if ( false === ( $sections = get_transient( 'ur_addons_sections' ) ) ) {
-			$raw_sections = wp_safe_remote_get( 'https://raw.githubusercontent.com/wpeverest/extensions-json/master/user-registration/addon-section.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
+			$raw_sections = wp_safe_remote_get( UR()->plugin_url() . '/assets/extensions-json/addon-section.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
+
 			if ( ! is_wp_error( $raw_sections ) ) {
 				$sections = json_decode( wp_remote_retrieve_body( $raw_sections ) );
 
@@ -78,8 +80,9 @@ class UR_Admin_Addons {
 		$section_data = '';
 
 		if ( ! empty( $section->endpoint ) ) {
+
 			if ( false === ( $section_data = get_transient( 'ur_addons_section_' . $section_id ) ) ) {
-				$raw_section = wp_safe_remote_get( esc_url_raw( $section->endpoint ), array( 'user-agent' => 'UserRegistration Addons Page' ) );
+				$raw_section = wp_safe_remote_get( UR()->plugin_url() . '/assets/' . $section->endpoint, array( 'user-agent' => 'UserRegistration Addons Page' ) );
 
 				if ( ! is_wp_error( $raw_section ) ) {
 					$section_data = json_decode( wp_remote_retrieve_body( $raw_section ) );
@@ -102,6 +105,25 @@ class UR_Admin_Addons {
 		$theme           = wp_get_theme();
 		$section_keys    = array_keys( $sections );
 		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : current( $section_keys );
+
+		$refresh_url     = add_query_arg(
+			array(
+				'page'             => 'user-registration-addons',
+				'action'           => 'user-registration-addons-refresh',
+				'user-registration-addons-nonce' => wp_create_nonce( 'refresh' ),
+			),
+			admin_url( 'admin.php' )
+		);
+
+		if ( isset( $_GET['action'] ) && 'user-registration-addons-refresh' === $_GET['action'] ) {
+			if ( empty( $_GET['user-registration-addons-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['user-registration-addons-nonce'] ) ), 'refresh' ) ) {
+				wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
+			}
+
+			delete_transient( 'ur_addons_sections' );
+			delete_transient( 'ur_addons_section_' . $current_section );
+		}
+
 		include_once dirname( __FILE__ ) . '/views/html-admin-page-addons.php';
 	}
 }
