@@ -106,7 +106,7 @@
       "title": "Conditional Logic",
       "slug" : "user-registration-conditional-logic",
       "name" : "User Registration Conditional Logic",
-      "image": "extensions-json/sections/images/conditional-logic.jpg",
+      "image": "extensions-json/sections/images/conditional-logic.png",
       "excerpt": "Conditional Logic allows you to create more dynamic forms based on user input. You can now show or hide specific fields based on the users other input in the form. A field hide or show based on on multiple conditions fulfilled.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conditional-logic",
       "plan" : [
@@ -167,7 +167,7 @@
       "title": "Geolocation",
 	    "slug" : "user-registration-geolocation",
 	    "name" : "User Registration Geolocation",
-      "image": "extensions-json/sections/images/geolocation.jpg",
+      "image": "extensions-json/sections/images/geolocation.png",
       "excerpt": "Allows you to collect geo location data from users who registered on your site. Information like Country, City, Zip Code, Latitude/Longitude and location map for the user will accessible.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
 	    "plan" : [
@@ -263,7 +263,7 @@
       "title": "Frontend Listing",
       "slug" : "user-registration-frontend-listing",
       "name" : "User Registration Frontend Listing",
-      "image": "extensions-json/sections/images/frontend-listing.jpg",
+      "image": "extensions-json/sections/images/frontend-listing.png",
       "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
       "plan" : [
@@ -275,7 +275,7 @@
       "title": "MailerLite",
       "slug" : "user-registration-mailerlite",
       "name" : "User Registration MailerLite",
-      "image": "extensions-json/sections/images/mailerlite.jpg",
+      "image": "extensions-json/sections/images/mailerlite.png",
       "excerpt": "Connect your MailerLite account with User Registration Form. Users filling up registration form can directly be added to your MailerLite subscriber list. You can then use those collected data for Email Marketing.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
       "plan" : [
