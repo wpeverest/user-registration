@@ -1,0 +1,6 @@
+{
+  "all_extensions": {
+    "title": "All Extensions",
+    "endpoint": "extensions-json/sections/all_extensions.json"
+  }
+}
