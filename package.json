@@ -18,7 +18,8 @@
     "test-php": "npm run lint-php && npm run test-unit-php",
     "test-php:watch": "wp-env run composer run-script test:watch",
     "pretest-unit-php": "wp-env start",
-    "test-unit-php": "wp-env run phpunit 'phpunit --configuration=/var/www/html/wp-content/plugins/user-registration/phpunit.xml.dist --verbose'"
+    "test-unit-php": "wp-env run phpunit 'phpunit --configuration=/var/www/html/wp-content/plugins/user-registration/phpunit.xml.dist --verbose'",
+    "phpunit-test": "phpunit --verbose"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
