@@ -22,7 +22,7 @@ Dotenv\Dotenv::createUnsafeImmutable( dirname( __DIR__ ) )->safeLoad();
  * Load the real wp-tests-config.php, wherever it may be.
  */
 if ( file_exists( getenv( 'WP_PHPUNIT__TESTS_CONFIG' ) ) ) {
-    require getenv( 'WP_PHPUNIT__TESTS_CONFIG' );
+    require_once getenv( 'WP_PHPUNIT__TESTS_CONFIG' );
 }
 
 // Determine the tests directory (from a WP dev checkout).
