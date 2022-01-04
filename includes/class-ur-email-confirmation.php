@@ -146,7 +146,7 @@ class UR_Email_Confirmation {
 	 * @since 1.9.4
 	 */
 	public function ur_admin_notice_resend_verification_sent() {
-		echo '<div class="notice-success notice is-dismissible"><p>' . ( 'Verification Email Sent Successfully !! ', 'user-registration' ) . '</p></div>';
+		echo '<div class="notice-success notice is-dismissible"><p>' . esc_html__( 'Verification Email Sent Successfully !! ', 'user-registration' ) . '</p></div>';
 	}
 
 	/**
