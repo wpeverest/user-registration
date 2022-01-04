@@ -51,7 +51,7 @@ class UR_Admin_Export_Users {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		$form_id = isset( $_POST['export_users'] ) ? absint( wp_unslash( $_POST['export_users'] ) ) : 0;
+		$form_id = isset( $_POST['export_users'] ) ? wp_unslash( $_POST['export_users'] ) : 0;
 
 		// Return if form id is not set and current user doesnot have export capability.
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
