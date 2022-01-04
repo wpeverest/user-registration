@@ -15,6 +15,7 @@
     "makepot": "composer run-script makepot",
     "prelint-php": "wp-env run composer 'install --no-interaction'",
     "lint-php": "wp-env composer run-script phpcs",
+    "phpcs": "composer run-script phpcs",
     "test-php": "npm run lint-php && npm run test-unit-php",
     "test-php:watch": "wp-env run composer run-script test:watch",
     "pretest-unit-php": "wp-env start",
