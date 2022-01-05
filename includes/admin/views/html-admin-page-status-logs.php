@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin View: Page - Status Logs
+ *
+ * @package UserRegistration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,18 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php echo esc_html( $viewed_log ); ?>
 				<?php if ( ! empty( $handle ) ) : ?>
 					<a class="page-title-action"
-					   href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => $handle ), admin_url( 'admin.php?page=user-registration-status' ) ), 'remove_log' ) ); ?>"
-					   class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
+					href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => $handle ), admin_url( 'admin.php?page=user-registration-status' ) ), 'remove_log' ) ); ?>"
+					class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
 				<?php endif; ?>
 			</h2>
 		</div>
 		<div class="alignright">
-			<form action="<?php echo admin_url( 'admin.php?page=user-registration-status' ); ?>" method="post">
+			<form action="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-status' ) ); ?>" method="post">
 				<select name="log_file" style="max-width: 450px;vertical-align:inherit">
 					<?php foreach ( $logs as $log_key => $log_file ) : ?>
 						<option
 							value="<?php echo esc_attr( $log_key ); ?>" <?php selected( sanitize_title( $viewed_log ), $log_key ); ?>><?php echo esc_html( $log_file ); ?>
-							(<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), filemtime( UR_LOG_DIR . $log_file ) ); ?>
+							(<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), filemtime( UR_LOG_DIR . $log_file ) ) ); ?>
 							)
 						</option>
 					<?php endforeach; ?>
@@ -46,5 +48,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 <?php else : ?>
 	<div class="updated user-registration-message inline">
-		<p><?php _e( 'There are currently no logs to view.', 'user-registration' ); ?></p></div>
+		<p><?php esc_html_e( 'There are currently no logs to view.', 'user-registration' ); ?></p></div>
 <?php endif; ?>
