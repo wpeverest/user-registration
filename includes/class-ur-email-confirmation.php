@@ -92,7 +92,7 @@ class UR_Email_Confirmation {
 	public function trigger_query_actions() {
 
 		$resend_verification_sent = isset( $_REQUEST['resend_verification_sent'] ) ? sanitize_key( $_REQUEST['resend_verification_sent'] ) : false;
-		if($resend_verification_sent){
+		if ( $resend_verification_sent ) {
 			add_action( 'admin_notices', array( $this, 'ur_admin_notice_resend_verification_sent' ) );
 		}
 
@@ -125,7 +125,7 @@ class UR_Email_Confirmation {
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
 					// Get selected email template id for specific form.
-				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
@@ -143,6 +143,7 @@ class UR_Email_Confirmation {
 
 	/**
 	 * Admin notice after resend verification email sent.
+	 *
 	 * @since 1.9.4
 	 */
 	public function ur_admin_notice_resend_verification_sent() {
@@ -173,7 +174,7 @@ class UR_Email_Confirmation {
 	/**
 	 * Set the status value for each user in the users list
 	 *
-	 * @param string
+	 * @param string $val
 	 * @param string $column_name
 	 * @param int    $user_id
 	 *
@@ -205,7 +206,7 @@ class UR_Email_Confirmation {
 
 	// Successful registration message.
 	public function custom_registration_message() {
-		return ur_print_notice( apply_filters("user_registration_success_message_after_email_confirmation", esc_html__('User successfully registered. Login to continue.', 'user-registration' ) ) );
+		return ur_print_notice( apply_filters( 'user_registration_success_message_after_email_confirmation', esc_html__( 'User successfully registered. Login to continue.', 'user-registration' ) ) );
 	}
 
 	// Token mismatch message.
@@ -261,7 +262,7 @@ class UR_Email_Confirmation {
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
 					// Get selected email template id for specific form.
-				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 
@@ -294,7 +295,7 @@ class UR_Email_Confirmation {
 
 			// Check if the token matches the token value stored in db.
 			if ( $user_token === $_GET['ur_token'] && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
-				if ( isset( $output[1]) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
+				if ( isset( $output[1] ) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
 				} else {
@@ -383,7 +384,7 @@ class UR_Email_Confirmation {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
-			//update user status when login using social connect
+			// update user status when login using social connect
 			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 			}
