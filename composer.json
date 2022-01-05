@@ -72,5 +72,11 @@
       "test:watch": "Automatically re-run unit tests on source file change",
       "test:reset": "Removes all tables from the test database"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
+    }
   }
 }
