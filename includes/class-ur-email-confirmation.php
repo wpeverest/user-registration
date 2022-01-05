@@ -173,7 +173,7 @@ class UR_Email_Confirmation {
 	/**
 	 * Set the status value for each user in the users list
 	 *
-	 * @param string $val
+	 * @param string
 	 * @param string $column_name
 	 * @param int    $user_id
 	 *
