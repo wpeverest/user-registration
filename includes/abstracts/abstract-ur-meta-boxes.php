@@ -44,9 +44,9 @@ abstract class UR_Meta_Boxes {
 		$checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" checked>';
 
 		if ( 'on' === $get_meta_data ) {
-			echo $checked;
+			echo esc_html( $checked );
 		} else {
-			echo $non_checked;
+			echo esc_html( $non_checked );
 		}
 
 		echo '</div>';
@@ -61,7 +61,7 @@ abstract class UR_Meta_Boxes {
 	 */
 	public function ur_metabox_select( $field ) {
 
-        global $thepostid, $post;
+		global $thepostid, $post;
 
 		$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
 		$field['class']         = isset( $field['class'] ) ? $field['class'] : 'select';
@@ -102,7 +102,7 @@ abstract class UR_Meta_Boxes {
 		echo '</div>';
 		echo '</div>';
 		echo '</div>';
-    }
+	}
 
 	/**
 	 * Renders the Multiple Select field in metabox.

@@ -48,10 +48,10 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'        => '<input type="checkbox" />',
-			'title'     => __( 'Title', 'user-registration' ),
-			'shortcode' => __( 'Shortcode', 'user-registration' ),
-			'author'    => __( 'Author', 'user-registration' ),
-			'date'      => __( 'Date', 'user-registration' ),
+			'title'     => esc_html__( 'Title', 'user-registration' ),
+			'shortcode' => esc_html__( 'Shortcode', 'user-registration' ),
+			'author'    => esc_html__( 'Author', 'user-registration' ),
+			'date'      => esc_html__( 'Date', 'user-registration' ),
 		);
 	}
 
@@ -75,7 +75,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 * @return string
 	 */
 	public function get_duplicate_link( $post_id ) {
-		return admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id  );
+		return admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id );
 	}
 
 	/**
@@ -93,10 +93,10 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 		// Get actions.
 		$actions = array(
-			'id' => sprintf( __( 'ID: %d', 'user-registration' ), $row->ID ),
+			'id' => sprintf( esc_html__( 'ID: %d', 'user-registration' ), $row->ID ),
 		);
 
-		if ( current_user_can( $post_type_object->cap->edit_post, $row->ID ) && !$current_status_trash  ) {
+		if ( current_user_can( $post_type_object->cap->edit_post, $row->ID ) && ! $current_status_trash ) {
 			$actions['edit'] = '<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>';
 		}
 
@@ -123,11 +123,11 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			$duplicate_link = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&post-id=' . $row->ID );
 
 			if ( 'trash' !== $post_status ) {
-				$actions['view'] = '<a href="' . esc_url( $preview_link ) . '" rel="bookmark" target="_blank">' . __( 'Preview', 'user-registration' ) . '</a>';
+				$actions['view'] = '<a href="' . esc_url( $preview_link ) . '" rel="bookmark" target="_blank">' . esc_html__( 'Preview', 'user-registration' ) . '</a>';
 			}
 
 			if ( 'publish' === $post_status ) {
-				$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . __( 'Duplicate', 'user-registration' ) . '</a>';
+				$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . esc_html__( 'Duplicate', 'user-registration' ) . '</a>';
 			}
 		}
 		return $actions;
@@ -142,7 +142,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 */
 	public function column_shortcode( $registration ) {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
-		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', $shortcode );
+		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', esc_attr( $shortcode ) );
 		?>
 		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 			<span class="dashicons dashicons-admin-page"></span>
@@ -165,7 +165,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					<input type="hidden" name="page" value="user-registration" />
 					<?php
 						$this->views();
-						$this->search_box( __( 'Search Registration', 'user-registration' ), 'registration' );
+						$this->search_box( esc_html__( 'Search Registration', 'user-registration' ), 'registration' );
 						$this->display();
 
 						wp_nonce_field( 'save', 'user_registration_nonce' );

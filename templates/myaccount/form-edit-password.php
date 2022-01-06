@@ -24,7 +24,7 @@ ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), 
 do_action( 'user_registration_before_change_password_form' );
 ?>
 <div class="ur-frontend-form login" id="ur-frontend-form">
-	<form class="user-registration-EditAccountForm edit-password" action="" method="post" data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" >
+	<form class="user-registration-EditAccountForm edit-password" action="" method="post" data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>" >
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<?php
@@ -32,11 +32,11 @@ do_action( 'user_registration_before_change_password_form' );
 					do_action( 'user_registration_change_password_form_start' );
 				?>
 				<fieldset>
-					<legend><?php _e( 'Change Password', 'user-registration' ); ?></legend>
+					<legend><?php esc_html_e( 'Change Password', 'user-registration' ); ?></legend>
 
 					<?php if ( apply_filters( 'user_registration_change_password_current_password_display', true ) ) { ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-						<label for="password_current"><?php _e( 'Current password', 'user-registration' ); ?></label>
+						<label for="password_current"><?php esc_html_e( 'Current password', 'user-registration' ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
 						<?php
@@ -48,7 +48,7 @@ do_action( 'user_registration_before_change_password_form' );
 					</p>
 					<?php } ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-						<label for="password_1"><?php _e( 'New password', 'user-registration' ); ?></label>
+						<label for="password_1"><?php esc_html_e( 'New password', 'user-registration' ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" />
 						<?php
@@ -59,7 +59,7 @@ do_action( 'user_registration_before_change_password_form' );
 						</span>
 					</p>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
-						<label for="password_2"><?php _e( 'Confirm new password', 'user-registration' ); ?></label>
+						<label for="password_2"><?php esc_html_e( 'Confirm new password', 'user-registration' ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_2" id="password_2" />
 						<?php

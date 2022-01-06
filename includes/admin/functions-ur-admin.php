@@ -147,7 +147,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data
 function user_registration_register_data_exporter( $exporters ) {
 
 	$exporters['user-registration'] = array(
-		'exporter_friendly_name' => __( 'User Extra Information', 'user-registration' ),
+		'exporter_friendly_name' => esc_html__( 'User Extra Information', 'user-registration' ),
 		'callback'               => 'user_registration_data_exporter',
 	);
 
@@ -210,7 +210,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 
 		$export_items[] = array(
 			'group_id'    => 'user-registration',
-			'group_label' => __( 'User Extra Information', 'user-registration' ),
+			'group_label' => esc_html__( 'User Extra Information', 'user-registration' ),
 			'item_id'     => "user-registration-{$meta->umeta_id}",
 			'data'        => $data,
 		);
@@ -230,7 +230,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
  */
 function user_registration_register_data_eraser( $erasers = array() ) {
 	$erasers['user-registration'] = array(
-		'eraser_friendly_name' => __( 'WordPress User Extra Information', 'user-registration' ),
+		'eraser_friendly_name' => esc_html__( 'WordPress User Extra Information', 'user-registration' ),
 		'callback'             => 'user_registration_data_eraser',
 	);
 	return $erasers;
@@ -352,8 +352,8 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 			'post_status'    => 'publish',
 			'post_type'      => 'page',
 			'post_author'    => 1,
-			'post_name'      => $slug,
-			'post_title'     => $page_title,
+			'post_name'      => sanitize_text_field( $slug ),
+			'post_title'     => sanitize_text_field( $page_title ),
 			'post_content'   => $page_content,
 			'post_parent'    => $post_parent,
 			'comment_status' => 'closed',
@@ -471,11 +471,11 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 					$remap_setting_data[ $field_data['id'] ]['value'] = sanitize_text_field( $remap_setting_data[ $field_data['id'] ]['value'] );
 				}
 
-				update_post_meta( $form_id, $field_data['id'], $remap_setting_data[ $field_data['id'] ]['value'] );
+				update_post_meta( absint( $form_id ), sanitize_text_field( $field_data['id'] ), $remap_setting_data[ $field_data['id'] ]['value'] );
 			}
 		} else {
 				// Update post meta if any setting value is not set for field data id.
-				update_post_meta( $form_id, $field_data['id'], '' );
+				update_post_meta( absint( $form_id) , sanitize_text_field( $field_data['id'] ), '' );
 		}
 	}
 }

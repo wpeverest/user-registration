@@ -87,7 +87,7 @@ class UR_Admin {
 				$result = array_intersect( $user_roles, $option_roles );
 
 				if ( count( $result ) > 0 && apply_filters( 'user_registration_prevent_admin_access', true ) ) {
-					wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+					wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'myaccount' ) ) );
 					exit;
 				}
 			}
@@ -119,7 +119,7 @@ class UR_Admin {
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = sprintf(
 					/* translators: 1: WooCommerce 2:: five stars */
-					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
+					esc_html__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
 					'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 				);
@@ -132,7 +132,7 @@ class UR_Admin {
 				"
 				);
 			} else {
-				$footer_text = __( 'Thank you for using User Registration.', 'user-registration' );
+				$footer_text = esc_html__( 'Thank you for using User Registration.', 'user-registration' );
 			}
 		}
 
@@ -166,21 +166,21 @@ class UR_Admin {
 		?>
 			<div id="user-registration-review-notice" class="notice notice-info user-registration-notice" data-purpose="review">
 				<div class="user-registration-notice-thumbnail">
-					<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
+					<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
 				</div>
 				<div class="user-registration-notice-text">
 
-						<h3><?php _e( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ); ?></h3>
-						<P><?php _e( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ); ?> </P>
-						<p><?php _e( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ); ?></p>
-						<p class="extra-pad"><?php _e('<strong>What benefit would you have?</strong> <br>
+						<h3><?php esc_html_e( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ); ?></h3>
+						<P><?php esc_html_e( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ); ?> </P>
+						<p><?php esc_html_e( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ); ?></p>
+						<p class="extra-pad"><?php esc_html_e('<strong>What benefit would you have?</strong> <br>
 				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>', 'user-registration' ); ?></p>
 
 					<ul class="user-registration-notice-ul">
-						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-						<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php _e( 'I already did!', 'user-registration' ); ?></a></li>
-						<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php _e( 'Never show again', 'user-registration' ); ?></a></li>
-						<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+						<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
+						<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a></li>
+						<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 					 </ul>
 				</div>
 			</div>
@@ -214,21 +214,21 @@ class UR_Admin {
 			?>
 				<div id="user-registration-survey-notice" class="notice notice-info user-registration-notice" data-purpose="survey">
 					<div class="user-registration-notice-thumbnail">
-						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
+						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
 					</div>
 					<div class="user-registration-notice-text">
 
-							<h3><?php _e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
-							<p><?php _e( '<strong>Hey there!</strong> <br>
+							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
+							<p><?php esc_html_e( '<strong>Hey there!</strong> <br>
 								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.', 'user-registration' ); ?></p>
-							<p class="extra-pad"><?php _e('<strong>What benefit would you have?</strong> <br>
+							<p class="extra-pad"><?php esc_html_e('<strong>What benefit would you have?</strong> <br>
 								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>', 'user-registration' ); ?></p>
 
 						<ul class="user-registration-notice-ul">
-							<li><a class="button button-primary" href=<?php echo esc_url("https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu"); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php _e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php _e( 'I already did!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php _e( 'Never show again', 'user-registration' ); ?></a></li>
-							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							<li><a class="button button-primary" href=<?php echo esc_url("https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu"); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+							<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
+							<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a></li>
+							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 						</ul>
 					</div>
 				</div>
@@ -243,7 +243,7 @@ class UR_Admin {
 	 */
 	public function live_user_read() {
 		$now = current_time( 'mysql' );
-		update_option( 'user_registration_users_listing_viewed', $now );
+		update_option( 'user_registration_users_listing_viewed', sanitize_text_field( $now ) );
 	}
 
 	/**
@@ -261,7 +261,7 @@ class UR_Admin {
 		$read_time = get_option( 'user_registration_users_listing_viewed' );
 		if ( ! $read_time ) {
 			$now = current_time( 'mysql' );
-			update_option( 'user_registration_users_listing_viewed', $now );
+			update_option( 'user_registration_users_listing_viewed', sanitize_text_field( $now ) );
 			$read_time = $now;
 		}
 
@@ -278,7 +278,7 @@ class UR_Admin {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
-		$response['user_registration_new_user_message'] = sprintf( __( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
+		$response['user_registration_new_user_message'] = sprintf( esc_html__( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
 		$response['user_registration_new_user_count']   = $user_count;
 		return $response;
 	}

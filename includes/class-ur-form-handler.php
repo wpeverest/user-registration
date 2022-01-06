@@ -37,7 +37,7 @@ class UR_Form_Handler {
 	 */
 	public static function redirect_reset_password_link() {
 		if ( is_ur_account_page() && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) {
-			$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
+			$value = sprintf( '%s:%s', sanitize_text_field(wp_unslash( $_GET['login'] )), sanitize_text_field(wp_unslash( $_GET['key'] ) ) );
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
 			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_lostpassword_url() ) );
@@ -108,10 +108,10 @@ class UR_Form_Handler {
 
 				switch ( $_FILES['profile-pic']['error'] ) {
 					case UPLOAD_ERR_INI_SIZE:
-						ur_add_notice( __( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
+						ur_add_notice( esc_html__( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
 						break;
 					default:
-						ur_add_notice( __( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
+						ur_add_notice( esc_html__( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
 						break;
 				}
 			} elseif ( empty( $_POST['profile-pic-url'] ) ) {
@@ -165,7 +165,7 @@ class UR_Form_Handler {
 					break;
 
 				default:
-					$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
+					$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field(( $_POST[ $key ] ) ) : '';
 					break;
 			}
 
@@ -181,7 +181,7 @@ class UR_Form_Handler {
 
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
-				ur_add_notice( sprintf( __( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+				ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
 			if ( 'user_email' === $field['field_key'] ) {
@@ -189,7 +189,7 @@ class UR_Form_Handler {
 
 				// Check if email already exists before updating user details.
 				if ( email_exists( $_POST[ $key ] ) && email_exists( $_POST[ $key ] ) !== $user_id ) {
-					ur_add_notice( __( 'Email already exists', 'user-registration' ), 'error' );
+					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
 
@@ -203,7 +203,7 @@ class UR_Form_Handler {
 								$_POST[ $key ] = strtolower( $_POST[ $key ] );
 
 								if ( ! is_email( $_POST[ $key ] ) ) {
-									ur_add_notice( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
+									ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
 
 								break;
@@ -359,9 +359,9 @@ class UR_Form_Handler {
 			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
 		);
 
-		$nonce_value     = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+		$nonce_value     = isset( $_POST['_wpnonce'] ) ? sanitize_key($_POST['_wpnonce']) : '';
 		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
-		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
+		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ): '';
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
 		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
@@ -374,7 +374,7 @@ class UR_Form_Handler {
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
-				$username         = trim( $_POST['username'] );
+				$username         = sanitize_user(trim( $_POST['username'] ) );
 				$validation_error = new WP_Error();
 				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
 
@@ -483,7 +483,7 @@ class UR_Form_Handler {
 	 * Handle lost password form.
 	 */
 	public static function process_lost_password() {
-		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'lost_password' ) ) {
+		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key($_POST['_wpnonce']), 'lost_password' ) ) {
 			$success = UR_Shortcode_My_Account::retrieve_password();
 
 			// If successful, redirect to my account with query arg set
@@ -534,15 +534,15 @@ class UR_Form_Handler {
 
 		if ( $user instanceof WP_User ) {
 			if ( empty( $posted_fields['password_1'] ) ) {
-				ur_add_notice( __( 'Please enter your password.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'Please enter your password.', 'user-registration' ), 'error' );
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				ur_add_notice( __( 'Passwords do not match.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'Passwords do not match.', 'user-registration' ), 'error' );
 			}
 
 			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
-				ur_add_notice( __( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+				ur_add_notice( esc_html__( 'New password must not be same as old password.', 'user-registration' ), 'error' );
 			}
 			$errors = new WP_Error();
 

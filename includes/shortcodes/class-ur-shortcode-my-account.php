@@ -64,7 +64,7 @@ class UR_Shortcode_My_Account {
 
 		if ( ! is_user_logged_in() ) {
 
-			$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
+			$redirect_url = isset( $atts['redirect_url'] ) ? esc_url( trim( $atts['redirect_url'] ) ) : '';
 			$redirect_url      = ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) ? esc_url( wp_unslash( $_GET['redirect_to'] ) ) : $redirect_url; // @codingStandardsIgnoreLine
 			$form_id      = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
 			$message      = apply_filters( 'user_registration_my_account_message', '' );

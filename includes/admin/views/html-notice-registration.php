@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin View: Notice - Allow Registration
+ *
+ * @package UserRegistration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,8 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div id="message" class="error user-registration-message">
-	<a class="user-registration-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'register' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ); ?>"><?php _e( 'Dismiss', 'user-registration' ); ?></a>
+	<a class="user-registration-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'register' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'user-registration' ); ?></a>
 
-	<p><?php echo sprintf( __( 'To allow users to register for your website via User registration, you must first enable user registration. Go to %1$sSettings > General%2$s tab, and under Membership make sure to check <strong>Anyone can register</strong>.', 'user-registration' ), '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>' ); ?></p>
+	<p><?php echo sprintf( esc_html__( 'To allow users to register for your website via User registration, you must first enable user registration. Go to %1$sSettings > General%2$s tab, and under Membership make sure to check <strong>Anyone can register</strong>.', 'user-registration' ), '<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">', '</a>' ); ?></p>
 </div>
-

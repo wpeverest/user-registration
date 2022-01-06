@@ -7,8 +7,6 @@
  * @class    UR_AddOn_Updater
  * @version  1.1.0
  * @package  UserRegistration/Updates
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,13 +18,48 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_AddOn_Updater {
 
-	private $api_url     = '';
-	private $api_data    = array();
-	private $name        = '';
-	private $slug        = '';
-	private $version     = '';
+	/**
+	 * API URL.
+	 *
+	 * @var string
+	 */
+	private $api_url = '';
+	/**
+	 * API Data.
+	 *
+	 * @var array
+	 */
+	private $api_data = array();
+	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
+	private $name = '';
+	/**
+	 * Slug.
+	 *
+	 * @var string
+	 */
+	private $slug = '';
+	/**
+	 * Version.
+	 *
+	 * @var string
+	 */
+	private $version = '';
+	/**
+	 * WP Override.
+	 *
+	 * @var bool
+	 */
 	private $wp_override = false;
-	private $cache_key   = '';
+	/**
+	 * Cache Key.
+	 *
+	 * @var string
+	 */
+	private $cache_key = '';
 
 	/**
 	 * Class constructor.
@@ -42,12 +75,12 @@ class UR_AddOn_Updater {
 
 		global $edd_plugin_data;
 
-		$this->api_url     = trailingslashit( $_api_url );
-		$this->api_data    = $_api_data;
-		$this->name        = plugin_basename( $_plugin_file );
-		$this->slug        = basename( $_plugin_file, '.php' );
+		$this->api_url  = trailingslashit( $_api_url );
+		$this->api_data = $_api_data;
+		$this->name     = plugin_basename( $_plugin_file );
+		$this->slug     = basename( $_plugin_file, '.php' );
 
-		if( strpos( $this->name, 'user-registration-pro' ) !== false ) {
+		if ( strpos( $this->name, 'user-registration-pro' ) !== false ) {
 			$this->slug .= '-pro';
 		}
 
@@ -101,7 +134,7 @@ class UR_AddOn_Updater {
 			$_transient_data = new stdClass();
 		}
 
-		if ( 'plugins.php' == $pagenow && is_multisite() ) {
+		if ( 'plugins.php' === $pagenow && is_multisite() ) {
 			return $_transient_data;
 		}
 
@@ -143,10 +176,10 @@ class UR_AddOn_Updater {
 	}
 
 	/**
-	 * show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
+	 * Show update notification row -- needed for multisite subsites, because WP won't tell you otherwise!
 	 *
-	 * @param string $file
-	 * @param array  $plugin
+	 * @param string $file File.
+	 * @param array  $plugin Plugin.
 	 */
 	public function show_update_notification( $file, $plugin ) {
 
@@ -162,11 +195,11 @@ class UR_AddOn_Updater {
 			return;
 		}
 
-		if ( $this->name != $file ) {
+		if ( $this->name !== $file ) {
 			return;
 		}
 
-		// Remove our filter on the site transient
+		// Remove our filter on the site transient.
 		remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
 
 		$update_cache = get_site_transient( 'update_plugins' );
@@ -210,15 +243,14 @@ class UR_AddOn_Updater {
 
 		}
 
-		// Restore our filter
+		// Restore our filter.
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
 		if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
-			// build a plugin list row, with update notification
+			// build a plugin list row, with update notification.
 			$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
-			// <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
-			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
+			echo '<tr class="plugin-update-tr" id="' . esc_attr( $this->slug ) . '-update" data-slug="' . esc_attr( $this->slug ) . '" data-plugin="' . esc_attr( $this->slug ) . '/' . esc_attr( $file ) . '">';
 			echo '<td colspan="3" class="plugin-update colspanchange">';
 			echo '<div class="update-message notice inline notice-warning notice-alt">';
 
@@ -226,7 +258,7 @@ class UR_AddOn_Updater {
 
 			if ( empty( $version_info->download_link ) ) {
 				printf(
-					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'user-registration' ),
+					esc_html__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'user-registration' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 					esc_html( $version_info->new_version ),
@@ -234,7 +266,7 @@ class UR_AddOn_Updater {
 				);
 			} else {
 				printf(
-					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'user-registration' ),
+					esc_html__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'user-registration' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 					esc_html( $version_info->new_version ),
@@ -244,7 +276,7 @@ class UR_AddOn_Updater {
 				);
 			}
 
-			do_action( "in_plugin_update_message-{$file}", $plugin, $version_info );
+			do_action( "in_plugin_update_message_{$file}", $plugin, $version_info );
 
 			echo '</div></td></tr>';
 		}
@@ -255,20 +287,20 @@ class UR_AddOn_Updater {
 	 *
 	 * @uses api_request()
 	 *
-	 * @param mixed  $_data
-	 * @param string $_action
-	 * @param object $_args
+	 * @param mixed  $_data Data.
+	 * @param string $_action Action.
+	 * @param object $_args Arguments.
 	 * @return object $_data
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( $_action != 'plugin_information' ) {
+		if ( 'plugin_information' !== $this->api_url ) {
 
 			return $_data;
 
 		}
 
-		if ( ! isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) {
+		if ( ! isset( $_args->slug ) || ( $_args->slug !== $this->slug ) ) {
 
 			return $_data;
 
@@ -285,7 +317,7 @@ class UR_AddOn_Updater {
 
 		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data['license'] . $this->beta ) );
 
-		// Get the transient where we store the api request for this plugin for 24 hours
+		// Get the transient where we store the api request for this plugin for 24 hours.
 		$edd_api_request_transient = $this->get_cached_version_info( $cache_key );
 
 		// If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
@@ -293,7 +325,7 @@ class UR_AddOn_Updater {
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
-			// Expires in 3 hours
+			// Expires in 3 hours.
 			$this->set_version_info_cache( $api_response, $cache_key );
 
 			if ( false !== $api_response ) {
@@ -329,8 +361,8 @@ class UR_AddOn_Updater {
 	/**
 	 * Disable SSL verification in order to prevent download update failures
 	 *
-	 * @param array  $args
-	 * @param string $url
+	 * @param array  $args Arguments.
+	 * @param string $url URL.
 	 * @return object $array
 	 */
 	public function http_request_args( $args, $url ) {
@@ -360,12 +392,12 @@ class UR_AddOn_Updater {
 
 		$data = array_merge( $this->api_data, $_data );
 
-		if ( $data['slug'] != $this->slug ) {
+		if ( $data['slug'] !== $this->slug ) {
 			return;
 		}
 
-		if ( $this->api_url == trailingslashit( home_url() ) ) {
-			return false; // Don't allow a plugin to ping itself
+		if ( trailingslashit( home_url() ) === $this->api_url ) {
+			return false; // Don't allow a plugin to ping itself.
 		}
 
 		$api_params = array(
@@ -413,6 +445,9 @@ class UR_AddOn_Updater {
 		return $request;
 	}
 
+	/**
+	 * Show Change Log.
+	 */
 	public function show_changelog() {
 
 		global $edd_plugin_data;
@@ -430,10 +465,10 @@ class UR_AddOn_Updater {
 		}
 
 		if ( ! current_user_can( 'update_plugins' ) ) {
-			wp_die( __( 'You do not have permission to install plugin updates', 'user-registration' ), __( 'Error', 'user-registration' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to install plugin updates', 'user-registration' ), esc_html__( 'Error', 'user-registration' ), array( 'response' => 403 ) );
 		}
 
-		$data         = $edd_plugin_data[ $_REQUEST['slug'] ];
+		$data         = $edd_plugin_data[ sanitize_key( wp_unslash( $_REQUEST['slug'] ) ) ];
 		$beta         = ! empty( $data['beta'] ) ? true : false;
 		$cache_key    = md5( 'edd_plugin_' . sanitize_key( $_REQUEST['plugin'] ) . '_' . $beta . '_version_info' );
 		$version_info = $this->get_cached_version_info( $cache_key );
@@ -444,7 +479,7 @@ class UR_AddOn_Updater {
 				'edd_action' => 'get_version',
 				'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
 				'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-				'slug'       => $_REQUEST['slug'],
+				'slug'       => isset( $_REQUEST['slug'] ) ? sanitize_key( wp_unslash( $_REQUEST['slug'] ) ) : '',
 				'author'     => $data['author'],
 				'url'        => home_url(),
 				'beta'       => ! empty( $data['beta'] ),
@@ -481,12 +516,17 @@ class UR_AddOn_Updater {
 		}
 
 		if ( ! empty( $version_info ) && isset( $version_info->sections['changelog'] ) ) {
-			echo '<div style="background:#fff;padding:10px;">' . $version_info->sections['changelog'] . '</div>';
+			echo '<div style="background:#fff;padding:10px;">' . esc_html( $version_info->sections['changelog'] ) . '</div>';
 		}
 
 		exit;
 	}
 
+	/**
+	 * Get Cache version info.
+	 *
+	 * @param string $cache_key Cache key.
+	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 
 		if ( empty( $cache_key ) ) {
@@ -496,22 +536,28 @@ class UR_AddOn_Updater {
 		$cache = get_option( $cache_key );
 
 		if ( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) {
-			return false; // Cache is expired
+			return false; // Cache is expired.
 		}
 
 		return json_decode( $cache['value'] );
 
 	}
 
+	/**
+	 * Set version info cache.
+	 *
+	 * @param string $value Value.
+	 * @param string $cache_key Key.
+	 */
 	public function set_version_info_cache( $value = '', $cache_key = '' ) {
 
 		if ( empty( $cache_key ) ) {
-			$cache_key = $this->cache_key;
+			$cache_key = sanitize_text_field( $this->cache_key );
 		}
 
 		$data = array(
 			'timeout' => strtotime( '+3 hours', current_time( 'timestamp' ) ),
-			'value'   => json_encode( $value ),
+			'value'   => wp_json_encode( $value ),
 		);
 
 		update_option( $cache_key, $data, 'no' );
