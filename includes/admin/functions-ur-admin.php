@@ -475,7 +475,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 			}
 		} else {
 				// Update post meta if any setting value is not set for field data id.
-				update_post_meta( absint( $form_id) , sanitize_text_field( $field_data['id'] ), '' );
+				update_post_meta( absint( $form_id ), sanitize_text_field( $field_data['id'] ), '' );
 		}
 	}
 }
@@ -525,7 +525,6 @@ function ur_format_setting_data( $setting_data ) {
  * Check for plugin activation date.
  *
  * True if user registration has been installed for 10 and 14 days ago according to the days supplied in the parameter.
- *
  *
  * @param int $days Number of days to check for activation.
  *

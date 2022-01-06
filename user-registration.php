@@ -363,6 +363,8 @@ if ( ! function_exists( 'UR' ) ) {
 		function user_registration_free_activated() {
 
 			set_transient( 'user_registration_free_activated', true );
+
+			wp_safe_redirect( admin_url() . 'admin.php?page=user-registration&tab=user-registration-getting-started' );
 		}
 	}
 	add_action( 'activate_user-registration/user-registration.php', 'user_registration_free_activated' );

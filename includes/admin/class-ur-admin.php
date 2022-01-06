@@ -155,11 +155,11 @@ class UR_Admin {
 		$notice_dismissed = get_option( 'user_registration_review_notice_dismissed', 'no' );
 
 		if ( 'yes' == $notice_dismissed ) {
-		 	return;
+			return;
 		}
 
 		// Return if activation date is less than 30 days.
-		if ( ur_check_activation_date("14") === false ) {
+		if ( ur_check_activation_date( '14' ) === false ) {
 			return;
 		}
 
@@ -173,8 +173,15 @@ class UR_Admin {
 						<h3><?php esc_html_e( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ); ?></h3>
 						<P><?php esc_html_e( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ); ?> </P>
 						<p><?php esc_html_e( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ); ?></p>
-						<p class="extra-pad"><?php esc_html_e('<strong>What benefit would you have?</strong> <br>
-				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>', 'user-registration' ); ?></p>
+						<p class="extra-pad">
+						<?php
+						esc_html_e(
+							'<strong>What benefit would you have?</strong> <br>
+				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+							'user-registration'
+						);
+						?>
+												</p>
 
 					<ul class="user-registration-notice-ul">
 						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
@@ -203,13 +210,13 @@ class UR_Admin {
 		$notice_dismissed = get_option( 'user_registration_survey_notice_dismissed', 'no' );
 
 		if ( 'yes' == $notice_dismissed ) {
-		 	return;
+			return;
 		}
 
 		// Return if license key not found.
 		$license_key  = trim( get_option( 'user-registration_license_key' ) );
 
-		if ( $license_key && ur_check_activation_date("10") === true ) {
+		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
 
 			?>
 				<div id="user-registration-survey-notice" class="notice notice-info user-registration-notice" data-purpose="survey">
@@ -219,13 +226,27 @@ class UR_Admin {
 					<div class="user-registration-notice-text">
 
 							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
-							<p><?php esc_html_e( '<strong>Hey there!</strong> <br>
-								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.', 'user-registration' ); ?></p>
-							<p class="extra-pad"><?php esc_html_e('<strong>What benefit would you have?</strong> <br>
-								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>', 'user-registration' ); ?></p>
+							<p>
+							<?php
+							esc_html_e(
+								'<strong>Hey there!</strong> <br>
+								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
+								'user-registration'
+							);
+							?>
+								</p>
+							<p class="extra-pad">
+							<?php
+							esc_html_e(
+								'<strong>What benefit would you have?</strong> <br>
+								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+								'user-registration'
+							);
+							?>
+													</p>
 
 						<ul class="user-registration-notice-ul">
-							<li><a class="button button-primary" href=<?php echo esc_url("https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu"); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+							<li><a class="button button-primary" href=<?php echo esc_url( 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu' ); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
 							<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
 							<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a></li>
 							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
