@@ -1,3 +1,7 @@
+= 2.1.1    - 31/12/2021
+* Fix 	   - Sanitization and escaping issues.
+* Tweak    - Images/JSON files locally added.
+
 = 2.1.0.1  - 16/12/2021
 * Dev 	   - Added filter hook for success message after email confirmation.
 * Tweak    - Upgrade to pro notice.

@@ -55,9 +55,9 @@ $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_cl
 do_action( 'user_registration_before_registration_form', $form_id );
 
 ?>
-	<div class='user-registration ur-frontend-form <?php echo $template_class . ' ' . $custom_class; ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
+	<div class='user-registration ur-frontend-form <?php echo esc_attr( $template_class ) . ' ' . esc_attr( $custom_class ); ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<form method='post' class='register' data-form-id="<?php echo absint( $form_id ); ?>"
-			  data-enable-strength-password="<?php echo $enable_strong_password; ?>" data-minimum-password-strength="<?php echo $minimum_password_strength; ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?> data-captcha-enabled="<?php echo esc_attr( $recaptcha_enabled ) ?>">
+			  data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?> data-captcha-enabled="<?php echo esc_attr( $recaptcha_enabled ); ?>">
 
 			<?php
 			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
@@ -98,7 +98,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 												}
 											}
 											?>
-															<div <?php echo $cl_props; ?> data-field-id="<?php echo $field_id; ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
+															<div <?php echo $cl_props; ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
@@ -138,7 +138,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 							<span></span>
 							<?php
 							$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
-								echo ur_string_translation( $form_id, 'user_registration_form_setting_form_submit_label', $submit );
+								echo esc_html( ur_string_translation( $form_id, 'user_registration_form_setting_form_submit_label', $submit ) );
 							?>
 						</button>
 						<?php do_action( 'user_registration_after_form_buttons', $form_id ); ?>
@@ -156,11 +156,11 @@ do_action( 'user_registration_before_registration_form', $form_id );
 			?>
 
 			<div style="clear:both"></div>
-			<?php if ('1' === $enable_field_icon) { ?>
-			<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo $enable_field_icon; ?>"/>
+			<?php if ( '1' === $enable_field_icon ) { ?>
+			<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo esc_attr( $enable_field_icon ); ?>"/>
 			<?php } ?>
 			<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
-			<input type="hidden" name="ur-redirect-url" value="<?php echo ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ); ?>"/>
+			<input type="hidden" name="ur-redirect-url" value="<?php echo esc_attr( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ); ?>"/>
 			<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 
 			<?php do_action( 'user_registration_form_registration_end', $form_id ); ?>

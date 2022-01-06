@@ -47,11 +47,11 @@ class UR_Admin_Import_Export_Forms {
 		}
 
 		// Nonce check.
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
-			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'user-registration-settings' ) ) {
+			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		$form_id = isset( $_POST['formid'] ) ? $_POST['formid'] : 0;
+		$form_id = isset( $_POST['formid'] ) ? absint( $_POST['formid'] ) : 0;
 
 		// Return if form id is not set and current user doesnot have export capability.
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
@@ -82,7 +82,6 @@ class UR_Admin_Import_Export_Forms {
 			ob_clean();
 		}
 
-		$export_json = wp_json_encode( $export_data );
 		// Force download.
 		header( 'Content-Type: application/force-download' );
 
@@ -90,7 +89,7 @@ class UR_Admin_Import_Export_Forms {
 		header( "Content-Disposition: attachment;filename={$file_name}" );
 		header( 'Content-type: application/json' );
 
-		echo $export_json; // phpcs:ignore WordPress.Security.EscapeOutput
+		echo wp_json_encode( $export_data );
 		exit();
 	}
 
@@ -132,7 +131,7 @@ class UR_Admin_Import_Export_Forms {
 		// Check for $_FILES set or not.
 		if ( isset( $_FILES['jsonfile'] ) ) {
 
-			$filename = esc_html( sanitize_text_field( $_FILES['jsonfile']['name'] ) ); // Get file name.
+			$filename = isset( $_FILES['jsonfile']['name'] ) ? esc_html( sanitize_text_field( wp_unslash( $_FILES['jsonfile']['name'] ) ) ) : ''; // Get file name.
 			$ext      = pathinfo( $filename, PATHINFO_EXTENSION ); // Get file extention.
 
 			// Check for file format.

@@ -63,12 +63,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
-					'title' =>  __( 'General Options', 'user-registration' ),
-					'sections' => array (
-						'general_options' => array(
-							'title' => __( 'General', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+					'title'    => __( 'General Options', 'user-registration' ),
+					'sections' => array(
+						'general_options'    => array(
+							'title'    => __( 'General', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'User login option', 'user-registration' ),
@@ -113,9 +113,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							),
 						),
 						'my_account_options' => array(
-							'title' => __( 'My account Section', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'    => __( 'My account Section', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'My account page', 'user-registration' ),
@@ -170,10 +170,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 							),
 						),
-						'endpoint_options' => array(
-							'title' => __( 'Endpoints Section', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '<strong>' . __( 'Endpoints: ', 'user-registration' ) . '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
+						'endpoint_options'   => array(
+							'title'    => __( 'Endpoints Section', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '<strong>' . __( 'Endpoints: ', 'user-registration' ) . '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
 							'settings' => array(
 								array(
 									'title'    => __( 'Edit profile', 'user-registration' ),
@@ -226,12 +226,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_frontend_messages_settings',
 				array(
-					'title' =>  __( 'Frontend Messages', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Frontend Messages', 'user-registration' ),
+					'sections' => array(
 						'frontend_success_messages_settings' => array(
-							'title' => __( 'Success Messages', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'    => __( 'Success Messages', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Manual login after registration', 'user-registration' ),
@@ -265,9 +265,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							),
 						),
 						'frontend_error_message_messages_settings' => array(
-							'title' => __( 'Error Messages', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'    => __( 'Error Messages', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Required', 'user-registration' ),
@@ -278,7 +278,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'css'      => 'min-width: 350px;',
 									'default'  => __( 'This field is required.', 'user-registration' ),
 								),
-									array(
+								array(
 									'title'    => __( 'Special Character Validation in Username', 'user-registration' ),
 									'desc'     => __( 'Enter the error message in form submission on username', 'user-registration' ),
 									'id'       => 'user_registration_form_submission_error_message_disallow_username_character',
@@ -364,12 +364,12 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
 				array(
-					'title' => __( 'Login Options', 'user-registration' ),
-					'sections' => array (
-						'login_options_settings' => array(
-							'title' => __( 'General', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+					'title'    => __( 'Login Options', 'user-registration' ),
+					'sections' => array(
+						'login_options_settings'           => array(
+							'title'    => __( 'General', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Form Template', 'user-registration' ),
@@ -498,10 +498,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 							),
 						),
-						'login_form_labels_settings' => array(
-							'title' => __( 'Labels', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+						'login_form_labels_settings'       => array(
+							'title'    => __( 'Labels', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Username or Email', 'user-registration' ),
@@ -555,9 +555,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							),
 						),
 						'login_form_placeholders_settings' => array(
-							'title' => __( 'Placeholders', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'    => __( 'Placeholders', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Username or Email Field', 'user-registration' ),
@@ -580,10 +580,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 							),
 						),
-						'login_form_messages_settings' => array(
-							'title' => __( 'Messages', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+						'login_form_messages_settings'     => array(
+							'title'    => __( 'Messages', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
 							'settings' => array(
 								array(
 									'title'    => __( 'Username Required', 'user-registration' ),

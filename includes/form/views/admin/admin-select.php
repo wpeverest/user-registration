@@ -23,10 +23,9 @@ $options 			 = array_map( 'trim', $options );
 		<select id="ur-input-type-select" disabled>
 			<?php
 			foreach ( $options as $option ) {
-				echo "<option value='" . esc_attr( trim( $option ) ) . "' '" . selected( $option, $default_value, false ) . "'>" . esc_html( trim( $option ) ) . '</option>';
+				echo "<option value='" . esc_attr( trim( $option ) ) . "' '" . esc_attr( selected( $option, $default_value, false ) ) . "'>" . esc_html( trim( $option ) ) . '</option>';
 			}
 			?>
 		</select>
 	</div>
 </div>
-

@@ -1174,7 +1174,7 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 	foreach ( $fields as $field ) {
 
 		if ( isset( $field['id'] ) && $meta_key == $field['id'] ) {
-			$value = isset( $field['default'] ) ? $field['default'] : $default;
+			$value = isset( $field['default'] ) ? sanitize_text_field( $field['default'] ) : $default;
 			break;
 		}
 	}
@@ -1344,7 +1344,7 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
 	$license_key  = trim( get_option( 'user-registration_license_key' ) );
 	if ( class_exists( 'UR_AddOn_Updater' ) ) {
 		new UR_AddOn_Updater(
-			$api_endpoint,
+			esc_url_raw( $api_endpoint ),
 			$file,
 			array(
 				'version' => $addon_version,
@@ -1694,7 +1694,7 @@ function ur_print_js() {
 		 *
 		 * @param string $js JavaScript code.
 		 */
-		echo apply_filters( 'user_registration_queued_js', $js );
+		echo wp_kses( apply_filters( 'user_registration_queued_js', $js ), array( 'script' => array( 'type' => true ) ) );
 
 		unset( $ur_queued_js );
 	}
