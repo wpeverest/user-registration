@@ -124,6 +124,12 @@ class UR_Admin_Addons {
 			delete_transient( 'ur_addons_section_' . $current_section );
 		}
 
+		if ( ! get_option( 'user_registration_addons_refresh_transient_reset' ) ) {
+			delete_transient( 'ur_addons_sections' );
+			delete_transient( 'ur_addons_section_' . $current_section );
+			update_option( 'user_registration_addons_refresh_transient_reset', true );
+		}
+
 		include_once dirname( __FILE__ ) . '/views/html-admin-page-addons.php';
 	}
 }
