@@ -62,6 +62,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 			),
 		);
 
+		$fields = apply_filters( 'text_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}
 }
