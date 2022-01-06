@@ -47,6 +47,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode( ', ', $single_item->advance_setting->valid_file_type );
 												}
+												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) ? $single_item->advance_setting->max_upload_size : '';
 											}
 										}
 									}
@@ -69,7 +70,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											<div class="uraf-profile-picture-upload">
 												<p class="form-row " id="profile_pic_url_field" data-priority="">
 													<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
-													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="<?php echo esc_html( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" />
+													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?> accept="<?php echo esc_html( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" />
 													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . esc_url( $profile_picture_url ) . '" />'; ?>
 													</span>
 													<?php do_action( 'uraf_profile_picture_buttons' ); ?>
