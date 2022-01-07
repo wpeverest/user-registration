@@ -507,6 +507,28 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_input_size;
 						}
+
+						var $max_upload_size = $(this)
+							.closest(".ur-selected-item")
+							.find(
+								".ur-advance-setting-block input[data-id='file_advance_setting_max_upload_size']"
+							)
+							.val();
+
+						var max_upload_size_ini =
+							user_registration_form_builder_data.max_upload_size_ini;
+
+						if (
+							parseInt($max_upload_size) >
+							parseInt(max_upload_size_ini)
+						) {
+							response.validation_status = false;
+							response.message =
+								label +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_max_upload_size;
+						}
 					}
 				);
 
@@ -2698,6 +2720,26 @@
 									".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date"
 								).hide();
 							}
+							break;
+
+						case "enable_prepopulate":
+							if ("false" === $this_node.val()) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-parameter_name")
+									.toggle();
+							});
 							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();

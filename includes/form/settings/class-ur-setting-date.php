@@ -132,6 +132,7 @@ class UR_Setting_Date extends UR_Field_Settings {
 			),
 		);
 
+		    $fields = apply_filters( 'date_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 			$this->render_html( $fields );
 	}
 }

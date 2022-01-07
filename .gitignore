@@ -29,3 +29,6 @@ Thumbs.db
 
 # Composer
 /vendor/
+
+# PHP Unit Tests
+/tests/
