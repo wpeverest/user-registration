@@ -146,6 +146,7 @@ class UR_Install {
 
 		do_action( 'user_registration_flush_rewrite_rules' );
 		do_action( 'user_registration_installed' );
+		set_transient( '_ur_activation_redirect', 1, 30 );
 	}
 
 	/**
@@ -198,7 +199,6 @@ class UR_Install {
 	private static function maybe_enable_setup_wizard() {
 		if ( apply_filters( 'user_registration_enable_setup_wizard', self::is_new_install() ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
-			set_transient( '_ur_activation_redirect', 1, 30 );
 		}
 	}
 
@@ -320,7 +320,7 @@ class UR_Install {
 		}
 
 		foreach ( $pages as $key => $page ) {
-			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post(($page['title'])), wp_kses_post($page['content']) );
+			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
 		}
 	}
 

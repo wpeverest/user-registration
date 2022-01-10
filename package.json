@@ -13,8 +13,8 @@
     "build": "grunt && npm run makepot && cross-env BABEL_ENV=default NODE_ENV=production webpack",
     "dev": "cross-env BABEL_ENV=default webpack --watch",
     "makepot": "composer run-script makepot",
-    "start": "webpack --mode development",
-    "eslint-fix": "eslint --fix \"src/**/*.js\" \"assets/js/admin/gutenberg/*.js\""
+    "start": "webpack --progress --watch --mode=development",
+    "eslint-fix": "eslint --fix \"src/**/*.js\""
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -41,6 +41,10 @@
     "grunt-rtlcss": "~2.0.1",
     "grunt-sass": "^2.0.0",
     "grunt-stylelint": "~0.9.0",
+    "html-webpack-plugin": "^5.5.0",
+    "node-sass": "~6.0.0",
+    "sass": "^1.43.5",
+    "sass-loader": "^12.3.0",
     "stylelint": "^10.1.0",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
@@ -51,10 +55,12 @@
     "npm": ">=5.5.1"
   },
   "dependencies": {
+    "css-loader": "^6.5.1",
     "grunt-cli": "^1.4.3",
     "makepot": "^0.3.0",
     "path-parse": "^1.0.7",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "style-loader": "^3.3.1"
   }
 }

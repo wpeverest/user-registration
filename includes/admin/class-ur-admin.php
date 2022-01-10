@@ -25,6 +25,7 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
+		add_action( 'admin_init', array( $this, 'ur_redirect_to_setup_wizard' ) );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
@@ -38,14 +39,15 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
-		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+			include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
+			include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+
 	}
 
 	/**
@@ -318,6 +320,22 @@ class UR_Admin {
 		};
 		return $classes;
 	}
+
+	/**
+	 * Redirect user to setup wizard on first install.
+	 *
+	 * @since 2.1.3
+	 */
+	public function ur_redirect_to_setup_wizard() {
+
+		if ( get_transient( '_ur_activation_redirect' ) ) {
+			delete_transient( '_ur_activation_redirect' );
+
+			wp_safe_redirect( admin_url() . 'admin.php?page=user-registration&tab=user-registration-getting-started' );
+			exit();
+		}
+	}
+
 }
 
 return new UR_Admin();

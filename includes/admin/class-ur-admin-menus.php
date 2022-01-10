@@ -349,16 +349,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add menu items.
 		 */
 		public function admin_menu() {
-			$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
-			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
+				$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+
+				add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
+
 		}
 
 		/**
 		 * Loads screen options into memory.
 		 */
 		public function registration_page_init() {
-			global $registration_table_list;
+				global $registration_table_list;
 
 			if ( ! isset( $_GET['add-new-registration'] ) ) {
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
@@ -373,6 +375,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					)
 				);
 			}
+
 		}
 
 		/**
@@ -462,8 +465,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Init the settings page.
 		 */
 		public function registration_page() {
-			global $registration_table_list;
-			$registration_table_list->display_page();
+			if ( isset( $_REQUEST['tab'] ) && $_REQUEST['tab'] === 'user-registration-getting-started' ) {
+				wp_enqueue_script( 'ur-getting-started-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version );
+
+				?>
+				<div id="user-registration-setup-wizard">
+				</div>
+				<?
+			} else {
+				global $registration_table_list;
+				$registration_table_list->display_page();
+			}
 		}
 
 		/**
@@ -591,50 +603,50 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</span>
 				</p>
 			</div>
-			<?php
-		}
-
-		/**
-		 * Get Edit Form Field.
-		 *
-		 * @param object $form_data Form Data.
-		 *
-		 * @throws Exception Throws exception if error in json.
-		 */
-		private function get_edit_form_field( $form_data ) {
-
-			if ( ! empty( $form_data ) ) {
-				$form_data_content = $form_data->post_content;
-				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
-			} else {
-				$form_data_content = '';
-				$form_row_ids      = '';
+				<?php
 			}
 
-			try {
-				$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
-				$form_data_array   = json_decode( $form_data_content );
+			/**
+			 * Get Edit Form Field.
+			 *
+			 * @param object $form_data Form Data.
+			 *
+			 * @throws Exception Throws exception if error in json.
+			 */
+			private function get_edit_form_field( $form_data ) {
 
-				if ( json_last_error() != JSON_ERROR_NONE ) {
-					throw new Exception( '' );
+				if ( ! empty( $form_data ) ) {
+					$form_data_content = $form_data->post_content;
+					$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
+				} else {
+					$form_data_content = '';
+					$form_row_ids      = '';
 				}
-			} catch ( Exception $e ) {
-				$form_data_array = array();
-			}
 
-			try {
-				$form_row_ids_array = json_decode( $form_row_ids );
+				try {
+					$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
+					$form_data_array   = json_decode( $form_data_content );
 
-				if ( json_last_error() != JSON_ERROR_NONE ) {
-					throw new Exception( '' );
+					if ( json_last_error() != JSON_ERROR_NONE ) {
+						throw new Exception( '' );
+					}
+				} catch ( Exception $e ) {
+					$form_data_array = array();
 				}
-			} catch ( Exception $e ) {
-				$form_row_ids_array = array();
-			}
 
-			echo '<div class="ur-selected-inputs">';
-			echo '<div class="ur-builder-wrapper-content">';
-			?>
+				try {
+					$form_row_ids_array = json_decode( $form_row_ids );
+
+					if ( json_last_error() != JSON_ERROR_NONE ) {
+						throw new Exception( '' );
+					}
+				} catch ( Exception $e ) {
+					$form_row_ids_array = array();
+				}
+
+				echo '<div class="ur-selected-inputs">';
+				echo '<div class="ur-builder-wrapper-content">';
+				?>
 			<div class="ur-builder-header">
 				<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
 					<?php
@@ -647,42 +659,42 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
 				</div>
 			</div>
-			<?php
-			echo '<div class="ur-input-grids">';
+				<?php
+				echo '<div class="ur-input-grids">';
 
-			$row_id  = 0;
-			$last_id = 0;
+				$row_id  = 0;
+				$last_id = 0;
 
-			foreach ( $form_data_array as $index => $rows ) {
-				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
-				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
+				foreach ( $form_data_array as $index => $rows ) {
+					$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
+					$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
-				$grid_count = count( $rows );
+					$grid_count = count( $rows );
 
-				$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
-				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
-				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
+					$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
+					$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
+					$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
 
-				$svg_args = array(
-					'svg'   => array(
-						'class'           => true,
-						'aria-hidden'     => true,
-						'aria-labelledby' => true,
-						'role'            => true,
-						'xmlns'           => true,
-						'width'           => true,
-						'height'          => true,
-						'viewbox'         => true, // <= Must be lower case!
-					),
-					'g'     => array( 'fill' => true ),
-					'title' => array( 'title' => true ),
-					'path'  => array(
-						'd'    => true,
-						'fill' => true,
-					),
-				);
-				echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
-				?>
+					$svg_args = array(
+						'svg'   => array(
+							'class'           => true,
+							'aria-hidden'     => true,
+							'aria-labelledby' => true,
+							'role'            => true,
+							'xmlns'           => true,
+							'width'           => true,
+							'height'          => true,
+							'viewbox'         => true, // <= Must be lower case!
+						),
+						'g'     => array( 'fill' => true ),
+						'title' => array( 'title' => true ),
+						'path'  => array(
+							'd'    => true,
+							'fill' => true,
+						),
+					);
+					echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
+					?>
 
 				<div class="ur-grids">
 					<button type="button" class="ur-edit-grid">
@@ -714,126 +726,126 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</div>
 				</div>
 
-				<?php
-				echo '<div class="ur-grid-lists">';
+					<?php
+					echo '<div class="ur-grid-lists">';
 
-				$grid_id = 0;
+					$grid_id = 0;
 
-				foreach ( $rows as $grid_lists ) {
+					foreach ( $rows as $grid_lists ) {
 
-					$grid_id ++;
+						$grid_id ++;
 
-					echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
+						echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
 
-					foreach ( $grid_lists as $single_field ) {
+						foreach ( $grid_lists as $single_field ) {
 
-						if ( isset( $single_field->field_key ) ) {
-							// Hook for fields backward compatibility.
-							apply_filters( 'user_registration_form_builder_field_before', $single_field );
+							if ( isset( $single_field->field_key ) ) {
+								// Hook for fields backward compatibility.
+								apply_filters( 'user_registration_form_builder_field_before', $single_field );
 
-							$admin_field = $this->get_admin_field( $single_field );
-							echo '<div class="ur-selected-item">';
-							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
-							$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
-							echo $template;
-							echo '</div>';
+								$admin_field = $this->get_admin_field( $single_field );
+								echo '<div class="ur-selected-item">';
+								echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
+								$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
+								echo $template;
+								echo '</div>';
+							}
 						}
-					}
 
-					if ( count( $grid_lists ) == 0 ) {
-						echo '<div class="user-registration-dragged-me">
+						if ( count( $grid_lists ) == 0 ) {
+							echo '<div class="user-registration-dragged-me">
 						<div class="user-registration-dragged-me-text"><p>' . esc_html__( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
 						</div>';
+						}
+
+						echo '</div>';
 					}
 
 					echo '</div>';
+					echo '</div>';
+
+				}
+				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+			}
+
+			/**
+			 * Get admin field.
+			 *
+			 * @param object $single_field Single field.
+			 * @throws Exception Throw exception if empty form data.
+			 */
+			public static function get_admin_field( $single_field ) {
+
+				if ( empty( $single_field->field_key ) ) {
+					throw new Exception( esc_html__( 'Empty form data', 'user-registration' ) );
 				}
 
-				echo '</div>';
-				echo '</div>';
+				$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
+
+				if ( class_exists( $class_name ) ) {
+					return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
+				}
+
+				/* Backward Compat since 1.4.0 */
+				$class_name_old = 'UR_' . ucwords( $single_field->field_key );
+				if ( class_exists( $class_name_old ) ) {
+					return $class_name_old::get_instance()->get_admin_template( $single_field );
+				}
+				/* Backward compat end */
+			}
+
+			/**
+			 * Get registered user form fields.
+			 */
+			private function get_registered_user_form_fields() {
+
+				$registered_form_fields = ur_get_user_field_only();
+
+				echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
+
+				foreach ( $registered_form_fields as $field ) {
+
+					$this->ur_get_list( $field );
+				}
+				echo ' </ul > ';
+			}
+
+			/**
+			 * Get Registered other form field.
+			 */
+			private function get_registered_other_form_fields() {
+
+				$registered_form_fields = ur_get_other_form_fields();
+
+				echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
+
+				foreach ( $registered_form_fields as $field ) {
+
+					$this->ur_get_list( $field );
+				}
+
+				do_action( 'ur_after_other_form_fields_printed' );
+				echo ' </ul > ';
+			}
+
+			/**
+			 * Get Admin field List.
+			 *
+			 * @param mixed $field Fields.
+			 */
+			public function ur_get_list( $field ) {
+
+				$class_name = ur_load_form_field_class( $field );
+
+				if ( null !== $class_name ) {
+					echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
+				}
 
 			}
-			echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
-			echo '</div>';
-			echo '</div>';
-			echo '</div>';
 		}
-
-		/**
-		 * Get admin field.
-		 *
-		 * @param object $single_field Single field.
-		 * @throws Exception Throw exception if empty form data.
-		 */
-		public static function get_admin_field( $single_field ) {
-
-			if ( empty( $single_field->field_key ) ) {
-				throw new Exception( esc_html__( 'Empty form data', 'user-registration' ) );
-			}
-
-			$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
-
-			if ( class_exists( $class_name ) ) {
-				return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
-			}
-
-			/* Backward Compat since 1.4.0 */
-			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
-			if ( class_exists( $class_name_old ) ) {
-				return $class_name_old::get_instance()->get_admin_template( $single_field );
-			}
-			/* Backward compat end */
-		}
-
-		/**
-		 * Get registered user form fields.
-		 */
-		private function get_registered_user_form_fields() {
-
-			$registered_form_fields = ur_get_user_field_only();
-
-			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
-
-			foreach ( $registered_form_fields as $field ) {
-
-				$this->ur_get_list( $field );
-			}
-			echo ' </ul > ';
-		}
-
-		/**
-		 * Get Registered other form field.
-		 */
-		private function get_registered_other_form_fields() {
-
-			$registered_form_fields = ur_get_other_form_fields();
-
-			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
-
-			foreach ( $registered_form_fields as $field ) {
-
-				$this->ur_get_list( $field );
-			}
-
-			do_action( 'ur_after_other_form_fields_printed' );
-			echo ' </ul > ';
-		}
-
-		/**
-		 * Get Admin field List.
-		 *
-		 * @param mixed $field Fields.
-		 */
-		public function ur_get_list( $field ) {
-
-			$class_name = ur_load_form_field_class( $field );
-
-			if ( null !== $class_name ) {
-				echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
-			}
-
-		}
-	}
 
 endif;
 
