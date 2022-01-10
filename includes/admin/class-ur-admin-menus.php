@@ -465,17 +465,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Init the settings page.
 		 */
 		public function registration_page() {
-			if ( isset( $_REQUEST['tab'] ) && $_REQUEST['tab'] === 'user-registration-getting-started' ) {
-				wp_enqueue_script( 'ur-getting-started-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version );
-
-				?>
-				<div id="user-registration-setup-wizard">
-				</div>
-				<?
-			} else {
-				global $registration_table_list;
-				$registration_table_list->display_page();
-			}
+			global $registration_table_list;
+			$registration_table_list->display_page();
 		}
 
 		/**
@@ -604,7 +595,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</p>
 			</div>
 				<?php
-			}
+		}
 
 			/**
 			 * Get Edit Form Field.
@@ -613,45 +604,45 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 *
 			 * @throws Exception Throws exception if error in json.
 			 */
-			private function get_edit_form_field( $form_data ) {
+		private function get_edit_form_field( $form_data ) {
 
-				if ( ! empty( $form_data ) ) {
-					$form_data_content = $form_data->post_content;
-					$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
-				} else {
-					$form_data_content = '';
-					$form_row_ids      = '';
+			if ( ! empty( $form_data ) ) {
+				$form_data_content = $form_data->post_content;
+				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
+			} else {
+				$form_data_content = '';
+				$form_row_ids      = '';
+			}
+
+			try {
+				$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
+				$form_data_array   = json_decode( $form_data_content );
+
+				if ( json_last_error() != JSON_ERROR_NONE ) {
+					throw new Exception( '' );
 				}
+			} catch ( Exception $e ) {
+				$form_data_array = array();
+			}
 
-				try {
-					$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
-					$form_data_array   = json_decode( $form_data_content );
+			try {
+				$form_row_ids_array = json_decode( $form_row_ids );
 
-					if ( json_last_error() != JSON_ERROR_NONE ) {
-						throw new Exception( '' );
-					}
-				} catch ( Exception $e ) {
-					$form_data_array = array();
+				if ( json_last_error() != JSON_ERROR_NONE ) {
+					throw new Exception( '' );
 				}
+			} catch ( Exception $e ) {
+				$form_row_ids_array = array();
+			}
 
-				try {
-					$form_row_ids_array = json_decode( $form_row_ids );
-
-					if ( json_last_error() != JSON_ERROR_NONE ) {
-						throw new Exception( '' );
-					}
-				} catch ( Exception $e ) {
-					$form_row_ids_array = array();
-				}
-
-				echo '<div class="ur-selected-inputs">';
-				echo '<div class="ur-builder-wrapper-content">';
-				?>
+			echo '<div class="ur-selected-inputs">';
+			echo '<div class="ur-builder-wrapper-content">';
+			?>
 			<div class="ur-builder-header">
 				<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
-					<?php
-					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
-					?>
+				<?php
+				$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
+				?>
 					<input name="ur-form-name" id="ur-form-name" type="text" class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
 					<span id="ur-form-name-edit-button" class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
@@ -769,7 +760,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 				echo '</div>';
 				echo '</div>';
-			}
+		}
 
 			/**
 			 * Get admin field.
@@ -777,75 +768,75 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 * @param object $single_field Single field.
 			 * @throws Exception Throw exception if empty form data.
 			 */
-			public static function get_admin_field( $single_field ) {
+		public static function get_admin_field( $single_field ) {
 
-				if ( empty( $single_field->field_key ) ) {
-					throw new Exception( esc_html__( 'Empty form data', 'user-registration' ) );
-				}
-
-				$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
-
-				if ( class_exists( $class_name ) ) {
-					return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
-				}
-
-				/* Backward Compat since 1.4.0 */
-				$class_name_old = 'UR_' . ucwords( $single_field->field_key );
-				if ( class_exists( $class_name_old ) ) {
-					return $class_name_old::get_instance()->get_admin_template( $single_field );
-				}
-				/* Backward compat end */
+			if ( empty( $single_field->field_key ) ) {
+				throw new Exception( esc_html__( 'Empty form data', 'user-registration' ) );
 			}
+
+			$class_name = 'UR_Form_Field_' . ucwords( $single_field->field_key );
+
+			if ( class_exists( $class_name ) ) {
+				return $class_name::get_instance()->get_admin_template( $single_field ); // @codingStandardsIgnoreLine
+			}
+
+			/* Backward Compat since 1.4.0 */
+			$class_name_old = 'UR_' . ucwords( $single_field->field_key );
+			if ( class_exists( $class_name_old ) ) {
+				return $class_name_old::get_instance()->get_admin_template( $single_field );
+			}
+			/* Backward compat end */
+		}
 
 			/**
 			 * Get registered user form fields.
 			 */
-			private function get_registered_user_form_fields() {
+		private function get_registered_user_form_fields() {
 
-				$registered_form_fields = ur_get_user_field_only();
+			$registered_form_fields = ur_get_user_field_only();
 
-				echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
+			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
 
-				foreach ( $registered_form_fields as $field ) {
+			foreach ( $registered_form_fields as $field ) {
 
-					$this->ur_get_list( $field );
-				}
-				echo ' </ul > ';
+				$this->ur_get_list( $field );
 			}
+			echo ' </ul > ';
+		}
 
 			/**
 			 * Get Registered other form field.
 			 */
-			private function get_registered_other_form_fields() {
+		private function get_registered_other_form_fields() {
 
-				$registered_form_fields = ur_get_other_form_fields();
+			$registered_form_fields = ur_get_other_form_fields();
 
-				echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
+			echo ' <ul id = "ur-draggabled" class="ur-registered-list" > ';
 
-				foreach ( $registered_form_fields as $field ) {
+			foreach ( $registered_form_fields as $field ) {
 
-					$this->ur_get_list( $field );
-				}
-
-				do_action( 'ur_after_other_form_fields_printed' );
-				echo ' </ul > ';
+				$this->ur_get_list( $field );
 			}
+
+			do_action( 'ur_after_other_form_fields_printed' );
+			echo ' </ul > ';
+		}
 
 			/**
 			 * Get Admin field List.
 			 *
 			 * @param mixed $field Fields.
 			 */
-			public function ur_get_list( $field ) {
+		public function ur_get_list( $field ) {
 
-				$class_name = ur_load_form_field_class( $field );
+			$class_name = ur_load_form_field_class( $field );
 
-				if ( null !== $class_name ) {
-					echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
-				}
-
+			if ( null !== $class_name ) {
+				echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
 			}
+
 		}
+	}
 
 endif;
 

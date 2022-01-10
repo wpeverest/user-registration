@@ -25,7 +25,6 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'ur_redirect_to_setup_wizard' ) );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
@@ -33,6 +32,7 @@ class UR_Admin {
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
+		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 	}
 
 	/**
@@ -48,6 +48,14 @@ class UR_Admin {
 			include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 			include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 
+			// Setup/welcome.
+		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			switch ( $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+				case 'user-registration-welcome':
+					include_once dirname( __FILE__ ) . '/class-ur-admin-welcome.php';
+					break;
+			}
+		}
 	}
 
 	/**
@@ -322,17 +330,42 @@ class UR_Admin {
 	}
 
 	/**
-	 * Redirect user to setup wizard on first install.
+	 * Handle redirects to setup/welcome page after install and updates.
+	 * For setup wizard, transient must be present, the user must have access rights, and we must ignore the network/bulk plugin updaters.
 	 *
 	 * @since 2.1.3
 	 */
-	public function ur_redirect_to_setup_wizard() {
+	public function admin_redirects() {
+		// Nonced plugin install redirects (whitelisted).
+		if ( ! empty( $_GET['ur-install-plugin-redirect'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$plugin_slug = ur_clean( esc_url_raw( wp_unslash( $_GET['ur-install-plugin-redirect'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.
 
-		if ( get_transient( '_ur_activation_redirect' ) ) {
-			delete_transient( '_ur_activation_redirect' );
+			$url = admin_url( 'plugin-install.php?tab=search&type=term&s=' . $plugin_slug );
+			wp_safe_redirect( $url );
+			exit;
+		}
 
-			wp_safe_redirect( admin_url() . 'admin.php?page=user-registration&tab=user-registration-getting-started' );
-			exit();
+		// Setup wizard redirect.
+		if ( get_transient( '_ur_activation_redirect' ) && apply_filters( 'user_registration_show_welcome_page', true ) ) {
+			$do_redirect  = true;
+			$current_page = isset( $_GET['page'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification
+
+			// On these pages, or during these events, postpone the redirect.
+			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_user_registration' ) ) {
+				$do_redirect = false;
+			}
+
+			// On these pages, or during these events, disable the redirect.
+			if ( 'user-registration-welcome' === $current_page || UR_Admin_Notices::has_notice( 'install' ) || apply_filters( 'user_registration_prevent_automatic_wizard_redirect', false ) || isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				delete_transient( '_ur_activation_redirect' );
+				$do_redirect = false;
+			}
+
+			if ( $do_redirect ) {
+				delete_transient( '_ur_activation_redirect' );
+				wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
+				exit;
+			}
 		}
 	}
 
