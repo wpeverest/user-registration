@@ -232,7 +232,7 @@ class UR_User_Approval {
 				$user_id      = $user->ID;
 				$instance     = new User_Registration_Payments_Process();
 				$redirect_url = $instance->generate_redirect_url( $user_id );
-				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending payment. Process the payment by clicking on this: %s', 'user-registration' ), '<a id="payment-link" href="' . esc_url( $redirect_url ) . '">' . __( 'link', 'user-registration' ) . '</a>' );
+				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}
