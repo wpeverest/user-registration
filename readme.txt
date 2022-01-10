@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.8.2
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -274,6 +274,13 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.1.2    - 07/01/2022
+* Dev      - Hooks for custom advance setting.
+* Enhance  - Extension page design and addons installation.
+* Enhance  - Size limit on profile picture field in edit profile page.
+* Fix      - Escaping issue in deactivation notice.
+* Fix      - Resend verification not working when ajax login is enabled.
+
 = 2.1.1    - 31/12/2021
 * Fix 	   - Sanitization and escaping issues.
 * Tweak    - Images/JSON files locally added.
