@@ -181,6 +181,10 @@ class UR_Emailer {
 			if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
 				$value = implode( ',', $single_field[ $key ] );
 			}
+
+			if ( 'file' === $form_data['field_key'] ) {
+				$value = isset( $value ) ? wp_get_attachment_url( $value ) : '';
+			}
 			// @codingStandardsIgnoreEnd
 
 			$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
