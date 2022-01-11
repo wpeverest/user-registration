@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import App from "./components/App";
+
 const Welcome = () => {
-    return <h1>Hello World from React boilerplate</h1>;
+    return <App />;
 };
 
 ReactDOM.render(

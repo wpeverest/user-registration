@@ -227,3 +227,63 @@
 		}
 	}
 }
+
+#user-registration-setup-wizard {
+	max-width: 980px;
+	border-radius: 4px;
+	margin: 3rem auto;
+	background: $white;
+	border: 1px solid $color_gray_two;
+	box-shadow: 0 2px 10px transparentize($gray_base, 0.9);
+	padding: 3rem;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	.user-registration-setup-wizard {
+		&__header {
+			&--nav {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+
+				.step {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+
+					.step-identifier {
+						font-size: 20px;
+						border: solid 2px darkblue;
+						color: darkblue;
+						background-color: lightblue;
+						text-align: center;
+						height: 50px;
+						width: 50px;
+						display: block;
+						margin: 0 auto;
+						line-height: 50px;
+						border-radius: 50%;
+					}
+
+					.step-label {
+						font-size: 15px;
+						color: black;
+						font-weight: 500;
+					}
+				}
+
+				.active {
+					.step-identifier {
+						background-color: #475BB2;
+						color: white;
+					}
+
+					.step-label {
+						color: #475BB2;
+					}
+				}
+			}
+		}
+	}
+}

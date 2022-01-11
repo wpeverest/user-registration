@@ -65,10 +65,15 @@ class UR_Admin_Welcome {
 	 * Show the welcome page.
 	 */
 	public static function welcome_page() {
-		wp_enqueue_script( 'ur-getting-started-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version, false );
-		wp_enqueue_style( 'ur-getting-started-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
+		wp_enqueue_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version, false );
+		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 
-		?>
+		if ( ! empty( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) {
+			?>
+				<div id="user-registration-setup-wizard" ></div>
+			<?php
+		} else {
+			?>
 		<div id="user-registration-welcome" >
 			<div class="user-registration-welcome-card" >
 				<div class="user-registration-welcome-header">
@@ -92,7 +97,7 @@ class UR_Admin_Welcome {
 						<button class="user-registration-welcome-video__button dashicons dashicons-controls-play"></button>
 					</a>
 					<div class="user-registration-welcome-container__action">
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-primary">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
 								<h3><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
 						</a>
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-primary">
@@ -128,7 +133,8 @@ class UR_Admin_Welcome {
 				</div>
 			</div>
 		</div>
-		<?php
+			<?php
+		}
 	}
 }
 
