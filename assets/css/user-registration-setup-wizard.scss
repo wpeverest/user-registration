@@ -5,6 +5,26 @@
  @import 'variables/variables';
  @import 'mixins/mixins';
 
+ *,
+ *::before,
+ *::after {
+   margin: 0;
+   box-sizing: border-box;
+ }
+
+ body {
+   margin: 0;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+	 "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	 "Poppins", sans-serif;
+   font-size: 13px;
+   line-height: 1.8;
+   font-weight: 400;
+   color: #000;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+
 #user-registration-welcome {
 
 
@@ -246,6 +266,7 @@
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				list-style-type: none;
 
 				.step {
 					display: flex;

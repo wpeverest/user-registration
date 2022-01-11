@@ -118,7 +118,6 @@ function ur_get_screen_ids() {
 
 	$ur_screen_id = sanitize_title( __( 'User Registration' ) );
 	$screen_ids   = array(
-		'dashboard_page_user-registration-welcome',
 		'toplevel_page_' . $ur_screen_id,
 		$ur_screen_id . '_page_user-registration-dashboard',
 		$ur_screen_id . '_page_add-new-registration',
