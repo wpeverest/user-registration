@@ -1,45 +1,7 @@
 import React, { useState } from "react";
 
-const Header = () => {
-    const [steps, setSteps] = useState([
-        {
-            key: "firstStep",
-            label: "Install Pages",
-            isDone: true,
-            component: ""
-        },
-        {
-            key: "secondStep",
-            label: "General",
-            isDone: false,
-            component: ""
-        },
-        {
-            key: "thirdStep",
-            label: "Registration",
-            isDone: false,
-            component: ""
-        },
-        {
-            key: "fourthStep",
-            label: "Login",
-            isDone: false,
-            component: ""
-        },
-        {
-            key: "fifthStep",
-            label: "My Account",
-            isDone: false,
-            component: ""
-        },
-        {
-            key: "finalStep",
-            label: "Final Step",
-            isDone: false,
-            component: ""
-        }
-    ]);
-
+const Header = ({ steps, activeStep }) => {
+    console.log(steps);
     return (
         <div className="user-registration-setup-wizard__header">
             <ul className="user-registration-setup-wizard__header--nav">
@@ -48,7 +10,7 @@ const Header = () => {
                         <li
                             key={i}
                             className={`user-registration-setup-wizard__header--nav-item ${
-                                i === 0 ? "active" : ""
+                                activeStep.key === step.key ? "active" : ""
                             } ${step.isDone ? "done" : ""}`}
                         >
                             <div id={`step-${i + 1}`} className="step">
