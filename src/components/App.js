@@ -1,6 +1,14 @@
 import React, { useState } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
+
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
+import GeneralSettings from "./screens/GeneralSettings";
+import RegistrationSettings from "./screens/RegistrationSettings";
+import LoginSettings from "./screens/LoginSettings";
+import MyAccountSettings from "./screens/MyAccountSettings";
+import LastPage from "./screens/LastPage";
 
 function App () {
     const [steps, setSteps] = useState([
@@ -14,89 +22,92 @@ function App () {
             key: "secondStep",
             label: "General",
             isDone: false,
-            component: ""
+            component: <GeneralSettings />
         },
         {
             key: "thirdStep",
             label: "Registration",
             isDone: false,
-            component: ""
+            component: <RegistrationSettings />
         },
         {
             key: "fourthStep",
             label: "Login",
             isDone: false,
-            component: ""
+            component: <LoginSettings />
         },
         {
             key: "fifthStep",
             label: "My Account",
             isDone: false,
-            component: ""
+            component: <MyAccountSettings />
         },
         {
             key: "finalStep",
             label: "Final Step",
             isDone: false,
-            component: ""
+            component: <LastPage />
         }
     ]);
     const [activeStep, setActiveStep] = useState(steps[0]);
 
+    /**
+	 * Progress to next item on menu when next button is clicked.
+	 */
     const handleNext = () => {
         if (steps[steps.length - 1].key === activeStep.key) {
             alert("You have completed all steps.");
             return;
         }
 
-        const index = steps.findIndex((x) => x.key === activeStep.key);
+        const index = steps.findIndex((step) => step.key === activeStep.key);
         setSteps((prevStep) =>
-            prevStep.map((x) => {
-                if (x.key === activeStep.key) x.isDone = true;
-                return x;
+            prevStep.map((step) => {
+                if (step.key === activeStep.key) step.isDone = true;
+                return step;
             })
         );
         setActiveStep(steps[index + 1]);
     };
 
+    /**
+	 * Go back to previous item on menu when back button is clicked.
+	 */
     const handleBack = () => {
-        const index = steps.findIndex((x) => x.key === activeStep.key);
+        const index = steps.findIndex((step) => step.key === activeStep.key);
         if (index === 0) return;
 
         setSteps((prevStep) =>
-            prevStep.map((x) => {
-                if (x.key === activeStep.key) x.isDone = false;
-                return x;
+            prevStep.map((step) => {
+                if (step.key === activeStep.key) step.isDone = false;
+                return step;
             })
         );
         setActiveStep(steps[index - 1]);
     };
     return (
-        <React.Fragment>
+        <ChakraProvider>
             <Header steps={steps} activeStep={activeStep} />
             <div className="user-registration-setup-wizard__body">
                 {activeStep.component}
             </div>
             <div className="user-registration-setup-wizard__footer">
-                <input
-                    type="button"
-                    className="button button-secondary"
-                    value="Back"
+                <Button
+                    colorScheme="gray"
                     onClick={handleBack}
                     disabled={steps[0].key === activeStep.key}
-                />
-                <input
-                    type="button"
-                    className="button button-primary"
-                    value={
-                        steps[steps.length - 1].key !== activeStep.key ?
-                            "Next" :
-                            "Submit"
-                    }
+                >
+					Back
+                </Button>
+                <Button
+                    colorScheme="blue"
+                    disabled={steps[steps.length - 1].key === activeStep.key}
                     onClick={handleNext}
-                />
+                >
+					Next
+                </Button>
             </div>
-        </React.Fragment>
+        </ChakraProvider>
     );
 }
 

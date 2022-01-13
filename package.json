@@ -55,7 +55,12 @@
     "npm": ">=5.5.1"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.7.4",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "chakra-react-select": "^3.0.1",
     "css-loader": "^6.5.1",
+    "framer-motion": "^5.5.7",
     "grunt-cli": "^1.4.3",
     "makepot": "^0.3.0",
     "path-parse": "^1.0.7",

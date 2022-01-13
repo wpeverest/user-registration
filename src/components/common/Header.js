@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Header = ({ steps, activeStep }) => {
-    console.log(steps);
     return (
         <div className="user-registration-setup-wizard__header">
             <ul className="user-registration-setup-wizard__header--nav">
