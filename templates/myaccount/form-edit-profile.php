@@ -371,12 +371,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<?php
 						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_attr_e( 'Save changes', 'user-registration' ); ?></button>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php echo apply_filters( 'user_registration_profile_update_btn', __( 'Save changes', 'user-registration' ) ); ?></button>
 							<?php
 						} else {
 							wp_nonce_field( 'save_profile_details' );
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo apply_filters( 'user_registration_profile_update_btn', __( 'Save changes', 'user-registration' ) ); ?>" />
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}
