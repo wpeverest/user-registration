@@ -27,7 +27,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<h2><?php _e( 'Profile Detail', 'user-registration' ); ?></h2>
+					<h2><?php echo apply_filters( 'user_registation_profile_detail_title', __( 'Profile detail', 'user-registration' ) ); ?></h2>
 					<?php
 					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
 						?>
