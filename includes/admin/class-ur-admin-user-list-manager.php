@@ -101,7 +101,7 @@ class UR_Admin_User_List_Manager {
 			$actions['ur_user_deny_action']    = $deny_action;
 			$actions['ur_user_approve_action'] = $approve_action;
 
-			if( 'admin_approval_after_email_confirmation' === $user_status['login_option'] || 'email_confirmation'  === $user_status['login_option']  ) {
+			if ( 'admin_approval_after_email_confirmation' === $user_status['login_option'] || 'email_confirmation' === $user_status['login_option'] ) {
 				$actions['ur_user_resend_verification_action'] = $resend_verification_action;
 			}
 		} elseif ( 1 == $user_status['user_status'] ) {
@@ -152,10 +152,10 @@ class UR_Admin_User_List_Manager {
 
 				$user_manager->approve();
 				$redirect = add_query_arg( array( 'approved' => 1 ), $redirect );
-				if ( "email_confirmation" === $login_option || "admin_approval_after_email_confirmation" === $login_option ) {
+				if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $user_id, 'ur_confirm_email', '1' );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
-					if ( "admin_approval_after_email_confirmation" === $login_option ){
+					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 						update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
 					}
 				}
@@ -163,15 +163,16 @@ class UR_Admin_User_List_Manager {
 
 				$user_manager->deny();
 				$redirect = add_query_arg( array( 'denied' => 1 ), $redirect );
-				if ( "email_confirmation" === $login_option || "admin_approval_after_email_confirmation" === $login_option ) {
+				if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $user_id, 'ur_confirm_email', '0' );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
-					if ( "admin_approval_after_email_confirmation" === $login_option ){
+					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 						update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'denied' );
 					}
 				}
 			}
-			wp_redirect( $redirect );
+
+			wp_redirect( esc_url_raw( $redirect ) );
 			exit;
 		}
 	}
@@ -180,35 +181,35 @@ class UR_Admin_User_List_Manager {
 	public function user_registration_pending_users_notices() {
 
 		$args = array(
-				'meta_query' => array(
-					'relation' => 'OR',
-						array(
-							'key'   => 'ur_user_status',
-							'value' => 0,
-							'compare'=> '='
-						),
-						array(
-							'key'   => 'ur_confirm_email',
-							'value' => 0,
-							'compare'=>'='
-						)
-				)
-			);
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key'   => 'ur_user_status',
+					'value' => 0,
+					'compare' => '=',
+				),
+				array(
+					'key'   => 'ur_confirm_email',
+					'value' => 0,
+					'compare' => '=',
+				),
+			),
+		);
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
-		$user_query = new WP_User_Query($args);
+		$user_query = new WP_User_Query( $args );
 
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
-		array_push($ur_pages,'users');
+		array_push( $ur_pages, 'users' );
 
 		// Check if Users are Pending and display pending users notice in UR and Users
-		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
+		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages ) ) {
 			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
-			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . __( 'User Registration:', 'user-registration' ) . '</strong> ' . count( $users ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? __( 'User', 'user-registration' ) : __( 'Users', 'user-registration' ) ) . '</a> ' . __( 'pending approval.', 'user-registration' ) . '</p></div>';
+			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
 
@@ -218,7 +219,7 @@ class UR_Admin_User_List_Manager {
 	 * @deprecated 1.9.0
 	 *
 	 * @return void
-	*/
+	 */
 	public function pending_users_notices() {
 		ur_deprecated_function( 'UR_Admin_User_List_Manager::pending_users_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_pending_users_notices' );
 	}
@@ -244,7 +245,7 @@ class UR_Admin_User_List_Manager {
 		}
 
 		if ( ! empty( $message ) ) {
-			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . $message . '</strong></p></div>';
+			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
 		}
 	}
 
@@ -254,7 +255,7 @@ class UR_Admin_User_List_Manager {
 	 * @deprecated 1.9.0
 	 *
 	 * @return void
-	*/
+	 */
 	public function display_admin_notices() {
 		ur_deprecated_function( 'UR_Admin_User_List_Manager::display_admin_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_display_admin_notices' );
 	}
@@ -268,8 +269,8 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function add_column_head( $columns ) {
 
-		$the_columns['ur_user_user_registered_source'] = __( 'Source', 'user-registration' );
-		$the_columns['ur_user_user_registered_log']    = __( 'Registered At', 'user-registration' );
+		$the_columns['ur_user_user_registered_source'] = esc_html__( 'Source', 'user-registration' );
+		$the_columns['ur_user_user_registered_log']    = esc_html__( 'Registered At', 'user-registration' );
 		$newcol                                        = array_slice( $columns, 0, -1 );
 		$newcol                                        = array_merge( $newcol, $the_columns );
 		$columns                                       = array_merge( $newcol, array_slice( $columns, 1 ) );
@@ -366,33 +367,33 @@ class UR_Admin_User_List_Manager {
 		<div class="alignleft actions">
 
 		<!-- Filter for approval status. -->
-		<label class="screen-reader-text" for="<?php echo $status_id; ?>"><?php _e( 'All statuses', 'user-registration' ); ?></label>
-		<select name="<?php echo $status_id; ?>" id="<?php echo $status_id; ?>">
-			<option value=""><?php _e( 'All approval statuses', 'user-registration' ); ?></option>
+		<label class="screen-reader-text" for="<?php echo esc_attr( $status_id ); ?>"><?php esc_html_e( 'All statuses', 'user-registration' ); ?></label>
+		<select name="<?php echo esc_attr( $status_id ); ?>" id="<?php echo esc_attr( $status_id ); ?>">
+			<option value=""><?php esc_html_e( 'All approval statuses', 'user-registration' ); ?></option>
 
 		<?php
-		echo '<option value="approved" ' . selected( 'approved', $status_filter_value ) . '>' . $approved_label . '</option>';
-		echo '<option value="pending" ' . selected( 'pending', $status_filter_value ) . '>' . $pending_label . '</option>';
-		echo '<option value="denied" ' . selected( 'denied', $status_filter_value ) . '>' . $denied_label . '</option>';
+		echo '<option value="approved" ' . esc_attr( selected( 'approved', $status_filter_value ) ) . '>' . esc_html( $approved_label ) . '</option>';
+		echo '<option value="pending" ' . esc_attr( selected( 'pending', $status_filter_value ) ) . '>' . esc_html( $pending_label ) . '</option>';
+		echo '<option value="denied" ' . esc_attr( selected( 'denied', $status_filter_value ) ) . '>' . esc_html( $denied_label ) . '</option>';
 		?>
 		</select>
 
 		<!-- Filter for specific forms. -->
-		<label class="screen-reader-text" for="<?php echo $specific_form_id; ?>"><?php _e( 'All Forms', 'user-registration' ); ?></label>
-		<select name="<?php echo $specific_form_id; ?>" id="<?php echo $specific_form_id; ?>">
-			<option value=""><?php _e( 'All UR Forms', 'user-registration' ); ?></option>
+		<label class="screen-reader-text" for="<?php echo esc_attr( $specific_form_id ); ?>"><?php esc_html_e( 'All Forms', 'user-registration' ); ?></label>
+		<select name="<?php echo esc_attr( $specific_form_id ); ?>" id="<?php echo esc_attr( $specific_form_id ); ?>">
+			<option value=""><?php esc_html_e( 'All UR Forms', 'user-registration' ); ?></option>
 
 		<?php
 				$all_forms = ur_get_all_user_registration_form();
 
 		foreach ( $all_forms as $form_id => $form_name ) {
-			echo '<option value="' . $form_id . '" ' . selected( $form_id, $specific_form_filter_value ) . ' >' . $form_name . '</option>';
+			echo '<option value="' . esc_attr( $form_id ) . '" ' . esc_attr( selected( $form_id, $specific_form_filter_value ) ) . ' >' . esc_html( $form_name ) . '</option>';
 		}
 
 		?>
 		</select>
 		<?php
-		submit_button( __( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
+		submit_button( esc_html__( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
 
 	}
 
@@ -518,11 +519,11 @@ class UR_Admin_User_List_Manager {
 		?>
 			<script type="text/javascript">
 				jQuery(document).ready(function() {
-					jQuery('<option>').val('approve').text('<?php _e( 'Approve', 'user-registration' ); ?>').appendTo("select[name='action']");
-					jQuery('<option>').val('approve').text('<?php _e( 'Approve', 'user-registration' ); ?>').appendTo("select[name='action2']");
+					jQuery('<option>').val('approve').text('<?php esc_html_e( 'Approve', 'user-registration' ); ?>').appendTo("select[name='action']");
+					jQuery('<option>').val('approve').text('<?php esc_html_e( 'Approve', 'user-registration' ); ?>').appendTo("select[name='action2']");
 
-					jQuery('<option>').val('deny').text('<?php _e( 'Deny', 'user-registration' ); ?>').appendTo("select[name='action']");
-					jQuery('<option>').val('deny').text('<?php _e( 'Deny', 'user-registration' ); ?>').appendTo("select[name='action2']");
+					jQuery('<option>').val('deny').text('<?php esc_html_e( 'Deny', 'user-registration' ); ?>').appendTo("select[name='action']");
+					jQuery('<option>').val('deny').text('<?php esc_html_e( 'Deny', 'user-registration' ); ?>').appendTo("select[name='action2']");
 				});
 			</script>
 		<?php
@@ -596,44 +597,22 @@ class UR_Admin_User_List_Manager {
 		?>
 			<table class="form-table">
 				<tr>
-					<th><label for="ur_user_user_status"><?php _e( 'Approval Status', 'user-registration' ); ?></label>
+					<th><label for="ur_user_user_status"><?php esc_html_e( 'Approval Status', 'user-registration' ); ?></label>
 					</th>
 					<td>
-					<?php
-					if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-						?>
+
 						<select id="ur_user_user_status" name="ur_user_user_status">
 						<?php
 						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
 						foreach ( $available_statuses as $status ) :
 							?>
 							<option
-								value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
+								value="<?php echo esc_attr( $status ); ?>"<?php esc_attr( selected( $status, $user_status['user_status'] ) ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
 							<?php
 						endforeach;
 						?>
 						</select>
-						<?php
-					} elseif ( 'email_confirmation' === $user_status['login_option'] ) {
-						?>
-						<select id="ur_user_email_confirmation_status" name="ur_user_email_confirmation_status">
-						<?php
-						$available_statuses = array(
-							'Verified' => 1,
-							'Pending'  => 0,
-						);
-						foreach ( $available_statuses as $status_lable => $status ) :
-							?>
-							<option
-								value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status['user_status'] ); ?>><?php echo esc_html( $status_lable ); ?></option>
-							<?php
-						endforeach;
-						?>
-						</select>
-						<?php
-					}
-					?>
-						<span class="description"><?php _e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
+						<span class="description"><?php esc_html_e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
 					</td>
 				</tr>
 			</table>
@@ -657,13 +636,12 @@ class UR_Admin_User_List_Manager {
 		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) {
 			return false;
 		}
-
 		if ( isset( $_POST['ur_user_user_status'] ) ) {
 			$new_status = $_POST['ur_user_user_status'];
 			$user_manager->save_status( $new_status );
 		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) {
-			$new_status = $_POST['ur_user_email_confirmation_status'];
-			return update_user_meta( $user_id, 'ur_confirm_email', $new_status );
+			$new_status = sanitize_text_field( $_POST['ur_user_email_confirmation_status'] );
+			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
 	}
 }

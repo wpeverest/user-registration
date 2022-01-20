@@ -78,14 +78,29 @@ class UR_Admin_User_Manager {
 		do_action( 'ur_user_status_updated', $status, $this->user->ID, $alert_user );
 
 		$action_label = '';
+		$form_id      = get_user_meta( $this->user->ID, 'ur_form_id', true );
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 		switch ( $status ) {
 			case self::APPROVED:
 				$action_label = 'approved';
+				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'true' );
+				}
+				break;
+
+			case self::PENDING:
+				$action_label = 'pending';
+				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				}
 				break;
 
 			case self::DENIED:
 				$action_label = 'denied';
+				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				}
 				break;
 		}
 
@@ -97,8 +112,7 @@ class UR_Admin_User_Manager {
 		if ( is_super_admin( $this->user->ID ) ) {
 			return;
 		}
-
-		return update_user_meta( $this->user->ID, 'ur_user_status', $status );
+		return update_user_meta( absint( $this->user->ID ), 'ur_user_status', sanitize_text_field( $status ) );
 	}
 
 	/**
@@ -137,12 +151,11 @@ class UR_Admin_User_Manager {
 
 		$user_status       = get_user_meta( $this->user->ID, 'ur_user_status', true );
 		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
-		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true);
+		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true );
 
 		$result            = '';
 
 		if ( '' === $user_status && '' === $user_email_status ) {
-
 			// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active.
 			if ( $exact_value ) {
 				return $user_status;
@@ -168,17 +181,15 @@ class UR_Admin_User_Manager {
 				'user_status'  => $user_status,
 			);
 
-		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status) {
-			if ( 'denied' === $admin_approval_after_email_confirmation_status )
-			{
-				$admin_approval_after_email_confirmation_status =  self::DENIED;
-			}elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ur_string_to_bool( $user_email_status ) )
-			{
-				$admin_approval_after_email_confirmation_status =  self::PENDING;
+		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status ) {
+			if ( 'denied' === $admin_approval_after_email_confirmation_status ) {
+				$admin_approval_after_email_confirmation_status = self::DENIED;
+			} elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ur_string_to_bool( $user_email_status ) ) {
+				$admin_approval_after_email_confirmation_status = self::PENDING;
 			} elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ! ur_string_to_bool( $user_email_status ) ) {
-				$admin_approval_after_email_confirmation_status =  self::PENDING;
+				$admin_approval_after_email_confirmation_status = self::PENDING;
 			} elseif ( $admin_approval_after_email_confirmation_status ) {
-				$admin_approval_after_email_confirmation_status =  self::APPROVED;
+				$admin_approval_after_email_confirmation_status = self::APPROVED;
 			}
 			$this->user_status = $admin_approval_after_email_confirmation_status;
 
@@ -364,15 +375,15 @@ class UR_Admin_User_Manager {
 	 */
 	public static function get_status_label( $status ) {
 		if ( $status == self::APPROVED ) {
-			$label = __( 'approved', 'user-registration' );
+			$label = esc_html__( 'approved', 'user-registration' );
 		}
 
 		if ( $status == self::PENDING ) {
-			$label = __( 'pending', 'user-registration' );
+			$label = esc_html__( 'pending', 'user-registration' );
 		}
 
 		if ( $status == self::DENIED ) {
-			$label = __( 'denied', 'user-registration' );
+			$label = esc_html__( 'denied', 'user-registration' );
 		}
 
 		return ucfirst( $label );

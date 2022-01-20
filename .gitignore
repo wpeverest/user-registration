@@ -29,3 +29,6 @@ Thumbs.db
 
 # Composer
 /vendor/
+
+# Test
+/tests
