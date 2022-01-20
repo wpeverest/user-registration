@@ -183,7 +183,17 @@ class UR_Emailer {
 			}
 
 			if ( 'file' === $form_data['field_key'] ) {
-				$value = isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				$upload_data = array();
+				$file_data = explode( ',', $value);
+
+				foreach ($file_data as $key => $value) {
+					$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+					array_push( $upload_data,$file );
+				}
+				// Check if value contains array.
+				if ( is_array( $upload_data ) ) {
+					$value = implode( ',',$upload_data );
+				}
 			}
 			// @codingStandardsIgnoreEnd
 
