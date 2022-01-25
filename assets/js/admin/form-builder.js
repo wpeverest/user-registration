@@ -1056,6 +1056,7 @@
 							init: function () {
 								this.single_row();
 								this.manage_required_fields();
+								this.manage_label_hidden_fields();
 							},
 							single_row: function () {
 								if (
@@ -1199,6 +1200,28 @@
 									.eq("0")
 									.css({});
 								return grid_lists;
+							},
+							/**
+							 * Hides label of fields if hide label option is enabled.
+							 */
+							manage_label_hidden_fields: function () {
+								$('select[data-field="hide_label"]').each(
+									function () {
+										if ($(this).val() === "yes") {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-label")
+												.find("label")
+												.hide();
+										} else {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-label")
+												.find("label")
+												.show();
+										}
+									}
+								);
 							},
 							/**
 							 * Information about required fields
@@ -3264,13 +3287,29 @@
 			 */
 			trigger_general_setting_hide_label: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'select[data-field="' +
+							$label.attr("data-field") +
+							'"] option:selected'
+					)
+					.removeAttr("selected");
+
+				if ("yes" === $label.val()) {
+					wrapper.find(".ur-label").find("label").hide();
+				} else {
+					wrapper.find(".ur-label").find("label").show();
+				}
+
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.find('option[value="' + $label.val() + '"]')
-					.prop("selected", true);
+					.attr("selected", true);
 			},
 			/**
 			 * Reflects changes in hide advance settings of field settings into selected field in form builder area.

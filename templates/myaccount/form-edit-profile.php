@@ -37,6 +37,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$max_size = wp_max_upload_size();
+								$max_upload_size = $max_size;
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
@@ -47,18 +49,16 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode( ', ', $single_item->advance_setting->valid_file_type );
 												}
-												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) ? $single_item->advance_setting->max_upload_size : '';
+												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
 											}
 										}
 									}
 								}
+
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
-									<?php
-									$max_size = wp_max_upload_size();
-									$max_size = size_format( $max_size );
-									?>
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( $max_size ); ?></p>
+
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
 								</div>
 								<header>
 									<p><strong><?php echo esc_html( apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) ) ); ?></strong></p>
@@ -70,7 +70,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											<div class="uraf-profile-picture-upload">
 												<p class="form-row " id="profile_pic_url_field" data-priority="">
 													<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
-													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?> accept="<?php echo esc_html( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" />
+													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" />
 													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . esc_url( $profile_picture_url ) . '" />'; ?>
 													</span>
 													<?php do_action( 'uraf_profile_picture_buttons' ); ?>
@@ -138,6 +138,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
 												// Migrate the conditional logic to logic_map schema.
 												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+												if ( 'profile_picture' === $single_item->field_key ) {
+													continue;
+												}
 											}
 
 											$user_id                    = get_current_user_id();
@@ -179,6 +183,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
 												<?php
 												$readonly_fields = ur_readonly_profile_details_fields();
+
 												if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
 													$field['custom_attributes']['readonly'] = 'readonly';
 													if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {

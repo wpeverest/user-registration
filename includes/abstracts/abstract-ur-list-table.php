@@ -13,8 +13,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * which columns needs to be shown, filter, ordered by and more and forget about the details.
  *
  * This class supports:
- *	- Bulk actions
- *	- Search
+ *  - Bulk actions
+ *  - Search
  *  - Sortable columns
  *  - Automatic translations of the columns
  *
@@ -75,9 +75,9 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * of columns (the column names are the values)
 	 */
 	protected $sort_by = array(
-				'title'  => array( 'title', false ),
-				'date'  => array( 'date', false ),
-				'author' => array( 'author', false ),
+		'title'  => array( 'title', false ),
+		'date'  => array( 'date', false ),
+		'author' => array( 'author', false ),
 	);
 
 	/**
@@ -104,7 +104,7 @@ abstract class UR_List_Table extends WP_List_Table {
 				'untrash' => __( 'Restore', 'user-registration' ),
 				'delete'  => __( 'Delete permanently', 'user-registration' ),
 			);
-		}else{
+		} else {
 			$actions = array(
 				'trash' => __( 'Move to trash', 'user-registration' ),
 			);
@@ -193,7 +193,6 @@ abstract class UR_List_Table extends WP_List_Table {
 		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created';
 		$args['order']   = isset( $_REQUEST['order'] ) && 'DESC' === strtoupper( $_REQUEST['order'] ) ? 'DESC' : 'ASC';
 
-
 		// Get the registrations
 		$query_posts = new WP_Query( $args );
 		$this->items       = $query_posts->posts;
@@ -211,7 +210,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Implements the logic behind processing an action once an action link is clicked on the list table.
 	 *
-	 * @param int $action_id
+	 * @param int    $action_id
 	 * @param string $row_action_type The type of action to perform on the action.
 	 */
 	protected function process_row_actions() {
@@ -219,7 +218,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 			$action = $action ? $action : ( ! empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '' );
 			$action = ( $action && '-1' !== $action ) ? $action : ( ! empty( $_POST['action2'] ) ? sanitize_text_field( $_POST['action2'] ) : '' );
-			$action = ! empty( $action ) ? $action : ( ( isset( $_REQUEST['empty_trash'] ) && ! empty( $_REQUEST['empty_trash'] ) )  ? "empty_trash" : "" );
+			$action = ! empty( $action ) ? $action : ( ( isset( $_REQUEST['empty_trash'] ) && ! empty( $_REQUEST['empty_trash'] ) ) ? 'empty_trash' : '' );
 			$nonce  = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : null;
 			$nonce  = $nonce ? $nonce : ( isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '' );
 			switch ( $action ) {
@@ -240,7 +239,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to trash posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
+						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
 						$this->bulk_trash( $post_ids );
 					}
 					break;
@@ -250,7 +249,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'edit_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to untrash posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
+						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
 						$this->bulk_untrash( $post_ids );
 					}
 					break;
@@ -260,7 +259,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to delete posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[$this->_args['singular']] );
+						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
 						$this->bulk_delete( $post_ids );
 					}
 					break;
@@ -278,7 +277,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		}
 	}
 
-		/**
+	/**
 	 * Duplicate a content access post.
 	 *
 	 * @since 2.0.0
@@ -328,25 +327,26 @@ abstract class UR_List_Table extends WP_List_Table {
 			$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $post_id ) );
 
 			if ( count( $post_meta_infos ) ) {
-				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-
 				foreach ( $post_meta_infos as $meta_info ) {
 					$meta_key = $meta_info->meta_key;
 
 					if ( '_wp_old_slug' === $meta_key ) {
 						continue;
 					}
-					$meta_value      = addslashes( $meta_info->meta_value );
-					$sql_query_sel[] = "SELECT $new_post_id, '$meta_key', '$meta_value'";
+					if ( substr( $meta_key, 0, 18 ) === 'user_registration_' ) {
+
+						$meta_value      = addslashes( $meta_info->meta_value );
+						if ( ! add_post_meta( $new_post_id, $meta_key, $meta_value, true ) ) {
+							update_post_meta( $new_post_id, $meta_key, $meta_value );
+						}
+					}
 				}
-				$sql_query .= implode( ' UNION ALL ', $sql_query_sel );
-				$wpdb->query( $sql_query );
 			}
 
 			/*
 			 * Finally, redirect to the edit post screen for the new draft.
 			 */
-			$duplicate_link = $this->get_duplicate_link($new_post_id);
+			$duplicate_link = $this->get_duplicate_link( $new_post_id );
 			wp_redirect( $duplicate_link );
 			exit;
 		}
@@ -367,7 +367,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		$qty    = count( $post_list );
 		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( $_GET['status'] ) : '';
 
-		wp_redirect( admin_url( 'admin.php?page='. $this->page .'' . $status . '&trashed=' . $qty ) );
+		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&trashed=' . $qty ) );
 		exit;
 	}
 
@@ -383,7 +383,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			wp_untrash_post( $post_id );
 		}
 
-		wp_redirect( admin_url( 'admin.php?page='. $this->page .'&status=trash&untrashed=' . count( $post_list ) ) );
+		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '&status=trash&untrashed=' . count( $post_list ) ) );
 		exit;
 	}
 
@@ -402,7 +402,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		$qty    = count( $post_list );
 		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( $_GET['status'] ) : '';
 
-		wp_redirect( admin_url( 'admin.php?page='. $this->page .'' . $status . '&deleted=' . $qty ) );
+		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );
 		exit();
 	}
 
@@ -426,7 +426,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			wp_delete_post( $webhook_id, true );
 		}
 
-		wp_redirect( admin_url( 'admin.php?page='. $this->page .'&deleted=' . count( $post_list ) ) );
+		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '&deleted=' . count( $post_list ) ) );
 		exit;
 	}
 
@@ -437,12 +437,12 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	protected function extra_tablenav( $which ) {
 		if ( 'top' === $which && isset( $_GET['status'] ) && 'trash' === $_GET['status'] && current_user_can( 'delete_posts' ) ) {
-			$empty_trash_link = esc_url( wp_nonce_url( admin_url( 'admin.php?page='. $this->page .'&action=empty_trash' ), 'empty_trash' ) );
+			$empty_trash_link = esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . $this->page . '&action=empty_trash' ), 'empty_trash' ) );
 
 			printf(
 				'<div class="alignleft actions"><a id="delete_all" class="button apply" href="%s">%s</a></div>',
 				$empty_trash_link,
-				esc_html__( 'Empty trash', 'user-registration')
+				esc_html__( 'Empty trash', 'user-registration' )
 			);
 		}
 	}
@@ -453,7 +453,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * name transformation though using `$this->ID`.
 	 */
 	public function column_cb( $row ) {
-		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s" />',  esc_attr($this->_args['singular'] ),  esc_attr( $row->ID ) );
+		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s" />', esc_attr( $this->_args['singular'] ), esc_attr( $row->ID ) );
 	}
 
 	/**
@@ -464,7 +464,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_title( $post ) {
-		$edit_link 			  = $this->get_edit_links($post);
+		$edit_link            = $this->get_edit_links( $post );
 		$title                = _draft_or_post_title( $post->ID );
 		$post_status          = $post->post_status;
 		$current_status_trash = ( 'trash' === $post_status );
@@ -492,7 +492,7 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		$row_actions = array();
 
-		$actions = $this->get_row_actions($post);
+		$actions = $this->get_row_actions( $post );
 
 		foreach ( $actions as $action => $link ) {
 			$row_actions[] = sprintf( '<span class="%s">%s</span>', esc_attr( $action ), $link );
@@ -571,19 +571,16 @@ abstract class UR_List_Table extends WP_List_Table {
 
 	/**
 	 * @param mixed $post
-	 *
 	 */
 	abstract public function get_row_actions( $post );
 
 	/**
 	 * @param mixed $post
-	 *
 	 */
 	abstract public function get_edit_links( $post );
 
 	/**
 	 * @param mixed $post
-	 *
 	 */
 	abstract public function get_duplicate_link( $post );
 
@@ -613,17 +610,19 @@ abstract class UR_List_Table extends WP_List_Table {
 			'<a href="admin.php?page=%s" %s >%s (%s)</a>',
 			$this->page,
 			$class,
-			esc_html__( 'All', 	$this->page ),
+			esc_html__( 'All', $this->page ),
 			number_format_i18n( $total_posts )
 		);
 
-		$allowed_status = array( 'publish',
-		'draft',
-		'pending',
-		'trash',
-		'future',
-		'private',
-		'auto-draft' );
+		$allowed_status = array(
+			'publish',
+			'draft',
+			'pending',
+			'trash',
+			'future',
+			'private',
+			'auto-draft',
+		);
 		$stati_objects  = get_post_stati(
 			array(
 				'show_in_admin_status_list' => true,
