@@ -37,6 +37,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$max_size = wp_max_upload_size();
+								$max_upload_size = $max_size;
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
@@ -47,18 +49,16 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode( ', ', $single_item->advance_setting->valid_file_type );
 												}
-												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) ? $single_item->advance_setting->max_upload_size : '';
+												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
 											}
 										}
 									}
 								}
+
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
-									<?php
-									$max_size = wp_max_upload_size();
-									$max_size = size_format( $max_size );
-									?>
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( $max_size ); ?></p>
+
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
 								</div>
 								<header>
 									<p><strong><?php echo esc_html( apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) ) ); ?></strong></p>

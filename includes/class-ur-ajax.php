@@ -198,7 +198,7 @@ class UR_AJAX {
 		$single_field = array();
 
 		if ( isset( $_POST['form_data'] ) ) {
-			$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) );
 			foreach ( $form_data as $data ) {
 				$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
 				$data->field_name                  = substr( $data->field_name, 18 );
