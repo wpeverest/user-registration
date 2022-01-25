@@ -138,6 +138,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
 												// Migrate the conditional logic to logic_map schema.
 												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+												if ( 'profile_picture' === $single_item->field_key ) {
+													continue;
+												}
 											}
 
 											$user_id                    = get_current_user_id();
@@ -179,6 +183,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
 												<?php
 												$readonly_fields = ur_readonly_profile_details_fields();
+
 												if ( array_key_exists( $field['field_key'], $readonly_fields ) ) {
 													$field['custom_attributes']['readonly'] = 'readonly';
 													if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
