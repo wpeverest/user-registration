@@ -3287,6 +3287,7 @@
 			 */
 			trigger_general_setting_hide_label: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
+
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
@@ -3308,7 +3309,7 @@
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.find('option[value="' + $label.val() + '"]')
-					.prop("selected", true);
+					.attr("selected", true);
 			},
 			/**
 			 * Reflects changes in hide advance settings of field settings into selected field in form builder area.
