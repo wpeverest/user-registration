@@ -2,8 +2,6 @@
 /**
  * Handles the Activation API responses.
  *
- * @author   WPEverest
- * @category Admin
  * @package  UserRegistration/Admin/Updates
  * @version  1.1.0
  */
@@ -17,10 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Updater_Key_API {
 
+	/**
+	 * Endpoint.
+	 *
+	 * @var string
+	 */
 	private static $endpoint = 'https://wpeverest.com/edd-sl-api/?';
 
 	/**
 	 * Attempt to check a plugin license.
+	 *
+	 * @param mixed $api_params Parameters.
 	 */
 	public static function check( $api_params ) {
 		$defaults = array(
@@ -40,7 +45,7 @@ class UR_Updater_Key_API {
 			)
 		);
 
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return false;
 		} else {
 			return wp_remote_retrieve_body( $response );
@@ -49,6 +54,8 @@ class UR_Updater_Key_API {
 
 	/**
 	 * Attempt to check a plugin version.
+	 *
+	 * @param mixed $api_params API Params.
 	 */
 	public static function version( $api_params ) {
 		$defaults = array(
@@ -68,7 +75,7 @@ class UR_Updater_Key_API {
 			)
 		);
 
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return false;
 		} else {
 			return wp_remote_retrieve_body( $response );
@@ -78,7 +85,8 @@ class UR_Updater_Key_API {
 	/**
 	 * Attempt to activate a plugin license.
 	 *
-	 * @return string JSON response
+	 * @param mixed $api_params API Params.
+	 * @return string JSON response.
 	 */
 	public static function activate( $api_params ) {
 		$defaults = array(
@@ -100,7 +108,7 @@ class UR_Updater_Key_API {
 
 		// Make sure there are no errors.
 		if ( is_wp_error( $response ) ) {
-			return json_encode(
+			return wp_json_encode(
 				array(
 					'error_code' => $response->get_error_code(),
 					'error'      => $response->get_error_message(),
@@ -108,8 +116,8 @@ class UR_Updater_Key_API {
 			);
 		}
 
-		if ( wp_remote_retrieve_response_code( $response ) != 200 ) {
-			return json_encode(
+		if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			return wp_json_encode(
 				array(
 					'error_code' => wp_remote_retrieve_response_code( $response ),
 					'error'      => 'Error code: ' . wp_remote_retrieve_response_code( $response ),
@@ -125,6 +133,8 @@ class UR_Updater_Key_API {
 
 	/**
 	 * Attempt to deactivate a plugin license.
+	 *
+	 * @param mixed $api_params API Params.
 	 */
 	public static function deactivate( $api_params ) {
 		$defaults = array(
@@ -144,7 +154,7 @@ class UR_Updater_Key_API {
 			)
 		);
 
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return false;
 		} else {
 			return wp_remote_retrieve_body( $response );

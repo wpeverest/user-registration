@@ -35,14 +35,14 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 			$settings = apply_filters(
 				'user_registration_reset_password_email',
 				array(
-					'title' => __( 'Emails', 'user-registration' ),
-					'sections' => array (
+					'title'    => __( 'Emails', 'user-registration' ),
+					'sections' => array(
 						'reset_password_email' => array(
-							'title' => __( 'Reset Password Email', 'user-registration' ),
-							'type'  => 'card',
-							'desc'  => '',
+							'title'     => __( 'Reset Password Email', 'user-registration' ),
+							'type'      => 'card',
+							'desc'      => '',
 							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings' => array(
+							'settings'  => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the user when a user requests for reset password.', 'user-registration' ),

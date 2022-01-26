@@ -1,4 +1,10 @@
 <?php
+/**
+ * Admin View: Page - Forms
+ *
+ * @package UserRegistration
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -11,10 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div id="menu-management">
 			<div class="menu-edit">
-				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo $form_id; ?>"/>
+				<input type="hidden" name="ur_form_id" id="ur_form_id" value="<?php echo esc_attr( $form_id ); ?>"/>
 				<div id="nav-menu-header">
 					<div class="ur-brand-logo ur-px-2">
-						<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
+						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
 					</div>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
@@ -23,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 								?>
 									<input type="text" onfocus="this.select();" readonly="readonly"
-										value='[user_registration_form id=<?php echo '"' . $form_id . '"'; ?>]'
+										value='[user_registration_form id=<?php echo '"' . esc_attr( $form_id ) . '"'; ?>]'
 										class=" code" size="35">
 
 									<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
@@ -35,11 +41,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php
 							}
 							?>
-							<button id="ur-full-screen-mode" class="button button-secondary button-large button-icon closed" title="<?php echo __( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
+							<button id="ur-full-screen-mode" class="button button-secondary button-large button-icon closed" title="<?php esc_attr_e( 'Fullscreen', 'user-registration' ); ?>"><span class="ur-fs-open-label dashicons dashicons-editor-expand"></span><span class="ur-fs-close-label dashicons dashicons-editor-contract"></span></button>
 							<?php if ( isset( $preview_link ) ) { ?>
-								<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php echo __( 'Preview Form', 'user-registration' ); ?>"><?php echo __( 'Preview', 'user-registration' ); ?></a>
+								<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 							<?php } ?>
-							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo $save_label; ?> </button>
+							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo esc_html( $save_label ); ?> </button>
 						</div><!-- END .publishing-action -->
 					</div><!-- END .major-publishing-actions -->
 				</div><!-- END .nav-menu-header -->
@@ -49,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<nav class="nav-tab-wrapper ur-tabs">
 								<ul class="ur-tab-lists">
 									<li><a href="#ur-tab-registered-fields"
-										   class="nav-tab active"><?php esc_html_e( 'Fields', 'user-registration' ); ?></a>
+										class="nav-tab active"><?php esc_html_e( 'Fields', 'user-registration' ); ?></a>
 									</li>
 									<li class="ur-no-pointer"><a href="#ur-tab-field-options" class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 									</li>
@@ -59,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									?>
 
 									<li><a href="#ur-tab-field-settings"
-										   class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
+										class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
 									</li>
 								</ul>
 								<div style="clear:both"></div>
@@ -71,14 +77,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"/></svg>
 										</div>
 										<div class="ur-fields-not-found" hidden>
-											<img src="<?php echo esc_attr( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/not-found.png' ); ?>" />
+											<img src="<?php echo esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/not-found.png' ); ?>" />
 											<h3 class="ur-fields-not-found-title">Whoops!</h3>
 											<span>There is not any field that you were searching for.</span>
 										</div>
-										<h2 class='ur-toggle-heading'><?php echo __( 'Default User Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_user_form_fields(); ?>
-										<h2 class='ur-toggle-heading'><?php echo __( 'Extra Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Extra Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_other_form_fields(); ?>
 										<?php do_action( 'user_registration_extra_fields' ); ?>
@@ -104,7 +110,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						$builder_class = apply_filters( 'user_registration_builder_class', array() );
 						$builder_class = implode( ' ', $builder_class );
 						?>
-						<div class='ur-builder-wrapper <?php echo $builder_class; ?>'>
+						<div class='ur-builder-wrapper <?php echo esc_attr( $builder_class ); ?>'>
 							<?php
 							if ( ! empty( $form_data ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
 								$this->get_edit_form_field( $form_data );
@@ -125,9 +131,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="ur-builder-wrapper-footer">
 								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
 								<ul class="ur-quick-links-content" hidden>
-									<li><a href="https://wpeverest.com/support/" target='_blank'><?php echo __( 'Get Support', 'user-registration' ); ?></a></li>
-									<li><a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target='_blank'><?php echo __( 'Create Login Form', 'user-registration' ); ?></a></li>
-									<li><a href="https://docs.wpeverest.com/docs/user-registration/" target='_blank'><?php echo __( 'Documentation', 'user-registration' ); ?></a></li>
+									<li><a href="https://wpeverest.com/support/" target='_blank'><?php echo esc_html__( 'Get Support', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target='_blank'><?php echo esc_html__( 'Create Login Form', 'user-registration' ); ?></a></li>
+									<li><a href="https://docs.wpeverest.com/docs/user-registration/" target='_blank'><?php echo esc_html__( 'Documentation', 'user-registration' ); ?></a></li>
 								</ul>
 								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
 							</div>

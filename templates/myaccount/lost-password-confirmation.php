@@ -24,4 +24,4 @@ ur_print_notices();
 ur_print_notice( __( 'Password reset email has been sent.', 'user-registration' ) );
 ?>
 
-<p><?php echo apply_filters( 'user_registration_lost_password_message', __( 'A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset.', 'user-registration' ) ); ?></p>
+<p><?php echo esc_html( apply_filters( 'user_registration_lost_password_message', esc_html__( 'A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset.', 'user-registration' ) ) ); ?></p>

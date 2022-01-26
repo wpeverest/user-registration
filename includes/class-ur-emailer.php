@@ -177,9 +177,23 @@ class UR_Emailer {
 
 			// Check if value contains array.
 			// @codingStandardsIgnoreStart
-			$value = ur_clean( isset( $single_field[ $key ] ) ? $single_field[ $key ] : '' );
+			$value =  isset( $single_field[ $key ] ) ? sanitize_text_field( $single_field[ $key ] ): '';
 			if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
 				$value = implode( ',', $single_field[ $key ] );
+			}
+
+			if ( 'file' === $form_data['field_key'] ) {
+				$upload_data = array();
+				$file_data = explode( ',', $value);
+
+				foreach ($file_data as $key => $value) {
+					$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+					array_push( $upload_data,$file );
+				}
+				// Check if value contains array.
+				if ( is_array( $upload_data ) ) {
+					$value = implode( ',',$upload_data );
+				}
 			}
 			// @codingStandardsIgnoreEnd
 
@@ -420,8 +434,8 @@ class UR_Emailer {
 	public static function lost_password_email( $user_login, $user_data, $key ) {
 
 		$user     = get_user_by( 'login', $user_login );
-		$email    = isset( $user->data->user_email ) ? $user->data->user_email : '';
-		$username = isset( $user->data->user_login ) ? $user->data->user_login : '';
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ): '';
+		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
 
 		if ( empty( $email ) || empty( $username ) ) {
 			return false;
@@ -477,7 +491,7 @@ class UR_Emailer {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject = get_option( 'user_registration_profile_details_changed_email_subject', __( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
+		$subject = get_option( 'user_registration_profile_details_changed_email_subject', esc_html__( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
 		$settings = new UR_Settings_Profile_Details_Changed_Email();
 		$message = $settings->ur_get_profile_details_changed_email();
 		$message = get_option( 'user_registration_profile_details_changed_email', $message );

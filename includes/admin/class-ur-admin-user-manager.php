@@ -112,6 +112,7 @@ class UR_Admin_User_Manager {
 		if ( is_super_admin( $this->user->ID ) ) {
 			return;
 		}
+
 		return update_user_meta( absint( $this->user->ID ), 'ur_user_status', sanitize_text_field( $status ) );
 	}
 

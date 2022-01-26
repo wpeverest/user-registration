@@ -35,5 +35,11 @@
       "makepot-audit": "Generate langauges/user-registration.pot file and run audit",
       "makepot": "Generate langauges/user-registration.pot file"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
+    }
   }
 }

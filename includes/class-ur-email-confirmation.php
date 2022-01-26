@@ -101,7 +101,7 @@ class UR_Email_Confirmation {
 			return $columns;
 		}
 
-		$the_columns['ur_user_user_status'] = __( 'Status', 'user-registration' );
+		$the_columns['ur_user_user_status'] = esc_html__( 'Status', 'user-registration' );
 
 		$newcol  = array_slice( $columns, 0, -1 );
 		$newcol  = array_merge( $newcol, $the_columns );
@@ -138,22 +138,22 @@ class UR_Email_Confirmation {
 
 	// Token mismatch message.
 	public function custom_registration_error_message() {
-		return ur_print_notice( __( 'Token Mismatch!', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'Token Mismatch!', 'user-registration' ), 'error' );
 	}
 
 	// Token expired message.
 	public function custom_token_expired_message() {
-		return ur_print_notice( __( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
 	}
 
 	// Resend verification email message.
 	public function custom_resend_email_token_message() {
-		return ur_print_notice( __( 'Verification Email Sent!', 'user-registration' ) );
+		return ur_print_notice( esc_html__( 'Verification Email Sent!', 'user-registration' ) );
 	}
 
 	// Resend verification email error message.
 	public function custom_resend_email_token_error_message() {
-		return ur_print_notice( __( 'User does not exist!', 'user-registration' ), 'error' );
+		return ur_print_notice( esc_html__( 'User does not exist!', 'user-registration' ), 'error' );
 	}
 
 	/**
@@ -170,7 +170,7 @@ class UR_Email_Confirmation {
 		// Condition for resending token.
 		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
-				die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
 			$output  = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
@@ -312,7 +312,7 @@ class UR_Email_Confirmation {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = ( $form_id ) ? $form_id : 0;
+		$form_id = isset( $form_id ) ? $form_id : 0;
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option  ) {

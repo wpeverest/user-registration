@@ -148,7 +148,7 @@ class UR_User_Approval {
 			if ( $this->is_admin_creation_process() ) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
-           // update user status when login using social connect
+			// update user status when login using social connect
 			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
@@ -165,16 +165,16 @@ class UR_User_Approval {
 	/**
 	 * Check the status of an user on login.
 	 *
-	 * @param mixed $user Users.
-	 * @param string  $password Password.
+	 * @param mixed  $user Users.
+	 * @param string $password Password.
 	 *
 	 * @return \WP_Error
 	 */
 	public function check_status_on_login( $user, $password ) {
 
-		if( ! $user instanceof WP_User ) {
+		if ( ! $user instanceof WP_User ) {
 			return $user;
-		 }
+		}
 
 		$form_id = ur_get_form_id_by_userid( $user->ID );
 
@@ -234,7 +234,14 @@ class UR_User_Approval {
 		} elseif ( 'email_confirmation' === $login_option || 'email_confirmation' === $status['login_option'] ) {
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
-			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME'];
+
+			if ( get_option( 'ur_login_ajax_submission' ) ) {
+				$url .= $_SERVER['HTTP_REFERER'];
+			} else {
+				$url .= $_SERVER['REQUEST_URI'];
+			}
+
 			$url      = substr( $url, 0, strpos( $url, '?' ) );
 			$instance = new UR_Email_Confirmation();
 			$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
@@ -254,7 +261,7 @@ class UR_User_Approval {
 				$user_id      = $user->ID;
 				$instance     = new User_Registration_Payments_Process();
 				$redirect_url = $instance->generate_redirect_url( $user_id );
-				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending payment. Process the payment by clicking on this: %s', 'user-registration' ), '<a id="payment-link" href="' . esc_url( $redirect_url ) . '">' . __( 'link', 'user-registration' ) . '</a>' );
+				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}
@@ -279,9 +286,9 @@ class UR_User_Approval {
 		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
-			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no');
+			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no' );
 
-			if( 'no' === $disable_pre_get ){
+			if ( 'no' === $disable_pre_get ) {
 				add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
 			}
 
