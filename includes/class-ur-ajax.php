@@ -86,7 +86,7 @@ class UR_AJAX {
 
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? $_POST['ur_frontend_form_nonce'] : '';
-		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash($_POST['captchaResponse']) ) : '';
+		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : '';
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
@@ -198,7 +198,7 @@ class UR_AJAX {
 		$single_field = array();
 
 		if ( isset( $_POST['form_data'] ) ) {
-			$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) );
 			foreach ( $form_data as $data ) {
 				$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
 				$data->field_name                  = substr( $data->field_name, 18 );
@@ -207,9 +207,13 @@ class UR_AJAX {
 
 		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
 			if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-				if ( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] ) ) {
-					$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url'] );
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
+				if ( '' === $single_field['user_registration_profile_pic_url'] ) {
+					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+				} else {
+					if ( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] ) ) {
+						$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url'] );
+						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
+					}
 				}
 			}
 		}
@@ -241,7 +245,7 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? sanitize_text_field( ( $single_field[ $key ] ) ): '';
+					$single_field[ $key ] = isset( $single_field[ $key ] ) ? sanitize_text_field( ( $single_field[ $key ] ) ) : '';
 					break;
 			}
 
@@ -284,9 +288,9 @@ class UR_AJAX {
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
 					if ( $new_key === 'display_name' ) {
-						$user_data['display_name'] = sanitize_text_field( ($single_field[ $key ]));
+						$user_data['display_name'] = sanitize_text_field( ( $single_field[ $key ] ) );
 					} else {
-						$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ]);
+						$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ] );
 					}
 				} else {
 					$update_key = $key;
@@ -683,8 +687,8 @@ class UR_AJAX {
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
-				'post_title'     => sanitize_text_field( $form_name),
-				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE |  JSON_UNESCAPED_SLASHES ),
+				'post_title'     => sanitize_text_field( $form_name ),
+				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ),
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',   // if you prefer
 				'ping_status'    => 'closed',      // if you prefer
@@ -921,7 +925,7 @@ class UR_AJAX {
 	 * @return void
 	 **/
 	public static function dismiss_notice() {
-		$notice_type = isset($_POST["notice_type"]) ? $_POST["notice_type"] : '';
+		$notice_type = isset( $_POST['notice_type'] ) ? $_POST['notice_type'] : '';
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {

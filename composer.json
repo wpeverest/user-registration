@@ -22,7 +22,7 @@
       "phpcbf -p"
     ],
     "makepot-audit": [
-      "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,bin,node_modules,vendor\" --slug=user-registration"
+      "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,bin,node_modules,vendor,tests\" --slug=user-registration"
     ],
     "makepot": [
       "@makepot-audit --skip-audit"
