@@ -131,7 +131,7 @@ class UR_Email_Confirmation {
 	 * Email Successfully verified and waiting for admin approval Message.
 	 */
 	public function custom_email_confirmed_admin_await_message() {
-		$default = __('Email successfully verified. But Admin has to approve you to give access to login. Please contact to your administrator for your approval.', 'user-registration' );
+		$default = __('Email has successfully been verified. Now, please wait until the admin approves you to give access for the login.', 'user-registration' );
 		$message = get_option( 'user_registration_pro_email_verified_admin_approval_await_message', $default );
 		return ur_print_notice( $message );
 	}
