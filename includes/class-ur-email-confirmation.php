@@ -22,7 +22,7 @@ class UR_Email_Confirmation {
 
 		if ( is_admin() ) {
 			add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
-			add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
+			// add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 			add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		}
 
@@ -30,60 +30,6 @@ class UR_Email_Confirmation {
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2 );
 		add_action( 'wp_authenticate', array( $this, 'check_token_before_authenticate' ), 40, 2 );
-	}
-
-	/**
-	 * Create two quick links Approve and Deny for each user in the users list
-	 *
-	 * @param $actions
-	 * @param $user
-	 *
-	 * @return array
-	 */
-	public function create_quick_links( $actions, $user ) {
-
-		$resend_verification_link = add_query_arg(
-			array(
-				'action' => 'resend_verification',
-				'user'   => $user->ID,
-			)
-		);
-		$resend_verification_link = remove_query_arg( array( 'new_role' ), $resend_verification_link );
-		$resend_verification_link = wp_nonce_url( $resend_verification_link, 'ur_user_change_email_status' );
-
-			$verify_link = add_query_arg(
-				array(
-					'action' => 'verify',
-					'user'   => $user->ID,
-				)
-			);
-			$verify_link = remove_query_arg( array( 'new_role' ), $verify_link );
-			$verify_link = wp_nonce_url( $verify_link, 'ur_user_change_email_status' );
-
-			$unverify_link = add_query_arg(
-				array(
-					'action' => 'unverify',
-					'user'   => $user->ID,
-				)
-			);
-			$unverify_link = remove_query_arg( array( 'new_role' ), $unverify_link );
-			$unverify_link = wp_nonce_url( $unverify_link, 'ur_user_change_email_status' );
-
-			$resend_verification_action   = '<a href="' . esc_url( $resend_verification_link ) . '">' . _x( 'Resend Verification', 'The action on users list page', 'user-registration' ) . '</a>';
-			$verify_action   = '<a style="color:#086512" href="' . esc_url( $verify_link ) . '">' . _x( 'Verify', 'The action on users list page', 'user-registration' ) . '</a>';
-			$unverify_action = '<a style="color:#e20707" href="' . esc_url( $unverify_link ) . '">' . _x( 'Unverify', 'The action on users list page', 'user-registration' ) . '</a>';
-
-		if ( current_user_can( 'edit_user' ) ) {
-			$get_user_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
-			if ( '0' === $get_user_status ) {
-				$actions['ur_user_verify_action'] = $verify_action;
-				$actions['ur_user_resend_verification_action'] = $resend_verification_action;
-			} elseif ( '1' === $get_user_status ) {
-				$actions['ur_user_unverify_action'] = $unverify_action;
-			}
-		}
-
-		return $actions;
 	}
 
 	/**
@@ -106,17 +52,14 @@ class UR_Email_Confirmation {
 			return;
 		}
 
-		if ( ! empty( $action ) && in_array( $action, array( 'verify', 'unverify', 'resend_verification' ) ) && ! isset( $_GET['new_role'] ) ) {
+		if ( ! empty( $action ) && in_array( $action, array( 'resend_verification' ) ) && ! isset( $_GET['new_role'] ) ) {
 
 			check_admin_referer( 'ur_user_change_email_status' );
 
 			$redirect = admin_url( 'users.php' );
 			$status   = $action;
 
-			if ( $status == 'verify' ) {
-				update_user_meta( $user_id, 'ur_confirm_email', '1' );
-				$redirect = add_query_arg( array( 'verified' => 1 ), $redirect );
-			} elseif ( $status == 'resend_verification' ) {
+			if ( $status == 'resend_verification' ) {
 				$user    = get_user_by( 'id', $user_id );
 				$form_id = ur_get_form_id_by_userid( $user_id );
 
@@ -130,9 +73,6 @@ class UR_Email_Confirmation {
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
 
-			} else {
-				update_user_meta( $user_id, 'ur_confirm_email', '0' );
-				$redirect = add_query_arg( array( 'unverified' => 1 ), $redirect );
 			}
 
 			wp_redirect( $redirect );
@@ -171,29 +111,6 @@ class UR_Email_Confirmation {
 	}
 
 	/**
-	 * Set the status value for each user in the users list
-	 *
-	 * @param string $val
-	 * @param string $column_name
-	 * @param int    $user_id
-	 *
-	 * @return string
-	 */
-	public function add_column_cell( $val, $user_id ) {
-		$token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-
-		if ( '1' === $val ) {
-			$val = esc_html__( 'Verified', 'user-registration' );
-		} elseif ( $val === '0' && isset( $token ) ) {
-			$val = esc_html__( 'Pending', 'user-registration' );
-		} else {
-			$val = '-';
-		}
-
-		return $val;
-	}
-
-	/**
 	 * Enqueque CSS to load notice
 	 *
 	 * @return void
@@ -205,7 +122,18 @@ class UR_Email_Confirmation {
 
 	// Successful registration message.
 	public function custom_registration_message() {
-		return ur_print_notice( apply_filters("user_registration_success_message_after_email_confirmation", esc_html__('User successfully registered. Login to continue.', 'user-registration' ) ) );
+		$default = __( 'User successfully registered. Login to continue.', 'user-registration' );
+		$message = get_option( 'user_registration_successful_email_verified_message', $default );
+		return ur_print_notice( $message );
+	}
+
+	/**
+	 * Email Successfully verified and waiting for admin approval Message.
+	 */
+	public function custom_email_confirmed_admin_await_message() {
+		$default = __('Email has successfully been verified. Now, please wait until the admin approves you to give access for the login.', 'user-registration' );
+		$message = get_option( 'user_registration_pro_email_verified_admin_approval_await_message', $default );
+		return ur_print_notice( $message );
 	}
 
 	// Token mismatch message.
@@ -241,7 +169,6 @@ class UR_Email_Confirmation {
 
 		// Condition for resending token.
 		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
-
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
@@ -254,8 +181,9 @@ class UR_Email_Confirmation {
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
-			if ( $user && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
+			if ( $user && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				$this->set_email_status( array(), '', $user_id );
 
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
@@ -293,7 +221,9 @@ class UR_Email_Confirmation {
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			// Check if the token matches the token value stored in db.
-			if ( $user_token === $_GET['ur_token'] && 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+
+			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				if ( isset( $output[1]) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
@@ -303,8 +233,13 @@ class UR_Email_Confirmation {
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
-					add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
-					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
+					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+						add_filter( 'login_message', array( $this, 'custom_email_confirmed_admin_await_message' ) );
+						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_email_confirmed_admin_await_message' ) );
+					} else {
+						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
+						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
+					}
 				}
 			} else {
 				add_filter( 'login_message', array( $this, 'custom_registration_error_message' ) );
@@ -378,14 +313,23 @@ class UR_Email_Confirmation {
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 		$form_id = isset( $form_id ) ? $form_id : 0;
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
-		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option  ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
+
+			if('admin_approval_after_email_confirmation' === $login_option ) {
+				update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'false' );
+			}
 			//update user status when login using social connect
 			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
+
+				if('admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
+				}
 			}
 		}
 	}

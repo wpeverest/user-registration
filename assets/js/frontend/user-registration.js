@@ -744,7 +744,10 @@
 														} else if (
 															response.data
 																.form_login_option ==
-															"email_confirmation"
+																"email_confirmation" ||
+															response.data
+																.form_login_option ==
+																"admin_approval_after_email_confirmation"
 														) {
 															message.append(
 																"<li>" +

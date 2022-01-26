@@ -563,7 +563,7 @@
 							.find(".ur-advance-setting-block .ur-settings-max")
 							.val();
 
-						if ($min > $max) {
+						if (parseFloat($min) > parseFloat($max)) {
 							response.validation_status = false;
 							response.message =
 								label +
@@ -631,7 +631,7 @@
 							.find(".ur-advance-setting-block .ur-settings-max")
 							.val();
 
-						if ($min > $max) {
+						if (parseFloat($min) > parseFloat($max)) {
 							response.validation_status = false;
 							response.message =
 								label +

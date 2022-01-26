@@ -251,6 +251,10 @@ class UR_Emailer {
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+		// Get User Status when admin approval after email confirmation login option enabled in form.
+		if('admin_approval_after_email_confirmation' === $login_option) {
+			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
+		}
 		$values       = array(
 			'username'    => $username,
 			'email'       => $email,
@@ -271,7 +275,7 @@ class UR_Emailer {
 
 			self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 
-		} elseif ( 0 === intval( $status ) ) {
+		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
 			$subject = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
 			$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
 			$message = $settings->ur_get_awaiting_admin_approval_email();
