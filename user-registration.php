@@ -194,6 +194,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
 
+			include_once UR_ABSPATH . 'includes/RestApi/class-ur-rest-api.php';
+
 			/**
 			 * Config classes.
 			 */

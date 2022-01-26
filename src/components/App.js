@@ -1,55 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
+import apiFetch from "@wordpress/api-fetch";
 
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
-import GeneralSettings from "./screens/GeneralSettings";
-import RegistrationSettings from "./screens/RegistrationSettings";
 import LoginSettings from "./screens/LoginSettings";
+import RegistrationSettings from "./screens/RegistrationSettings";
+import GeneralSettings from "./screens/GeneralSettings";
 import MyAccountSettings from "./screens/MyAccountSettings";
 import LastPage from "./screens/LastPage";
 
 function App () {
     const [steps, setSteps] = useState([
         {
-            key: "firstStep",
+            key: "install_pages",
             label: "Install Pages",
             isDone: true,
             component: <InstallPage />
         },
         {
-            key: "secondStep",
+            key: "general_settings",
             label: "General",
             isDone: false,
             component: <GeneralSettings />
         },
         {
-            key: "thirdStep",
+            key: "registration_settings",
             label: "Registration",
             isDone: false,
             component: <RegistrationSettings />
         },
         {
-            key: "fourthStep",
+            key: "login_settings",
             label: "Login",
             isDone: false,
             component: <LoginSettings />
         },
         {
-            key: "fifthStep",
+            key: "my_account_settings",
             label: "My Account",
             isDone: false,
             component: <MyAccountSettings />
         },
         {
-            key: "finalStep",
+            key: "final_step",
             label: "Final Step",
             isDone: false,
             component: <LastPage />
         }
     ]);
     const [activeStep, setActiveStep] = useState(steps[0]);
+
+    useEffect(() => {
+        apiFetch({
+            path: "/wp-json/user-registration/v1/getting-started"
+        }).then((settings) => {
+            const newStepsRef = steps.map((step) => {
+                step.sectionSettings = settings[step.key] ?
+                    settings[step.key] :
+                    {};
+
+                return { ...step };
+            });
+
+            setSteps(newStepsRef);
+        });
+    }, [activeStep]);
 
     /**
 	 * Progress to next item on menu when next button is clicked.
@@ -85,11 +102,14 @@ function App () {
         );
         setActiveStep(steps[index - 1]);
     };
+
     return (
         <ChakraProvider>
             <Header steps={steps} activeStep={activeStep} />
             <div className="user-registration-setup-wizard__body">
-                {activeStep.component}
+                {cloneElement(activeStep.component, {
+                    sectionSettings: activeStep.sectionSettings
+                })}
             </div>
             <div className="user-registration-setup-wizard__footer">
                 <Button
