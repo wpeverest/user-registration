@@ -213,11 +213,17 @@ class UR_User_Approval {
 					break;
 				case UR_Admin_User_Manager::PENDING:
 					$user_email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
-					if( ur_string_to_bool( $user_email_status ) ){
+					if ( ur_string_to_bool( $user_email_status ) ) {
 						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
 						return new WP_Error( 'pending_approval', $message );
-					}else{
-						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+					} else {
+						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME'];
+
+						if ( get_option( 'ur_login_ajax_submission' ) ) {
+							$url .= $_SERVER['HTTP_REFERER'];
+						} else {
+							$url .= $_SERVER['REQUEST_URI'];
+						}
 						$url      = substr( $url, 0, strpos( $url, '?' ) );
 						$instance = new UR_Email_Confirmation();
 						$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );

@@ -119,6 +119,7 @@ module.exports = function (grunt) {
 		sass: {
 			options: {
 				sourceMap: false,
+				implementation: require("node-sass"),
 			},
 			compile: {
 				files: [
@@ -232,6 +233,8 @@ module.exports = function (grunt) {
 					"!*.zip",
 					"!.*/**",
 					"!sass/**",
+					"!vendor/**",
+					"!tests",
 					"!vendor/**",
 					"!Gruntfile.js",
 					"!package.json",
