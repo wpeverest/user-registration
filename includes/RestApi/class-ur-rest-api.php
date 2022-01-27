@@ -65,14 +65,14 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable users to register', 'user-registration' ),
 						'id'       => 'users_can_register',
 						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'default'  => true,
 					),
 					array(
 						'title'    => __( 'User login option', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_login_options',
 						'type'     => 'select',
-						'default'  => 'default',
+						'default'  => 0,
 						'options'  => ur_login_option(),
 					),
 					array(
@@ -80,7 +80,7 @@ class UR_REST_API {
 						'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
 						'id'       => 'user_registration_general_setting_disabled_user_roles',
 						'type'     => 'multiselect',
-						'default'  => array( 'subscriber' ),
+						'default'  => array_search( 'subscriber', array_keys( $all_roles_except_admin ) ),
 						'options'  => $all_roles_except_admin,
 					),
 				)
@@ -93,7 +93,7 @@ class UR_REST_API {
 						'desc'               => __( 'Choose form template to use.', 'user-registration' ),
 						'id'                => 'user_registration_form_template',
 						'type'              => 'select',
-						'default'           => array('Default'),
+						'default'           => 0,
 						'options'           => array(
 							'Default'      => __( 'Default', 'user-registration' ),
 							'Bordered'     => __( 'Bordered', 'user-registration' ),
@@ -107,14 +107,14 @@ class UR_REST_API {
 						'desc'               => __( 'Make strong password compulsary.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_enable_strong_password',
 						'type'              => 'checkbox',
-						'default'           => 'yes',
+						'default'           => true,
 					),
 					array(
 						'title'             => __( 'Minimum Password Strength', 'user-registration' ),
 						'desc'               => __( 'Set minimum required password strength.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_minimum_password_strength',
 						'type'              => 'select',
-						'default'           => '3',
+						'default'           => 3,
 						'options'           => array(
 							'0' => __( 'Very Weak', 'user-registration' ),
 							'1' => __( 'Weak', 'user-registration' ),
@@ -127,7 +127,7 @@ class UR_REST_API {
 						'desc'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_default_user_role',
 						'type'              => 'select',
-						'default'           => array( 'subscriber' ),
+						'default'           => array_search( 'subscriber', array_keys( $all_roles ) ),
 						'options'           => $all_roles,
 					),
 				)
@@ -140,7 +140,7 @@ class UR_REST_API {
 						'desc'     => __( 'Choose the login form template.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_form_template',
 						'type'     => 'select',
-						'default'  => 'default',
+						'default'  => 0,
 						'options'  => array(
 							'default'      => __( 'Default', 'user-registration' ),
 							'bordered'     => __( 'Bordered', 'user-registration' ),
@@ -154,14 +154,14 @@ class UR_REST_API {
 						'desc' => __( 'Check to enable/disable lost password.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_lost_password',
 						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'default'  => true,
 					),
 					array(
 						'title'    => __( 'Enable remember me', 'user-registration' ),
 						'desc' => __( 'Check to enable/disable remember me.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_remember_me',
 						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'default'  => true,
 					),
 
 					array(
@@ -169,7 +169,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 						'id'       => 'user_registration_login_option_hide_show_password',
 						'type'     => 'checkbox',
-						'default'  => 'no',
+						'default'  => false,
 					),
 				),
 			),
@@ -181,7 +181,7 @@ class UR_REST_API {
 						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
 						'id'       => 'user_registration_my_account_layout',
 						'type'     => 'select',
-						'default'  => 'horizontal',
+						'default'  => 0,
 						'options'  => array(
 							'horizontal' => __( 'Horizontal', 'user-registration' ),
 							'vertical'   => __( 'Vertical', 'user-registration' ),
@@ -192,7 +192,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 						'id'       => 'user_registration_disable_profile_picture',
 						'type'     => 'checkbox',
-						'default'  => 'no',
+						'default'  => false,
 					),
 				)
 			)

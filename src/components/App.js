@@ -2,6 +2,8 @@ import React, { useState, useEffect, cloneElement } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
+import { StateProvider } from "../context/StateProvider";
+import reducer, { initialState } from "../context/gettingStartedContext";
 
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
@@ -66,7 +68,7 @@ function App () {
 
             setSteps(newStepsRef);
         });
-    }, [activeStep]);
+    }, []);
 
     /**
 	 * Progress to next item on menu when next button is clicked.
@@ -104,30 +106,34 @@ function App () {
     };
 
     return (
-        <ChakraProvider>
-            <Header steps={steps} activeStep={activeStep} />
-            <div className="user-registration-setup-wizard__body">
-                {cloneElement(activeStep.component, {
-                    sectionSettings: activeStep.sectionSettings
-                })}
-            </div>
-            <div className="user-registration-setup-wizard__footer">
-                <Button
-                    colorScheme="gray"
-                    onClick={handleBack}
-                    disabled={steps[0].key === activeStep.key}
-                >
-					Back
-                </Button>
-                <Button
-                    colorScheme="blue"
-                    disabled={steps[steps.length - 1].key === activeStep.key}
-                    onClick={handleNext}
-                >
-					Next
-                </Button>
-            </div>
-        </ChakraProvider>
+        <StateProvider initialState={initialState} reducer={reducer}>
+            <ChakraProvider>
+                <Header steps={steps} activeStep={activeStep} />
+                <div className="user-registration-setup-wizard__body">
+                    {cloneElement(activeStep.component, {
+                        sectionSettings: activeStep.sectionSettings
+                    })}
+                </div>
+                <div className="user-registration-setup-wizard__footer">
+                    <Button
+                        colorScheme="gray"
+                        onClick={handleBack}
+                        disabled={steps[0].key === activeStep.key}
+                    >
+						Back
+                    </Button>
+                    <Button
+                        colorScheme="blue"
+                        disabled={
+                            steps[steps.length - 1].key === activeStep.key
+                        }
+                        onClick={handleNext}
+                    >
+						Next
+                    </Button>
+                </div>
+            </ChakraProvider>
+        </StateProvider>
     );
 }
 
