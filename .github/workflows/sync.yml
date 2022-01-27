@@ -16,4 +16,4 @@ jobs:
           GH_PAT: ${{ secrets.REPO_SYNC }}
           COMMIT_BODY: "Update: Sync changes from main repository"
           ASSIGNEES: iamprazol
-          CONFIG_PATH: .github/workflows/sync-file-list.yml
+          CONFIG_PATH: .github/sync-file-list.yml

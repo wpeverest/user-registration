@@ -234,6 +234,8 @@ module.exports = function (grunt) {
 					"!.*/**",
 					"!sass/**",
 					"!vendor/**",
+					"!tests",
+					"!vendor/**",
 					"!Gruntfile.js",
 					"!package.json",
 					"!composer.json",
