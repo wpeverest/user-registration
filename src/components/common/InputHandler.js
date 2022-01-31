@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Checkbox, FormLabel } from "@chakra-ui/react";
+import { Flex, Switch, FormLabel } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
 import { useStateValue } from "../../context/StateProvider";
@@ -73,7 +73,7 @@ function InputHandler ({ setting }) {
         switch (setting.type) {
             case "checkbox":
                 return (
-                    <Checkbox
+                    <Switch
                         flex={"0 0 40%"}
                         className="user-registration-setup-wizard__body--checkbox"
                         name={setting.id}
@@ -81,9 +81,8 @@ function InputHandler ({ setting }) {
                         onChange={(e) =>
                             handleInputChange(setting.type, setting.id, e)
                         }
-                        isChecked={
-                            settings[setting.id] ? true : setting.default
-                        }
+                        isChecked={!!settings[setting.id]}
+                        defaultChecked={setting.default}
                     />
                 );
             case "select":
@@ -123,7 +122,9 @@ function InputHandler ({ setting }) {
     };
     return (
         <Flex justify={"space-between"} align="center">
-            <FormLabel sx={{ fontWeight: "bold" }}>{setting.title}</FormLabel>
+            <FormLabel sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                {setting.title}
+            </FormLabel>
             {renderElement()}
         </Flex>
     );

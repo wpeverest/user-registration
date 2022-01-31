@@ -1,13 +1,5 @@
 import React from "react";
-import {
-    Flex,
-    Button,
-    Heading,
-    Text,
-    OrderedList,
-    Box,
-    Checkbox
-} from "@chakra-ui/react";
+import { Flex, Heading, Text, Box, Checkbox } from "@chakra-ui/react";
 
 const InstallPage = () => {
     return (
