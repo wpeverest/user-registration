@@ -146,23 +146,31 @@ function App () {
                 })}
             </div>
             <div className="user-registration-setup-wizard__footer">
-                <Button
-                    colorScheme="gray"
-                    onClick={handleBack}
-                    disabled={steps[0].key === activeStep.key}
-                >
-					Back
-                </Button>
-                <Button colorScheme="gray" onClick={handleSkip}>
-					Skip
-                </Button>
-                <Button
-                    colorScheme="blue"
-                    disabled={steps[steps.length - 1].key === activeStep.key}
-                    onClick={handleNext}
-                >
-					Next
-                </Button>
+                <div className="user-registration-setup-wizard__footer--left">
+                    <Button
+                        colorScheme="gray"
+                        onClick={handleBack}
+                        disabled={steps[0].key === activeStep.key}
+                    >
+						Back
+                    </Button>
+                </div>
+                <div className="user-registration-setup-wizard__footer--right">
+                    {activeStep.key !== "install_pages" && (
+                        <Button colorScheme="gray" onClick={handleSkip}>
+							Skip
+                        </Button>
+                    )}
+                    <Button
+                        colorScheme="blue"
+                        disabled={
+                            steps[steps.length - 1].key === activeStep.key
+                        }
+                        onClick={handleNext}
+                    >
+						Next
+                    </Button>
+                </div>
             </div>
         </ChakraProvider>
     );
