@@ -39,6 +39,23 @@ class UR_REST_API {
 			'methods' => 'GET',
 			'callback' => array( __CLASS__, 'ur_get_getting_started_settings' )
 		) );
+		register_rest_route( 'user-registration/v1', 'getting-started/save', array(
+			'methods' => 'POST',
+			'callback' => array( __CLASS__, 'ur_save_getting_started_settings' )
+		) );
+	}
+
+	/**
+	 * Save settings for getting started page.
+	 *
+	 * @since 2.1.4
+	 *
+	 * @return array settings.
+	 */
+	public static function ur_save_getting_started_settings($request) {
+		foreach ($request['settings'] as $option => $value) {
+			update_option( $option, $value );
+		}
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Flex, Checkbox, FormLabel } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
@@ -20,7 +20,6 @@ function InputHandler ({ setting }) {
                         typeof settings[setting.id] !== "string" &&
 						Object.values(settings[setting.id]).includes(key)
                     ) {
-                        console.log(settings);
                         newSelectedOptionRef.push(value);
                     } else {
                         newSelectedOptionRef =
@@ -66,6 +65,8 @@ function InputHandler ({ setting }) {
             type: actionTypes.GET_SETTINGS,
             settings: newChangedValueRef
         });
+
+        console.log(settings);
     };
 
     const renderElement = () => {

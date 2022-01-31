@@ -1,9 +1,7 @@
 import React, { useState, useEffect, cloneElement } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
-import { StateProvider } from "../context/StateProvider";
-import reducer, { initialState } from "../context/gettingStartedContext";
 
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
@@ -12,8 +10,12 @@ import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
 import MyAccountSettings from "./screens/MyAccountSettings";
 import LastPage from "./screens/LastPage";
+import { useStateValue } from "../context/StateProvider";
+import { actionTypes } from "../context/gettingStartedContext";
 
 function App () {
+    const [{ settings }, dispatch] = useStateValue();
+
     const [steps, setSteps] = useState([
         {
             key: "install_pages",
@@ -57,16 +59,27 @@ function App () {
     useEffect(() => {
         apiFetch({
             path: "/wp-json/user-registration/v1/getting-started"
-        }).then((settings) => {
+        }).then((data) => {
             const newStepsRef = steps.map((step) => {
-                step.sectionSettings = settings[step.key] ?
-                    settings[step.key] :
-                    {};
+                step.sectionSettings = data[step.key] ? data[step.key] : {};
 
                 return { ...step };
             });
 
+            const newSettingsRef = {};
+            Object.keys(data).map((key) => {
+                var sectionSettings = data[key].settings;
+                sectionSettings.map((individualSettings) => {
+                    newSettingsRef[individualSettings.id] =
+						individualSettings.default;
+                });
+            });
             setSteps(newStepsRef);
+
+            dispatch({
+                type: actionTypes.GET_SETTINGS,
+                settings: newSettingsRef
+            });
         });
     }, []);
 
@@ -74,9 +87,15 @@ function App () {
 	 * Progress to next item on menu when next button is clicked.
 	 */
     const handleNext = () => {
-        if (steps[steps.length - 1].key === activeStep.key) {
-            alert("You have completed all steps.");
-            return;
+        if (steps[steps.length - 2].key === activeStep.key) {
+            // POST
+            apiFetch({
+                path: "/wp-json/user-registration/v1/getting-started/save",
+                method: "POST",
+                data: { settings: settings }
+            }).then((res) => {
+                console.log(res);
+            });
         }
 
         const index = steps.findIndex((step) => step.key === activeStep.key);
@@ -105,35 +124,47 @@ function App () {
         setActiveStep(steps[index - 1]);
     };
 
+    const handleSkip = () => {
+        const newSettingsRef = { ...settings };
+        activeStep.sectionSettings.settings.map((individualSettings) => {
+            delete newSettingsRef[individualSettings.id];
+        });
+
+        dispatch({
+            type: actionTypes.GET_SETTINGS,
+            settings: newSettingsRef
+        });
+        handleNext();
+    };
+
     return (
-        <StateProvider initialState={initialState} reducer={reducer}>
-            <ChakraProvider>
-                <Header steps={steps} activeStep={activeStep} />
-                <div className="user-registration-setup-wizard__body">
-                    {cloneElement(activeStep.component, {
-                        sectionSettings: activeStep.sectionSettings
-                    })}
-                </div>
-                <div className="user-registration-setup-wizard__footer">
-                    <Button
-                        colorScheme="gray"
-                        onClick={handleBack}
-                        disabled={steps[0].key === activeStep.key}
-                    >
-						Back
-                    </Button>
-                    <Button
-                        colorScheme="blue"
-                        disabled={
-                            steps[steps.length - 1].key === activeStep.key
-                        }
-                        onClick={handleNext}
-                    >
-						Next
-                    </Button>
-                </div>
-            </ChakraProvider>
-        </StateProvider>
+        <ChakraProvider>
+            <Header steps={steps} activeStep={activeStep} />
+            <div className="user-registration-setup-wizard__body">
+                {cloneElement(activeStep.component, {
+                    sectionSettings: activeStep.sectionSettings
+                })}
+            </div>
+            <div className="user-registration-setup-wizard__footer">
+                <Button
+                    colorScheme="gray"
+                    onClick={handleBack}
+                    disabled={steps[0].key === activeStep.key}
+                >
+					Back
+                </Button>
+                <Button colorScheme="gray" onClick={handleSkip}>
+					Skip
+                </Button>
+                <Button
+                    colorScheme="blue"
+                    disabled={steps[steps.length - 1].key === activeStep.key}
+                    onClick={handleNext}
+                >
+					Next
+                </Button>
+            </div>
+        </ChakraProvider>
     );
 }
 
