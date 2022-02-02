@@ -362,7 +362,7 @@
 			flex-direction: row;
 			justify-content: space-between;
 			background-color: $white;
-			padding: 20px;
+			padding: 20px 40px;
 
 			&--left,
 			&--right {
@@ -372,10 +372,6 @@
 
 			&--right{
 				justify-content: flex-end;
-
-				.chakra-button {
-					margin-left: 10px;
-				}
 			}
 
 		}

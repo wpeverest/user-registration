@@ -147,29 +147,66 @@ function App () {
             </div>
             <div className="user-registration-setup-wizard__footer">
                 <div className="user-registration-setup-wizard__footer--left">
-                    <Button
-                        colorScheme="gray"
-                        onClick={handleBack}
-                        disabled={steps[0].key === activeStep.key}
-                    >
-						Back
-                    </Button>
+                    {steps[steps.length - 1].key === activeStep.key ||
+					steps[0].key === activeStep.key ? (
+                            <Button
+                                variant="outline"
+                                colorScheme="blue"
+                                onClick={handleBack}
+                            >
+							Go To Dashboard
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="outline"
+                                colorScheme="blue"
+                                onClick={handleBack}
+                            >
+							Back
+                            </Button>
+                        )}
                 </div>
                 <div className="user-registration-setup-wizard__footer--right">
-                    {activeStep.key !== "install_pages" && (
-                        <Button colorScheme="gray" onClick={handleSkip}>
-							Skip
-                        </Button>
+                    {steps[steps.length - 1].key === activeStep.key ? (
+                        <React.Fragment>
+                            <Button
+                                variant="link"
+                                colorScheme="blue"
+                                onClick={handleSkip}
+                                mr={10}
+                                ml={10}
+                            >
+								Edit Default Form
+                            </Button>
+                            <Button colorScheme="blue" onClick={handleNext}>
+								Create New Form
+                            </Button>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            {steps[0].key !== activeStep.key && (
+                                <Button
+                                    variant="link"
+                                    colorScheme="blue"
+                                    onClick={handleSkip}
+                                    mr={10}
+                                    ml={10}
+                                >
+									Skip
+                                </Button>
+                            )}
+                            <Button
+                                colorScheme="blue"
+                                disabled={
+                                    steps[steps.length - 1].key ===
+									activeStep.key
+                                }
+                                onClick={handleNext}
+                            >
+								Next
+                            </Button>
+                        </React.Fragment>
                     )}
-                    <Button
-                        colorScheme="blue"
-                        disabled={
-                            steps[steps.length - 1].key === activeStep.key
-                        }
-                        onClick={handleNext}
-                    >
-						Next
-                    </Button>
                 </div>
             </div>
         </ChakraProvider>
