@@ -148,14 +148,14 @@ class UR_REST_API {
 						'title'             => __( 'Form Template', 'user-registration' ),
 						'desc'               => __( 'Choose form template to use.', 'user-registration' ),
 						'id'                => 'user_registration_form_template',
-						'type'              => 'select',
+						'type'              => 'radio',
 						'default'           => 0,
 						'options'           => array(
-							'Default'      => __( 'Default', 'user-registration' ),
-							'Bordered'     => __( 'Bordered', 'user-registration' ),
-							'Flat'         => __( 'Flat', 'user-registration' ),
-							'Rounded'      => __( 'Rounded', 'user-registration' ),
-							'Rounded Edge' => __( 'Rounded Edge', 'user-registration' ),
+							'default'      => __( 'Default', 'user-registration' ),
+							'bordered'     => __( 'Bordered', 'user-registration' ),
+							'flat'         => __( 'Flat', 'user-registration' ),
+							'rounded'      => __( 'Rounded', 'user-registration' ),
+							'rounded_edge' => __( 'Rounded Edge', 'user-registration' ),
 						),
 					),
 					array(
@@ -195,7 +195,7 @@ class UR_REST_API {
 						'title'    => __( 'Form Template', 'user-registration' ),
 						'desc'     => __( 'Choose the login form template.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_form_template',
-						'type'     => 'select',
+						'type'     => 'radio',
 						'default'  => 0,
 						'options'  => array(
 							'default'      => __( 'Default', 'user-registration' ),
@@ -236,7 +236,7 @@ class UR_REST_API {
 						'title'    => __( 'My Account Page Layout', 'user-registration' ),
 						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
 						'id'       => 'user_registration_my_account_layout',
-						'type'     => 'select',
+						'type'     => 'radio',
 						'default'  => 0,
 						'options'  => array(
 							'horizontal' => __( 'Horizontal', 'user-registration' ),

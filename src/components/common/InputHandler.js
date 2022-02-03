@@ -1,5 +1,15 @@
 import React from "react";
-import { Flex, Switch, FormLabel } from "@chakra-ui/react";
+import {
+    Flex,
+    Switch,
+    FormLabel,
+    Box,
+    Text,
+    Tooltip,
+    useRadio,
+    useRadioGroup,
+    HStack
+} from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
 import { useStateValue } from "../../context/StateProvider";
@@ -45,6 +55,41 @@ function InputHandler ({ setting }) {
         return newOptionsRef;
     };
 
+    const RadioCard = (props) => {
+        const { radioProps, label } = props;
+        const { state, getInputProps, getCheckboxProps } = useRadio(radioProps);
+
+        const input = getInputProps();
+        const checkbox = getCheckboxProps();
+
+        return (
+            <Box as="label">
+                <input {...input} />
+                <Box
+                    {...checkbox}
+                    cursor="pointer"
+                    borderWidth="1px"
+                    borderRadius="md"
+                    boxShadow="md"
+                    _checked={{
+                        bg: "#F5F7FF",
+                        color: "#475BB2",
+                        borderColor: "#475BB2"
+                    }}
+                    _focus={{
+                        boxShadow: "outline"
+                    }}
+                    px={5}
+                    py={3}
+                >
+                    <Text fontSize="18px" color={state.isChecked && "#818181"}>
+                        {label}
+                    </Text>
+                </Box>
+            </Box>
+        );
+    };
+
     const handleInputChange = (fieldType, fieldIdentifier, event) => {
         const newChangedValueRef = { ...settings };
 
@@ -52,6 +97,8 @@ function InputHandler ({ setting }) {
             newChangedValueRef[fieldIdentifier] = event.target.checked;
         } else if (fieldType === "select") {
             newChangedValueRef[fieldIdentifier] = event.value;
+        } else if (fieldType === "radio") {
+            newChangedValueRef[fieldIdentifier] = event;
         } else {
             const multiselectValue = [];
             event.map((eve) => {
@@ -65,8 +112,6 @@ function InputHandler ({ setting }) {
             type: actionTypes.GET_SETTINGS,
             settings: newChangedValueRef
         });
-
-        console.log(settings);
     };
 
     const renderElement = () => {
@@ -118,13 +163,46 @@ function InputHandler ({ setting }) {
                         defaultValue={defaultSelectedOption}
                     />
                 );
+
+            case "radio":
+                const { getRootProps, getRadioProps } = useRadioGroup({
+                    name: setting.id,
+                    defaultValue: settings[setting.id] ?
+                        settings[setting.id].toString() :
+                        setting.default.toString(),
+                    onChange: (data) => {
+                        handleInputChange(setting.type, setting.id, data);
+                    }
+                });
+                const group = getRootProps();
+
+                return (
+                    <HStack {...group}>
+                        {Object.keys(setting.options).map((value, key) => {
+                            return (
+                                <RadioCard
+                                    key={value}
+                                    radioProps={getRadioProps({
+                                        value: key.toString()
+                                    })}
+                                    label={setting.options[value]}
+                                />
+                            );
+                        })}
+                    </HStack>
+                );
         }
     };
     return (
         <Flex justify={"space-between"} align="center">
-            <FormLabel sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                {setting.title}
-            </FormLabel>
+            <Flex align="center">
+                <FormLabel sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    {setting.title}
+                </FormLabel>
+                <Tooltip label={setting.desc} hasArrow fontSize="xs">
+                    <span className="dashicons dashicons-editor-help" />
+                </Tooltip>
+            </Flex>
             {renderElement()}
         </Flex>
     );

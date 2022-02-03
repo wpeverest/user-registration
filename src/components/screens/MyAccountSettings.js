@@ -17,9 +17,10 @@ const MyAccountSettings = ({ sectionSettings }) => {
 				Customize your my account settings as per your preference.
             </Text>
             <Stack direction="column" spacing="8" mt={5}>
-                {sectionSettings.settings.map((setting, key) => (
-                    <InputHandler key={key} setting={setting} />
-                ))}
+                {sectionSettings &&
+					sectionSettings.settings.map((setting, key) => (
+					    <InputHandler key={key} setting={setting} />
+					))}
             </Stack>
         </Flex>
     );
