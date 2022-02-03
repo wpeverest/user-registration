@@ -14,7 +14,8 @@ import { useStateValue } from "../context/StateProvider";
 import { actionTypes } from "../context/gettingStartedContext";
 
 function App () {
-    const [{ settings }, dispatch] = useStateValue();
+    const [{ settings, installPage }, dispatch] = useStateValue();
+    const [initiateInstall, setInitiateInstall] = useState(false);
 
     const [steps, setSteps] = useState([
         {
@@ -87,17 +88,6 @@ function App () {
 	 * Progress to next item on menu when next button is clicked.
 	 */
     const handleNext = () => {
-        if (steps[steps.length - 2].key === activeStep.key) {
-            // POST
-            apiFetch({
-                path: "/wp-json/user-registration/v1/getting-started/save",
-                method: "POST",
-                data: { settings: settings }
-            }).then((res) => {
-                console.log(res);
-            });
-        }
-
         const index = steps.findIndex((step) => step.key === activeStep.key);
         setSteps((prevStep) =>
             prevStep.map((step) => {
@@ -137,6 +127,67 @@ function App () {
         handleNext();
     };
 
+    /**
+	 * Install Pages in backend when Install Pages button is clicked.
+	 */
+    const handleInstallPages = () => {
+        setInitiateInstall(true);
+        // POST
+        apiFetch({
+            path: "/wp-json/user-registration/v1/getting-started/install-pages",
+            method: "POST",
+            data: {}
+        }).then((res) => {
+            if (res.success) {
+                let newInstallPageRef = { ...installPage };
+                newInstallPageRef.registration_page.status = "installing";
+                newInstallPageRef.registration_page.slug =
+					"/" + res.data.page_slug[0];
+
+                dispatch({
+                    type: actionTypes.GET_INSTALL_PAGE,
+                    installPage: newInstallPageRef
+                });
+
+                new Promise(function (resolve, reject) {
+                    setTimeout(resolve, 5000);
+                }).then(function () {
+                    newInstallPageRef.registration_page.status = "installed";
+                    newInstallPageRef.my_account_page.status = "installing";
+                    newInstallPageRef.my_account_page.slug =
+						"/" + res.data.page_slug[1];
+
+                    dispatch({
+                        type: actionTypes.GET_INSTALL_PAGE,
+                        installPage: newInstallPageRef
+                    });
+
+                    new Promise(function (resolve, reject) {
+                        setTimeout(resolve, 5000);
+                    }).then(function () {
+                        newInstallPageRef.my_account_page.status = "installed";
+
+                        dispatch({
+                            type: actionTypes.GET_INSTALL_PAGE,
+                            installPage: newInstallPageRef
+                        });
+                    });
+                });
+            }
+        });
+    };
+
+    const handleSaveSettings = () => {
+        // POST
+        apiFetch({
+            path: "/wp-json/user-registration/v1/getting-started/save",
+            method: "POST",
+            data: { settings: settings }
+        }).then((res) => {
+            console.log(res);
+        });
+    };
+
     return (
         <ChakraProvider>
             <Header steps={steps} activeStep={activeStep} />
@@ -152,7 +203,7 @@ function App () {
                             <Button
                                 variant="outline"
                                 colorScheme="blue"
-                                onClick={handleBack}
+                                onClick={handleSaveSettings}
                             >
 							Go To Dashboard
                             </Button>
@@ -172,13 +223,16 @@ function App () {
                             <Button
                                 variant="link"
                                 colorScheme="blue"
-                                onClick={handleSkip}
+                                onClick={handleSaveSettings}
                                 mr={10}
                                 ml={10}
                             >
 								Edit Default Form
                             </Button>
-                            <Button colorScheme="blue" onClick={handleNext}>
+                            <Button
+                                colorScheme="blue"
+                                onClick={handleSaveSettings}
+                            >
 								Create New Form
                             </Button>
                         </React.Fragment>
@@ -195,16 +249,28 @@ function App () {
 									Skip
                                 </Button>
                             )}
-                            <Button
-                                colorScheme="blue"
-                                disabled={
-                                    steps[steps.length - 1].key ===
-									activeStep.key
-                                }
-                                onClick={handleNext}
-                            >
-								Next
-                            </Button>
+                            {steps[0].key === activeStep.key &&
+							installPage.my_account_page.status !==
+								"installed" ? (
+                                    <Button
+                                        colorScheme="blue"
+                                        disabled={initiateInstall}
+                                        onClick={handleInstallPages}
+                                    >
+									Install & Proceed
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        colorScheme="blue"
+                                        disabled={
+                                            steps[steps.length - 1].key ===
+										activeStep.key
+                                        }
+                                        onClick={handleNext}
+                                    >
+									Next
+                                    </Button>
+                                )}
                         </React.Fragment>
                     )}
                 </div>

@@ -43,6 +43,10 @@ class UR_REST_API {
 			'methods' => 'POST',
 			'callback' => array( __CLASS__, 'ur_save_getting_started_settings' )
 		) );
+		register_rest_route( 'user-registration/v1', 'getting-started/install-pages', array(
+			'methods' => 'POST',
+			'callback' => array( __CLASS__, 'ur_getting_started_install_pages' )
+		) );
 	}
 
 	/**
@@ -56,6 +60,41 @@ class UR_REST_API {
 		foreach ($request['settings'] as $option => $value) {
 			update_option( $option, $value );
 		}
+	}
+
+	/**
+	 * Install default pages when user hits Install & Proceed button in setup wizard.
+	 *
+	 * @since 2.1.4
+	 *
+	 * @return array settings.
+	 */
+	public static function ur_getting_started_install_pages($request) {
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$pages = apply_filters('user_registration_create_pages', array() );
+
+		if ( $default_form_page_id = get_option( 'user_registration_default_form_page_id' ) ) {
+			$pages['registration'] = array(
+				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
+				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+			);
+		}
+
+		$pages['myaccount'] = array(
+			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+		);
+
+		$page_slug = array();
+		foreach ( $pages as $key => $page ) {
+			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+			array_push( $page_slug , get_post_field( 'post_name', $post_id ) );
+		}
+
+		wp_send_json_success(array( 'page_slug' => $page_slug));
 	}
 
 	/**

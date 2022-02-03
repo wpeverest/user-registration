@@ -1,9 +1,20 @@
 export const initialState = {
-    settings: {}
+    settings: {},
+    installPage: {
+        registration_page: {
+            status: "not_installed",
+            slug: ""
+        },
+        my_account_page: {
+            status: "not_installed",
+            slug: ""
+        }
+    }
 };
 
 export const actionTypes = {
-    GET_SETTINGS: "GET_SETTINGS"
+    GET_SETTINGS: "GET_SETTINGS",
+    GET_INSTALL_PAGE: "GET_INSTALL_PAGE"
 };
 
 const reducer = (state, action) => {
@@ -12,6 +23,11 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 settings: action.settings
+            };
+        case actionTypes.GET_INSTALL_PAGE:
+            return {
+                ...state,
+                installPage: action.installPage
             };
         default:
             return state;
