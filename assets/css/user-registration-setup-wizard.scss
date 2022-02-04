@@ -28,7 +28,6 @@
 
 #user-registration-welcome {
 
-
 	.user-registration-welcome-card,
 	.user-registration-extensions-card,
 	.user-registration-support-card {
@@ -36,8 +35,59 @@
 		border-radius: 4px;
 		margin: 3rem auto;
 		background: $white;
-		border: 1px solid $color_gray_two;
+		border: 1px solid $white;
 		box-shadow: 0 2px 10px transparentize($gray_base, 0.9);
+	}
+
+	a.button {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 8px 16px;
+		margin: 0px 10px;
+
+		height: 44px;
+		left: 440px;
+		top: 726px;
+
+		border: 1px solid #475BB2;
+		border-radius: 2px;
+		box-sizing: border-box;
+		text-decoration: none;
+
+		&-primary {
+			background: #475BB2;
+			color: $white;
+		}
+
+		&-secondary {
+			background: #F1F4FF;
+			color: #475BB2;
+		}
+
+		&-tertiary {
+			background: whitesmoke;
+			color: #2d3559;
+			border: 1px solid #2d3559;
+		}
+
+		h3 {
+			font-weight: 400;
+		}
+	}
+
+	a.button:hover {
+		filter: brightness(0.85);
+	}
+
+	p {
+		margin-bottom: 1.5em;
+		line-height: 180%;
+		font-size: 16px;
+		text-align: center;
+		color: #212121;
+		margin-top: 0.75em;
 	}
 
 	.user-registration-welcome-card {
@@ -50,11 +100,6 @@
 			}
 		}
 
-		p {
-			font-size: 1.25em;
-			color: $gray_base;
-		}
-
 		.user-registration-welcome-header {
 			display: flex;
 			align-items: center;
@@ -63,87 +108,85 @@
 			border-bottom: 1px solid $color_gray_two;
 		}
 
-		.user-registration-welcome-header__logo-wrap {
-			display: flex;
-			align-items: center;
-
-			.user-registration-welcome-header__logo-icon {
-				margin-right: 16px;
-				padding-right: 16px;
-				border-right: 1px solid $color_gray_two;
-
-				img {
-					display: block;
-					fill: $primary_color;
-					width: 24px;
-					height: 24px;
-				}
-			}
-
-			span {
-				font-size: 14px;
-				font-weight: 600;
-			}
-		}
-
 		.user-registration-welcome-container {
 			text-align: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 
 			.user-registration-welcome-container__header {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 				padding: 0 1em;
 
 				h2 {
-					font-size: 1.75em;
-					margin-top: 1.75em;
+					font-size: 24px;
+					line-height: 130%;
+					color: #475BB2;
+					font-weight: 600;
+					margin-top: 1em;
 				}
 
-				p {
-					margin-bottom: 1.5em;
+				img {
+					margin-top: 1.75em;
+					fill: $primary_color;
+					height: 70px;
 				}
 			}
 
 			.user-registration-welcome-video {
-				cursor: pointer;
 				display: flex;
-				position: relative;
-				align-items: center;
 				justify-content: center;
+				background: #FFFFFF;
+				border: 1px solid #DDE3FF;
+				box-sizing: border-box;
+				box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.05);
+				border-radius: 2px;
 
-				.user-registration-welcome-video__button {
-					border: none;
+				a.welcome-video-play{
 					cursor: pointer;
-					font-size: 24px;
-					height: 40px;
-					width: 54px;
-					border-radius: 12px;
-					padding: 8px 15px;
-					position: absolute;
-					color: $white;
-					opacity: 0;
-					visibility: hidden;
-					transition: 0.25s ease;
-					background: transparentize($gray_base, 0.25);
+					align-items: center;
 
-					svg {
-						height: 24px;
-						width: 224px;
-					}
+					.user-registration-welcome-video__button {
+						border: none;
+						cursor: pointer;
+						font-size: 24px;
+						height: 40px;
+						width: 54px;
+						border-radius: 12px;
+						padding: 8px 15px;
+						position: absolute;
+						color: $white;
+						opacity: 0;
+						visibility: hidden;
+						transition: 0.25s ease;
+						background: transparentize($gray_base, 0.25);
 
-					&:hover {
-						background: $red;
-						visibility: visible;
-						opacity: 1;
-					}
-				}
+						svg {
+							height: 24px;
+							width: 224px;
+						}
 
-				img {
-					display: block;
-					max-width: 100%;
-
-					&:hover {
-						& + .user-registration-welcome-video__button {
+						&:hover {
+							background: $red;
 							visibility: visible;
 							opacity: 1;
+						}
+					}
+
+					img {
+						display: block;
+						max-width: 100%;
+						border: 1px solid #DDE3FF;
+						width: 540px;
+						height: 300px;
+
+						&:hover {
+							& + .user-registration-welcome-video__button {
+								visibility: visible;
+								opacity: 1;
+							}
 						}
 					}
 				}
@@ -177,9 +220,6 @@
 							margin-bottom: 0.5em;
 						}
 
-						p {
-							margin-top: 0.5em;
-						}
 					}
 
 					&:hover {
@@ -200,10 +240,11 @@
 			h2 {
 				font-size: 1.75em;
 				margin-top: 1.75em;
-			}
-
-			p {
-				margin-bottom: 1.5em;
+				margin-bottom: 1em;
+				color: #2D3559;
+				font-size: 24px;
+				line-height: 130%;
+				font-weight: 600;
 			}
 		}
 
@@ -233,11 +274,16 @@
 			h2 {
 				font-size: 1.75em;
 				margin-top: 1.75em;
+				margin-bottom: 1em;
+				color: #2D3559;
+				font-size: 20px;
+				line-height: 130%;
+				font-weight: 600;
 			}
+		}
 
-			p {
-				margin-bottom: 1.5em;
-			}
+		.user-registration-support-container__body {
+			padding: 0 1em;
 		}
 
 		.user-registration-support-container__footer {

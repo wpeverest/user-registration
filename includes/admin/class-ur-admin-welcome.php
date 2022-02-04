@@ -97,34 +97,26 @@ class UR_Admin_Welcome {
 					?>
 					<div id="user-registration-welcome" >
 						<div class="user-registration-welcome-card" >
-							<div class="user-registration-welcome-header">
-								<div class="user-registration-welcome-header__logo-wrap">
-									<div class="user-registration-welcome-header__logo-icon">
-										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
-									</div>
-									<span><?php esc_html_e( 'Getting Started', 'user-registration' ); ?></span>
-								</div>
-								<a class="user-registration-welcome__skip" href="<?php echo esc_url( admin_url() ); ?>">
-									<span class="dashicons dashicons-no-alt"></span>
-								</a>
-							</div>
 							<div class="user-registration-welcome-container">
 								<div class="user-registration-welcome-container__header">
+									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-logo.png' ); ?>" alt="">
 									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
-								<a class="user-registration-welcome-video welcome-video-play">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-feature.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
-									<button class="user-registration-welcome-video__button dashicons dashicons-controls-play"></button>
-								</a>
+								<div class="user-registration-welcome-video">
+									<a class="welcome-video-play">
+										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-feature.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
+										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play"></button>
+									</a>
+								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
 											<h3><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
 									</a>
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-primary">
+									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-secondary">
 											<h3><?php esc_html_e( 'Create a First Form', 'user-registration' ); ?></h3>
 									</a>
-									<a href="https://docs.wpeverest.com/docs/user-registration/" class="button button-secondary" target="blank">
+									<a href="https://docs.wpeverest.com/docs/user-registration/" class="button button-tertiary" target="blank">
 											<h3><?php esc_html_e( 'Visit Documentation', 'user-registration' ); ?></h3>
 									</a>
 								</div>
@@ -145,7 +137,10 @@ class UR_Admin_Welcome {
 						</div>
 						<div class="user-registration-support-card" >
 							<div class="user-registration-support-container__header">
-								<h2><?php echo wp_kses_post( 'Feeling Lost? </br></br> Contact Our Support Team', 'user-registration' ); ?></h2>
+								<h2><?php echo wp_kses_post( 'Feeling Lost? </br> Contact Our Support Team', 'user-registration' ); ?></h2>
+							</div>
+							<div class="user-registration-support-container__body">
+								<p>Feel free to get in touch with one of our sales representative if you have any queries related to our product.</p>
 							</div>
 							<div class="user-registration-support-container__footer">
 								<a href=<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?> class="button button-secondary" target="blank">

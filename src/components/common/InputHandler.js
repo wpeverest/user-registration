@@ -94,11 +94,15 @@ function InputHandler ({ setting }) {
         const newChangedValueRef = { ...settings };
 
         if (fieldType === "checkbox") {
-            newChangedValueRef[fieldIdentifier] = event.target.checked;
+            newChangedValueRef[fieldIdentifier] = event.target.checked ?
+                "yes" :
+                "no";
         } else if (fieldType === "select") {
             newChangedValueRef[fieldIdentifier] = event.value;
         } else if (fieldType === "radio") {
-            newChangedValueRef[fieldIdentifier] = event;
+            newChangedValueRef[fieldIdentifier] = Object.keys(setting.options)[
+                event
+            ];
         } else {
             const multiselectValue = [];
             event.map((eve) => {
@@ -126,7 +130,7 @@ function InputHandler ({ setting }) {
                         onChange={(e) =>
                             handleInputChange(setting.type, setting.id, e)
                         }
-                        isChecked={!!settings[setting.id]}
+                        isChecked={settings[setting.id] === "yes"}
                         defaultChecked={setting.default}
                     />
                 );
@@ -165,10 +169,17 @@ function InputHandler ({ setting }) {
                 );
 
             case "radio":
+                const reversedOptions = (obj) =>
+                    Object.fromEntries(
+                        Object.entries(obj).map((a) => a.reverse())
+                    );
+
                 const { getRootProps, getRadioProps } = useRadioGroup({
                     name: setting.id,
                     defaultValue: settings[setting.id] ?
-                        settings[setting.id].toString() :
+                        reversedOptions(Object.keys(setting.options))[
+                            settings[setting.id]
+						  ] :
                         setting.default.toString(),
                     onChange: (data) => {
                         handleInputChange(setting.type, setting.id, data);

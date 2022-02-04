@@ -958,7 +958,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', 'subscriber' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', get_option( 'user_registration_form_setting_default_user_role', 'subscriber') ),
 				'tip'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
 			),
 			array(
@@ -970,7 +970,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', 'yes' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ) ),
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
 			array(
@@ -988,7 +988,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 					'3' => __( 'Strong', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', '3' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', get_option( 'user_registration_form_setting_minimum_password_strength', '3' ) ),
 				'tip'               => __( 'Set minimum required password strength.', 'user-registration' ),
 			),
 			array(
@@ -1070,7 +1070,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 					'Rounded Edge' => __( 'Rounded Edge', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', 'default' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', get_option( 'user_registration_form_template', 'default' ) ),
 				'tip'               => __( 'Choose form template to use.', 'user-registration' ),
 			),
 			array(

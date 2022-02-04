@@ -121,7 +121,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable users to register', 'user-registration' ),
 						'id'       => 'users_can_register',
 						'type'     => 'checkbox',
-						'default'  => true,
+						'default'  => "yes",
 					),
 					array(
 						'title'    => __( 'User login option', 'user-registration' ),
@@ -163,7 +163,7 @@ class UR_REST_API {
 						'desc'               => __( 'Make strong password compulsary.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_enable_strong_password',
 						'type'              => 'checkbox',
-						'default'           => true,
+						'default'           => "no",
 					),
 					array(
 						'title'             => __( 'Minimum Password Strength', 'user-registration' ),
@@ -210,14 +210,14 @@ class UR_REST_API {
 						'desc' => __( 'Check to enable/disable lost password.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_lost_password',
 						'type'     => 'checkbox',
-						'default'  => true,
+						'default'  => "yes",
 					),
 					array(
 						'title'    => __( 'Enable remember me', 'user-registration' ),
 						'desc' => __( 'Check to enable/disable remember me.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_remember_me',
 						'type'     => 'checkbox',
-						'default'  => true,
+						'default'  => "yes",
 					),
 
 					array(
@@ -225,7 +225,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 						'id'       => 'user_registration_login_option_hide_show_password',
 						'type'     => 'checkbox',
-						'default'  => false,
+						'default'  => "no",
 					),
 				),
 			),
@@ -248,7 +248,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 						'id'       => 'user_registration_disable_profile_picture',
 						'type'     => 'checkbox',
-						'default'  => false,
+						'default'  => "no",
 					),
 				)
 			)
