@@ -62,10 +62,10 @@ class UR_Frontend_Form_Handler {
 		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
 			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
-			self::validate_form_data( $form_field_data, $form_data, $form_id );
+			self::validate_form_data( $form_id, $form_field_data, $form_data );
 		} else {
 			self::match_password( $form_field_data, $form_data );
-			self::validate_form_data( $form_field_data, $form_data, $form_id );
+			self::validate_form_data( $form_id, $form_field_data, $form_data );
 			self::validate_password_data( $form_field_data, $form_data );
 			$user_pass = wp_slash( self::$valid_form_data['user_pass']->value );
 		}
@@ -171,10 +171,11 @@ class UR_Frontend_Form_Handler {
 	 * Validation from each field's class validation() method.
 	 * Sanitization from get_sanitize_value().
 	 *
+	 * @param int   $form_id Form ID.
 	 * @param  array $form_field_data Form Field Data.
 	 * @param  array $form_data  Form data to validate.
 	 */
-	private static function validate_form_data( $form_field_data = array(), $form_data = array(), $form_id ) {
+	private static function validate_form_data( $form_id, $form_field_data = array(), $form_data = array() ) {
 		$form_data_field     = wp_list_pluck( $form_data, 'field_name' );
 		$form_field_data     = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );
 		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );

@@ -50,7 +50,7 @@ class UR_Shortcode_Login {
 				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					wp_enqueue_script( 'user-registration' );
 				}
-				$recaptcha_node = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+				$recaptcha_node = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
 				ur_get_template(
 					'myaccount/form-login.php',

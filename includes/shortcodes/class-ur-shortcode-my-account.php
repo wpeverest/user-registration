@@ -82,7 +82,7 @@ class UR_Shortcode_My_Account {
 				self::lost_password();
 			} else {
 				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-				$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+				$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 				ob_start();
 
 				ur_get_template(
@@ -105,7 +105,7 @@ class UR_Shortcode_My_Account {
 					ur_get_template(
 						'form-login-registration.php',
 						array(
-							'form_id'			=> $form_id,
+							'form_id'           => $form_id,
 							'registration_form' => $registration_form,
 							'login_form'        => $login_form,
 						)
@@ -235,7 +235,7 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'ur-form-validator' );
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
-			wp_dequeue_script( 'wc-password-strength-meter');
+			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
