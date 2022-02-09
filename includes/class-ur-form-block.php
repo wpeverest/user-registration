@@ -37,13 +37,13 @@ class UR_Form_Block {
 		);
 
 		if ( $pagenow === 'widgets.php' ) {
-			unset( $enqueue_script[array_search( 'wp-editor', $enqueue_script )] );
-	    }
-	    wp_register_script(
-				'user-registration-block-editor',
-				UR()->plugin_url() . '/assets/js/admin/gutenberg/form-block.build.js',
-				$enqueue_script,
-				UR_VERSION
+			unset( $enqueue_script[ array_search( 'wp-editor', $enqueue_script ) ] );
+		}
+		wp_register_script(
+			'user-registration-block-editor',
+			UR()->plugin_url() . '/build/main.js',
+			$enqueue_script,
+			UR_VERSION
 		);
 
 		$form_block_data = array(
@@ -80,13 +80,13 @@ class UR_Form_Block {
 					'formType' => array(
 						'type' => 'string',
 					),
-					'shortcode' =>  array(
+					'shortcode' => array(
 						'type' => 'string',
 					),
-					'redirectUrl' =>  array(
+					'redirectUrl' => array(
 						'type' => 'string',
 					),
-					'logoutUrl' =>  array(
+					'logoutUrl' => array(
 						'type' => 'string',
 					),
 				),
@@ -106,7 +106,7 @@ class UR_Form_Block {
 	function render_callback( $attr ) {
 
 		$formType = ! empty( $attr['formType'] ) ? _sanitize_text_fields( $attr['formType'] ) : 'registration_form';
-		if( 'registration_form' === $formType ){
+		if ( 'registration_form' === $formType ) {
 			$form_id = ! empty( $attr['formId'] ) ? absint( $attr['formId'] ) : 0;
 
 			if ( empty( $form_id ) ) {
@@ -143,7 +143,7 @@ class UR_Form_Block {
 					'id' => $form_id,
 				)
 			);
-		} elseif ( 'login_form' === $formType ){
+		} elseif ( 'login_form' === $formType ) {
 			$shortcode = ! empty( $attr['shortcode'] ) ? _sanitize_text_fields( $attr['shortcode'] ) : '';
 
 			if ( empty( $shortcode ) ) {
@@ -151,19 +151,19 @@ class UR_Form_Block {
 			}
 			$parameters = array();
 
-			if( ! empty( $attr['redirectUrl'] ) ) {
-				$parameters["redirect_url"] = $attr['redirectUrl'];
+			if ( ! empty( $attr['redirectUrl'] ) ) {
+				$parameters['redirect_url'] = $attr['redirectUrl'];
 			}
 
-			if( ! empty( $attr['logoutUrl'] ) ) {
-				$parameters["logout_redirect"] = $attr['logoutUrl'];
+			if ( ! empty( $attr['logoutUrl'] ) ) {
+				$parameters['logout_redirect'] = $attr['logoutUrl'];
 			}
 
-			if('user_registration_login'=== $shortcode ) {
+			if ( 'user_registration_login' === $shortcode ) {
 				return UR_Shortcodes::login(
 					$parameters
 				);
-			}else{
+			} else {
 				return UR_Shortcodes::my_account(
 					$parameters
 				);
