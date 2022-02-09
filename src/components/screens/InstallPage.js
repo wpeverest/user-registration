@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+/**
+ *  Internal Dependencies
+ */
+import React, { useState, useEffect, Fragment } from "react";
 import {
     Flex,
     Heading,
@@ -7,12 +10,20 @@ import {
     Checkbox,
     CircularProgress
 } from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
+
+/**
+ * Internal Dependencies
+ */
 import { useStateValue } from "../../context/StateProvider";
 
 const InstallPage = () => {
     const [{ installPage }] = useStateValue();
     const [counter, setCounter] = useState(0);
 
+    /**
+	 * Change counter every time installPage state is changed to show spinner while installing.
+	 */
     useEffect(() => {
         if (
             installPage.registration_page.status === "installing" ||
@@ -37,19 +48,62 @@ const InstallPage = () => {
         }
     }, [installPage]);
 
+    /**
+	 * Create the HTML block for the pages to be installed.
+	 *
+	 * @param {object} page The detals of page to be installed.
+	 * @returns
+	 */
+    const createInstallPageBox = (page) => {
+        return (
+            <Box
+                bg={page.status === "installed" ? "#ECEFFF" : "#FAFAFC"}
+                w="100%"
+                p={4}
+                color={page.status !== "not_installed" ? "#2D3559" : "#C4C4C4"}
+                mt={3}
+                borderRadius="md"
+            >
+                <Flex justify="space-between" align="center">
+                    <Checkbox
+                        isChecked={page.status === "installed"}
+                        isReadOnly
+                    >
+                        <Text fontSize="18px" fontWeight={600}>
+                            {__("Registration Page", "user-registration")}
+                        </Text>
+                        {page.status !== "not_installed" && (
+                            <Text fontSize="13px" color="#212121">
+                                {page.slug}
+                            </Text>
+                        )}
+                    </Checkbox>
+                    {page.status === "installing" ? (
+                        <Flex align="center">
+                            <Text fontSize="12px" color="#212121">
+                                {__("Installing...", "user-registration")}
+                            </Text>
+                            <CircularProgress
+                                value={counter}
+                                size="30px"
+                                thickness="15px"
+                                color="blue.300"
+                                ml={3}
+                            />
+                        </Flex>
+                    ) : (
+                        page.status === "installed" && (
+                            <Text fontSize="12px" color="#212121">
+                                {__("Installed", "user-registration")}
+                            </Text>
+                        )
+                    )}
+                </Flex>
+            </Box>
+        );
+    };
     return (
-        <Flex
-            direction="column"
-            justifyContent="space-between"
-            alignItems="left"
-        >
-            <Heading as="h2" size="lg" fontSize="24px" mb={4}>
-				Install Pages
-            </Heading>
-            <Text fontSize="16px" as="i">
-				The following pages will be installed automatically.
-            </Text>
-
+        <Fragment>
             <Box
                 bg="#ECEFFF"
                 w="100%"
@@ -60,125 +114,16 @@ const InstallPage = () => {
             >
                 <Checkbox isChecked isReadOnly>
                     <Text fontSize="18px" fontWeight={600}>
-						Default Registration Form
+                        {__("Default Registration Form", "user-registration")}
                     </Text>
                     <Text fontSize="13px" color="#212121">
 						Form id : 2
                     </Text>
                 </Checkbox>
             </Box>
-            <Box
-                bg={
-                    installPage.registration_page.status === "installed" ?
-                        "#ECEFFF" :
-                        "#FAFAFC"
-                }
-                w="100%"
-                p={4}
-                color={
-                    installPage.registration_page.status !== "not_installed" ?
-                        "#2D3559" :
-                        "#C4C4C4"
-                }
-                mt={3}
-                borderRadius="md"
-            >
-                <Flex justify="space-between" align="center">
-                    <Checkbox
-                        isChecked={
-                            installPage.registration_page.status === "installed"
-                        }
-                        isReadOnly
-                    >
-                        <Text fontSize="18px" fontWeight={600}>
-							Registration Page
-                        </Text>
-                        {installPage.registration_page.status !==
-							"not_installed" && (
-                            <Text fontSize="13px" color="#212121">
-                                {installPage.registration_page.slug}
-                            </Text>
-                        )}
-                    </Checkbox>
-                    {installPage.registration_page.status === "installing" ? (
-                        <Flex align="center">
-                            <Text fontSize="12px" color="#212121">
-								Installing...
-                            </Text>
-                            <CircularProgress
-                                value={counter}
-                                size="30px"
-                                thickness="15px"
-                                color="blue.300"
-                                ml={3}
-                            />
-                        </Flex>
-                    ) : (
-                        installPage.registration_page.status ===
-							"installed" && (
-                            <Text fontSize="12px" color="#212121">
-								Installed
-                            </Text>
-                        )
-                    )}
-                </Flex>
-            </Box>
-            <Box
-                bg={
-                    installPage.my_account_page.status === "installed" ?
-                        "#ECEFFF" :
-                        "#FAFAFC"
-                }
-                w="100%"
-                p={4}
-                color={
-                    installPage.my_account_page.status !== "not_installed" ?
-                        "#2D3559" :
-                        "#C4C4C4"
-                }
-                mt={3}
-                borderRadius="md"
-            >
-                <Flex justify="space-between" align="center">
-                    <Checkbox
-                        isChecked={
-                            installPage.my_account_page.status === "installed"
-                        }
-                        isReadOnly
-                    >
-                        <Text fontSize="18px" fontWeight={600}>
-							My Account Page
-                        </Text>
-                        {installPage.my_account_page.status !==
-							"not_installed" && (
-                            <Text fontSize="13px" color="#212121">
-                                {installPage.my_account_page.slug}
-                            </Text>
-                        )}
-                    </Checkbox>
-                    {installPage.my_account_page.status === "installing" ? (
-                        <Flex align="center">
-                            <Text fontSize="12px" color="#212121">
-								Installing...
-                            </Text>
-                            <CircularProgress
-                                value={counter}
-                                size="30px"
-                                thickness="15px"
-                                color="blue.300"
-                                ml={3}
-                            />
-                        </Flex>
-                    ) : (
-                        installPage.my_account_page.status === "installed" && (
-                            <Text fontSize="12px" color="#212121">
-								Installed
-                            </Text>
-                        )
-                    )}
-                </Flex>
-            </Box>
-        </Flex>
+            {createInstallPageBox(installPage.registration_page)}
+            {createInstallPageBox(installPage.my_account_page)}
+        </Fragment>
     );
 };
 

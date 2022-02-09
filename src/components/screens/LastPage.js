@@ -1,5 +1,9 @@
+/**
+ * External Dependencies
+ */
 import React from "react";
 import { Flex, Image, Heading, Text } from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
 
 function LastPage ({ siteURL }) {
     return (
@@ -15,12 +19,16 @@ function LastPage ({ siteURL }) {
                 alt="Onboard Finish"
             />
             <Heading as="h2" fontSize="24px" mb={4} mt={4}>
-				Congratulations!! You are all set up.
+                {__(
+                    "Congratulations!! You are all set up.",
+                    "user-registration"
+                )}
             </Heading>
             <Text fontSize="14px" lineHeight="160%" align="center">
-				Vivamus magna justo, lacinia eget consectetur sed, convallis at
-				tellus. Proin eget tortor risus. Quisque velit nisi, pretium ut
-				lacinia in, elementum id enim.
+                {__(
+                    "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
+                    "user-registration"
+                )}
             </Text>
         </Flex>
     );
