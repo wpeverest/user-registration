@@ -79,7 +79,7 @@ class UR_REST_API {
 		}
 
 		$settings_to_update = $request['settings'];
-
+		error_log( print_r( $settings_to_update, true ) );
 		foreach ( $settings_to_update as $option => $value ) {
 			update_option( $option, $value );
 		}
@@ -218,7 +218,7 @@ class UR_REST_API {
 						'title'             => __( 'Minimum Password Strength', 'user-registration' ),
 						'desc'               => __( 'Set minimum required password strength.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_minimum_password_strength',
-						'type'              => 'select',
+						'type'              => 'radio',
 						'default'           => 3,
 						'options'           => array(
 							'0' => __( 'Very Weak', 'user-registration' ),

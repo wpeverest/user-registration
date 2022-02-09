@@ -387,7 +387,7 @@
 			color: #2D3559;
 
 			&--select {
-				flex: 0 0 40%;
+				flex: 1 0 60%;
 			}
 
 			.chakra-checkbox__control {
@@ -414,6 +414,11 @@
 			&--right {
 				flex: 0 0 50%;
 				display: flex;
+				align-items: center;
+
+				a.chakra-link {
+					text-decoration: none;
+				}
 			}
 
 			&--right{

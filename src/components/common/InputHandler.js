@@ -8,7 +8,8 @@ import {
     Tooltip,
     useRadio,
     useRadioGroup,
-    HStack
+    HStack,
+    Image
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
@@ -56,7 +57,7 @@ function InputHandler ({ setting, siteURL }) {
     };
 
     const RadioCard = (props) => {
-        const { radioProps, label } = props;
+        const { radioProps, label, identifier } = props;
         const { state, getInputProps, getCheckboxProps } = useRadio(radioProps);
 
         const input = getInputProps();
@@ -81,10 +82,35 @@ function InputHandler ({ setting, siteURL }) {
                     }}
                     px={5}
                     py={3}
+                    style={{
+                        flex: "1 0 30%"
+                    }}
                 >
-                    <Text fontSize="18px" color={state.isChecked && "#818181"}>
-                        {label}
-                    </Text>
+                    {setting.id ===
+						"user_registration_login_options_form_template" ||
+					setting.id === "user_registration_form_template" ? (
+                            <Flex direction="column" align="center">
+                                <Image
+                                    src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-icons/${identifier}.png`}
+                                />
+                                <Text
+                                    fontSize="14px"
+                                    fontWeight="500"
+                                    color={state.isChecked && "#475BB2"}
+                                    mt={2}
+                                >
+                                    {label}
+                                </Text>
+                            </Flex>
+                        ) : (
+                            <Text
+                                fontSize="18px"
+                                fontWeight="500"
+                                color={state.isChecked && "#475BB2"}
+                            >
+                                {label}
+                            </Text>
+                        )}
                 </Box>
             </Box>
         );
@@ -123,7 +149,7 @@ function InputHandler ({ setting, siteURL }) {
             case "checkbox":
                 return (
                     <Switch
-                        flex={"0 0 40%"}
+                        flex={"0 0 60%"}
                         className="user-registration-setup-wizard__body--checkbox"
                         name={setting.id}
                         id={setting.id}
@@ -137,6 +163,7 @@ function InputHandler ({ setting, siteURL }) {
             case "select":
                 return (
                     <Select
+                        flex={"0 0 60%"}
                         focusBorderColor="blue.500"
                         className="user-registration-setup-wizard__body--select"
                         name={setting.id}
@@ -155,6 +182,7 @@ function InputHandler ({ setting, siteURL }) {
                 });
                 return (
                     <Select
+                        flex={"0 0 60%"}
                         isMulti
                         focusBorderColor="blue.500"
                         className="user-registration-setup-wizard__body--select"
@@ -188,7 +216,11 @@ function InputHandler ({ setting, siteURL }) {
                 const group = getRootProps();
 
                 return (
-                    <HStack {...group}>
+                    <HStack
+                        {...group}
+                        sx={{ flexWrap: "wrap" }}
+                        flex={"1 0 60%"}
+                    >
                         {Object.keys(setting.options).map((value, key) => {
                             return (
                                 <RadioCard
@@ -197,6 +229,7 @@ function InputHandler ({ setting, siteURL }) {
                                         value: key.toString()
                                     })}
                                     label={setting.options[value]}
+                                    identifier={value}
                                 />
                             );
                         })}
@@ -206,7 +239,7 @@ function InputHandler ({ setting, siteURL }) {
     };
     return (
         <Flex justify={"space-between"} align="center">
-            <Flex align="center">
+            <Flex align="center" flex="0 0 40%">
                 <FormLabel sx={{ fontWeight: "bold", fontSize: "18px" }}>
                     {setting.title}
                 </FormLabel>
