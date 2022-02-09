@@ -15,7 +15,7 @@ import { Select } from "chakra-react-select";
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
-function InputHandler ({ setting }) {
+function InputHandler ({ setting, siteURL }) {
     const [{ settings }, dispatch] = useStateValue();
 
     const renderOptions = () => {

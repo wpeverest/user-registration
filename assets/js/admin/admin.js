@@ -463,21 +463,6 @@ jQuery(function ($) {
 			});
 		});
 	});
-
-	// To play welcome video.
-	$(document).on(
-		"click",
-		"#user-registration-welcome .welcome-video-play",
-		function (event) {
-			var video =
-				'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/tMaG6pnfYg0?start=15&amprel=0&amp;showinfo=0&amp;autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
-
-			event.preventDefault();
-
-			$(this).find(".user-registration-welcome-thumb").remove();
-			$(this).append(video);
-		}
-	);
 })(jQuery, window.user_registration_admin_data);
 
 /**

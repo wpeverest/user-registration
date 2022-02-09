@@ -35,18 +35,33 @@ class UR_REST_API {
 	 * @since 1.0.0
 	 */
 	public static function register_rest_routes() {
-		register_rest_route( 'user-registration/v1', 'getting-started', array(
-			'methods' => 'GET',
-			'callback' => array( __CLASS__, 'ur_get_getting_started_settings' )
-		) );
-		register_rest_route( 'user-registration/v1', 'getting-started/save', array(
-			'methods' => 'POST',
-			'callback' => array( __CLASS__, 'ur_save_getting_started_settings' )
-		) );
-		register_rest_route( 'user-registration/v1', 'getting-started/install-pages', array(
-			'methods' => 'POST',
-			'callback' => array( __CLASS__, 'ur_getting_started_install_pages' )
-		) );
+		register_rest_route(
+			'user-registration/v1',
+			'getting-started',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_getting_started_settings' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+		register_rest_route(
+			'user-registration/v1',
+			'getting-started/save',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_save_getting_started_settings' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+		register_rest_route(
+			'user-registration/v1',
+			'getting-started/install-pages',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_getting_started_install_pages' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -54,12 +69,28 @@ class UR_REST_API {
 	 *
 	 * @since 2.1.4
 	 *
+	 * @param WP_REST_Request $request Full data about the request.
 	 * @return array settings.
 	 */
-	public static function ur_save_getting_started_settings($request) {
-		foreach ($request['settings'] as $option => $value) {
+	public static function ur_save_getting_started_settings( $request ) {
+
+		if ( ! isset( $request['settings'] ) ) {
+			return;
+		}
+
+		$settings_to_update = $request['settings'];
+
+		foreach ( $settings_to_update as $option => $value ) {
 			update_option( $option, $value );
 		}
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'message' => __( 'OnBoarding completed successfully', 'user-registration' ),
+			),
+			200
+		);
 	}
 
 	/**
@@ -67,12 +98,24 @@ class UR_REST_API {
 	 *
 	 * @since 2.1.4
 	 *
+	 * @param WP_REST_Request $request Full data about the request.
 	 * @return array settings.
 	 */
-	public static function ur_getting_started_install_pages($request) {
+	public static function ur_getting_started_install_pages( $request ) {
+
+		if ( ! isset( $request['install_pages'] ) || ! $request['install_pages'] ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => __( 'Pages cannot be installed', 'user-registration' ),
+				),
+				200
+			);
+		}
+
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
-		$pages = apply_filters('user_registration_create_pages', array() );
+		$pages = apply_filters( 'user_registration_create_pages', array() );
 
 		if ( $default_form_page_id = get_option( 'user_registration_default_form_page_id' ) ) {
 			$pages['registration'] = array(
@@ -91,10 +134,16 @@ class UR_REST_API {
 		$page_slug = array();
 		foreach ( $pages as $key => $page ) {
 			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
-			array_push( $page_slug , get_post_field( 'post_name', $post_id ) );
+			array_push( $page_slug, get_post_field( 'post_name', $post_id ) );
 		}
 
-		wp_send_json_success(array( 'page_slug' => $page_slug));
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'page_slug' => $page_slug,
+			),
+			200
+		);
 	}
 
 	/**
@@ -121,7 +170,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable users to register', 'user-registration' ),
 						'id'       => 'users_can_register',
 						'type'     => 'checkbox',
-						'default'  => "yes",
+						'default'  => 'yes',
 					),
 					array(
 						'title'    => __( 'User login option', 'user-registration' ),
@@ -139,7 +188,7 @@ class UR_REST_API {
 						'default'  => array_search( 'subscriber', array_keys( $all_roles_except_admin ) ),
 						'options'  => $all_roles_except_admin,
 					),
-				)
+				),
 			),
 			'registration_settings' => array(
 				'title'    => __( 'Registration', 'user-registration' ),
@@ -163,7 +212,7 @@ class UR_REST_API {
 						'desc'               => __( 'Make strong password compulsary.', 'user-registration' ),
 						'id'                => 'user_registration_form_setting_enable_strong_password',
 						'type'              => 'checkbox',
-						'default'           => "no",
+						'default'           => 'no',
 					),
 					array(
 						'title'             => __( 'Minimum Password Strength', 'user-registration' ),
@@ -186,7 +235,7 @@ class UR_REST_API {
 						'default'           => array_search( 'subscriber', array_keys( $all_roles ) ),
 						'options'           => $all_roles,
 					),
-				)
+				),
 			),
 			'login_settings' => array(
 				'title'    => __( 'Login', 'user-registration' ),
@@ -210,14 +259,14 @@ class UR_REST_API {
 						'desc' => __( 'Check to enable/disable lost password.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_lost_password',
 						'type'     => 'checkbox',
-						'default'  => "yes",
+						'default'  => 'yes',
 					),
 					array(
 						'title'    => __( 'Enable remember me', 'user-registration' ),
 						'desc' => __( 'Check to enable/disable remember me.', 'user-registration' ),
 						'id'       => 'user_registration_login_options_remember_me',
 						'type'     => 'checkbox',
-						'default'  => "yes",
+						'default'  => 'yes',
 					),
 
 					array(
@@ -225,7 +274,7 @@ class UR_REST_API {
 						'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 						'id'       => 'user_registration_login_option_hide_show_password',
 						'type'     => 'checkbox',
-						'default'  => "no",
+						'default'  => 'no',
 					),
 				),
 			),
@@ -248,14 +297,31 @@ class UR_REST_API {
 						'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 						'id'       => 'user_registration_disable_profile_picture',
 						'type'     => 'checkbox',
-						'default'  => "no",
+						'default'  => 'no',
 					),
-				)
-			)
+				),
+			),
 		);
 
-		return $settings;
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'options' => $settings,
+			),
+			200
+		);
 	}
+
+	/**
+	 * Check if a given request has access to update a setting
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public static function check_admin_permissions( $request ) {
+		return current_user_can( 'manage_options' );
+	}
+
 }
 
 UR_REST_API::init();

@@ -3,7 +3,7 @@ import { Stack, Flex, Heading, Text } from "@chakra-ui/react";
 
 import InputHandler from "../common/InputHandler";
 
-const RegistrationSettings = ({ sectionSettings }) => {
+const RegistrationSettings = ({ sectionSettings, siteURL }) => {
     return (
         <Flex
             direction="column"
@@ -19,7 +19,11 @@ const RegistrationSettings = ({ sectionSettings }) => {
             <Stack direction="column" spacing="8" mt={5}>
                 {sectionSettings &&
 					sectionSettings.settings.map((setting, key) => (
-					    <InputHandler key={key} setting={setting} />
+					    <InputHandler
+					        key={key}
+					        setting={setting}
+					        siteURL={siteURL}
+					    />
 					))}
             </Stack>
         </Flex>

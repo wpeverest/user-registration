@@ -49,6 +49,18 @@ class UR_Admin_Welcome {
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
 
+		wp_localize_script(
+			'ur-setup-wizard-script',
+			'_UR_',
+			array(
+				'adminURL'       => esc_url( admin_url() ),
+				'siteURL'        => esc_url( home_url( '/' ) ),
+				'defaultFormURL' => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-form=' . get_option( 'user_registration_default_form_page_id' ) ) ),
+				'newFormURL'     => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
+				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+			)
+		);
+
 		if ( ! empty( $_GET['page'] ) && 'user-registration-welcome' === $_GET['page'] ) {
 
 			ob_start();
@@ -76,6 +88,22 @@ class UR_Admin_Welcome {
 						<?php esc_html_e( 'User Registration - Setup Wizard', 'user-registration' ); ?>
 					</title>
 					<?php wp_print_head_scripts(); ?>
+					<script>
+						// To play welcome video.
+						jQuery(document).on(
+							"click",
+							"#user-registration-welcome .welcome-video-play",
+							function (event) {
+								var video =
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/tMaG6pnfYg0?start=15&amprel=0&amp;showinfo=0&amp;autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
+
+								event.preventDefault();
+
+								jQuery(this).find(".user-registration-welcome-thumb").remove();
+								jQuery(this).append(video);
+							}
+						);
+					</script>
 				</head>
 		<?php
 	}

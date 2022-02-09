@@ -1,6 +1,5 @@
 import React, { useState, useEffect, cloneElement } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
+import { ChakraProvider, Button, Link } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 
 import Header from "./common/Header";
@@ -16,6 +15,9 @@ import { actionTypes } from "../context/gettingStartedContext";
 function App () {
     const [{ settings, installPage }, dispatch] = useStateValue();
     const [initiateInstall, setInitiateInstall] = useState(false);
+
+    const { adminURL, siteURL, defaultFormURL, newFormURL, urRestApiNonce } =
+		typeof _UR_ !== "undefined" && _UR_;
 
     const [steps, setSteps] = useState([
         {
@@ -59,17 +61,22 @@ function App () {
 
     useEffect(() => {
         apiFetch({
-            path: "/wp-json/user-registration/v1/getting-started"
+            path: "/wp-json/user-registration/v1/getting-started",
+            headers: {
+                "X-WP-Nonce": urRestApiNonce
+            }
         }).then((data) => {
             const newStepsRef = steps.map((step) => {
-                step.sectionSettings = data[step.key] ? data[step.key] : {};
+                step.sectionSettings = data.options[step.key] ?
+                    data.options[step.key] :
+                    {};
 
                 return { ...step };
             });
 
             const newSettingsRef = {};
-            Object.keys(data).map((key) => {
-                var sectionSettings = data[key].settings;
+            Object.keys(data.options).map((key) => {
+                var sectionSettings = data.options[key].settings;
                 sectionSettings.map((individualSettings) => {
                     newSettingsRef[individualSettings.id] =
 						individualSettings.default;
@@ -136,13 +143,16 @@ function App () {
         apiFetch({
             path: "/wp-json/user-registration/v1/getting-started/install-pages",
             method: "POST",
-            data: {}
+            headers: {
+                "X-WP-Nonce": urRestApiNonce
+            },
+            data: { install_pages: true }
         }).then((res) => {
             if (res.success) {
                 let newInstallPageRef = { ...installPage };
                 newInstallPageRef.registration_page.status = "installing";
                 newInstallPageRef.registration_page.slug =
-					"/" + res.data.page_slug[0];
+					"/" + res.page_slug[0];
 
                 dispatch({
                     type: actionTypes.GET_INSTALL_PAGE,
@@ -155,7 +165,7 @@ function App () {
                     newInstallPageRef.registration_page.status = "installed";
                     newInstallPageRef.my_account_page.status = "installing";
                     newInstallPageRef.my_account_page.slug =
-						"/" + res.data.page_slug[1];
+						"/" + res.page_slug[1];
 
                     dispatch({
                         type: actionTypes.GET_INSTALL_PAGE,
@@ -173,6 +183,8 @@ function App () {
                         });
                     });
                 });
+            } else {
+                console.log(res.message);
             }
         });
     };
@@ -182,6 +194,9 @@ function App () {
         apiFetch({
             path: "/wp-json/user-registration/v1/getting-started/save",
             method: "POST",
+            headers: {
+                "X-WP-Nonce": urRestApiNonce
+            },
             data: { settings: settings }
         }).then((res) => {
             console.log(res);
@@ -193,20 +208,25 @@ function App () {
             <Header steps={steps} activeStep={activeStep} />
             <div className="user-registration-setup-wizard__body">
                 {cloneElement(activeStep.component, {
-                    sectionSettings: activeStep.sectionSettings
+                    sectionSettings: activeStep.sectionSettings,
+                    siteURL: siteURL
                 })}
             </div>
             <div className="user-registration-setup-wizard__footer">
                 <div className="user-registration-setup-wizard__footer--left">
                     {steps[steps.length - 1].key === activeStep.key ||
 					steps[0].key === activeStep.key ? (
-                            <Button
-                                variant="outline"
-                                colorScheme="blue"
-                                onClick={handleSaveSettings}
+                            <Link
+                                href={`${adminURL}/admin.php?page=user-registration`}
                             >
-							Go To Dashboard
-                            </Button>
+                                <Button
+                                    variant="outline"
+                                    colorScheme="blue"
+                                    onClick={handleSaveSettings}
+                                >
+								Go To Dashboard
+                                </Button>
+                            </Link>
                         ) : (
                             <Button
                                 variant="outline"
@@ -220,21 +240,25 @@ function App () {
                 <div className="user-registration-setup-wizard__footer--right">
                     {steps[steps.length - 1].key === activeStep.key ? (
                         <React.Fragment>
-                            <Button
-                                variant="link"
-                                colorScheme="blue"
-                                onClick={handleSaveSettings}
-                                mr={10}
-                                ml={10}
-                            >
-								Edit Default Form
-                            </Button>
-                            <Button
-                                colorScheme="blue"
-                                onClick={handleSaveSettings}
-                            >
-								Create New Form
-                            </Button>
+                            <Link href={defaultFormURL}>
+                                <Button
+                                    variant="link"
+                                    colorScheme="blue"
+                                    onClick={handleSaveSettings}
+                                    mr={10}
+                                    ml={10}
+                                >
+									Edit Default Form
+                                </Button>
+                            </Link>
+                            <Link href={newFormURL}>
+                                <Button
+                                    colorScheme="blue"
+                                    onClick={handleSaveSettings}
+                                >
+									Create New Form
+                                </Button>
+                            </Link>
                         </React.Fragment>
                     ) : (
                         <React.Fragment>

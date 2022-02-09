@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Image, Heading, Text } from "@chakra-ui/react";
 
-function LastPage () {
+function LastPage ({ siteURL }) {
     return (
         <Flex
             direction="column"
@@ -11,7 +11,7 @@ function LastPage () {
             <Image
                 htmlWidth="800px"
                 htmlHeight="320px"
-                src="https://user.local/wp-content/plugins/user-registration/assets/images/onboard-end.png"
+                src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-end.png`}
                 alt="Onboard Finish"
             />
             <Heading as="h2" fontSize="24px" mb={4} mt={4}>
