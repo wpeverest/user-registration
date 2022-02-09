@@ -79,7 +79,7 @@ class UR_REST_API {
 		}
 
 		$settings_to_update = $request['settings'];
-		error_log( print_r( $settings_to_update, true ) );
+
 		foreach ( $settings_to_update as $option => $value ) {
 			update_option( $option, $value );
 		}

@@ -19,13 +19,17 @@ class UR_Admin_Welcome {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		if (
-		apply_filters( 'user_registration_show_welcome_page', true )
-		&& current_user_can( 'manage_user_registration' )
-		) {
-			add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
-			add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
+
+		$wizard_ran = get_option( 'user_registration_first_time_activation_flag', false );
+
+		// If Wizard was ran already, then do not proceed to Wizard page again.
+		if ( $wizard_ran ) {
+			return;
 		}
+
+		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
+		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
+
 	}
 
 	/**
@@ -45,6 +49,11 @@ class UR_Admin_Welcome {
 	 * Show the welcome page.
 	 */
 	public static function welcome_page() {
+
+		if ( isset( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) {
+			update_option( 'user_registration_first_time_activation_flag', true );
+		}
+
 		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );

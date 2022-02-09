@@ -336,39 +336,22 @@ class UR_Admin {
 	 * @since 2.1.3
 	 */
 	public function admin_redirects() {
-		// Nonced plugin install redirects (whitelisted).
-		if ( ! empty( $_GET['ur-install-plugin-redirect'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$plugin_slug = ur_clean( esc_url_raw( wp_unslash( $_GET['ur-install-plugin-redirect'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.
+		if ( ! get_transient( '_ur_activation_redirect' ) ) {
+			return;
+		}
 
-			$url = admin_url( 'plugin-install.php?tab=search&type=term&s=' . $plugin_slug );
-			wp_safe_redirect( $url );
+		delete_transient( '_ur_activation_redirect' );
+
+		if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-welcome' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.PHP.StrictInArray.MissingTrueStrict
+			return;
+		}
+
+		// If plugin is running for first time, redirect to onboard page.
+		if ( '1' !== get_option( 'user_registration_first_time_activation_flag' ) ) {
+			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
 			exit;
 		}
-
-		// Setup wizard redirect.
-		if ( get_transient( '_ur_activation_redirect' ) && apply_filters( 'user_registration_show_welcome_page', true ) ) {
-			$do_redirect  = true;
-			$current_page = isset( $_GET['page'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification
-
-			// On these pages, or during these events, postpone the redirect.
-			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_user_registration' ) ) {
-				$do_redirect = false;
-			}
-
-			// On these pages, or during these events, disable the redirect.
-			if ( 'user-registration-welcome' === $current_page || UR_Admin_Notices::has_notice( 'install' ) || apply_filters( 'user_registration_prevent_automatic_wizard_redirect', false ) || isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				delete_transient( '_ur_activation_redirect' );
-				$do_redirect = false;
-			}
-
-			if ( $do_redirect ) {
-				delete_transient( '_ur_activation_redirect' );
-				wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
-				exit;
-			}
-		}
 	}
-
 }
 
 return new UR_Admin();

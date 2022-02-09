@@ -20,18 +20,18 @@ function App() {
 		typeof _UR_ !== "undefined" && _UR_;
 
 	const [steps, setSteps] = useState([
-		// {
-		//     key: "install_pages",
-		//     label: "Install Pages",
-		//     isDone: true,
-		//     component: <InstallPage />
-		// },
-		// {
-		//     key: "general_settings",
-		//     label: "General",
-		//     isDone: false,
-		//     component: <GeneralSettings />
-		// },
+		{
+			key: "install_pages",
+			label: "Install Pages",
+			isDone: true,
+			component: <InstallPage />,
+		},
+		{
+			key: "general_settings",
+			label: "General",
+			isDone: false,
+			component: <GeneralSettings />,
+		},
 		{
 			key: "registration_settings",
 			label: "Registration",
@@ -283,28 +283,28 @@ function App() {
 									Skip
 								</Button>
 							)}
-							{/* {steps[0].key === activeStep.key &&
+							{steps[0].key === activeStep.key &&
 							installPage.my_account_page.status !==
 								"installed" ? (
-                                    <Button
-                                        colorScheme="blue"
-                                        disabled={initiateInstall}
-                                        onClick={handleInstallPages}
-                                    >
+								<Button
+									colorScheme="blue"
+									disabled={initiateInstall}
+									onClick={handleInstallPages}
+								>
 									Install & Proceed
-                                    </Button>
-                                ) : ( */}
-							<Button
-								colorScheme="blue"
-								disabled={
-									steps[steps.length - 1].key ===
-									activeStep.key
-								}
-								onClick={handleNext}
-							>
-								Next
-							</Button>
-							{/* )} */}
+								</Button>
+							) : (
+								<Button
+									colorScheme="blue"
+									disabled={
+										steps[steps.length - 1].key ===
+										activeStep.key
+									}
+									onClick={handleNext}
+								>
+									Next
+								</Button>
+							)}
 						</React.Fragment>
 					)}
 				</div>
