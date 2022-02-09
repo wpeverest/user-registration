@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.8.2
-Stable tag: 2.1.2
+Tested up to: 5.9
+Stable tag: 2.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -274,6 +274,14 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.1.3    - 26/01/2022
+* Dev      - Combine two login option compatibility.
+* Dev      - Introduce hooks for save button in myaccount.
+* Fix      - Security and escaping issues.
+* Fix      - Cannot unhide labels.
+* Fix      - Profile picture remove, update and save on the edit profile page.
+* Fix      - File upload data not updated in profile details changed email.
+
 = 2.1.2    - 07/01/2022
 * Dev      - Hooks for custom advance setting.
 * Enhance  - Extension page design and addons installation.

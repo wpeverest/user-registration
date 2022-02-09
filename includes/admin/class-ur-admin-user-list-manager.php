@@ -82,20 +82,32 @@ class UR_Admin_User_List_Manager {
 		$deny_link = remove_query_arg( array( 'new_role' ), $deny_link );
 		$deny_link = wp_nonce_url( $deny_link, 'ur_user_change_status' );
 
-		$approve_action = '<a style="color:#086512" href="' . esc_url( $approve_link ) . '">' . esc_html_x( 'Approve', 'The action on users list page', 'user-registration' ) . '</a>';
-		$deny_action    = '<a style="color:#e20707" href="' . esc_url( $deny_link ) . '">' . esc_html_x( 'Deny', 'The action on users list page', 'user-registration' ) . '</a>';
+		$resend_verification_link = add_query_arg(
+			array(
+				'action' => 'resend_verification',
+				'user'   => $user->ID,
+			)
+		);
+		$resend_verification_link = remove_query_arg( array( 'new_role' ), $resend_verification_link );
+		$resend_verification_link = wp_nonce_url( $resend_verification_link, 'ur_user_change_email_status' );
+
+		$resend_verification_action   = '<a href="' . esc_url( $resend_verification_link ) . '">' . _x( 'Resend Verification', 'The action on users list page', 'user-registration' ) . '</a>';
+		$approve_action = '<a style="color:#086512" href="' . esc_url( $approve_link ) . '">' . _x( 'Approve', 'The action on users list page', 'user-registration' ) . '</a>';
+		$deny_action    = '<a style="color:#e20707" href="' . esc_url( $deny_link ) . '">' . _x( 'Deny', 'The action on users list page', 'user-registration' ) . '</a>';
 
 		$user_status = $user_manager->get_user_status();
 
-		if ( isset( $user_status['login_option'] ) && 'admin_approval' === $user_status['login_option'] ) {
-			if ( 0 == $user_status['user_status'] ) {
-				$actions['ur_user_deny_action']    = $deny_action;
-				$actions['ur_user_approve_action'] = $approve_action;
-			} elseif ( 1 == $user_status['user_status'] ) {
-				$actions['ur_user_deny_action'] = $deny_action;
-			} elseif ( -1 == $user_status['user_status'] ) {
-				$actions['ur_user_approve_action'] = $approve_action;
+		if ( 0 == $user_status['user_status'] ) {
+			$actions['ur_user_deny_action']    = $deny_action;
+			$actions['ur_user_approve_action'] = $approve_action;
+
+			if ( 'admin_approval_after_email_confirmation' === $user_status['login_option'] || 'email_confirmation' === $user_status['login_option'] ) {
+				$actions['ur_user_resend_verification_action'] = $resend_verification_action;
 			}
+		} elseif ( 1 == $user_status['user_status'] ) {
+			$actions['ur_user_deny_action'] = $deny_action;
+		} elseif ( -1 == $user_status['user_status'] ) {
+			$actions['ur_user_approve_action'] = $approve_action;
 		}
 
 		return $actions;
@@ -131,15 +143,33 @@ class UR_Admin_User_List_Manager {
 
 			$redirect     = admin_url( 'users.php' );
 			$status       = $action;
-			$user         = absint( $_GET['user'] );
-			$user_manager = new UR_Admin_User_Manager( $user );
+			$user_id         = absint( $_GET['user'] );
+			$user_manager = new UR_Admin_User_Manager( $user_id );
+			$form_id = ur_get_form_id_by_userid( $user_id );
+			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 			if ( $status == 'approve' ) {
+
 				$user_manager->approve();
 				$redirect = add_query_arg( array( 'approved' => 1 ), $redirect );
+				if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $user_id, 'ur_confirm_email', '1' );
+					delete_user_meta( $user_id, 'ur_confirm_email_token' );
+					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+						update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
+					}
+				}
 			} else {
+
 				$user_manager->deny();
 				$redirect = add_query_arg( array( 'denied' => 1 ), $redirect );
+				if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
+					update_user_meta( $user_id, 'ur_confirm_email', '0' );
+					delete_user_meta( $user_id, 'ur_confirm_email_token' );
+					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+						update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'denied' );
+					}
+				}
 			}
 
 			wp_redirect( esc_url_raw( $redirect ) );
@@ -151,33 +181,33 @@ class UR_Admin_User_List_Manager {
 	public function user_registration_pending_users_notices() {
 
 		$args = array(
-				'meta_query' => array(
-					'relation' => 'OR',
-						array(
-							'key'   => 'ur_user_status',
-							'value' => 0,
-							'compare'=> '='
-						),
-						array(
-							'key'   => 'ur_confirm_email',
-							'value' => 0,
-							'compare'=>'='
-						)
-				)
-			);
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key'   => 'ur_user_status',
+					'value' => 0,
+					'compare' => '=',
+				),
+				array(
+					'key'   => 'ur_confirm_email',
+					'value' => 0,
+					'compare' => '=',
+				),
+			),
+		);
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
-		$user_query = new WP_User_Query($args);
+		$user_query = new WP_User_Query( $args );
 
 		 // Get the results from the query, returning the first user.
 		$users = $user_query->get_results();
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
-		array_push($ur_pages,'users');
+		array_push( $ur_pages, 'users' );
 
 		// Check if Users are Pending and display pending users notice in UR and Users
-		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages )) {
+		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages ) ) {
 			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
@@ -189,7 +219,7 @@ class UR_Admin_User_List_Manager {
 	 * @deprecated 1.9.0
 	 *
 	 * @return void
-	*/
+	 */
 	public function pending_users_notices() {
 		ur_deprecated_function( 'UR_Admin_User_List_Manager::pending_users_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_pending_users_notices' );
 	}
@@ -225,7 +255,7 @@ class UR_Admin_User_List_Manager {
 	 * @deprecated 1.9.0
 	 *
 	 * @return void
-	*/
+	 */
 	public function display_admin_notices() {
 		ur_deprecated_function( 'UR_Admin_User_List_Manager::display_admin_notices', '1.9.0', 'UR_Admin_User_List_Manager::user_registration_display_admin_notices' );
 	}
@@ -265,12 +295,7 @@ class UR_Admin_User_List_Manager {
 			$status       = $user_manager->get_user_status();
 
 			if ( ! empty( $status ) ) {
-				if ( 'admin_approval' === $status['login_option'] || 'default' === $status['login_option'] ) {
 					return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
-				} else {
-					$user_managers = new UR_Email_Confirmation( $user_id );
-					return $user_managers->add_column_cell( $status['user_status'], $user_id );
-				}
 			}
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
 			$user_metas = get_user_meta( $user_id );
@@ -362,7 +387,7 @@ class UR_Admin_User_List_Manager {
 				$all_forms = ur_get_all_user_registration_form();
 
 		foreach ( $all_forms as $form_id => $form_name ) {
-			echo '<option value="' . esc_attr( $form_id ). '" ' . esc_attr( selected( $form_id, $specific_form_filter_value ) ) . ' >' . esc_html( $form_name ) . '</option>';
+			echo '<option value="' . esc_attr( $form_id ) . '" ' . esc_attr( selected( $form_id, $specific_form_filter_value ) ) . ' >' . esc_html( $form_name ) . '</option>';
 		}
 
 		?>
@@ -575,9 +600,7 @@ class UR_Admin_User_List_Manager {
 					<th><label for="ur_user_user_status"><?php esc_html_e( 'Approval Status', 'user-registration' ); ?></label>
 					</th>
 					<td>
-					<?php
-					if ( 'admin_approval' === $user_status['login_option'] || 'default' === $user_status['login_option'] ) {
-						?>
+
 						<select id="ur_user_user_status" name="ur_user_user_status">
 						<?php
 						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
@@ -589,26 +612,6 @@ class UR_Admin_User_List_Manager {
 						endforeach;
 						?>
 						</select>
-						<?php
-					} elseif ( 'email_confirmation' === $user_status['login_option'] ) {
-						?>
-						<select id="ur_user_email_confirmation_status" name="ur_user_email_confirmation_status">
-						<?php
-						$available_statuses = array(
-							'Verified' => 1,
-							'Pending'  => 0,
-						);
-						foreach ( $available_statuses as $status_label => $status ) :
-							?>
-							<option
-								value="<?php echo esc_attr( $status ); ?>"<?php esc_attr( selected( $status, $user_status['user_status'] ) ); ?>><?php echo esc_html( $status_label ); ?></option>
-							<?php
-						endforeach;
-						?>
-						</select>
-						<?php
-					}
-					?>
 						<span class="description"><?php esc_html_e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
 					</td>
 				</tr>
@@ -633,7 +636,6 @@ class UR_Admin_User_List_Manager {
 		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) {
 			return false;
 		}
-
 		if ( isset( $_POST['ur_user_user_status'] ) ) {
 			$new_status = $_POST['ur_user_user_status'];
 			$user_manager->save_status( $new_status );

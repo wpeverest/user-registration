@@ -127,11 +127,13 @@ class UR_Admin {
 		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
 			// Change the footer text
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
-				$footer_text = sprintf(
-					/* translators: 1: WooCommerce 2:: five stars */
-					esc_html__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
-					sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
-					'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+				$footer_text = wp_kses_post(
+					sprintf(
+						/* translators: 1: User Registration 2:: five stars */
+						__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
+						sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
+						'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+					)
 				);
 				ur_enqueue_js(
 					"
@@ -180,15 +182,17 @@ class UR_Admin {
 				</div>
 				<div class="user-registration-notice-text">
 
-						<h3><?php esc_html_e( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ); ?></h3>
-						<P><?php esc_html_e( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ); ?> </P>
-						<p><?php esc_html_e( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ); ?></p>
+						<h3><?php echo wp_kses_post( __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ) ); ?></h3>
+						<P><?php echo wp_kses_post( __( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ) ); ?> </P>
+						<p><?php echo wp_kses_post( __( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ) ); ?></p>
 						<p class="extra-pad">
 						<?php
-						esc_html_e(
-							'<strong>What benefit would you have?</strong> <br>
+						echo wp_kses_post(
+							__(
+								'<strong>What benefit would you have?</strong> <br>
 				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-							'user-registration'
+								'user-registration'
+							)
 						);
 						?>
 												</p>
@@ -238,22 +242,26 @@ class UR_Admin {
 							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
 							<p>
 							<?php
-							esc_html_e(
-								'<strong>Hey there!</strong> <br>
+							echo wp_kses_post(
+								__(
+									'<strong>Hey there!</strong> <br>
 								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-								'user-registration'
+									'user-registration'
+								)
 							);
 							?>
 								</p>
 							<p class="extra-pad">
 							<?php
-							esc_html_e(
-								'<strong>What benefit would you have?</strong> <br>
+							echo wp_kses_post(
+								__(
+									'<strong>What benefit would you have?</strong> <br>
 								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration'
+									'user-registration'
+								)
 							);
 							?>
-													</p>
+							</p>
 
 						<ul class="user-registration-notice-ul">
 							<li><a class="button button-primary" href=<?php echo esc_url( 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu' ); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>

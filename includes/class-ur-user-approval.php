@@ -178,11 +178,13 @@ class UR_User_Approval {
 
 		$form_id = ur_get_form_id_by_userid( $user->ID );
 
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+
 		$user_manager = new UR_Admin_User_Manager( $user );
 
 		$status = $user_manager->get_user_status();
 
-		if ( 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) || 'admin_approval' === $status['login_option'] ) {
+		if ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
 
 			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
 
@@ -201,8 +203,41 @@ class UR_User_Approval {
 					return new WP_Error( 'denied_access', $message );
 					break;
 			}
-		} elseif ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) || 'email_confirmation' === $status['login_option'] ) {
+		} elseif ( ( 'admin_approval_after_email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $status['login_option'] ) ) {
 
+			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
+
+			switch ( $status['user_status'] ) {
+				case UR_Admin_User_Manager::APPROVED:
+					return $user;
+					break;
+				case UR_Admin_User_Manager::PENDING:
+					$user_email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
+					if ( ur_string_to_bool( $user_email_status ) ) {
+						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
+						return new WP_Error( 'pending_approval', $message );
+					} else {
+						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME'];
+
+						if ( get_option( 'ur_login_ajax_submission' ) ) {
+							$url .= $_SERVER['HTTP_REFERER'];
+						} else {
+							$url .= $_SERVER['REQUEST_URI'];
+						}
+						$url      = substr( $url, 0, strpos( $url, '?' ) );
+						$instance = new UR_Email_Confirmation();
+						$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+						$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
+						return new WP_Error( 'user_email_not_verified', $message );
+					}
+					break;
+				case UR_Admin_User_Manager::DENIED:
+					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+
+					return new WP_Error( 'denied_access', $message );
+					break;
+			}
+		} elseif ( 'email_confirmation' === $login_option || 'email_confirmation' === $status['login_option'] ) {
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
 			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME'];
@@ -222,7 +257,7 @@ class UR_User_Approval {
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
 			return $user;
-		} elseif ( 'payment' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
+		} elseif ( 'payment' === $login_option ) {
 			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
 
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );

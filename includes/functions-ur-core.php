@@ -2015,7 +2015,14 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
-			$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value ) : '';
+			$upload_data = array();
+			$file_data = explode( ',', $form_data->value);
+			
+			foreach ($file_data as $key => $value) {
+				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				array_push( $upload_data,$file );
+			}
+			$form_data->value = $upload_data;
 		}
 
 		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
