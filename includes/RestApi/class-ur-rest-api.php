@@ -81,6 +81,10 @@ class UR_REST_API {
 		$settings_to_update = $request['settings'];
 
 		foreach ( $settings_to_update as $option => $value ) {
+
+			if ( 'users_can_register' === $option ) {
+				$value = ur_string_to_bool( $value );
+			}
 			update_option( $option, $value );
 		}
 
@@ -139,7 +143,7 @@ class UR_REST_API {
 
 		return new \WP_REST_Response(
 			array(
-				'success' => true,
+				'success'   => true,
 				'page_slug' => $page_slug,
 			),
 			200
@@ -162,31 +166,31 @@ class UR_REST_API {
 		unset( $all_roles_except_admin['administrator'] );
 
 		$settings = array(
-			'general_settings'    => array(
+			'general_settings'      => array(
 				'title'    => __( 'General', 'user-registration' ),
 				'settings' => array(
 					array(
-						'title'    => __( 'Anyone can register', 'user-registration' ),
-						'desc'     => __( 'Check to enable users to register', 'user-registration' ),
-						'id'       => 'users_can_register',
-						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'title'   => __( 'Anyone can register', 'user-registration' ),
+						'desc'    => __( 'Check to enable users to register', 'user-registration' ),
+						'id'      => 'users_can_register',
+						'type'    => 'checkbox',
+						'default' => 'yes',
 					),
 					array(
-						'title'    => __( 'User login option', 'user-registration' ),
-						'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_login_options',
-						'type'     => 'select',
-						'default'  => 0,
-						'options'  => ur_login_option(),
+						'title'   => __( 'User login option', 'user-registration' ),
+						'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+						'id'      => 'user_registration_general_setting_login_options',
+						'type'    => 'select',
+						'default' => 0,
+						'options' => ur_login_option(),
 					),
 					array(
-						'title'    => __( 'Prevent dashboard access', 'user-registration' ),
-						'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
-						'id'       => 'user_registration_general_setting_disabled_user_roles',
-						'type'     => 'multiselect',
-						'default'  => array_search( 'subscriber', array_keys( $all_roles_except_admin ) ),
-						'options'  => $all_roles_except_admin,
+						'title'   => __( 'Prevent dashboard access', 'user-registration' ),
+						'desc'    => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
+						'id'      => 'user_registration_general_setting_disabled_user_roles',
+						'type'    => 'multiselect',
+						'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
+						'options' => $all_roles_except_admin,
 					),
 				),
 			),
@@ -194,12 +198,12 @@ class UR_REST_API {
 				'title'    => __( 'Registration', 'user-registration' ),
 				'settings' => array(
 					array(
-						'title'             => __( 'Form Template', 'user-registration' ),
-						'desc'               => __( 'Choose form template to use.', 'user-registration' ),
-						'id'                => 'user_registration_form_template',
-						'type'              => 'radio',
-						'default'           => 0,
-						'options'           => array(
+						'title'   => __( 'Form Template', 'user-registration' ),
+						'desc'    => __( 'Choose form template to use.', 'user-registration' ),
+						'id'      => 'user_registration_form_template',
+						'type'    => 'radio',
+						'default' => 0,
+						'options' => array(
 							'default'      => __( 'Default', 'user-registration' ),
 							'bordered'     => __( 'Bordered', 'user-registration' ),
 							'flat'         => __( 'Flat', 'user-registration' ),
@@ -208,19 +212,19 @@ class UR_REST_API {
 						),
 					),
 					array(
-						'title'             => __( 'Enable Strong Password', 'user-registration' ),
-						'desc'               => __( 'Make strong password compulsary.', 'user-registration' ),
-						'id'                => 'user_registration_form_setting_enable_strong_password',
-						'type'              => 'checkbox',
-						'default'           => 'no',
+						'title'   => __( 'Enable Strong Password', 'user-registration' ),
+						'desc'    => __( 'Make strong password compulsary.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_enable_strong_password',
+						'type'    => 'checkbox',
+						'default' => 'no',
 					),
 					array(
-						'title'             => __( 'Minimum Password Strength', 'user-registration' ),
-						'desc'               => __( 'Set minimum required password strength.', 'user-registration' ),
-						'id'                => 'user_registration_form_setting_minimum_password_strength',
-						'type'              => 'radio',
-						'default'           => 3,
-						'options'           => array(
+						'title'   => __( 'Minimum Password Strength', 'user-registration' ),
+						'desc'    => __( 'Set minimum required password strength.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_minimum_password_strength',
+						'type'    => 'radio',
+						'default' => 3,
+						'options' => array(
 							'0' => __( 'Very Weak', 'user-registration' ),
 							'1' => __( 'Weak', 'user-registration' ),
 							'2' => __( 'Medium', 'user-registration' ),
@@ -228,25 +232,25 @@ class UR_REST_API {
 						),
 					),
 					array(
-						'title'             => __( 'Default User Role', 'user-registration' ),
-						'desc'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
-						'id'                => 'user_registration_form_setting_default_user_role',
-						'type'              => 'select',
-						'default'           => array_search( 'subscriber', array_keys( $all_roles ) ),
-						'options'           => $all_roles,
+						'title'   => __( 'Default User Role', 'user-registration' ),
+						'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_default_user_role',
+						'type'    => 'select',
+						'default' => array_search( 'subscriber', array_keys( $all_roles ) ),
+						'options' => $all_roles,
 					),
 				),
 			),
-			'login_settings' => array(
+			'login_settings'        => array(
 				'title'    => __( 'Login', 'user-registration' ),
 				'settings' => array(
 					array(
-						'title'    => __( 'Form Template', 'user-registration' ),
-						'desc'     => __( 'Choose the login form template.', 'user-registration' ),
-						'id'       => 'user_registration_login_options_form_template',
-						'type'     => 'radio',
-						'default'  => 0,
-						'options'  => array(
+						'title'   => __( 'Form Template', 'user-registration' ),
+						'desc'    => __( 'Choose the login form template.', 'user-registration' ),
+						'id'      => 'user_registration_login_options_form_template',
+						'type'    => 'radio',
+						'default' => 0,
+						'options' => array(
 							'default'      => __( 'Default', 'user-registration' ),
 							'bordered'     => __( 'Bordered', 'user-registration' ),
 							'flat'         => __( 'Flat', 'user-registration' ),
@@ -255,49 +259,49 @@ class UR_REST_API {
 						),
 					),
 					array(
-						'title'    => __( 'Enable lost password', 'user-registration' ),
-						'desc' => __( 'Check to enable/disable lost password.', 'user-registration' ),
-						'id'       => 'user_registration_login_options_lost_password',
-						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'title'   => __( 'Enable lost password', 'user-registration' ),
+						'desc'    => __( 'Check to enable/disable lost password.', 'user-registration' ),
+						'id'      => 'user_registration_login_options_lost_password',
+						'type'    => 'checkbox',
+						'default' => 'yes',
 					),
 					array(
-						'title'    => __( 'Enable remember me', 'user-registration' ),
-						'desc' => __( 'Check to enable/disable remember me.', 'user-registration' ),
-						'id'       => 'user_registration_login_options_remember_me',
-						'type'     => 'checkbox',
-						'default'  => 'yes',
+						'title'   => __( 'Enable remember me', 'user-registration' ),
+						'desc'    => __( 'Check to enable/disable remember me.', 'user-registration' ),
+						'id'      => 'user_registration_login_options_remember_me',
+						'type'    => 'checkbox',
+						'default' => 'yes',
 					),
 
 					array(
-						'title'    => __( 'Enable hide/show password', 'user-registration' ),
-						'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
-						'id'       => 'user_registration_login_option_hide_show_password',
-						'type'     => 'checkbox',
-						'default'  => 'no',
+						'title'   => __( 'Enable hide/show password', 'user-registration' ),
+						'desc'    => __( 'Check to enable hide/show password icon.', 'user-registration' ),
+						'id'      => 'user_registration_login_option_hide_show_password',
+						'type'    => 'checkbox',
+						'default' => 'no',
 					),
 				),
 			),
-			'my_account_settings' => array(
+			'my_account_settings'   => array(
 				'title'    => __( 'My Account', 'user-registration' ),
 				'settings' => array(
 					array(
-						'title'    => __( 'My Account Page Layout', 'user-registration' ),
-						'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
-						'id'       => 'user_registration_my_account_layout',
-						'type'     => 'radio',
-						'default'  => 0,
-						'options'  => array(
+						'title'   => __( 'My Account Page Layout', 'user-registration' ),
+						'desc'    => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
+						'id'      => 'user_registration_my_account_layout',
+						'type'    => 'radio',
+						'default' => 0,
+						'options' => array(
 							'horizontal' => __( 'Horizontal', 'user-registration' ),
 							'vertical'   => __( 'Vertical', 'user-registration' ),
 						),
 					),
 					array(
-						'title'    => __( 'Disable profile picture', 'user-registration' ),
-						'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
-						'id'       => 'user_registration_disable_profile_picture',
-						'type'     => 'checkbox',
-						'default'  => 'no',
+						'title'   => __( 'Disable profile picture', 'user-registration' ),
+						'desc'    => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
+						'id'      => 'user_registration_disable_profile_picture',
+						'type'    => 'checkbox',
+						'default' => 'no',
 					),
 				),
 			),

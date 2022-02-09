@@ -333,7 +333,7 @@ class UR_Admin {
 	 * Handle redirects to setup/welcome page after install and updates.
 	 * For setup wizard, transient must be present, the user must have access rights, and we must ignore the network/bulk plugin updaters.
 	 *
-	 * @since 2.1.3
+	 * @since 2.1.4
 	 */
 	public function admin_redirects() {
 		if ( ! get_transient( '_ur_activation_redirect' ) ) {
