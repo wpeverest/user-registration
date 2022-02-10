@@ -560,11 +560,13 @@ class UR_AJAX {
 	 * @since 1.9.9
 	 */
 	public static function send_test_email() {
-		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		$from_name    = apply_filters('wp_mail_from_name',get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters('wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$email   = sanitize_email( isset( $_POST['email'] ) ? $_POST['email'] : '' );
-		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );
-		$header  = "Reply-To: {{from}} \r\n";
-		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
+		$header  = 'From: ' . $from_name . ' <' . $sender_email . ">\r\n";
+		$header .= 'Reply-To: ' . $sender_email . "\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>
