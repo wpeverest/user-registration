@@ -37,7 +37,8 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
-
+			$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+			$invisible = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 			$settings = apply_filters(
 				'user_registration_integration_settings',
 				array(
@@ -67,6 +68,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key',
 									'default'  => '',
 									'type'     => 'text',
+									'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
 									'class'    => '',
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
@@ -78,7 +80,41 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret',
 									'default'  => '',
 									'type'     => 'text',
+									'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
 									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Site Key (v2)', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'id'       => 'user_registration_integration_setting_recaptcha_invisible_site_key',
+									'default'  => '',
+									'type'     => 'text',
+									'is_visible' => 'v2' === $recaptcha_type && 'yes' === $invisible,
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+
+								),
+								array(
+									'title'    => __( 'Secret Key (v2)', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'id'       => 'user_registration_integration_setting_recaptcha_invisible_site_secret',
+									'default'  => '',
+									'type'     => 'text',
+									'is_visible' => 'v2' === $recaptcha_type && 'yes' === $invisible,
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Invisible reCAPTCHA', 'user-registration' ),
+									'desc'     => sprintf( __( 'check this to enable invisible recaptcha.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'id'       => 'user_registration_integration_setting_invisible_recaptcha_v2',
+									'default'  => 'no',
+									'type'     => 'checkbox',
+									'is_visible' => 'v2' === $recaptcha_type,
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -88,6 +124,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_v3',
 									'default'  => '',
 									'type'     => 'text',
+									'is_visible' => 'v3' === $recaptcha_type,
 									'class'    => '',
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
@@ -99,6 +136,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_v3',
 									'default'  => '',
 									'type'     => 'text',
+									'is_visible' => 'v3' === $recaptcha_type,
 									'class'    => '',
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
