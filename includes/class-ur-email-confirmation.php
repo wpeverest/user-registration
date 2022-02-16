@@ -279,9 +279,9 @@ class UR_Email_Confirmation {
 		$key            = hash( 'sha256', $secret_key );
 		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
 
-		if ( $action == 'e' ) {
+		if ( 'e' == $action ) {
 			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( $action == 'd' ) {
+		} elseif ( 'd' == $action ) {
 			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
 		}
 
@@ -298,13 +298,13 @@ class UR_Email_Confirmation {
 
 		$length        = 50;
 		$token         = '';
-		$codeAlphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$codeAlphabet .= 'abcdefghijklmnopqrstuvwxyz';
-		$codeAlphabet .= '0123456789';
-		$max           = strlen( $codeAlphabet );
+		$code_alphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$code_alphabet .= 'abcdefghijklmnopqrstuvwxyz';
+		$code_alphabet .= '0123456789';
+		$max           = strlen( $code_alphabet );
 
 		for ( $i = 0; $i < $length; $i++ ) {
-			$token .= $codeAlphabet[ random_int( 0, $max - 1 ) ];
+			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
 		}
 
 		$token .= $this->crypt_the_string( $user_id . '_' . time(), 'e' );
@@ -348,7 +348,8 @@ class UR_Email_Confirmation {
 	/**
 	 * Check the email status during authentication
 	 *
-	 * @param  WP_User $user User instance
+	 * @param  WP_User $user User instance.
+	 * @param mixed   $password Password.
 	 * @return mixed
 	 */
 	public function check_email_status( WP_User $user, $password ) {
@@ -361,11 +362,12 @@ class UR_Email_Confirmation {
 
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
-			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
 			$url = substr( $url, 0, strpos( $url, '?' ) );
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
-			if ( $email_status === '0' ) {
+			if ( '0' === $email_status ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
@@ -377,8 +379,8 @@ class UR_Email_Confirmation {
 	/**
 	 * If the user is not approved, disalow to reset the password fom Lost Passwod form and display an error message
 	 *
-	 * @param $result
-	 * @param $user_id
+	 * @param mixed $result Result.
+	 * @param int   $user_id User Id.
 	 *
 	 * @return \WP_Error
 	 */
@@ -389,7 +391,7 @@ class UR_Email_Confirmation {
 
 			$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 
-			if ( $email_status === '0' ) {
+			if ( '0' === $email_status ) {
 				$error_message = __( 'Email not verified! Verify your email by clicking on the link sent to your email.', 'user-registration' );
 				$result        = new WP_Error( 'user_email_not_verified', $error_message );
 			}
@@ -398,9 +400,11 @@ class UR_Email_Confirmation {
 	}
 
 	/**
+	 * Deprecated my_simple_crypt function.
+	 *
 	 * @deprecated 1.4.0
-	 * @param  string $string the string to encrypt/decrypt
-	 * @param  string $action the action encrypt or decrypt
+	 * @param  string $string the string to encrypt/decrypt.
+	 * @param  string $action the action encrypt or decrypt.
 	 * @return void
 	 */
 	public function my_simple_crypt( $string, $action ) {
@@ -408,8 +412,10 @@ class UR_Email_Confirmation {
 	}
 
 	/**
+	 * Deprecated getToken function.
+	 *
 	 * @deprecated 1.4.0
-	 * @param $user_id User's ID.
+	 * @param int $user_id User's ID.
 	 * @return void
 	 */
 	public function getToken( $user_id ) {
