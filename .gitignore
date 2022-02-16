@@ -32,7 +32,7 @@ Thumbs.db
 
 # PHP Unit Tests
 /tests/.env
-/tests/
+/tests/wordpress
 
 # Local overrides
 phpcs.xml
