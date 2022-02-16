@@ -1,3 +1,18 @@
+= 2.1.3    - 26/01/2022
+* Dev      - Combine two login option compatibility.
+* Dev      - Introduce hooks for save button in myaccount.
+* Fix      - Security and escaping issues.
+* Fix      - Cannot unhide labels.
+* Fix      - Profile picture remove, update and save on the edit profile page.
+* Fix      - File upload data not updated in profile details changed email.
+
+= 2.1.2    - 07/01/2022
+* Dev      - Hooks for custom advance setting.
+* Enhance  - Extension page design and addons installation.
+* Enhance  - Size limit on profile picture field in edit profile page.
+* Fix      - Escaping issue in deactivation notice.
+* Fix      - Resend verification not working when ajax login is enabled.
+
 = 2.1.1    - 31/12/2021
 * Fix 	   - Sanitization and escaping issues.
 * Tweak    - Images/JSON files locally added.

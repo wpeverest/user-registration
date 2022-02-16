@@ -155,7 +155,7 @@ class UR_Admin_Settings {
 		if ( $flag ) {
 
 			// Save settings if data has been posted.
-			if ( ! empty( $_POST ) ) {
+			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) {
 				self::save();
 			}
 		}
@@ -480,7 +480,7 @@ class UR_Admin_Settings {
 												class="' . esc_attr( $value['class'] ) . '"
 												' . esc_attr( implode( ' ', $custom_attributes ) ) . '
 												' . esc_attr( checked( $key, $option_value, false ) ) . '
-												/>' . esc_html( $val ) . '</label>';
+												/>' . wp_kses_post( $val ) . '</label>';
 								$settings .= '</li>';
 							}
 

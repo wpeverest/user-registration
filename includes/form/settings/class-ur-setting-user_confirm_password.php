@@ -43,6 +43,7 @@ class UR_Setting_User_confirm_password extends UR_Field_Settings {
 			),
 		);
 
+		$fields = apply_filters( 'user_confirm_password_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}
 }

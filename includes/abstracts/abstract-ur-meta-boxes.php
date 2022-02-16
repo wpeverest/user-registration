@@ -43,10 +43,21 @@ abstract class UR_Meta_Boxes {
 
 		$checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" checked>';
 
+		$metabox__allowedtags = array(
+			'input' => array(
+				'type' => array(),
+				'id' => array(),
+				'name' => array(),
+				'class' => array(),
+				'checked' => array(),
+				'style' => array(),
+			),
+		);
+
 		if ( 'on' === $get_meta_data ) {
-			echo esc_html( $checked );
+			echo wp_kses( $checked, $metabox__allowedtags );
 		} else {
-			echo esc_html( $non_checked );
+			echo wp_kses( $non_checked, $metabox__allowedtags );
 		}
 
 		echo '</div>';
@@ -88,7 +99,7 @@ abstract class UR_Meta_Boxes {
 					<?php
 
 					if ( is_array( $get_meta_data ) ) {
-						selected( in_array( $key, $get_meta_data, true ), true );
+						selected( in_array( $key, $get_meta_data ), true );
 					} else {
 						selected( $get_meta_data, $key );
 					}

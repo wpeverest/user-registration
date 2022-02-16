@@ -2015,7 +2015,14 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
-			$form_data->value = isset( $form_data->value ) ? wp_get_attachment_url( $form_data->value ) : '';
+			$upload_data = array();
+			$file_data = explode( ',', $form_data->value);
+			
+			foreach ($file_data as $key => $value) {
+				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				array_push( $upload_data,$file );
+			}
+			$form_data->value = $upload_data;
 		}
 
 		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
@@ -2282,5 +2289,147 @@ if ( ! function_exists( 'ur_string_to_bool' ) ) {
 		}
 		$string = strtolower( $string );
 		return ( 'yes' === $string || 1 === $string || 'true' === $string || '1' === $string );
+	}
+}
+
+
+
+if ( ! function_exists( 'ur_install_extensions' ) ) {
+	/**
+	 * This function return boolean according to string to avoid colision of 1, true, yes.
+	 *
+	 * @param [string] $name Name of the extension.
+	 * @param [string] $slug Slug of the extension.
+	 * @throws Exception Extension Download and activation unsuccessful message.
+	 */
+	function ur_install_extensions( $name, $slug ) {
+		try {
+
+			$plugin = plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
+			$status = array(
+				'install' => 'plugin',
+				'slug'    => sanitize_key( wp_unslash( $slug ) ),
+			);
+
+			if ( ! current_user_can( 'install_plugins' ) ) {
+				$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'user-registration' );
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+				$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+				$status['plugin']     = $plugin;
+				$status['pluginName'] = $plugin_data['Name'];
+
+				if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+					$result = activate_plugin( $plugin );
+
+					if ( is_wp_error( $result ) ) {
+						$status['errorCode']    = $result->get_error_code();
+						$status['errorMessage'] = $result->get_error_message();
+
+						/* translators: %1$s: Activation error message */
+						throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+					}
+
+					$status['success'] = true;
+					$status['message'] = $name . ' has been installed and activated successfully';
+
+					return $status;
+				}
+			}
+
+			$api = json_decode(
+				UR_Updater_Key_API::version(
+					array(
+						'license'   => get_option( 'user-registration_license_key' ),
+						'item_name' => $name,
+					)
+				)
+			);
+
+			if ( is_wp_error( $api ) ) {
+				$status['errorMessage'] = $api->get_error_message();
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			$status['pluginName'] = $api->name;
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
+			$upgrader = new Plugin_Upgrader( $skin );
+			$result   = $upgrader->install( $api->download_link );
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				$status['debug'] = $skin->get_upgrade_messages();
+			}
+
+			if ( is_wp_error( $result ) ) {
+				$status['errorCode']    = $result->get_error_code();
+				$status['errorMessage'] = $result->get_error_message();
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_wp_error( $skin->result ) ) {
+				$status['errorCode']    = $skin->result->get_error_code();
+				$status['errorMessage'] = $skin->result->get_error_message();
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( $skin->get_errors()->get_error_code() ) {
+				$status['errorMessage'] = $skin->get_error_messages();
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			} elseif ( is_null( $result ) ) {
+				global $wp_filesystem;
+
+				$status['errorCode']    = 'unable_to_connect_to_filesystem';
+				$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
+
+				// Pass through the error from WP_Filesystem if one was raised.
+				if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+					$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+				}
+
+				/* translators: %1$s: Activation error message */
+				throw new Exception( sprintf( __( '<strong>Activation error:</strong> %1$s', 'user-registration' ), $status['errorMessage'] ) );
+			}
+
+			$install_status = install_plugin_install_status( $api );
+
+			if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+				$status['activateUrl'] =
+				esc_url_raw(
+					add_query_arg(
+						array(
+							'action'   => 'activate',
+							'plugin'   => $install_status['file'],
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+						),
+						admin_url( 'admin.php?page=user-registration-addons' )
+					)
+				);
+			}
+
+			$status['success'] = true;
+			$status['message'] = $name . ' has been installed and activated successfully';
+
+			return $status;
+
+		} catch ( Exception $e ) {
+
+			$message           = $e->getMessage();
+			$status['success'] = false;
+			$status['message'] = $message;
+
+			return $status;
+		}
 	}
 }
