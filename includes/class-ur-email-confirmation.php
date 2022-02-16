@@ -5,8 +5,6 @@
  * @class    UR_Email_Confirmation
  * @since    1.1.5
  * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,11 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Email_Confirmation {
 
+	/**
+	 * UR_Email_Confirmation Constructor.
+	 */
 	public function __construct() {
 
 		if ( is_admin() ) {
 			add_filter( 'manage_users_columns', array( $this, 'add_column_head' ) );
-			// add_filter( 'user_row_actions', array( $this, 'create_quick_links' ), 10, 2 );
 			add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		}
 
@@ -44,10 +44,10 @@ class UR_Email_Confirmation {
 
 		$user_id = absint( isset( $_GET['user'] ) ? $_GET['user'] : 0 );
 
-			$action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
-			$mode   = isset( $_POST['mode'] ) ? $_POST['mode'] : false;
+		$action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
+		$mode   = isset( $_POST['mode'] ) ? wp_unslash( sanitize_key( $_POST['mode'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification
 
-			// If this is a multisite, bulk request, stop now!
+		// If this is a multisite, bulk request, stop now!
 		if ( 'list' == $mode ) {
 			return;
 		}
@@ -59,7 +59,7 @@ class UR_Email_Confirmation {
 			$redirect = admin_url( 'users.php' );
 			$status   = $action;
 
-			if ( $status == 'resend_verification' ) {
+			if ( 'resend_verification' == $status ) {
 				$user    = get_user_by( 'id', $user_id );
 				$form_id = ur_get_form_id_by_userid( $user_id );
 
@@ -93,7 +93,7 @@ class UR_Email_Confirmation {
 	/**
 	 * Add the column header for the email status column
 	 *
-	 * @param array $columns
+	 * @param array $columns Column.
 	 *
 	 * @return array
 	 */
@@ -121,7 +121,9 @@ class UR_Email_Confirmation {
 		wp_enqueue_style( 'user-registration-css' );
 	}
 
-	// Successful registration message.
+	/**
+	 * Successful registration message.
+	 */
 	public function custom_registration_message() {
 		$default = __( 'User successfully registered. Login to continue.', 'user-registration' );
 		$message = get_option( 'user_registration_successful_email_verified_message', $default );
@@ -132,27 +134,35 @@ class UR_Email_Confirmation {
 	 * Email Successfully verified and waiting for admin approval Message.
 	 */
 	public function custom_email_confirmed_admin_await_message() {
-		$default = __('Email has successfully been verified. Now, please wait until the admin approves you to give access for the login.', 'user-registration' );
+		$default = __( 'Email has successfully been verified. Now, please wait until the admin approves you to give access for the login.', 'user-registration' );
 		$message = get_option( 'user_registration_pro_email_verified_admin_approval_await_message', $default );
 		return ur_print_notice( $message );
 	}
 
-	// Token mismatch message.
+	/**
+	 * Token mismatch message.
+	 */
 	public function custom_registration_error_message() {
 		return ur_print_notice( esc_html__( 'Token Mismatch!', 'user-registration' ), 'error' );
 	}
 
-	// Token expired message.
+	/**
+	 * Token expired message.
+	 */
 	public function custom_token_expired_message() {
 		return ur_print_notice( esc_html__( 'Token Expired . Please request for new verification email.', 'user-registration' ), 'error' );
 	}
 
-	// Resend verification email message.
+	/**
+	 * Resend verification email message.
+	 */
 	public function custom_resend_email_token_message() {
 		return ur_print_notice( esc_html__( 'Verification Email Sent!', 'user-registration' ) );
 	}
 
-	// Resend verification email error message.
+	/**
+	 * Resend verification email error message.
+	 */
 	public function custom_resend_email_token_error_message() {
 		return ur_print_notice( esc_html__( 'User does not exist!', 'user-registration' ), 'error' );
 	}
@@ -169,15 +179,14 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && $_GET['ur_resend_token'] === 'true' ) {
-			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ur_resend_token' ) ) {
+		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && 'true' === $_GET['ur_resend_token'] ) {
+			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_key( $_REQUEST['_wpnonce'] ) ), 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output  = $this->crypt_the_string( $_GET['ur_resend_id'], 'd' );
+			$output  = $this->crypt_the_string( wp_unslash( sanitize_key( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
-
 			$user    = get_user_by( 'id', $user_id );
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
@@ -207,7 +216,7 @@ class UR_Email_Confirmation {
 			return;
 		} else {
 
-			$ur_token     = str_split( $_GET['ur_token'], 50 );
+			$ur_token     = str_split( wp_unslash( sanitize_key( $_GET['ur_token'] ) ), 50 );
 			$token_string = $ur_token[1];
 
 			if ( 2 < count( $ur_token ) ) {
@@ -225,7 +234,7 @@ class UR_Email_Confirmation {
 			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-				if ( isset( $output[1]) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
+				if ( isset( $output[1] ) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
 				} else {
@@ -256,8 +265,8 @@ class UR_Email_Confirmation {
 	 * Encrypt/Decrypt the provided string.
 	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
 	 *
-	 * @param  string $string String to encrypt/decrypt
-	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt
+	 * @param  string $string String to encrypt/decrypt.
+	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
 	 * @return string Encrypted/Decrypted string.
 	 */
 	public function crypt_the_string( $string, $action = 'e' ) {
@@ -316,20 +325,20 @@ class UR_Email_Confirmation {
 		$form_id = isset( $form_id ) ? $form_id : 0;
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
-		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option  ) {
+		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
 
-			if('admin_approval_after_email_confirmation' === $login_option ) {
+			if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 				update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'false' );
 			}
-      
-			//update user status when login using social connect
+
+			// update user status when login using social connect.
 			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 
-				if('admin_approval_after_email_confirmation' === $login_option ) {
+				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
 				}
 			}
