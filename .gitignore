@@ -31,8 +31,7 @@ Thumbs.db
 /vendor/
 
 # PHP Unit Tests
-/tests/.env
-/tests/wordpress
+/tests/
 
 # Local overrides
 phpcs.xml
