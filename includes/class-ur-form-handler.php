@@ -180,7 +180,6 @@ class UR_Form_Handler {
 					$disabled = true;
 				}
 			}
-			error_log( print_r( $_POST, true ) );
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
