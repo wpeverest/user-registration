@@ -1449,19 +1449,22 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 		if ( 0 === $rc_counter ) {
 			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
+
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
-			wp_localize_script(
-				$enqueue_script,
-				'ur_google_recaptcha_code',
-				array(
-					'site_key'          => $recaptcha_site_key,
-					'is_captcha_enable' => true,
-					'version'           => $recaptcha_version,
-				)
+
+			$ur_google_recaptcha_code = array(
+				'site_key'          => $recaptcha_site_key,
+				'is_captcha_enable' => true,
+				'version'           => $recaptcha_version,
 			);
 
-			$rc_counter++;
+			?>
+				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
+					const ur_google_recaptcha_code = <?php echo json_encode( $ur_google_recaptcha_code ); ?>
+				</script>
+				<?php
+				$rc_counter++;
 		}
 
 		if ( 'v3' === $recaptcha_version ) {
@@ -2016,11 +2019,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 			$upload_data = array();
-			$file_data = explode( ',', $form_data->value);
-			
-			foreach ($file_data as $key => $value) {
-				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
-				array_push( $upload_data,$file );
+			$file_data = explode( ',', $form_data->value );
+
+			foreach ( $file_data as $key => $value ) {
+				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				array_push( $upload_data, $file );
 			}
 			$form_data->value = $upload_data;
 		}
