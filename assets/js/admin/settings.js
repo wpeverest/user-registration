@@ -147,6 +147,11 @@
 					)
 						.closest("tr")
 						.hide();
+					$(
+						"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+					)
+						.closest("tr")
+						.hide();
 				} else {
 					$(
 						"#user_registration_integration_setting_recaptcha_site_key"
@@ -180,6 +185,11 @@
 						.show();
 					$(
 						"#user_registration_integration_setting_recaptcha_site_secret_v3"
+					)
+						.closest("tr")
+						.show();
+					$(
+						"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 					)
 						.closest("tr")
 						.show();
