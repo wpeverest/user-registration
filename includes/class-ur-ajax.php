@@ -90,15 +90,26 @@ class UR_AJAX {
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
-		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+		if ( 'v2' === $recaptcha_version && 'no' === $invisible_recaptcha ) {
+			$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		} elseif ( 'v2' === $recaptcha_version && 'yes' === $invisible_recaptcha ) {
+			$site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+		} elseif (  'v3' === $recaptcha_version ) {
+			$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		}
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 
 				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 				$data = json_decode( wp_remote_retrieve_body( $data ) );
-
-				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+			
+				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score <= get_option( 'user_registration_integration_setting_recaptcha_threshold_score_v3', apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) ) {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),

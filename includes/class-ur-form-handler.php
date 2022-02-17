@@ -378,7 +378,6 @@ class UR_Form_Handler {
 			$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
 		}
-		// $secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {
 

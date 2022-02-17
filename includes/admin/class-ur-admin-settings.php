@@ -331,7 +331,7 @@ class UR_Admin_Settings {
 
 					if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
 						foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
-							$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
+							$custom_attributes[] = esc_attr( $attribute ) . '=' . esc_attr( $attribute_value ) . '';
 						}
 					}
 
