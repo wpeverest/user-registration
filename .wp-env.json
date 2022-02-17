@@ -1,0 +1,11 @@
+{
+  "core": null,
+  "plugins": [
+    "."
+  ],
+  "config": {
+    "UR_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "WP_DEBUG_DISPLAY": true
+  }
+}
