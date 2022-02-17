@@ -33,6 +33,11 @@
 							.val();
 						if (ur_google_recaptcha_code.version == "v3") {
 							request_recaptcha_token();
+						} else if (
+							ur_google_recaptcha_code.version == "v2" &&
+							ur_google_recaptcha_code.is_invisible == "yes"
+						) {
+							request_invisible_recaptcha_token();
 						} else {
 							for (
 								var i = 0;
@@ -63,6 +68,11 @@
 					if (ur_recaptcha_node !== 0) {
 						if (ur_google_recaptcha_code.version == "v3") {
 							request_recaptcha_token();
+						} else if (
+							ur_google_recaptcha_code.version == "v2" &&
+							ur_google_recaptcha_code.is_invisible == "yes"
+						) {
+							request_invisible_recaptcha_token();
 						} else {
 							for (var i = 0; i <= google_recaptcha_login; i++) {
 								grecaptcha.reset(i);
@@ -154,6 +164,45 @@ function request_recaptcha_token() {
 				.then(function (token) {
 					jQuery("form.login")
 						.find("#g-recaptcha-response")
+						.text(token);
+				});
+		});
+	}
+}
+
+// invisible recaptcha v2
+function request_invisible_recaptcha_token() {
+	var node_invisible_recaptcha_register = jQuery(".ur-frontend-form").find(
+		"form.register #ur-recaptcha-node #node_invisible_recaptcha_register.g-recaptcha-invisible"
+	).length;
+
+	if (node_invisible_recaptcha_register !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha
+				.execute(ur_google_recaptcha_code.site_key, {
+					action: "register",
+				})
+				.then(function (token) {
+					jQuery("form.register")
+						.find("#g-invisible-recaptcha-response")
+						.text(token);
+
+					var captchaResponse = jQuery("form.register")
+						.find('[name="g-invisible-recaptcha-response"]')
+						.val();
+				});
+		});
+	}
+	var node_invisible_recaptcha_login = jQuery(".ur-frontend-form").find(
+		"form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_invisible_recaptcha_login.g-recaptcha-invisible"
+	).length;
+	if (node_invisible_recaptcha_login !== 0) {
+		grecaptcha.ready(function () {
+			grecaptcha
+				.execute(ur_google_recaptcha_code.site_key, { action: "login" })
+				.then(function (token) {
+					jQuery("form.login")
+						.find("#g-invisible-recaptcha-response")
 						.text(token);
 				});
 		});

@@ -1440,15 +1440,26 @@ function ur_get_user_login_option() {
 function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	$recaptcha_version     = get_option( 'user_registration_integration_setting_recaptcha_version' );
+	$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 	$recaptcha_site_key    = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 	$recaptcha_site_secret = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
+	if ( 'v2' === $recaptcha_version && 'no' === $invisible_recaptcha ) {
+		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+	} elseif ( 'v2' === $recaptcha_version && 'yes' === $invisible_recaptcha ) {
+		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+	} elseif (  'v3' === $recaptcha_version ) {
+		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+	}
 	static $rc_counter = 0;
 
 	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if ( 0 === $rc_counter ) {
-			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
+			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : ( ('yes' === $invisible_recaptcha) ? 'ur-google-recaptcha-invisible' : 'ur-google-recaptcha' );
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
 			wp_localize_script(
@@ -1458,6 +1469,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 					'site_key'          => $recaptcha_site_key,
 					'is_captcha_enable' => true,
 					'version'           => $recaptcha_version,
+					'is_invisible'		=> $invisible_recaptcha,
 				)
 			);
 
@@ -1473,15 +1485,25 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				$recaptcha_node = '';
 			}
 		} else {
-
-			if ( 'login' === $context ) {
-				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
-
-			} elseif ( 'register' === $context ) {
-				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
+			if ( 'yes' === $invisible_recaptcha ) {
+				if ( 'login' === $context ) {
+					$recaptcha_node = '<div id="node_invisible_recaptcha_login" class="g-recaptcha-invisible" data-size="invisible" style="display:none"><textarea id="g-invisible-recaptcha-response" name="g-invisible-recaptcha-response" ></textarea></div>';
+				} elseif ( 'register' === $context ) {
+					$recaptcha_node = '<div id="node_invisible_recaptcha_register" class="g-recaptcha-invisible" data-size="invisible" style="display:none"><textarea id="g-invisible-recaptcha-response" name="g-invisible-recaptcha-response" ></textarea></div>';
+				} else {
+					$recaptcha_node = '';
+				}
 			} else {
-				$recaptcha_node = '';
+				if ( 'login' === $context ) {
+					$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
+
+				} elseif ( 'register' === $context ) {
+					$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
+				} else {
+					$recaptcha_node = '';
+				}
 			}
+
 		}
 	} else {
 		$recaptcha_node = '';
@@ -2017,7 +2039,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 			$upload_data = array();
 			$file_data = explode( ',', $form_data->value);
-			
+
 			foreach ($file_data as $key => $value) {
 				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
 				array_push( $upload_data,$file );
