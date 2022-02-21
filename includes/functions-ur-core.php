@@ -1441,8 +1441,6 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 	$recaptcha_version     = get_option( 'user_registration_integration_setting_recaptcha_version' );
 	$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
-	$recaptcha_site_key    = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-	$recaptcha_site_secret = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 
 	if ( 'v2' === $recaptcha_version && 'no' === $invisible_recaptcha ) {
 		$recaptcha_site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
