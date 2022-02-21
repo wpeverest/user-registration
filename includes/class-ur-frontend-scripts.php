@@ -229,11 +229,6 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '2.0.0',
 			),
-			'ur-google-recaptcha-invisible'        => array(
-				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
-				'deps'    => array(),
-				'version' => '2.0.0',
-			),
 			'ur-google-recaptcha-v3'     => array(
 				'src'     => 'https://www.google.com/recaptcha/api.js?render=' . $recaptcha_site_key_v3,
 				'deps'    => array(),

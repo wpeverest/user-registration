@@ -1459,7 +1459,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if ( 0 === $rc_counter ) {
-			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : ( ('yes' === $invisible_recaptcha) ? 'ur-google-recaptcha-invisible' : 'ur-google-recaptcha' );
+			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
 			wp_localize_script(
@@ -1485,11 +1485,11 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				$recaptcha_node = '';
 			}
 		} else {
-			if ( 'yes' === $invisible_recaptcha ) {
+			if ( 'v2' === $recaptcha_version && 'yes' === $invisible_recaptcha ) {
 				if ( 'login' === $context ) {
-					$recaptcha_node = '<div id="node_invisible_recaptcha_login" class="g-recaptcha-invisible" data-size="invisible" style="display:none"><textarea id="g-invisible-recaptcha-response" name="g-invisible-recaptcha-response" ></textarea></div>';
+					$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" data-size="invisible"></div>';
 				} elseif ( 'register' === $context ) {
-					$recaptcha_node = '<div id="node_invisible_recaptcha_register" class="g-recaptcha-invisible" data-size="invisible" style="display:none"><textarea id="g-invisible-recaptcha-response" name="g-invisible-recaptcha-response" ></textarea></div>';
+					$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" data-size="invisible"></div>';
 				} else {
 					$recaptcha_node = '';
 				}

@@ -27,17 +27,21 @@
 			"user_registration_frontend_before_form_submit",
 			function (event, data, $registration_form, $error_message) {
 				if ("undefined" !== typeof ur_google_recaptcha_code) {
+					var captchaResponse;
 					if ("1" == $registration_form.data("captcha-enabled")) {
-						var captchaResponse = $registration_form
-							.find('[name="g-recaptcha-response"]')
-							.val();
+						if ("yes" === ur_google_recaptcha_code.is_invisible) {
+							captchaResponse = $registration_form
+								.find(
+									"#ur-recaptcha-node .g-recaptcha .grecaptcha-badge input#recaptcha-token"
+								)
+								.val();
+						} else {
+							captchaResponse = $registration_form
+								.find('[name="g-recaptcha-response"]')
+								.val();
+						}
 						if (ur_google_recaptcha_code.version == "v3") {
 							request_recaptcha_token();
-						} else if (
-							ur_google_recaptcha_code.version == "v2" &&
-							ur_google_recaptcha_code.is_invisible == "yes"
-						) {
-							request_invisible_recaptcha_token();
 						} else {
 							for (
 								var i = 0;
@@ -47,7 +51,7 @@
 								grecaptcha.reset(i);
 							}
 						}
-
+						console.log(captchaResponse);
 						if (0 === captchaResponse.length) {
 							$error_message["message"] = ursL10n.captcha_error;
 						}
@@ -68,11 +72,6 @@
 					if (ur_recaptcha_node !== 0) {
 						if (ur_google_recaptcha_code.version == "v3") {
 							request_recaptcha_token();
-						} else if (
-							ur_google_recaptcha_code.version == "v2" &&
-							ur_google_recaptcha_code.is_invisible == "yes"
-						) {
-							request_invisible_recaptcha_token();
 						} else {
 							for (var i = 0; i <= google_recaptcha_login; i++) {
 								grecaptcha.reset(i);
@@ -102,14 +101,28 @@ var onloadURCallback = function () {
 				$this
 					.find("#ur-recaptcha-node .g-recaptcha")
 					.attr("id", "node_recaptcha_register_" + form_id);
-				google_recaptcha_user_registration = grecaptcha.render(
-					"node_recaptcha_register_" + form_id,
-					{
-						sitekey: ur_google_recaptcha_code.site_key,
-						theme: "light",
-						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-					}
-				);
+				if (ur_google_recaptcha_code.is_invisible == "yes") {
+					$this
+						.find("#ur-recaptcha-node .grecaptcha-badge")
+						.css("visibility", "hidden");
+					google_recaptcha_user_registration = grecaptcha.render(
+						// "node_recaptcha_register",
+						{
+							sitekey: ur_google_recaptcha_code.site_key,
+						}
+					);
+					console.log(google_recaptcha_user_registration);
+					grecaptcha.execute(google_recaptcha_user_registration);
+				} else {
+					google_recaptcha_user_registration = grecaptcha.render(
+						"node_recaptcha_register_" + form_id,
+						{
+							sitekey: ur_google_recaptcha_code.site_key,
+							theme: "light",
+							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+						}
+					);
+				}
 			}
 		});
 
@@ -120,14 +133,25 @@ var onloadURCallback = function () {
 			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
 
 			if (ur_recaptcha_node.length !== 0) {
-				google_recaptcha_login = grecaptcha.render(
-					ur_recaptcha_node.find(".g-recaptcha").attr("id"),
-					{
-						sitekey: ur_google_recaptcha_code.site_key,
-						theme: "light",
-						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-					}
-				);
+				if (ur_google_recaptcha_code.is_invisible == "yes") {
+					google_recaptcha_login = grecaptcha.render(
+						ur_recaptcha_node.find(".g-recaptcha").attr("id"),
+						{
+							sitekey: ur_google_recaptcha_code.site_key,
+						},
+						true
+					);
+					grecaptcha.execute(google_recaptcha_login);
+				} else {
+					google_recaptcha_login = grecaptcha.render(
+						ur_recaptcha_node.find(".g-recaptcha").attr("id"),
+						{
+							sitekey: ur_google_recaptcha_code.site_key,
+							theme: "light",
+							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+						}
+					);
+				}
 			}
 		});
 };
@@ -164,45 +188,6 @@ function request_recaptcha_token() {
 				.then(function (token) {
 					jQuery("form.login")
 						.find("#g-recaptcha-response")
-						.text(token);
-				});
-		});
-	}
-}
-
-// invisible recaptcha v2
-function request_invisible_recaptcha_token() {
-	var node_invisible_recaptcha_register = jQuery(".ur-frontend-form").find(
-		"form.register #ur-recaptcha-node #node_invisible_recaptcha_register.g-recaptcha-invisible"
-	).length;
-
-	if (node_invisible_recaptcha_register !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, {
-					action: "register",
-				})
-				.then(function (token) {
-					jQuery("form.register")
-						.find("#g-invisible-recaptcha-response")
-						.text(token);
-
-					var captchaResponse = jQuery("form.register")
-						.find('[name="g-invisible-recaptcha-response"]')
-						.val();
-				});
-		});
-	}
-	var node_invisible_recaptcha_login = jQuery(".ur-frontend-form").find(
-		"form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_invisible_recaptcha_login.g-recaptcha-invisible"
-	).length;
-	if (node_invisible_recaptcha_login !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, { action: "login" })
-				.then(function (token) {
-					jQuery("form.login")
-						.find("#g-invisible-recaptcha-response")
 						.text(token);
 				});
 		});
