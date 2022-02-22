@@ -1759,10 +1759,10 @@ add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
 	if ( function_exists( 'icl_register_string' ) ) {
-		icl_register_string( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+		icl_register_string( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	if ( function_exists( 'icl_t' ) ) {
-		$variable = icl_t( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+		$variable = icl_t( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	return $variable;
 }
@@ -2016,11 +2016,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 			$upload_data = array();
-			$file_data = explode( ',', $form_data->value);
-			
-			foreach ($file_data as $key => $value) {
-				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
-				array_push( $upload_data,$file );
+			$file_data = explode( ',', $form_data->value );
+
+			foreach ( $file_data as $key => $value ) {
+				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				array_push( $upload_data, $file );
 			}
 			$form_data->value = $upload_data;
 		}

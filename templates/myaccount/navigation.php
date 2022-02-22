@@ -26,8 +26,10 @@ do_action( 'user_registration_before_account_navigation' );
 <nav class="user-registration-MyAccount-navigation">
 	<ul>
 		<?php foreach ( ur_get_account_menu_items() as $endpoint => $label ) : ?>
+			<?php $label = ur_string_translation( 0, 'user_registration_' . $endpoint . '_label', $label ); ?>
+			<?php $endpoint = ur_string_translation( 0, 'user_registration_' . $endpoint . '_slug', $endpoint ); ?>
 			<li class="<?php echo ur_get_account_menu_item_classes( $endpoint ); ?>">
-				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>"><?php echo esc_html( $label ); ?></a>
+				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>"><?php echo esc_html__( $label, 'user-registration' ); ?></a>
 			</li>
 		<?php endforeach; ?>
 	</ul>

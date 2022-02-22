@@ -636,6 +636,11 @@ class UR_Admin_User_List_Manager {
 		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) {
 			return false;
 		}
+
+		if ( get_user_meta( $user_id, 'ur_user_status', true ) == $_POST['ur_user_user_status'] ) {
+			return false;
+		}
+
 		if ( isset( $_POST['ur_user_user_status'] ) ) {
 			$new_status = $_POST['ur_user_user_status'];
 			$user_manager->save_status( $new_status );
