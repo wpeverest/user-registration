@@ -233,18 +233,22 @@ class UR_Admin {
 							<p>
 							<?php
 							echo wp_kses_post(
-								__('<strong>Hey there!</strong> <br>
+								__(
+									'<strong>Hey there!</strong> <br>
 								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-								'user-registration' )
+									'user-registration'
+								)
 							);
 							?>
 								</p>
 							<p class="extra-pad">
 							<?php
 							echo wp_kses_post(
-								__('<strong>What benefit would you have?</strong> <br>
+								__(
+									'<strong>What benefit would you have?</strong> <br>
 								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration')
+									'user-registration'
+								)
 							);
 							?>
 							</p>

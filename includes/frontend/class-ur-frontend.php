@@ -25,8 +25,33 @@ class UR_Frontend {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'after_setup_theme', array( $this, 'prevent_admin_access' ) );
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
+	}
+
+		/**
+		 * Prevent any user who cannot 'edit_posts' from accessing admin.
+		 */
+	public function prevent_admin_access() {
+		$user_id = get_current_user_id();
+
+		if ( $user_id > 0 ) {
+			$user_meta    = get_userdata( $user_id );
+			$user_roles   = $user_meta->roles;
+			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array() );
+			if ( ! is_array( $option_roles ) ) {
+				$option_roles = array();
+			}
+
+			if ( ! in_array( 'administrator', $user_roles, true ) ) {
+				$result = array_intersect( $user_roles, $option_roles );
+
+				if ( count( $result ) > 0 && apply_filters( 'user_registration_prevent_admin_access', true ) ) {
+					show_admin_bar( false );
+				}
+			}
+		}
 	}
 
 	/**
@@ -62,7 +87,7 @@ class UR_Frontend {
 			$instance                   = $class_name::get_instance();
 			$setting['general_setting'] = $field_object->general_setting;
 			$setting['advance_setting'] = $field_object->advance_setting;
-			$setting['icon']			=  isset($field_object->icon) ? $field_object->icon : '';
+			$setting['icon']            = isset( $field_object->icon ) ? $field_object->icon : '';
 			$field_type                 = ur_get_field_type( $field_object->field_key );
 
 			// Force drop the custom class because it has been addressed in prior container.
@@ -107,17 +132,17 @@ class UR_Frontend {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
 					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
+						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
+							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						}
 					}
-			    } else {
+				} else {
 					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
-					if(1 > absint( $matched )) {
+					if ( 1 > absint( $matched ) ) {
 						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $login_page->post_content );
-				    }
-			    }
+					}
+				}
 			}
 			$page_id = $login_page->ID;
 		} elseif ( ! empty( $myaccount_page ) ) {
@@ -127,18 +152,18 @@ class UR_Frontend {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
 					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
+						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/',  $shortcode['innerHTML'] );
+							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						}
 					}
-			    }
-		    } else {
+				}
+			} else {
 				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-				if(1 > absint( $matched )) {
+				if ( 1 > absint( $matched ) ) {
 					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
 				}
-		    }
+			}
 			$page_id = $myaccount_page->ID;
 		}
 
