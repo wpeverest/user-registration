@@ -122,7 +122,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 				?>
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
-						echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> ' . $recaptcha_node . '</div>';
+						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';
 					}
 
 					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );

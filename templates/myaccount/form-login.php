@@ -113,7 +113,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
-						echo '<div id="ur-recaptcha-node" style="width:100px;max-width: 100px;"> ' . $recaptcha_node . '</div>';
+						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';
 					}
 					?>
 

@@ -348,8 +348,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Google reCaptcha', 'user-registration' ),
-									'desc'     => __( 'Enter the error message in form submission on google recaptcha.', 'user-registration' ),
+									'title'    => __( 'reCaptcha', 'user-registration' ),
+									'desc'     => __( 'Enter the error message in form submission on recaptcha.', 'user-registration' ),
 									'id'       => 'user_registration_form_submission_error_message_recaptcha',
 									'type'     => 'text',
 									'desc_tip' => true,
@@ -457,7 +457,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Enable google reCaptcha', 'user-registration' ),
+									'title'    => __( 'Enable reCaptcha', 'user-registration' ),
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'checkbox',

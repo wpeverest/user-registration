@@ -346,7 +346,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 function ur_doing_it_wrong( $function, $message, $version ) {
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
 
-	if ( is_ajax() ) {
+	if ( defined( 'DOING_AJAX' ) ) {
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
 		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
 	} else {
@@ -1439,36 +1439,56 @@ function ur_get_user_login_option() {
  */
 function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
-	$recaptcha_version     = get_option( 'user_registration_integration_setting_recaptcha_version' );
-	$recaptcha_site_key    = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-	$recaptcha_site_secret = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-
+	$recaptcha_type     = get_option( 'user_registration_integration_setting_recaptcha_type' );
+	error_log( print_r( $recaptcha_type, true ) );
+	if ( 'v3' === $recaptcha_type ) {
+		$recaptcha_site_key    = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		$enqueue_script = 'ur-google-recaptcha-v3';
+	} elseif ( 'hCaptcha' === $recaptcha_type ) {
+		$recaptcha_site_key    = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		$enqueue_script = 'ur-recaptcha-hcaptcha';
+	} else {
+		$recaptcha_site_key    = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+		$recaptcha_site_secret = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		$enqueue_script = 'ur-google-recaptcha';
+	}
 	static $rc_counter = 0;
 
 	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
 
 		if ( 0 === $rc_counter ) {
-			$enqueue_script = 'v3' === $recaptcha_version ? 'ur-google-recaptcha-v3' : 'ur-google-recaptcha';
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
 			wp_localize_script(
 				$enqueue_script,
-				'ur_google_recaptcha_code',
+				'ur_recaptcha_code',
 				array(
 					'site_key'          => $recaptcha_site_key,
 					'is_captcha_enable' => true,
-					'version'           => $recaptcha_version,
+					'version'           => $recaptcha_type,
 				)
 			);
 
 			$rc_counter++;
 		}
 
-		if ( 'v3' === $recaptcha_version ) {
+		if ( 'v3' === $recaptcha_type ) {
 			if ( 'login' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
 			} elseif ( 'register' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-v3" style="display:none"><textarea id="g-recaptcha-response" name="g-recaptcha-response" ></textarea></div>';
+			} else {
+				$recaptcha_node = '';
+			}
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+
+			if ( 'login' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-hcaptcha"></div>';
+
+			} elseif ( 'register' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-hcaptcha"></div>';
 			} else {
 				$recaptcha_node = '';
 			}
@@ -2016,11 +2036,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 			$upload_data = array();
-			$file_data = explode( ',', $form_data->value);
-			
-			foreach ($file_data as $key => $value) {
-				$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
-				array_push( $upload_data,$file );
+			$file_data = explode( ',', $form_data->value );
+
+			foreach ( $file_data as $key => $value ) {
+				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
+				array_push( $upload_data, $file );
 			}
 			$form_data->value = $upload_data;
 		}

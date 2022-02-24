@@ -89,21 +89,34 @@ class UR_AJAX {
 		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : '';
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
-		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
-		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
+				if ( 'hCaptcha' === $recaptcha_type ) {
+					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
-				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-				$data = json_decode( wp_remote_retrieve_body( $data ) );
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				} else {
+					$secret_key        = 'v3' === $recaptcha_type ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
-				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
-						)
-					);
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
 				}
 			} else {
 				wp_send_json_error(
@@ -478,21 +491,34 @@ class UR_AJAX {
 		$info['remember'] = isset( $_POST['rememberme'] );
 		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : '';
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_version = get_option( 'user_registration_integration_setting_recaptcha_version' );
-		$secret_key        = 'v3' === $recaptcha_version ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
+				if ( 'hCaptcha' === $recaptcha_type ) {
+					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
-				$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-				$data = json_decode( wp_remote_retrieve_body( $data ) );
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				} else {
+					$secret_key        = 'v3' === $recaptcha_type ? get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' ) : get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
-				if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
-						)
-					);
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
 				}
 			} else {
 				wp_send_json_error(

@@ -221,7 +221,7 @@ class UR_Frontend_Scripts {
 			),
 			'ur-recaptcha'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-recaptcha' . $suffix . '.js' ),
-				'deps'    => array( 'jquery'),
+				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
 			'ur-google-recaptcha'        => array(
@@ -234,6 +234,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
+			'ur-recaptcha-hcaptcha'     => array(
+				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
+				'deps'    => array(),
+				'version' => UR_VERSION,
+			),
 			'ur-my-account'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),
@@ -241,7 +246,7 @@ class UR_Frontend_Scripts {
 			),
 			'ur-login'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/ur-login' . $suffix . '.js' ),
-				'deps'    => array( 'jquery'),
+				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
 			'jquery-tiptip'              => array(
@@ -402,12 +407,12 @@ class UR_Frontend_Scripts {
 					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
-				case 'ur-login':
-					return array(
-							'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-							'ur_login_form_save_nonce' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
-							'ajax_submission_on_ur_login'  	   => get_option('ur_login_ajax_submission', 'no' ),
-					);
+			case 'ur-login':
+				return array(
+					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
+					'ur_login_form_save_nonce'         => wp_create_nonce( 'ur_login_form_save_nonce' ),
+					'ajax_submission_on_ur_login'      => get_option( 'ur_login_ajax_submission', 'no' ),
+				);
 					break;
 		}
 

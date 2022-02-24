@@ -44,14 +44,14 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 					'title'    => __( 'Integration', 'user-registration' ),
 					'sections' => array(
 						'integration_options' => array(
-							'title'    => __( 'Google reCaptcha', 'user-registration' ),
+							'title'    => __( 'ReCaptcha', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Version', 'user-registration' ),
-									'desc'     => __( 'Select the google reCaptcha version', 'user-registration' ),
-									'id'       => 'user_registration_integration_setting_recaptcha_version',
+									'title'    => __( 'ReCaptcha Type', 'user-registration' ),
+									'desc'     => __( 'Select the reCaptcha type', 'user-registration' ),
+									'id'       => 'user_registration_integration_setting_recaptcha_type',
 									'default'  => 'v2',
 									'type'     => 'radio',
 									'class'    => '',
@@ -59,6 +59,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'options'  => array(
 										'v2' => 'reCaptcha v2',
 										'v3' => 'reCaptcha v3',
+										'hCaptcha' => 'hCaptcha',
 									),
 								),
 								array(
@@ -97,6 +98,27 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'title'    => __( 'Secret Key (v3)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_v3',
+									'default'  => '',
+									'type'     => 'text',
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Site Key ( hCaptcha )', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ),
+									'id'       => 'user_registration_integration_setting_recaptcha_site_key_hcaptcha',
+									'default'  => '',
+									'type'     => 'text',
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+
+								),
+								array(
+									'title'    => __( 'Secret Key ( hCaptcha )', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ),
+									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha',
 									'default'  => '',
 									'type'     => 'text',
 									'class'    => '',
