@@ -30,9 +30,9 @@ function ur_maybe_define_constant( $name, $value ) {
 if ( ! function_exists( 'is_ur_endpoint_url' ) ) {
 
 	/**
-	 * is_ur_endpoint_url - Check if an endpoint is showing.
+	 * Check if an endpoint is showing.
 	 *
-	 * @param  string $endpoint
+	 * @param string $endpoint User registration myaccount endpoints.
 	 *
 	 * @return bool
 	 */
@@ -64,7 +64,7 @@ if ( ! function_exists( 'is_ur_endpoint_url' ) ) {
 if ( ! function_exists( 'is_ur_account_page' ) ) {
 
 	/**
-	 * is_ur_account_page - Returns true when viewing an account page.
+	 * Returns true when viewing an account page.
 	 *
 	 * @return bool
 	 */
@@ -91,7 +91,7 @@ if ( ! function_exists( 'is_ur_edit_account_page' ) ) {
 if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 
 	/**
-	 * is_ur_lost_password_page - Returns true when viewing the lost password page.
+	 * Returns true when viewing the lost password page.
 	 *
 	 * @return bool
 	 */
@@ -106,7 +106,7 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
  *
- * @param  string|array $var
+ * @param  string|array $var Variable.
  *
  * @return string|array
  */
@@ -123,7 +123,7 @@ function ur_clean( $var ) {
  *
  * @since  1.0.0  Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
  *
- * @param  string $var
+ * @param  string $var Value to sanitize.
  *
  * @return string
  */
@@ -151,7 +151,7 @@ function ur_sanitize_tooltip( $var ) {
  *
  * @since  1.7.0
  * @param  array $dimensions Array of dimensions.
- * @param  array $suffix     Suffix, defaults to 'px'.
+ * @param  array $unit Unit, defaults to 'px'.
  * @return string
  */
 function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
@@ -218,10 +218,10 @@ function ur_bool_to_string( $bool ) {
 /**
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
- * @param string $template_name
- * @param array  $args          (default: array())
- * @param string $template_path (default: '')
- * @param string $default_path  (default: '')
+ * @param string $template_name Template Name.
+ * @param array  $args Extra arguments(default: array()).
+ * @param string $template_path Path of template provided (default: '').
+ * @param string $default_path  Default path of template provided(default: '').
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	if ( ! empty( $args ) && is_array( $args ) ) {
@@ -255,9 +255,9 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
  *        yourtheme        /    $template_name
  *        $default_path    /    $template_name
  *
- * @param string $template_name
- * @param string $template_path (default: '')
- * @param string $default_path  (default: '')
+ * @param string $template_name Template Name.
+ * @param string $template_path Path of template provided (default: '').
+ * @param string $default_path  Default path of template provided(default: '').
  *
  * @return string
  */
@@ -278,7 +278,7 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
 		)
 	);
 
-	// Get default template/
+	// Get default template.
 	if ( ! $template || UR_TEMPLATE_DEBUG_MODE ) {
 		$template = $default_path . $template_name;
 	}
@@ -290,8 +290,9 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
 /**
  * Display a UserRegistration help tip.
  *
- * @param  string $tip        Help tip text
- * @param  bool   $allow_html Allow sanitized HTML if true or escape
+ * @param  string $tip        Help tip text.
+ * @param  bool   $allow_html Allow sanitized HTML if true or escape.
+ * @param string $classname Classname.
  *
  * @return string
  */
@@ -315,7 +316,7 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 function ur_post_content_has_shortcode( $tag = '' ) {
 	global $post;
 	$new_shortcode = '';
-	$wp_version = '5.0';
+	$wp_version    = '5.0';
 	if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
 		if ( is_object( $post ) ) {
 			$blocks = parse_blocks( $post->post_content );
@@ -339,9 +340,9 @@ function ur_post_content_has_shortcode( $tag = '' ) {
  *
  * @since  1.0.0
  *
- * @param  string $function
- * @param  string $version
- * @param  string $replacement
+ * @param  string $function Callback function name.
+ * @param  string $message Message to display.
+ * @param  string $version Version of the plugin.
  */
 function ur_doing_it_wrong( $function, $message, $version ) {
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -376,7 +377,7 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
  *
  * @since  1.1.0
  *
- * @param  array $headers header,
+ * @param  array $headers header.
  *
  * @return array $headers
  */
@@ -396,7 +397,7 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
 /**
  * Set field type for all registrered field keys
  *
- * @param  string $field_key field's field key
+ * @param  string $field_key field's field key.
  * @return string $field_type
  */
 function ur_get_field_type( $field_key ) {
@@ -560,6 +561,8 @@ function ur_readonly_profile_details_fields() {
 }
 
 /**
+ * Get profile detail fields.
+ *
  * @deprecated 1.4.1
  * @return void
  */
@@ -1120,9 +1123,9 @@ function ur_login_option_with() {
 	return apply_filters(
 		'user_registration_login_options_with',
 		array(
-			'default'            => __( 'Username or Email', 'user-registration' ),
-			'username'           => __( 'Username', 'user-registration' ),
-			'email'              => __( 'Email', 'user-registration' ),
+			'default'  => __( 'Username or Email', 'user-registration' ),
+			'username' => __( 'Username', 'user-registration' ),
+			'email'    => __( 'Email', 'user-registration' ),
 		)
 	);
 }
@@ -1220,12 +1223,12 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 		foreach ( $data as $single_data ) {
 			foreach ( $single_data as $field_data ) {
 
-				$field_key = isset( $field_data->field_key ) && $field_data->field_key !== null ? $field_data->field_key : '';
+				$field_key = isset( $field_data->field_key ) && null !== $field_data->field_key ? $field_data->field_key : '';
 
 				if ( ! empty( $field_key ) ) {
-					$field_name = isset( $field_data->general_setting->field_name ) && $field_data->general_setting->field_name !== null ? $field_data->general_setting->field_name : '';
+					$field_name = isset( $field_data->general_setting->field_name ) && null !== $field_data->general_setting->field_name ? $field_data->general_setting->field_name : '';
 
-					if ( $key === null ) {
+					if ( null === $key ) {
 
 						if ( ! empty( $field_name ) ) {
 							$form_data_array[ $field_name ] = $field_data;
@@ -1269,7 +1272,7 @@ function ur_get_log_file_path( $handle ) {
  *
  * @since 1.0.5
  *
- * @param array $handlers
+ * @param array $handlers Log handlers.
  *
  * @return array
  */
@@ -1461,7 +1464,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 			?>
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
-					const ur_google_recaptcha_code = <?php echo json_encode( $ur_google_recaptcha_code ); ?>
+					const ur_google_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
 				<?php
 				$rc_counter++;
@@ -1534,7 +1537,7 @@ function ur_get_user_extra_fields( $user_id ) {
 
 	foreach ( $user_extra_fields as $extra_field ) {
 
-		// Get meta key remove user_registration_ from the beginning
+		// Get meta key remove user_registration_ from the beginning.
 		$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
 		$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
 
@@ -1551,14 +1554,14 @@ function ur_get_user_extra_fields( $user_id ) {
 /**
  * Get User status like approved, pending.
  *
- * @param  string $user_status.
- * @param  string $user_email_status.
+ * @param  string $user_status Admin approval status of user.
+ * @param  string $user_email_status Email confirmation status of user.
  */
 function ur_get_user_status( $user_status, $user_email_status ) {
 	$status = array();
-	if ( $user_status === '0' || $user_email_status === '0' ) {
+	if ( '0' === $user_status || '0' === $user_email_status ) {
 		array_push( $status, 'Pending' );
-	} elseif ( $user_status === '-1' || $user_email_status === '-1' ) {
+	} elseif ( '-1' === $user_status || '-1' === $user_email_status ) {
 		array_push( $status, 'Denied' );
 	} else {
 		if ( $user_email_status ) {
@@ -1595,7 +1598,7 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
 /**
  * Checks if the string is json or not
  *
- * @param  string $str
+ * @param  string $str String to check.
  * @since  1.4.2
  * @return mixed
  */
@@ -1607,7 +1610,7 @@ function ur_is_json( $str ) {
 /**
  * Checks if the form contains a date field or not.
  *
- * @param  int $form_id     Form ID
+ * @param  int $form_id     Form ID.
  * @since  1.5.3
  * @return boolean
  */
@@ -1619,7 +1622,7 @@ function ur_has_date_field( $form_id ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					if ( isset( $field->field_key ) && $field->field_key === 'date' ) {
+					if ( isset( $field->field_key ) && 'date' === $field->field_key ) {
 						return true;
 					}
 				}
@@ -1633,7 +1636,7 @@ function ur_has_date_field( $form_id ) {
 /**
  * Get attributes from the shortcode content.
  *
- * @param  $content     Shortcode content.
+ * @param  string $content     Shortcode content.
  * @return array        Array of attributes within the shortcode.
  *
  * @since  1.6.0
@@ -1660,10 +1663,10 @@ function ur_get_shortcode_attr( $content ) {
 
 		if ( $keys && $result ) {
 
-			// Loop the result array and add the missing shortcode attribute key
+			// Loop the result array and add the missing shortcode attribute key.
 			foreach ( $result as $key => $value ) {
 
-				// Loop the shortcode attribute key
+				// Loop the shortcode attribute key.
 				foreach ( $keys as $attr_key ) {
 					$result[ $key ][ $attr_key ] = isset( $result[ $key ][ $attr_key ] ) ? $result[ $key ][ $attr_key ] : null;
 				}
@@ -1678,6 +1681,8 @@ function ur_get_shortcode_attr( $content ) {
 }
 
 /**
+ * Print js script by properly sanitizing and escaping.
+ *
  * @since 1.1.2
  * Output any queued javascript code in the footer.
  */
@@ -1693,7 +1698,7 @@ function ur_print_js() {
 		$js = "<!-- User Registration JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $ur_queued_js });\n</script>\n";
 
 		/**
-		 * user_registration_js filter.
+		 * User Registration js filter.
 		 *
 		 * @param string $js JavaScript code.
 		 */
@@ -1703,10 +1708,12 @@ function ur_print_js() {
 	}
 }
 /**
+ * Enqueue UR js.
+ *
  * @since 1.1.2
  * Queue some JavaScript code to be output in the footer.
  *
- * @param string $code
+ * @param string $code Code to enqueue.
  */
 function ur_enqueue_js( $code ) {
 	global $ur_queued_js;
@@ -1792,7 +1799,7 @@ function ur_get_form_id_by_userid( $user_id ) {
  *
  * @since 1.9.0
  *
- * @param int $user_id
+ * @param int $user_id User ID.
  *
  * @return mixed
  */
@@ -1820,9 +1827,9 @@ function ur_get_registration_source_id( $user_id ) {
  *
  * @since 1.9.0
  *
- * @param string      $target_date
- * @param string|null $start_date
- * @param string|null $end_date
+ * @param string      $target_date Target date.
+ * @param string|null $start_date Start date.
+ * @param string|null $end_date End date.
  *
  * @return bool
  */
@@ -1938,7 +1945,7 @@ function user_registration_email_content_overrider( $form_id, $settings, $messag
 /** Get User Data in particular array format.
  *
  * @param string $new_string Field Key.
- * @param string $post_key Post Key
+ * @param string $post_key Post Key.
  * @param array  $profile Form Data.
  * @param mixed  $value Value.
  */
@@ -1981,10 +1988,10 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ) {
 	$ur_shortcodes = array(
 		'User Registration My Account' => '[user_registration_my_account]',
-		'User Registration Login' => '[user_registration_login]',
+		'User Registration Login'      => '[user_registration_login]',
 	);
 
-	$conflict_shortcodes  = array_merge( $conflict_shortcodes, $ur_shortcodes );
+	$conflict_shortcodes = array_merge( $conflict_shortcodes, $ur_shortcodes );
 	return $conflict_shortcodes;
 }
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
@@ -1992,9 +1999,9 @@ add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_
 /**
  * Parse name values and smart tags
  *
- * @param  array $valid_form_data Form filled data.
- * @param  int   $form_id Form ID.
  * @param  int   $user_id User ID.
+ * @param  int   $form_id Form ID.
+ * @param  array $valid_form_data Form filled data.
  *
  * @since 1.9.6
  *
@@ -2003,7 +2010,7 @@ add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_
 function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data ) {
 
 	$name_value = array();
-	$data_html       = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+	$data_html  = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
 
 	// Generate $data_html string to replace for {{all_fields}} smart tag.
 	foreach ( $valid_form_data as $field_meta => $form_data ) {
@@ -2019,7 +2026,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
 			$upload_data = array();
-			$file_data = explode( ',', $form_data->value );
+			$file_data   = explode( ',', $form_data->value );
 
 			foreach ( $file_data as $key => $value ) {
 				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
@@ -2141,10 +2148,11 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 *
 	 * @param array  $connection Connection Data.
 	 * @param string $integration Integration.
+	 * @param int    $form_id Form ID.
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output = '<div class="ur_conditional_logic_container">';
+		$output  = '<div class="ur_conditional_logic_container">';
 		$output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
 		$checked = '';
 
@@ -2156,24 +2164,24 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 
-		$output .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
-		$output .= '<h4>' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</h4>';
-		$output .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
-		$output .= '<div class="ur-conditional-wrapper">';
-		$output .= '<select class="ur_conditional_field" name="ur_conditional_field">';
-		$get_all_fields       = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
+		$output                .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$output                .= '<h4>' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</h4>';
+		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
+		$output                .= '<div class="ur-conditional-wrapper">';
+		$output                .= '<select class="ur_conditional_field" name="ur_conditional_field">';
+		$get_all_fields         = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 		$selected_ur_field_type = '';
 
 		if ( isset( $get_all_fields ) ) {
 
 			foreach ( $get_all_fields as $key => $field ) {
-				$selectedAttr = '';
+				$selected_attr = '';
 
 				if ( isset( $connection['conditional_logic_data']['conditional_field'] ) && $connection['conditional_logic_data']['conditional_field'] === $key ) {
-					$selectedAttr = 'selected=selected';
+					$selected_attr          = 'selected=selected';
 					$selected_ur_field_type = $field['field_key'];
 				}
-				$output .= '<option data-type="' . esc_attr( $field['field_key'] ) . '" data-label="' . esc_attr( $field['label'] ) . '" value="' . esc_attr( $key ) . '" ' . $selectedAttr . '>' . esc_html( $field['label'] ) . '</option>';
+				$output .= '<option data-type="' . esc_attr( $field['field_key'] ) . '" data-label="' . esc_attr( $field['label'] ) . '" value="' . esc_attr( $key ) . '" ' . $selected_attr . '>' . esc_html( $field['label'] ) . '</option>';
 			}
 		}
 		$output .= '</select>';
