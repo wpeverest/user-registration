@@ -225,7 +225,7 @@ function ur_bool_to_string( $bool ) {
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	if ( ! empty( $args ) && is_array( $args ) ) {
-		extract( $args );
+		extract( $args ); // phpcs:ignore
 	}
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
@@ -234,7 +234,7 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
 	if ( ! file_exists( $located ) ) {
-		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '1.0' );
 
 		return;
 	}
@@ -351,7 +351,7 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
 		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
 	} else {
-		_doing_it_wrong( $function, $message, $version );
+		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) );
 	}
 }
 
@@ -368,7 +368,7 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
-		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE );
+		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore
 	}
 }
 
@@ -1047,6 +1047,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'checkbox',
+
+				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
 				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
@@ -1320,6 +1322,7 @@ function ur_get_logger() {
 			ur_doing_it_wrong(
 				__FUNCTION__,
 				sprintf(
+					/* translators: %s: Class */
 					__( 'The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>.', 'user-registration' ),
 					esc_html( is_object( $class ) ? get_class( $class ) : $class )
 				),
@@ -1533,7 +1536,7 @@ function ur_get_user_extra_fields( $user_id ) {
 
 	global $wpdb;
 	$name_value        = array();
-	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' );
+	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' ); // phpcs:ignore
 
 	foreach ( $user_extra_fields as $extra_field ) {
 
@@ -2190,7 +2193,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<option value="is_not" ' . ( isset( $connection['conditional_logic_data']['conditional_operator'] ) && 'is_not' === $connection['conditional_logic_data']['conditional_operator'] ? 'selected' : '' ) . '> is not </option>';
 		$output .= '</select>';
 
-		if ( $selected_ur_field_type == 'checkbox' || $selected_ur_field_type == 'radio' || $selected_ur_field_type == 'select' || $selected_ur_field_type == 'country' || $selected_ur_field_type == 'billing_country' || $selected_ur_field_type == 'shipping_country' || $selected_ur_field_type == 'select2' || $selected_ur_field_type == 'multi_select2' ) {
+		if ( 'checkbox' == $selected_ur_field_type || 'radio' == $selected_ur_field_type || 'select' == $selected_ur_field_type || 'country' == $selected_ur_field_type || 'billing_country' == $selected_ur_field_type || 'shipping_country' == $selected_ur_field_type || 'select2' == $selected_ur_field_type || 'multi_select2' == $selected_ur_field_type ) {
 			$choices = user_registration_pro_get_checkbox_choices( $form_id, $connection['conditional_logic_data']['conditional_field'] );
 			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
 
