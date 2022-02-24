@@ -1,17 +1,17 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * Handle frontend forms.
  *
  * @class       UR_Form_Handler
  * @version     1.0.0
  * @package     UserRegistration/Classes/
- * @category    Class
- * @author      WPEverest
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Form_Handler Class
  */
 class UR_Form_Handler {
 
