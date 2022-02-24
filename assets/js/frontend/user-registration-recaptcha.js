@@ -102,7 +102,7 @@ var onloadURCallback = function () {
 					}
 				);
 			}
-			if ("yes" === ur_google_recaptcha_code.is_visible) {
+			if ("yes" === ur_google_recaptcha_code.is_invisible) {
 				grecaptcha.execute();
 			}
 		});
@@ -123,7 +123,7 @@ var onloadURCallback = function () {
 					}
 				);
 			}
-			if ("yes" === ur_google_recaptcha_code.is_visible) {
+			if ("yes" === ur_google_recaptcha_code.is_invisible) {
 				grecaptcha.execute();
 			}
 		});
@@ -135,34 +135,40 @@ function request_recaptcha_token() {
 	).length;
 
 	if (node_recaptcha_register !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, {
-					action: "register",
-				})
-				.then(function (token) {
-					jQuery("form.register")
-						.find("#g-recaptcha-response")
-						.text(token);
+		setInterval(() => {
+			grecaptcha.ready(function () {
+				grecaptcha
+					.execute(ur_google_recaptcha_code.site_key, {
+						action: "register",
+					})
+					.then(function (token) {
+						jQuery("form.register")
+							.find("#g-recaptcha-response")
+							.text(token);
 
-					var captchaResponse = jQuery("form.register")
-						.find('[name="g-recaptcha-response"]')
-						.val();
-				});
-		});
+						var captchaResponse = jQuery("form.register")
+							.find('[name="g-recaptcha-response"]')
+							.val();
+					});
+			});
+		}, 110000);
 	}
 	var node_recaptcha_login = jQuery(".ur-frontend-form").find(
 		"form.login .ur-form-row .ur-form-grid #ur-recaptcha-node #node_recaptcha_login.g-recaptcha-v3"
 	).length;
 	if (node_recaptcha_login !== 0) {
-		grecaptcha.ready(function () {
-			grecaptcha
-				.execute(ur_google_recaptcha_code.site_key, { action: "login" })
-				.then(function (token) {
-					jQuery("form.login")
-						.find("#g-recaptcha-response")
-						.text(token);
-				});
-		});
+		setInterval(() => {
+			grecaptcha.ready(function () {
+				grecaptcha
+					.execute(ur_google_recaptcha_code.site_key, {
+						action: "login",
+					})
+					.then(function (token) {
+						jQuery("form.login")
+							.find("#g-recaptcha-response")
+							.text(token);
+					});
+			});
+		}, 110000);
 	}
 }
