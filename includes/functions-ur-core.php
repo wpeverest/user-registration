@@ -2201,13 +2201,13 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 				$output .= '<option>--select--</option>';
 
 				foreach ( $choices as $key => $choice ) {
-					$key           = $selected_ur_field_type == 'country' ? $key : $choice;
+					$key           = 'country' == $selected_ur_field_type ? $key : $choice;
 					$selectedvalue = isset( $connection['conditional_logic_data']['conditional_value'] ) && $connection['conditional_logic_data']['conditional_value'] == $key ? 'selected="selected"' : '';
 					$output       .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
 				}
 			} else {
 				$selected = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : 0;
-				$output  .= '<option value="1" ' . ( $selected == '1' ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
+				$output  .= '<option value="1" ' . ( '1' == $selected ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
 			}
 			$output .= '</select>';
 		} else {
