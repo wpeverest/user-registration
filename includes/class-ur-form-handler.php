@@ -8,6 +8,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
+
 }
 
 /**
@@ -53,11 +54,11 @@ class UR_Form_Handler {
 	public static function save_profile_details() {
 
 		global $wp;
-		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' !== strtoupper( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) {
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_profile_details' ) ) {
+		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'save_profile_details' ) ) {
 			return;
 		}
 
@@ -68,11 +69,11 @@ class UR_Form_Handler {
 		}
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) ) {
-				if ( '' === $_POST['profile_pic_url'] ) {
+				if ( '' === wp_unslash( $_POST['profile_pic_url'] ) ) {
 					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
 				} else {
 					if ( wp_http_validate_url( $_POST['profile_pic_url'] ) ) {
-						$profile_pic_url = esc_url_raw( $_POST['profile_pic_url'] );
+						$profile_pic_url = esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) );
 						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
 					}
 				}
@@ -80,7 +81,7 @@ class UR_Form_Handler {
 		} else {
 			if ( isset( $_FILES['profile-pic'] ) ) {
 
-				if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
+				if ( isset( $_FILES['profile-pic'] ) && isset( $_FILES['profile-pic']['size'] ) ) {
 
 					if ( ! function_exists( 'wp_handle_upload' ) ) {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
