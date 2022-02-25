@@ -13,19 +13,20 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
 
 /**
+ * Template for Registration Form.
+ *
  * @var $form_data_array array
  * @var $form_id         int
  * @var $is_field_exists boolean
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 $frontend       = UR_Frontend::instance();
@@ -50,6 +51,8 @@ if ( 'Bordered' === $form_template ) {
 $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class, $form_id );
 
 /**
+ * Hook for Before registration form
+ *
  * @since 1.5.1
  */
 do_action( 'user_registration_before_registration_form', $form_id );
@@ -73,7 +76,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 						foreach ( $data as $grid_key => $grid_data ) {
 							?>
 										<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
-											 style="width:<?php echo $width; ?>%">
+											 style="width:<?php echo esc_attr( $width ); ?>%">
 									<?php
 										$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
@@ -98,7 +101,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 												}
 											}
 											?>
-															<div <?php echo $cl_props; ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
+															<div <?php echo esc_attr( $cl_props ); ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 													<?php
 														$frontend->user_registration_frontend_form( $single_item, $form_id );
 														$is_field_exists = true;
