@@ -5,8 +5,6 @@
  * @class    UR_Admin_User_List_Manager
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -52,7 +50,7 @@ class UR_Admin_User_List_Manager {
 	 * Create two quick links Approve and Deny for each user in the users list.
 	 *
 	 * @param  array  $actions the approve or pending action.
-	 * @param  string $user The id of the user.
+	 * @param  object $user User data.
 	 *
 	 * @return array
 	 */
@@ -91,9 +89,9 @@ class UR_Admin_User_List_Manager {
 		$resend_verification_link = remove_query_arg( array( 'new_role' ), $resend_verification_link );
 		$resend_verification_link = wp_nonce_url( $resend_verification_link, 'ur_user_change_email_status' );
 
-		$resend_verification_action   = '<a href="' . esc_url( $resend_verification_link ) . '">' . _x( 'Resend Verification', 'The action on users list page', 'user-registration' ) . '</a>';
-		$approve_action = '<a style="color:#086512" href="' . esc_url( $approve_link ) . '">' . _x( 'Approve', 'The action on users list page', 'user-registration' ) . '</a>';
-		$deny_action    = '<a style="color:#e20707" href="' . esc_url( $deny_link ) . '">' . _x( 'Deny', 'The action on users list page', 'user-registration' ) . '</a>';
+		$resend_verification_action = '<a href="' . esc_url( $resend_verification_link ) . '">' . _x( 'Resend Verification', 'The action on users list page', 'user-registration' ) . '</a>';
+		$approve_action             = '<a style="color:#086512" href="' . esc_url( $approve_link ) . '">' . _x( 'Approve', 'The action on users list page', 'user-registration' ) . '</a>';
+		$deny_action                = '<a style="color:#e20707" href="' . esc_url( $deny_link ) . '">' . _x( 'Deny', 'The action on users list page', 'user-registration' ) . '</a>';
 
 		$user_status = $user_manager->get_user_status();
 
@@ -114,6 +112,8 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
+	 * Create quick links in users table.
+	 *
 	 * @deprecated 1.8.7
 	 *
 	 * @param  array  $actions the approve or pending action.
@@ -130,7 +130,7 @@ class UR_Admin_User_List_Manager {
 	public function trigger_query_actions() {
 
 		$action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : false;
-		$mode   = isset( $_POST['mode'] ) ? $_POST['mode'] : false;
+		$mode   = isset( $_POST['mode'] ) ? $_POST['mode'] : false; // phpcs:ignore
 
 		// If this is a multisite, bulk request, stop now!
 		if ( 'list' == $mode ) {
@@ -143,12 +143,12 @@ class UR_Admin_User_List_Manager {
 
 			$redirect     = admin_url( 'users.php' );
 			$status       = $action;
-			$user_id         = absint( $_GET['user'] );
+			$user_id      = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : 0;
 			$user_manager = new UR_Admin_User_Manager( $user_id );
-			$form_id = ur_get_form_id_by_userid( $user_id );
+			$form_id      = ur_get_form_id_by_userid( $user_id );
 			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
-			if ( $status == 'approve' ) {
+			if ( 'approve' === $status ) {
 
 				$user_manager->approve();
 				$redirect = add_query_arg( array( 'approved' => 1 ), $redirect );
@@ -172,25 +172,27 @@ class UR_Admin_User_List_Manager {
 				}
 			}
 
-			wp_redirect( esc_url_raw( $redirect ) );
+			wp_safe_redirect( esc_url_raw( $redirect ) );
 			exit;
 		}
 	}
 
-	// Display a notice to admin notifying the pending users.
+	/**
+	 * Display a notice to admin notifying the pending users.
+	 */
 	public function user_registration_pending_users_notices() {
 
 		$args = array(
 			'meta_query' => array(
 				'relation' => 'OR',
 				array(
-					'key'   => 'ur_user_status',
-					'value' => 0,
+					'key'     => 'ur_user_status',
+					'value'   => 0,
 					'compare' => '=',
 				),
 				array(
-					'key'   => 'ur_confirm_email',
-					'value' => 0,
+					'key'     => 'ur_confirm_email',
+					'value'   => 0,
 					'compare' => '=',
 				),
 			),
@@ -200,13 +202,13 @@ class UR_Admin_User_List_Manager {
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
 		$user_query = new WP_User_Query( $args );
 
-		 // Get the results from the query, returning the first user.
-		$users = $user_query->get_results();
+		// Get the results from the query, returning the first user.
+		$users          = $user_query->get_results();
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
 		array_push( $ur_pages, 'users' );
 
-		// Check if Users are Pending and display pending users notice in UR and Users
+		// Check if Users are Pending and display pending users notice in UR and Users.
 		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages ) ) {
 			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
@@ -230,7 +232,7 @@ class UR_Admin_User_List_Manager {
 	public function user_registration_display_admin_notices() {
 		$screen = get_current_screen();
 
-		if ( $screen->id != 'users' ) {
+		if ( 'users' !== $screen->id ) {
 			return;
 		}
 
@@ -239,9 +241,11 @@ class UR_Admin_User_List_Manager {
 		$users_approved = ( isset( $_GET['approved'] ) && is_numeric( $_GET['approved'] ) ) ? absint( $_GET['approved'] ) : null;
 
 		if ( $users_approved ) {
-			$message = sprintf( _n( 'User approved.', '%s users approved.', $users_approved, 'user-registration' ), $users_approved );
+			/* translators: %s - Number of users approved. */
+			$message = sprintf( __( 'User Approved: %s users approved.', 'user-registration' ), $users_approved );
 		} elseif ( $users_denied ) {
-			$message = sprintf( _n( 'User denied.', '%s users denied.', $users_denied, 'user-registration' ), $users_denied );
+			/* translators: %s - Number of users denied. */
+			$message = sprintf( __( 'User Denied: %s users denied.', 'user-registration' ), $users_denied );
 		}
 
 		if ( ! empty( $message ) ) {
@@ -263,7 +267,7 @@ class UR_Admin_User_List_Manager {
 	/**
 	 * Add the column header for the status column
 	 *
-	 * @param array $columns
+	 * @param array $columns Columns.
 	 *
 	 * @return array
 	 */
@@ -280,9 +284,9 @@ class UR_Admin_User_List_Manager {
 	/**
 	 * Set the status value for each user in the users list
 	 *
-	 * @param string $val
-	 * @param string $column_name
-	 * @param int    $user_id
+	 * @param string $val Status Value.
+	 * @param string $column_name Name of the column.
+	 * @param int    $user_id User ID.
 	 *
 	 * @return string
 	 */
@@ -337,7 +341,7 @@ class UR_Admin_User_List_Manager {
 	/**
 	 * Make our "Registration At" column sortable
 	 *
-	 * @param array $columns Array of all user sortable columns
+	 * @param array $columns Array of all user sortable columns.
 	 */
 	public function make_registered_at_column_sortable( $columns ) {
 		return wp_parse_args( array( 'ur_user_user_registered_log' => 'user_registered' ), $columns );
@@ -352,11 +356,11 @@ class UR_Admin_User_List_Manager {
 
 		// Get the filter selector id for approval status and the selected status.
 		$status_id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
-		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? $_GET[ $status_id ] : false;
+		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $status_id ] ) ) : false;
 
 		// Get the filter selector id for specific forms and the selected form id.
 		$specific_form_id           = 'bottom' === $which ? 'ur_specific_form_user2' : 'ur_specific_form_user';
-		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? $_GET[ $specific_form_id ] : false;
+		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $specific_form_id ] ) ) : false;
 
 		$approved_label = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::APPROVED );
 		$pending_label  = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::PENDING );
@@ -398,20 +402,20 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
-	 * Fire the filter selction and show only the users with specified approval status
+	 * Fire the filter selction and show only the users with specified approval status.
 	 *
-	 * @param $query
+	 * @param object $query Database query.
 	 */
 	public function filter_users_by_approval_status( $query ) {
-		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? $_REQUEST['ur_user_filter_action'] : false;
+		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_filter_action'] ) ) : false;
 
 		// Get the selected value of user approval status from top or bottom user approval filter.
-		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? $_REQUEST['ur_user_approval_status'] : false;
-		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? $_REQUEST['ur_user_approval_status2'] : false;
+		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status'] ) ) : false;
+		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status2'] ) ) : false;
 
 		// Get the selected id of specific form from top or bottom user form filter.
-		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? $_REQUEST['ur_specific_form_user'] : false;
-		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? $_REQUEST['ur_specific_form_user2'] : false;
+		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
+		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false;
 
 		if ( ! $ur_user_filter_action ) {
 			return;
@@ -462,7 +466,7 @@ class UR_Admin_User_List_Manager {
 				),
 			);
 
-			if ( $status === UR_Admin_User_Manager::APPROVED ) {
+			if ( UR_Admin_User_Manager::APPROVED === $status ) {
 				$meta_query = array(
 					'relation' => 'OR',
 					array(
@@ -531,7 +535,9 @@ class UR_Admin_User_List_Manager {
 
 
 	/**
-	 * Trigger the bulk action approvation
+	 * Trigger the bulk action approvation.
+	 *
+	 * @throws Exception Throw exception if permissions not met.
 	 */
 	public function trigger_bulk_action() {
 
@@ -539,20 +545,20 @@ class UR_Admin_User_List_Manager {
 		$action        = $wp_list_table->current_action();
 		$redirect      = 'users.php';
 
-		// Check if the action is under the scope of this unction
-		if ( $action != 'approve' && $action != 'deny' ) {
+		// Check if the action is under the scope of this function.
+		if ( 'approve' !== $action && 'deny' !== $action ) {
 			return;}
 
-		// Check if the current user has permissions to change approvation statuses
+		// Check if the current user has permissions to change approvation statuses.
 		if ( ! UR_Admin_User_Manager::is_user_allowed_to_change_status() ) {
 			throw new Exception( 'You have not enough permissions to perform a bulk action on users approval status' );}
 
-		if ( empty( $_REQUEST['users'] ) ) {
-			wp_redirect( $redirect );
+		if ( empty( $_REQUEST['users'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			wp_safe_redirect( $redirect );
 			exit();
 		}
 
-		if ( $action == 'approve' ) {
+		if ( 'approve' === $action ) {
 			$status    = UR_Admin_User_Manager::APPROVED;
 			$query_arg = 'approved';
 		} else {
@@ -560,7 +566,7 @@ class UR_Admin_User_List_Manager {
 			$query_arg = 'denied';
 		}
 
-		$userids = $_REQUEST['users'];
+		$userids = wp_unslash( $_REQUEST['users'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$c = 0;
 
@@ -568,7 +574,7 @@ class UR_Admin_User_List_Manager {
 			$id           = (int) $id;
 			$user_manager = new UR_Admin_User_Manager( $id );
 
-			// For each user, check if the current user can change him status
+			// For each user, check if the current user can change him status.
 			if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
 				continue;}
 
@@ -576,20 +582,20 @@ class UR_Admin_User_List_Manager {
 			$c++;
 		}
 
-		wp_redirect( add_query_arg( $query_arg, $c, $redirect ) );
+		wp_safe_redirect( add_query_arg( $query_arg, $c, $redirect ) );
 		exit();
 	}
 
 	/**
-	 * Render the field Status in the user profile, in backend
+	 * Render the field Status in the user profile, in backend.
 	 *
-	 * @param $user
+	 * @param object $user User data.
 	 */
 	public function render_profile_field( $user ) {
 
 		$user_manager = new UR_Admin_User_Manager( $user );
 
-		// If the current user can't change status of the user displayed, then return
+		// If the current user can't change status of the user displayed, then return.
 		if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
 			return;}
 
@@ -620,9 +626,9 @@ class UR_Admin_User_List_Manager {
 	}
 
 	/**
-	 * Update the profile field Status in the user profile, in backend
+	 * Update the profile field Status in the user profile, in backend.
 	 *
-	 * @param $user_id
+	 * @param int $user_id User id.
 	 *
 	 * @return bool
 	 */
@@ -633,7 +639,7 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) {
+		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return false;
 		}
 
@@ -641,11 +647,11 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( isset( $_POST['ur_user_user_status'] ) ) {
-			$new_status = $_POST['ur_user_user_status'];
+		if ( isset( $_POST['ur_user_user_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$new_status = $_POST['ur_user_user_status']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$user_manager->save_status( $new_status );
-		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) {
-			$new_status = sanitize_text_field( $_POST['ur_user_email_confirmation_status'] );
+		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$new_status = sanitize_text_field( $_POST['ur_user_email_confirmation_status'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
 	}
