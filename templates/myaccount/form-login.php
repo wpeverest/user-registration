@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.4.7
  */
@@ -70,7 +69,9 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 			<div class="ur-form-grid">
 				<?php
 				if ( $login_title ) {
-					echo esc_html( apply_filters( 'ur_login_title', esc_html__( $labels['login'], 'user-registration' ) ) );
+					$login_title_lable = apply_filters( 'ur_login_title', $labels['login'] );
+					/* translators: %s - Login Title. */
+					echo wp_kses_post( sprintf( esc_html__( '<span> %s </span>', 'user-registration' ), $login_title_label ) );
 				}
 				?>
 					<?php do_action( 'user_registration_login_form_start' ); ?>
@@ -81,7 +82,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						}
 						?>
 						<span class="input-wrapper">
-						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( $_POST['username'] ) : ''; ?>" />
+						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification ?>" />
 						<?php if ( $enable_field_icon ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
@@ -100,7 +101,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
 							?>
-						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo __( 'Show password', 'user-registration' ); ?>"></a>
+						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
 						</span>
 							<?php
 						}
@@ -113,7 +114,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
-						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';
+						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					}
 					?>
 
@@ -129,7 +130,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 							<input type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
 							<?php } ?>
 						</div>
-						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? $redirect : the_permalink(); ?>" />
+						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
 						<?php
 							$remember_me_enabled = get_option( 'user_registration_login_options_remember_me', 'yes' );
 
@@ -167,13 +168,13 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 
 							if ( ! empty( $label ) ) {
 								?>
-								<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' ); ?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
+								<a href="<?php echo esc_url( get_option( 'user_registration_general_setting_registration_url_options' ) ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
 									</a>
 								<?php
 							} else {
 								update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
 								?>
-									<a href="<?php echo get_option( 'user_registration_general_setting_registration_url_options' ); ?>"> <?php echo get_option( 'user_registration_general_setting_registration_label' ); ?>
+									<a href="<?php echo esc_url( get_option( 'user_registration_general_setting_registration_url_options' ) ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
 									</a>
 								<?php
 							}
