@@ -58,7 +58,7 @@ class UR_Form_Handler {
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'save_profile_details' ) ) {
+		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( wp_unslash( $_POST['_wpnonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'save_profile_details' ) ) {
 			return;
 		}
 
@@ -72,7 +72,7 @@ class UR_Form_Handler {
 				if ( '' === wp_unslash( $_POST['profile_pic_url'] ) ) {
 					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
 				} else {
-					if ( wp_http_validate_url( $_POST['profile_pic_url'] ) ) {
+					if ( wp_http_validate_url( wp_unslash( $_POST['profile_pic_url'] ) ) ) {
 						$profile_pic_url = esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) );
 						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
 					}
@@ -87,7 +87,7 @@ class UR_Form_Handler {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
 					}
 
-					$upload           = $_FILES['profile-pic'];
+					$upload           = wp_unslash( $_FILES['profile-pic'] );
 					$upload_overrides = array(
 						'action' => 'save_profile_details',
 					);
@@ -107,9 +107,9 @@ class UR_Form_Handler {
 					} else {
 						ur_add_notice( $uploaded['error'], 'error' );
 					}
-				} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
+				} elseif ( isset( $_FILES['profile-pic']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 
-					switch ( $_FILES['profile-pic']['error'] ) {
+					switch ( isset( $_FILES['profile-pic']['error'] ) && $_FILES['profile-pic']['error'] ) {
 						case UPLOAD_ERR_INI_SIZE:
 							 ur_add_notice( esc_html__( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
 							break;
