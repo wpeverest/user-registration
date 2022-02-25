@@ -553,7 +553,7 @@ class UR_Admin_User_List_Manager {
 		if ( ! UR_Admin_User_Manager::is_user_allowed_to_change_status() ) {
 			throw new Exception( 'You have not enough permissions to perform a bulk action on users approval status' );}
 
-		if ( empty( $_REQUEST['users'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $_REQUEST['users'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			wp_safe_redirect( $redirect );
 			exit();
 		}
@@ -566,7 +566,7 @@ class UR_Admin_User_List_Manager {
 			$query_arg = 'denied';
 		}
 
-		$userids = wp_unslash( $_REQUEST['users'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$userids = wp_unslash( $_REQUEST['users'] ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$c = 0;
 
@@ -639,19 +639,19 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( $_POST['ur_user_user_status'] ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ( isset( $_POST['ur_user_user_status'] ) && empty( $_POST['ur_user_user_status'] ) && ! UR_Admin_User_Manager::validate_status( sanitize_text_field( wp_unslash( $_POST['ur_user_user_status'] ) ) ) ) && ( isset( $_POST['ur_user_email_confirmation_status'] ) && empty( $_POST['ur_user_email_confirmation_status'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 
-		if ( get_user_meta( $user_id, 'ur_user_status', true ) == $_POST['ur_user_user_status'] ) {
+		if ( get_user_meta( $user_id, 'ur_user_status', true ) == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 
-		if ( isset( $_POST['ur_user_user_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$new_status = $_POST['ur_user_user_status']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_POST['ur_user_user_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_user_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$user_manager->save_status( $new_status );
-		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$new_status = sanitize_text_field( $_POST['ur_user_email_confirmation_status'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_email_confirmation_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
 	}
