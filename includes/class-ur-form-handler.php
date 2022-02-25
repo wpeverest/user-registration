@@ -1,7 +1,7 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -10,8 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class       UR_Form_Handler
  * @version     1.0.0
  * @package     UserRegistration/Classes/
- * @category    Class
- * @author      WPEverest
  */
 class UR_Form_Handler {
 
@@ -53,11 +51,11 @@ class UR_Form_Handler {
 	public static function save_profile_details() {
 
 		global $wp;
-		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' !== strtoupper( wp_unslash( sanitize_key( $_SERVER['REQUEST_METHOD'] ) ) ) ) {
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_profile_details' ) ) {
+		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_profile_details' ) ) { //phpcs:ignore
 			return;
 		}
 
@@ -71,8 +69,8 @@ class UR_Form_Handler {
 				if ( '' === $_POST['profile_pic_url'] ) {
 					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
 				} else {
-					if ( wp_http_validate_url( $_POST['profile_pic_url'] ) ) {
-						$profile_pic_url = esc_url_raw( $_POST['profile_pic_url'] );
+					if ( wp_http_validate_url( $_POST['profile_pic_url'] ) ) { //phpcs:ignore
+						$profile_pic_url = esc_url_raw( $_POST['profile_pic_url'] ); //phpcs:ignore
 						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
 					}
 				}
@@ -261,8 +259,10 @@ class UR_Form_Handler {
 	}
 
 	/**
+	 * Save Account details.
+	 *
 	 * @deprecated 1.4.1
-	 * @param $user_id
+	 * @param $user_id User Id.
 	 * @return void
 	 */
 	public function save_account_details( $user_id ) {
@@ -362,7 +362,7 @@ class UR_Form_Handler {
 		);
 
 		$nonce_value     = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
-		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value;
+		$nonce_value     = isset( $_POST['user-registration-login-nonce'] ) ? $_POST['user-registration-login-nonce'] : $nonce_value; //phpcs:ignore
 		$hcaptca_response = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 		$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
