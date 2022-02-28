@@ -97,7 +97,7 @@ class UR_Frontend {
 			if ( ! empty( $setting['advance_setting']->custom_class ) ) {
 				unset( $setting['advance_setting']->custom_class );
 			}
-			$instance->frontend_includes( $setting, $form_id, $field_type, $field_object->field_key );
+			$instance->frontend_includes( $form_id, $field_type, $field_object->field_key, $setting );
 		}
 	}
 

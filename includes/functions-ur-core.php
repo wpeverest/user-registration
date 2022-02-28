@@ -1439,11 +1439,11 @@ function ur_get_user_login_option() {
 /**
  * Get the node to display google reCaptcha
  *
- * @param string $recaptcha_enabled Is Recaptcha enabled.
  * @param string $context Recaptcha context.
+ * @param string $recaptcha_enabled Is Recaptcha enabled.
  * @return string
  */
-function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
+function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 
 	$recaptcha_type     = get_option( 'user_registration_integration_setting_recaptcha_type' );
 
