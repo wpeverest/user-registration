@@ -174,6 +174,7 @@ class UR_AJAX {
 
 				wp_send_json_error(
 					array(
+						/* translators: %s - Link to logout. */
 						'message' => apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID ),
 					)
 				);
@@ -403,7 +404,7 @@ class UR_AJAX {
 			if ( ! in_array( $file_extension, $valid_ext ) ) {
 				wp_send_json_error(
 					array(
-						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration-advanced-fields' ),
+						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration' ),
 					)
 				);
 			}
@@ -500,8 +501,8 @@ class UR_AJAX {
 		}
 
 		$info = array();
-		$info['user_login'] = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' );
-		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : '';	
+		$info['user_login'] = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
+		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : ''; //phpcs:ignore
 		$info['remember'] = isset( $_POST['rememberme'] );
 		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? wp_unslash( $_POST['CaptchaResponse'] ) : ''; //phpcs:ignore
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
@@ -582,7 +583,7 @@ class UR_AJAX {
 				$redirect = admin_url();
 			} else {
 				if ( ! empty( $_POST['redirect'] ) ) {
-					$redirect = wp_unslash( esc_url_raw( $_POST['redirect'] ) );
+					$redirect = wp_unslash( esc_url_raw( $_POST['redirect'] ) ); //phpcs:ignore
 				} elseif ( wp_get_raw_referer() ) {
 					$redirect = wp_get_raw_referer();
 				} else {
@@ -601,7 +602,7 @@ class UR_AJAX {
 	 */
 	public static function send_test_email() {
 		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
-		$email   = isset( $_POST['email'] ) ? wp_unslash( sanitize_email( $_POST['email'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$email   = isset( $_POST['email'] ) ? wp_unslash( sanitize_email( $_POST['email'] ) ) : ''; // phpcs:ignore
 			/* translators: %s - Form name. */
 		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );
 		$header  = "Reply-To: {{from}} \r\n";
@@ -630,7 +631,7 @@ class UR_AJAX {
 
 			check_ajax_referer( 'user_input_dropped_nonce', 'security' );
 
-			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? $_POST['form_field_id'] : null;
+			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? $_POST['form_field_id'] : null; //phpcs:ignore
 
 			if ( null == $form_field_id || '' == $form_field_id ) {
 				throw  new Exception( 'Empty form data' );
@@ -723,12 +724,12 @@ class UR_AJAX {
 			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
 
 			if ( false === $contains_search ) {
-				throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) );
+				throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
 
-			$form_name    = sanitize_text_field( $_POST['data']['form_name'] );
-			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] );
-			$form_id      = sanitize_text_field( $_POST['data']['form_id'] );
+			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
+			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
+			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -750,7 +751,7 @@ class UR_AJAX {
 			if ( $post_id > 0 ) {
 				$_POST['data']['form_id'] = $post_id; // Form id for new form.
 
-				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array();
+				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
 				ur_update_form_settings( $post_data_setting, $post_id );
 
 				// Form row_id save.
