@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.9
-Stable tag: 2.1.3
+Tested up to: 5.9.1
+Stable tag: 2.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -274,6 +274,21 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.1.4    - 28/02/2022
+* Feature  - hCaptcha integration.
+* Feature  - ReCaptcha v2 invisible integration.
+* Enhance  - Threshold score handled in v3.
+* Dev 	   - PHPCS configuration for sanitization and escaping improvement.
+* Dev 	   - Compatibility with frontend listing.
+* Tweak    - Never show again and May be later button in notices.
+* Fix      - PHP 8.0 compatibility.
+* Fix      - Recaptcha script localization.
+* Fix      - Prevent dashboard access not working for all user roles.
+* Fix      - Margin issue on login form.
+* Fix      - Default value not set in multiple choice options in metaboxes.
+* Fix      - Input field size limit in edit profile.
+* Fix      - While sending test email sender option saved value is not showing instead wordpress core address.
+
 = 2.1.3    - 26/01/2022
 * Dev      - Combine two login option compatibility.
 * Dev      - Introduce hooks for save button in myaccount.

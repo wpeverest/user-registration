@@ -9,7 +9,10 @@ jQuery(function ($) {
 				var notice_type = $(this)
 						.closest(".user-registration-notice")
 						.data("purpose"),
-					notice_type_nonce = notice_type + "_nonce";
+					notice_type_nonce = notice_type + "_nonce",
+					dismiss_forever = $(this).hasClass(
+						"notice-dismiss-permanently"
+					);
 
 				$(this)
 					.closest("#user-registration-" + notice_type + "-notice")
@@ -20,6 +23,7 @@ jQuery(function ($) {
 					security: ur_notice_params[notice_type_nonce],
 					notice_type: notice_type,
 					dismissed: true,
+					dismiss_forever: dismiss_forever,
 				};
 
 				$.post(ur_notice_params.ajax_url, data, function (response) {

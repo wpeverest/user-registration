@@ -99,7 +99,7 @@ abstract class UR_Meta_Boxes {
 					<?php
 
 					if ( is_array( $get_meta_data ) ) {
-						selected( in_array( $key, $get_meta_data, true ), true );
+						selected( in_array( $key, $get_meta_data ), true );
 					} else {
 						selected( $get_meta_data, $key );
 					}
@@ -149,7 +149,7 @@ abstract class UR_Meta_Boxes {
 					<?php
 
 					if ( is_array( $get_meta_data ) ) {
-						selected( in_array( $key, $get_meta_data, true ), true );
+						selected( in_array( $key, $get_meta_data ), true );
 					} else {
 						selected( $get_meta_data, $key );
 					}

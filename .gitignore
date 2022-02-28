@@ -32,3 +32,9 @@ Thumbs.db
 
 # PHP Unit Tests
 /tests/
+
+# Local overrides
+phpcs.xml
+phpunit.xml
+phpunit-watcher.yml
+.wp-env.override.json
