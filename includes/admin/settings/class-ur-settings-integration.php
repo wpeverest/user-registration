@@ -64,7 +64,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Site Key (v2)', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key',
 									'default'  => '',
 									'type'     => 'text',
@@ -75,7 +75,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Secret Key (v2)', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret',
 									'default'  => '',
 									'type'     => 'text',
@@ -85,7 +85,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Site Key (v3)', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_v3',
 									'default'  => '',
 									'type'     => 'text',
@@ -96,7 +96,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Secret Key (v3)', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_v3',
 									'default'  => '',
 									'type'     => 'text',
@@ -106,7 +106,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Site Key ( hCaptcha )', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_hcaptcha',
 									'default'  => '',
 									'type'     => 'text',
@@ -117,7 +117,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								),
 								array(
 									'title'    => __( 'Secret Key ( hCaptcha )', 'user-registration' ),
-									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), 	//phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha',
 									'default'  => '',
 									'type'     => 'text',
