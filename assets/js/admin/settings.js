@@ -83,7 +83,7 @@
 	// reCaptcha version selection
 	var recaptcha_input_value = $(".user-registration")
 		.find(
-			'input[name="user_registration_integration_setting_recaptcha_version"]:checked'
+			'input[name="user_registration_integration_setting_recaptcha_type"]:checked'
 		)
 		.val();
 	if (recaptcha_input_value != undefined) {
@@ -92,7 +92,7 @@
 
 	$(".user-registration").on(
 		"change",
-		'input[name="user_registration_integration_setting_recaptcha_version"]',
+		'input[name="user_registration_integration_setting_recaptcha_type"]',
 		function () {
 			handleReCaptchaHideShow($(this).val());
 		}
@@ -112,7 +112,50 @@
 			$("#user_registration_integration_setting_recaptcha_site_secret")
 				.closest("tr")
 				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+		} else if (value == "hCaptcha") {
+			$(
+				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+			)
+				.closest("tr")
+				.show();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest("tr")
+				.show();
+			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_recaptcha_site_key")
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_recaptcha_site_secret")
+				.closest("tr")
+				.hide();
 		} else {
+			$(
+				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
 				.closest("tr")
 				.hide();

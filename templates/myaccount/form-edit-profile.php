@@ -201,6 +201,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 												}
 
+												if ( 'text' === $single_item->field_key ) {
+													$field['size']  = isset( $advance_data['advance_setting']->size ) ? $advance_data['advance_setting']->size : '';
+												}
+
 												if ( 'range' === $single_item->field_key ) {
 													$field['range_min'] = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
 													$field['range_max'] = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
