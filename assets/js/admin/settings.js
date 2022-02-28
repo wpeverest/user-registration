@@ -98,6 +98,76 @@
 		}
 	);
 
+	$(".user-registration").on(
+		"change",
+		"input#user_registration_integration_setting_invisible_recaptcha_v2",
+		function () {
+			if ($(this).is(":checked")) {
+				$("#user_registration_integration_setting_recaptcha_site_key")
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_site_secret"
+				)
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				)
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				)
+					.closest("tr")
+					.show();
+			} else {
+				$("#user_registration_integration_setting_recaptcha_site_key")
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_site_secret"
+				)
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				)
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				)
+					.closest("tr")
+					.hide();
+			}
+			$(
+				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+				.closest("tr")
+				.show();
+		}
+	);
+
 	function handleReCaptchaHideShow(value) {
 		if (value == "v3") {
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
@@ -119,6 +189,24 @@
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+			)
+				.closest("tr")
+				.show();
+			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_invisible_site_key"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
 				.closest("tr")
 				.hide();
@@ -145,7 +233,86 @@
 			$("#user_registration_integration_setting_recaptcha_site_secret")
 				.closest("tr")
 				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_invisible_site_key"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+			)
+				.closest("tr")
+				.hide();
+			$(
+				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+			)
+				.closest("tr")
+				.hide();
+			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+				.closest("tr")
+				.hide();
 		} else {
+			if (
+				value == "v2" &&
+				$(
+					"input#user_registration_integration_setting_invisible_recaptcha_v2"
+				).is(":checked")
+			) {
+				$(
+					"#user_registration_integration_setting_recaptcha_site_key_v3"
+				)
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_site_secret_v3"
+				)
+					.closest("tr")
+					.hide();
+				$("#user_registration_integration_setting_recaptcha_site_key")
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_site_secret"
+				)
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				)
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				)
+					.closest("tr")
+					.show();
+			} else {
+				$("#user_registration_integration_setting_recaptcha_site_key")
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_site_secret"
+				)
+					.closest("tr")
+					.show();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				)
+					.closest("tr")
+					.hide();
+				$(
+					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				)
+					.closest("tr")
+					.hide();
+			}
+
+			// Common Hide for V2
+			$(
+				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+			)
+				.closest("tr")
+				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
@@ -162,10 +329,7 @@
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
 				.closest("tr")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
-				.show();
-			$("#user_registration_integration_setting_recaptcha_site_secret")
+			$("#user_registration_integration_setting_invisible_recaptcha_v2")
 				.closest("tr")
 				.show();
 		}
