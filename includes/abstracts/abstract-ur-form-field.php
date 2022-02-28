@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 /**
  * Abstract UR_Form_Field Class
  *
@@ -11,6 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @version  2.6.0
  * @package  UserRegistration/Abstracts
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Form_Field Class
  */
 abstract class UR_Form_Field {
 
@@ -28,9 +31,9 @@ abstract class UR_Form_Field {
 	 */
 	public $field_defaults = array();
 	/**
-	 * Admin Data Array.
+	 * Admin Data Object.
 	 *
-	 * @var array
+	 * @var object
 	 */
 	public $admin_data = array();
 	/**
@@ -120,12 +123,17 @@ abstract class UR_Form_Field {
 
 	/**
 	 * Includes any classes we need within frontend.
+	 *
+	 * @param integer $form_id Form ID.
+	 * @param string  $field_type Field Type.
+	 * @param string  $field_key Field Key.
+	 * @param array   $data Form data.
 	 */
 	public function frontend_includes( $form_id, $field_type, $field_key, $data = array() ) {
-		$this->form_id        = $form_id;
-		$form_data            = (array) $data['general_setting'];
-		$form_data['form_id'] = $form_id;
-		$form_data['type']    = $field_type;
+		$this->form_id          = $form_id;
+		$form_data              = (array) $data['general_setting'];
+		$form_data['form_id']   = $form_id;
+		$form_data['type']      = $field_type;
 		$form_data['field_key'] = $field_key;
 		$form_data['icon']      = $data['icon'];
 
@@ -273,14 +281,14 @@ abstract class UR_Form_Field {
 			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
-			$options = array();
+			$options                 = array();
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					 $options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+					$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 				}
 
-				 $form_data['options'] = $options;
+				$form_data['options'] = $options;
 			}
 
 			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
@@ -290,20 +298,20 @@ abstract class UR_Form_Field {
 			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
-			$options = array();
+			$options                 = array();
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					 $options[ $option->label ] = array(
-						 'label' => $option->label,
-						 'value' => $option->value,
-					 );
+					$options[ $option->label ] = array(
+						'label' => $option->label,
+						'value' => $option->value,
+					);
 				}
 
-				 $form_data['options'] = $options;
+				$form_data['options'] = $options;
 			}
 
-			 $form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
+			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
 		}
 
 		if ( 'user_login' === $field_key ) {
@@ -313,21 +321,21 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'range' === $field_key ) {
-			$form_data['range_min'] = ( isset( $data['advance_setting']->range_min ) && '' !== $data['advance_setting']->range_min ) ? $data['advance_setting']->range_min : '0';
-			$form_data['range_max'] = ( isset( $data['advance_setting']->range_max ) && '' !== $data['advance_setting']->range_max ) ? $data['advance_setting']->range_max : '10';
-			$form_data['range_step'] = isset( $data['advance_setting']->range_step ) ? $data['advance_setting']->range_step : '';
-			$enable_prefix_postfix = isset( $data['advance_setting']->enable_prefix_postfix ) ? $data['advance_setting']->enable_prefix_postfix : 'false';
-			$enable_text_prefix_postfix = isset( $data['advance_setting']->enable_text_prefix_postfix ) ? $data['advance_setting']->enable_text_prefix_postfix : 'false';
+			$form_data['range_min']             = ( isset( $data['advance_setting']->range_min ) && '' !== $data['advance_setting']->range_min ) ? $data['advance_setting']->range_min : '0';
+			$form_data['range_max']             = ( isset( $data['advance_setting']->range_max ) && '' !== $data['advance_setting']->range_max ) ? $data['advance_setting']->range_max : '10';
+			$form_data['range_step']            = isset( $data['advance_setting']->range_step ) ? $data['advance_setting']->range_step : '';
+			$enable_prefix_postfix              = isset( $data['advance_setting']->enable_prefix_postfix ) ? $data['advance_setting']->enable_prefix_postfix : 'false';
+			$enable_text_prefix_postfix         = isset( $data['advance_setting']->enable_text_prefix_postfix ) ? $data['advance_setting']->enable_text_prefix_postfix : 'false';
 			$form_data['enable_payment_slider'] = isset( $data['advance_setting']->enable_payment_slider ) ? $data['advance_setting']->enable_payment_slider : 'false';
 
 			if ( 'true' === $enable_prefix_postfix ) {
 
 				if ( 'true' === $enable_text_prefix_postfix ) {
-					$form_data['range_prefix'] = isset( $data['advance_setting']->range_prefix ) ? $data['advance_setting']->range_prefix : '';
+					$form_data['range_prefix']  = isset( $data['advance_setting']->range_prefix ) ? $data['advance_setting']->range_prefix : '';
 					$form_data['range_postfix'] = isset( $data['advance_setting']->range_postfix ) ? $data['advance_setting']->range_postfix : '';
 				} else {
 
-					$form_data['range_prefix'] = $form_data['range_min'];
+					$form_data['range_prefix']  = $form_data['range_min'];
 					$form_data['range_postfix'] = $form_data['range_max'];
 				}
 			}
@@ -343,7 +351,7 @@ abstract class UR_Form_Field {
 			$minampm                    = intval( $form_data['time_min'] ) <= 12 ? 'AM' : 'PM';
 			$maxampm                    = intval( $form_data['time_max'] ) <= 12 ? 'AM' : 'PM';
 
-				// Handles the time format
+			// Handles the time format.
 			if ( 'am' === $timemin || 'pm' === $timemin ) {
 				$form_data['time_min'] = $form_data['time_min'];
 			} else {
@@ -409,8 +417,9 @@ abstract class UR_Form_Field {
 	}
 
 	/**
+	 * Get field general settings.
+	 *
 	 * @return string
-	 * @param string $id Form field name
 	 */
 	public function get_field_general_settings() {
 
@@ -624,7 +633,7 @@ abstract class UR_Form_Field {
 	/**
 	 * Display Setting for each fields in options tab
 	 *
-	 * @return void
+	 * @return string $settings
 	 */
 	public function get_setting() {
 
@@ -658,5 +667,13 @@ abstract class UR_Form_Field {
 		return $settings;
 	}
 
+	/**
+	 * Validation for form field.
+	 *
+	 * @param object $single_form_field The field being validate.
+	 * @param object $form_data Form Data.
+	 * @param string $filter_hook Filter for validation messages.
+	 * @param int    $form_id Form ID.
+	 */
 	abstract public function validation( $single_form_field, $form_data, $filter_hook, $form_id );
 }
