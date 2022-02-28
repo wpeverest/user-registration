@@ -7,8 +7,6 @@
  * @class    UR_Shortcode_Login
  * @version  1.0.0
  * @package  UserRegistration/Shortcodes/Login
- * @category Shortcodes
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +21,7 @@ class UR_Shortcode_Login {
 	/**
 	 * Get the shortcode content.
 	 *
-	 * @param array $atts
+	 * @param array $atts Shortcode attributes.
 	 * @return string
 	 */
 	public static function get( $atts ) {
@@ -33,7 +31,7 @@ class UR_Shortcode_Login {
 	/**
 	 * Output the shortcode.
 	 *
-	 * @param array $atts
+	 * @param array $atts Shortcode attributes.
 	 */
 	public static function output( $atts ) {
 		global $wp, $post;

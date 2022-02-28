@@ -5,8 +5,6 @@
  * @class    UR_Frontend
  * @version  1.0.0
  * @package  UserRegistration/Frontend
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Frontend {
 
-	private static $_instance;
+	private static $_instance; // phpcs:ignore
 
 	/**
 	 * Class Constructor.

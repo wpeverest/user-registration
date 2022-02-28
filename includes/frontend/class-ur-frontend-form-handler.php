@@ -105,7 +105,7 @@ class UR_Frontend_Form_Handler {
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
+				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( wp_unslash( $_POST['ur_stripe_payment_method'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
@@ -123,10 +123,10 @@ class UR_Frontend_Form_Handler {
 					}
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
-				$success_params['form_login_option'] = $login_option;
-				$success_params                      = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
+				$success_params['form_login_option']       = $login_option;
+				$success_params                            = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( $_POST['ur_stripe_payment_method'] ) ) {
+				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( wp_unslash( $_POST['ur_stripe_payment_method'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 					wp_send_json_success( $success_params );
 				} else {
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
@@ -349,9 +349,9 @@ class UR_Frontend_Form_Handler {
 					$field_name = 'user_registration_' . $field_name;
 				}
 
-				if ( isset( $data->extra_params['field_key'] ) && ( $data->extra_params['field_key'] === 'checkbox' || $data->extra_params['field_key'] === 'learndash_course' ) ) {
+				if ( isset( $data->extra_params['field_key'] ) && ( 'checkbox' === $data->extra_params['field_key'] || 'learndash_course' === $data->extra_params['field_key'] ) ) {
 					$data->value = ( json_decode( $data->value ) !== null ) ? json_decode( $data->value ) : $data->value;
-				} else if ( isset( $data->extra_params['field_key'] ) && ( $data->extra_params['field_key'] === 'wysiwyg' ) ) {
+				} elseif ( isset( $data->extra_params['field_key'] ) && ( 'wysiwyg' === $data->extra_params['field_key'] ) ) {
 					$data->value = sanitize_text_field( htmlentities( $data->value ) );
 				}
 				update_user_meta( $user_id, $field_name, $data->value );
@@ -469,7 +469,8 @@ class UR_Frontend_Form_Handler {
 					return;
 				} else {
 					$field_label = $form_field_data[ $key ]->general_setting->label;
-					$response    = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+					/* translators: %s - Field Label */
+					$response = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
 					array_push( self::$response_array, $response );
 				}
 			}

@@ -5,8 +5,6 @@
  * @class    UR_Shortcodes
  * @version  1.4.0
  * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,19 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Shortcodes {
 
-	public static $parts = false;
+	public static $parts = false; // phpcs:ignore
 
 	/**
 	 * Init Shortcodes.
 	 */
 	public static function init() {
 		$shortcodes = array(
-			'user_registration_form'       => __CLASS__ . '::form', // change it to user_registration_form ;)
-			'user_registration_my_account' => __CLASS__ . '::my_account',
-			'user_registration_login'      => __class__ . '::login',
+			'user_registration_form'         => __CLASS__ . '::form', // change it to user_registration_form.
+			'user_registration_my_account'   => __CLASS__ . '::my_account',
+			'user_registration_login'        => __class__ . '::login',
 			'user_registration_edit_profile' => __class__ . '::edit_profile',
 		);
-		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 );
+		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 ); // phpcs:ignore
 
 		foreach ( $shortcodes as $shortcode => $function ) {
 			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ), $function );
@@ -40,9 +38,9 @@ class UR_Shortcodes {
 	/**
 	 * Shortcode Wrapper.
 	 *
-	 * @param string[] $function
-	 * @param array    $atts (default: array())
-	 * @param array    $wrapper
+	 * @param string[] $function Callback function.
+	 * @param array    $atts (default: array()) Extra attributes.
+	 * @param array    $wrapper Shortcode wrapper.
 	 *
 	 * @return string
 	 */
@@ -69,7 +67,7 @@ class UR_Shortcodes {
 	/**
 	 * My account page shortcode.
 	 *
-	 * @param mixed $atts
+	 * @param mixed $atts Extra attributes.
 	 *
 	 * @return string
 	 */
@@ -94,7 +92,7 @@ class UR_Shortcodes {
 	/**
 	 * My account page shortcode.
 	 *
-	 * @param mixed $atts
+	 * @param mixed $atts Extra attributes.
 	 *
 	 * @return string
 	 */
@@ -119,7 +117,7 @@ class UR_Shortcodes {
 	/**
 	 * User Registration Edit profile form shortcode.
 	 *
-	 * @param mixed $atts
+	 * @param mixed $atts Extra attributes.
 	 */
 	public static function edit_profile( $atts ) {
 		return self::shortcode_wrapper( array( __CLASS__, 'render_edit_profile' ), $atts );
@@ -163,7 +161,7 @@ class UR_Shortcodes {
 	/**
 	 * User Registration form shortcode.
 	 *
-	 * @param mixed $atts
+	 * @param mixed $atts Extra attributes.
 	 */
 	public static function form( $atts ) {
 
@@ -189,6 +187,7 @@ class UR_Shortcodes {
 				$current_url  = home_url( add_query_arg( array(), $wp->request ) );
 				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
 
+				/* translators: 1: Link and username of user 2: Logout url */
 				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
 
 			}
@@ -213,6 +212,7 @@ class UR_Shortcodes {
 	/**
 	 * Output for registration form .
 	 *
+	 * @param int $form_id Form ID.
 	 * @since 1.0.1 Recaptcha only
 	 */
 	private static function render_form( $form_id ) {
