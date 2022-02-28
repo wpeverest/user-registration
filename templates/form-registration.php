@@ -60,7 +60,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 ?>
 	<div class='user-registration ur-frontend-form <?php echo esc_attr( $template_class ) . ' ' . esc_attr( $custom_class ); ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<form method='post' class='register' data-form-id="<?php echo absint( $form_id ); ?>"
-			  data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>" <?php echo apply_filters( 'user_registration_form_params', '' ); ?> data-captcha-enabled="<?php echo esc_attr( $recaptcha_enabled ); ?>">
+			  data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>" <?php echo apply_filters( 'user_registration_form_params', '' );  //phpcs:ignore ?> data-captcha-enabled="<?php echo esc_attr( $recaptcha_enabled ); ?>">
 
 			<?php
 			do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
@@ -88,7 +88,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 											// If the conditional logic addon is installed.
 											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
 												// Migrate the conditional logic to logic_map schema.
-												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item; //phpcs:ignore
 
 												$enabled_status = isset( $single_item->advance_setting->enable_conditional_logic ) ? $single_item->advance_setting->enable_conditional_logic : '';
 												$cl_enabled     = '1' === $enabled_status || 'on' === $enabled_status ? 'yes' : 'no';
@@ -125,7 +125,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 				?>
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
-						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';
+						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>'; //phpcs:ignore
 					}
 
 					$btn_container_class = apply_filters( 'user_registration_form_btn_container_class', array(), $form_id );
@@ -152,7 +152,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 
 			if ( count( $form_data_array ) == 0 ) {
 				?>
-						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); ?></h2>
+						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); //phpcs:ignore ?></h2>
 					<?php
 			}
 			$enable_field_icon   = ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon' );

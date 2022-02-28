@@ -99,7 +99,7 @@ class UR_AJAX {
 
 		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
-		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( sanitize_key( $_POST['captchaResponse'] ) ) ) : '';
+		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
@@ -108,6 +108,7 @@ class UR_AJAX {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
 					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					error_log( print_r( $secret_key, true ) );
 					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
@@ -500,9 +501,9 @@ class UR_AJAX {
 
 		$info = array();
 		$info['user_login'] = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' );
-		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : '';
+		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : '';	
 		$info['remember'] = isset( $_POST['rememberme'] );
-		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? wp_unslash( sanitize_key( $_POST['CaptchaResponse'] ) ) : '';
+		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? wp_unslash( $_POST['CaptchaResponse'] ) : ''; //phpcs:ignore
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
 

@@ -1476,9 +1476,9 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 
 			?>
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
-					const ur_google_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
+					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
-				<?php
+				<?php	
 				$rc_counter++;
 		}
 

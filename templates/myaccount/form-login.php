@@ -82,7 +82,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						}
 						?>
 						<span class="input-wrapper">
-						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification ?>" />
+						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" />
 						<?php if ( $enable_field_icon ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
