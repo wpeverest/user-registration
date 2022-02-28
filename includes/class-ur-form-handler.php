@@ -1,15 +1,18 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 /**
  * Handle frontend forms.
  *
  * @class       UR_Form_Handler
  * @version     1.0.0
  * @package     UserRegistration/Classes/
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Form_Handler Class.
  */
 class UR_Form_Handler {
 
@@ -78,13 +81,13 @@ class UR_Form_Handler {
 		} else {
 			if ( isset( $_FILES['profile-pic'] ) ) {
 
-				if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) {
+				if ( isset( $_FILES['profile-pic'] ) && $_FILES['profile-pic']['size'] ) { //phpcs:ignore
 
 					if ( ! function_exists( 'wp_handle_upload' ) ) {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
 					}
 
-					$upload           = $_FILES['profile-pic'];
+					$upload           = $_FILES['profile-pic']; //phpcs:ignore
 					$upload_overrides = array(
 						'action' => 'save_profile_details',
 					);
@@ -104,9 +107,9 @@ class UR_Form_Handler {
 					} else {
 						ur_add_notice( $uploaded['error'], 'error' );
 					}
-				} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
+				} elseif ( UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) { //phpcs:ignore
 
-					switch ( $_FILES['profile-pic']['error'] ) {
+					switch ( $_FILES['profile-pic']['error'] ) { //phpcs:ignore
 						case UPLOAD_ERR_INI_SIZE:
 							 ur_add_notice( esc_html__( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
 							break;
@@ -151,26 +154,26 @@ class UR_Form_Handler {
 			switch ( $field['type'] ) {
 				case 'checkbox':
 					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = $_POST[ $key ];
+						$_POST[ $key ] = wp_unslash( sanitize_text_field( $_POST[ $key ] ) ); //phpcs:ignore
 					} else {
 						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					}
 					break;
 				case 'wysiwyg':
 					if ( isset( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_text_field( htmlentities( $_POST[ $key ] ) );
+						$_POST[ $key ] = wp_unslash( sanitize_text_field( htmlentities( $_POST[ $key ] ) ) ); //phpcs:ignore
 					} else {
 						$_POST[ $key ] = '';
 					}
 					break;
 
 				default:
-					$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( ( $_POST[ $key ] ) ) : '';
+					$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( ( $_POST[ $key ] ) ) : ''; //phpcs:ignore
 					break;
 			}
 
 			// Hook to allow modification of value.
-			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $_POST[ $key ] );
+			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, $_POST[ $key ] ); //phpcs:ignore
 
 			$disabled = false;
 			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
@@ -181,14 +184,15 @@ class UR_Form_Handler {
 
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
+							/* translators: %s - Label. */
 				ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 			}
 
 			if ( 'user_email' === $field['field_key'] ) {
-				do_action( 'user_registration_validate_email_whitelist', $_POST[ $key ], '' );
+				do_action( 'user_registration_validate_email_whitelist', wp_unslash( sanitize_key( $_POST[ $key ] ) ), '' );
 
 				// Check if email already exists before updating user details.
-				if ( email_exists( $_POST[ $key ] ) && email_exists( $_POST[ $key ] ) !== $user_id ) {
+				if ( email_exists( $_POST[ $key ] ) && email_exists( $_POST[ $key ] ) !== $user_id ) { //phpcs:ignore
 					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
@@ -200,9 +204,10 @@ class UR_Form_Handler {
 					foreach ( $field['validate'] as $rule ) {
 						switch ( $rule ) {
 							case 'email':
-								$_POST[ $key ] = strtolower( $_POST[ $key ] );
+								$_POST[ $key ] = strtolower( $_POST[ $key ] ); //phpcs:ignore
 
-								if ( ! is_email( $_POST[ $key ] ) ) {
+								if ( ! is_email( $_POST[ $key ] ) ) { //phpcs:ignore
+									/* translators: %s - Label. */
 									ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
 								}
 
@@ -212,7 +217,7 @@ class UR_Form_Handler {
 				}
 			}
 			// Action to add extra validation to edit profile fields.
-			do_action( 'user_registration_validate_' . $key, $_POST[ $key ] );
+			do_action( 'user_registration_validate_' . $key, wp_unslash( sanitize_key( $_POST[ $key ] ) ) );
 
 		}// End foreach().
 
@@ -225,10 +230,10 @@ class UR_Form_Handler {
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
-					if ( $new_key === 'display_name' ) {
-						$user_data['display_name'] = $_POST[ $key ];
+					if ( 'display_name' === $new_key ) {
+						$user_data['display_name'] = wp_unslash( sanitize_key( $_POST[ $key ] ) );
 					} else {
-						$user_data[ $new_key ] = $_POST[ $key ];
+						$user_data[ $new_key ] = wp_unslash( sanitize_key( $_POST[ $key ] ) );
 					}
 				} else {
 					$update_key = $key;
@@ -238,8 +243,8 @@ class UR_Form_Handler {
 					}
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
-					if ( $disabled !== 'disabled' ) {
-						update_user_meta( $user_id, $update_key, $_POST[ $key ] );
+					if ( 'disabled' !== $disabled ) {
+						update_user_meta( $user_id, $update_key, wp_unslash( sanitize_key( $_POST[ $key ] ) ) );
 					}
 				}
 			}
@@ -262,7 +267,7 @@ class UR_Form_Handler {
 	 * Save Account details.
 	 *
 	 * @deprecated 1.4.1
-	 * @param $user_id User Id.
+	 * @param int $user_id User Id.
 	 * @return void
 	 */
 	public function save_account_details( $user_id ) {
@@ -273,11 +278,11 @@ class UR_Form_Handler {
 	 * Save the password and redirect back to the my account page.
 	 */
 	public static function save_change_password() {
-		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
+		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) { //phpcs:ignore
 			return;
 		}
 
-		if ( empty( $_POST['action'] ) || 'save_change_password' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_change_password' ) ) {
+		if ( empty( $_POST['action'] ) || 'save_change_password' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_change_password' ) ) { //phpcs:ignore
 			return;
 		}
 
@@ -291,9 +296,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';
-		$pass1                   = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
-		$pass2                   = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : ''; //phpcs:ignore
+		$pass1                   = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : ''; //phpcs:ignore
+		$pass2                   = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : ''; //phpcs:ignore
 		$save_pass               = true;
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
@@ -348,6 +353,8 @@ class UR_Form_Handler {
 
 	/**
 	 * Process the login form.
+	 *
+	 * @throws Exception Throws when lgin failed.
 	 */
 	public static function process_login() {
 
@@ -372,13 +379,13 @@ class UR_Form_Handler {
 
 			try {
 				$creds = array(
-					'user_password' => $_POST['password'],
+					'user_password' => $_POST['password'], //phpcs:ignore
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
-				$username         = sanitize_user( trim( $_POST['username'] ) );
+				$username         = sanitize_user( trim( $_POST['username'] ) ); //phpcs:ignore
 				$validation_error = new WP_Error();
-				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] );
+				$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, $_POST['username'], $_POST['password'] ); //phpcs:ignore
 
 				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					if ( ! empty( $recaptcha_value ) ) {
@@ -433,7 +440,7 @@ class UR_Form_Handler {
 					}
 				}
 
-				// To check the specific login
+				// To check the specific login.
 				if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 					$user_data = get_user_by( 'email', $username );
 					$creds['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $username );
@@ -444,7 +451,7 @@ class UR_Form_Handler {
 					$creds['user_login'] = $username;
 				}
 
-				// Perform the login
+				// Perform the login.
 				$user = wp_signon( apply_filters( 'user_registration_login_credentials', $creds ), is_ssl() );
 
 				if ( is_wp_error( $user ) ) {
@@ -473,7 +480,7 @@ class UR_Form_Handler {
 						$redirect = admin_url();
 					} else {
 						if ( ! empty( $_POST['redirect'] ) ) {
-							$redirect = $_POST['redirect'];
+							$redirect = $_POST['redirect']; //phpcs:ignore
 						} elseif ( wp_get_raw_referer() ) {
 							$redirect = wp_get_raw_referer();
 						} else {
@@ -498,7 +505,7 @@ class UR_Form_Handler {
 		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'lost_password' ) ) {
 			$success = UR_Shortcode_My_Account::retrieve_password();
 
-			// If successful, redirect to my account with query arg set
+			// If successful, redirect to my account with query arg set.
 			if ( $success ) {
 				wp_redirect(
 					add_query_arg(
@@ -535,7 +542,7 @@ class UR_Form_Handler {
 			if ( ! isset( $_POST[ $field ] ) ) {
 				return;
 			}
-			$posted_fields[ $field ] = $_POST[ $field ];
+			$posted_fields[ $field ] = $_POST[ $field ]; //phpcs:ignore
 		}
 
 		if ( ! wp_verify_nonce( $posted_fields['_wpnonce'], 'reset_password' ) ) {

@@ -689,17 +689,17 @@ class UR_AJAX {
 
 			check_ajax_referer( 'ur_form_save_nonce', 'security' );
 
-			if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( sanitize_key( $_POST['data'] ) ) ) != 'array' ) ) {
+			if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( $_POST['data'] ) ) != 'array' ) ) { //phpcs:ignore
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 
 			} elseif ( ! isset( $_POST['data']['form_data'] )
 			|| ( isset( $_POST['data']['form_data'] )
-			&& gettype( wp_unslash( sanitize_key( $_POST['data']['form_data'] ) ) ) != 'string' ) ) {
+			&& gettype( wp_unslash( $_POST['data']['form_data'] ) ) != 'string' ) ) { //phpcs:ignore
 
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
 
-			$post_data = json_decode( wp_unslash( sanitize_key( $_POST['data']['form_data'] ) ) );
+			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
 
 			$post_data = self::ur_add_to_advanced_settings( $post_data ); // Backward compatibility method. Since @1.5.7.
 
