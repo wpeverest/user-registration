@@ -5,8 +5,6 @@
  * @class    UR_Frontend_Scripts
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -91,7 +89,7 @@ class UR_Frontend_Scripts {
 	/**
 	 * Return asset URL.
 	 *
-	 * @param string $path
+	 * @param string $path Asset Path.
 	 *
 	 * @return string
 	 */
@@ -103,13 +101,12 @@ class UR_Frontend_Scripts {
 	 * Register a script for use.
 	 *
 	 * @uses   wp_register_script()
-	 * @access private
 	 *
-	 * @param  string   $handle
-	 * @param  string   $path
-	 * @param  string[] $deps
-	 * @param  string   $version
-	 * @param  boolean  $in_footer
+	 * @param  string   $handle Script handler.
+	 * @param  string   $path Script Path.
+	 * @param  string[] $deps Dependencies.
+	 * @param  string   $version Version.
+	 * @param  boolean  $in_footer In Footer Enable/Disable.
 	 */
 	private static function register_script( $handle, $path, $deps = array( 'jquery' ), $version = UR_VERSION, $in_footer = true ) {
 		self::$scripts[] = $handle;
@@ -120,13 +117,12 @@ class UR_Frontend_Scripts {
 	 * Register and enqueue a script for use.
 	 *
 	 * @uses   wp_enqueue_script()
-	 * @access private
 	 *
-	 * @param  string   $handle
-	 * @param  string   $path
-	 * @param  string[] $deps
-	 * @param  string   $version
-	 * @param  boolean  $in_footer
+	 * @param  string   $handle Script handler.
+	 * @param  string   $path Script Path.
+	 * @param  string[] $deps Dependencies.
+	 * @param  string   $version Version.
+	 * @param  boolean  $in_footer In Footer Enable/Disable.
 	 */
 	private static function enqueue_script( $handle, $path = '', $deps = array( 'jquery' ), $version = UR_VERSION, $in_footer = true ) {
 		if ( ! in_array( $handle, self::$scripts ) && $path ) {
@@ -139,14 +135,13 @@ class UR_Frontend_Scripts {
 	 * Register a style for use.
 	 *
 	 * @uses   wp_register_style()
-	 * @access private
 	 *
-	 * @param  string   $handle
-	 * @param  string   $path
-	 * @param  string[] $deps
-	 * @param  string   $version
-	 * @param  string   $media
-	 * @param  boolean  $has_rtl
+	 * @param  string   $handle Script handler.
+	 * @param  string   $path Script Path.
+	 * @param  string[] $deps Dependencies.
+	 * @param  string   $version Version.
+	 * @param  string   $media Media.
+	 * @param  boolean  $has_rtl RTL.
 	 */
 	private static function register_style( $handle, $path, $deps = array(), $version = UR_VERSION, $media = 'all', $has_rtl = false ) {
 		self::$styles[] = $handle;
@@ -161,14 +156,13 @@ class UR_Frontend_Scripts {
 	 * Register and enqueue a styles for use.
 	 *
 	 * @uses   wp_enqueue_style()
-	 * @access private
 	 *
-	 * @param  string   $handle
-	 * @param  string   $path
-	 * @param  string[] $deps
-	 * @param  string   $version
-	 * @param  string   $media
-	 * @param  boolean  $has_rtl
+	 * @param  string   $handle Script handler.
+	 * @param  string   $path Script Path.
+	 * @param  string[] $deps Dependencies.
+	 * @param  string   $version Version.
+	 * @param  string   $media Media.
+	 * @param  boolean  $has_rtl RTL.
 	 */
 	private static function enqueue_style( $handle, $path = '', $deps = array(), $version = UR_VERSION, $media = 'all', $has_rtl = false ) {
 		if ( ! in_array( $handle, self::$styles ) && $path ) {
@@ -221,7 +215,7 @@ class UR_Frontend_Scripts {
 			),
 			'ur-recaptcha'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-recaptcha' . $suffix . '.js' ),
-				'deps'    => array( 'jquery'),
+				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
 			'ur-google-recaptcha'        => array(
@@ -234,6 +228,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
+			'ur-recaptcha-hcaptcha'     => array(
+				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
+				'deps'    => array(),
+				'version' => UR_VERSION,
+			),
 			'ur-my-account'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),
@@ -241,7 +240,7 @@ class UR_Frontend_Scripts {
 			),
 			'ur-login'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/ur-login' . $suffix . '.js' ),
-				'deps'    => array( 'jquery'),
+				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
 			'jquery-tiptip'              => array(
@@ -314,8 +313,8 @@ class UR_Frontend_Scripts {
 			self::enqueue_script( 'ur-lost-password' );
 		}
 
-		// CSS Styles
-		if ( $enqueue_styles = self::get_styles() ) {
+		// CSS Styles.
+		if ( $enqueue_styles = self::get_styles() ) { //phpcs:ignore
 			foreach ( $enqueue_styles as $handle => $args ) {
 				if ( ! isset( $args['has_rtl'] ) ) {
 					$args['has_rtl'] = false;
@@ -331,12 +330,10 @@ class UR_Frontend_Scripts {
 	/**
 	 * Localize a UR script once.
 	 *
-	 * @access private
-	 *
-	 * @param  string $handle
+	 * @param  string $handle Script Handler.
 	 */
 	private static function localize_script( $handle ) {
-		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) {
+		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) { //phpcs:ignore
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
 			self::$wp_localize_scripts[] = $handle;
 			wp_localize_script( $handle, $name, apply_filters( $name, $data ) );
@@ -346,9 +343,7 @@ class UR_Frontend_Scripts {
 	/**
 	 * Return data for script handles.
 	 *
-	 * @access private
-	 *
-	 * @param  string $handle
+	 * @param  string $handle Script handler.
 	 *
 	 * @return array|bool
 	 */
@@ -402,12 +397,12 @@ class UR_Frontend_Scripts {
 					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 				);
 				break;
-				case 'ur-login':
-					return array(
-							'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-							'ur_login_form_save_nonce' 		   => wp_create_nonce( 'ur_login_form_save_nonce' ),
-							'ajax_submission_on_ur_login'  	   => get_option('ur_login_ajax_submission', 'no' ),
-					);
+			case 'ur-login':
+				return array(
+					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
+					'ur_login_form_save_nonce'         => wp_create_nonce( 'ur_login_form_save_nonce' ),
+					'ajax_submission_on_ur_login'      => get_option( 'ur_login_ajax_submission', 'no' ),
+				);
 					break;
 		}
 
