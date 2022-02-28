@@ -976,7 +976,12 @@ class UR_AJAX {
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
+			if ( ! empty( $_POST['dismiss_forever'] ) && 'true' === $_POST['dismiss_forever'] ) {
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
+				update_option( 'user_registration_review_notice_dismissed_temporarily', '' );
+			} else {
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
+			}
 		}
 	}
 }
