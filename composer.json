@@ -4,13 +4,33 @@
   "homepage": "https://wpeverest.com/plugins/user-registration/",
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
+  "config": {
+    "process-timeout": 0,
+    "sort-packages": true,
+    "preferred-install": "dist"
+  },
   "require": {
-    "composer/installers": "1.9.0"
+    "php": ">=5.6.20",
+    "composer/installers": "~2.0.0"
   },
   "require-dev": {
+    "wp-cli/db-command": "2.0.13",
     "wp-cli/i18n-command": "2.2.9",
-    "wpeverest/wpeverest-sniffs": "0.1.0"
+    "wpeverest/wpeverest-sniffs": "0.1.0",
+    "phpunit/phpunit": "^5 || ^7",
+    "wp-phpunit/wp-phpunit": "5.8.0",
+    "spatie/phpunit-watcher": "1.23.2",
+    "vlucas/phpdotenv": "5.3.0",
+    "10up/wp_mock": "dev-enhance/allow-to-enable-disable-mock-constants-functions",
+    "roots/wordpress": "5.8.0",
+    "yoast/phpunit-polyfills": "1.0.3"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:mi5t4n/wp_mock.git"
+    }
+  ],
   "scripts": {
     "phpcs": [
       "phpcs -s -p"
@@ -26,14 +46,31 @@
     ],
     "makepot": [
       "@makepot-audit --skip-audit"
+    ],
+    "test": [
+      "@test:reset",
+      "phpunit --verbose"
+    ],
+    "test:watch": [
+      "phpunit-watcher watch"
+    ],
+    "test:reset": [
+      "wp db reset --yes --path=tests/wordpress --color"
+    ],
+    "post-update-cmd": [
+      "@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.example', 'tests/.env' );\""
     ]
   },
   "extra": {
+    "wordpress-install-dir": "tests/wordpress",
     "scripts-description": {
       "phpcs": "Analyze code against the WordPress coding standard with PHP_CodeSniffer",
       "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
       "makepot-audit": "Generate langauges/user-registration.pot file and run audit",
-      "makepot": "Generate langauges/user-registration.pot file"
+      "makepot": "Generate langauges/user-registration.pot file",
+      "test": "Run unit tests",
+      "test:watch": "Automatically re-run unit tests on source file change",
+      "test:reset": "Removes all tables from the test database"
     }
   },
   "config": {
