@@ -16,15 +16,45 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Frontend {
 
-	private static $_instance; // phpcs:ignore
+	/**
+	 * Instance of the class.
+	 *
+	 * @var UR_Frontend
+	 */
+	private static $_instance;
 
 	/**
 	 * Class Constructor.
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'after_setup_theme', array( $this, 'prevent_admin_access' ) );
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
+	}
+
+		/**
+		 * Prevent any user who cannot 'edit_posts' from accessing admin.
+		 */
+	public function prevent_admin_access() {
+		$user_id = get_current_user_id();
+
+		if ( $user_id > 0 ) {
+			$user_meta    = get_userdata( $user_id );
+			$user_roles   = $user_meta->roles;
+			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array() );
+			if ( ! is_array( $option_roles ) ) {
+				$option_roles = array();
+			}
+
+			if ( ! in_array( 'administrator', $user_roles, true ) ) {
+				$result = array_intersect( $user_roles, $option_roles );
+
+				if ( count( $result ) > 0 && apply_filters( 'user_registration_prevent_admin_access', true ) ) {
+					show_admin_bar( false );
+				}
+			}
+		}
 	}
 
 	/**

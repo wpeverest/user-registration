@@ -601,19 +601,23 @@ class UR_AJAX {
 	 * @since 1.9.9
 	 */
 	public static function send_test_email() {
-		$from    = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
-		$email   = isset( $_POST['email'] ) ? wp_unslash( sanitize_email( $_POST['email'] ) ) : ''; // phpcs:ignore
-			/* translators: %s - Form name. */
-		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from );
-		$header  = "Reply-To: {{from}} \r\n";
-		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
+		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
+		/* translators: %s - WP mail from name */
+		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
+		$header  = 'From: ' . $from_name . ' <' . $sender_email . ">\r\n";
+		$header .= 'Reply-To: ' . $sender_email . "\r\n";
+		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>
 		We thank you for trying out User Registration and joining our mission to make sure you get your emails delivered.<br>
 		Regards,<br>
 		User Registration Team';
+
 		$status = wp_mail( $email, $subject, $message, $header );
+
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
@@ -976,7 +980,12 @@ class UR_AJAX {
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
+			if ( ! empty( $_POST['dismiss_forever'] ) && 'true' === $_POST['dismiss_forever'] ) {
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
+				update_option( 'user_registration_review_notice_dismissed_temporarily', '' );
+			} else {
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
+			}
 		}
 	}
 }
