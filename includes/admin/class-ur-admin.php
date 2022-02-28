@@ -5,8 +5,6 @@
  * @class    UR_Admin
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -52,7 +50,8 @@ class UR_Admin {
 	 * Include admin files conditionally.
 	 */
 	public function conditional_includes() {
-		if ( ! $screen = get_current_screen() ) {
+		$screen = get_current_screen();
+		if ( ! $screen ) {
 			return;
 		}
 
@@ -99,7 +98,7 @@ class UR_Admin {
 	 *
 	 * @since  1.1.2
 	 *
-	 * @param  string $footer_text
+	 * @param  string $footer_text User Registration Plugin footer text.
 	 *
 	 * @return string
 	 */
@@ -115,7 +114,7 @@ class UR_Admin {
 
 		// Check to make sure we're on a User Registration admin page.
 		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
-			// Change the footer text
+			// Change the footer text.
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = wp_kses_post(
 					sprintf(
@@ -149,7 +148,7 @@ class UR_Admin {
 	 */
 	public function review_notice() {
 
-		// Show only to Admins
+		// Show only to Admins.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -225,7 +224,7 @@ class UR_Admin {
 	 */
 	public function survey_notice() {
 
-		// Show only to Admins
+		// Show only to Admins.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -237,7 +236,7 @@ class UR_Admin {
 		}
 
 		// Return if license key not found.
-		$license_key  = trim( get_option( 'user-registration_license_key' ) );
+		$license_key = trim( get_option( 'user-registration_license_key' ) );
 
 		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
 
@@ -251,28 +250,28 @@ class UR_Admin {
 							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
 							<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
 						</div>
-						<p>
-						<?php
-						echo wp_kses_post(
-							__(
-								'<strong>Hey there!</strong> <br>
-							We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-								'user-registration'
-							)
-						);
-						?>
+							<p>
+							<?php
+							echo wp_kses_post(
+								__(
+									'<strong>Hey there!</strong> <br>
+								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
+									'user-registration'
+								)
+							);
+							?>
+								</p>
+							<p class="extra-pad">
+							<?php
+							echo wp_kses_post(
+								__(
+									'<strong>What benefit would you have?</strong> <br>
+								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+									'user-registration'
+								)
+							);
+							?>
 							</p>
-						<p class="extra-pad">
-						<?php
-						echo wp_kses_post(
-							__(
-								'<strong>What benefit would you have?</strong> <br>
-							We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration'
-							)
-						);
-						?>
-						</p>
 
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
@@ -331,6 +330,7 @@ class UR_Admin {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
+		/* translators: 1: Newly registered user count 2: User */
 		$response['user_registration_new_user_message'] = sprintf( esc_html__( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
 		$response['user_registration_new_user_count']   = $user_count;
 		return $response;
