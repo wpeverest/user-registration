@@ -38,8 +38,8 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 		 */
 		public function get_settings() {
 			$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-			$invisible = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
-			$settings = apply_filters(
+			$invisible      = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+			$settings       = apply_filters(
 				'user_registration_integration_settings',
 				array(
 					'title'    => __( 'Integration', 'user-registration' ),
