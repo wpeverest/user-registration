@@ -184,7 +184,6 @@ class UR_Form_Handler {
 					$disabled = true;
 				}
 			}
-
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				/* translators: %s - Field Label */
