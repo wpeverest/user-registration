@@ -1049,7 +1049,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'checkbox',
 
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
-				'label'             => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -1057,7 +1057,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' ),
-				'tip'               => __( 'Enable reCaptcha for strong security from spams and bots.', 'user-registration' ),
+				'tip'               => __( 'Enable Captcha for strong security from spams and bots.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -1478,7 +1478,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
 					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
-				<?php	
+				<?php
 				$rc_counter++;
 		}
 

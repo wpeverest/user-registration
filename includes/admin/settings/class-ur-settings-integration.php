@@ -44,13 +44,13 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 					'title'    => __( 'Integration', 'user-registration' ),
 					'sections' => array(
 						'integration_options' => array(
-							'title'    => __( 'ReCaptcha', 'user-registration' ),
+							'title'    => __( 'Captcha', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'ReCaptcha Type', 'user-registration' ),
-									'desc'     => __( 'Select the reCaptcha type', 'user-registration' ),
+									'title'    => __( 'Captcha Type', 'user-registration' ),
+									'desc'     => __( 'Select the Captcha type', 'user-registration' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_type',
 									'default'  => 'v2',
 									'type'     => 'radio',
@@ -63,7 +63,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									),
 								),
 								array(
-									'title'    => __( 'Site Key (v2)', 'user-registration' ),
+									'title'    => __( 'Site Key (reCaptcha v2)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key',
 									'default'  => '',
@@ -74,7 +74,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key (v2)', 'user-registration' ),
+									'title'    => __( 'Secret Key ( reCaptcha v2)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret',
 									'default'  => '',
@@ -84,7 +84,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Site Key (v3)', 'user-registration' ),
+									'title'    => __( 'Site Key (reCaptcha v3)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_v3',
 									'default'  => '',
@@ -95,7 +95,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key (v3)', 'user-registration' ),
+									'title'    => __( 'Secret Key (reCaptcha v3)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_v3',
 									'default'  => '',

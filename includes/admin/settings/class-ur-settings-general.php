@@ -119,7 +119,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'settings' => array(
 								array(
 									'title'    => __( 'My account page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
+									'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ), //phpcs:ignore
 									'id'       => 'user_registration_myaccount_page_id',
 									'type'     => 'single_select_page',
 									'default'  => '',
@@ -457,11 +457,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Enable reCaptcha', 'user-registration' ),
+									'title'    => __( 'Enable Captcha', 'user-registration' ),
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'checkbox',
-									'desc_tip' => sprintf( __( 'Enable %1$s %2$s reCaptcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ), //phpcs:ignore
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
