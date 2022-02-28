@@ -48,7 +48,7 @@ class UR_Preview {
 	 * @param string $link Link.
 	 */
 	public function edit_form_link( $link ) {
-		$form_id       = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0 ;
+		$form_id       = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 		$edit_form_url = add_query_arg(
 			array(
 				'page'              => 'add-new-registration',
@@ -176,7 +176,7 @@ class UR_Preview {
 
 		wp_enqueue_script( 'ur-my-account' );
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+		$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
 		ob_start();
 		echo '<div id="user-registration">';

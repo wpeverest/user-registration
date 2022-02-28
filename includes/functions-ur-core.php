@@ -1439,11 +1439,11 @@ function ur_get_user_login_option() {
 /**
  * Get the node to display google reCaptcha
  *
- * @param string $recaptcha_enabled Is Recaptcha enabled.
  * @param string $context Recaptcha context.
+ * @param string $recaptcha_enabled Is Recaptcha enabled.
  * @return string
  */
-function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
+function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 
 	$recaptcha_type     = get_option( 'user_registration_integration_setting_recaptcha_type' );
 	$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
@@ -1476,7 +1476,7 @@ function ur_get_recaptcha_node( $recaptcha_enabled = 'no', $context ) {
 			$ur_google_recaptcha_code = array(
 				'site_key'          => $recaptcha_site_key,
 				'is_captcha_enable' => true,
-				'version'           => $recaptcha_type,		
+				'version'           => $recaptcha_type,
 				'is_invisible'      => $invisible_recaptcha,
 			);
 

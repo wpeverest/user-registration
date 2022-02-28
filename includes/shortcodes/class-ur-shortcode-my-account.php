@@ -7,8 +7,6 @@
  * @class    UR_Shortcode_My_Account
  * @version  1.0.0
  * @package  UserRegistration/Shortcodes/My_Account
- * @category Shortcodes
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +21,7 @@ class UR_Shortcode_My_Account {
 	/**
 	 * Get the shortcode content.
 	 *
-	 * @param array $atts
+	 * @param array $atts Shortcode attributes.
 	 * @return mixed
 	 */
 	public static function get( $atts ) {
@@ -39,7 +37,7 @@ class UR_Shortcode_My_Account {
 	 *
 	 * @param mixed  $return Content to return. If returned false, the shortcode will be rendered.
 	 * @param string $tag Current shortocode tag.
-	 * @param array  $attr List of shortcode attributes
+	 * @param array  $attr List of shortcode attributes.
 	 * @param array  $matches List of matches obtained while doing regex for shortcodes.
 	 */
 	public static function pre_do_shortcode_tag( $return, $tag, $attr, $matches ) {
@@ -54,7 +52,7 @@ class UR_Shortcode_My_Account {
 	/**
 	 * Output the shortcode.
 	 *
-	 * @param array $atts
+	 * @param array $atts Shortcode attributes.
 	 */
 	public static function output( $atts ) {
 
@@ -82,7 +80,7 @@ class UR_Shortcode_My_Account {
 				self::lost_password();
 			} else {
 				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-				$recaptcha_node    = ur_get_recaptcha_node( $recaptcha_enabled, 'login' );
+				$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 				ob_start();
 
 				ur_get_template(
@@ -105,13 +103,13 @@ class UR_Shortcode_My_Account {
 					ur_get_template(
 						'form-login-registration.php',
 						array(
-							'form_id'			=> $form_id,
+							'form_id'           => $form_id,
 							'registration_form' => $registration_form,
 							'login_form'        => $login_form,
 						)
 					);
 				} else {
-					echo $login_form;
+					echo $login_form; // phpcs:ignore
 				}
 			}
 		} else {
@@ -135,6 +133,7 @@ class UR_Shortcode_My_Account {
 			ob_start();
 
 			if ( isset( $wp->query_vars['user-logout'] ) ) {
+				/* translators: %s - Link to logout */
 				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
 			}
 
@@ -155,7 +154,7 @@ class UR_Shortcode_My_Account {
 	/**
 	 * My account page.
 	 *
-	 * @param array $atts
+	 * @param array $atts Shortcode attributes.
 	 */
 	private static function my_account( $atts ) {
 		ur_get_template(
@@ -235,7 +234,7 @@ class UR_Shortcode_My_Account {
 		wp_enqueue_script( 'ur-form-validator' );
 
 		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
-			wp_dequeue_script( 'wc-password-strength-meter');
+			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
@@ -264,8 +263,8 @@ class UR_Shortcode_My_Account {
 			 */
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
 
-			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
-				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
+			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) { // phpcs:ignore
+				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) ); // phpcs:ignore
 				$user                      = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
@@ -317,7 +316,7 @@ class UR_Shortcode_My_Account {
 	public static function retrieve_password() {
 		global $wpdb, $wp_hasher;
 
-		$login = trim( $_POST['user_login'] );
+		$login = isset( $_POST['user_login'] ) ? trim( wp_unslash( $_POST['user_login'] ) ) : null; // phpcs:ignore
 
 		if ( empty( $login ) ) {
 			ur_add_notice( __( 'Enter a username or email address.', 'user-registration' ), 'error' );
@@ -413,10 +412,12 @@ class UR_Shortcode_My_Account {
 
 	/**
 	 * Set or unset the cookie.
+	 *
+	 * @param string $value Value.
 	 */
 	public static function set_reset_password_cookie( $value = '' ) {
 		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-		$rp_path   = current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // phpcs:ignore
 
 		if ( $value ) {
 			setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );

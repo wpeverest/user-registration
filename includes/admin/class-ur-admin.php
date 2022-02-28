@@ -5,8 +5,6 @@
  * @class    UR_Admin
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -52,7 +50,8 @@ class UR_Admin {
 	 * Include admin files conditionally.
 	 */
 	public function conditional_includes() {
-		if ( ! $screen = get_current_screen() ) {
+		$screen = get_current_screen();
+		if ( ! $screen ) {
 			return;
 		}
 
@@ -99,7 +98,7 @@ class UR_Admin {
 	 *
 	 * @since  1.1.2
 	 *
-	 * @param  string $footer_text
+	 * @param  string $footer_text User Registration Plugin footer text.
 	 *
 	 * @return string
 	 */
@@ -115,7 +114,7 @@ class UR_Admin {
 
 		// Check to make sure we're on a User Registration admin page.
 		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
-			// Change the footer text
+			// Change the footer text.
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = wp_kses_post(
 					sprintf(
@@ -149,20 +148,35 @@ class UR_Admin {
 	 */
 	public function review_notice() {
 
-		// Show only to Admins
+		// Show only to Admins.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
 		$notice_dismissed = get_option( 'user_registration_review_notice_dismissed', 'no' );
+		$notice_dismissed_temporarily = get_option( 'user_registration_review_notice_dismissed_temporarily', '' );
 
 		if ( 'yes' == $notice_dismissed ) {
 			return;
 		}
 
-		// Return if activation date is less than 30 days.
-		if ( ur_check_activation_date( '14' ) === false ) {
+		// Return if activation date is less than 7 days.
+		if ( ur_check_activation_date( '7' ) === false ) {
 			return;
+		}
+
+		// Return if dismissed date is less than a day.
+		if ( '' !== $notice_dismissed_temporarily ) {
+
+			$days_to_validate = strtotime( $notice_dismissed_temporarily );
+			$days_to_validate = strtotime( '+1 day', $days_to_validate );
+			$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+			$current_date = date_i18n( 'Y-m-d' );
+
+			if ( $current_date < $days_to_validate ) {
+				return;
+			}
 		}
 
 		?>
@@ -171,11 +185,13 @@ class UR_Admin {
 					<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
 				</div>
 				<div class="user-registration-notice-text">
-
+					<div class="user-registration-notice-header">
 						<h3><?php echo wp_kses_post( __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ) ); ?></h3>
-						<P><?php echo wp_kses_post( __( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ) ); ?> </P>
-						<p><?php echo wp_kses_post( __( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ) ); ?></p>
-						<p class="extra-pad">
+						<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
+					</div>
+					<p><?php echo wp_kses_post( __( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ) ); ?> </p>
+					<p><?php echo wp_kses_post( __( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ) ); ?></p>
+					<p class="extra-pad">
 						<?php
 						echo wp_kses_post(
 							__(
@@ -185,14 +201,16 @@ class UR_Admin {
 							)
 						);
 						?>
-												</p>
-
-					<ul class="user-registration-notice-ul">
-						<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-						<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
-						<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a></li>
-						<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
-					 </ul>
+					</p>
+					<div class="user-registration-notice-links">
+						<ul class="user-registration-notice-ul">
+							<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+							<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
+							<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
+							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+						</ul>
+						<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+					</div>
 				</div>
 			</div>
 		<?php
@@ -206,7 +224,7 @@ class UR_Admin {
 	 */
 	public function survey_notice() {
 
-		// Show only to Admins
+		// Show only to Admins.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -218,7 +236,7 @@ class UR_Admin {
 		}
 
 		// Return if license key not found.
-		$license_key  = trim( get_option( 'user-registration_license_key' ) );
+		$license_key = trim( get_option( 'user-registration_license_key' ) );
 
 		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
 
@@ -228,33 +246,42 @@ class UR_Admin {
 						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
 					</div>
 					<div class="user-registration-notice-text">
-
+						<div class="user-registration-notice-header">
 							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
+							<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
+						</div>
 							<p>
 							<?php
 							echo wp_kses_post(
-								__('<strong>Hey there!</strong> <br>
+								__(
+									'<strong>Hey there!</strong> <br>
 								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-								'user-registration' )
+									'user-registration'
+								)
 							);
 							?>
 								</p>
 							<p class="extra-pad">
 							<?php
 							echo wp_kses_post(
-								__('<strong>What benefit would you have?</strong> <br>
+								__(
+									'<strong>What benefit would you have?</strong> <br>
 								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration')
+									'user-registration'
+								)
 							);
 							?>
 							</p>
 
-						<ul class="user-registration-notice-ul">
-							<li><a class="button button-primary" href=<?php echo esc_url( 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu' ); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a></li>
-							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
-						</ul>
+						<div class="user-registration-notice-links">
+							<ul class="user-registration-notice-ul">
+								<li><a class="button button-primary" href=<?php echo esc_url( 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu' ); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
+								<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
+								<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
+								<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+							</ul>
+							<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+						</div>
 					</div>
 				</div>
 			<?php
@@ -303,6 +330,7 @@ class UR_Admin {
 		$user_query = new WP_User_Query( $user_args );
 		$user_count = $user_query->get_total();
 
+		/* translators: 1: Newly registered user count 2: User */
 		$response['user_registration_new_user_message'] = sprintf( esc_html__( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
 		$response['user_registration_new_user_count']   = $user_count;
 		return $response;
