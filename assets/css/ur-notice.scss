@@ -34,10 +34,23 @@
 	.user-registration-notice-text {
 		overflow: hidden;
 
-		h3 {
-			font-size: 18px;
-			margin: 0;
-			line-height: 1;
+		.user-registration-notice-header {
+			display: flex;
+			justify-content: space-between;
+
+			h3 {
+				font-size: 18px;
+				margin: 0;
+				line-height: 1;
+			}
+
+			.close-btn {
+				font-size: 30px;
+				color: darkgray;
+				cursor: pointer;
+				text-decoration: none;
+				position: relative;
+			}
 		}
 
 		.ur-error {
@@ -54,38 +67,50 @@
 	.extra-pad {
 		padding-bottom: 20px;
 	}
-	.user-registration-notice-ul {
-		margin: 0;
-		padding: 0;
 
-		li {
-			display: inline-block;
-			margin-right: 10px;
+	.user-registration-notice-links {
+		display: flex;
+		justify-content: space-between;
 
-			a {
+		a {
+			position: relative;
+			text-decoration: none;
+		}
+
+		.user-registration-notice-ul {
+			margin: 0;
+			padding: 0;
+
+			li {
 				display: inline-block;
-				text-decoration: none;
-				position: relative;
+				margin-right: 10px;
 
-				span {
-					margin-right: 5px;
-					margin-top: 4px;
+				a {
+					display: inline-block;
+					text-decoration: none;
+					position: relative;
+
+					span {
+						margin-right: 5px;
+						margin-top: 4px;
+					}
 				}
+
 			}
-		}
-		.button-primary {
-			background: #475bb2;
-			border-color: #475bb2;
-		}
-		.button-primary:focus,
-		.button-primary:hover {
-			background: #2e44a1;
-			border-color: #2e44a1;
-		}
-		.button.button-secondary {
-			border-color: #475bb2;
-			color: #475bb2;
-			box-shadow: none;
+			.button-primary {
+				background: #475bb2;
+				border-color: #475bb2;
+			}
+			.button-primary:focus,
+			.button-primary:hover {
+				background: #2e44a1;
+				border-color: #2e44a1;
+			}
+			.button.button-secondary {
+				border-color: #475bb2;
+				color: #475bb2;
+				box-shadow: none;
+			}
 		}
 	}
 
