@@ -1,3 +1,4 @@
+/* global  ur_recaptcha_code */
 jQuery(function ($) {
 	$(".ur-frontend-form")
 		.find("form.login")
@@ -23,11 +24,18 @@ jQuery(function ($) {
 						redirect_url = $this
 							.closest("form")
 							.find('input[name="redirect"]')
-							.val(),
-						CaptchaResponse = $this
+							.val();
+					if ("hCaptcha" === ur_recaptcha_code.version) {
+						var CaptchaResponse = $this
+							.closest("form")
+							.find('[name="h-captcha-response"]')
+							.val();
+					} else {
+						var CaptchaResponse = $this
 							.closest("form")
 							.find('[name="g-recaptcha-response"]')
 							.val();
+					}
 
 					var url =
 						ur_login_params.ajax_url +
