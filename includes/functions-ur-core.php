@@ -1467,7 +1467,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 	}
 	static $rc_counter = 0;
 
-	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $recaptcha_site_key ) && ! empty( $recaptcha_site_secret ) ) {
+	if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) ) {
 
 		if ( 0 === $rc_counter ) {
 			wp_enqueue_script( 'ur-recaptcha' );

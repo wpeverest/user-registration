@@ -54,8 +54,6 @@ $enable_field_icon = 'yes' === get_option( 'user_registration_pro_general_settin
 
 $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 
-$login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
-
 ?>
 
 <?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
@@ -69,9 +67,9 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 			<div class="ur-form-grid">
 				<?php
 				if ( $login_title ) {
-					$login_title_lable = apply_filters( 'ur_login_title', $labels['login'] );
+					$login_title_label = apply_filters( 'ur_login_title', $labels['login'] );
 					/* translators: %s - Login Title. */
-					echo wp_kses_post( sprintf( esc_html__( '<span> %s </span>', 'user-registration' ), $login_title_label ) );
+					echo wp_kses_post( sprintf( __( '<span> %s </span>', 'user-registration' ), $login_title_label ) );
 				}
 				?>
 					<?php do_action( 'user_registration_login_form_start' ); ?>
@@ -82,7 +80,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						}
 						?>
 						<span class="input-wrapper">
-						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" />
+						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo $enable_field_icon ? "padding-left: 32px !important" : '' ?>"/>
 						<?php if ( $enable_field_icon ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
@@ -96,7 +94,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						?>
 						<span class="input-wrapper">
 						<span class="password-input-group">
-						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" />
+						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo $enable_field_icon ? 'padding-left: 32px !important' : ''; ?>" />
 
 						<?php
 						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {

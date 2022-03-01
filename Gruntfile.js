@@ -211,7 +211,7 @@ module.exports = function (grunt) {
 			options: {
 				processors: [
 					require("autoprefixer")({
-						browsers: ["> 0.1%", "ie 8", "ie 9"],
+						overrideBrowserslist: ["> 0.1%", "ie 8", "ie 9"],
 					}),
 				],
 			},
@@ -234,8 +234,7 @@ module.exports = function (grunt) {
 					"!.*/**",
 					"!sass/**",
 					"!vendor/**",
-					"!tests",
-					"!vendor/**",
+					"!tests/**",
 					"!Gruntfile.js",
 					"!package.json",
 					"!composer.json",
