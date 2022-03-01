@@ -274,7 +274,7 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
-= 2.1.4    - 28/02/2022
+= 2.1.4    - 01/03/2022
 * Feature  - hCaptcha integration.
 * Feature  - ReCaptcha v2 invisible integration.
 * Enhance  - Threshold score handled in v3.

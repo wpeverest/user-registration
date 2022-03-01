@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-28T09:59:12+00:00\n"
+"POT-Creation-Date: 2022-03-01T06:26:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: user-registration\n"
@@ -1301,7 +1301,7 @@ msgid "This option lets you enter the label to registration url in login form."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:485
-#: templates/myaccount/form-login.php:175
+#: templates/myaccount/form-login.php:173
 msgid "Not a member yet? Register now."
 msgstr ""
 
@@ -4726,11 +4726,11 @@ msgid "Gravatar"
 msgstr ""
 
 #. translators: %s - Login Title.
-#: templates/myaccount/form-login.php:74
+#: templates/myaccount/form-login.php:72
 msgid "<span> %s </span>"
 msgstr ""
 
-#: templates/myaccount/form-login.php:104
+#: templates/myaccount/form-login.php:102
 msgid "Show password"
 msgstr ""
 

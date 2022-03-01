@@ -184,7 +184,7 @@ class UR_Email_Confirmation {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output  = $this->crypt_the_string( wp_unslash( sanitize_key( $_GET['ur_resend_id'] ) ), 'd' );
+			$output = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
 			$user    = get_user_by( 'id', $user_id );
@@ -216,7 +216,7 @@ class UR_Email_Confirmation {
 			return;
 		} else {
 
-			$ur_token     = str_split( wp_unslash( sanitize_key( $_GET['ur_token'] ) ), 50 );
+			$ur_token     = str_split( sanitize_text_field( wp_unslash( $_GET['ur_token'] ) ), 50 );
 			$token_string = $ur_token[1];
 
 			if ( 2 < count( $ur_token ) ) {
