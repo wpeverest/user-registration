@@ -576,12 +576,16 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
 					</div>
 					<div class="user-registration-notice-text">
-						<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
+						<div class="user-registration-notice-header">
+							<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
+						</div>
 						<p class="extra-pad"><?php echo sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ); ?></p>
 						<?php echo wp_kses_post( sprintf( __( '%1$s', 'user-registration' ), $update_addon_content ) ); ?>
-						<ul class="user-registration-notice-ul">
-							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
-						</ul>
+						<div class="user-registration-notice-links">
+							<ul class="user-registration-notice-ul">
+								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<?php
@@ -593,13 +597,18 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<img src="<?php echo UR()->plugin_url() . '/assets/images/UR-Logo.png'; ?>" alt="">
 					</div>
 					<div class="user-registration-notice-text">
-						<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
+						<div class="user-registration-notice-header">
+							<h3 class="ur-error extra-pad"><?php _e( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ); ?></h3>
+						</div>
+
 						<p class="extra-pad"><?php _e( 'It seems you are using some premium addons of User Registration plugin. <br>', 'user-registration' ); ?></p>
 						<?php echo esc_html( $license_key ) ? '<p class="extra-pad">' . wp_kses_post( $content ) . '</p>' : wp_kses_post( $content ); ?>
+						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
-							<?php echo esc_html( $license_key ) ? '<li><form method="post">' . wp_kses_post( $link ) . '</form></li>' : wp_kses_post( $link ); ?>
-							<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
-						</ul>
+								<?php echo esc_html( $license_key ) ? '<li><form method="post">' . wp_kses_post( $link ) . '</form></li>' : wp_kses_post( $link ); ?>
+								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			<?php

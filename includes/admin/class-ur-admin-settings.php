@@ -65,8 +65,8 @@ class UR_Admin_Settings {
 	public static function save() {
 		global $current_tab;
 
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-registration-settings' ) ) {
-			die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
+			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
 		// Trigger actions.
@@ -110,11 +110,11 @@ class UR_Admin_Settings {
 	 * @echo string
 	 */
 	public static function show_messages() {
-		if ( sizeof( self::$errors ) > 0 ) {
+		if ( count( self::$errors ) > 0 ) {
 			foreach ( self::$errors as $error ) {
 				echo '<div id="message" class="error inline"><p><strong>' . esc_html( $error ) . '</strong></p></div>';
 			}
-		} elseif ( sizeof( self::$messages ) > 0 ) {
+		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
 				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
 			}
@@ -146,30 +146,30 @@ class UR_Admin_Settings {
 		// Include settings pages.
 		self::get_settings_pages();
 
-		// Get current tab/section
-		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( $_GET['tab'] );
-		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( $_REQUEST['section'] );
+		// Get current tab/section.
+		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		$flag = apply_filters( 'user_registration_settings_save_action', true );
 
 		if ( $flag ) {
 
 			// Save settings if data has been posted.
-			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) {
+			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				self::save();
 			}
 		}
 
-		// Add any posted messages
-		if ( ! empty( $_GET['ur_error'] ) ) {
-			self::add_error( stripslashes( $_GET['ur_error'] ) );
+		// Add any posted messages.
+		if ( ! empty( $_GET['ur_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			self::add_error( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
 		}
 
-		if ( ! empty( $_GET['ur_message'] ) ) {
-			self::add_message( stripslashes( $_GET['ur_error'] ) );
+		if ( ! empty( $_GET['ur_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
 		}
 
-		// Get tabs for the settings page
+		// Get tabs for the settings page.
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
 		if ( 'import_export' === $current_tab ) {
@@ -198,7 +198,7 @@ class UR_Admin_Settings {
 			if ( strstr( $option_name, '[' ) ) {
 				parse_str( $option_name, $option_array );
 
-				// Option name is first key
+				// Option name is first key.
 				$option_name = current( array_keys( $option_array ) );
 
 				// Get value.
@@ -230,15 +230,15 @@ class UR_Admin_Settings {
 	 *
 	 * Loops though the user registration options array and outputs each field.
 	 *
-	 * @param array[] $options Opens array to output.
+	 * @param array $options Opens array to output.
 	 */
 	public static function output_fields( $options ) {
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
 
-			$settings .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
-			$back_link = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
+			$settings      .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
+			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
 
 			if ( isset( $options['back_link'] ) ) {
@@ -326,18 +326,18 @@ class UR_Admin_Settings {
 						$value['placeholder'] = '';
 					}
 
-					// Custom attribute handling
+					// Custom attribute handling.
 					$custom_attributes = array();
 
 					if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
 						foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
-							$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
+							$custom_attributes[] = esc_attr( $attribute ) . '=' . esc_attr( $attribute_value ) . '';
 						}
 					}
 
 					// Description handling.
 					$field_description = self::get_field_description( $value );
-					extract( $field_description );
+					extract( $field_description ); // phpcs:ignore
 
 					// Switch based on type.
 					switch ( $value['type'] ) {
@@ -368,14 +368,14 @@ class UR_Admin_Settings {
 						// Color picker.
 						case 'color':
 							$option_value = self::get_option( $value['id'], $value['default'] );
-							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
-							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= wp_kses_post( $tooltip_html );
-							$settings .= '</th>';
-							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
-							$settings .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
-							$settings .= '<input
+							$settings    .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings    .= '<th scope="row" class="titledesc">';
+							$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
+							$settings    .= wp_kses_post( $tooltip_html );
+							$settings    .= '</th>';
+							$settings    .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
+							$settings    .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
+							$settings    .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
 										id="' . esc_attr( $value['id'] ) . '"
 										type="text"
@@ -385,7 +385,7 @@ class UR_Admin_Settings {
 										class="' . esc_attr( $value['class'] ) . 'colorpick"
 										placeholder="' . esc_attr( $value['placeholder'] ) . '"
 										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
-							$settings .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></td></tr>';
+							$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></td></tr>';
 							break;
 
 						// Textarea.
@@ -425,9 +425,9 @@ class UR_Admin_Settings {
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 
 							$multiple = '';
-							$type = '';
+							$type     = '';
 							if ( 'multiselect' == $value['type'] ) {
-								$type = '[]';
+								$type     = '[]';
 								$multiple = 'multiple="multiple"';
 							}
 
@@ -459,15 +459,15 @@ class UR_Admin_Settings {
 						// Radio inputs.
 						case 'radio':
 							$option_value = self::get_option( $value['id'], $value['default'] );
-							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
-							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
-							$settings .= wp_kses_post( $tooltip_html );
-							$settings .= '</th>';
-							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
-							$settings .= '<fieldset>';
-							$settings .= wp_kses_post( $description );
-							$settings .= '<ul>';
+							$settings    .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings    .= '<th scope="row" class="titledesc">';
+							$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
+							$settings    .= wp_kses_post( $tooltip_html );
+							$settings    .= '</th>';
+							$settings    .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
+							$settings    .= '<fieldset>';
+							$settings    .= wp_kses_post( $description );
+							$settings    .= '<ul>';
 
 							foreach ( $value['options'] as $key => $val ) {
 								$settings .= '<li>';
@@ -559,11 +559,11 @@ class UR_Admin_Settings {
 								$args = wp_parse_args( $value['args'], $args );
 							}
 
-							$settings .= '<tr valign="top" class="single_select_page ' . esc_attr( $value['row_class'] ) . '" ' . ( ( isset( $value['display'] ) && $value['display'] === 'none' ) ? 'style="display:none"' : '' ) . '>';
+							$settings .= '<tr valign="top" class="single_select_page ' . esc_attr( $value['row_class'] ) . '" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
 							$settings .= '<th scope="row" class="titledesc">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td class="forminp">';
-							$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) );
+							$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							$settings .= wp_kses_post( $description );
 							$settings .= '</td></tr>';
 							break;
@@ -593,7 +593,7 @@ class UR_Admin_Settings {
 							$settings .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">';
 							$settings .= wp_kses_post( $description );
 
-							// Output buffer for tinymce editor
+							// Output buffer for tinymce editor.
 							ob_start();
 							wp_editor( $option_value, $value['id'], $editor_settings );
 							$settings .= ob_get_clean();
@@ -638,7 +638,7 @@ class UR_Admin_Settings {
 				}
 			}// End foreach.
 		}
-		echo $settings;
+		echo $settings; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -653,7 +653,7 @@ class UR_Admin_Settings {
 	public static function get_field_description( $value ) {
 		$description  = '';
 		$tooltip_html = '';
-		$desc_field = '';
+		$desc_field   = '';
 
 		if ( true === $value['desc_tip'] ) {
 			$tooltip_html = $value['desc'];
@@ -703,7 +703,7 @@ class UR_Admin_Settings {
 	 * @return bool
 	 */
 	public static function save_fields( $options ) {
-		if ( empty( $_POST ) ) {
+		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 
@@ -727,11 +727,11 @@ class UR_Admin_Settings {
 					$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );
 
 					$setting_name = key( $option_name_array[ $option_name ] );
-					$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null;
+					$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option_name ][ $setting_name ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 				} else {
 					$option_name  = sanitize_text_field( $option['id'] );
 					$setting_name = '';
-					$raw_value    = isset( $_POST[ $option['id'] ] ) ? wp_unslash( $_POST[ $option['id'] ] ) : null;
+					$raw_value    = isset( $_POST[ $option['id'] ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option['id'] ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 				}
 
 				// Format the value based on option type.
