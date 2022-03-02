@@ -102,7 +102,7 @@ class UR_AJAX {
 		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
@@ -515,7 +515,7 @@ class UR_AJAX {
 		$info['remember'] = isset( $_POST['rememberme'] );
 		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {

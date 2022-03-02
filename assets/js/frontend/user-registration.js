@@ -1,5 +1,4 @@
 /* global  user_registration_params */
-/* global  ur_recaptcha_code */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -576,19 +575,22 @@
 									var form_data;
 									var form_id = 0;
 									var form_nonce = "0";
+									var captchaResponse = "";
 									if (
-										"hcaptcha" === ur_recaptcha_code.version
+										"hcaptcha" ===
+										user_registration_params.recaptcha_type
 									) {
-										var captchaResponse = $this
+										captchaResponse = $this
 											.find('[name="h-captcha-response"]')
 											.val();
 									} else {
-										var captchaResponse = $this
+										captchaResponse = $this
 											.find(
 												'[name="g-recaptcha-response"]'
 											)
 											.val();
 									}
+
 									try {
 										form_data = JSON.stringify(
 											form.get_form_data(

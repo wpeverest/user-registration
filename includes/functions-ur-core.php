@@ -1445,7 +1445,7 @@ function ur_get_user_login_option() {
  */
 function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 
-	$recaptcha_type     = get_option( 'user_registration_integration_setting_recaptcha_type' );
+	$recaptcha_type     = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 	$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 	if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {

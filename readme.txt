@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 5.9.1
-Stable tag: 2.1.4
+Stable tag: 2.1.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -179,9 +179,11 @@ Here’s a brief look at the features that make User Registration one of the bes
     * Admin Approval after Registration
 * Redirect to any page or URL after registration form submission
 * Hide/show password feature on entering password
-* reCaptcha for spam protection
+* Captcha for spam protection
     * reCaptcha v2
+	* reCaptcha v2 Invisible
     * reCaptcha v3
+	* hCaptcha
 * Honeypot spam protection
 * Allow only whitelisted email domains to register
 * Check user registration statistics in the plugin dashboard
@@ -274,6 +276,9 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.1.4.1  - 02/03/2022
+* Fix      - ReCaptcha backward compatibility issue.
+
 = 2.1.4    - 01/03/2022
 * Feature  - hCaptcha integration.
 * Feature  - ReCaptcha v2 invisible integration.
