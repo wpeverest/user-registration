@@ -1,4 +1,13 @@
 <?php
+/**
+ * UserRegistration UR_Form_Block
+ *
+ * AJAX Event Handler
+ *
+ * @class    UR_AJAX
+ * @version  1.0.0
+ * @package  UserRegistration/Classes
+ */
 
 /**
  * Form Selector Gutenberg block with live preview.
@@ -36,7 +45,7 @@ class UR_Form_Block {
 			UR_VERSION
 		);
 
-		if ( $pagenow === 'widgets.php' ) {
+		if ( 'widgets.php' === $pagenow ) {
 			unset( $enqueue_script[ array_search( 'wp-editor', $enqueue_script ) ] );
 		}
 		wp_register_script(
@@ -74,19 +83,19 @@ class UR_Form_Block {
 			'user-registration/form-selector',
 			array(
 				'attributes'      => array(
-					'formId' => array(
+					'formId'      => array(
 						'type' => 'string',
 					),
-					'formType' => array(
+					'formType'    => array(
 						'type' => 'string',
 					),
-					'shortcode' => array(
+					'shortcode'   => array(
 						'type' => 'string',
 					),
 					'redirectUrl' => array(
 						'type' => 'string',
 					),
-					'logoutUrl' => array(
+					'logoutUrl'   => array(
 						'type' => 'string',
 					),
 				),
@@ -101,19 +110,19 @@ class UR_Form_Block {
 	 * Render Callback for the block. This is what is output
 	 * in the preview within Gutenberg
 	 *
-	 * @param $attr
+	 * @param array $attr Attributes.
 	 */
-	function render_callback( $attr ) {
+	public function render_callback( $attr ) {
 
-		$formType = ! empty( $attr['formType'] ) ? _sanitize_text_fields( $attr['formType'] ) : 'registration_form';
-		if ( 'registration_form' === $formType ) {
+		$form_type = ! empty( $attr['formType'] ) ? _sanitize_text_fields( $attr['formType'] ) : 'registration_form';
+		if ( 'registration_form' === $form_type ) {
 			$form_id = ! empty( $attr['formId'] ) ? absint( $attr['formId'] ) : 0;
 
 			if ( empty( $form_id ) ) {
 				return '';
 			}
 
-			$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'];
+			$is_gb_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context']; // phpcs:ignore WordPress.Security.NonceVerification
 
 			if ( $is_gb_editor ) {
 				add_filter(
@@ -143,7 +152,7 @@ class UR_Form_Block {
 					'id' => $form_id,
 				)
 			);
-		} elseif ( 'login_form' === $formType ) {
+		} elseif ( 'login_form' === $form_type ) {
 			$shortcode = ! empty( $attr['shortcode'] ) ? _sanitize_text_fields( $attr['shortcode'] ) : '';
 
 			if ( empty( $shortcode ) ) {

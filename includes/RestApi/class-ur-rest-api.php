@@ -7,8 +7,6 @@
  * @class    UR_REST_API
  * @version  1.0.0
  * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -119,9 +117,10 @@ class UR_REST_API {
 
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
-		$pages = apply_filters( 'user_registration_create_pages', array() );
+		$pages                = apply_filters( 'user_registration_create_pages', array() );
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
 
-		if ( $default_form_page_id = get_option( 'user_registration_default_form_page_id' ) ) {
+		if ( $default_form_page_id ) {
 			$pages['registration'] = array(
 				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),

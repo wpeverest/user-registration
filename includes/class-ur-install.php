@@ -98,16 +98,16 @@ class UR_Install {
 	 * This function is hooked into admin_init to affect admin only.
 	 */
 	public static function install_actions() {
-		if ( ! empty( $_GET['do_update_user_registration'] ) ) { // WPCS: input var okay, CSRF ok.
+		if ( ! empty( $_GET['do_update_user_registration'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 			self::update();
 			UR_Admin_Notices::add_notice( 'update' );
 		}
-		if ( ! empty( $_GET['force_update_user_registration'] ) ) { // WPCS: input var okay, CSRF ok.
+		if ( ! empty( $_GET['force_update_user_registration'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 			do_action( 'wp_' . get_current_blog_id() . '_ur_updater_cron' );
 			wp_safe_redirect( admin_url( 'admin.php?page=user-registration-settings' ) );
 			exit;
 		}
-		if ( ! empty( $_GET['install_user_registration_pages'] ) ) { // WPCS: input var okay, CSRF ok.
+		if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 			self::create_pages();
 			UR_Admin_Notices::remove_notice( 'install' );
 		}
@@ -311,7 +311,9 @@ class UR_Install {
 			)
 		);
 
-		if ( $default_form_page_id = get_option( 'user_registration_default_form_page_id' ) ) {
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+
+		if ( $default_form_page_id ) {
 			$pages['registration'] = array(
 				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
@@ -361,7 +363,7 @@ class UR_Install {
 		if ( 0 === count( $hasposts ) ) {
 			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
 
-			// Insert default form :)
+			// Insert default form.
 			$default_post_id = wp_insert_post(
 				array(
 					'post_type'      => 'user_registration',
@@ -437,7 +439,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		$tables = self::get_tables();
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // WPCS: unprepared SQL ok.
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore
 		}
 	}
 
@@ -491,7 +493,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		foreach ( $capability_types as $capability_type ) {
 
 			$capabilities[ $capability_type ] = array(
-				// Post type
+				// Post type.
 				"edit_{$capability_type}",
 				"read_{$capability_type}",
 				"delete_{$capability_type}",
@@ -506,7 +508,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 				"edit_private_{$capability_type}s",
 				"edit_published_{$capability_type}s",
 
-				// Terms
+				// Terms.
 				"manage_{$capability_type}_terms",
 				"edit_{$capability_type}_terms",
 				"delete_{$capability_type}_terms",
@@ -528,7 +530,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 
 		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new WP_Roles();
+			$wp_roles = new WP_Roles(); // phpcs:ignore
 		}
 
 		$capabilities = self::get_core_capabilities();
@@ -549,7 +551,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 			return;
 		}
 
-		// Install files and folders for uploading files and prevent hotlinking
+		// Install files and folders for uploading files and prevent hotlinking.
 		$upload_dir = wp_upload_dir();
 
 		$files = array(
@@ -567,7 +569,9 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 
 		foreach ( $files as $file ) {
 			if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-				if ( $file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'w' ) ) {
+				$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'w' );
+
+				if ( $file_handle ) {
 					fwrite( $file_handle, $file['content'] );
 					fclose( $file_handle );
 				}
@@ -577,11 +581,14 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 
 	/**
 	 * Show plugin changes. Code adapted from W3 Total Cache.
+	 *
+	 * @param array $args Arguments.
 	 */
 	public static function in_plugin_update_message( $args ) {
 		$transient_name = 'ur_upgrade_notice_' . $args['Version'];
+		$upgrade_notice = get_transient( $transient_name );
 
-		if ( false === ( $upgrade_notice = get_transient( $transient_name ) ) ) {
+		if ( false === $upgrade_notice ) {
 			$response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
 
 			if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
@@ -596,8 +603,8 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	/**
 	 * Parse update notice from readme file
 	 *
-	 * @param  string $content
-	 * @param  string $new_version
+	 * @param  string $content Content of notice.
+	 * @param  string $new_version Version of plugin.
 	 *
 	 * @return string
 	 */

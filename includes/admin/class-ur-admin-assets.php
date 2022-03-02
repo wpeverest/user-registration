@@ -254,13 +254,13 @@ class UR_Admin_Assets {
 				'ur_form_save'                   => wp_create_nonce( 'ur_form_save_nonce' ),
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
-				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false,
-				'post_id'                        => isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0,
+				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
+				'post_id'                        => isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0, //phpcs:ignore WordPress.Security.NonceVerification
 				'admin_url'                      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
-				'add_new'                        => esc_html( 'Add New', 'user-registration' ),
+				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
 				'max_upload_size_ini'            => wp_max_upload_size() / 1024,
 			);
 
@@ -312,7 +312,7 @@ class UR_Admin_Assets {
 			);
 		}
 		// send test email.
-		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : '';
+		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
 			wp_localize_script(
 				'user-registration-admin',
@@ -334,7 +334,7 @@ class UR_Admin_Assets {
 	 */
 	public static function get_form_required_html() {
 
-		if ( isset( $_GET['edit-registration'] ) ) {
+		if ( isset( $_GET['edit-registration'] ) ) {//phpcs:ignore WordPress.Security.NonceVerification
 
 			return '';
 		}
@@ -371,7 +371,7 @@ class UR_Admin_Assets {
 	 * @return array
 	 */
 	public static function get_i18n_admin_data() {
-		$max_upload_size_ini           = wp_max_upload_size() / 1024;
+		$max_upload_size_ini = wp_max_upload_size() / 1024;
 
 		$i18n = array(
 			'i18n_choice_delete'                     => esc_html__( 'Delete', 'user-registration' ),
@@ -402,7 +402,7 @@ class UR_Admin_Assets {
 			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
 			'i18n_input_size'                        => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
 			'i18n_min_max_input'                     => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
-			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ),
+			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ), // phpcs:ignore
 		);
 
 		return $i18n;

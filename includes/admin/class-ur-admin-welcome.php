@@ -49,7 +49,7 @@ class UR_Admin_Welcome {
 	 */
 	public static function welcome_page() {
 
-		if ( isset( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) {
+		if ( isset( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 			update_option( 'user_registration_first_time_activation_flag', true );
 		}
 
@@ -69,7 +69,7 @@ class UR_Admin_Welcome {
 			)
 		);
 
-		if ( ! empty( $_GET['page'] ) && 'user-registration-welcome' === $_GET['page'] ) {
+		if ( ! empty( $_GET['page'] ) && 'user-registration-welcome' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 
 			ob_start();
 			self::setup_wizard_header();
@@ -125,7 +125,7 @@ class UR_Admin_Welcome {
 		?>
 			<body class="user-registration-welcome notranslate" translate="no">
 				<?php
-				if ( ! empty( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) {
+				if ( ! empty( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 					?>
 					<div id="user-registration-setup-wizard"></div>
 					<?php

@@ -163,7 +163,7 @@ class UR_Admin {
 			return;
 		}
 
-		$notice_dismissed = get_option( 'user_registration_review_notice_dismissed', 'no' );
+		$notice_dismissed             = get_option( 'user_registration_review_notice_dismissed', 'no' );
 		$notice_dismissed_temporarily = get_option( 'user_registration_review_notice_dismissed_temporarily', '' );
 
 		if ( 'yes' == $notice_dismissed ) {

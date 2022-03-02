@@ -288,11 +288,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$class_to_check = $section['fields_parent_class'];
 
 				if ( ! class_exists( $class_to_check ) ) {
-					$fields = $section['fields'];
-					$plan   = isset( $section['plan'] ) ? $section['plan'] : '';
+					$fields       = $section['fields'];
+					$plan         = isset( $section['plan'] ) ? $section['plan'] : '';
+					$fields_count = count( $fields );
 
 					// Set the same plan for all the section's fields.
-					for ( $i = 0; $i < count( $fields ); $i++ ) {
+					for ( $i = 0; $i < $fields_count; $i++ ) {
 						$fields[ $i ]['plan'] = $plan;
 					}
 
@@ -362,7 +363,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function registration_page_init() {
 				global $registration_table_list;
 
-			if ( ! isset( $_GET['add-new-registration'] ) ) {
+			if ( ! isset( $_GET['add-new-registration'] ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
 				$registration_table_list->process_actions();
 
@@ -473,7 +474,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Init the add registration page.
 		 */
 		public function add_registration_page() {
-			$form_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;
+			$form_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0; //phpcs:ignore WordPress.Security.NonceVerification
 			$form_data = ( $form_id ) ? UR()->form->get_form( $form_id ) : array();
 
 			$save_label = __( 'Create Form', 'user-registration' );
@@ -738,7 +739,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 								echo '<div class="ur-selected-item">';
 								echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
 								$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
-								echo $template;
+								echo $template; // phpcs:ignore
 								echo '</div>';
 							}
 						}
