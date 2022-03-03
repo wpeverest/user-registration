@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.1.4\n"
+"Project-Id-Version: User Registration 2.1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-01T06:26:02+00:00\n"
+"POT-Creation-Date: 2022-03-02T05:24:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -1023,7 +1023,7 @@ msgid "Enter the text message after successful form submission on manual login a
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:243
-#: includes/class-ur-frontend-scripts.php:374
+#: includes/class-ur-frontend-scripts.php:375
 msgid "User successfully registered."
 msgstr ""
 
@@ -1037,7 +1037,7 @@ msgid "Enter the text message after successful form submission on email confirma
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:253
-#: includes/class-ur-frontend-scripts.php:376
+#: includes/class-ur-frontend-scripts.php:377
 msgid "User registered. Verify your email by clicking on the link sent to your email."
 msgstr ""
 
@@ -1064,7 +1064,7 @@ msgid "Enter the text message after successful form submission on admin approval
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:273
-#: includes/class-ur-frontend-scripts.php:375
+#: includes/class-ur-frontend-scripts.php:376
 msgid "User registered. Wait until admin approves your registration."
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgid "Enter the error message in form submission on required fields."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:289
-#: includes/class-ur-frontend-scripts.php:362
+#: includes/class-ur-frontend-scripts.php:363
 msgid "This field is required."
 msgstr ""
 
@@ -1103,7 +1103,7 @@ msgid "Enter the error message in form submission on Email."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:307
-#: includes/class-ur-frontend-scripts.php:363
+#: includes/class-ur-frontend-scripts.php:364
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -1116,7 +1116,7 @@ msgid "Enter the error message in form submission on website/URL."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:317
-#: includes/class-ur-frontend-scripts.php:364
+#: includes/class-ur-frontend-scripts.php:365
 msgid "Please enter a valid URL."
 msgstr ""
 
@@ -1132,7 +1132,7 @@ msgid "Enter the error message in form submission on Number."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:327
-#: includes/class-ur-frontend-scripts.php:365
+#: includes/class-ur-frontend-scripts.php:366
 msgid "Please enter a valid number."
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgid "Enter the error message in form submission on Confim Email."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:337
-#: includes/class-ur-frontend-scripts.php:369
+#: includes/class-ur-frontend-scripts.php:370
 msgid "Email and confirm email not matched."
 msgstr ""
 
@@ -1160,7 +1160,7 @@ msgid "Enter the error message in form submission on Confim Password."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:347
-#: includes/class-ur-frontend-scripts.php:366
+#: includes/class-ur-frontend-scripts.php:367
 msgid "Password and confirm password not matched."
 msgstr ""
 
@@ -1176,7 +1176,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:147
 #: includes/class-ur-ajax.php:560
 #: includes/class-ur-form-handler.php:421
-#: includes/class-ur-frontend-scripts.php:377
+#: includes/class-ur-frontend-scripts.php:378
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -1498,8 +1498,6 @@ msgid "Site Key (reCaptcha v2)"
 msgstr ""
 
 #. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:69
 #: includes/admin/settings/class-ur-settings-integration.php:94
 #: includes/admin/settings/class-ur-settings-integration.php:130
@@ -1510,8 +1508,6 @@ msgstr ""
 msgid "Secret Key ( reCaptcha v2)"
 msgstr ""
 
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:82
 #: includes/admin/settings/class-ur-settings-integration.php:107
@@ -2377,7 +2373,6 @@ msgid "Form"
 msgstr ""
 
 #. translators: %s - Field Label
-#. translators: %s - Field Label
 #: includes/class-ur-form-handler.php:188
 #: includes/frontend/class-ur-frontend-form-handler.php:473
 msgid "%s is a required field."
@@ -2448,35 +2443,35 @@ msgstr ""
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:360
+#: includes/class-ur-frontend-scripts.php:361
 msgid "Uploading..."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:367
+#: includes/class-ur-frontend-scripts.php:368
 msgid "Please enter a valid phone number."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:368
+#: includes/class-ur-frontend-scripts.php:369
 msgid "Please enter a valid username."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:370
+#: includes/class-ur-frontend-scripts.php:371
 msgid "Please enter a value less than or equal to %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:371
+#: includes/class-ur-frontend-scripts.php:372
 msgid "Please enter a value greater than or equal to %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:372
+#: includes/class-ur-frontend-scripts.php:373
 msgid "Please enter a multiple of %qty%."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:378
+#: includes/class-ur-frontend-scripts.php:379
 msgid "Hide Password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:379
+#: includes/class-ur-frontend-scripts.php:380
 #: templates/myaccount/form-edit-password.php:44
 #: templates/myaccount/form-edit-password.php:56
 #: templates/myaccount/form-edit-password.php:67
@@ -2485,39 +2480,39 @@ msgstr ""
 msgid "Show Password"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:380
+#: includes/class-ur-frontend-scripts.php:381
 msgid "Password strength is not strong enough"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:388
+#: includes/class-ur-frontend-scripts.php:389
 msgid "Please enter a stronger password."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:390
+#: includes/class-ur-frontend-scripts.php:391
 #: includes/functions-ur-core.php:988
 msgid "Very Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:391
+#: includes/class-ur-frontend-scripts.php:392
 #: includes/functions-ur-core.php:989
 msgid "Weak"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:392
+#: includes/class-ur-frontend-scripts.php:393
 #: includes/functions-ur-core.php:990
 msgid "Medium"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:393
+#: includes/class-ur-frontend-scripts.php:394
 #: includes/functions-ur-core.php:991
 msgid "Strong"
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:394
+#: includes/class-ur-frontend-scripts.php:395
 msgid "Password with confirm password not matched."
 msgstr ""
 
-#: includes/class-ur-frontend-scripts.php:397
+#: includes/class-ur-frontend-scripts.php:398
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
@@ -2609,12 +2604,6 @@ msgstr ""
 msgid "The provided license key could not be found. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/class-ur-plugin-updater.php:366
 #: includes/functions-ur-core.php:2366
@@ -2743,7 +2732,6 @@ msgstr ""
 msgid "Edit Form"
 msgstr ""
 
-#. translators: %s - Form name.
 #. translators: %s - Form name.
 #: includes/class-ur-preview.php:115
 #: includes/class-ur-preview.php:162

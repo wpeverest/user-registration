@@ -375,7 +375,7 @@ class UR_Form_Handler {
 		$hcaptca_response    = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 		$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
 		$recaptcha_enabled   = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_type', 'v2' );
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {

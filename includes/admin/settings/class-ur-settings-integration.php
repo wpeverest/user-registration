@@ -52,7 +52,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								array(
 									'title'    => __( 'Captcha Type', 'user-registration' ),
 									'desc'     => __( 'Select the Captcha type', 'user-registration' ),
-									'id'       => 'user_registration_integration_setting_recaptcha_type',
+									'id'       => 'user_registration_integration_setting_recaptcha_version',
 									'default'  => 'v2',
 									'type'     => 'radio',
 									'class'    => '',

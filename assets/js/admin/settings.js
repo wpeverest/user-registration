@@ -83,7 +83,7 @@
 	// reCaptcha version selection
 	var recaptcha_input_value = $(".user-registration")
 		.find(
-			'input[name="user_registration_integration_setting_recaptcha_type"]:checked'
+			'input[name="user_registration_integration_setting_recaptcha_version"]:checked'
 		)
 		.val();
 	if (recaptcha_input_value != undefined) {
@@ -92,7 +92,7 @@
 
 	$(".user-registration").on(
 		"change",
-		'input[name="user_registration_integration_setting_recaptcha_type"]',
+		'input[name="user_registration_integration_setting_recaptcha_version"]',
 		function () {
 			handleReCaptchaHideShow($(this).val());
 		}
