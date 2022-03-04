@@ -282,7 +282,7 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? sanitize_text_field( ( $single_field[ $key ] ) ) : '';
+					$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
 					break;
 			}
 
@@ -781,7 +781,7 @@ class UR_AJAX {
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
 			}
 
-			do_action( 'user_registration_after_form_settings_save', wp_unslash( sanitize_key( $_POST['data'] ) ) );
+			do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
 				array(

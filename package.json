@@ -55,7 +55,7 @@
     "npm": ">=5.5.1"
   },
   "dependencies": {
-    "grunt-cli": "^1.4.3",
+    "grunt-cli": "~1.4.3",
     "makepot": "^0.3.0",
     "path-parse": "^1.0.7"
   },
