@@ -727,11 +727,11 @@ class UR_Admin_Settings {
 					$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );
 
 					$setting_name = key( $option_name_array[ $option_name ] );
-					$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option_name ][ $setting_name ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+					$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				} else {
 					$option_name  = sanitize_text_field( $option['id'] );
 					$setting_name = '';
-					$raw_value    = isset( $_POST[ $option['id'] ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option['id'] ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+					$raw_value    = isset( $_POST[ $option['id'] ] ) ? wp_unslash( $_POST[ $option['id'] ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				}
 
 				// Format the value based on option type.

@@ -949,9 +949,9 @@
 					 * @since  1.8.5
 					 */
 					edit_profile_event: function () {
-						$("form.user-registration-EditProfileForm").on(
-							"submit",
-							function (event) {
+						$("form.user-registration-EditProfileForm")
+							.off("submit")
+							.on("submit", function (event) {
 								var $this = $(this);
 
 								// Validator messages.
@@ -1153,8 +1153,7 @@
 										);
 									},
 								});
-							}
-						);
+							});
 					},
 				};
 				form.init();
