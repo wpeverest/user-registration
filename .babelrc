@@ -16,10 +16,5 @@
 				]
 			}
 		}]
-	],
-	"plugins": [
-		[ "transform-react-jsx", {
-			"pragma": "wp.element.createElement"
-		} ]
 	]
 }

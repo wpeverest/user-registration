@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
 			publicPath: "/",
 			filename: "[name].js",
 		},
-
+		devtool: "source-map",
 		resolve: {
 			extensions: [".js", ".jsx", ".json"],
 		},
