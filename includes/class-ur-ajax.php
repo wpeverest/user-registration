@@ -282,7 +282,7 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? sanitize_text_field( ( $single_field[ $key ] ) ) : '';
+					$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
 					break;
 			}
 
