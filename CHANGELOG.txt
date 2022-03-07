@@ -1,3 +1,10 @@
+= 2.1.4.2  - 04/03/2022
+* Fix      - Conditional assign role not working.
+* Fix      - Inline email content on save.
+* Fix      - Conditional logic not working.
+* Fix      - Multi select2 value not being saved in edit profile.
+* Fix      - Multiple profile updated email to admin.
+
 = 2.1.4.1  - 02/03/2022
 * Fix      - ReCaptcha backward compatibility issue.
 

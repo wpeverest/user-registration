@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.1.4.1\n"
+"Project-Id-Version: User Registration 2.1.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-02T05:24:55+00:00\n"
+"POT-Creation-Date: 2022-03-04T08:36:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
@@ -38,6 +38,7 @@ msgid "https://wpeverest.com"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:644
+#: build/main.js:2098
 msgid "General Settings"
 msgstr ""
 
@@ -783,6 +784,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:27
 #: includes/admin/settings/class-ur-settings-general.php:69
 #: includes/admin/settings/class-ur-settings-general.php:380
+#: build/main.js:2098
 msgid "General"
 msgstr ""
 
@@ -1372,6 +1374,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:553
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
+#: build/main.js:2098
 msgid "Login"
 msgstr ""
 
@@ -2680,6 +2683,7 @@ msgid "Registrations"
 msgstr ""
 
 #: includes/class-ur-post-types.php:49
+#: build/main.js:2098
 msgid "Registration"
 msgstr ""
 
@@ -4752,4 +4756,100 @@ msgstr ""
 
 #: templates/myaccount/lost-password-confirmation.php:27
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
+msgstr ""
+
+#: build/main.js:2098
+msgid "Install Pages"
+msgstr ""
+
+#: build/main.js:2098
+msgid "The following pages will be installed automatically."
+msgstr ""
+
+#: build/main.js:2098
+msgid "Customize your general settings as per your preference."
+msgstr ""
+
+#: build/main.js:2098
+msgid "Registration Settings"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Customize your registration settings as per your preference."
+msgstr ""
+
+#: build/main.js:2098
+msgid "Login Settings"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Customize your login settings as per your preference."
+msgstr ""
+
+#: build/main.js:2098
+msgid "My Account"
+msgstr ""
+
+#: build/main.js:2098
+msgid "My Account Settings"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Customize your my account page settings as per your preference."
+msgstr ""
+
+#: build/main.js:2098
+msgid "Final Step"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Go To Dashboard"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Back"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Edit Default Form"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Create New Form"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Skip"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Install & Proceed"
+msgstr ""
+
+#: build/main.js:2098
+msgid "Next"
+msgstr ""
+
+#: build/main.js:2142
+msgid "Registration Page"
+msgstr ""
+
+#: build/main.js:2142
+msgid "Installing..."
+msgstr ""
+
+#: build/main.js:2142
+msgid "Installed"
+msgstr ""
+
+#: build/main.js:2142
+msgid "Default Registration Form"
+msgstr ""
+
+#: build/main.js:2153
+msgid "Congratulations!! You are all set up."
+msgstr ""
+
+#: build/main.js:2153
+msgid "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim."
 msgstr ""
