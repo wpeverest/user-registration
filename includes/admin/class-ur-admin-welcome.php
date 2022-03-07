@@ -63,7 +63,7 @@ class UR_Admin_Welcome {
 			array(
 				'adminURL'       => esc_url( admin_url() ),
 				'siteURL'        => esc_url( home_url( '/' ) ),
-				'defaultFormURL' => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-form=' . get_option( 'user_registration_default_form_page_id' ) ) ),
+				'defaultFormURL' => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
 				'newFormURL'     => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
 			)

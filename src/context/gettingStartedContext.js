@@ -9,12 +9,14 @@ export const initialState = {
             status: "not_installed",
             slug: ""
         }
-    }
+    },
+    defaultFormId: ""
 };
 
 export const actionTypes = {
     GET_SETTINGS: "GET_SETTINGS",
-    GET_INSTALL_PAGE: "GET_INSTALL_PAGE"
+    GET_INSTALL_PAGE: "GET_INSTALL_PAGE",
+    GET_DEFAULT_FORM: "GET_DEFAULT_FORM"
 };
 
 const reducer = (state, action) => {
@@ -28,6 +30,12 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 installPage: action.installPage
+            };
+        case actionTypes.GET_DEFAULT_FORM:
+            console.log(action.defaultFormId);
+            return {
+                ...state,
+                defaultFormId: action.defaultFormId
             };
         default:
             return state;

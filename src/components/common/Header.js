@@ -1,11 +1,11 @@
 import React from "react";
 
-const Header = ({ steps, activeStep }) => {
+const Header = ({ steps, activeStep, siteURL }) => {
     return (
         <div className="user-registration-setup-wizard__header">
             <div className="user-registration-setup-wizard__header--logo">
                 <img
-                    src="https://user.local/wp-content/plugins/user-registration/assets/images/UR-Logo.png"
+                    src={`${siteURL}/wp-content/plugins/user-registration/assets/images/UR-Logo.png`}
                     alt=""
                 />
                 <h1>User Registration</h1>

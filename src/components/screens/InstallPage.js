@@ -18,7 +18,7 @@ import { __ } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";
 
 const InstallPage = () => {
-    const [{ installPage }] = useStateValue();
+    const [{ installPage, defaultFormId }] = useStateValue();
     const [counter, setCounter] = useState(0);
 
     /**
@@ -54,7 +54,7 @@ const InstallPage = () => {
 	 * @param {object} page The detals of page to be installed.
 	 * @returns
 	 */
-    const createInstallPageBox = (page) => {
+    const createInstallPageBox = (page, slug) => {
         return (
             <Box
                 bg={page.status === "installed" ? "#ECEFFF" : "#FAFAFC"}
@@ -70,7 +70,9 @@ const InstallPage = () => {
                         isReadOnly
                     >
                         <Text fontSize="18px" fontWeight={600}>
-                            {__("Registration Page", "user-registration")}
+                            {slug === "registration_page" ?
+                                __("Registration Page", "user-registration") :
+                                __("My Account Page", "user-registration")}
                         </Text>
                         {page.status !== "not_installed" && (
                             <Text fontSize="13px" color="#212121">
@@ -117,12 +119,18 @@ const InstallPage = () => {
                         {__("Default Registration Form", "user-registration")}
                     </Text>
                     <Text fontSize="13px" color="#212121">
-						Form id : 2
+						Form id : {defaultFormId}
                     </Text>
                 </Checkbox>
             </Box>
-            {createInstallPageBox(installPage.registration_page)}
-            {createInstallPageBox(installPage.my_account_page)}
+            {createInstallPageBox(
+                installPage.registration_page,
+                "registration_page"
+            )}
+            {createInstallPageBox(
+                installPage.my_account_page,
+                "my_account_page"
+            )}
         </Fragment>
     );
 };

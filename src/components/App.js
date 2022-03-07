@@ -194,6 +194,13 @@ function App () {
             data: { install_pages: true }
         }).then((res) => {
             if (res.success) {
+                if (res.default_form_id) {
+                    dispatch({
+                        type: actionTypes.GET_DEFAULT_FORM,
+                        defaultFormId: res.default_form_id
+                    });
+                }
+
                 let newInstallPageRef = { ...installPage };
                 newInstallPageRef.registration_page.status = "installing";
                 newInstallPageRef.registration_page.slug =
@@ -263,7 +270,7 @@ function App () {
 
     return (
         <ChakraProvider>
-            <Header steps={steps} activeStep={activeStep} />
+            <Header steps={steps} activeStep={activeStep} siteURL={siteURL} />
             <div className="user-registration-setup-wizard__body">
                 {steps[steps.length - 1].key === activeStep.key ? (
                     cloneElement(activeStep.component, {

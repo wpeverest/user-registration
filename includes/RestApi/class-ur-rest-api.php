@@ -142,8 +142,9 @@ class UR_REST_API {
 
 		return new \WP_REST_Response(
 			array(
-				'success'   => true,
-				'page_slug' => $page_slug,
+				'success'         => true,
+				'page_slug'       => $page_slug,
+				'default_form_id' => $default_form_page_id,
 			),
 			200
 		);
