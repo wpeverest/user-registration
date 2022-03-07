@@ -394,7 +394,7 @@ class UR_AJAX {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
 
-			$upload = isset( $_FILES['file'] ) ? wp_unslash( sanitize_key( $_FILES['file'] ) ) : array();
+			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
 			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( sanitize_key( $_REQUEST['valid_extension'] ) ) : '';

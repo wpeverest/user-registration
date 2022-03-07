@@ -87,7 +87,7 @@ class UR_Form_Handler {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
 					}
 
-					$upload           = wp_unslash( $_FILES['profile-pic'] ); // phpcs:ignore
+					$upload           = $_FILES['profile-pic']; // phpcs:ignore
 					$upload_overrides = array(
 						'action' => 'save_profile_details',
 					);
