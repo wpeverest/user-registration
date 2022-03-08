@@ -13,8 +13,8 @@ function LastPage ({ siteURL }) {
             alignItems="center"
         >
             <Image
-                htmlWidth="800px"
-                htmlHeight="320px"
+                htmlWidth="80%"
+                htmlHeight="auto"
                 src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-end.png`}
                 alt="Onboard Finish"
             />
