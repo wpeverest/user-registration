@@ -357,6 +357,7 @@ class UR_Frontend_Scripts {
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'form_required_fields'             => ur_get_required_fields(),
 					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
+					'recaptcha_type'                   => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
 					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
@@ -402,6 +403,7 @@ class UR_Frontend_Scripts {
 					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 					'ur_login_form_save_nonce'         => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login'      => get_option( 'ur_login_ajax_submission', 'no' ),
+					'recaptcha_type'                   => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 				);
 					break;
 		}

@@ -249,7 +249,7 @@ class UR_Shortcodes {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
-		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support' );
+		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
 
 		$form_data_array = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );

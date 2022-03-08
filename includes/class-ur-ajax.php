@@ -102,7 +102,7 @@ class UR_AJAX {
 		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
@@ -282,7 +282,7 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? sanitize_text_field( ( $single_field[ $key ] ) ) : '';
+					$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
 					break;
 			}
 
@@ -394,7 +394,7 @@ class UR_AJAX {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
 
-			$upload = isset( $_FILES['file'] ) ? wp_unslash( sanitize_key( $_FILES['file'] ) ) : array();
+			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
 			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( sanitize_key( $_REQUEST['valid_extension'] ) ) : '';
@@ -515,7 +515,7 @@ class UR_AJAX {
 		$info['remember'] = isset( $_POST['rememberme'] );
 		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
 		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_type' );
+		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
@@ -781,7 +781,7 @@ class UR_AJAX {
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
 			}
 
-			do_action( 'user_registration_after_form_settings_save', wp_unslash( sanitize_key( $_POST['data'] ) ) );
+			do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
 				array(

@@ -87,7 +87,7 @@ class UR_Form_Handler {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
 					}
 
-					$upload           = wp_unslash( $_FILES['profile-pic'] ); // phpcs:ignore
+					$upload           = $_FILES['profile-pic']; // phpcs:ignore
 					$upload_overrides = array(
 						'action' => 'save_profile_details',
 					);
@@ -168,12 +168,12 @@ class UR_Form_Handler {
 					break;
 
 				default:
-					$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+					$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					break;
 			}
 
 			// Hook to allow modification of value.
-			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
+			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			$disabled = false;
 			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
@@ -181,7 +181,7 @@ class UR_Form_Handler {
 					$disabled = true;
 				}
 			}
-			error_log( print_r( $_POST, true ) );
+
 			// Validation: Required fields.
 			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
 				/* translators: %s - Field Label */
@@ -217,7 +217,7 @@ class UR_Form_Handler {
 				}
 			}
 			// Action to add extra validation to edit profile fields.
-			do_action( 'user_registration_validate_' . $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
+			do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		}
 
@@ -233,7 +233,7 @@ class UR_Form_Handler {
 					if ( 'display_name' === $new_key ) {
 						$user_data['display_name'] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
 					} else {
-						$user_data[ $new_key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+						$user_data[ $new_key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 				} else {
 					$update_key = $key;
@@ -244,7 +244,7 @@ class UR_Form_Handler {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if ( 'disabled' !== $disabled ) {
-						update_user_meta( $user_id, $update_key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
+						update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 				}
 			}
@@ -375,7 +375,7 @@ class UR_Form_Handler {
 		$hcaptca_response    = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 		$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
 		$recaptcha_enabled   = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_type', 'v2' );
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {

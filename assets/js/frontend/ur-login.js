@@ -1,4 +1,3 @@
-/* global  ur_recaptcha_code */
 jQuery(function ($) {
 	$(".ur-frontend-form")
 		.find("form.login")
@@ -25,7 +24,7 @@ jQuery(function ($) {
 							.closest("form")
 							.find('input[name="redirect"]')
 							.val();
-					if ("hCaptcha" === ur_recaptcha_code.version) {
+					if ("hCaptcha" === ur_login_params.recaptcha_type) {
 						var CaptchaResponse = $this
 							.closest("form")
 							.find('[name="h-captcha-response"]')
