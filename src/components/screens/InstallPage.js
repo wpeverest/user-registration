@@ -114,14 +114,24 @@ const InstallPage = () => {
                 mt={3}
                 borderRadius="md"
             >
-                <Checkbox isChecked isReadOnly>
-                    <Text fontSize="18px" fontWeight={600}>
-                        {__("Default Registration Form", "user-registration")}
-                    </Text>
-                    <Text fontSize="13px" color="#212121">
-						Form id : {defaultFormId}
-                    </Text>
-                </Checkbox>
+                <Flex justify="space-between" align="center">
+                    <Checkbox isChecked isReadOnly>
+                        <Text fontSize="18px" fontWeight={600}>
+                            {__(
+                                "Default Registration Form",
+                                "user-registration"
+                            )}
+                        </Text>
+                        <Text fontSize="13px" color="#212121">
+							Form id : {defaultFormId}
+                        </Text>
+                    </Checkbox>
+                    <Flex align="center">
+                        <Text fontSize="12px" color="#212121">
+                            {__("Installed", "user-registration")}
+                        </Text>
+                    </Flex>
+                </Flex>
             </Box>
             {createInstallPageBox(
                 installPage.registration_page,

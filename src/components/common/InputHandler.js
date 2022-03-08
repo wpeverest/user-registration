@@ -64,7 +64,7 @@ function InputHandler ({ setting, siteURL }) {
         const checkbox = getCheckboxProps();
 
         return (
-            <Box as="label">
+            <Box as="label" marginLeft="0px !important">
                 <input {...input} />
                 <Box
                     {...checkbox}
@@ -218,7 +218,7 @@ function InputHandler ({ setting, siteURL }) {
                 return (
                     <HStack
                         {...group}
-                        sx={{ flexWrap: "wrap" }}
+                        sx={{ flexWrap: "wrap", gap: "20px" }}
                         flex={"1 0 60%"}
                     >
                         {Object.keys(setting.options).map((value, key) => {

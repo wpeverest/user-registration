@@ -32,7 +32,6 @@ const reducer = (state, action) => {
                 installPage: action.installPage
             };
         case actionTypes.GET_DEFAULT_FORM:
-            console.log(action.defaultFormId);
             return {
                 ...state,
                 defaultFormId: action.defaultFormId
