@@ -24,12 +24,6 @@ function LastPage ({ siteURL }) {
                     "user-registration"
                 )}
             </Heading>
-            <Text fontSize="14px" lineHeight="160%" align="center">
-                {__(
-                    "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
-                    "user-registration"
-                )}
-            </Text>
         </Flex>
     );
 }

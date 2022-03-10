@@ -137,7 +137,6 @@ class UR_Install {
 		self::setup_environment();
 		self::create_form();
 		self::create_files();
-		self::maybe_enable_setup_wizard();
 		self::update_ur_version();
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
