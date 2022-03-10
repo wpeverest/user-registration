@@ -159,7 +159,7 @@ class UR_Form_Handler {
 						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					}
 					break;
-					
+
 				case 'wysiwyg':
 					if ( isset( $_POST[ $key ] ) ) {
 						$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
@@ -170,7 +170,7 @@ class UR_Form_Handler {
 
 				case 'email':
 					if ( isset( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
+						$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 					} else {
 						$user_data = get_userdata($user_id);
 						$_POST[ $key ] = $user_data->data->user_email;
