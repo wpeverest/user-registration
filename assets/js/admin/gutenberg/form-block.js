@@ -7,14 +7,8 @@ const { InspectorControls } = wp.blockEditor ? wp.blockEditor : wp.editor;
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
-const {
-	TextControl,
-	SelectControl,
-	ToggleControl,
-	PanelBody,
-	Placeholder,
-	RadioControl,
-} = wp.components;
+const { TextControl, SelectControl, PanelBody, Placeholder, RadioControl } =
+	wp.components;
 const UserRegistrationIcon = createElement(
 	"svg",
 	{ width: 24, height: 24, viewBox: "0 0 32 32" },
@@ -139,7 +133,7 @@ registerBlockType("user-registration/form-selector", {
 				</PanelBody>
 			</InspectorControls>,
 		];
-		if (formId || "" !== shortcode) {
+		if (formId || shortcode !== "") {
 			jsx.push(
 				<ServerSideRender
 					key="ur-gutenberg-form-selector-server-side-renderer"

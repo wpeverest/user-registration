@@ -1,0 +1,420 @@
+
+/**
+ * Imports
+ */
+ @import 'variables/variables';
+ @import 'mixins/mixins';
+
+ *,
+ *::before,
+ *::after {
+   margin: 0;
+   box-sizing: border-box;
+ }
+
+ body {
+	position: relative;
+   margin: 0;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+	 "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	 "Poppins", sans-serif;
+   font-size: 13px;
+   line-height: 1.8;
+   font-weight: 400;
+   color: #000;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   background-color: #E5E5E5;
+ }
+
+#user-registration-welcome {
+	.user-registration-welcome-card,
+	.user-registration-extensions-card,
+	.user-registration-support-card {
+		max-width: 760px;
+		border-radius: 4px;
+		margin: 3rem auto;
+		background: $white;
+		border: 1px solid $white;
+		box-shadow: 0 2px 10px transparentize($gray_base, 0.9);
+	}
+
+	a.button {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 8px 16px;
+		margin: 0px 10px;
+
+		height: 44px;
+		left: 440px;
+		top: 726px;
+
+		border: 1px solid #475BB2;
+		border-radius: 2px;
+		box-sizing: border-box;
+		text-decoration: none;
+
+		&-primary {
+			background: #475BB2;
+			color: $white;
+		}
+
+		&-secondary {
+			background: #F1F4FF;
+			color: #475BB2;
+		}
+
+		&-tertiary {
+			background: whitesmoke;
+			color: #2d3559;
+			border: 1px solid #2d3559;
+		}
+
+		h3 {
+			font-weight: 400;
+		}
+	}
+
+	a.button:hover {
+		filter: brightness(0.85);
+	}
+
+	p {
+		margin-bottom: 1.5em;
+		line-height: 180%;
+		font-size: 16px;
+		text-align: center;
+		color: #212121;
+		margin-top: 0.75em;
+	}
+
+	.user-registration-welcome-card {
+		a {
+			text-decoration: none;
+
+			&:focus {
+				box-shadow: none;
+				outline: none;
+			}
+		}
+
+		.user-registration-welcome-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1em;
+			border-bottom: 1px solid $color_gray_two;
+		}
+
+		.user-registration-welcome-container {
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.user-registration-welcome-container__header {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 0 1em;
+
+				h2 {
+					font-size: 24px;
+					line-height: 130%;
+					color: #475BB2;
+					font-weight: 600;
+					margin-top: 1em;
+				}
+
+				img {
+					margin-top: 1.75em;
+					fill: $primary_color;
+					height: 70px;
+				}
+			}
+
+			.user-registration-welcome-video {
+				display: flex;
+				justify-content: center;
+				background: #FFFFFF;
+				border: 1px solid #DDE3FF;
+				box-sizing: border-box;
+				box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.05);
+				border-radius: 2px;
+				position: relative;
+
+				a.welcome-video-play{
+					cursor: pointer;
+					align-items: center;
+
+					.user-registration-welcome-video__button {
+						border: none;
+						cursor: pointer;
+						font-size: 24px;
+						height: 40px;
+						width: 54px;
+						border-radius: 12px;
+						padding: 8px 15px;
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						color: $white;
+						background: $red;
+
+						svg {
+							height: 24px;
+							width: 224px;
+						}
+
+						&:hover {
+							background-color: #d51319;
+						}
+					}
+
+					img {
+						display: block;
+						max-width: 100%;
+						border: 1px solid #DDE3FF;
+						width: 540px;
+						height: 300px;
+					}
+				}
+			}
+
+			.user-registration-welcome-container__action {
+				padding: 0 32px;
+				margin: 3rem 0;
+				display: flex;
+				justify-content: space-between;
+
+				.user-registration-welcome-container__action-card {
+					padding: 1em;
+					margin: 0 1em;
+					width: 100%;
+					border-radius: 4px;
+					width: calc(50% - 38px);
+					border: 1px solid $color_gray_two;
+					transition: 0.3s ease;
+
+					.user-registration-welcome-container__action-card-img {
+						svg {
+							height: 64px;
+							width: 64px;
+						}
+					}
+
+					.user-registration-welcome-container__action-card-content {
+						h3 {
+							font-size: 1.23em;
+							margin-bottom: 0.5em;
+						}
+
+					}
+
+					&:hover {
+						box-shadow: 0 2px 20px 0
+							transparentize($gray_base, 0.85);
+					}
+				}
+			}
+		}
+	}
+
+	.user-registration-extensions-card {
+		text-align: center;
+
+		.user-registration-extensions-container__header {
+			padding: 0 1em;
+
+			h2 {
+				font-size: 1.75em;
+				margin-top: 1.75em;
+				margin-bottom: 1em;
+				color: #2D3559;
+				font-size: 24px;
+				line-height: 130%;
+				font-weight: 600;
+			}
+		}
+
+		.user-registration-extensions-container__body {
+			padding: 15px;
+
+			img {
+				display: block;
+				max-width: 100%;
+			}
+		}
+
+		.user-registration-extensions-container__footer {
+			padding: 0 32px;
+			margin: 3rem 0;
+			display: flex;
+			justify-content: center;
+		}
+	}
+
+	.user-registration-support-card {
+		text-align: center;
+
+		.user-registration-support-container__header {
+			padding: 0 1em;
+
+			h2 {
+				font-size: 1.75em;
+				margin-top: 1.75em;
+				margin-bottom: 1em;
+				color: #2D3559;
+				font-size: 20px;
+				line-height: 130%;
+				font-weight: 600;
+			}
+		}
+
+		.user-registration-support-container__body {
+			padding: 0 1em;
+		}
+
+		.user-registration-support-container__footer {
+			padding: 0 32px;
+			margin: 3rem 0;
+			display: flex;
+			justify-content: center;
+		}
+	}
+}
+
+#user-registration-setup-wizard {
+	margin: 24px 200px;
+	min-width: 980px;
+	border-radius: 4px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	.user-registration-setup-wizard {
+		&__header {
+			flex: 0 0 25%;
+			margin-bottom: 25px;
+
+			&--logo {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-bottom: 100px;
+
+				h1 {
+					font-size: 24px;
+					font-weight: 400;
+					line-height: 31px;
+					margin-left: 20px;
+				}
+				img {
+					width: 50px;
+				}
+			}
+
+			&--nav {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				list-style-type: none;
+
+				.step {
+					width: 100%;
+					height: 2px;
+					color: #BFBFBF;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: flex-end;
+					background-color: #BFBFBF;
+
+					.step-label {
+						margin-bottom: 20px;
+						font-weight: 500;
+						font-size: 18px;
+					}
+
+					p.step-identifier {
+						display: inline-block;
+						vertical-align: middle;
+						background-color: #E5E5E5;
+						width: 13px;
+						height: 13px;
+						border: solid 3px #BFBFBF;
+						border-radius: 50%;
+						position: absolute;
+						top: -6px;
+						left: calc(50% - 5px);
+					}
+				}
+
+				.done,
+				.active {
+					background-color: #475BB2;
+
+					p.step-identifier {
+						border-color: #475BB2 ;
+					}
+
+					.step-label {
+						color: #475BB2;
+					}
+				}
+			}
+		}
+
+		&__body {
+			flex: 0 0 50%;
+			padding: 30px 48px;
+			background-color: $white;
+			border-radius: 4px;
+			color: #2D3559;
+
+			&--select {
+				flex: 1 0 60%;
+			}
+
+			.chakra-checkbox__control {
+				border-radius: 50%;
+				height: 32px;
+				width: 32px;
+				margin-right: 10px;
+
+				svg {
+					font-size: 15px;
+				}
+			}
+		}
+
+		&__footer {
+			flex: 0 0 25%;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			background-color: $white;
+			padding: 20px 40px;
+
+			&--left,
+			&--right {
+				flex: 0 0 50%;
+				display: flex;
+				align-items: center;
+
+				a.chakra-link {
+					text-decoration: none;
+				}
+			}
+
+			&--right{
+				justify-content: flex-end;
+			}
+
+		}
+	}
+}

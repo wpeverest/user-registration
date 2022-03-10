@@ -30,20 +30,30 @@ class UR_Admin {
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
+		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 	}
 
 	/**
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
-		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+			include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
+			include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
+			include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+
+			// Setup/welcome.
+		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			switch ( $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+				case 'user-registration-welcome':
+					include_once dirname( __FILE__ ) . '/class-ur-admin-welcome.php';
+					break;
+			}
+		}
 	}
 
 	/**
@@ -153,7 +163,7 @@ class UR_Admin {
 			return;
 		}
 
-		$notice_dismissed = get_option( 'user_registration_review_notice_dismissed', 'no' );
+		$notice_dismissed             = get_option( 'user_registration_review_notice_dismissed', 'no' );
 		$notice_dismissed_temporarily = get_option( 'user_registration_review_notice_dismissed_temporarily', '' );
 
 		if ( 'yes' == $notice_dismissed ) {
@@ -349,6 +359,30 @@ class UR_Admin {
 			$classes = 'user-registration';
 		};
 		return $classes;
+	}
+
+	/**
+	 * Handle redirects to setup/welcome page after install and updates.
+	 * For setup wizard, transient must be present, the user must have access rights, and we must ignore the network/bulk plugin updaters.
+	 *
+	 * @since 2.1.4
+	 */
+	public function admin_redirects() {
+		if ( ! get_transient( '_ur_activation_redirect' ) ) {
+			return;
+		}
+
+		delete_transient( '_ur_activation_redirect' );
+
+		if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-welcome' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.PHP.StrictInArray.MissingTrueStrict
+			return;
+		}
+
+		// If plugin is running for first time, redirect to onboard page.
+		if ( '1' !== get_option( 'user_registration_first_time_activation_flag' ) ) {
+			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
+			exit;
+		}
 	}
 }
 

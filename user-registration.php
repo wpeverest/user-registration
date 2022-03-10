@@ -1,4 +1,4 @@
-<?php
+<?php //phpcs:ignore
 /**
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
@@ -74,7 +74,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * @since 1.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -83,7 +83,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * @since 1.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -127,8 +127,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		/**
 		 * Define constant if not already set.
 		 *
-		 * @param string      $name
-		 * @param string|bool $value
+		 * @param string      $name Name.
+		 * @param string|bool $value Value.
 		 */
 		private function define( $name, $value ) {
 			if ( ! defined( $name ) ) {
@@ -184,8 +184,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
-			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types
-			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php'; // User Approval class
+			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
+			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php'; // User Approval class.
 			include_once UR_ABSPATH . 'includes/class-ur-emailer.php';
 			include_once UR_ABSPATH . 'includes/class-ur-ajax.php';
 			include_once UR_ABSPATH . 'includes/class-ur-query.php';
@@ -193,6 +193,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+
+			include_once UR_ABSPATH . 'includes/RestApi/class-ur-rest-api.php';
 
 			/**
 			 * Config classes.
@@ -225,8 +227,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public function frontend_includes() {
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
-			include_once UR_ABSPATH . 'includes/class-ur-form-handler.php';                   // Form Handlers
-			include_once UR_ABSPATH . 'includes/class-ur-frontend-scripts.php';               // Frontend Scripts
+			include_once UR_ABSPATH . 'includes/class-ur-form-handler.php';                   // Form Handlers.
+			include_once UR_ABSPATH . 'includes/class-ur-frontend-scripts.php';               // Frontend Scripts.
 			include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
 			include_once UR_ABSPATH . 'includes/class-ur-preview.php';
 		}
@@ -363,6 +365,7 @@ if ( ! function_exists( 'UR' ) ) {
 		function user_registration_free_activated() {
 
 			set_transient( 'user_registration_free_activated', true );
+
 		}
 	}
 	add_action( 'activate_user-registration/user-registration.php', 'user_registration_free_activated' );

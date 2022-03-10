@@ -2,8 +2,6 @@
 /**
  * UserRegistration Admin Functions
  *
- * @author   WPEverest
- * @category Core
  * @package  UserRegistration/Admin/Functions
  * @version  1.0.0
  */
@@ -52,6 +50,7 @@ function ur_status_widget() {
 /**
  * Report for the user registration activity.
  *
+ * @param int $form_id Form ID.
  * @return array
  */
 function ur_get_user_report( $form_id ) {
@@ -116,7 +115,7 @@ function ur_get_user_report( $form_id ) {
  */
 function ur_get_screen_ids() {
 
-	$ur_screen_id = sanitize_title( __( 'User Registration' ) );
+	$ur_screen_id = sanitize_title( __( 'User Registration', 'user-registration' ) );
 	$screen_ids   = array(
 		'toplevel_page_' . $ur_screen_id,
 		$ur_screen_id . '_page_user-registration-dashboard',
@@ -139,9 +138,9 @@ add_filter( 'wp_privacy_personal_data_exporters', 'user_registration_register_da
 add_filter( 'wp_privacy_personal_data_erasers', 'user_registration_register_data_eraser' );
 
 /**
- * Add user registration data to exporters
+ * Add user registration data to exporters.
  *
- * @param  array $exporters
+ * @param  array $exporters Exporters.
  * @return array
  */
 function user_registration_register_data_exporter( $exporters ) {
@@ -157,8 +156,8 @@ function user_registration_register_data_exporter( $exporters ) {
 /**
  * Get user registration data to export.
  *
- * @param  string  $email_address user's email address
- * @param  integer $page
+ * @param  string  $email_address user's email address.
+ * @param  integer $page Page.
  * @return array exporting data
  */
 function user_registration_data_exporter( $email_address, $page = 1 ) {
@@ -185,7 +184,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 
 	$user     = get_user_by( 'email', $email_address );
 	$user_id  = isset( $user->ID ) ? $user->ID : 0;
-	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' );
+	$usermeta = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' ); // phpcs:ignore
 
 	$export_items = array();
 	if ( $usermeta && is_array( $usermeta ) ) {
@@ -196,7 +195,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 			if ( array_key_exists( $strip_prefix, $form_data ) ) {
 
 				if ( is_serialized( $meta->meta_value ) ) {
-					$meta->meta_value = unserialize( $meta->meta_value );
+					$meta->meta_value = maybe_unserialize( $meta->meta_value );
 					$meta->meta_value = implode( ',', $meta->meta_value );
 				}
 
@@ -225,7 +224,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 /**
  * Add user registration data to the eraser tool.
  *
- * @param  array $erasers
+ * @param  array $erasers Erasers.
  * @return array
  */
 function user_registration_register_data_eraser( $erasers = array() ) {
@@ -237,10 +236,10 @@ function user_registration_register_data_eraser( $erasers = array() ) {
 }
 
 /**
- * Get user registration data to erase
+ * Get user registration data to erase.
  *
- * @param  string  $email_address user's email address
- * @param  integer $page          [description]
+ * @param  string  $email_address user's email address.
+ * @param  integer $page Page.
  * @return array
  */
 function user_registration_data_eraser( $email_address, $page = 1 ) {
@@ -264,9 +263,9 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 
 	if ( $user && $user->ID ) {
 		$user_id         = $user->ID;
-		$delete_usermeta = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' );
+		$delete_usermeta = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' ); // phpcs:ignore
 
-		$delete_form_data = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'ur_form_id' AND user_id = " . $user_id . ' ;' );
+		$delete_form_data = $wpdb->get_results( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'ur_form_id' AND user_id = " . $user_id . ' ;' ); // phpcs:ignore
 
 		if ( $delete_usermeta && $delete_form_data ) {
 			$items_removed = true;
@@ -284,11 +283,11 @@ function user_registration_data_eraser( $email_address, $page = 1 ) {
 /**
  * Create a page and store the ID in an option.
  *
- * @param  mixed  $slug         Slug for the new page
- * @param  string $option       Option name to store the page's ID
- * @param  string $page_title   (default: '') Title for the new page
- * @param  string $page_content (default: '') Content for the new page
- * @param  int    $post_parent  (default: 0) Parent for the new page
+ * @param  mixed  $slug         Slug for the new page.
+ * @param  string $option       Option name to store the page's ID.
+ * @param  string $page_title   (default: '') Title for the new page.
+ * @param  string $page_content (default: '') Content for the new page.
+ * @param  int    $post_parent  (default: 0) Parent for the new page.
  *
  * @return int page ID
  */
@@ -296,8 +295,9 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 	global $wpdb;
 
 	$option_value = get_option( $option );
+	$page_object  = get_post( $option_value );
 
-	if ( $option_value > 0 && ( $page_object = get_post( $option_value ) ) ) {
+	if ( $option_value > 0 && $page_object ) {
 		if ( 'page' === $page_object->post_type && ! in_array(
 			$page_object->post_status,
 			array(
@@ -308,16 +308,16 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 			)
 		)
 		) {
-			// Valid page is already in place
+			// Valid page is already in place.
 			return $page_object->ID;
 		}
 	}
 
 	if ( strlen( $page_content ) > 0 ) {
-		// Search for an existing page with the specified page content (typically a shortcode)
+		// Search for an existing page with the specified page content (typically a shortcode).
 		$valid_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status NOT IN ( 'pending', 'trash', 'future', 'auto-draft' ) AND post_content LIKE %s LIMIT 1;", "%{$page_content}%" ) );
 	} else {
-		// Search for an existing page with the specified page slug
+		// Search for an existing page with the specified page slug.
 		$valid_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status NOT IN ( 'pending', 'trash', 'future', 'auto-draft' )  AND post_name = %s LIMIT 1;", $slug ) );
 	}
 
@@ -331,12 +331,12 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 		return $valid_page_found;
 	}
 
-	// Search for a matching valid trashed page
+	// Search for a matching valid trashed page.
 	if ( strlen( $page_content ) > 0 ) {
-		// Search for an existing page with the specified page content (typically a shortcode)
+		// Search for an existing page with the specified page content (typically a shortcode).
 		$trashed_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status = 'trash' AND post_content LIKE %s LIMIT 1;", "%{$page_content}%" ) );
 	} else {
-		// Search for an existing page with the specified page slug
+		// Search for an existing page with the specified page slug.
 		$trashed_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status = 'trash' AND post_name = %s LIMIT 1;", $slug ) );
 	}
 
@@ -373,7 +373,7 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
  *
  * Loops though the user registration options array and outputs each field.
  *
- * @param array $options Opens array to output
+ * @param array $options Opens array to output.
  */
 function user_registration_admin_fields( $options ) {
 
@@ -387,8 +387,8 @@ function user_registration_admin_fields( $options ) {
 /**
  * Update all settings which are passed.
  *
- * @param array $options
- * @param array $data
+ * @param array $options Options to save.
+ * @param array $data Data.
  */
 function user_registration_update_options( $options, $data = null ) {
 
@@ -402,8 +402,8 @@ function user_registration_update_options( $options, $data = null ) {
 /**
  * Get a setting from the settings API.
  *
- * @param mixed $option_name
- * @param mixed $default
+ * @param mixed $option_name Option name.
+ * @param mixed $default Default option value.
  *
  * @return string
  */
@@ -437,7 +437,7 @@ function ur_admin_form_settings( $form_id = 0 ) {
 /**
  * Update Settings of the form.
  *
- * @param array $setting_data Settings data in name value array pair
+ * @param array $setting_data Settings data in name value array pair.
  * @param int   $form_id      Form ID.
  */
 function ur_update_form_settings( $setting_data, $form_id ) {
@@ -463,7 +463,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 
 			if ( isset( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
 
-				// Check if any settings value contains array
+				// Check if any settings value contains array.
 				if ( is_array( $remap_setting_data[ $field_data['id'] ]['value'] ) ) {
 					$remap_setting_data[ $field_data['id'] ]['value'] = array_map( 'sanitize_text_field', $remap_setting_data[ $field_data['id'] ]['value'] );
 					$remap_setting_data[ $field_data['id'] ]['value'] = maybe_serialize( $remap_setting_data[ $field_data['id'] ]['value'] );
@@ -475,7 +475,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 			}
 		} else {
 				// Update post meta if any setting value is not set for field data id.
-				update_post_meta( absint( $form_id) , sanitize_text_field( $field_data['id'] ), '' );
+				update_post_meta( absint( $form_id ), sanitize_text_field( $field_data['id'] ), '' );
 		}
 	}
 }
@@ -525,7 +525,6 @@ function ur_format_setting_data( $setting_data ) {
  * Check for plugin activation date.
  *
  * True if user registration has been installed for 10 and 14 days ago according to the days supplied in the parameter.
- *
  *
  * @param int $days Number of days to check for activation.
  *
