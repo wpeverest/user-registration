@@ -9,5 +9,8 @@
 	  "react": {
 		"version": "detect"
 	  }
+	},
+	"rules": {
+		"max-nested-callbacks": [2, 4]
 	}
   }

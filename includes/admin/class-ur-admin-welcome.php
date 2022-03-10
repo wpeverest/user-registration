@@ -53,7 +53,7 @@ class UR_Admin_Welcome {
 			update_option( 'user_registration_first_time_activation_flag', true );
 		}
 
-		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/build/main.js', array(), UR()->version, true );
+		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array(), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
 
@@ -61,11 +61,12 @@ class UR_Admin_Welcome {
 			'ur-setup-wizard-script',
 			'_UR_',
 			array(
-				'adminURL'       => esc_url( admin_url() ),
-				'siteURL'        => esc_url( home_url( '/' ) ),
-				'defaultFormURL' => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
-				'newFormURL'     => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
-				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+				'adminURL'        => esc_url( admin_url() ),
+				'siteURL'         => esc_url( home_url( '/' ) ),
+				'defaultFormURL'  => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
+				'newFormURL'      => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
+				'urRestApiNonce'  => wp_create_nonce( 'wp_rest' ),
+				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
 			)
 		);
 

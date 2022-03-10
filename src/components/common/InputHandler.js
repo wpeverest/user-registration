@@ -16,7 +16,7 @@ import { Select } from "chakra-react-select";
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
-function InputHandler ({ setting, siteURL }) {
+function InputHandler ({ setting, onBoardIconsURL }) {
     const [{ settings }, dispatch] = useStateValue();
 
     const renderOptions = () => {
@@ -91,7 +91,7 @@ function InputHandler ({ setting, siteURL }) {
 					setting.id === "user_registration_form_template" ? (
                             <Flex direction="column" align="center">
                                 <Image
-                                    src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-icons/${identifier}.png`}
+                                    src={`${onBoardIconsURL}/${identifier}.png`}
                                 />
                                 <Text
                                     fontSize="14px"

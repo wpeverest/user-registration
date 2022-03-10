@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-10T06:18:15+00:00\n"
+"POT-Creation-Date: 2022-03-10T09:14:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: user-registration\n"
@@ -39,7 +39,7 @@ msgid "https://wpeverest.com"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:644
-#: src/components/App.js:51
+#: src/components/App.js:60
 msgid "General Settings"
 msgstr ""
 
@@ -685,44 +685,44 @@ msgid "denied"
 msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:39
-#: includes/admin/class-ur-admin-welcome.php:139
+#: includes/admin/class-ur-admin-welcome.php:140
 msgid "Welcome to User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:96
+#: includes/admin/class-ur-admin-welcome.php:97
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:140
+#: includes/admin/class-ur-admin-welcome.php:141
 msgid "Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:144
-#: includes/admin/class-ur-admin-welcome.php:166
+#: includes/admin/class-ur-admin-welcome.php:145
+#: includes/admin/class-ur-admin-welcome.php:167
 msgid "Watch how to create your first form with User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:150
+#: includes/admin/class-ur-admin-welcome.php:151
 msgid "Get Started"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:153
+#: includes/admin/class-ur-admin-welcome.php:154
 msgid "Create a First Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:156
+#: includes/admin/class-ur-admin-welcome.php:157
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:163
+#: includes/admin/class-ur-admin-welcome.php:164
 msgid "Check Our Awesome Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:170
+#: includes/admin/class-ur-admin-welcome.php:171
 msgid "See All Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:183
+#: includes/admin/class-ur-admin-welcome.php:184
 msgid "Contact support"
 msgstr ""
 
@@ -827,7 +827,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:69
 #: includes/admin/settings/class-ur-settings-general.php:380
 #: includes/RestApi/class-ur-rest-api.php:170
-#: src/components/App.js:50
+#: src/components/App.js:59
 msgid "General"
 msgstr ""
 
@@ -1446,7 +1446,7 @@ msgstr ""
 #: includes/RestApi/class-ur-rest-api.php:245
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
-#: src/components/App.js:72
+#: src/components/App.js:81
 msgid "Login"
 msgstr ""
 
@@ -2807,7 +2807,7 @@ msgstr ""
 
 #: includes/class-ur-post-types.php:49
 #: includes/RestApi/class-ur-rest-api.php:198
-#: src/components/App.js:61
+#: src/components/App.js:70
 msgid "Registration"
 msgstr ""
 
@@ -4740,7 +4740,7 @@ msgid "Check to enable users to register"
 msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:286
-#: src/components/App.js:83
+#: src/components/App.js:92
 msgid "My Account"
 msgstr ""
 
@@ -4915,93 +4915,93 @@ msgstr ""
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
 msgstr ""
 
-#: src/components/App.js:39
-#: src/components/App.js:40
+#: src/components/App.js:48
+#: src/components/App.js:49
 msgid "Install Pages"
 msgstr ""
 
-#: src/components/App.js:41
+#: src/components/App.js:50
 msgid "The following pages will be installed automatically."
 msgstr ""
 
-#: src/components/App.js:52
+#: src/components/App.js:61
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:62
+#: src/components/App.js:71
 msgid "Registration Settings"
 msgstr ""
 
-#: src/components/App.js:63
+#: src/components/App.js:72
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:73
+#: src/components/App.js:82
 msgid "Login Settings"
 msgstr ""
 
-#: src/components/App.js:74
+#: src/components/App.js:83
 msgid "Customize your login settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:84
+#: src/components/App.js:93
 msgid "My Account Settings"
 msgstr ""
 
-#: src/components/App.js:85
+#: src/components/App.js:94
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:94
+#: src/components/App.js:103
 msgid "Final Step"
 msgstr ""
 
-#: src/components/App.js:315
+#: src/components/App.js:325
 msgid "Go To Dashboard"
 msgstr ""
 
-#: src/components/App.js:324
+#: src/components/App.js:334
 msgid "Back"
 msgstr ""
 
-#: src/components/App.js:339
+#: src/components/App.js:349
 msgid "Edit Default Form"
 msgstr ""
 
-#: src/components/App.js:350
+#: src/components/App.js:360
 msgid "Create New Form"
 msgstr ""
 
-#: src/components/App.js:364
+#: src/components/App.js:374
 msgid "Skip"
 msgstr ""
 
-#: src/components/App.js:375
+#: src/components/App.js:385
 msgid "Install & Proceed"
 msgstr ""
 
-#: src/components/App.js:389
+#: src/components/App.js:399
 msgid "Next"
 msgstr ""
 
-#: src/components/screens/InstallPage.js:74
+#: src/components/screens/InstallPage.js:67
 msgid "Registration Page"
 msgstr ""
 
-#: src/components/screens/InstallPage.js:75
+#: src/components/screens/InstallPage.js:68
 msgid "My Account Page"
 msgstr ""
 
-#: src/components/screens/InstallPage.js:86
+#: src/components/screens/InstallPage.js:79
 msgid "Installing..."
 msgstr ""
 
-#: src/components/screens/InstallPage.js:99
-#: src/components/screens/InstallPage.js:131
+#: src/components/screens/InstallPage.js:92
+#: src/components/screens/InstallPage.js:124
 msgid "Installed"
 msgstr ""
 
-#: src/components/screens/InstallPage.js:120
+#: src/components/screens/InstallPage.js:113
 msgid "Default Registration Form"
 msgstr ""
 

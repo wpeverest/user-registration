@@ -50,7 +50,7 @@ class UR_Form_Block {
 		}
 		wp_register_script(
 			'user-registration-block-editor',
-			UR()->plugin_url() . '/build/main.js',
+			UR()->plugin_url() . '/chunks/main.js',
 			$enqueue_script,
 			UR_VERSION
 		);

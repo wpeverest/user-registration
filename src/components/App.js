@@ -12,6 +12,8 @@ import {
 } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
+import * as Promise from "promise";
+import * as Reflect from "reflect-metadata";
 
 /**
  * Internal Dependencies
@@ -30,8 +32,15 @@ function App () {
     const [{ settings, installPage }, dispatch] = useStateValue();
     const [initiateInstall, setInitiateInstall] = useState(false);
 
-    const { adminURL, siteURL, defaultFormURL, newFormURL, urRestApiNonce } =
-		typeof _UR_ !== "undefined" && _UR_;
+    /* global _UR_ */
+    const {
+        adminURL,
+        siteURL,
+        defaultFormURL,
+        newFormURL,
+        urRestApiNonce,
+        onBoardIconsURL
+    } = typeof _UR_ !== "undefined" && _UR_;
 
     const [steps, setSteps] = useState([
         {
@@ -169,7 +178,7 @@ function App () {
     const handleSkip = () => {
         const newSettingsRef = { ...settings };
         activeStep.sectionSettings.settings.map((individualSettings) => {
-            delete newSettingsRef[individualSettings.id];
+            Reflect.deleteProperty(newSettingsRef, individualSettings.id);
         });
 
         dispatch({
@@ -275,7 +284,8 @@ function App () {
                 {steps[steps.length - 1].key === activeStep.key ? (
                     cloneElement(activeStep.component, {
                         sectionSettings: activeStep.sectionSettings,
-                        siteURL: siteURL
+                        siteURL: siteURL,
+                        onBoardIconsURL: onBoardIconsURL
                     })
                 ) : (
                     <Flex

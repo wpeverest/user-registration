@@ -2,14 +2,7 @@
  *  Internal Dependencies
  */
 import React, { useState, useEffect, Fragment } from "react";
-import {
-    Flex,
-    Heading,
-    Text,
-    Box,
-    Checkbox,
-    CircularProgress
-} from "@chakra-ui/react";
+import { Flex, Text, Box, Checkbox, CircularProgress } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
 /**

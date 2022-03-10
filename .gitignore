@@ -13,6 +13,7 @@ project.properties
 
 # Build
 build/
+chunks/
 
 # Grunt
 /node_modules/
