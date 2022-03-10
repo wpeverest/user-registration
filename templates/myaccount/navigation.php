@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -26,7 +25,9 @@ do_action( 'user_registration_before_account_navigation' );
 <nav class="user-registration-MyAccount-navigation">
 	<ul>
 		<?php foreach ( ur_get_account_menu_items() as $endpoint => $label ) : ?>
-			<li class="<?php echo ur_get_account_menu_item_classes( $endpoint ); ?>">
+			<?php $label = ur_string_translation( 0, 'user_registration_' . $endpoint . '_label', $label ); ?>
+			<?php $endpoint = ur_string_translation( 0, 'user_registration_' . $endpoint . '_slug', $endpoint ); ?>
+			<li class="<?php echo esc_attr( ur_get_account_menu_item_classes( $endpoint ) ); ?>">
 				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>"><?php echo esc_html( $label ); ?></a>
 			</li>
 		<?php endforeach; ?>

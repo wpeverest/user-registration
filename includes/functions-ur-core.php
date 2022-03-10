@@ -1806,10 +1806,10 @@ add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
 	if ( function_exists( 'icl_register_string' ) ) {
-		icl_register_string( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+		icl_register_string( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	if ( function_exists( 'icl_t' ) ) {
-		$variable = icl_t( isset( $form_id ) ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
+		$variable = icl_t( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
 	}
 	return $variable;
 }
