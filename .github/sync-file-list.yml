@@ -1,6 +1,7 @@
 wpeverest/user-registration-pro@master:
       - assets
       - includes
+      - src
       - templates
       - .babelrc
       - .distignore

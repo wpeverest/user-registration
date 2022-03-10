@@ -9,14 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-04T08:36:28+00:00\n"
+"POT-Creation-Date: 2022-03-10T09:14:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
-#: includes/admin/class-ur-admin.php:124
-#: includes/class-ur-form-block.php:53
+#: includes/admin/class-ur-admin.php:133
+#: includes/admin/functions-ur-admin.php:118
+#: includes/class-ur-form-block.php:62
 #: includes/class-ur-privacy.php:31
 msgid "User Registration"
 msgstr ""
@@ -38,7 +39,7 @@ msgid "https://wpeverest.com"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:644
-#: build/main.js:2098
+#: src/components/App.js:60
 msgid "General Settings"
 msgstr ""
 
@@ -174,6 +175,14 @@ msgstr ""
 msgid "Could not install."
 msgstr ""
 
+#: includes/admin/class-ur-admin-assets.php:263
+#: includes/admin/class-ur-admin-menus.php:422
+#: includes/admin/class-ur-admin-menus.php:423
+#: includes/admin/class-ur-admin-menus.php:760
+#: includes/admin/class-ur-admin-registrations-table-list.php:162
+msgid "Add New"
+msgstr ""
+
 #: includes/admin/class-ur-admin-assets.php:273
 #: includes/admin/views/html-admin-page-import-export-forms.php:50
 msgid "No file selected."
@@ -187,154 +196,154 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:356
+#: includes/admin/class-ur-admin-assets.php:355
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:356
+#: includes/admin/class-ur-admin-assets.php:355
 #: includes/admin/class-ur-admin-registrations-table-list.php:107
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:378
+#: includes/admin/class-ur-admin-assets.php:377
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:379
+#: includes/admin/class-ur-admin-assets.php:378
 #: includes/admin/class-ur-admin-form-modal.php:93
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:380
+#: includes/admin/class-ur-admin-assets.php:379
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:381
+#: includes/admin/class-ur-admin-assets.php:380
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:382
+#: includes/admin/class-ur-admin-assets.php:381
 msgctxt "user-registration admin"
 msgid "Payment"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:383
+#: includes/admin/class-ur-admin-assets.php:382
 msgctxt "user-registration admin"
 msgid "Stripe Gateway"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:384
+#: includes/admin/class-ur-admin-assets.php:383
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this row?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:385
+#: includes/admin/class-ur-admin-assets.php:384
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this field?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:386
+#: includes/admin/class-ur-admin-assets.php:385
 msgctxt "user registration admin"
 msgid "At least one row is required to create a registration form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:387
+#: includes/admin/class-ur-admin-assets.php:386
 msgctxt "user registration admin"
 msgid "Cannot delete row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:388
+#: includes/admin/class-ur-admin-assets.php:387
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:389
+#: includes/admin/class-ur-admin-assets.php:388
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:390
+#: includes/admin/class-ur-admin-assets.php:389
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:391
+#: includes/admin/class-ur-admin-assets.php:390
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:392
+#: includes/admin/class-ur-admin-assets.php:391
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:393
+#: includes/admin/class-ur-admin-assets.php:392
 msgid "Confirm Deletion"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:394
+#: includes/admin/class-ur-admin-assets.php:393
 msgctxt "user registration admin"
 msgid "At least one field needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:395
+#: includes/admin/class-ur-admin-assets.php:394
 msgctxt "user registration admin"
 msgid "Empty form name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:396
+#: includes/admin/class-ur-admin-assets.php:395
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:397
+#: includes/admin/class-ur-admin-assets.php:396
 msgctxt "user registration admin"
 msgid "Duplicate field name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:398
+#: includes/admin/class-ur-admin-assets.php:397
 msgctxt "user registration admin"
 msgid "Empty field label."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:399
+#: includes/admin/class-ur-admin-assets.php:398
 msgctxt "user registration admin"
 msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:400
+#: includes/admin/class-ur-admin-assets.php:399
 msgctxt "user registration admin"
 msgid "Multiple field key "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:401
+#: includes/admin/class-ur-admin-assets.php:400
 msgctxt "user registration admin"
 msgid "field is required."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:402
+#: includes/admin/class-ur-admin-assets.php:401
 msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:403
+#: includes/admin/class-ur-admin-assets.php:402
 msgctxt "user registration admin"
 msgid "Please select at least one country."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:404
+#: includes/admin/class-ur-admin-assets.php:403
 msgctxt "user registration admin"
 msgid "input size must be greater than zero."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:405
+#: includes/admin/class-ur-admin-assets.php:404
 msgctxt "user registration admin"
 msgid "input of min value must be less than max value."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:406
+#: includes/admin/class-ur-admin-assets.php:405
 msgctxt "user registration admin"
 msgid "input of max upload size must less than "
 msgstr ""
@@ -408,75 +417,68 @@ msgstr ""
 msgid "Please select json file to import form data."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:384
+#: includes/admin/class-ur-admin-menus.php:388
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:385
-#: includes/class-ur-install.php:638
+#: includes/admin/class-ur-admin-menus.php:389
+#: includes/class-ur-install.php:644
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:401
+#: includes/admin/class-ur-admin-menus.php:405
 msgid "User Registration Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:402
+#: includes/admin/class-ur-admin-menus.php:406
 #: includes/class-ur-email-confirmation.php:105
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:418
-#: includes/admin/class-ur-admin-menus.php:419
-#: includes/admin/class-ur-admin-menus.php:756
-#: includes/admin/class-ur-admin-registrations-table-list.php:162
-msgid "Add New"
-msgstr ""
-
-#: includes/admin/class-ur-admin-menus.php:435
+#: includes/admin/class-ur-admin-menus.php:439
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:436
+#: includes/admin/class-ur-admin-menus.php:440
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:476
+#: includes/admin/class-ur-admin-menus.php:480
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:478
+#: includes/admin/class-ur-admin-menus.php:482
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:522
+#: includes/admin/class-ur-admin-menus.php:526
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:546
+#: includes/admin/class-ur-admin-menus.php:550
 #: includes/admin/settings/class-ur-settings-general.php:195
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:584
+#: includes/admin/class-ur-admin-menus.php:588
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:588
+#: includes/admin/class-ur-admin-menus.php:592
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:641
+#: includes/admin/class-ur-admin-menus.php:645
 #: includes/admin/views/html-admin-page-forms.php:122
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:745
+#: includes/admin/class-ur-admin-menus.php:749
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:771
+#: includes/admin/class-ur-admin-menus.php:775
 msgid "Empty form data"
 msgstr ""
 
@@ -575,96 +577,94 @@ msgstr ""
 msgid "Select a page&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:94
+#: includes/admin/class-ur-admin-user-list-manager.php:92
 msgctxt "The action on users list page"
 msgid "Resend Verification"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:95
+#: includes/admin/class-ur-admin-user-list-manager.php:93
 msgctxt "The action on users list page"
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:96
+#: includes/admin/class-ur-admin-user-list-manager.php:94
 msgctxt "The action on users list page"
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:212
+#: includes/admin/class-ur-admin-user-list-manager.php:214
 msgid "User Registration:"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin-user-list-manager.php:212
-#: includes/admin/class-ur-admin.php:334
+#: includes/admin/class-ur-admin-user-list-manager.php:214
+#: includes/admin/class-ur-admin.php:344
 msgid "User"
 msgid_plural "Users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:212
+#: includes/admin/class-ur-admin-user-list-manager.php:214
 msgid "Users"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:212
+#: includes/admin/class-ur-admin-user-list-manager.php:214
 msgid "pending approval."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:242
-msgid "User approved."
-msgid_plural "%s users approved."
-msgstr[0] ""
-msgstr[1] ""
+#. translators: %s - Number of users approved.
+#: includes/admin/class-ur-admin-user-list-manager.php:245
+msgid "User Approved: %s users approved."
+msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:244
-msgid "User denied."
-msgid_plural "%s users denied."
-msgstr[0] ""
-msgstr[1] ""
+#. translators: %s - Number of users denied.
+#: includes/admin/class-ur-admin-user-list-manager.php:248
+msgid "User Denied: %s users denied."
+msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:272
+#: includes/admin/class-ur-admin-user-list-manager.php:276
 msgid "Source"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:273
+#: includes/admin/class-ur-admin-user-list-manager.php:277
 msgid "Registered At"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:370
+#: includes/admin/class-ur-admin-user-list-manager.php:374
 msgid "All statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:372
+#: includes/admin/class-ur-admin-user-list-manager.php:376
 msgid "All approval statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:382
+#: includes/admin/class-ur-admin-user-list-manager.php:386
 msgid "All Forms"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:384
+#: includes/admin/class-ur-admin-user-list-manager.php:388
 msgid "All UR Forms"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:396
+#: includes/admin/class-ur-admin-user-list-manager.php:400
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:522
-#: includes/admin/class-ur-admin-user-list-manager.php:523
+#: includes/admin/class-ur-admin-user-list-manager.php:526
+#: includes/admin/class-ur-admin-user-list-manager.php:527
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:525
-#: includes/admin/class-ur-admin-user-list-manager.php:526
+#: includes/admin/class-ur-admin-user-list-manager.php:529
+#: includes/admin/class-ur-admin-user-list-manager.php:530
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:600
+#: includes/admin/class-ur-admin-user-list-manager.php:606
 msgid "Approval Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:615
+#: includes/admin/class-ur-admin-user-list-manager.php:621
 msgid "If user has access to sign in or not."
 msgstr ""
 
@@ -684,99 +684,141 @@ msgstr ""
 msgid "denied"
 msgstr ""
 
+#: includes/admin/class-ur-admin-welcome.php:39
+#: includes/admin/class-ur-admin-welcome.php:140
+msgid "Welcome to User Registration"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:97
+msgid "User Registration - Setup Wizard"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:141
+msgid "Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market."
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:145
+#: includes/admin/class-ur-admin-welcome.php:167
+msgid "Watch how to create your first form with User Registration"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:151
+msgid "Get Started"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:154
+msgid "Create a First Form"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:157
+msgid "Visit Documentation"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:164
+msgid "Check Our Awesome Extensions"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:171
+msgid "See All Extensions"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:184
+msgid "Contact support"
+msgstr ""
+
 #. translators: 1: User Registration 2:: five stars
-#: includes/admin/class-ur-admin.php:122
+#: includes/admin/class-ur-admin.php:132
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:125
+#: includes/admin/class-ur-admin.php:134
 msgid "Thank You!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:136
+#: includes/admin/class-ur-admin.php:146
 msgid "Thank you for using User Registration."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:189
+#: includes/admin/class-ur-admin.php:199
 msgid "HAKUNA <strong>MATATA!</strong>"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:192
+#: includes/admin/class-ur-admin.php:202
 msgid "( The above word is just to draw your attention. <span class=\"dashicons dashicons-smiley smile-icon\"></span> )"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:193
+#: includes/admin/class-ur-admin.php:203
 msgid "Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:197
+#: includes/admin/class-ur-admin.php:207
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:207
-#: includes/admin/class-ur-admin.php:278
+#: includes/admin/class-ur-admin.php:217
+#: includes/admin/class-ur-admin.php:288
 msgid "Sure, I'd love to!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:208
-#: includes/admin/class-ur-admin.php:279
+#: includes/admin/class-ur-admin.php:218
+#: includes/admin/class-ur-admin.php:289
 msgid "I already did!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:209
-#: includes/admin/class-ur-admin.php:280
+#: includes/admin/class-ur-admin.php:219
+#: includes/admin/class-ur-admin.php:290
 msgid "Maybe later"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:210
-#: includes/admin/class-ur-admin.php:281
+#: includes/admin/class-ur-admin.php:220
+#: includes/admin/class-ur-admin.php:291
 #: includes/class-ur-plugin-updater.php:586
 #: includes/class-ur-plugin-updater.php:609
 msgid "I have a query"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:212
-#: includes/admin/class-ur-admin.php:283
+#: includes/admin/class-ur-admin.php:222
+#: includes/admin/class-ur-admin.php:293
 msgid "Never show again"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:250
+#: includes/admin/class-ur-admin.php:260
 msgid "User Registration Plugin Survey"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:256
+#: includes/admin/class-ur-admin.php:266
 msgid ""
-"<strong>Hey there!</strong> <br>\n"
+"<strong>Hey there!</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:267
+#: includes/admin/class-ur-admin.php:277
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin.php:334
+#: includes/admin/class-ur-admin.php:344
 msgid "%1$d new %2$s registered."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:28
+#: includes/admin/functions-ur-admin.php:26
 msgid "User Registration Activity"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:44
+#: includes/admin/functions-ur-admin.php:42
 msgid "loading..."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:150
-#: includes/admin/functions-ur-admin.php:213
+#: includes/admin/functions-ur-admin.php:149
+#: includes/admin/functions-ur-admin.php:212
 msgid "User Extra Information"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:233
+#: includes/admin/functions-ur-admin.php:232
 msgid "WordPress User Extra Information"
 msgstr ""
 
@@ -784,7 +826,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:27
 #: includes/admin/settings/class-ur-settings-general.php:69
 #: includes/admin/settings/class-ur-settings-general.php:380
-#: build/main.js:2098
+#: includes/RestApi/class-ur-rest-api.php:170
+#: src/components/App.js:59
 msgid "General"
 msgstr ""
 
@@ -883,28 +926,34 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:74
 #: includes/functions-ur-core.php:942
+#: includes/RestApi/class-ur-rest-api.php:180
 msgid "User login option"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:75
 #: includes/admin/settings/class-ur-settings-general.php:402
 #: includes/functions-ur-core.php:943
+#: includes/RestApi/class-ur-rest-api.php:181
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:85
+#: includes/RestApi/class-ur-rest-api.php:188
 msgid "Prevent dashboard access"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:86
+#: includes/RestApi/class-ur-rest-api.php:189
 msgid "This option lets you limit which roles you are willing to prevent dashboard access."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:96
+#: includes/RestApi/class-ur-rest-api.php:277
 msgid "Enable hide/show password"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:97
+#: includes/RestApi/class-ur-rest-api.php:278
 msgid "Check to enable hide/show password icon."
 msgstr ""
 
@@ -937,10 +986,12 @@ msgid "Check to enable ajax form submission on edit profile"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:140
+#: includes/RestApi/class-ur-rest-api.php:300
 msgid "Disable profile picture"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:141
+#: includes/RestApi/class-ur-rest-api.php:301
 msgid "Check to disable profile picture in edit profile page."
 msgstr ""
 
@@ -957,14 +1008,17 @@ msgid "Layout"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:159
+#: includes/RestApi/class-ur-rest-api.php:290
 msgid "This option lets you choose layout for user registration my account tab."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:167
+#: includes/RestApi/class-ur-rest-api.php:295
 msgid "Horizontal"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:168
+#: includes/RestApi/class-ur-rest-api.php:296
 msgid "Vertical"
 msgstr ""
 
@@ -1184,35 +1238,48 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:385
 #: includes/functions-ur-core.php:1064
+#: includes/RestApi/class-ur-rest-api.php:201
+#: includes/RestApi/class-ur-rest-api.php:248
 msgid "Form Template"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:386
+#: includes/RestApi/class-ur-rest-api.php:249
 msgid "Choose the login form template."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:393
 #: includes/functions-ur-core.php:1071
+#: includes/RestApi/class-ur-rest-api.php:207
+#: includes/RestApi/class-ur-rest-api.php:254
 msgid "Default"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:394
 #: includes/functions-ur-core.php:1072
+#: includes/RestApi/class-ur-rest-api.php:208
+#: includes/RestApi/class-ur-rest-api.php:255
 msgid "Bordered"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:395
 #: includes/functions-ur-core.php:1073
+#: includes/RestApi/class-ur-rest-api.php:209
+#: includes/RestApi/class-ur-rest-api.php:256
 msgid "Flat"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:396
 #: includes/functions-ur-core.php:1074
+#: includes/RestApi/class-ur-rest-api.php:210
+#: includes/RestApi/class-ur-rest-api.php:257
 msgid "Rounded"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:397
 #: includes/functions-ur-core.php:1075
+#: includes/RestApi/class-ur-rest-api.php:211
+#: includes/RestApi/class-ur-rest-api.php:258
 msgid "Rounded Edge"
 msgstr ""
 
@@ -1245,6 +1312,7 @@ msgid "Check to field to enable the ajax form submission."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:430
+#: includes/RestApi/class-ur-rest-api.php:269
 msgid "Enable remember me"
 msgstr ""
 
@@ -1255,14 +1323,17 @@ msgid "Enable"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:434
+#: includes/RestApi/class-ur-rest-api.php:270
 msgid "Check to enable/disable remember me."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:440
+#: includes/RestApi/class-ur-rest-api.php:262
 msgid "Enable lost password"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:444
+#: includes/RestApi/class-ur-rest-api.php:263
 msgid "Check to enable/disable lost password."
 msgstr ""
 
@@ -1372,9 +1443,10 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:547
 #: includes/admin/settings/class-ur-settings-general.php:553
+#: includes/RestApi/class-ur-rest-api.php:245
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
-#: build/main.js:2098
+#: src/components/App.js:81
 msgid "Login"
 msgstr ""
 
@@ -1707,12 +1779,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:99
 msgid ""
-"Hi Admin, <br/>\n"
-"\n"
-"A new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/>\n"
-"\n"
+"Hi Admin, <br/>\r\n"
+"\r\n"
+"A new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1739,12 +1811,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1767,12 +1839,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:82
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please click on this verification link {{home_url}}/{{ur_login}}?ur_token={{email_token}} to confirm registration. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please click on this verification link {{home_url}}/{{ur_login}}?ur_token={{email_token}} to confirm registration. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1796,13 +1868,13 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:102
 msgid ""
-"User has changed profile information for the following account:<br/>\n"
-"\n"
-"SiteName: {{blog_info}} <br/>\n"
-"Username: {{username}} <br/>\n"
-"\n"
-"{{all_fields}}\n"
-"<br/>\n"
+"User has changed profile information for the following account:<br/>\r\n"
+"\r\n"
+"SiteName: {{blog_info}} <br/>\r\n"
+"Username: {{username}} <br/>\r\n"
+"\r\n"
+"{{all_fields}}\r\n"
+"<br/>\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1826,12 +1898,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\n"
-"\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\r\n"
+"\r\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1856,12 +1928,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1885,14 +1957,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:92
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\n"
-"\n"
-"Sorry for the inconvenience. <br/>\n"
-"\n"
-"You will be notified after it is approved. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\r\n"
+"\r\n"
+"Sorry for the inconvenience. <br/>\r\n"
+"\r\n"
+"You will be notified after it is approved. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1916,16 +1988,16 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:89
 msgid ""
-"Someone has requested a password reset for the following account: <br/>\n"
-"\n"
-"SiteName: {{blog_info}} <br/>\n"
-"Username: {{username}} <br/>\n"
-"\n"
-"If this was a mistake, just ignore this email and nothing will happen. <br/>\n"
-"\n"
-"To reset your password, visit the following address: <br/>\n"
-"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\n"
-"\n"
+"Someone has requested a password reset for the following account: <br/>\r\n"
+"\r\n"
+"SiteName: {{blog_info}} <br/>\r\n"
+"Username: {{username}} <br/>\r\n"
+"\r\n"
+"If this was a mistake, just ignore this email and nothing will happen. <br/>\r\n"
+"\r\n"
+"To reset your password, visit the following address: <br/>\r\n"
+"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1949,12 +2021,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1997,6 +2069,38 @@ msgstr ""
 #. translators: %s - User Registration Extensions Catalog
 #: includes/admin/views/html-admin-page-addons.php:74
 msgid "Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href=\"%s\">User Registration Extensions Catalog</a>"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:20
+msgid "Getting Started"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:28
+msgid "Welcome to Everest Forms"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:29
+msgid "Thank you for choosing Everest Forms, the most powerful and easy drag & drop WordPress form builder in the market."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:32
+msgid "Watch how to create your first form with Everest Forms"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:41
+msgid "Create Your First Form"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:42
+msgid "Let's get started with the first contact forms for your site."
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:50
+msgid "Read The Full Guide"
+msgstr ""
+
+#: includes/admin/views/html-admin-page-builder-setup.php:51
+msgid "Read our step by step guide on how to create your first form."
 msgstr ""
 
 #: includes/admin/views/html-admin-page-export-users.php:18
@@ -2359,19 +2463,19 @@ msgstr ""
 msgid "Chosen Password"
 msgstr ""
 
-#: includes/class-ur-form-block.php:54
+#: includes/class-ur-form-block.php:63
 msgid "Select &#38; display one of your form."
 msgstr ""
 
-#: includes/class-ur-form-block.php:55
+#: includes/class-ur-form-block.php:64
 msgid "Select a Form"
 msgstr ""
 
-#: includes/class-ur-form-block.php:56
+#: includes/class-ur-form-block.php:65
 msgid "Form Settings"
 msgstr ""
 
-#: includes/class-ur-form-block.php:57
+#: includes/class-ur-form-block.php:66
 msgid "Form"
 msgstr ""
 
@@ -2493,21 +2597,25 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:391
 #: includes/functions-ur-core.php:988
+#: includes/RestApi/class-ur-rest-api.php:228
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:392
 #: includes/functions-ur-core.php:989
+#: includes/RestApi/class-ur-rest-api.php:229
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:393
 #: includes/functions-ur-core.php:990
+#: includes/RestApi/class-ur-rest-api.php:230
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:394
 #: includes/functions-ur-core.php:991
+#: includes/RestApi/class-ur-rest-api.php:231
 msgid "Strong"
 msgstr ""
 
@@ -2519,47 +2627,51 @@ msgstr ""
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:307
+#: includes/class-ur-install.php:306
+#: includes/RestApi/class-ur-rest-api.php:132
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:308
+#: includes/class-ur-install.php:307
+#: includes/RestApi/class-ur-rest-api.php:133
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:316
+#: includes/class-ur-install.php:317
+#: includes/RestApi/class-ur-rest-api.php:125
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:317
+#: includes/class-ur-install.php:318
+#: includes/RestApi/class-ur-rest-api.php:126
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-install.php:368
+#: includes/class-ur-install.php:369
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:638
+#: includes/class-ur-install.php:644
 msgid "View User Registration settings"
 msgstr ""
 
-#: includes/class-ur-install.php:654
+#: includes/class-ur-install.php:660
 msgid "View User Registration documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:654
+#: includes/class-ur-install.php:660
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:655
+#: includes/class-ur-install.php:661
 msgid "Visit free customer support"
 msgstr ""
 
-#: includes/class-ur-install.php:655
+#: includes/class-ur-install.php:661
 msgid "Free support"
 msgstr ""
 
@@ -2683,7 +2795,8 @@ msgid "Registrations"
 msgstr ""
 
 #: includes/class-ur-post-types.php:49
-#: build/main.js:2098
+#: includes/RestApi/class-ur-rest-api.php:198
+#: src/components/App.js:70
 msgid "Registration"
 msgstr ""
 
@@ -4436,26 +4549,32 @@ msgid "Login method that should be used by the users registered through this for
 msgstr ""
 
 #: includes/functions-ur-core.php:956
+#: includes/RestApi/class-ur-rest-api.php:235
 msgid "Default User Role"
 msgstr ""
 
 #: includes/functions-ur-core.php:965
+#: includes/RestApi/class-ur-rest-api.php:236
 msgid "Default role for the users registered through this form."
 msgstr ""
 
 #: includes/functions-ur-core.php:969
+#: includes/RestApi/class-ur-rest-api.php:215
 msgid "Enable Strong Password"
 msgstr ""
 
 #: includes/functions-ur-core.php:977
+#: includes/RestApi/class-ur-rest-api.php:216
 msgid "Make strong password compulsary."
 msgstr ""
 
 #: includes/functions-ur-core.php:981
+#: includes/RestApi/class-ur-rest-api.php:222
 msgid "Minimum Password Strength"
 msgstr ""
 
 #: includes/functions-ur-core.php:995
+#: includes/RestApi/class-ur-rest-api.php:223
 msgid "Set minimum required password strength."
 msgstr ""
 
@@ -4513,6 +4632,7 @@ msgid "Enable Captcha for strong security from spams and bots."
 msgstr ""
 
 #: includes/functions-ur-core.php:1079
+#: includes/RestApi/class-ur-rest-api.php:202
 msgid "Choose form template to use."
 msgstr ""
 
@@ -4589,6 +4709,31 @@ msgstr ""
 
 #: includes/log-handlers/class-ur-log-handler-file.php:353
 msgid "This method should not be called before plugins_loaded."
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:92
+msgid "OnBoarding completed successfully"
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:112
+msgid "Pages cannot be installed"
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:173
+msgid "Anyone can register"
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:174
+msgid "Check to enable users to register"
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:286
+#: src/components/App.js:92
+msgid "My Account"
+msgstr ""
+
+#: includes/RestApi/class-ur-rest-api.php:289
+msgid "My Account Page Layout"
 msgstr ""
 
 #. translators: %s - Link to logout.
@@ -4758,98 +4903,96 @@ msgstr ""
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:48
+#: src/components/App.js:49
 msgid "Install Pages"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:50
 msgid "The following pages will be installed automatically."
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:61
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:71
 msgid "Registration Settings"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:72
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:82
 msgid "Login Settings"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:83
 msgid "Customize your login settings as per your preference."
 msgstr ""
 
-#: build/main.js:2098
-msgid "My Account"
-msgstr ""
-
-#: build/main.js:2098
+#: src/components/App.js:93
 msgid "My Account Settings"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:94
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:103
 msgid "Final Step"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:325
 msgid "Go To Dashboard"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:334
 msgid "Back"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:349
 msgid "Edit Default Form"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:360
 msgid "Create New Form"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:374
 msgid "Skip"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:385
 msgid "Install & Proceed"
 msgstr ""
 
-#: build/main.js:2098
+#: src/components/App.js:399
 msgid "Next"
 msgstr ""
 
-#: build/main.js:2142
+#: src/components/screens/InstallPage.js:67
 msgid "Registration Page"
 msgstr ""
 
-#: build/main.js:2142
+#: src/components/screens/InstallPage.js:68
+msgid "My Account Page"
+msgstr ""
+
+#: src/components/screens/InstallPage.js:79
 msgid "Installing..."
 msgstr ""
 
-#: build/main.js:2142
+#: src/components/screens/InstallPage.js:92
+#: src/components/screens/InstallPage.js:124
 msgid "Installed"
 msgstr ""
 
-#: build/main.js:2142
+#: src/components/screens/InstallPage.js:113
 msgid "Default Registration Form"
 msgstr ""
 
-#: build/main.js:2153
+#: src/components/screens/LastPage.js:22
 msgid "Congratulations!! You are all set up."
-msgstr ""
-
-#: build/main.js:2153
-msgid "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Proin eget tortor risus. Quisque velit nisi, pretium ut lacinia in, elementum id enim."
 msgstr ""

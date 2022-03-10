@@ -6,7 +6,7 @@ module.exports = (env, argv) => {
 	return {
 		entry: ["/src/index.js", "./assets/js/admin/gutenberg/form-block.js"],
 		output: {
-			path: path.resolve(__dirname + "/build"),
+			path: path.resolve(__dirname + "/chunks"),
 			publicPath: "/",
 			filename: "[name].js",
 		},
