@@ -167,6 +167,15 @@ class UR_Form_Handler {
 					}
 					break;
 
+				case 'email':
+					if ( isset( $_POST[ $key ] ) ) {
+						$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
+					} else {
+						$user_data = get_userdata($user_id);
+						$_POST[ $key ] = $user_data->data->user_email;
+					}
+					break;
+
 				default:
 					$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					break;
