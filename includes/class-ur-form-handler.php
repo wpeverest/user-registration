@@ -172,7 +172,7 @@ class UR_Form_Handler {
 					if ( isset( $_POST[ $key ] ) ) {
 						$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 					} else {
-						$user_data = get_userdata($user_id);
+						$user_data = get_userdata( $user_id );
 						$_POST[ $key ] = $user_data->data->user_email;
 					}
 					break;
