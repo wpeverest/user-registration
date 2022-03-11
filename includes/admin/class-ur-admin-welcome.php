@@ -22,7 +22,7 @@ class UR_Admin_Welcome {
 		$wizard_ran = get_option( 'user_registration_first_time_activation_flag', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-		if ( $wizard_ran || ur_check_activation_date( '1' ) ) {
+		if ( ! $wizard_ran ) {
 			return;
 		}
 
@@ -50,7 +50,7 @@ class UR_Admin_Welcome {
 	public static function welcome_page() {
 
 		if ( isset( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-			update_option( 'user_registration_first_time_activation_flag', true );
+			update_option( 'user_registration_first_time_activation_flag', false );
 		}
 
 		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array(), UR()->version, true );
