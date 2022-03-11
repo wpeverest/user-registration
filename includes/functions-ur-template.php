@@ -462,8 +462,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
 				if ( ! empty( $args['options'] ) ) {
-					// If we have a blank option, select2 needs a placeholder
-					if ( ! empty( $args['placeholder'] ) ) {
+					// If we have a blank option, select2 needs a placeholder.
+					if ( empty( $args['placeholder'] && '' !== $value ) ) {
 						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
