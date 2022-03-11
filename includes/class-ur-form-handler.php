@@ -154,7 +154,7 @@ class UR_Form_Handler {
 			switch ( $field['type'] ) {
 				case 'checkbox':
 					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = wp_unslash( $_POST[ $key ] );
+						$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
 					} else {
 						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					}
