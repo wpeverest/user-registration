@@ -81,7 +81,7 @@ class UR_Form_Handler {
 		} else {
 			if ( isset( $_FILES['profile-pic'] ) ) {
 
-				if ( isset( $_FILES['profile-pic'] ) && isset( $_FILES['profile-pic']['size'] ) ) {
+				if ( isset( $_FILES['profile-pic'] ) && ! empty( $_FILES['profile-pic']['size'] ) ) {
 
 					if ( ! function_exists( 'wp_handle_upload' ) ) {
 						require_once ABSPATH . 'wp-admin/includes/file.php';
