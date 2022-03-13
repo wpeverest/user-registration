@@ -179,6 +179,10 @@ abstract class UR_List_Table extends WP_List_Table {
 			'ignore_sticky_posts' => true,
 			'paged'               => $current_page,
 		);
+		// End setup wizard when skipped to list table.
+		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && $_REQUEST['end-setup-wizard'] ) {
+			update_option( 'user_registration_first_time_activation_flag', false );
+		}
 
 		// Handle the status query.
 		if ( ! empty( $_REQUEST['status'] ) ) {

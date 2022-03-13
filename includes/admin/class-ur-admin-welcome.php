@@ -153,8 +153,8 @@ class UR_Admin_Welcome {
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-secondary">
 											<h3><?php esc_html_e( 'Create a First Form', 'user-registration' ); ?></h3>
 									</a>
-									<a href="https://docs.wpeverest.com/docs/user-registration/" class="button button-tertiary" target="blank">
-											<h3><?php esc_html_e( 'Visit Documentation', 'user-registration' ); ?></h3>
+									<a href="<?php echo esc_url_raw( admin_url() . '/admin.php?page=user-registration&end-setup-wizard=' . true ); ?>" class="button button-tertiary">
+											<h3><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?></h3>
 									</a>
 								</div>
 							</div>

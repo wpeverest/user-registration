@@ -11,31 +11,31 @@ import InputHandler from "../common/InputHandler";
 import { useStateValue } from "../../context/StateProvider";
 
 const RegistrationSettings = ({
-	sectionSettings,
-	siteURL,
-	onBoardIconsURL,
+    sectionSettings,
+    siteURL,
+    onBoardIconsURL
 }) => {
-	const [{ settings }] = useStateValue();
-	return (
-		<Stack direction="column" spacing="8" mt={5}>
-			{sectionSettings &&
+    const [{ settings }] = useStateValue();
+    return (
+        <Stack direction="column" spacing="8" mt={5}>
+            {sectionSettings &&
 				sectionSettings.settings.map((setting, key) =>
-					setting.id ===
+				    setting.id ===
 						"user_registration_form_setting_minimum_password_strength" &&
 					settings.user_registration_form_setting_enable_strong_password ===
 						"no" ? (
-						""
-					) : (
-						<InputHandler
-							key={key}
-							setting={setting}
-							siteURL={siteURL}
-							onBoardIconsURL={onBoardIconsURL}
-						/>
-					)
+				            ""
+				        ) : (
+				            <InputHandler
+				                key={key}
+				                setting={setting}
+				                siteURL={siteURL}
+				                onBoardIconsURL={onBoardIconsURL}
+				            />
+				        )
 				)}
-		</Stack>
-	);
+        </Stack>
+    );
 };
 
 export default RegistrationSettings;
