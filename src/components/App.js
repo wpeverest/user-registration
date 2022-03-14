@@ -13,7 +13,6 @@ import {
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
 import * as Promise from "promise";
-import * as Reflect from "reflect-metadata";
 
 /**
  * Internal Dependencies
@@ -31,6 +30,7 @@ import { actionTypes } from "../context/gettingStartedContext";
 function App () {
     const [{ settings, installPage }, dispatch] = useStateValue();
     const [initiateInstall, setInitiateInstall] = useState(false);
+    const [disabledLink, setDisabledLink] = useState(false);
 
     /* global _UR_ */
     const {
@@ -176,9 +176,14 @@ function App () {
 	 * Skip the section on button press.
 	 */
     const handleSkip = () => {
-        const newSettingsRef = { ...settings };
+        var newSettingsRef = { ...settings };
         activeStep.sectionSettings.settings.map((individualSettings) => {
-            Reflect.deleteProperty(newSettingsRef, individualSettings.id);
+            newSettingsRef = Object.keys(newSettingsRef)
+                .filter((key) => key !== individualSettings.id)
+                .reduce((obj, key) => {
+                    obj[key] = newSettingsRef[key];
+                    return obj;
+                }, {});
         });
 
         dispatch({
@@ -253,15 +258,22 @@ function App () {
     /**
 	 * Save settings on button press.
 	 */
-    const handleSaveSettings = () => {
+    const handleSaveSettings = (redirectLink) => {
+        var newSettingsRef = { ...settings };
         if (
             settings.user_registration_form_setting_enable_strong_password ===
 			"no"
         ) {
-            Reflect.deleteProperty(
-                settings,
-                "user_registration_form_setting_minimum_password_strength"
-            );
+            newSettingsRef = Object.keys(settings)
+                .filter(
+                    (key) =>
+                        key !==
+						"user_registration_form_setting_minimum_password_strength"
+                )
+                .reduce((obj, key) => {
+                    obj[key] = settings[key];
+                    return obj;
+                }, {});
         }
 
         // POST
@@ -271,9 +283,11 @@ function App () {
             headers: {
                 "X-WP-Nonce": urRestApiNonce
             },
-            data: { settings: settings }
+            data: { settings: newSettingsRef }
         }).then((res) => {
-            console.log(res);
+            if (res.success) {
+                window.location.href = redirectLink;
+            }
         });
     };
 
@@ -321,7 +335,13 @@ function App () {
                                 <Button
                                     variant="outline"
                                     colorScheme="blue"
-                                    onClick={handleSaveSettings}
+                                    disabled={disabledLink}
+                                    onClick={() => {
+                                        setDisabledLink(true);
+                                        handleSaveSettings(
+                                            `${adminURL}/admin.php?page=user-registration`
+                                        );
+                                    }}
                                 >
                                     {__("Go To Dashboard", "user-registration")}
                                 </Button>
@@ -339,28 +359,29 @@ function App () {
                 <div className="user-registration-setup-wizard__footer--right">
                     {steps[steps.length - 1].key === activeStep.key ? (
                         <React.Fragment>
-                            <Link href={defaultFormURL}>
-                                <Button
-                                    variant="link"
-                                    colorScheme="blue"
-                                    onClick={handleSaveSettings}
-                                    mr={10}
-                                    ml={10}
-                                >
-                                    {__(
-                                        "Edit Default Form",
-                                        "user-registration"
-                                    )}
-                                </Button>
-                            </Link>
-                            <Link href={newFormURL}>
-                                <Button
-                                    colorScheme="blue"
-                                    onClick={handleSaveSettings}
-                                >
-                                    {__("Create New Form", "user-registration")}
-                                </Button>
-                            </Link>
+                            <Button
+                                variant="link"
+                                colorScheme="blue"
+                                onClick={() => {
+                                    setDisabledLink(true);
+                                    handleSaveSettings(defaultFormURL);
+                                }}
+                                mr={10}
+                                ml={10}
+                                disabled={disabledLink}
+                            >
+                                {__("Edit Default Form", "user-registration")}
+                            </Button>
+                            <Button
+                                colorScheme="blue"
+                                onClick={() => {
+                                    setDisabledLink(true);
+                                    handleSaveSettings(newFormURL);
+                                }}
+                                disabled={disabledLink}
+                            >
+                                {__("Create New Form", "user-registration")}
+                            </Button>
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
