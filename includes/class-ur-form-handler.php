@@ -170,7 +170,7 @@ class UR_Form_Handler {
 
 				case 'email':
 					if ( isset( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+						$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
 					} else {
 						$user_data = get_userdata( $user_id );
 						$_POST[ $key ] = $user_data->data->user_email;
