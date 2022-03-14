@@ -48,7 +48,7 @@ class UR_REST_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( __CLASS__, 'ur_save_getting_started_settings' ),
-				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+				// 'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(
@@ -77,6 +77,25 @@ class UR_REST_API {
 		}
 
 		$settings_to_update = $request['settings'];
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+
+		if ( isset( $settings_to_update['user_registration_general_setting_login_options'] ) ) {
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_login_options', $settings_to_update['user_registration_general_setting_login_options'] );
+		}
+
+		if ( isset( $settings_to_update['user_registration_form_template'] ) ) {
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_template', ucwords( str_replace( '_', ' ', $settings_to_update['user_registration_form_template'] ) ) );
+		}
+
+		if ( isset( $settings_to_update['user_registration_form_setting_enable_strong_password'] ) ) {
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_enable_strong_password', $settings_to_update['user_registration_form_setting_enable_strong_password'] );
+		}
+		if ( isset( $settings_to_update['user_registration_form_setting_minimum_password_strength'] ) ) {
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_minimum_password_strength', $settings_to_update['user_registration_form_setting_minimum_password_strength'] );
+		}
+		if ( isset( $settings_to_update['user_registration_form_setting_default_user_role'] ) ) {
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_default_user_role', $settings_to_update['user_registration_form_setting_default_user_role'] );
+		}
 
 		foreach ( $settings_to_update as $option => $value ) {
 
