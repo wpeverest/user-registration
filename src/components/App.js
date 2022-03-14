@@ -305,7 +305,8 @@ function App () {
                         )}
                         {cloneElement(activeStep.component, {
                             sectionSettings: activeStep.sectionSettings,
-                            siteURL: siteURL
+                            siteURL: siteURL,
+                            onBoardIconsURL: onBoardIconsURL
                         })}
                     </Flex>
                 )}

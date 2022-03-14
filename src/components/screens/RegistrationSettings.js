@@ -10,7 +10,11 @@ import { Stack } from "@chakra-ui/react";
 import InputHandler from "../common/InputHandler";
 import { useStateValue } from "../../context/StateProvider";
 
-const RegistrationSettings = ({ sectionSettings, siteURL }) => {
+const RegistrationSettings = ({
+    sectionSettings,
+    siteURL,
+    onBoardIconsURL
+}) => {
     const [{ settings }] = useStateValue();
     return (
         <Stack direction="column" spacing="8" mt={5}>
@@ -26,6 +30,7 @@ const RegistrationSettings = ({ sectionSettings, siteURL }) => {
 				                key={key}
 				                setting={setting}
 				                siteURL={siteURL}
+				                onBoardIconsURL={onBoardIconsURL}
 				            />
 				        )
 				)}

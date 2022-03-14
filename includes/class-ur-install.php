@@ -360,6 +360,7 @@ class UR_Install {
 		$hasposts = get_posts( 'post_type=user_registration' );
 
 		if ( 0 === count( $hasposts ) ) {
+			update_option( 'user_registration_first_time_activation_flag', true );
 			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
 
 			// Insert default form.

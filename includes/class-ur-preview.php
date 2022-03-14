@@ -32,12 +32,14 @@ class UR_Preview {
 			if ( isset( $_GET['ur_preview'] ) ) {
 				add_filter( 'edit_post_link', array( $this, 'edit_form_link' ) );
 				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-				add_filter( 'template_include', array( $this, 'template_include' ) );
+				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
+				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 				add_action( 'template_redirect', array( $this, 'handle_preview' ) );
 			} elseif ( isset( $_GET['ur_login_preview'] ) ) {
 				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-				add_filter( 'template_include', array( $this, 'template_include' ) );
 				add_action( 'template_redirect', array( $this, 'handle_login_preview' ) );
+				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
+				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 			}
 		}
 	}
@@ -74,12 +76,12 @@ class UR_Preview {
 	}
 
 	/**
-	 * Limit page templates to singular pages only.
+	 * A list of template candidates.
 	 *
-	 * @return string
+	 * @param array $templates A list of template candidates, in descending order of priority.
 	 */
-	public function template_include() {
-		return locate_template( array( 'page.php', 'single.php', 'index.php' ) );
+	public function template_include( $templates ) {
+		return array( 'page.php', 'single.php', 'index.php' );
 	}
 
 	/**
