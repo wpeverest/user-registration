@@ -15,7 +15,7 @@ function LastPage ({ onBoardIconsURL }) {
             <Image
                 htmlWidth="80%"
                 htmlHeight="auto"
-                src={`${onBoardIconsURL}./onboard-end.png`}
+                src={`${onBoardIconsURL}/onboard-end.png`}
                 alt="Onboard Finish"
             />
             <Heading as="h2" fontSize="24px" mb={4} mt={4}>
