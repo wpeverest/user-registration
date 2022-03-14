@@ -154,16 +154,26 @@ class UR_Form_Handler {
 			switch ( $field['type'] ) {
 				case 'checkbox':
 					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+						$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
 					} else {
 						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
 					}
 					break;
+
 				case 'wysiwyg':
 					if ( isset( $_POST[ $key ] ) ) {
 						$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
 					} else {
 						$_POST[ $key ] = '';
+					}
+					break;
+
+				case 'email':
+					if ( isset( $_POST[ $key ] ) ) {
+						$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+					} else {
+						$user_data = get_userdata( $user_id );
+						$_POST[ $key ] = $user_data->data->user_email;
 					}
 					break;
 
