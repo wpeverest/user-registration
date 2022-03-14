@@ -379,7 +379,7 @@ class UR_Admin {
 		}
 
 		// If plugin is running for first time, redirect to onboard page.
-		if ( '1' !== get_option( 'user_registration_first_time_activation_flag' ) ) {
+		if ( '1' === get_option( 'user_registration_first_time_activation_flag' ) ) {
 			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
 			exit;
 		}

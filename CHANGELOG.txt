@@ -1,3 +1,12 @@
+= 2.1.5    - 14/03/2022
+* Feature  - Getting started page.
+* Fix      - My Account translation issue.
+* Fix      - Profile picture not being uploaded.
+* Fix      - No file uploaded error in edit profile.
+* Fix      - Twenty Twenty Two theme form preview issue.
+* Fix      - Select value not shown when placeholder is set in edit profile.
+* Fix      - Empty email field after profile updates when field visibility set to readonly.
+
 = 2.1.4.2  - 04/03/2022
 * Fix      - Conditional assign role not working.
 * Fix      - Inline email content on save.
