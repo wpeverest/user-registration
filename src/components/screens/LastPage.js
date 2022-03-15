@@ -5,7 +5,7 @@ import React from "react";
 import { Flex, Image, Heading } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
-function LastPage ({ siteURL }) {
+function LastPage ({ onBoardIconsURL }) {
     return (
         <Flex
             direction="column"
@@ -15,7 +15,7 @@ function LastPage ({ siteURL }) {
             <Image
                 htmlWidth="80%"
                 htmlHeight="auto"
-                src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-end.png`}
+                src={`${onBoardIconsURL}/onboard-end.png`}
                 alt="Onboard Finish"
             />
             <Heading as="h2" fontSize="24px" mb={4} mt={4}>

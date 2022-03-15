@@ -103,12 +103,15 @@ class UR_Admin_Welcome {
 							"click",
 							"#user-registration-welcome .welcome-video-play",
 							function (event) {
+								jQuery(this).find(".welcome-video-container").remove();
+
 								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/tMaG6pnfYg0?start=15&amprel=0&amp;showinfo=0&amp;autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/tMaG6pnfYg0?start=15&amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
 
 								event.preventDefault();
 
 								jQuery(this).find(".user-registration-welcome-thumb").remove();
+								jQuery(this).find(".user-registration-welcome-video__button").remove();
 								jQuery(this).append(video);
 							}
 						);

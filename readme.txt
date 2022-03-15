@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.9.1
-Stable tag: 2.1.4.2
+Tested up to: 5.9.2
+Stable tag: 2.1.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,18 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.1.5.1  - 14/03/2022
+* Fix 	   - Deploy script.
+
+= 2.1.5    - 14/03/2022
+* Feature  - Getting started page.
+* Fix      - My Account translation issue.
+* Fix      - Profile picture not being uploaded.
+* Fix      - No file uploaded error in edit profile.
+* Fix      - Twenty Twenty Two theme form preview issue.
+* Fix      - Select value not shown when placeholder is set in edit profile.
+* Fix      - Empty email field after profile updates when field visibility set to readonly.
+
 = 2.1.4.2  - 04/03/2022
 * Fix      - Conditional assign role not working.
 * Fix      - Inline email content on save.
