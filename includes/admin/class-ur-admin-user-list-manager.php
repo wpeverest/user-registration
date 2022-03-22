@@ -650,9 +650,6 @@ class UR_Admin_User_List_Manager {
 		if ( isset( $_POST['ur_user_user_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_user_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$user_manager->save_status( $new_status );
-		} elseif ( isset( $_POST['ur_user_email_confirmation_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_email_confirmation_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
 	}
 }

@@ -86,6 +86,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'approved';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'true' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 
@@ -93,6 +95,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'pending';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 
@@ -100,6 +104,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'denied';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 		}
