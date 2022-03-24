@@ -5,8 +5,6 @@
  * @class    UR_Admin_User_Manager
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,7 +31,10 @@ class UR_Admin_User_Manager {
 	const DENIED = - 1;
 
 	/**
+	 * WP user object
+	 *
 	 * @var \WP_User
+	 *
 	 */
 	private $user;
 
@@ -49,7 +50,7 @@ class UR_Admin_User_Manager {
 	 *
 	 * @param null $user
 	 *
-	 * @throws Exception
+	 * @throws Exception // phpcs:ignore
 	 */
 	public function __construct( $user = null ) {
 		if ( is_null( $user ) ) {
@@ -69,9 +70,10 @@ class UR_Admin_User_Manager {
 	/**
 	 * Save a new status for the user
 	 *
-	 * @param $status
+	 * @param $status status
+	 * @param $alert_user alert status
 	 *
-	 * @return bool|int
+	 * @return bool|int $meta_status meta status
 	 */
 	public function save_status( $status, $alert_user = true ) {
 
@@ -147,7 +149,7 @@ class UR_Admin_User_Manager {
 	 *
 	 * @param bool $exact_value
 	 *
-	 * @return int|mixed
+	 * @return int|mixed $user_status user status
 	 */
 	public function get_user_status( $exact_value = false ) {
 
@@ -225,9 +227,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::APPROVED );
+			return ( self::APPROVED == $user_status['user_status'] );
 		}
-		return ( $user_status == self::APPROVED );
+		return ( self::APPROVED == $user_status );
 	}
 
 	/**
@@ -239,9 +241,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::PENDING );
+			return ( self::PENDING == $user_status['user_status'] );
 		}
-		return ( $user_status == self::PENDING );
+		return ( self::PENDING  == $user_status );
 	}
 
 	/**
@@ -253,9 +255,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::DENIED );
+			return ( self::DENIED == $user_status['user_status'] );
 		}
-		return ( $user_status == self::DENIED );
+		return ( self::DENIED == $user_status );
 	}
 
 	/**
