@@ -622,16 +622,80 @@ class UR_Admin_Settings {
 								$settings .= '</td>';
 								$settings .= '</tr>';
 							break;
+						// Image upload.
+						case 'image':
+							$option_value = self::get_option( $value['id'], $value['default'] );
 
+							if ( empty( $option_value ) ) {
+								$option_value = $value['default'];
+							}
+
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<th scope="row" class="titledesc">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
+							$settings .= wp_kses_post( $tooltip_html );
+							$settings .= '</th>';
+							$settings .= '<td>';
+							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr_e( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="100" width="auto">';
+							$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Logo', 'user-registration' ) . '</button>';
+
+							$settings .= '	<input
+										name="' . esc_attr( $value['id'] ) . '"
+										id="' . esc_attr( $value['id'] ) . '"
+										value="' . esc_attr( $option_value ) . '"
+										type="hidden"
+									>';
+							$settings .= '</td>';
+							$settings .= '</tr>';
+							wp_enqueue_media();
+
+							break;
+
+						// Radio image inputs.
+						case 'radio-image':
+							$option_value = self::get_option( $value['id'], $value['default'] );
+
+							if ( empty( $option_value ) ) {
+								$option_value = $value['default'];
+							}
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<th scope="row" class="titledesc">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
+							$settings .= wp_kses_post( $tooltip_html );
+							$settings .= '</th>';
+							$settings .= '<td>';
+							$settings .= '<ul>';
+
+							foreach ( $value['options'] as $key => $val ) {
+								$settings .= '<li>';
+								$settings .= '<label>';
+								$settings .= '<img src="' . esc_html( $val['image'] ) . '">';
+								$settings .= '<input
+												name="' . esc_attr( $value['id'] ) . '"
+												value="' . esc_attr( $key ) . '"
+												type="radio"
+												style="' . esc_attr( $value['css'] ) . '"
+												class="' . esc_attr( $value['class'] ) . '"
+												' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+												' . checked( $key, $option_value ) . '>';
+								$settings .= esc_html( $val['name'] );
+								$settings .= '</label>';
+								$settings .= '</li>';
+							}
+
+							$settings .= '</ul>';
+							$settings .= '</td>';
+							$settings .= '</tr>';
+							break;
 						// Default: run an action.
 						default:
 							$settings = apply_filters( 'user_registration_admin_field_' . $value['type'], $settings, $value );
 							break;
 					}// End switch case.
 				}
-				$settings .= '</table>';
-				$settings .= '</div>';
-				$settings .= '</div>';
+				$settings .= ' </table > ';
+				$settings .= ' </div > ';
+				$settings .= ' </div > ';
 
 				if ( ! empty( $section['id'] ) ) {
 					do_action( 'user_registration_settings_' . sanitize_title( $section['id'] ) . '_after' );
@@ -669,17 +733,17 @@ class UR_Admin_Settings {
 		}
 
 		if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
-			$description = '<p style="margin-top:0">' . wp_kses_post( $description ) . '</p>';
+			$description = ' <p style ="margin-top:0" > ' . wp_kses_post( $description ) . ' </p > ';
 		} elseif ( $description && in_array( $value['type'], array( 'checkbox' ) ) ) {
 			$description = wp_kses_post( $description );
 		} elseif ( $description ) {
-			$description = '<span class="description">' . wp_kses_post( $description ) . '</span>';
+			$description = ' <span class = "description" > ' . wp_kses_post( $description ) . ' </span > ';
 		}
 
 		if ( $desc_field && in_array( $value['type'], array( 'textarea', 'radio', 'checkbox' ) ) ) {
-			$desc_field = '<p class="description">' . wp_kses_post( $desc_field ) . '</p>';
+			$desc_field = ' <p class = "description" > ' . wp_kses_post( $desc_field ) . ' </p > ';
 		} elseif ( $desc_field ) {
-			$desc_field = '<span class="description">' . wp_kses_post( $desc_field ) . '</span>';
+			$desc_field = ' <span class = "description" > ' . wp_kses_post( $desc_field ) . ' </span > ';
 		}
 
 		if ( $tooltip_html ) {

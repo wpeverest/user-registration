@@ -391,4 +391,35 @@
 			}
 		}
 	);
+
+	$(".ur-image-uploader").on("click", function (e) {
+		ur_uploader = $(this);
+		e.preventDefault();
+		var image = wp
+			.media({
+				library: {
+					type: ["image"],
+				},
+				title: ur_uploader.upload_file,
+				// multiple: true if you want to upload multiple files at once
+				multiple: false,
+			})
+			.open()
+			.on("select", function (e) {
+				// This will return the selected image from the Media Uploader, the result is an object
+				var uploaded_image = image.state().get("selection").first();
+				// We convert uploaded_image to a JSON object to make accessing it easier
+				var image_url = uploaded_image.toJSON().url;
+				// Let's assign the url value to the input field
+				ur_uploader.attr("src", image_url);
+				if (ur_uploader.hasClass("ur-button")) {
+					ur_uploader.prev().attr("src", image_url);
+					ur_uploader.next().val(image_url);
+					ur_uploader.remove();
+				} else {
+					ur_uploader.attr("src", image_url);
+					ur_uploader.next().next().val(image_url);
+				}
+			});
+	});
 })(jQuery);
