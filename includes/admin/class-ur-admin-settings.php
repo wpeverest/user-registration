@@ -373,7 +373,7 @@ class UR_Admin_Settings {
 							$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
 							$settings    .= wp_kses_post( $tooltip_html );
 							$settings    .= '</th>';
-							$settings    .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm';
+							$settings    .= '<td class="forminp forminp-' . esc_attr( sanitize_title( $value['type'] ) ) . '">&lrm;';
 							$settings    .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
 							$settings    .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
@@ -626,17 +626,13 @@ class UR_Admin_Settings {
 						case 'image':
 							$option_value = self::get_option( $value['id'], $value['default'] );
 
-							if ( empty( $option_value ) ) {
-								$option_value = $value['default'];
-							}
-
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
 							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td>';
-							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr_e( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="100" width="auto">';
+							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="100" width="auto">';
 							$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Logo', 'user-registration' ) . '</button>';
 
 							$settings .= '	<input
@@ -655,10 +651,7 @@ class UR_Admin_Settings {
 						case 'radio-image':
 							$option_value = self::get_option( $value['id'], $value['default'] );
 
-							if ( empty( $option_value ) ) {
-								$option_value = $value['default'];
-							}
-							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . ' radio-image">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
 							$settings .= wp_kses_post( $tooltip_html );
@@ -677,13 +670,39 @@ class UR_Admin_Settings {
 												style="' . esc_attr( $value['css'] ) . '"
 												class="' . esc_attr( $value['class'] ) . '"
 												' . esc_attr( implode( ' ', $custom_attributes ) ) . '
-												' . checked( $key, $option_value ) . '>';
+												' . checked( $key, $option_value, false ) . '>';
 								$settings .= esc_html( $val['name'] );
 								$settings .= '</label>';
 								$settings .= '</li>';
 							}
 
 							$settings .= '</ul>';
+							$settings .= '</td>';
+							$settings .= '</tr>';
+							break;
+						// Toggle input.
+						case 'toggle':
+							$option_value = self::get_option( $value['id'], $value['default'] );
+
+							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<th scope="row" class="titledesc">';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+							$settings .= '</th>';
+							$settings .= '<td>';
+							$settings .= wp_kses_post( $description );
+							$settings .= '<div class="ur-toggle-section">';
+							$settings .= '<span class="user-registration-toggle-form">';
+							$settings .= '<input
+											type="checkbox"
+											name="' . esc_attr( $value['id'] ) . '"
+											id="' . esc_attr( $value['id'] ) . '"
+											style="' . esc_attr( $value['css'] ) . '"
+											class="' . esc_attr( $value['class'] ) . '"
+											value="yes"
+											' . esc_attr( checked( 'yes', $option_value, true ) ) . '>';
+							$settings .= '<span class="slider round"></span>';
+							$settings .= '</span>';
+							$settings .= '</div>';
 							$settings .= '</td>';
 							$settings .= '</tr>';
 							break;
@@ -802,6 +821,7 @@ class UR_Admin_Settings {
 				switch ( $option['type'] ) {
 
 					case 'checkbox':
+					case 'toggle':
 						$value = '1' === $raw_value || 'yes' === $raw_value ? 'yes' : 'no';
 						break;
 					case 'textarea':
