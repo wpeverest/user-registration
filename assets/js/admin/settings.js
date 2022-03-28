@@ -413,13 +413,30 @@
 				// Let's assign the url value to the input field
 				ur_uploader.attr("src", image_url);
 				if (ur_uploader.hasClass("ur-button")) {
-					ur_uploader.prev().attr("src", image_url);
-					ur_uploader.next().val(image_url);
-					ur_uploader.remove();
+					ur_remover.siblings("img").show();
+					ur_uploader.siblings("img").attr("src", image_url);
+					ur_uploader
+						.siblings("#user_registration_pdf_logo_image")
+						.val(image_url);
+					ur_uploader.hide();
+					ur_uploader.siblings(".ur-image-remover").show();
 				} else {
 					ur_uploader.attr("src", image_url);
-					ur_uploader.next().next().val(image_url);
+					ur_uploader
+						.siblings("#user_registration_pdf_logo_image")
+						.val(image_url);
 				}
 			});
+	});
+
+	$(".ur-image-remover").on("click", function (e) {
+		ur_remover = $(this);
+		e.preventDefault();
+
+		ur_remover.siblings("img").attr("src", "");
+		ur_remover.siblings("#user_registration_pdf_logo_image").val("");
+		ur_remover.siblings(".ur-image-uploader").show();
+		ur_remover.hide();
+		ur_remover.siblings("img").hide();
 	});
 })(jQuery);

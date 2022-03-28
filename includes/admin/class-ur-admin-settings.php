@@ -633,7 +633,8 @@ class UR_Admin_Settings {
 							$settings .= '</th>';
 							$settings .= '<td>';
 							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="100" width="auto">';
-							$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Logo', 'user-registration' ) . '</button>';
+							$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
+							$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
 							$settings .= '	<input
 										name="' . esc_attr( $value['id'] ) . '"
@@ -670,7 +671,8 @@ class UR_Admin_Settings {
 												style="' . esc_attr( $value['css'] ) . '"
 												class="' . esc_attr( $value['class'] ) . '"
 												' . esc_attr( implode( ' ', $custom_attributes ) ) . '
-												' . checked( $key, $option_value, false ) . '>';
+												' . esc_attr( checked( $key, $option_value, false ) ) . '>';
+
 								$settings .= esc_html( $val['name'] );
 								$settings .= '</label>';
 								$settings .= '</li>';
@@ -683,7 +685,6 @@ class UR_Admin_Settings {
 						// Toggle input.
 						case 'toggle':
 							$option_value = self::get_option( $value['id'], $value['default'] );
-
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
@@ -699,7 +700,7 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											class="' . esc_attr( $value['class'] ) . '"
 											value="yes"
-											' . esc_attr( checked( 'yes', $option_value, true ) ) . '>';
+											' . esc_attr( checked( 'yes', $option_value, false ) ) . '>';
 							$settings .= '<span class="slider round"></span>';
 							$settings .= '</span>';
 							$settings .= '</div>';
