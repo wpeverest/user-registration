@@ -134,15 +134,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
-											// If the conditional logic addon is installed.
-											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
-												// Migrate the conditional logic to logic_map schema.
-												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 
-												if ( 'profile_picture' === $single_item->field_key ) {
-													continue;
-												}
-											}
 
 											$user_id                    = get_current_user_id();
 											$form_id                    = ur_get_form_id_by_userid( $user_id );
@@ -169,8 +161,17 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
 											}
+
+											if ( 'profile_picture' === $single_item->field_key ) {
+												continue;
+											}
+
 											// unset invite code.
 											if ( 'invite_code' === $single_item->field_key ) {
+												continue;
+											}
+											// unset learndash code.
+											if ( 'learndash_course' === $single_item->field_key ) {
 												continue;
 											}
 

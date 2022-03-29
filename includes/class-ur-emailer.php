@@ -131,7 +131,7 @@ class UR_Emailer {
 			do_action( 'user_registration_email_send_before' );
 
 			// Get selected email template id for specific form.
-			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
@@ -173,47 +173,49 @@ class UR_Emailer {
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
 		foreach ( $profile as $key => $form_data ) {
-			$field_name = str_replace( 'user_registration_', '', $key );
+			if ( isset( $form_data['field_key'] ) ) {
+				$field_name = str_replace( 'user_registration_', '', $key );
 
-			// Check if value contains array.
-			// @codingStandardsIgnoreStart
-			$value =  isset( $single_field[ $key ] ) ? sanitize_text_field( $single_field[ $key ] ): '';
-			if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
-				$value = implode( ',', $single_field[ $key ] );
-			}
-
-			if ( 'file' === $form_data['field_key'] ) {
-				$upload_data = array();
-				$file_data = explode( ',', $value);
-
-				foreach ($file_data as $key => $value) {
-					$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
-					array_push( $upload_data,$file );
-				}
 				// Check if value contains array.
-				if ( is_array( $upload_data ) ) {
-					$value = implode( ',',$upload_data );
+				// @codingStandardsIgnoreStart
+				$value =  isset( $single_field[ $key ] ) ? sanitize_text_field( $single_field[ $key ] ): '';
+				if ( isset( $single_field[ $key ] ) && is_array( $single_field[ $key ] ) ) {
+					$value = implode( ',', $single_field[ $key ] );
 				}
+
+				if ( 'file' === $form_data['field_key'] ) {
+						$upload_data = array();
+						$file_data = explode( ',', $value);
+
+						foreach ($file_data as $key => $value) {
+							$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+							array_push( $upload_data,$file );
+						}
+						// Check if value contains array.
+						if ( is_array( $upload_data ) ) {
+							$value = implode( ',',$upload_data );
+						}
+				}
+				// @codingStandardsIgnoreEnd
+
+				$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
+				$field_key                 = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
+				$name_value[ $field_name ] = $value;
+
+				if ( 'user_email' === $field_name ) {
+					$email = $value;
+				}
+				$tmp_data['value']        = $value;
+				$tmp_data['field_type']   = $form_data['type'];
+				$tmp_data['label']        = $form_data['label'];
+				$tmp_data['field_name']   = $field_name;
+				$tmp_data['extra_params'] = array(
+					'field_key' => $field_key,
+					'label'     => $form_data['label'],
+				);
+
+				array_push( $smart_data, $tmp_data );
 			}
-			// @codingStandardsIgnoreEnd
-
-			$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
-			$field_key                 = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
-			$name_value[ $field_name ] = $value;
-
-			if ( 'user_email' === $field_name ) {
-				$email = $value;
-			}
-			$tmp_data['value']        = $value;
-			$tmp_data['field_type']   = $form_data['type'];
-			$tmp_data['label']        = $form_data['label'];
-			$tmp_data['field_name']   = $field_name;
-			$tmp_data['extra_params'] = array(
-				'field_key' => $field_key,
-				'label'     => $form_data['label'],
-			);
-
-			array_push( $smart_data, $tmp_data );
 		}
 
 		// Smart tag process for extra fields.
@@ -240,7 +242,7 @@ class UR_Emailer {
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @param  array  $attachments Email Attachment.
-	 * @param  int  $template_id Email Template Identifier.
+	 * @param  int    $template_id Email Template Identifier.
 	 * @return void
 	 */
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
@@ -252,7 +254,7 @@ class UR_Emailer {
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 		// Get User Status when admin approval after email confirmation login option enabled in form.
-		if('admin_approval_after_email_confirmation' === $login_option) {
+		if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
 		}
 		$values       = array(
@@ -268,7 +270,7 @@ class UR_Emailer {
 			$message = $settings->ur_get_email_confirmation();
 			$message = get_option( 'user_registration_email_confirmation', $message );
 
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -280,7 +282,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Awaiting_Admin_Approval_Email();
 			$message = $settings->ur_get_awaiting_admin_approval_email();
 			$message = get_option( 'user_registration_awaiting_admin_approval_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -293,7 +295,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Registration_Denied_Email();
 			$message = $settings->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -306,7 +308,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message = $settings->ur_get_successfully_registered_email();
 			$message = get_option( 'user_registration_successfully_registered_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -348,7 +350,7 @@ class UR_Emailer {
 			'email'      => $user_email,
 			'all_fields' => $data_html,
 		);
-		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject);
+		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 		$header  = self::parse_smart_tags( $header, $values, $name_value );
@@ -379,7 +381,7 @@ class UR_Emailer {
 		);
 
 		// Get selected email template id for specific form.
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 		if ( 0 === intval( $status ) ) {
 
@@ -387,7 +389,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Registration_Pending_Email();
 			$message = $settings->ur_get_registration_pending_email();
 			$message = get_option( 'user_registration_registration_pending_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -400,7 +402,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Registration_Denied_Email();
 			$message = $settings->ur_get_registration_denied_email();
 			$message = get_option( 'user_registration_registration_denied_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -413,7 +415,7 @@ class UR_Emailer {
 			$settings = new UR_Settings_Registration_Approved_Email();
 			$message = $settings->ur_get_registration_approved_email();
 			$message = get_option( 'user_registration_registration_approved_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -434,7 +436,7 @@ class UR_Emailer {
 	public static function lost_password_email( $user_login, $user_data, $key ) {
 
 		$user     = get_user_by( 'login', $user_login );
-		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ): '';
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
 		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
 
 		if ( empty( $email ) || empty( $username ) ) {
@@ -453,14 +455,14 @@ class UR_Emailer {
 		);
 		$form_id = ur_get_form_id_by_userid( $user->ID );
 
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values );
 		$subject = self::parse_smart_tags( $subject, $values );
 
 		if ( 'yes' === get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
 
 			// Get selected email template id for specific form.
-			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 			self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 
 			return true;
@@ -503,14 +505,14 @@ class UR_Emailer {
 		);
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject);
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 		$header  = self::parse_smart_tags( $header, $values, $name_value );
 
 		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
 			foreach ( $admin_email as $email ) {
-				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template');
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
 		}
@@ -590,7 +592,7 @@ class UR_Emailer {
 			$default_values['auto_pass'] = $user_pass;
 		}
 
-		$default_values = apply_filters("user_registration_add_smart_tags", $default_values, $values['email']);
+		$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
 		$values = wp_parse_args( $values, $default_values );
 
@@ -619,7 +621,7 @@ class UR_Emailer {
 			$smart_tags = array_merge( $smart_tags, $user_smart_tags );
 		}
 
-		foreach( $values as $key => $value ) {
+		foreach ( $values as $key => $value ) {
 			$content    = str_replace( '{{' . $key . '}}', $value, $content );
 		}
 
@@ -633,16 +635,16 @@ class UR_Emailer {
 	 * @param  string $subject Subject of the email.
 	 * @param  string $message  The body of the email.
 	 * @param  array  $attachments Email Attachment.
-	 * @param  int  $template_id Email Template Identifier.
+	 * @param  int    $template_id Email Template Identifier.
 	 * @return void
 	 */
-	public static function user_registration_process_and_send_email(  $email, $subject, $message, $header, $attachment, $template_id  ) {
+	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
 		// Check if email template is selected.
-		if( '' !== $template_id && 'none' !== $template_id ) {
+		if ( '' !== $template_id && 'none' !== $template_id ) {
 			$message = apply_filters( 'user_registration_email_template_message', $message, $template_id );
 		}
 
-		wp_mail(  $email, $subject, $message, $header, $attachment, $template_id );
+		wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
 	}
 }
 
