@@ -45,10 +45,10 @@ jQuery(function ($) {
 					);
 				},
 				complete: function (ajax_response) {
-					var message = "";
-					var profile_pic_url = "";
+					var message = "",
+						profile_pic_url = "",
+						attachment_id = "";
 
-					// $node.parent().parent().parent().find('.user-registration-error').remove();
 					$this.val("");
 
 					var response_obj = JSON.parse(ajax_response.responseText);
@@ -67,10 +67,11 @@ jQuery(function ($) {
 
 						// Gets the profile picture url and displays the picture on frontend
 						profile_pic_url = response_obj.data.url;
+						attachment_id = response_obj.data.attachment_id;
 						$this
 							.closest(".button-group")
 							.find("#profile_pic_url")
-							.val(profile_pic_url);
+							.val(attachment_id);
 						$this
 							.closest(".user-registration-profile-header")
 							.find(".profile-preview")

@@ -242,16 +242,13 @@ class UR_AJAX {
 			}
 		}
 
-		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
-			if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-				if ( '' === $single_field['user_registration_profile_pic_url'] ) {
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
-				} else {
-					if ( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] ) ) {
-						$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url'] );
-						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
-					}
-				}
+		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
+
+		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+			if ( '' === $profile_picture_attachment_id ) {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+			} else {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', absint( $profile_picture_attachment_id ) );
 			}
 		}
 
@@ -397,7 +394,7 @@ class UR_AJAX {
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
-			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( sanitize_key( $_REQUEST['valid_extension'] ) ) : '';
+			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( sanitize_text_field( $_REQUEST['valid_extension'] ) ) : '';
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext = array();
 
@@ -417,33 +414,69 @@ class UR_AJAX {
 					)
 				);
 			}
-			$post_overrides = array(
-				'post_status' => 'publish',
-				'post_title'  => $upload['name'],
-			);
-			$attachment_id  = media_handle_sideload( $upload, (int) 0, $post_overrides['post_title'], $post_overrides );
 
-			if ( is_wp_error( $attachment_id ) ) {
+			$upload_dir = wp_upload_dir();
+			$uploads = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
+			if ( ! is_writable( $uploads ) ) {  /*Check if upload dir is writable*/
 				wp_send_json_error(
 					array(
 
-						'message' => $attachment_id->get_error_message(),
+						'message' => __( 'Upload path permission deny.', 'user-registration' ),
+					)
+				);
+
+			}
+
+			$pic_path = $uploads . '/' . sanitize_file_name( $_FILES['file']['name'] );
+			if ( move_uploaded_file( $_FILES['file']['tmp_name'], $pic_path ) ) {
+
+				$attachment_id = wp_insert_attachment(
+					array(
+						'guid'           => $pic_path,
+						'post_mime_type' => $file_extension,
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $_FILES['file']['name'] ) ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					),
+					$pic_path
+				);
+
+				if ( is_wp_error( $attachment_id ) ) {
+
+					wp_send_json_error(
+						array(
+
+							'message' => $attachment_id->get_error_message(),
+						)
+					);
+				}
+
+				// wp_generate_attachment_metadata() won't work if you do not include this file
+				include_once ABSPATH . 'wp-admin/includes/image.php';
+
+				// Generate and save the attachment metas into the database
+				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $pic_path ) );
+
+				$url = wp_get_attachment_url( $attachment_id );
+
+				if ( empty( $url ) ) {
+					$url = home_url() . '/wp-includes/images/media/text.png';
+				}
+
+				wp_send_json_success(
+					array(
+						'url' => $url,
+						'attachment_id' => $attachment_id,
+					)
+				);
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => __( 'File cannot be uploaded.', 'user-registration-advanced-fields' ),
 					)
 				);
 			}
-
-			$url = wp_get_attachment_thumb_url( $attachment_id );
-			if ( empty( $url ) ) {
-				$url = home_url() . '/wp-includes/images/media/text.png';
-			}
-
-			wp_send_json_success(
-				array(
-					'url' => $url,
-				)
-			);
-
 		} elseif ( isset( $_FILES['file']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['file']['error'] ) {
 
 			switch ( $_FILES['file']['error'] ) {
