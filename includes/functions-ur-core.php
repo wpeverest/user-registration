@@ -2031,6 +2031,7 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ) {
 	$conflict_shortcodes = array_merge( $conflict_shortcodes, $ur_shortcodes );
 	return $conflict_shortcodes;
 }
+
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
 
 /**
@@ -2478,6 +2479,56 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			$status['message'] = $message;
 
 			return $status;
+		}
+	}
+}
+
+
+add_action( 'user_registration_init', 'ur_profile_picture_migration_script' );
+
+if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
+
+	/**
+	 * Update usermeta from profile_pic_url to attachemnt id and move files to new directory.
+	 *
+	 * @since 1.5.0.
+	 */
+	function ur_profile_picture_migration_script() {
+			$users = get_users(
+				array(
+					'meta_key' => 'user_registration_profile_pic_url',
+				)
+			);
+
+		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
+
+			foreach ( $users as $user ) {
+				$user_registration_profile_pic_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
+
+				if ( ! is_numeric( $user_registration_profile_pic_url ) ) {
+					$user_registration_profile_pic_attachment = attachment_url_to_postid( $user_registration_profile_pic_url );
+					update_user_meta( $user->ID, 'user_registration_profile_pic_url', absint( $user_registration_profile_pic_attachment ) );
+
+					$uploaddir    = wp_upload_dir();
+					$newdirectory = 'user_registration_uploads/profile-pictures';
+					$source       = get_attached_file( $user_registration_profile_pic_attachment );
+					$destination  = $uploaddir['basedir'] . '/' . $newdirectory . '/' . sanitize_file_name( wp_basename( $source ) );
+
+					include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+
+					if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+						return false;
+					}
+
+					$file_system = new \WP_Filesystem_Direct( null );
+					if ( ! empty( $source ) ) {
+						$file_system->copy( $source, $destination, true );
+					}
+				}
+			}
+
+			update_option( 'ur_profile_picture_migrated', true );
 		}
 	}
 }
