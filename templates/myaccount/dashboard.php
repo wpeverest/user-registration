@@ -13,22 +13,19 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 ?>
 
 <h2>
 	<?php
-	printf(
-		__( 'Welcome, %1$s', 'user-registration' ),
-		esc_html( $current_user->display_name )
-	);
+	/* translators: %s - Users display name. */
+	sprintf( __( 'Welcome, %1$s', 'user-registration' ), esc_html( $current_user->display_name ) );
 	?>
 </h2>
 
@@ -57,19 +54,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<h3>
 		<?php
-		printf(
-			__( '%1$s', 'user-registration' ),
-			esc_html( $full_name )
-		);
+			echo esc_html( $full_name );
 		?>
 			</h3>
 		<span class="user-registration-nick-name">
 			<?php
-				printf(
-					__( '@%1$s', 'user-registration' ),
-					esc_html( $current_user->display_name )
-				);
-				?>
+				echo esc_html( $current_user->display_name );
+			?>
 		</span>
 	</header>
 </div>
@@ -77,23 +68,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 <?php
 	/* translators: 1 profile details url, 2: change password url */
-	printf(
-		__( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ),
-		esc_url( ur_get_endpoint_url( 'edit-profile' ) ),
-		esc_url( ur_get_endpoint_url( 'edit-password' ) )
-	);
-	?>
+	sprintf( __( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url( 'edit-profile' ) ), esc_url( ur_get_endpoint_url( 'edit-password' ) ) );
+?>
 </p>
 
 <p>
 	<?php
 		/* translators: 1: user display name 2: logout url */
-		printf(
-			__( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ),
-			'<strong>' . esc_html( $current_user->display_name ) . '</strong>',
-			esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) )
-		);
-		?>
+		sprintf( __( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ), '<strong>' . esc_html( $current_user->display_name ) . '</strong>', esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) );
+	?>
 </p>
 
 <?php
