@@ -217,7 +217,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		return $avatar;
 	}
 
-	$profile_picture_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
+	$profile_picture_url = wp_get_attachment_url( get_user_meta( $user->ID, 'user_registration_profile_pic_url', true ) );
 	$class               = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
 	if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || ( isset( $args['force_default'] ) && $args['force_default'] ) ) {
