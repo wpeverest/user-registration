@@ -391,19 +391,19 @@ class UR_AJAX {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
 
-			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
+			$upload = isset( $_FILES['file'] ) ? wp_unslash( $_FILES['file'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			// valid extension for image.
-			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( sanitize_text_field( $_REQUEST['valid_extension'] ) ) : '';
+			$valid_extensions     = isset( $_REQUEST['valid_extension'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['valid_extension'] ) ) : '';
 			$valid_extension_type = explode( ',', $valid_extensions );
-			$valid_ext = array();
+			$valid_ext            = array();
 
 			foreach ( $valid_extension_type as $key => $value ) {
-				$image_extension = explode( '/', $value );
+				$image_extension   = explode( '/', $value );
 				$valid_ext[ $key ] = $image_extension[1];
 			}
 
-			$src_file_name = isset( $upload['name'] ) ? $upload['name'] : '';
+			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
 			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
 
 			// Validates if the uploaded file has the acceptable extension.
@@ -416,9 +416,9 @@ class UR_AJAX {
 			}
 
 			$upload_dir = wp_upload_dir();
-			$uploads = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
+			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
-			if ( ! is_writable( $uploads ) ) {  /*Check if upload dir is writable*/
+			if ( ! is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
 				wp_send_json_error(
 					array(
 
@@ -428,14 +428,14 @@ class UR_AJAX {
 
 			}
 
-			$pic_path = $uploads . '/' . sanitize_file_name( $_FILES['file']['name'] );
-			if ( move_uploaded_file( $_FILES['file']['tmp_name'], $pic_path ) ) {
+			$pic_path = $upload_path . '/' . sanitize_file_name( $upload['name'] );
+			if ( move_uploaded_file( $upload['tmp_name'], $pic_path ) ) {
 
 				$attachment_id = wp_insert_attachment(
 					array(
 						'guid'           => $pic_path,
 						'post_mime_type' => $file_extension,
-						'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $_FILES['file']['name'] ) ),
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $upload['name'] ) ),
 						'post_content'   => '',
 						'post_status'    => 'inherit',
 					),
@@ -452,10 +452,9 @@ class UR_AJAX {
 					);
 				}
 
-				// wp_generate_attachment_metadata() won't work if you do not include this file
 				include_once ABSPATH . 'wp-admin/includes/image.php';
 
-				// Generate and save the attachment metas into the database
+				// Generate and save the attachment metas into the database.
 				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $pic_path ) );
 
 				$url = wp_get_attachment_url( $attachment_id );
@@ -466,14 +465,14 @@ class UR_AJAX {
 
 				wp_send_json_success(
 					array(
-						'url' => $url,
+						'url'           => $url,
 						'attachment_id' => $attachment_id,
 					)
 				);
 			} else {
 				wp_send_json_error(
 					array(
-						'message' => __( 'File cannot be uploaded.', 'user-registration-advanced-fields' ),
+						'message' => __( 'File cannot be uploaded.', 'user-registration' ),
 					)
 				);
 			}

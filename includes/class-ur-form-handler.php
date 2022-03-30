@@ -68,7 +68,7 @@ class UR_Form_Handler {
 			return;
 		}
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			$profile_picture_attachment_id = isset( $_POST['profile_pic_url'] ) ? $_POST['profile_pic_url'] : '';
+			$profile_picture_attachment_id = isset( $_POST['profile_pic_url'] ) ? absint( wp_unslash( $_POST['profile_pic_url'] ) ) : '';
 
 			if ( '' === $profile_picture_attachment_id ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
@@ -80,18 +80,16 @@ class UR_Form_Handler {
 
 				if ( isset( $_FILES['profile-pic'] ) && ! empty( $_FILES['profile-pic']['size'] ) ) {
 
-					$upload           = $_FILES['profile-pic']; // phpcs:ignore
-					$upload_overrides = array(
-						'action' => 'save_profile_details',
-					);
-					$upload_dir = wp_upload_dir();
-					$uploads = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
+					$upload = wp_unslash( $_FILES['profile-pic'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-					if ( ! is_writable( $uploads ) ) {  /*Check if upload dir is writable*/
+					$upload_dir  = wp_upload_dir();
+					$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
+
+					if ( ! wp_is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
 						ur_add_notice( 'Upload path permission deny.', 'error' );
 					}
 
-					$pic_path = $uploads . '/' . sanitize_file_name( $upload['name'] );
+					$pic_path = $upload_path . '/' . sanitize_file_name( $upload['name'] );
 
 					if ( move_uploaded_file( $upload['tmp_name'], $pic_path ) ) {
 
@@ -116,10 +114,9 @@ class UR_Form_Handler {
 							);
 						}
 
-						// wp_generate_attachment_metadata() won't work if you do not include this file
 						include_once ABSPATH . 'wp-admin/includes/image.php';
 
-						// Generate and save the attachment metas into the database
+						// Generate and save the attachment metas into the database.
 						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $pic_path ) );
 
 						update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
