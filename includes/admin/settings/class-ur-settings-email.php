@@ -178,6 +178,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				'user_registration_email_setting_columns',
 				array(
 					'name'    => __( 'Email', 'user-registration' ),
+					'status'  => __( 'Status', 'user-registration' ),
 					'actions' => __( 'Configure', 'user-registration' ),
 				)
 			);
@@ -191,10 +192,17 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$emails = $this->get_emails();
 			foreach ( $emails as $email ) {
+				$status = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
 				$settings .= '<tr><td class="ur-email-settings-table">';
 				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
 												'">' . esc_html__( $email->title, 'user-registration' ) . '</a>';
-				$settings .=  ur_help_tip( __( $email->description, 'user-registration' ) );
+				$settings .= ur_help_tip( __( $email->description, 'user-registration' ) );
+				$settings .= '</td>';
+				$settings .= '<td class="ur-email-settings-table">';
+				$label = $status ? __( 'Active', 'user-registration' ) : __( 'Inactive', 'user-registration' );
+				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
+				$settings .= esc_html( $label );
+				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
 				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
