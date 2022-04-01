@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -27,7 +26,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); ?></h2>
+					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
 					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
 						?>
@@ -181,7 +180,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											}
 
 											?>
-											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props; ?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
+											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
 												<?php
 												$readonly_fields = ur_readonly_profile_details_fields();
 
@@ -350,7 +349,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 												$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
 												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value'];
+												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value']; //PHPCS:ignore
 
 												user_registration_form_field( $key, $field, $value );
 
@@ -381,12 +380,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<?php
 						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); ?></button>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 							<?php
 						} else {
 							wp_nonce_field( 'save_profile_details' );
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); ?>" />
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>" />
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}
