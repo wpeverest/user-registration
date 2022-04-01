@@ -2764,6 +2764,25 @@
 									.toggle();
 							});
 							break;
+						case "autocomplete_address":
+							if ("no" === $this_node.val()) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-address_style")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-address_style")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-address_style")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 

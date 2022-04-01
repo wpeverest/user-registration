@@ -396,6 +396,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				$field .= ' <span class="input-wrapper"> ';
+				if ( isset( $args['autocomplete_address'] ) && 'yes' == $args['autocomplete_address'] ) {
+					$attr .= 'data-autocomplete-address="' . $args['autocomplete_address'] . '"';
+					$attr .= 'data-address-style="' . $args['address_style'] . '"';
+					$attr .= 'data-current-location="' . get_option( 'user_registration_google_map_current_location', '' ) . '"';
+					if ( 'map' == $args['address_style'] ) {
+						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
+					}
+				}
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 				} else {
