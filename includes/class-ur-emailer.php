@@ -160,15 +160,15 @@ class UR_Emailer {
 
 		if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 
-			if ( isset( $_POST['form_data'] ) ) {
-				$form_data = json_decode( stripslashes( $_POST['form_data'] ) );
+			if ( isset( $_POST['form_data'] ) ) { //PHPCS:ignore
+				$form_data = json_decode( stripslashes( $_POST['form_data'] ) ); //PHPCS:ignore
 				foreach ( $form_data as $data ) {
 					$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
 					$data->field_name                  = substr( $data->field_name, 18 );
 				}
 			}
 		} else {
-			$single_field = $_POST;
+			$single_field = $_POST; //PHPCS:ignore
 		}
 
 		// Generate $data_html string to replace for {{all_fields}} smart tag.
@@ -188,12 +188,12 @@ class UR_Emailer {
 						$file_data = explode( ',', $value);
 
 						foreach ($file_data as $key => $value) {
-							$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
-							array_push( $upload_data,$file );
+						$file =  isset( $value ) ? wp_get_attachment_url( $value ) : '';
+						array_push( $upload_data,$file );
 						}
 						// Check if value contains array.
 						if ( is_array( $upload_data ) ) {
-							$value = implode( ',',$upload_data );
+						$value = implode( ',',$upload_data );
 						}
 				}
 				// @codingStandardsIgnoreEnd
@@ -328,6 +328,7 @@ class UR_Emailer {
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @param  array  $attachments Email Attachement.
+	 * @param  mixed  $template_id Email Template Id.
 	 * @return void
 	 */
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
@@ -368,6 +369,7 @@ class UR_Emailer {
 	 * @param  string $email    Email address of the user.
 	 * @param  string $username Username of the user.
 	 * @param  int    $status   Stautus of the user.
+	 * @param  int    $form_id Form ID..
 	 * @return void
 	 */
 	public static function status_change_email( $email, $username, $status, $form_id ) {
@@ -634,7 +636,8 @@ class UR_Emailer {
 	 * @param  string $email Email of the user.
 	 * @param  string $subject Subject of the email.
 	 * @param  string $message  The body of the email.
-	 * @param  array  $attachments Email Attachment.
+	 * @param  mixed  $header The header of the email.
+	 * @param  array  $attachment Email Attachment.
 	 * @param  int    $template_id Email Template Identifier.
 	 * @return void
 	 */
