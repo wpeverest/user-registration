@@ -1,18 +1,15 @@
 <?php
-
 /**
  * UserRegistration Template
  *
  * Functions for the templating system.
  *
- * @author   WPEverest
- * @category Core
  * @package  UserRegistration/Functions
  * @version  1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 add_action( 'template_redirect', 'ur_template_redirect' );
@@ -27,7 +24,7 @@ function ur_template_redirect() {
 	global $wp;
 
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) {
-		// Logout
+		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
@@ -116,7 +113,7 @@ function ur_registration_template_redirect() {
 /**
  * Add body classes for UR pages.
  *
- * @param  array $classes
+ * @param  array $classes Classes.
  *
  * @return array
  */
@@ -142,9 +139,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	/**
 	 * Outputs a form fields on frontend.
 	 *
-	 * @param string $key
-	 * @param mixed  $args
-	 * @param string $value (default: null)
+	 * @param string $key Key.
+	 * @param mixed  $args Arguments.
+	 * @param string $value (default: null).
 	 *
 	 * @return string
 	 */
@@ -197,14 +194,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
-			$args['required'] = $required = '';
+			$args['required'] = '';
 		}
 
 		if ( is_null( $value ) || empty( $value ) ) {
 			$value = $args['default'];
 		}
 
-		// Custom attribute handling
+		// Custom attribute handling.
 		$custom_attributes         = array();
 		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
 
@@ -280,7 +277,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'checkbox':
 				$field_key     = isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default       = ! empty( $value ) ? $value : $default_value;
 				$select_all    = isset( $args['select_all'] ) ? $args['select_all'] : '';
 				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
@@ -465,7 +462,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'select':
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 
 				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
@@ -504,7 +501,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 
 						if ( '' === $option_key ) {
-							// If we have a blank option, select2 needs a placeholder
+							// If we have a blank option, select2 needs a placeholder.
 							if ( empty( $args['placeholder'] ) ) {
 								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
 							}
@@ -525,7 +522,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'radio':
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 				$value         = ! empty( $value ) ? $value : $default_value;
 				$label_id      = current( array_keys( $args['options'] ) );
 				if ( ! empty( $args['options'] ) ) {
@@ -589,7 +586,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( $args['return'] ) {
 			return $field;
 		} else {
-			echo $field;
+			echo $field; //PHPCS:ignore;
 		}
 	}
 } // End if().
@@ -599,8 +596,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	/**
 	 * Get form fields to display on profile tab
 	 *
-	 * @param string $user_id
-	 * @param string $form_id
+	 * @param string $user_id User Id.
+	 * @param string $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -811,9 +808,10 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 /**
  * Get logout endpoint.
  *
+ * @param string $redirect URL.
+ *
  * @return string
  */
-
 function ur_logout_url( $redirect = '' ) {
 	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
 
@@ -883,7 +881,7 @@ function ur_logout_url( $redirect = '' ) {
  * @return bool
  */
 function is_elementor_editing_page() {
-	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) ||
+	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
 		! empty( $_GET['elementor-preview'] ) ||
 		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] );
 }
