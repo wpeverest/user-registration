@@ -23,7 +23,7 @@ add_action( 'template_redirect', 'ur_registration_template_redirect' );
 function ur_template_redirect() {
 	global $wp;
 
-	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) {
+	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
