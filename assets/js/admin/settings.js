@@ -413,7 +413,7 @@
 				// Let's assign the url value to the input field
 				ur_uploader.attr("src", image_url);
 				if (ur_uploader.hasClass("ur-button")) {
-					ur_remover.siblings("img").show();
+					ur_uploader.siblings("img").show();
 					ur_uploader.siblings("img").attr("src", image_url);
 					ur_uploader
 						.siblings("#user_registration_pdf_logo_image")
@@ -430,7 +430,7 @@
 	});
 
 	$(".ur-image-remover").on("click", function (e) {
-		ur_remover = $(this);
+		var ur_remover = $(this);
 		e.preventDefault();
 
 		ur_remover.siblings("img").attr("src", "");
