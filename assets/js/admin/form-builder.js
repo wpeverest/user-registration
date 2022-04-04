@@ -26,7 +26,10 @@
 					if (event.ctrlKey || event.metaKey) {
 						if (
 							"s" ===
-							String.fromCharCode(event.which).toLowerCase()
+								String.fromCharCode(
+									event.which
+								).toLowerCase() ||
+							83 === event.which
 						) {
 							event.preventDefault();
 							URFormBuilder.ur_save_form();
@@ -34,7 +37,21 @@
 						}
 					}
 				});
-
+				// preview the form on key event
+				$(window).on("keydown", function (e) {
+					if (e.ctrlKey || e.metaKey) {
+						if (
+							"p" ===
+								String.fromCharCode(e.which).toLowerCase() ||
+							80 === e.which
+						) {
+							e.preventDefault();
+							window.open(
+								user_registration_form_builder_data.ur_preview
+							);
+						}
+					}
+				});
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
 					URFormBuilder.ur_save_form();

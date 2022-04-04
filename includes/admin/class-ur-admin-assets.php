@@ -262,6 +262,13 @@ class UR_Admin_Assets {
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
 				'max_upload_size_ini'            => wp_max_upload_size() / 1024,
+				'ur_preview'					 => add_query_arg(
+					array(
+						'ur_preview' => 'true',
+						'form_id'    => absint( $_GET['edit-registration'] ),
+					),
+					home_url()
+				),
 			);
 
 			wp_localize_script(
