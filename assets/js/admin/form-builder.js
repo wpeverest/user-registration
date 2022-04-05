@@ -52,6 +52,21 @@
 						}
 					}
 				});
+				// View user list table on key event.
+				$(window).on("keydown", function (e) {
+					if (e.ctrlKey || e.metaKey) {
+						if (
+							"u" ===
+								String.fromCharCode(e.which).toLowerCase() ||
+							85 === e.which
+						) {
+							e.preventDefault();
+							window.open(
+								user_registration_form_builder_data.ur_user_list_table
+							);
+						}
+					}
+				});
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
 					URFormBuilder.ur_save_form();

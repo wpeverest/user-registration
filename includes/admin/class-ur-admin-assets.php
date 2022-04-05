@@ -269,6 +269,7 @@ class UR_Admin_Assets {
 					),
 					home_url()
 				),
+				'ur_user_list_table'	         => admin_url( 'users.php?ur_specific_form_user='.absint( $_GET['edit-registration'] ).'&ur_user_filter_action=Filter'),
 			);
 
 			wp_localize_script(
