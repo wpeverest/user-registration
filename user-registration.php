@@ -197,6 +197,12 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/RestApi/class-ur-rest-api.php';
 
 			/**
+			 * Elementor classes.
+			 */
+			if ( class_exists( '\Elementor\Plugin' ) ) {
+			 	include_once UR_ABSPATH . 'includes/elementor/Elementor.php';
+			}
+			/**
 			 * Config classes.
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
