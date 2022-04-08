@@ -595,8 +595,11 @@ class UR_AJAX {
 			if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
 				$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 			}
+			if ( ! empty( $user->errors['invalid_email'] ) ) {
+				$user->errors['invalid_email'][0] = apply_filters( "user_registration_invalid_email_error_message", sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), __( 'Unknown email address. Check again or try your username.', 'user-registration' ) ) );
+			}
 			if ( ! empty( $user->errors['incorrect_password'] ) ) {
-				$user->errors['incorrect_password'][0] = apply_filters ("user_registration_incorrect_password_error_message", sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $info['user_login'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ) );
+				$user->errors['incorrect_password'][0] = apply_filters( "user_registration_incorrect_password_error_message", sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $info['user_login'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ) );
 			}
 			$message = $user->get_error_message();
 			wp_send_json_error( array( 'message' => $message ) );
