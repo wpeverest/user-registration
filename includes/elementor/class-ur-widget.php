@@ -158,7 +158,7 @@ class UR_Widget extends Widget_Base {
 					$user_registration_forms[ $form_value ] = $form_name;
 				}
 			} else {
-				$user_registration_forms[0] = esc_html__( 'Yo have not created a form, Please Create a form first', 'user_registration' );
+				$user_registration_forms[0] = esc_html__( 'Yo have not created a form, Please Create a form first', 'user-registration' );
 			}
 
 			return $user_registration_forms;

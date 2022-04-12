@@ -200,7 +200,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Elementor classes.
 			 */
 			if ( class_exists( '\Elementor\Plugin' ) ) {
-			 	include_once UR_ABSPATH . 'includes/elementor/Elementor.php';
+				include_once UR_ABSPATH . 'includes/elementor/elementor.php';
 			}
 			/**
 			 * Config classes.
