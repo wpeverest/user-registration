@@ -15,7 +15,6 @@ use Elementor\Controls_Manager;
  *
  * @since 2.1.6
  */
-
 class UR_Widget extends Widget_Base {
 	/**
 	 * Get widget name.
@@ -26,7 +25,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @return string Widget name.
 	 */
-
 	public function get_name() {
 		return 'user-registration';
 	}
@@ -39,7 +37,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @return string Widget title.
 	 */
-
 	public function get_title() {
 		return __( 'User Registration', 'user-registration' );
 	}
@@ -52,7 +49,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @return string Widget icon.
 	 */
-
 	public function get_icon() {
 		return 'eicon-document-file';
 	}
@@ -63,7 +59,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @return array Widget categories.
 	 */
-
 	public function get_categories() {
 
 		if ( class_exists( 'User_Registration_Style_Customizer' ) ) {
@@ -85,7 +80,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @return array Widget keywords.
 	 */
-
 	public function get_keywords() {
 		return array( 'form', 'forms', 'user-registration', 'registration form', 'userregistration', 'userregistrations' );
 	}
@@ -94,7 +88,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @since 2.1.6
 	 */
-
 	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
 		$this->start_controls_section(
 			'section_content_layout',
@@ -112,9 +105,7 @@ class UR_Widget extends Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'options' => $forms,
 			)
-
 		);
-
 		$this->end_controls_section();
 
 		do_action( 'user_registration_elementor_style', $this );
@@ -125,7 +116,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @since 2.1.6
 	 */
-
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
@@ -149,7 +139,6 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @since 2.1.6
 	 */
-
 	protected function render() {
 		echo do_shortcode( $this->get_shortcode() );
 	}
@@ -158,18 +147,16 @@ class UR_Widget extends Widget_Base {
 	 *
 	 * @since 2.1.6
 	 */
-	
 	public function get_forms() {
 		$user_registration_forms = array();
 
 		if ( empty( $user_registration_forms ) ) {
 			$ur_forms = ur_get_all_user_registration_form();
-			if ( ! empty( $ur_forms) ) {
+			if ( ! empty( $ur_forms ) ) {
 
 				foreach ( $ur_forms as $form_value => $form_name ) {
 					$user_registration_forms[ $form_value ] = $form_name;
 				}
-
 			} else {
 				$user_registration_forms[0] = esc_html__( 'Yo have not created a form, Please Create a form first', 'user_registration' );
 			}
