@@ -262,14 +262,14 @@ class UR_Admin_Assets {
 				'i18n_admin'                     => self::get_i18n_admin_data(),
 				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
 				'max_upload_size_ini'            => wp_max_upload_size() / 1024,
-				'ur_preview'					 => add_query_arg(
+				'ur_preview'                     => add_query_arg(
 					array(
 						'ur_preview' => 'true',
-						'form_id'    => absint( $_GET['edit-registration'] ),
+						'form_id'    => absint( $_GET['edit-registration'] ), //phpcs:ignore;
 					),
 					home_url()
 				),
-				'ur_user_list_table'	         => admin_url( 'users.php?ur_specific_form_user='.absint( $_GET['edit-registration'] ).'&ur_user_filter_action=Filter'),
+				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . absint( $_GET['edit-registration'] ) . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 			);
 
 			wp_localize_script(
