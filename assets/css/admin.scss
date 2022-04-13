@@ -668,12 +668,21 @@
 			 vertical-align: middle;
 		 }
 
+		 .image-upload {
+			td {
+				display: flex;
+				align-items: baseline;
+				flex-direction: column;
+				gap: 10px;
+			}
+		 }
+
 		 .radio-image {
 			 td {
 				 ul {
 					display: flex;
 					column-gap: 30px;
-   
+
 					li {
 					   label {
 						   display: flex;
@@ -700,7 +709,7 @@
 				}
 			 }
 		 }
-		 
+
 		.ur-toggle-section {
 			.user-registration-toggle-form {
 				position: relative;

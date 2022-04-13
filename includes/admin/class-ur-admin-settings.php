@@ -626,13 +626,13 @@ class UR_Admin_Settings {
 						case 'image':
 							$option_value = self::get_option( $value['id'], $value['default'] );
 
-							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
+							$settings .= '<tr valign="top" class="image-upload ' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
 							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . '</label>';
 							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td>';
-							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="100" width="auto">';
+							$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
 							$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
 							$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
@@ -662,7 +662,7 @@ class UR_Admin_Settings {
 
 							foreach ( $value['options'] as $key => $val ) {
 								$settings .= '<li>';
-								$settings .= '<label>';
+								$settings .= '<label class="' . ( esc_attr( checked( $key, $option_value, false ) ) ? 'selected' : '' ) . '">';
 								$settings .= '<img src="' . esc_html( $val['image'] ) . '">';
 								$settings .= '<input
 												name="' . esc_attr( $value['id'] ) . '"
@@ -687,10 +687,10 @@ class UR_Admin_Settings {
 							$option_value = self::get_option( $value['id'], $value['default'] );
 							$settings .= '<tr valign="top" class="' . esc_attr( $value['row_class'] ) . '">';
 							$settings .= '<th scope="row" class="titledesc">';
-							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+							$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . '</label>';
+							$settings .= wp_kses_post( $tooltip_html );
 							$settings .= '</th>';
 							$settings .= '<td>';
-							$settings .= wp_kses_post( $description );
 							$settings .= '<div class="ur-toggle-section">';
 							$settings .= '<span class="user-registration-toggle-form">';
 							$settings .= '<input

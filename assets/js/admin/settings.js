@@ -17,7 +17,7 @@
 		.trigger("change");
 
 	// Color picker
-	$(".colorpick")
+	$(".colorpick, .colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)
@@ -37,7 +37,7 @@
 		$(".iris-picker").hide();
 	});
 
-	$(".colorpick").on("click", function (event) {
+	$(".colorpick, .colorpickpreview").on("click", function (event) {
 		event.stopPropagation();
 	});
 
@@ -439,4 +439,16 @@
 		ur_remover.hide();
 		ur_remover.siblings("img").hide();
 	});
+
+	// Handles radio images option click.
+	$(".radio-image")
+		.find("input")
+		.each(function () {
+			var $option_selector = $(this);
+
+			$option_selector.on("click", function () {
+				$(this).closest("ul").find("label").removeClass("selected");
+				$(this).closest("label").addClass("selected");
+			});
+		});
 })(jQuery);
