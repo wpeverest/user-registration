@@ -236,7 +236,8 @@ class UR_Admin_Settings {
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
-			$settings      .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $options['title'] ) );
+			$option_title   = isset( $options['title'] ) ? $options['title'] : '';
+			$settings      .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $option_title ) );
 			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
 
