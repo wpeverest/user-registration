@@ -247,7 +247,8 @@ class UR_Admin_Assets {
 			wp_enqueue_script( 'jquery-ui-widget' );
 			wp_enqueue_script( 'ur-copy' );
 
-			$params = array(
+			$form_id = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;//phpcs:ignore WordPress.Security.NonceVerification
+			$params  = array(
 				'required_form_html'             => self::get_form_required_html(),
 				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'             => wp_create_nonce( 'user_input_dropped_nonce' ),
@@ -255,7 +256,7 @@ class UR_Admin_Assets {
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
 				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
-				'post_id'                        => isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0, //phpcs:ignore WordPress.Security.NonceVerification
+				'post_id'                        => $form_id,
 				'admin_url'                      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
@@ -265,11 +266,11 @@ class UR_Admin_Assets {
 				'ur_preview'                     => add_query_arg(
 					array(
 						'ur_preview' => 'true',
-						'form_id'    => isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0, //phpcs:ignore;
+						'form_id'    => $form_id,
 					),
 					home_url()
 				),
-				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0 . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
+				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 			);
 
 			wp_localize_script(
