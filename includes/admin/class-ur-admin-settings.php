@@ -51,7 +51,14 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
-			$settings[] = include 'settings/class-ur-settings-license.php';
+
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+				$settings[] = include 'settings/class-ur-settings-license.php';
+			}
 
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
