@@ -30,6 +30,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_filter( 'show_user_registration_setting_message', array( $this, 'filter_notice' ) );
+			add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
 		}
 
 		/**
@@ -135,6 +136,15 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			}
 
 			return true;
+		}
+
+		/**
+		 * Label for Save button.
+		 *
+		 * @return string
+		 */
+		public function user_registration_license_setting_label() {
+			return esc_html__( 'Activate License', 'user-registration' );
 		}
 
 	}

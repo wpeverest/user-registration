@@ -5,8 +5,6 @@
  * @class    UR_Admin_User_Manager
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +31,8 @@ class UR_Admin_User_Manager {
 	const DENIED = - 1;
 
 	/**
+	 * WP user object
+	 *
 	 * @var \WP_User
 	 */
 	private $user;
@@ -47,9 +47,9 @@ class UR_Admin_User_Manager {
 	/**
 	 * UR_Admin_User_Manager constructor.
 	 *
-	 * @param null $user
+	 * @param null $user user.
 	 *
-	 * @throws Exception
+	 * @throws Exception .
 	 */
 	public function __construct( $user = null ) {
 		if ( is_null( $user ) ) {
@@ -69,9 +69,10 @@ class UR_Admin_User_Manager {
 	/**
 	 * Save a new status for the user
 	 *
-	 * @param $status
+	 * @param string $status status.
+	 * @param int    $alert_user alert_user.
 	 *
-	 * @return bool|int
+	 * @return bool|int $meta_status meta status.
 	 */
 	public function save_status( $status, $alert_user = true ) {
 
@@ -86,6 +87,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'approved';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'true' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 
@@ -93,6 +96,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'pending';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 
@@ -100,6 +105,8 @@ class UR_Admin_User_Manager {
 				$action_label = 'denied';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+				} elseif ( 'email_confirmation' === $login_option ) {
+					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
 				break;
 		}
@@ -139,9 +146,9 @@ class UR_Admin_User_Manager {
 	 * If the status is not present (user registered when plugin was not active)
 	 * then it return an empty string if $exact_value == true, otherwise it return approved flag
 	 *
-	 * @param bool $exact_value
+	 * @param bool $exact_value exact value.
 	 *
-	 * @return int|mixed
+	 * @return int|mixed $user_status user status.
 	 */
 	public function get_user_status( $exact_value = false ) {
 
@@ -154,7 +161,7 @@ class UR_Admin_User_Manager {
 		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
 		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true );
 
-		$result            = '';
+		$result = '';
 
 		if ( '' === $user_status && '' === $user_email_status ) {
 			// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active.
@@ -219,9 +226,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::APPROVED );
+			return ( self::APPROVED === $user_status['user_status'] );
 		}
-		return ( $user_status == self::APPROVED );
+		return ( self::APPROVED === $user_status );
 	}
 
 	/**
@@ -233,9 +240,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::PENDING );
+			return ( self::PENDING === $user_status['user_status'] );
 		}
-		return ( $user_status == self::PENDING );
+		return ( self::PENDING === $user_status );
 	}
 
 	/**
@@ -247,9 +254,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( $user_status['user_status'] == self::DENIED );
+			return ( self::DENIED === $user_status['user_status'] );
 		}
-		return ( $user_status == self::DENIED );
+		return ( self::DENIED === $user_status );
 	}
 
 	/**
@@ -261,16 +268,16 @@ class UR_Admin_User_Manager {
 	public function reset_password() {
 		$password = '';
 
-		// If the password reset has been programmatically removed, don't reset
+		// If the password reset has been programmatically removed, don't reset.
 		$avoid_password_reset = apply_filters( 'ur_avoid_password_reset', false );
 		if ( $avoid_password_reset ) {
 			return $password;
 		}
 
-		// If the first_access_flag is equal to "" it means that user has registered when the plugin was not active, then don't reset
-		// If the first_access_flag is equal to 1 it means that user has has already loggedin at least one time, then don't reset
+		// If the first_access_flag is equal to "" it means that user has registered when the plugin was not active, then don't reset.
+		// If the first_access_flag is equal to 1 it means that user has has already loggedin at least one time, then don't reset.
 		$first_access_flag = $this->get_first_access_flag();
-		if ( $first_access_flag == 1 ) {
+		if ( 1 === $first_access_flag ) {
 			return $password;
 		}
 
@@ -313,24 +320,24 @@ class UR_Admin_User_Manager {
 	/**
 	 * Check if the instanced user can change status of the user passed by parameter
 	 *
-	 * @param $user_id
+	 * @param int $user_id user_id.
 	 *
 	 * @return bool
 	 */
 	public function can_change_status_of( $user_id ) {
 
-		// The instanced user is not able to update statuses at all
+		// The instanced user is not able to update statuses at all.
 		if ( ! $this->is_allowed_to_change_users_status() ) {
 			return false;
 		}
 
-		// The instanced user is the same user who the status have to be changed
-		if ( $this->user->ID == $user_id ) {
+		// The instanced user is the same user who the status have to be changed.
+		if ( $this->user->ID === $user_id ) {
 			return false;
 		}
 
 		// If the changer user has the capability "edit_users" but not "manage_options" (isn't an admin),
-		// then allow to edit the status of another user only if him hasn't capability "manage_options" (isn't an admin)
+		// then allow to edit the status of another user only if him hasn't capability "manage_options" (isn't an admin).
 		if ( ! user_can( $this->user, 'manage_options' ) && user_can( $user_id, 'manage_options' ) ) {
 			return false;
 		}
@@ -341,7 +348,7 @@ class UR_Admin_User_Manager {
 	/**
 	 * Check if the approval status of the instanced user can be changd by the user passed by parameter
 	 *
-	 * @param null|int|\WP_User $user if this value is null, it is considered the current user
+	 * @param null|int|\WP_User $user if this value is null, it is considered the current user.
 	 *
 	 * @return bool
 	 */
@@ -357,7 +364,7 @@ class UR_Admin_User_Manager {
 	 * Check if a certain user (passed by parameter) is allowed to change approval status of other users
 	 * If user id is not passed by parameter, it will be user the current user id
 	 *
-	 * @param null $user_id
+	 * @param null $user_id user_id.
 	 *
 	 * @return bool
 	 */
@@ -370,20 +377,22 @@ class UR_Admin_User_Manager {
 	}
 
 	/**
-	 * @param int $status
+	 * Get status label
+	 *
+	 * @param string $status status.
 	 *
 	 * @return string
 	 */
 	public static function get_status_label( $status ) {
-		if ( $status == self::APPROVED ) {
+		if ( self::APPROVED == $status ) {
 			$label = esc_html__( 'approved', 'user-registration' );
 		}
 
-		if ( $status == self::PENDING ) {
+		if ( self::PENDING == $status ) {
 			$label = esc_html__( 'pending', 'user-registration' );
 		}
 
-		if ( $status == self::DENIED ) {
+		if ( self::DENIED == $status ) {
 			$label = esc_html__( 'denied', 'user-registration' );
 		}
 
@@ -393,11 +402,11 @@ class UR_Admin_User_Manager {
 	/**
 	 * Check if the status passed by parameter is a valid status
 	 *
-	 * @param $status
+	 * @param string $status status.
 	 *
 	 * @return bool
 	 */
 	public static function validate_status( $status ) {
-		return ( $status == self::APPROVED || $status == self::PENDING || $status == self::DENIED );
+		return ( self::APPROVED === $status || self::PENDING === $status || self::DENIED === $status );
 	}
 }
