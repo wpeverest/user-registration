@@ -165,7 +165,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$rules['rules'] = array_values( $rules['rules'] );
 
 		$rules = ( ! empty( $rules['rules'] ) && isset( $args['enable_conditional_logic'] ) ) ? wp_json_encode( $rules ) : '';
-		/*Conditonal Logic codes end*/	
+		/*Conditonal Logic codes end*/
 
 		$defaults = array(
 			'type'              => 'text',
