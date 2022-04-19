@@ -256,6 +256,7 @@ class UR_Admin_Assets {
 				'number_of_grid'                 => UR_Config::$ur_form_grid,
 				'active_grid'                    => UR_Config::$default_active_grid,
 				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
+				'is_form_builder'                => ( isset( $_GET['page'] ) && 'add-new-registration' === $_GET['page'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
 				'post_id'                        => $form_id,
 				'admin_url'                      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'           => ur_get_required_fields(),
