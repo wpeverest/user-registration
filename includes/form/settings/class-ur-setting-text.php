@@ -34,7 +34,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-size',
 				'type'        => 'text',
 				'required'    => false,
-				'default'     => '20',
+				'default'     => '50',
 				'placeholder' => __( 'Size', 'user-registration' ),
 				'tip'         => __( 'Allowed maximum number of characters.', 'user-registration' ),
 			),
