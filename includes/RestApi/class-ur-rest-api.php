@@ -48,7 +48,7 @@ class UR_REST_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( __CLASS__, 'ur_save_getting_started_settings' ),
-				// 'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(

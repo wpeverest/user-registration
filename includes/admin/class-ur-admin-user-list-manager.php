@@ -299,7 +299,7 @@ class UR_Admin_User_List_Manager {
 			$status       = $user_manager->get_user_status();
 
 			if ( ! empty( $status ) ) {
-					return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
+				return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
 			}
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
 			$user_metas = get_user_meta( $user_id );
@@ -388,7 +388,7 @@ class UR_Admin_User_List_Manager {
 			<option value=""><?php esc_html_e( 'All UR Forms', 'user-registration' ); ?></option>
 
 		<?php
-				$all_forms = ur_get_all_user_registration_form();
+			$all_forms = ur_get_all_user_registration_form();
 
 		foreach ( $all_forms as $form_id => $form_name ) {
 			echo '<option value="' . esc_attr( $form_id ) . '" ' . esc_attr( selected( $form_id, $specific_form_filter_value ) ) . ' >' . esc_html( $form_name ) . '</option>';
@@ -608,21 +608,21 @@ class UR_Admin_User_List_Manager {
 					<td>
 
 						<select id="ur_user_user_status" name="ur_user_user_status">
-						<?php
-						$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
-						foreach ( $available_statuses as $status ) :
-							?>
+					<?php
+					$available_statuses = array( UR_Admin_User_Manager::APPROVED, UR_Admin_User_Manager::PENDING, UR_Admin_User_Manager::DENIED );
+					foreach ( $available_statuses as $status ) :
+						?>
 							<option
 								value="<?php echo esc_attr( $status ); ?>"<?php esc_attr( selected( $status, $user_status['user_status'] ) ); ?>><?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
 							<?php
-						endforeach;
-						?>
+							endforeach;
+					?>
 						</select>
 						<span class="description"><?php esc_html_e( 'If user has access to sign in or not.', 'user-registration' ); ?></span>
 					</td>
 				</tr>
 			</table>
-							<?php
+						<?php
 	}
 
 	/**
@@ -643,7 +643,12 @@ class UR_Admin_User_List_Manager {
 			return false;
 		}
 
-		if ( get_user_meta( $user_id, 'ur_user_status', true ) == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$user_status       = get_user_meta( $user_id, 'ur_user_status', true );
+		$user_email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
+
+		if ( '' === $user_email_status && $user_status == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return false;
+		} elseif ( '' !== $user_email_status && $user_status == $_POST['ur_user_user_status'] && $user_email_status == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 

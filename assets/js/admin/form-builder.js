@@ -22,18 +22,58 @@
 					URFormBuilder.handle_selected_item($(this));
 				});
 
-				$(window).on("keydown", function (event) {
-					if (event.ctrlKey || event.metaKey) {
-						if (
-							"s" ===
-							String.fromCharCode(event.which).toLowerCase()
-						) {
-							event.preventDefault();
-							URFormBuilder.ur_save_form();
-							return false;
+				// Run keyboard shortcuts action in form builder area only.
+				if (user_registration_form_builder_data.is_form_builder) {
+					$(window).on("keydown", function (event) {
+						if (event.ctrlKey || event.metaKey) {
+							if (
+								"s" ===
+									String.fromCharCode(
+										event.which
+									).toLowerCase() ||
+								83 === event.which
+							) {
+								event.preventDefault();
+								URFormBuilder.ur_save_form();
+								return false;
+							}
 						}
-					}
-				});
+					});
+					// preview the form on key event
+					$(window).on("keydown", function (e) {
+						if (e.ctrlKey || e.metaKey) {
+							if (
+								"p" ===
+									String.fromCharCode(
+										e.which
+									).toLowerCase() ||
+								80 === e.which
+							) {
+								e.preventDefault();
+								window.open(
+									user_registration_form_builder_data.ur_preview
+								);
+							}
+						}
+					});
+					// View user list table on key event.
+					$(window).on("keydown", function (e) {
+						if (e.ctrlKey || e.metaKey) {
+							if (
+								"u" ===
+									String.fromCharCode(
+										e.which
+									).toLowerCase() ||
+								85 === e.which
+							) {
+								e.preventDefault();
+								window.open(
+									user_registration_form_builder_data.ur_user_list_table
+								);
+							}
+						}
+					});
+				}
 
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
