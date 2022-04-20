@@ -1,22 +1,33 @@
 <?php
+/**
+ * UR_Setting_Text Class
+ *
+ * @class    UR_Setting_Text
+ * @package  UserRegistration/Form/Settings
+ * @version  1.0.0
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Text Class
- *
- * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
+ * UR_Setting_Text Class.
  */
 class UR_Setting_Text extends UR_Field_Settings {
 
+	/**
+	 * UserRegistration Form Text Settings Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'text_advance_setting';
 	}
 
+	/**
+	 * Outputs settings html.
+	 *
+	 * @param array $field_data Field data array.
+	 */
 	public function output( $field_data = array() ) {
 		$this->field_data = $field_data;
 		$this->register_fields();
@@ -25,6 +36,9 @@ class UR_Setting_Text extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register new settings field.
+	 */
 	public function register_fields() {
 		$fields = array(
 			'size'          => array(
@@ -34,7 +48,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-size',
 				'type'        => 'text',
 				'required'    => false,
-				'default'     => '20',
+				'default'     => '50',
 				'placeholder' => __( 'Size', 'user-registration' ),
 				'tip'         => __( 'Allowed maximum number of characters.', 'user-registration' ),
 			),

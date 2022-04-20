@@ -28,7 +28,7 @@ class UR_Privacy {
 			$content = $this->get_privacy_message();
 
 			if ( $content ) {
-				wp_add_privacy_policy_content( __( 'User Registration', 'user-registration' ), $this->get_privacy_message() );
+				wp_add_privacy_policy_content( 'User Registration', $this->get_privacy_message() );
 			}
 		}
 	}

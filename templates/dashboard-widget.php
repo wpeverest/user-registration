@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-logo-wrap">
 			<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>">
 			<div class="ur-plugin-info">
-				<?php echo __( 'User registration', 'user-registration' );?>
+				<?php echo 'User registration';?>
 				<span class="ur-version"><?php echo __('Current Version:', 'user-registration' ) . UR_VERSION;?></span>
 			</div>
 		</div>

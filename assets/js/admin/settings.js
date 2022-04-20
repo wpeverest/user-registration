@@ -17,7 +17,7 @@
 		.trigger("change");
 
 	// Color picker
-	$(".colorpick")
+	$(".colorpick, .colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)
@@ -37,7 +37,7 @@
 		$(".iris-picker").hide();
 	});
 
-	$(".colorpick").on("click", function (event) {
+	$(".colorpick, .colorpickpreview").on("click", function (event) {
 		event.stopPropagation();
 	});
 
@@ -391,4 +391,64 @@
 			}
 		}
 	);
+
+	$(".ur-image-uploader").on("click", function (e) {
+		ur_uploader = $(this);
+		e.preventDefault();
+		var image = wp
+			.media({
+				library: {
+					type: ["image"],
+				},
+				title: ur_uploader.upload_file,
+				// multiple: true if you want to upload multiple files at once
+				multiple: false,
+			})
+			.open()
+			.on("select", function (e) {
+				// This will return the selected image from the Media Uploader, the result is an object
+				var uploaded_image = image.state().get("selection").first();
+				// We convert uploaded_image to a JSON object to make accessing it easier
+				var image_url = uploaded_image.toJSON().url;
+				// Let's assign the url value to the input field
+				ur_uploader.attr("src", image_url);
+				if (ur_uploader.hasClass("ur-button")) {
+					ur_uploader.siblings("img").show();
+					ur_uploader.siblings("img").attr("src", image_url);
+					ur_uploader
+						.siblings("#user_registration_pdf_logo_image")
+						.val(image_url);
+					ur_uploader.hide();
+					ur_uploader.siblings(".ur-image-remover").show();
+				} else {
+					ur_uploader.attr("src", image_url);
+					ur_uploader
+						.siblings("#user_registration_pdf_logo_image")
+						.val(image_url);
+				}
+			});
+	});
+
+	$(".ur-image-remover").on("click", function (e) {
+		var ur_remover = $(this);
+		e.preventDefault();
+
+		ur_remover.siblings("img").attr("src", "");
+		ur_remover.siblings("#user_registration_pdf_logo_image").val("");
+		ur_remover.siblings(".ur-image-uploader").show();
+		ur_remover.hide();
+		ur_remover.siblings("img").hide();
+	});
+
+	// Handles radio images option click.
+	$(".radio-image")
+		.find("input")
+		.each(function () {
+			var $option_selector = $(this);
+
+			$option_selector.on("click", function () {
+				$(this).closest("ul").find("label").removeClass("selected");
+				$(this).closest("label").addClass("selected");
+			});
+		});
 })(jQuery);
