@@ -226,9 +226,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( self::APPROVED === $user_status['user_status'] );
+			return ( self::APPROVED == $user_status['user_status'] );
 		}
-		return ( self::APPROVED === $user_status );
+		return ( self::APPROVED == $user_status );
 	}
 
 	/**
@@ -240,9 +240,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( self::PENDING === $user_status['user_status'] );
+			return ( self::PENDING == $user_status['user_status'] );
 		}
-		return ( self::PENDING === $user_status );
+		return ( self::PENDING == $user_status );
 	}
 
 	/**
@@ -254,9 +254,9 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
-			return ( self::DENIED === $user_status['user_status'] );
+			return ( self::DENIED == $user_status['user_status'] );
 		}
-		return ( self::DENIED === $user_status );
+		return ( self::DENIED == $user_status );
 	}
 
 	/**
@@ -277,7 +277,7 @@ class UR_Admin_User_Manager {
 		// If the first_access_flag is equal to "" it means that user has registered when the plugin was not active, then don't reset.
 		// If the first_access_flag is equal to 1 it means that user has has already loggedin at least one time, then don't reset.
 		$first_access_flag = $this->get_first_access_flag();
-		if ( 1 === $first_access_flag ) {
+		if ( 1 == $first_access_flag ) {
 			return $password;
 		}
 
@@ -332,7 +332,7 @@ class UR_Admin_User_Manager {
 		}
 
 		// The instanced user is the same user who the status have to be changed.
-		if ( $this->user->ID === $user_id ) {
+		if ( $this->user->ID == $user_id ) {
 			return false;
 		}
 
@@ -407,6 +407,6 @@ class UR_Admin_User_Manager {
 	 * @return bool
 	 */
 	public static function validate_status( $status ) {
-		return ( self::APPROVED === $status || self::PENDING === $status || self::DENIED === $status );
+		return ( self::APPROVED == $status || self::PENDING == $status || self::DENIED == $status );
 	}
 }
