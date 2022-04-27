@@ -171,6 +171,12 @@ class UR_Frontend {
 		}
 
 		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
+
+			// Redirect to core login reset password page on multisite.
+			if ( is_multisite() && ( 'lostpassword' === $action || 'resetpass' === $action ) ) {
+				return;
+			}
+
 			if ( 'register' === $action || 'login' === $action || 'lostpassword' === $action || 'resetpass' === $action ) {
 				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
 				wp_safe_redirect( $myaccount_page );
