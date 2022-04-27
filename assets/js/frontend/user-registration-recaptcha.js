@@ -146,9 +146,9 @@ var onloadURCallback = function () {
 							}
 						);
 					}
-				}
-				if ("yes" === ur_recaptcha_code.is_invisible) {
-					grecaptcha.execute();
+					if ("yes" === ur_recaptcha_code.is_invisible) {
+						grecaptcha.execute(google_recaptcha_user_registration);
+					}
 				}
 			}
 		});
@@ -181,9 +181,9 @@ var onloadURCallback = function () {
 							}
 						);
 					}
-				}
-				if ("yes" === ur_recaptcha_code.is_invisible) {
-					grecaptcha.execute();
+					if ("yes" === ur_recaptcha_code.is_invisible) {
+						grecaptcha.execute(google_recaptcha_login);
+					}
 				}
 			}
 		});
@@ -204,10 +204,6 @@ function request_recaptcha_token() {
 						jQuery("form.register")
 							.find("#g-recaptcha-response")
 							.text(token);
-
-						var captchaResponse = jQuery("form.register")
-							.find('[name="g-recaptcha-response"]')
-							.val();
 					});
 			});
 		}

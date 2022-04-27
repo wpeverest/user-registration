@@ -2072,6 +2072,12 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$form_data->value = $upload_data;
 		}
 
+		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
+			$country_class = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+			$countries     = $country_class::get_instance()->get_country();
+			$form_data->value       = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+		}
+
 		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
 		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
 		$value      = isset( $form_data->value ) ? $form_data->value : '';

@@ -1,3 +1,10 @@
+= 2.1.7    - 27/04/2022
+* Tweak    - Country full name in smart tags.
+* Fix 	   - Multiple form invisible recaptcha issue.
+* Fix      - Wrong label of save changes button in settings.
+* Fix      - Bypass prevent core reset password on multisite.
+* Fix 	   - Wrong sanitization for valid extensions in profile pic.
+
 = 2.1.6    - 20/04/2022
 * Enhance  - Active status on emails settings.
 * Enhance  - Keyboard shortcut in form builder.

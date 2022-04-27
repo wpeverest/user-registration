@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.1.6\n"
+"Project-Id-Version: User Registration 2.1.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-04-20T09:48:46+00:00\n"
+"POT-Creation-Date: 2022-04-27T10:07:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: user-registration\n"
@@ -1660,49 +1660,49 @@ msgid "reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:27
-#: includes/admin/settings/class-ur-settings-license.php:43
+#: includes/admin/settings/class-ur-settings-license.php:46
 msgid "License"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:59
+#: includes/admin/settings/class-ur-settings-license.php:62
 msgid "License Options"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:62
+#: includes/admin/settings/class-ur-settings-license.php:65
 msgid "License Activation"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:64
+#: includes/admin/settings/class-ur-settings-license.php:67
 msgid "License: "
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:64
+#: includes/admin/settings/class-ur-settings-license.php:67
 msgid "Please enter the license key below inorder to use our premium addons smoothly."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:67
+#: includes/admin/settings/class-ur-settings-license.php:70
 msgid "License Key"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:68
+#: includes/admin/settings/class-ur-settings-license.php:71
 msgid "Please enter the license key"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:85
-#: includes/admin/settings/class-ur-settings-license.php:93
+#: includes/admin/settings/class-ur-settings-license.php:88
+#: includes/admin/settings/class-ur-settings-license.php:96
 #: includes/class-ur-plugin-updater.php:296
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:87
+#: includes/admin/settings/class-ur-settings-license.php:90
 msgid "Deactivate the license of User Registration plugin"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:101
+#: includes/admin/settings/class-ur-settings-license.php:104
 msgid "Your license has already been activated. Enjoy using <strong>User Registration</strong>."
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:147
+#: includes/admin/settings/class-ur-settings-license.php:150
 msgid "Activate License"
 msgstr ""
 
@@ -1777,7 +1777,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:69
-#: includes/class-ur-emailer.php:344
+#: includes/class-ur-emailer.php:349
 msgid "A New User Registered"
 msgstr ""
 
@@ -1833,7 +1833,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:60
-#: includes/class-ur-emailer.php:281
+#: includes/class-ur-emailer.php:286
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -1861,7 +1861,7 @@ msgid "Confirmation Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
-#: includes/class-ur-emailer.php:268
+#: includes/class-ur-emailer.php:273
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -1890,7 +1890,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:70
-#: includes/class-ur-emailer.php:498
+#: includes/class-ur-emailer.php:503
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -1920,7 +1920,7 @@ msgid "Enable this email sent to the user notifying the registration is approved
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:60
-#: includes/class-ur-emailer.php:416
+#: includes/class-ur-emailer.php:421
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1949,8 +1949,8 @@ msgid "Enable this email sent to the user notifying the registration is denied b
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:60
-#: includes/class-ur-emailer.php:294
-#: includes/class-ur-emailer.php:403
+#: includes/class-ur-emailer.php:299
+#: includes/class-ur-emailer.php:408
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -1979,7 +1979,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:390
+#: includes/class-ur-emailer.php:395
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -2010,7 +2010,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:59
-#: includes/class-ur-emailer.php:448
+#: includes/class-ur-emailer.php:453
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -2043,7 +2043,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:60
-#: includes/class-ur-emailer.php:307
+#: includes/class-ur-emailer.php:312
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -2503,8 +2503,8 @@ msgstr ""
 msgid "Email not verified! Verify your email by clicking on the link sent to your email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:611
-#: includes/functions-ur-core.php:2080
+#: includes/class-ur-emailer.php:616
+#: includes/functions-ur-core.php:2086
 msgid "Chosen Password"
 msgstr ""
 
@@ -2773,13 +2773,13 @@ msgstr ""
 #. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/class-ur-plugin-updater.php:366
-#: includes/functions-ur-core.php:2366
-#: includes/functions-ur-core.php:2385
-#: includes/functions-ur-core.php:2408
-#: includes/functions-ur-core.php:2426
+#: includes/functions-ur-core.php:2372
+#: includes/functions-ur-core.php:2391
+#: includes/functions-ur-core.php:2414
 #: includes/functions-ur-core.php:2432
-#: includes/functions-ur-core.php:2437
-#: includes/functions-ur-core.php:2450
+#: includes/functions-ur-core.php:2438
+#: includes/functions-ur-core.php:2443
+#: includes/functions-ur-core.php:2456
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -4705,27 +4705,27 @@ msgstr ""
 msgid "Disable all emails sent after registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:2201
+#: includes/functions-ur-core.php:2207
 msgid "Use conditional logic"
 msgstr ""
 
-#: includes/functions-ur-core.php:2205
+#: includes/functions-ur-core.php:2211
 msgid "Conditional Rules"
 msgstr ""
 
-#: includes/functions-ur-core.php:2206
+#: includes/functions-ur-core.php:2212
 msgid "Send data only if the following matches."
 msgstr ""
 
-#: includes/functions-ur-core.php:2244
+#: includes/functions-ur-core.php:2250
 msgid "Checked"
 msgstr ""
 
-#: includes/functions-ur-core.php:2363
+#: includes/functions-ur-core.php:2369
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: includes/functions-ur-core.php:2442
+#: includes/functions-ur-core.php:2448
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 

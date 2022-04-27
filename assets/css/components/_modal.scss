@@ -34,10 +34,10 @@
 		background: $white;
 		position: relative;
 		width: auto;
-		margin: 16px;
 		border-radius: 8px;
 		z-index: 99999;
 		box-shadow: 0 3px 25px 0px transparentize($gray_base, 0.6);
+		margin: 16px;
 		@media (min-width: 576px) {
 			max-width: 500px;
 			margin: 24px auto;

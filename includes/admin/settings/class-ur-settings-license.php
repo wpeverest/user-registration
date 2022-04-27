@@ -30,7 +30,10 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_filter( 'show_user_registration_setting_message', array( $this, 'filter_notice' ) );
-			add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
+
+			if ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] ) { // phpcs:ignore
+				add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
+			}
 		}
 
 		/**
