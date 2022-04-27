@@ -196,6 +196,11 @@ class UR_Emailer {
 						$value = implode( ',',$upload_data );
 						}
 				}
+				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
+					$country_class = ur_load_form_field_class( $form_data['field_key'] );
+					$countries     = $country_class::get_instance()->get_country();
+					$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+				}
 				// @codingStandardsIgnoreEnd
 
 				$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
