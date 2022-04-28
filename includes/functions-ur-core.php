@@ -334,7 +334,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
-				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
