@@ -73,6 +73,18 @@ if ( ! function_exists( 'is_ur_account_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'is_ur_login_page' ) ) {
+
+	/**
+	 * Returns true when viewing an login page.
+	 *
+	 * @return bool
+	 */
+	function is_ur_login_page() {
+		return is_page( ur_get_page_id( 'login' ) ) || ur_post_content_has_shortcode( 'user_registration_login' ) || apply_filters( 'user_registration_is_login_page', false );
+	}
+}
+
 if ( ! function_exists( 'is_ur_edit_account_page' ) ) {
 
 	/**
