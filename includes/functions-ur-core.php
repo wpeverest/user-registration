@@ -73,6 +73,18 @@ if ( ! function_exists( 'is_ur_account_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'is_ur_login_page' ) ) {
+
+	/**
+	 * Returns true when viewing an login page.
+	 *
+	 * @return bool
+	 */
+	function is_ur_login_page() {
+		return is_page( ur_get_page_id( 'login' ) ) || ur_post_content_has_shortcode( 'user_registration_login' ) || apply_filters( 'user_registration_is_login_page', false );
+	}
+}
+
 if ( ! function_exists( 'is_ur_edit_account_page' ) ) {
 
 	/**
@@ -322,7 +334,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
-				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';

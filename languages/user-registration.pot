@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-04-27T10:07:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -1593,8 +1593,6 @@ msgid "Site Key (reCaptcha v2)"
 msgstr ""
 
 #. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:69
 #: includes/admin/settings/class-ur-settings-integration.php:94
 #: includes/admin/settings/class-ur-settings-integration.php:130
@@ -1605,8 +1603,6 @@ msgstr ""
 msgid "Secret Key ( reCaptcha v2)"
 msgstr ""
 
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:82
 #: includes/admin/settings/class-ur-settings-integration.php:107
@@ -2765,12 +2761,6 @@ msgstr ""
 msgid "The provided license key could not be found. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/class-ur-plugin-updater.php:366
 #: includes/functions-ur-core.php:2372

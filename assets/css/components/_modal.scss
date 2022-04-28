@@ -32,7 +32,10 @@
 
 	.user-registration-modal__content {
 		background: $white;
-		position: relative;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 		width: auto;
 		border-radius: 8px;
 		z-index: 99999;
@@ -91,7 +94,7 @@
 				margin: 0 auto;
 				background: $color_gray_three;
 			}
-
+ 
 			&::before {
 				transform: rotate(45deg);
 			}
@@ -105,6 +108,8 @@
 	.user-registration-modal__body {
 		position: relative;
 		padding: 16px;
+		max-height: 580px;
+		overflow-y: scroll;
 
 		// Customize UR form for modal
 		#user-registration,

@@ -578,7 +578,14 @@ class UR_Emailer {
 
 		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
 
-		$ur_login = ( ur_get_page_permalink( 'myaccount' ) !== get_home_url() ) ? ur_get_page_permalink( 'myaccount' ) : wp_login_url();
+		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+		$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
+
+		if ( ! $ur_account_page_exists ) {
+			$ur_login_or_account_page = ur_get_page_permalink( 'login' );
+		}
+
+		$ur_login = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
 		$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
 
 		$default_values = array(

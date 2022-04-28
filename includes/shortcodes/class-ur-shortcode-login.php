@@ -39,7 +39,10 @@ class UR_Shortcode_Login {
 		$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 
 		if ( ! is_user_logged_in() ) {
-
+			// After password reset, add confirmation message.
+			if ( ! empty( $_GET['password-reset'] ) ) {
+				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+			}
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
