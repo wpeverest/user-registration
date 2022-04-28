@@ -277,9 +277,11 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.1.7    - 27/04/2022
+= 2.1.7    - 29/04/2022
 * Tweak    - Country full name in smart tags.
+* Fix 	   - Lost password when no account page.
 * Fix 	   - Multiple form invisible recaptcha issue.
+* Fix 	   - Lost password functionality in multisite.
 * Fix      - Wrong label of save changes button in settings.
 * Fix      - Bypass prevent core reset password on multisite.
 * Fix 	   - Wrong sanitization for valid extensions in profile pic.
