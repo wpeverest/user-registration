@@ -9,6 +9,7 @@
 }
 
 .user-registration-modal {
+	display: flex;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -32,18 +33,15 @@
 
 	.user-registration-modal__content {
 		background: $white;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
+		position: relative;
 		width: auto;
+		margin: 16px;
 		border-radius: 8px;
 		z-index: 99999;
 		box-shadow: 0 3px 25px 0px transparentize($gray_base, 0.6);
-		margin: 16px;
 		@media (min-width: 576px) {
 			max-width: 500px;
-			margin: 24px auto;
+			margin: auto;
 		}
 
 		&.user-registration-modal__content--xl,
@@ -94,7 +92,7 @@
 				margin: 0 auto;
 				background: $color_gray_three;
 			}
- 
+
 			&::before {
 				transform: rotate(45deg);
 			}
@@ -108,7 +106,7 @@
 	.user-registration-modal__body {
 		position: relative;
 		padding: 16px;
-		max-height: 580px;
+		max-height: 75vh;
 		overflow-y: scroll;
 
 		// Customize UR form for modal
@@ -275,3 +273,11 @@
 		}
 	}
 }
+
+//Modal z-index fix
+.user-registration-modal-open{
+	.wp-block-cover {
+		z-index: 99;
+	}
+}
+
