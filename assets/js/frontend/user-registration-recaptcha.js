@@ -146,10 +146,9 @@ var onloadURCallback = function () {
 							}
 						);
 					}
-				}
-
-				if ("yes" === ur_recaptcha_code.is_invisible) {
-					grecaptcha.execute( google_recaptcha_user_registration );
+					if ("yes" === ur_recaptcha_code.is_invisible) {
+						grecaptcha.execute(google_recaptcha_user_registration);
+					}
 				}
 			}
 		});
@@ -182,9 +181,9 @@ var onloadURCallback = function () {
 							}
 						);
 					}
-				}
-				if ("yes" === ur_recaptcha_code.is_invisible) {
-					grecaptcha.execute( google_recaptcha_login );
+					if ("yes" === ur_recaptcha_code.is_invisible) {
+						grecaptcha.execute(google_recaptcha_login);
+					}
 				}
 			}
 		});
