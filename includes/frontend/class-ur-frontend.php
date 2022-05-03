@@ -128,6 +128,10 @@ class UR_Frontend {
 		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 		$matched        = 0;
 
+		if ( ( isset( $_POST['learndash-login-form'] ) || isset( $_POST['learndash-registration-form'] ) ) ) { //phpcs:ignore
+			return;
+		}
+
 		if ( ! empty( $login_page ) ) {
 			$shortcodes = parse_blocks( $login_page->post_content );
 			foreach ( $shortcodes as $shortcode ) {
