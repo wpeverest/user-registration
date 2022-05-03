@@ -87,7 +87,7 @@ class UR_Form_Handler {
 
 				if ( isset( $_FILES['profile-pic'] ) && ! empty( $_FILES['profile-pic']['size'] ) ) {
 
-					$upload = wp_unslash( $_FILES['profile-pic'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$upload = $_FILES['profile-pic']; // phpcs:ignore
 
 					$upload_dir  = wp_upload_dir();
 					$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/

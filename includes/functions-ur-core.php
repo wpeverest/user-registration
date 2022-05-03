@@ -2526,23 +2526,6 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 				if ( ! is_numeric( $user_registration_profile_pic_url ) ) {
 					$user_registration_profile_pic_attachment = attachment_url_to_postid( $user_registration_profile_pic_url );
 					update_user_meta( $user->ID, 'user_registration_profile_pic_url', absint( $user_registration_profile_pic_attachment ) );
-
-					$uploaddir    = wp_upload_dir();
-					$newdirectory = 'user_registration_uploads/profile-pictures';
-					$source       = get_attached_file( $user_registration_profile_pic_attachment );
-					$destination  = $uploaddir['basedir'] . '/' . $newdirectory . '/' . sanitize_file_name( wp_basename( $source ) );
-
-					include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-					include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-
-					if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
-						return false;
-					}
-
-					$file_system = new \WP_Filesystem_Direct( null );
-					if ( ! empty( $source ) ) {
-						$file_system->copy( $source, $destination, true );
-					}
 				}
 			}
 
