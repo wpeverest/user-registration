@@ -100,10 +100,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
 						$attribute_string     = '';
 						$date_format          = '';
+						$date_mode = '';
 
 						foreach ( $attributes as $name => $value ) {
 							if ( 'data-date-format' === $name ) {
 								$date_format = $value;
+							}
+							if ( 'data-mode' === $name ) {
+								$date_mode = $value;
 							}
 							if ( is_bool( $value ) ) {
 								if ( $value ) {
@@ -123,13 +127,16 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-						<?php if( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+						<?php if ( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
-							    <label
-								for="<?php echo esc_attr( $key ); ?>"><?php
-								echo esc_html( $field_label ); ?></label>
+								<label
+								for="<?php echo esc_attr( $key ); ?>">
+												<?php
+												echo esc_html( $field_label );
+												?>
+								</label>
 								<p><span class="description"><?php echo wp_kses_post( $field['description'] ); ?></span></p>
 							</th>
 							<td>
@@ -195,7 +202,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																					echo 'checked="checked"';
 																				}
 																				?>
-											 ><?php echo esc_html(trim( $choice ) ); ?></label><br/>
+											 ><?php echo esc_html( trim( $choice ) ); ?></label><br/>
 											<?php
 										}
 									} else {
@@ -268,7 +275,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
 
-
 										if ( empty( $extra_params ) ) {
 											?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
@@ -285,7 +291,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<br/>
 							</td>
 						</tr>
-						<?php
+							<?php
 						}
 					endforeach;
 					?>
@@ -326,7 +332,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							if ( isset( $_POST[ $key ] ) ) {
 								if ( is_array( $_POST[ $key ] ) ) {
 									$value = array_map( 'sanitize_text_field', $_POST[ $key ] );
-								}else{
+								} else {
 									$value = sanitize_text_field( $_POST[ $key ] );
 								}
 								update_user_meta( absint( $user_id ), sanitize_text_field( $key ), $value );
@@ -334,7 +340,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								update_user_meta( absint( $user_id ), sanitize_text_field( $key ), '' );
 							}
 						} elseif ( isset( $_POST[ $key ] ) ) {
-							update_user_meta( absint( $user_id ),  sanitize_text_field( $key ), sanitize_text_field( $_POST[ $key ] ) );
+							update_user_meta( absint( $user_id ), sanitize_text_field( $key ), sanitize_text_field( $_POST[ $key ] ) );
 						}
 					}
 				}
@@ -537,6 +543,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									if ( ! empty( $field->advance_setting->enable_date_range ) ) {
 										$enable_date_range                                 = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 										$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
+									}
+
+									if ( ! empty( $field->advance_setting->date_localization ) ) {
+										$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
+										$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
 									}
 									break;
 

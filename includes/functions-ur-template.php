@@ -669,6 +669,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
 								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
 								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+								$date_localization = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
 								if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
@@ -677,6 +678,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								}
 								$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
 								$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
+								$extra_params['custom_attributes']['data-locale']       = $date_localization;
 								break;
 
 							case 'country':
@@ -824,6 +826,8 @@ function ur_logout_url( $redirect = '' ) {
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
 			$blocks = parse_blocks( $post_content );
+			$new_shortcode = '';
+
 			foreach ( $blocks as $block ) {
 				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
