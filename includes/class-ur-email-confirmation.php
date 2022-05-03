@@ -75,7 +75,7 @@ class UR_Email_Confirmation {
 
 			}
 
-			wp_redirect( $redirect );
+			wp_safe_redirect( esc_url_raw( apply_filters( 'user_registration_admin_action_redirect', $redirect ) ) );
 			exit;
 		}
 
