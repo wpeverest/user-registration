@@ -5,7 +5,7 @@ on:
 jobs:
   tag:
     name: New tag
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -14,7 +14,7 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF:10}
       - name: Build
         id: build
-        uses: wpeverest/action-build@1.0.0
+        uses: wpeverest/action-build@3.0.0
         with:
           generate-zip: true
       - name: WordPress Plugin Deploy

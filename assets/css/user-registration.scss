@@ -14,6 +14,32 @@
 // Components
 @import "components/button", "components/modal";
 
+// loader
+.lds-dual-ring {
+	width: 100%;
+	@include flexbox();
+	justify-content: center;
+	&::after {
+		content: " ";
+		display: block;
+		width: 35px;
+		height: 35px;
+		margin: 8px;
+		border-radius: 50%;
+		border: 6px solid $gray_base;
+		border-color: $gray_base transparent $gray_base transparent;
+		animation: lds-dual-ring 1.2s linear infinite;
+	}
+}
+@keyframes lds-dual-ring {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 .ur-gutenberg-form-selector-wrap {
 
 	.components-radio-control__option {
@@ -141,6 +167,11 @@
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
+
+		.input-text {
+			padding-left: 35px !important;
+		}
+
 	}
 
 	* {

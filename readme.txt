@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.9.2
-Stable tag: 2.1.5.1
+Tested up to: 5.9.3
+Stable tag: 2.1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,35 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.1.7    - 29/04/2022
+* Tweak    - Country full name in smart tags.
+* Fix 	   - Lost password when no account page.
+* Fix 	   - Multiple form invisible recaptcha issue.
+* Fix 	   - Lost password functionality in multisite.
+* Fix      - Wrong label of save changes button in settings.
+* Fix      - Bypass prevent core reset password on multisite.
+* Fix 	   - Wrong sanitization for valid extensions in profile pic.
+
+= 2.1.6    - 20/04/2022
+* Enhance  - Active status on emails settings.
+* Enhance  - Keyboard shortcut in form builder.
+* Dev      - Geolocation auto complete address and map compatibility.
+* Dev      - PDF toggle, image upload, image choice and radio choice settings compatibility.
+* Dev      - Incorrect password error message handled and filter added when ajax login enabled.
+* Tweak    - Ring Loader css added.
+* Tweak    - Elementor widget icon added.
+* Tweak    - Licences tab removed from settings tab of free version.
+* Fix 	   - Permission callback error in restapi.
+* Fix	   - Translation issue with user registration.
+* Fix 	   - Profile Pic upload issue from edit profile.
+* Fix 	   - ReCaptcha conflict with all in one seo plugin.
+* Fix 	   - Undefined index title in payment settings tab.
+* Fix 	   - Invalid argument supplied in admin settings file.
+* Fix 	   - Default reset password and myaccount design issue.
+* Fix 	   - Invalid email error message handled when ajax enabled.
+* Fix 	   - User status keep switching to pending only after admin approval from admin user list.
+
 = 2.1.5.1  - 14/03/2022
 * Fix 	   - Deploy script.
 

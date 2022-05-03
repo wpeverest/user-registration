@@ -37,7 +37,14 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		if ( is_ur_account_page() && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+		$is_ur_login_or_account_page = is_ur_account_page();
+
+		if ( ! $ur_account_page_exists ) {
+			$is_ur_login_or_account_page = is_ur_login_page();
+		}
+
+		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
@@ -163,89 +170,91 @@ class UR_Form_Handler {
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		foreach ( $profile as $key => $field ) {
-			if ( ! isset( $field['type'] ) ) {
-				$field['type'] = 'text';
-			}
-
-			// Get Value.
-			switch ( $field['type'] ) {
-				case 'checkbox':
-					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
-					} else {
-						$_POST[ $key ] = (int) isset( $_POST[ $key ] );
-					}
-					break;
-
-				case 'wysiwyg':
-					if ( isset( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
-					} else {
-						$_POST[ $key ] = '';
-					}
-					break;
-
-				case 'email':
-					if ( isset( $_POST[ $key ] ) ) {
-						$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
-					} else {
-						$user_data = get_userdata( $user_id );
-						$_POST[ $key ] = $user_data->data->user_email;
-					}
-					break;
-
-				default:
-					$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					break;
-			}
-
-			// Hook to allow modification of value.
-			$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			$disabled = false;
-			if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
-				if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
-					$disabled = true;
+			if ( isset( $field['field_key'] ) ) {
+				if ( ! isset( $field['type'] ) ) {
+					$field['type'] = 'text';
 				}
-			}
 
-			// Validation: Required fields.
-			if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
-				/* translators: %s - Field Label */
-				ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
-			}
+				// Get Value.
+				switch ( $field['type'] ) {
+					case 'checkbox':
+						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
+						} else {
+							$_POST[ $key ] = (int) isset( $_POST[ $key ] );
+						}
+						break;
 
-			if ( 'user_email' === $field['field_key'] ) {
-				do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '' );
+					case 'wysiwyg':
+						if ( isset( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
+						} else {
+							$_POST[ $key ] = '';
+						}
+						break;
 
-				// Check if email already exists before updating user details.
-				if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
-					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
+					case 'email':
+						if ( isset( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+						} else {
+							$user_data = get_userdata( $user_id );
+							$_POST[ $key ] = $user_data->data->user_email;
+						}
+						break;
+
+					default:
+						$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						break;
 				}
-			}
 
-			if ( ! empty( $_POST[ $key ] ) ) {
+				// Hook to allow modification of value.
+				$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-				// Validation rules.
-				if ( ! empty( $field['validate'] ) && is_array( $field['validate'] ) ) {
-					foreach ( $field['validate'] as $rule ) {
-						switch ( $rule ) {
-							case 'email':
-								$_POST[ $key ] = strtolower( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
+				$disabled = false;
+				if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
+					if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
+						$disabled = true;
+					}
+				}
 
-								if ( ! is_email( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) ) {
-									/* translators: %s - Field Label */
-									ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
-								}
+				// Validation: Required fields.
+				if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
+					/* translators: %s - Field Label */
+					ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
+				}
 
-								break;
+				if ( 'user_email' === $field['field_key'] ) {
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '' );
+
+					// Check if email already exists before updating user details.
+					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
+						ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
+					}
+				}
+
+				if ( ! empty( $_POST[ $key ] ) ) {
+
+					// Validation rules.
+					if ( ! empty( $field['validate'] ) && is_array( $field['validate'] ) ) {
+						foreach ( $field['validate'] as $rule ) {
+							switch ( $rule ) {
+								case 'email':
+									$_POST[ $key ] = strtolower( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
+
+									if ( ! is_email( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) ) {
+										/* translators: %s - Field Label */
+										ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
+									}
+
+									break;
+							}
 						}
 					}
 				}
-			}
-			// Action to add extra validation to edit profile fields.
-			do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				// Action to add extra validation to edit profile fields.
+				do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
+			}
 		}
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
@@ -253,25 +262,26 @@ class UR_Form_Handler {
 		if ( 0 === ur_notice_count( 'error' ) ) {
 			$user_data = array();
 			foreach ( $profile as $key => $field ) {
-				$new_key = str_replace( 'user_registration_', '', $key );
+				if ( isset( $field['field_key'] ) ) {
+					$new_key = str_replace( 'user_registration_', '', $key );
 
-				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
-					if ( 'display_name' === $new_key ) {
-						$user_data['display_name'] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+						if ( 'display_name' === $new_key ) {
+							$user_data['display_name'] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+						} else {
+							$user_data[ $new_key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						}
 					} else {
-						$user_data[ $new_key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					}
-				} else {
-					$update_key = $key;
+						$update_key = $key;
 
-					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
-						$update_key = str_replace( 'user_', '', $new_key );
-					}
-					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
-
-					if ( 'disabled' !== $disabled ) {
-						update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+							$update_key = str_replace( 'user_', '', $new_key );
+						}
+						$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+						if ( 'disabled' !== $disabled ) {
+							update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						}
 					}
 				}
 			}
@@ -612,7 +622,14 @@ class UR_Form_Handler {
 
 				do_action( 'user_registration_reset_password', $user );
 
-				wp_redirect( add_query_arg( 'password-reset', 'true', ur_get_page_permalink( 'myaccount' ) ) );
+				$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+				$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
+
+				if ( ! $ur_account_page_exists ) {
+					$ur_login_or_account_page = ur_get_page_permalink( 'login' );
+				}
+
+				wp_redirect( add_query_arg( 'password-reset', 'true', $ur_login_or_account_page ) );
 				exit;
 			}
 		}

@@ -667,8 +667,107 @@
 			 margin-bottom: 2px;
 			 vertical-align: middle;
 		 }
+
+		 .image-upload {
+			td {
+				display: flex;
+				align-items: baseline;
+				flex-direction: column;
+				gap: 10px;
+			}
+		 }
+
+		 .radio-image {
+			 td {
+				 ul {
+					display: flex;
+					column-gap: 30px;
+
+					li {
+					   label {
+						   display: flex;
+						   flex-direction: column;
+						   align-items: center;
+						   max-width: 175px;
+						   row-gap: 16px;
+						   border: 1px solid $border_color;
+						   border-radius: 2px;
+						   padding: 8px 16px;
+
+						   &.selected {
+							   border-color: #475BB2;
+							   background-color: #475bb230;
+							   color: #475BB2;
+							   font-weight: 600;
+						   }
+
+						   input {
+							   display: none;
+						   }
+					   }
+					}
+				}
+			 }
+		 }
+
+		.ur-toggle-section {
+			.user-registration-toggle-form {
+				position: relative;
+				display: inline-block;
+				width: 40px;
+				height: 22px;
+
+				input {
+					position: relative;
+					z-index: 99;
+					opacity:0;
+					height: 22px;
+					width: 40px;
+
+					&:checked + .slider {
+						background-color: #475BB2;
+					}
+
+					&:focus + .slider {
+						box-shadow: 0 0 1px #2196F3;
+					}
+
+					&:checked + .slider::before {
+						transform: translateX(16px);
+					}
+				}
+
+					.slider {
+						position: absolute;
+						cursor: pointer;
+						inset: 0;
+						background-color: #DFE1EA;
+						transition: .4s;
+
+						&.round {
+							border-radius: 30px;
+						}
+
+						&.round::before {
+							border-radius: 50%;
+						}
+
+						&::before {
+							position: absolute;
+							content: "";
+							height: 16px;
+							width: 16px;
+							left: 4px;
+							bottom: 3px;
+							background-color: white;
+							transition: .4s;
+							border-radius: 100%;
+						}
+					}
+				}
+			}
+		}
 	 }
- }
 
  .ur-registered-from {
 	 display: flex;
@@ -1836,7 +1935,6 @@
 			 }
 		 }
 	 }
- }
 
  /**
   * User Registration Builder Loading
@@ -1969,6 +2067,7 @@
 	 margin: 0px;
 	 font-style: italic;
  }
+}
 
  @media screen and (max-width: 1400px) {
 	 .ur-registered-from {

@@ -85,8 +85,16 @@ function ur_lostpassword_url( $default_url = '' ) {
 	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 	$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
 
+	$ur_login_page_exists = ur_get_page_id( 'login' ) > 0;
+
+	if ( ! $ur_account_page_exists && $ur_login_page_exists ) {
+		update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
+	}
+
 	if ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) ) {
 		return ur_get_endpoint_url( $lost_password_endpoint, '', $ur_account_page_url );
+	} elseif ( $ur_login_page_exists && ! empty( $lost_password_endpoint ) ) {
+		return ur_get_endpoint_url( $lost_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
 	} else {
 		return $default_url;
 	}

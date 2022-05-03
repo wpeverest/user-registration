@@ -26,7 +26,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<h2><?php echo esc_html( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); ?></h2>
+					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
 					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
 						?>
@@ -133,15 +133,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {
-											// If the conditional logic addon is installed.
-											if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
-												// Migrate the conditional logic to logic_map schema.
-												$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item; // phpcs:ignore
 
-												if ( 'profile_picture' === $single_item->field_key ) {
-													continue;
-												}
-											}
 
 											$user_id                    = get_current_user_id();
 											$form_id                    = ur_get_form_id_by_userid( $user_id );
@@ -168,8 +160,17 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
 											}
+
+											if ( 'profile_picture' === $single_item->field_key ) {
+												continue;
+											}
+
 											// unset invite code.
 											if ( 'invite_code' === $single_item->field_key ) {
+												continue;
+											}
+											// unset learndash code.
+											if ( 'learndash_course' === $single_item->field_key ) {
 												continue;
 											}
 
@@ -179,7 +180,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											}
 
 											?>
-											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props;   // phpcs:ignore ?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
+											<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
 												<?php
 												$readonly_fields = ur_readonly_profile_details_fields();
 
@@ -379,12 +380,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 						<?php
 						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php echo esc_html( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); ?></button>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 							<?php
 						} else {
 							wp_nonce_field( 'save_profile_details' );
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); ?>" />
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>" />
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}

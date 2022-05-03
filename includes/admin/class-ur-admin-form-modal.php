@@ -39,6 +39,11 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				return;
 			}
 
+			// Remove Add User Registration Form button from wp-editor in customize my account settings page.
+			if ( isset( $_GET['tab'] ) && 'user-registration-customize-my-account' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return;
+			}
+
 			// Setup the icon - currently using a dashicon.
 			$icon       = '<span class="dashicons dashicons-list-view" style="line-height:25px; font-size:16px"></span>';
 			$login_icon = '<span class="dashicons dashicons-migrate" style="line-height:25px; font-size:16px"></span>';

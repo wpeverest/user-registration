@@ -73,6 +73,18 @@ if ( ! function_exists( 'is_ur_account_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'is_ur_login_page' ) ) {
+
+	/**
+	 * Returns true when viewing an login page.
+	 *
+	 * @return bool
+	 */
+	function is_ur_login_page() {
+		return is_page( ur_get_page_id( 'login' ) ) || ur_post_content_has_shortcode( 'user_registration_login' ) || apply_filters( 'user_registration_is_login_page', false );
+	}
+}
+
 if ( ! function_exists( 'is_ur_edit_account_page' ) ) {
 
 	/**
@@ -322,7 +334,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
-				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
+				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
@@ -2071,6 +2083,12 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 				array_push( $upload_data, $file );
 			}
 			$form_data->value = $upload_data;
+		}
+
+		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
+			$country_class = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+			$countries     = $country_class::get_instance()->get_country();
+			$form_data->value       = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
 		}
 
 		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
