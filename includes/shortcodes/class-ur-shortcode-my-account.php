@@ -214,7 +214,7 @@ class UR_Shortcode_My_Account {
 				'myaccount/form-edit-profile.php',
 				array(
 					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
-					'form_data_array' => $form_data_array,
+					'form_data_array' => apply_filters( 'user_registration_form_data_to_edit', $form_data_array ),
 				)
 			);
 		} else {
