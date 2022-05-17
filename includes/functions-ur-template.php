@@ -478,7 +478,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
 
-						if ( empty( $args['placeholder'] ) ) {
+						if ( '' !== $value ) {
 							$selected_attribute = selected( $value, trim( $option_key ), false );
 						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
