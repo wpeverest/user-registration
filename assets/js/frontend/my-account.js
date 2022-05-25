@@ -82,6 +82,10 @@ jQuery(function ($) {
 					$this
 						.closest(".button-group")
 						.find(".profile-pic-remove")
+						.data("attachment-id", response_obj.data.attachment_id);
+					$this
+						.closest(".button-group")
+						.find(".profile-pic-remove")
 						.prop("style", false);
 					$this
 						.closest(".button-group")
@@ -127,41 +131,67 @@ jQuery(function ($) {
 				}
 			);
 		},
+		remove_avatar: function ($node) {
+			var url =
+				user_registration_params.ajax_url +
+				"?action=user_registration_profile_pic_remove&security=" +
+				user_registration_params.user_registration_profile_picture_remove_nonce;
+
+			$.ajax({
+				url: url,
+				type: "POST",
+				data: {
+					attachment_id: $node.data("attachment-id"),
+				},
+				success: function (response) {
+					if (response.success) {
+						var input_file = $node
+							.closest("form")
+							.find('input[name="profile-pic"]');
+						input_hidden = $node
+							.closest("form")
+							.find('input[name="profile-pic-url"]');
+						profile_default_input_hidden = $node
+							.closest("form")
+							.find('input[name="profile-default-image"]');
+						preview = $node
+							.closest("form")
+							.find("img.profile-preview");
+
+						input_hidden.val("");
+						preview.attr("src", profile_default_input_hidden.val());
+						$node.hide();
+
+						// Check if ajax submission on edit profile is enabled.
+						if (
+							"yes" ===
+							user_registration_params.ajax_submission_on_edit_profile
+						) {
+							$node
+								.closest(".button-group")
+								.find(
+									".user_registration_profile_picture_upload"
+								)
+								.show();
+							$node
+								.closest(".user-registration-profile-header")
+								.find(
+									".user-registration-profile-picture-error"
+								)
+								.remove();
+						} else {
+							input_file.val("").show();
+						}
+					}
+				},
+			});
+		},
 	};
 
 	// Handle profile picture remove event.
 	$(".profile-pic-remove").on("click", function (e) {
 		e.preventDefault();
-		var input_file = $(this)
-			.closest("form")
-			.find('input[name="profile-pic"]');
-		input_hidden = $(this)
-			.closest("form")
-			.find('input[name="profile-pic-url"]');
-		profile_default_input_hidden = $(this)
-			.closest("form")
-			.find('input[name="profile-default-image"]');
-		preview = $(this).closest("form").find("img.profile-preview");
-
-		input_hidden.val("");
-		preview.attr("src", profile_default_input_hidden.val());
-		$(this).hide();
-
-		// Check if ajax submission on edit profile is enabled.
-		if (
-			"yes" === user_registration_params.ajax_submission_on_edit_profile
-		) {
-			$(this)
-				.closest(".button-group")
-				.find(".user_registration_profile_picture_upload")
-				.show();
-			$(this)
-				.closest(".user-registration-profile-header")
-				.find(".user-registration-profile-picture-error")
-				.remove();
-		} else {
-			input_file.val("").show();
-		}
+		user_registration_profile_picture_upload.remove_avatar($(this));
 	});
 
 	// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.

@@ -54,6 +54,7 @@ class UR_AJAX {
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
+			'profile_pic_remove'     => true,
 			'ajax_login_submit'      => true,
 			'send_test_email'        => true,
 			'deactivation_notice'    => false,
@@ -1045,6 +1046,48 @@ class UR_AJAX {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
 			}
 		}
+	}
+
+	/**
+	 * Remove profile picture ajax method.
+	 */
+	public static function profile_pic_remove() {
+		check_ajax_referer( 'user_registration_profile_picture_remove_nonce', 'security' );
+		$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+
+		$flag = wp_verify_nonce( $nonce, 'user_registration_profile_picture_remove_nonce' );
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+
+		$attachment_id = isset( $_POST['attachment_id'] ) ? intval( wp_unslash( $_POST['attachment_id'] ) ) : '';
+
+		if ( file_exists( get_attached_file( $attachment_id ) ) && ! unlink( get_attached_file( $attachment_id ) ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'File cannot be removed', 'user-registration' ),
+				)
+			);
+		}
+
+		$user_id = get_current_user_id();
+
+		if ( $user_id > 0 ) {
+			update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'User profile picture removed successfully', 'user-registration' ),
+			)
+		);
+
 	}
 }
 
