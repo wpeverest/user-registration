@@ -2501,7 +2501,6 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 	}
 }
 
-
 add_action( 'user_registration_init', 'ur_profile_picture_migration_script' );
 
 if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
@@ -2530,6 +2529,60 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 			}
 
 			update_option( 'ur_profile_picture_migrated', true );
+		}
+	}
+}
+
+
+add_action( 'delete_user', 'ur_delete_user_files_on_user_delete', 10, 3 );
+
+if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
+
+	/**
+	 * Delete user uploaded files when user is deleted.
+	 *
+	 * @param [type] $user_id User Id.
+	 * @param [type] $reassign  Reassign to another user ( admin ).
+	 * @param [type] $user User Data.
+	 */
+	function ur_delete_user_files_on_user_delete( $user_id, $reassign, $user ) {
+
+		// Return if reassign is set.
+		if ( null !== $reassign ) {
+			return;
+		}
+
+		// Delete user uploaded file when user is deleted.
+		if ( class_exists( 'URFU_Uploaded_Data' ) ) {
+			$post = get_post( ur_get_form_id_by_userid( $user_id ) );
+
+			$form_data_object = json_decode( $post->post_content );
+
+			$file_fields = URFU_Uploaded_Data::get_file_field( $form_data_object );
+
+			foreach ( $file_fields as $field ) {
+
+				$meta_key = isset( $field['key'] ) ? $field['key'] : '';
+
+				$attachment_ids = explode( ',', get_user_meta( $user->ID, 'user_registration_' . $meta_key, true ) );
+
+				foreach ( $attachment_ids as $attachment_id ) {
+					$file_path = get_attached_file( $attachment_id );
+
+					if ( file_exists( $file_path ) ) {
+						unlink( $file_path );
+					}
+				}
+			}
+		}
+
+		// Delete user uploaded profile image when user is deleted.
+		$profile_pic_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
+
+		$pic_path = get_attached_file( $profile_pic_attachment_id );
+
+		if ( file_exists( $pic_path ) ) {
+			unlink( $pic_path );
 		}
 	}
 }
