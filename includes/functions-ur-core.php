@@ -2533,7 +2533,6 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 	}
 }
 
-
 add_action( 'delete_user', 'ur_delete_user_files_on_user_delete', 10, 3 );
 
 if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
@@ -2584,5 +2583,34 @@ if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
 		if ( file_exists( $pic_path ) ) {
 			unlink( $pic_path );
 		}
+	}
+}
+
+if ( ! function_exists( 'user_registration_incremental_file_name' ) ) {
+
+	/**
+	 * Create a incremental file name
+	 *
+	 * @param [type] $upload_path Path to the upload directory.
+	 * @param [type] $file Uploaded file.
+	 */
+	function user_registration_incremental_file_name( $upload_path, $file ) {
+
+		$file_name = sanitize_file_name( $file['name'] );
+		$file_ext  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+
+		$file_counter = 0;
+		while ( file_exists( $upload_path . $file_name ) ) {
+			$file_name = pathinfo( $file_name, PATHINFO_FILENAME );
+
+			if ( 0 === $file_counter ) {
+				$file_name = $file_name . '-' . $file_counter;
+			}
+
+			$file_name = substr( $file_name, 0, strpos( $file_name, '-' ) );
+			$file_name = $file_name . '-' . ( $file_counter++ ) . '.' . $file_ext;
+		}
+
+		return $file_name;
 	}
 }

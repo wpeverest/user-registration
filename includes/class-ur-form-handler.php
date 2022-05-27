@@ -96,19 +96,24 @@ class UR_Form_Handler {
 						ur_add_notice( 'Upload path permission deny.', 'error' );
 					}
 
-					$pic_path = $upload_path . '/' . sanitize_file_name( $upload['name'] );
+					$upload_path = $upload_path . '/';
+					$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
 
-					if ( move_uploaded_file( $upload['tmp_name'], $pic_path ) ) {
+					$file_name = user_registration_incremental_file_name( $upload_path, $upload );
+
+					$file_path = $upload_path . sanitize_file_name( $file_name );
+
+					if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
 
 						$attachment_id = wp_insert_attachment(
 							array(
-								'guid'           => $pic_path,
-								'post_mime_type' => strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) ),
-								'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $upload['name'] ) ),
+								'guid'           => $file_path,
+								'post_mime_type' => $file_ext,
+								'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
 								'post_content'   => '',
 								'post_status'    => 'inherit',
 							),
-							$pic_path
+							$file_path
 						);
 
 						if ( is_wp_error( $attachment_id ) ) {
@@ -124,7 +129,7 @@ class UR_Form_Handler {
 						include_once ABSPATH . 'wp-admin/includes/image.php';
 
 						// Generate and save the attachment metas into the database.
-						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $pic_path ) );
+						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
 
 						update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
 
