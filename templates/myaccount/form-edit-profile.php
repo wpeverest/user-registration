@@ -35,8 +35,8 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								<?php
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-								$max_size = wp_max_upload_size();
+								$image               = ( ! empty( $profile_picture_url ) ) ? wp_get_attachment_url( $profile_picture_url ) : $gravatar_image;
+								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
 
 								foreach ( $form_data_array as $data ) {
@@ -82,7 +82,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 											?>
 											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
 											<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-											<button class="button profile-pic-remove" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+											<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
 											<?php
 											if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 												?>
@@ -202,21 +202,21 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												}
 
 												if ( 'text' === $single_item->field_key ) {
-													$field['size']  = isset( $advance_data['advance_setting']->size ) ? $advance_data['advance_setting']->size : '';
+													$field['size'] = isset( $advance_data['advance_setting']->size ) ? $advance_data['advance_setting']->size : '';
 												}
 
 												if ( 'range' === $single_item->field_key ) {
-													$field['range_min'] = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
-													$field['range_max'] = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
-													$field['range_step'] = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
+													$field['range_min']             = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
+													$field['range_max']             = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
+													$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
 													$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
 
 													if ( 'true' === $advance_data['advance_setting']->enable_prefix_postfix ) {
 														if ( 'true' === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
-															$field['range_prefix'] = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
+															$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
 															$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
 														} else {
-															$field['range_prefix'] = $field['range_min'];
+															$field['range_prefix']  = $field['range_min'];
 															$field['range_postfix'] = $field['range_max'];
 														}
 													}
@@ -319,7 +319,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 												}
 
 												if ( 'timepicker' === $single_item->field_key ) {
-													$field['current_time'] = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
+													$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
 													$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
 													$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
 													$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
@@ -349,7 +349,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 												$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
 												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : $field['value']; //PHPCS:ignore
+												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 												user_registration_form_field( $key, $field, $value );
 

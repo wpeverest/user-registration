@@ -75,44 +75,66 @@ class UR_Form_Handler {
 			return;
 		}
 		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			if ( isset( $_POST['profile_pic_url'] ) ) {
-				if ( '' === esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) ) ) {
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
-				} else {
-					if ( wp_http_validate_url( esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) ) ) ) {
-						$profile_pic_url = esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) );
-						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
-					}
-				}
+			$profile_picture_attachment_id = isset( $_POST['profile_pic_url'] ) ? absint( wp_unslash( $_POST['profile_pic_url'] ) ) : '';
+
+			if ( '' === $profile_picture_attachment_id ) {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+			} else {
+					update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_picture_attachment_id );
 			}
 		} else {
 			if ( isset( $_FILES['profile-pic'] ) ) {
 
 				if ( isset( $_FILES['profile-pic'] ) && ! empty( $_FILES['profile-pic']['size'] ) ) {
 
-					if ( ! function_exists( 'wp_handle_upload' ) ) {
-						require_once ABSPATH . 'wp-admin/includes/file.php';
+					$upload = $_FILES['profile-pic']; // phpcs:ignore
+
+					$upload_dir  = wp_upload_dir();
+					$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
+
+					if ( ! wp_is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
+						ur_add_notice( 'Upload path permission deny.', 'error' );
 					}
 
-					$upload           = $_FILES['profile-pic']; // phpcs:ignore
-					$upload_overrides = array(
-						'action' => 'save_profile_details',
-					);
-					$uploaded         = wp_handle_upload( $upload, $upload_overrides );
+					$upload_path = $upload_path . '/';
+					$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
 
-					if ( $uploaded && ! isset( $uploaded['error'] ) ) {
-						$image = wp_get_image_editor( $uploaded['file'] );
+					$file_name = user_registration_incremental_file_name( $upload_path, $upload );
 
-						if ( ! is_wp_error( $image ) ) {
-							$image->resize( 150, 150, true );
-							$image->save( $uploaded['file'] );
+					$file_path = $upload_path . sanitize_file_name( $file_name );
+
+					if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+
+						$attachment_id = wp_insert_attachment(
+							array(
+								'guid'           => $file_path,
+								'post_mime_type' => $file_ext,
+								'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+								'post_content'   => '',
+								'post_status'    => 'inherit',
+							),
+							$file_path
+						);
+
+						if ( is_wp_error( $attachment_id ) ) {
+
+							wp_send_json_error(
+								array(
+
+									'message' => $attachment_id->get_error_message(),
+								)
+							);
 						}
-						if ( wp_http_validate_url( $uploaded['url'] ) ) {
-							$profile_pic_url = esc_url_raw( $uploaded['url'] );
-							update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
-						}
+
+						include_once ABSPATH . 'wp-admin/includes/image.php';
+
+						// Generate and save the attachment metas into the database.
+						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+
+						update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+
 					} else {
-						ur_add_notice( $uploaded['error'], 'error' );
+						ur_add_notice( 'File cannot be uploaded.', 'error' );
 					}
 				} elseif ( isset( $_FILES['profile-pic']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 

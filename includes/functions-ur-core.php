@@ -2043,6 +2043,7 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ) {
 	$conflict_shortcodes = array_merge( $conflict_shortcodes, $ur_shortcodes );
 	return $conflict_shortcodes;
 }
+
 add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_with_aioseo' );
 
 /**
@@ -2497,5 +2498,119 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			return $status;
 		}
+	}
+}
+
+add_action( 'user_registration_init', 'ur_profile_picture_migration_script' );
+
+if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
+
+	/**
+	 * Update usermeta from profile_pic_url to attachemnt id and move files to new directory.
+	 *
+	 * @since 1.5.0.
+	 */
+	function ur_profile_picture_migration_script() {
+			$users = get_users(
+				array(
+					'meta_key' => 'user_registration_profile_pic_url',
+				)
+			);
+
+		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
+
+			foreach ( $users as $user ) {
+				$user_registration_profile_pic_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
+
+				if ( ! is_numeric( $user_registration_profile_pic_url ) ) {
+					$user_registration_profile_pic_attachment = attachment_url_to_postid( $user_registration_profile_pic_url );
+					update_user_meta( $user->ID, 'user_registration_profile_pic_url', absint( $user_registration_profile_pic_attachment ) );
+				}
+			}
+
+			update_option( 'ur_profile_picture_migrated', true );
+		}
+	}
+}
+
+add_action( 'delete_user', 'ur_delete_user_files_on_user_delete', 10, 3 );
+
+if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
+
+	/**
+	 * Delete user uploaded files when user is deleted.
+	 *
+	 * @param [type] $user_id User Id.
+	 * @param [type] $reassign  Reassign to another user ( admin ).
+	 * @param [type] $user User Data.
+	 */
+	function ur_delete_user_files_on_user_delete( $user_id, $reassign, $user ) {
+
+		// Return if reassign is set.
+		if ( null !== $reassign ) {
+			return;
+		}
+
+		// Delete user uploaded file when user is deleted.
+		if ( class_exists( 'URFU_Uploaded_Data' ) ) {
+			$post = get_post( ur_get_form_id_by_userid( $user_id ) );
+
+			$form_data_object = json_decode( $post->post_content );
+
+			$file_fields = URFU_Uploaded_Data::get_file_field( $form_data_object );
+
+			foreach ( $file_fields as $field ) {
+
+				$meta_key = isset( $field['key'] ) ? $field['key'] : '';
+
+				$attachment_ids = explode( ',', get_user_meta( $user->ID, 'user_registration_' . $meta_key, true ) );
+
+				foreach ( $attachment_ids as $attachment_id ) {
+					$file_path = get_attached_file( $attachment_id );
+
+					if ( file_exists( $file_path ) ) {
+						unlink( $file_path );
+					}
+				}
+			}
+		}
+
+		// Delete user uploaded profile image when user is deleted.
+		$profile_pic_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
+
+		$pic_path = get_attached_file( $profile_pic_attachment_id );
+
+		if ( file_exists( $pic_path ) ) {
+			unlink( $pic_path );
+		}
+	}
+}
+
+if ( ! function_exists( 'user_registration_incremental_file_name' ) ) {
+
+	/**
+	 * Create a incremental file name
+	 *
+	 * @param [type] $upload_path Path to the upload directory.
+	 * @param [type] $file Uploaded file.
+	 */
+	function user_registration_incremental_file_name( $upload_path, $file ) {
+
+		$file_name = sanitize_file_name( $file['name'] );
+		$file_ext  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+
+		$file_counter = 0;
+		while ( file_exists( $upload_path . $file_name ) ) {
+			$file_name = pathinfo( $file_name, PATHINFO_FILENAME );
+
+			if ( 0 === $file_counter ) {
+				$file_name = $file_name . '-' . $file_counter;
+			}
+
+			$file_name = substr( $file_name, 0, strpos( $file_name, '-' ) );
+			$file_name = $file_name . '-' . ( $file_counter++ ) . '.' . $file_ext;
+		}
+
+		return $file_name;
 	}
 }

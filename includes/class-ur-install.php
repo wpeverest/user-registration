@@ -141,6 +141,12 @@ class UR_Install {
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
 
+		$path = WP_CONTENT_DIR . '/uploads/user_registration_uploads/profile-pictures';
+
+		if ( ! is_dir( $path ) ) {
+			mkdir( $path, 0777, true );
+		}
+
 		delete_transient( 'ur_installing' );
 
 		do_action( 'user_registration_flush_rewrite_rules' );

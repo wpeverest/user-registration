@@ -4,8 +4,6 @@
  *
  * Functions for account specific things.
  *
- * @author   WPEverest
- * @category Core
  * @package  UserRegistration/Functions
  * @version  1.0.0
  */
@@ -23,7 +21,7 @@ add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
  *
  * @since 1.5.8
  *
- * @param  array $query
+ * @param  array $query User Queries.
  *
  * @return array
  */
@@ -37,10 +35,14 @@ function ur_show_current_user_attachments( $query ) {
 	return $query;
 }
 
-// Modify error message on invalid username or password.
+/**
+ * Modify error message on invalid username or password.
+ *
+ * @param string $error Error Message.
+ */
 function ur_login_error_message( $error ) {
 	// Don't change login error messages on admin site .
-	if ( isset( $_POST['redirect_to'] ) && false !== strpos( $_POST['redirect_to'], network_admin_url() ) ) {
+	if ( isset( $_POST['redirect_to'] ) && false !== strpos( wp_unslash( $_POST['redirect_to'] ), network_admin_url() ) ) {  // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		return $error;
 	}
 
@@ -48,12 +50,12 @@ function ur_login_error_message( $error ) {
 	$pos2 = strpos( $error, 'Invalid' );       // Check if the error contains Invalid string.
 
 	// Its the correct username with incorrect password.
-	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {
-
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $_POST['username'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
-	} // It's invalid username.
-	elseif ( is_int( $pos2 ) && isset( $_POST['username'] ) ) {
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s', 'user-registration' ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' );
+	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {  // phpcs:ignore WordPress.Security.NonceVerification
+		/* translators: %s - Username */
+		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), sanitize_text_field( wp_unslash( $_POST['username'] ) ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ); // phpcs:ignore WordPress.Security.NonceVerification
+	} elseif ( is_int( $pos2 ) && isset( $_POST['username'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		/* translators: %s - Lost password URL */
+		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s', 'user-registration' ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
 	return $error;
@@ -62,19 +64,19 @@ function ur_login_error_message( $error ) {
 /**
  * Returns the url to the lost password endpoint url.
  *
- * @param  string $default_url
+ * @param  string $default_url Default lost password URL.
  *
  * @return string
  */
 function ur_lostpassword_url( $default_url = '' ) {
 
 	// Don't redirect to the user registration endpoint on global network admin lost passwords.
-	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( $_GET['redirect_to'], network_admin_url() ) ) {
+	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( wp_unslash( $_GET['redirect_to'] ), network_admin_url() ) ) { // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		return $default_url;
 	}
 
 	// Don't  change default url if admin side login form.
-	if ( $GLOBALS['pagenow'] === 'wp-login.php' ) {
+	if ( 'wp-login.php' === $GLOBALS['pagenow'] ) {
 		return $default_url;
 	}
 
@@ -141,7 +143,7 @@ function ur_get_account_menu_items() {
 /**
  * Get account menu item classes.
  *
- * @param  string $endpoint
+ * @param  string $endpoint Endpoint.
  *
  * @return string
  */
@@ -173,7 +175,7 @@ function ur_get_account_menu_item_classes( $endpoint ) {
  *
  * @since 2.6.0
  *
- * @param string $endpoint
+ * @param string $endpoint Endpoint.
  *
  * @return string
  */
@@ -188,12 +190,12 @@ function ur_get_account_endpoint_url( $endpoint ) {
 /**
  * Custom function to override get_gavatar function.
  *
- * @param [type] $avatar
- * @param [type] $id_or_email
- * @param [type] $size
- * @param [type] $default
- * @param [type] $alt
- * @param array  $args
+ * @param [type] $avatar Avatar of user.
+ * @param [type] $id_or_email ID or email of user.
+ * @param [type] $size Size of avatar.
+ * @param [type] $default Default avatar.
+ * @param [type] $alt Alt.
+ * @param array  $args Args.
  */
 function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt, $args = array() ) {
 	global $wp_filter;
@@ -225,7 +227,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		return $avatar;
 	}
 
-	$profile_picture_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
+	$profile_picture_url = wp_get_attachment_url( get_user_meta( $user->ID, 'user_registration_profile_pic_url', true ) );
 	$class               = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
 	if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || ( isset( $args['force_default'] ) && $args['force_default'] ) ) {
