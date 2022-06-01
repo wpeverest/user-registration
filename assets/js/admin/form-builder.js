@@ -3598,20 +3598,22 @@
 
 				// Load a flatpicker for the field, if hasn't been loaded.
 				if (!date_flatpickr) {
-					var formated_date = $(this).siblings("#formated_date").val()
-						? $(this).siblings("#formated_date").val()
-						: $(this)
-								.closest(".ur-field-item")
-								.find("#formatted_date")
-								.val();
-					var date_selector = $(
-						".ur-frontend-form #" +
-							field_id +
-							", #fieldset-user_registration #" +
-							field_id
-					)
-						.attr("type", "text")
-						.val(formated_date);
+					var formated_date = $(this)
+						.closest(".ur-field-item")
+						.find("#formated_date")
+						.val();
+
+					if (0 < $(".ur-frontend-form").length) {
+						var date_selector = $(".ur-frontend-form #" + field_id)
+							.attr("type", "text")
+							.val(formated_date);
+					} else {
+						var date_selector = $(
+							".woocommerce-MyAccount-content #" + field_id
+						)
+							.attr("type", "text")
+							.val(formated_date);
+					}
 
 					$(this).attr(
 						"data-date-format",
