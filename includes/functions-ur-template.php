@@ -478,7 +478,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
 
-						if ( empty( $args['placeholder'] ) ) {
+						if ( '' !== $value ) {
 							$selected_attribute = selected( $value, trim( $option_key ), false );
 						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
@@ -845,7 +845,8 @@ function ur_logout_url( $redirect = '' ) {
 			preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 		}
 
-		$attributes = shortcode_parse_atts( $matches[3] );
+		$matches_attr = isset( $matches[3] ) ? $matches[3] : '';
+		$attributes = shortcode_parse_atts( $matches_attr );
 		/**
 		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
 		 *
