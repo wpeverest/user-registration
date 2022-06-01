@@ -824,6 +824,7 @@ function ur_logout_url( $redirect = '' ) {
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
 			$blocks = parse_blocks( $post_content );
+			$new_shortcode = '';
 			foreach ( $blocks as $block ) {
 				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
 					$new_shortcode = $block['innerHTML'];
@@ -841,7 +842,8 @@ function ur_logout_url( $redirect = '' ) {
 			preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
 		}
 
-		$attributes = shortcode_parse_atts( $matches[3] );
+		$matches_attr = isset( $matches[3] ) ? $matches[3] : '';
+		$attributes = shortcode_parse_atts( $matches_attr );
 		/**
 		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
 		 *

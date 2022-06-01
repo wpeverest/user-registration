@@ -335,7 +335,9 @@ class UR_Email_Confirmation {
 			}
 
 			// update user status when login using social connect.
-			if ( get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
+			$is_social_login_option_enabled = 'yes' === get_option( 'user_registration_social_setting_enable_login_options', 'no' );
+
+			if ( ! $is_social_login_option_enabled && get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
 
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
