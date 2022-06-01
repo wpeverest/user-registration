@@ -214,6 +214,11 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-mode'] = $data['advance_setting']->enable_date_range;
 		}
 
+		if ( isset( $data['advance_setting']->date_localization ) ) {
+			wp_enqueue_script( 'flatpickr-localization_' . $data['advance_setting']->date_localization, 'https://npmcdn.com/flatpickr/dist/l10n/' . $data['advance_setting']->date_localization . '.js', array(), '4.6.13' );
+			$form_data['custom_attributes']['data-locale'] = $data['advance_setting']->date_localization;
+		}
+
 		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );
 
 		if ( isset( $form_data['label'] ) ) {
