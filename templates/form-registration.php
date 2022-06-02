@@ -50,6 +50,8 @@ if ( 'Bordered' === $form_template ) {
 
 $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class, $form_id );
 
+$notices = apply_filters( 'user_registration_before_registration_form_notice', ur_print_notices() );
+echo esc_html( $notices );
 /**
  * Hook for Before registration form
  *

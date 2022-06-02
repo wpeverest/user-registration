@@ -39,7 +39,7 @@ ur_print_notices(); ?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button" value="<?php esc_attr_e( 'Reset password', 'user-registration' ); ?>" />
+					<input type="submit" class="user-registration-Button button" value="<?php echo esc_html( apply_filters( 'user_registration_lost_password_button_text', __( 'Reset password', 'user-registration' ) ) ); ?>" />
 				</p>
 
 				<?php wp_nonce_field( 'lost_password' ); ?>

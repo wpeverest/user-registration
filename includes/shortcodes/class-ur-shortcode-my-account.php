@@ -191,6 +191,9 @@ class UR_Shortcode_My_Account {
 
 			// Prepare values.
 			foreach ( $profile as $key => $field ) {
+				if ( isset( $field['custom_attributes']['data-locale'] ) ) {
+					wp_enqueue_script( 'flatpickr-localization_' . $field['custom_attributes']['data-locale'], 'https://npmcdn.com/flatpickr/dist/l10n/' . $field['custom_attributes']['data-locale'] . '.js', array(), '4.6.13' );
+				}
 				$value                    = get_user_meta( get_current_user_id(), $key, true );
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
 				$new_key                  = str_replace( 'user_registration_', '', $key );
@@ -214,7 +217,7 @@ class UR_Shortcode_My_Account {
 				'myaccount/form-edit-profile.php',
 				array(
 					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
-					'form_data_array' => $form_data_array,
+					'form_data_array' => apply_filters( 'user_registration_form_data_to_edit', $form_data_array ),
 				)
 			);
 		} else {

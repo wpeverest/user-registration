@@ -1213,6 +1213,7 @@
 						date_selector.data("date-format")
 					);
 					$(this).attr("data-mode", date_selector.data("mode"));
+					$(this).attr("data-locale", date_selector.data("locale"));
 					$(this).attr(
 						"data-min-date",
 						date_selector.data("min-date")

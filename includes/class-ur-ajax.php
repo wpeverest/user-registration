@@ -54,6 +54,7 @@ class UR_AJAX {
 			'user_form_submit'       => true,
 			'update_profile_details' => true,
 			'profile_pic_upload'     => true,
+			'profile_pic_remove'     => true,
 			'ajax_login_submit'      => true,
 			'send_test_email'        => true,
 			'deactivation_notice'    => false,
@@ -242,16 +243,13 @@ class UR_AJAX {
 			}
 		}
 
-		if ( isset( $single_field['user_registration_profile_pic_url'] ) ) {
-			if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-				if ( '' === $single_field['user_registration_profile_pic_url'] ) {
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
-				} else {
-					if ( wp_http_validate_url( $single_field['user_registration_profile_pic_url'] ) ) {
-						$profile_pic_url = esc_url_raw( $single_field['user_registration_profile_pic_url'] );
-						update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_pic_url );
-					}
-				}
+		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
+
+		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+			if ( '' === $profile_picture_attachment_id ) {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+			} else {
+				update_user_meta( $user_id, 'user_registration_profile_pic_url', absint( $profile_picture_attachment_id ) );
 			}
 		}
 
@@ -399,14 +397,14 @@ class UR_AJAX {
 			// valid extension for image.
 			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( $_REQUEST['valid_extension'] ) : ''; // phpcs:ignore
 			$valid_extension_type = explode( ',', $valid_extensions );
-			$valid_ext = array();
+			$valid_ext            = array();
 
 			foreach ( $valid_extension_type as $key => $value ) {
-				$image_extension = explode( '/', $value );
+				$image_extension   = explode( '/', $value );
 				$valid_ext[ $key ] = $image_extension[1];
 			}
 
-			$src_file_name = isset( $upload['name'] ) ? $upload['name'] : '';
+			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
 			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
 
 			// Validates if the uploaded file has the acceptable extension.
@@ -417,33 +415,74 @@ class UR_AJAX {
 					)
 				);
 			}
-			$post_overrides = array(
-				'post_status' => 'publish',
-				'post_title'  => $upload['name'],
-			);
-			$attachment_id  = media_handle_sideload( $upload, (int) 0, $post_overrides['post_title'], $post_overrides );
 
-			if ( is_wp_error( $attachment_id ) ) {
+			$upload_dir = wp_upload_dir();
+			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
+			if ( ! is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
 				wp_send_json_error(
 					array(
 
-						'message' => $attachment_id->get_error_message(),
+						'message' => __( 'Upload path permission deny.', 'user-registration' ),
+					)
+				);
+
+			}
+
+			$upload_path = $upload_path . '/';
+			$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
+
+			$file_name = user_registration_incremental_file_name( $upload_path, $upload );
+
+			$file_path = $upload_path . sanitize_file_name( $file_name );
+
+			if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+
+				$attachment_id = wp_insert_attachment(
+					array(
+						'guid'           => $file_path,
+						'post_mime_type' => $file_ext,
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					),
+					$file_path
+				);
+
+				if ( is_wp_error( $attachment_id ) ) {
+
+					wp_send_json_error(
+						array(
+
+							'message' => $attachment_id->get_error_message(),
+						)
+					);
+				}
+
+				include_once ABSPATH . 'wp-admin/includes/image.php';
+
+				// Generate and save the attachment metas into the database.
+				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+
+				$url = wp_get_attachment_url( $attachment_id );
+
+				if ( empty( $url ) ) {
+					$url = home_url() . '/wp-includes/images/media/text.png';
+				}
+
+				wp_send_json_success(
+					array(
+						'url'           => $url,
+						'attachment_id' => $attachment_id,
+					)
+				);
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => __( 'File cannot be uploaded.', 'user-registration' ),
 					)
 				);
 			}
-
-			$url = wp_get_attachment_thumb_url( $attachment_id );
-			if ( empty( $url ) ) {
-				$url = home_url() . '/wp-includes/images/media/text.png';
-			}
-
-			wp_send_json_success(
-				array(
-					'url' => $url,
-				)
-			);
-
 		} elseif ( isset( $_FILES['file']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['file']['error'] ) {
 
 			switch ( $_FILES['file']['error'] ) {
@@ -599,6 +638,7 @@ class UR_AJAX {
 				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), __( 'Unknown email address. Check again or try your username.', 'user-registration' ) ) );
 			}
 			if ( ! empty( $user->errors['incorrect_password'] ) ) {
+				/* translators: 1 User login, 2: lost password url */
 				$user->errors['incorrect_password'][0] = apply_filters( 'user_registration_incorrect_password_error_message', sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $info['user_login'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ) );
 			}
 			$message = $user->get_error_message();
@@ -1012,6 +1052,48 @@ class UR_AJAX {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
 			}
 		}
+	}
+
+	/**
+	 * Remove profile picture ajax method.
+	 */
+	public static function profile_pic_remove() {
+		check_ajax_referer( 'user_registration_profile_picture_remove_nonce', 'security' );
+		$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+
+		$flag = wp_verify_nonce( $nonce, 'user_registration_profile_picture_remove_nonce' );
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+
+		$attachment_id = isset( $_POST['attachment_id'] ) ? intval( wp_unslash( $_POST['attachment_id'] ) ) : '';
+
+		if ( file_exists( get_attached_file( $attachment_id ) ) && ! unlink( get_attached_file( $attachment_id ) ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'File cannot be removed', 'user-registration' ),
+				)
+			);
+		}
+
+		$user_id = get_current_user_id();
+
+		if ( $user_id > 0 ) {
+			update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'User profile picture removed successfully', 'user-registration' ),
+			)
+		);
+
 	}
 }
 

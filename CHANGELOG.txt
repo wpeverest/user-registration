@@ -1,3 +1,16 @@
+= 2.1.8    - 02/06/2022
+* Feature  - Native date Field.
+* Enhance  - Profile Picture and File Upload to different folder.
+* Dev      - Social connect with login option.
+* Dev      - Hook for notice in registration form.
+* Dev      - Hook for customize edit profile fields.
+* Dev      - Filter hook for admin action redirect in users section.
+* Tweak    - Filter to change lost password page button text.
+* Tweak    - Remove Add User Registration Form button from wp-editor in URCMA settings.
+* Fix      - Popup issue with wpcover block.
+* Fix      - Learndash login conflict with prevent core login feature.
+* Fix      - Country field value issue in edit profile when placeholder is set.
+
 = 2.1.7    - 29/04/2022
 * Tweak    - Country full name in smart tags.
 * Fix 	   - Lost password when no account page.
