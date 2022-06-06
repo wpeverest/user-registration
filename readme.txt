@@ -277,7 +277,7 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.1.8    - 07/06/2022
+= 2.1.8    - 08/06/2022
 * Feature  - Native date Field.
 * Enhance  - Profile Picture and File Upload to different folder.
 * Dev      - Social connect with login option.
