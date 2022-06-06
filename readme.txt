@@ -277,13 +277,15 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.1.8    - 02/06/2022
+= 2.1.8    - 07/06/2022
 * Feature  - Native date Field.
 * Enhance  - Profile Picture and File Upload to different folder.
 * Dev      - Social connect with login option.
+* Dev      - Proper escaping on left out htmls.
 * Dev      - Hook for notice in registration form.
 * Dev      - Hook for customize edit profile fields.
 * Dev      - Filter hook for admin action redirect in users section.
+* Tweak    - URL to pricing page from extensions menu.
 * Tweak    - Filter to change lost password page button text.
 * Tweak    - Remove Add User Registration Form button from wp-editor in URCMA settings.
 * Fix      - Popup issue with wpcover block.

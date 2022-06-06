@@ -579,7 +579,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<div class="user-registration-notice-header">
 							<h3 class="ur-error extra-pad"><?php _e( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ); ?></h3>
 						</div>
-						<p class="extra-pad"><?php echo sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ); ?></p>
+						<p class="extra-pad"><?php echo wp_kses_post( sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ) ); ?></p>
 						<?php echo wp_kses_post( sprintf( __( '%1$s', 'user-registration' ), $update_addon_content ) ); ?>
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
