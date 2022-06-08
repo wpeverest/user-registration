@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 5.9.3
-Stable tag: 2.1.7
+Tested up to: 6.0
+Stable tag: 2.1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,21 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.1.8    - 08/06/2022
+* Feature  - Native date Field.
+* Enhance  - Profile Picture and File Upload to different folder.
+* Dev      - Social connect with login option.
+* Dev      - Proper escaping on left out htmls.
+* Dev      - Hook for notice in registration form.
+* Dev      - Hook for customize edit profile fields.
+* Dev      - Filter hook for admin action redirect in users section.
+* Tweak    - URL to pricing page from extensions menu.
+* Tweak    - Filter to change lost password page button text.
+* Tweak    - Remove Add User Registration Form button from wp-editor in URCMA settings.
+* Fix      - Popup issue with wpcover block.
+* Fix      - Learndash login conflict with prevent core login feature.
+* Fix      - Country field value issue in edit profile when placeholder is set.
 
 = 2.1.7    - 29/04/2022
 * Tweak    - Country full name in smart tags.

@@ -33,14 +33,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="user-registration-img-container">
 		<?php
 			$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-			$profile_picture_url = wp_get_attachment_url( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) );
+			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+
+		if ( is_numeric( $profile_picture_url ) ) {
+			$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+		}
 			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 
 		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
 
 			?>
-				<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">
-			<?php } ?>
+					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">
+				<?php } ?>
 
 	</div>
 	<header>

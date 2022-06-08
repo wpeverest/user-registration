@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 												<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">
-													<a class="button upgrade-now" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=evf-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
+													<a class="button upgrade-now" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
 												</div>
 										<?php } ?>
 									</div>

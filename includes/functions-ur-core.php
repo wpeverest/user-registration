@@ -2524,7 +2524,9 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 
 				if ( ! is_numeric( $user_registration_profile_pic_url ) ) {
 					$user_registration_profile_pic_attachment = attachment_url_to_postid( $user_registration_profile_pic_url );
-					update_user_meta( $user->ID, 'user_registration_profile_pic_url', absint( $user_registration_profile_pic_attachment ) );
+					if ( 0 != $user_registration_profile_pic_attachment ) {
+						update_user_meta( $user->ID, 'user_registration_profile_pic_url', absint( $user_registration_profile_pic_attachment ) );
+					}
 				}
 			}
 

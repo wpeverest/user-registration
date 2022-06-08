@@ -35,7 +35,12 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 								<?php
 								$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-								$image               = ( ! empty( $profile_picture_url ) ) ? wp_get_attachment_url( $profile_picture_url ) : $gravatar_image;
+
+								if ( is_numeric( $profile_picture_url ) ) {
+									$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+								}
+
+								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
 

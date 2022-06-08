@@ -248,7 +248,7 @@ class UR_Form_Handler {
 
 									if ( ! is_email( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) ) {
 										/* translators: %s - Field Label */
-										ur_add_notice( sprintf( esc_html__( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' );
+										ur_add_notice( wp_kses_post( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' ) );
 									}
 
 									break;
