@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<div class="inside">
 						<p class="help">
-							<?php echo wp_kses_post( 'Export your forms along with their settings as <strong>JSON</strong> file.', 'user-registration' ); ?>
+							<?php echo wp_kses_post( __( 'Export your forms along with their settings as <strong>JSON</strong> file.', 'user-registration' ) ); ?>
 						</p>
 
 						<p>
@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<div class="inside">
 						<p class="help">
-							<?php echo wp_kses_post( 'Import your forms along with their settings from <strong>JSON</strong> file.', 'user-registration' ); ?>
+							<?php echo wp_kses_post( __( 'Import your forms along with their settings from <strong>JSON</strong> file.', 'user-registration' ) ); ?>
 						</p>
 						<div class="ur-form-group">
 							<div class="user-registration-custom-file">

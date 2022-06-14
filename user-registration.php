@@ -418,7 +418,7 @@ if ( ! function_exists( 'UR' ) ) {
 				return;
 			}
 
-			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( 'As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) . '</p></div>';
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
 
 			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
