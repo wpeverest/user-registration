@@ -100,6 +100,7 @@ class UR_Frontend_Form_Handler {
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
 
 			if ( $user_id > 0 ) {
+				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
 				$login_option   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 				$success_params = array(
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
