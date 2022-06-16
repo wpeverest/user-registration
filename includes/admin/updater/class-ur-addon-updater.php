@@ -258,6 +258,7 @@ class UR_AddOn_Updater {
 
 			if ( empty( $version_info->download_link ) ) {
 				printf(
+					/* translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close */
 					esc_html__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'user-registration' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
@@ -266,6 +267,7 @@ class UR_AddOn_Updater {
 				);
 			} else {
 				printf(
+					/* translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close, 5: Upgrade Plugin Link, 6: Link Close */
 					esc_html__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'user-registration' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
@@ -294,7 +296,7 @@ class UR_AddOn_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( 'plugin_information' !== $this->api_url ) {
+		if ( 'plugin_information' !== $_REQUEST['tab'] && 'https://wpeverest.com/edd-sl-api/' !== $this->api_url ) { //phpcs:ignore
 
 			return $_data;
 
