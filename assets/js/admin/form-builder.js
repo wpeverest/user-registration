@@ -2823,6 +2823,25 @@
 									.toggle();
 							});
 							break;
+						case "validate_unique":
+						if ("false" === $this_node.val()) {
+							$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-advance-validation_message")
+								.hide();
+						}
+
+						$this_node.on("change", function () {
+							$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-advance-validation_message")
+								.toggle();
+
+							$(".ur-selected-item.ur-item-active")
+								.find(".ur-advance-validation_message")
+								.toggle();
+						});
+						break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
