@@ -354,7 +354,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 				add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
-
+				add_submenu_page(
+					'user-registration',
+					__( 'All Forms', 'user-registration' ),
+					__( 'All Forms', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration',
+					array(
+						$this,
+						'registration_page',
+					)
+				);
 		}
 
 		/**
