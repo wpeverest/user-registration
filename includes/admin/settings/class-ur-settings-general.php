@@ -63,7 +63,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
-					'title'    => __( 'General Options', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'general_options'    => array(
 							'title'    => __( 'General', 'user-registration' ),
