@@ -31,10 +31,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 
+			// Hooks to Remove Redundant titles
+			add_filter( 'user_registration_general_settings', array( $this, 'remove_redundant_title' ) );
+			add_filter( 'user_registration_login_options_settings', array( $this, 'remove_redundant_title' ) );
+			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'remove_redundant_title' ) );
+
 			// Custom Actions to capitalize settings titles
-			add_filter( 'user_registration_general_settings', array( $this, 'changeSettingsTitles' ) );
-			add_filter( 'user_registration_login_options_settings', array( $this, 'changeSettingsTitles' ) );
-			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'changeSettingsTitles' ) );
+			add_filter( 'user_registration_general_settings', array( $this, 'change_settings_title' ) );
+			add_filter( 'user_registration_login_options_settings', array( $this, 'change_settings_title' ) );
+			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'change_settings_title' ) );
 		}
 
 		/**
@@ -68,7 +73,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
-					'title'    => __( '', 'user-registration' ),
+					'title'    => __( 'General Options', 'user-registration' ),
 					'sections' => array(
 						'general_options'    => array(
 							'title'    => __( 'General', 'user-registration' ),
@@ -693,6 +698,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
+		 * Remove Redundant titles from Global Settings
+		 */
+		public function remove_redundant_title( $settings ) {
+			$settings['title'] = "";
+			return $settings;
+		}
+
+		/**
 		 * Save settings
 		 */
 		public function save() {
@@ -715,13 +728,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		/**
 		 * Callback to capitalize settings title
 		 */
-		public function changeSettingsTitles( $settings ) {
+		public function change_settings_title( $settings ) {
 			foreach ( $settings['sections'] as $section_key => $section_value ) {
 				
 				foreach ( $section_value['settings'] as $setting_key => $setting_value ) {
 					$title = $settings['sections'][$section_key]['settings'][$setting_key]['title'];
 
-					$title = $this->capitalizeTitle( $title );
+					$title = $this->capitalize_title( $title );
 
 					$settings['sections'][$section_key]['settings'][$setting_key]['title'] = __( $title, 'user-registration ');
 				}
@@ -733,7 +746,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		/**
 		 * Capitalize Each Word that is not preposition
 		 */
-		public function capitalizeTitle( $text = null ) {
+		public function capitalize_title( $text = null ) {
 			$prepositions = ['at', 'by', 'for', 'in', 'on', 'to', 'or'];
 
 			$words = explode( ' ', $text );
