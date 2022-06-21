@@ -30,6 +30,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+
+			// Custom Actions to capitalize settings titles
+			add_filter( 'user_registration_general_settings', array( $this, 'changeSettingsTitles' ) );
+			add_filter( 'user_registration_login_options_settings', array( $this, 'changeSettingsTitles' ) );
+			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'changeSettingsTitles' ) );
 		}
 
 		/**
@@ -705,6 +710,45 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			}
 
 			UR_Admin_Settings::save_fields( $settings );
+		}
+
+		/**
+		 * Callback to capitalize settings title
+		 */
+		public function changeSettingsTitles( $settings ) {
+			foreach ( $settings['sections'] as $section_key => $section_value ) {
+				
+				foreach ( $section_value['settings'] as $setting_key => $setting_value ) {
+					$title = $settings['sections'][$section_key]['settings'][$setting_key]['title'];
+
+					$title = $this->capitalizeTitle( $title );
+
+					$settings['sections'][$section_key]['settings'][$setting_key]['title'] = __( $title, 'user-registration ');
+				}
+			}
+			
+			return $settings;
+		}
+
+		/**
+		 * Capitalize Each Word that is not preposition
+		 */
+		public function capitalizeTitle( $text = null ) {
+			$prepositions = ['at', 'by', 'for', 'in', 'on', 'to', 'or'];
+
+			$words = explode( ' ', $text );
+
+			$capitalized_words = array();
+
+			foreach( $words as $word ) {
+				$word = trim( $word );
+				if ( ! in_array( $word, $prepositions ) ) {
+					$word = ucfirst( $word );
+				}
+				$capitalized_words[] = $word;
+			}
+
+			return implode( ' ', $capitalized_words );
 		}
 	}
 
