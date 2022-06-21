@@ -437,7 +437,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @since 2.0.6
 	 */
 	public function user_registration_failed_extension_install() {
-		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php';
 		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
 
 		if ( ! file_exists( $ur_pro_plugins_path ) ) {
@@ -470,7 +470,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		}
 
 		$license_key = get_option( $this->plugin_slug . '_license_key' );
-		$ur_pro_plugins_path = WP_PLUGIN_DIR . '\user-registration-pro\user-registration.php';
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php';
 
 		$link = '';
 		$content = '';
