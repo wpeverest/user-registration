@@ -447,7 +447,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_submenu_page(
 				'user-registration',
 				__( 'User Registration extensions', 'user-registration' ),
-				__( 'Extensions', 'user-registration' ),
+				__( '<span><span class="dashicons dashicons-plus"></span>&nbsp;Extensions</span>', 'user-registration' ),
 				'manage_user_registration',
 				'user-registration-addons',
 				array(
