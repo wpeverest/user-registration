@@ -30,16 +30,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
-
-			// Hooks to Remove Redundant titles
-			add_filter( 'user_registration_general_settings', array( $this, 'remove_redundant_title' ) );
-			add_filter( 'user_registration_login_options_settings', array( $this, 'remove_redundant_title' ) );
-			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'remove_redundant_title' ) );
-
-			// Custom Actions to capitalize settings titles
-			add_filter( 'user_registration_general_settings', array( $this, 'change_settings_title' ) );
-			add_filter( 'user_registration_login_options_settings', array( $this, 'change_settings_title' ) );
-			add_filter( 'user_registration_frontend_messages_settings', array( $this, 'change_settings_title' ) );
 		}
 
 		/**
@@ -73,7 +63,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
-					'title'    => __( 'General Options', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'general_options'    => array(
 							'title'    => __( 'General', 'user-registration' ),
@@ -81,7 +71,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'User login option', 'user-registration' ),
+									'title'    => __( 'User Approval And Login Option', 'user-registration' ),
 									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options',
 									'default'  => 'default',
@@ -92,7 +82,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => ur_login_option(),
 								),
 								array(
-									'title'    => __( 'Prevent dashboard access', 'user-registration' ),
+									'title'    => __( 'Prevent Dashboard Access', 'user-registration' ),
 									'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
 									'default'  => array( 'subscriber' ),
@@ -103,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => $all_roles_except_admin,
 								),
 								array(
-									'title'    => __( 'Enable hide/show password', 'user-registration' ),
+									'title'    => __( 'Enable Hide/Show Password', 'user-registration' ),
 									'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_hide_show_password',
 									'type'     => 'checkbox',
@@ -128,7 +118,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'My account page', 'user-registration' ),
+									'title'    => __( 'My Account Page', 'user-registration' ),
 									'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ), //phpcs:ignore
 									'id'       => 'user_registration_myaccount_page_id',
 									'type'     => 'single_select_page',
@@ -138,7 +128,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Ajax submission on edit profile', 'user-registration' ),
+									'title'    => __( 'Ajax Submission on Edit Profile', 'user-registration' ),
 									'desc'     => __( 'Check to enable ajax form submission on edit profile', 'user-registration' ),
 									'id'       => 'user_registration_ajax_form_submission_on_edit_profile',
 									'type'     => 'checkbox',
@@ -147,7 +137,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
-									'title'    => __( 'Disable profile picture', 'user-registration' ),
+									'title'    => __( 'Disable Profile Picture', 'user-registration' ),
 									'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 									'id'       => 'user_registration_disable_profile_picture',
 									'type'     => 'checkbox',
@@ -156,7 +146,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
-									'title'    => __( 'Disable logout confirmation', 'user-registration' ),
+									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
 									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
 									'id'       => 'user_registration_disable_logout_confirmation',
 									'type'     => 'checkbox',
@@ -186,7 +176,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '<strong>' . __( 'Endpoints: ', 'user-registration' ) . '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
 							'settings' => array(
 								array(
-									'title'    => __( 'Edit profile', 'user-registration' ),
+									'title'    => __( 'Edit Profile', 'user-registration' ),
 									'desc'     => __( 'Endpoint for the "My account &rarr; Edit profile" page.', 'user-registration' ),
 									'id'       => 'user_registration_myaccount_edit_profile_endpoint',
 									'type'     => 'text',
@@ -202,7 +192,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Lost password', 'user-registration' ),
+									'title'    => __( 'Lost Password', 'user-registration' ),
 									'desc'     => __( 'Endpoint for the "My account &rarr; Lost password" page.', 'user-registration' ),
 									'id'       => 'user_registration_myaccount_lost_password_endpoint',
 									'type'     => 'text',
@@ -210,7 +200,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'User logout', 'user-registration' ),
+									'title'    => __( 'User Logout', 'user-registration' ),
 									'desc'     => __( 'Endpoint for the triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
 									'id'       => 'user_registration_logout_endpoint',
 									'type'     => 'text',
@@ -236,7 +226,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_frontend_messages_settings',
 				array(
-					'title'    => __( 'Frontend Messages', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'frontend_success_messages_settings' => array(
 							'title'    => __( 'Success Messages', 'user-registration' ),
@@ -244,7 +234,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Manual login after registration', 'user-registration' ),
+									'title'    => __( 'Manual Login After Registration', 'user-registration' ),
 									'desc'     => __( 'Enter the text message after successful form submission on manual login after registration.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_manual_registation',
 									'type'     => 'textarea',
@@ -254,7 +244,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Email confirmation to login', 'user-registration' ),
+									'title'    => __( 'Email Confirmation to Login', 'user-registration' ),
 									'desc'     => __( 'Enter the text message after successful form submission on email confirmation to login.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
 									'type'     => 'textarea',
@@ -264,7 +254,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Email verification completed', 'user-registration' ),
+									'title'    => __( 'Email Verification Completed', 'user-registration' ),
 									'desc'     => __( 'Enter the text message after email successfully verified and have access to login.', 'user-registration' ),
 									'id'       => 'user_registration_successful_email_verified_message',
 									'type'     => 'textarea',
@@ -274,7 +264,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Admin approval after registration', 'user-registration' ),
+									'title'    => __( 'Admin Approval After Registration', 'user-registration' ),
 									'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_admin_approval',
 									'type'     => 'textarea',
@@ -358,7 +348,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'reCaptcha', 'user-registration' ),
+									'title'    => __( 'reCAPTCHA', 'user-registration' ),
 									'desc'     => __( 'Enter the error message in form submission on recaptcha.', 'user-registration' ),
 									'id'       => 'user_registration_form_submission_error_message_recaptcha',
 									'type'     => 'text',
@@ -384,7 +374,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
 				array(
-					'title'    => __( 'Login Options', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'login_options_settings'           => array(
 							'title'    => __( 'General', 'user-registration' ),
@@ -437,7 +427,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
-									'title'    => __( 'Enable remember me', 'user-registration' ),
+									'title'    => __( 'Enable Remember Me', 'user-registration' ),
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_remember_me',
 									'type'     => 'checkbox',
@@ -447,7 +437,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Enable lost password', 'user-registration' ),
+									'title'    => __( 'Enable Lost Password', 'user-registration' ),
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_lost_password',
 									'type'     => 'checkbox',
@@ -486,7 +476,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Registration URL label', 'user-registration' ),
+									'title'    => __( 'Registration URL Label', 'user-registration' ),
 									'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_registration_label',
 									'type'     => 'text',
@@ -544,7 +534,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Remember me', 'user-registration' ),
+									'title'    => __( 'Remember Me', 'user-registration' ),
 									'desc'     => __( 'This option lets you edit the "Remember me" option label.', 'user-registration' ),
 									'id'       => 'user_registration_label_remember_me',
 									'type'     => 'text',
@@ -564,7 +554,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Lost your password?', 'user-registration' ),
+									'title'    => __( 'Lost Your Password?', 'user-registration' ),
 									'desc'     => __( 'This option lets you edit the "Lost your password?" option label.', 'user-registration' ),
 									'id'       => 'user_registration_label_lost_your_password',
 									'type'     => 'text',
@@ -696,72 +686,25 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
-
-		/**
-		 * Remove Redundant titles from Global Settings
-		 */
-		public function remove_redundant_title( $settings ) {
-			$settings['title'] = "";
-			return $settings;
-		}
-
+		
 		/**
 		 * Save settings
 		 */
 		public function save() {
-
+			
 			global $current_section;
 			$settings = $this->get_settings();
-
+			
 			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
-
+				
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
 			}
-
-			UR_Admin_Settings::save_fields( $settings );
-		}
-
-		/**
-		 * Callback to capitalize settings title
-		 */
-		public function change_settings_title( $settings ) {
-			foreach ( $settings['sections'] as $section_key => $section_value ) {
-				
-				foreach ( $section_value['settings'] as $setting_key => $setting_value ) {
-					$title = $settings['sections'][$section_key]['settings'][$setting_key]['title'];
-
-					$title = $this->capitalize_title( $title );
-
-					$settings['sections'][$section_key]['settings'][$setting_key]['title'] = __( $title, 'user-registration ');
-				}
-			}
 			
-			return $settings;
-		}
-
-		/**
-		 * Capitalize Each Word that is not preposition
-		 */
-		public function capitalize_title( $text = null ) {
-			$prepositions = ['at', 'by', 'for', 'in', 'on', 'to', 'or'];
-
-			$words = explode( ' ', $text );
-
-			$capitalized_words = array();
-
-			foreach( $words as $word ) {
-				$word = trim( $word );
-				if ( ! in_array( $word, $prepositions ) ) {
-					$word = ucfirst( $word );
-				}
-				$capitalized_words[] = $word;
-			}
-
-			return implode( ' ', $capitalized_words );
+			UR_Admin_Settings::save_fields( $settings );
 		}
 	}
 
