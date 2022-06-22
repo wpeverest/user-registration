@@ -82,8 +82,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => ur_login_option(),
 								),
 								array(
-									'title'    => __( 'Prevent Dashboard Access', 'user-registration' ),
-									'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
+									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
+									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
 									'default'  => array( 'subscriber' ),
 									'type'     => 'multiselect',
@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Hide/Show Password', 'user-registration' ),
-									'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
+									'desc'     => __( 'Check this option to enable hide/show password icon beside the password field in both registration and login form.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_hide_show_password',
 									'type'     => 'checkbox',
 									'desc_tip' => true,
@@ -102,8 +102,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
-									'title'    => __( 'Uninstall Option', 'user-registration' ),
-									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
+									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
+									'desc'     => __( '<strong>Heads Up!</strong> All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_uninstall_option',
 									'type'     => 'checkbox',
 									'desc_tip' => 'All user registration forms, pages and users data will be unrecoverable.',
