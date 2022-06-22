@@ -127,7 +127,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'select',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
+									'desc_tip' => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
 									'options'  => array(
 										'horizontal' => __( 'Horizontal', 'user-registration' ),
 										'vertical'   => __( 'Vertical', 'user-registration' ),
@@ -138,7 +138,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => __( 'Check to enable ajax form submission on edit profile', 'user-registration' ),
 									'id'       => 'user_registration_ajax_form_submission_on_edit_profile',
 									'type'     => 'checkbox',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Check to enable ajax form submission on edit profile i.e. saves profile details on save button click without reloading the page.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -197,7 +197,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_logout_endpoint',
 									'type'     => 'text',
 									'default'  => 'user-logout',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Endpoint for triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
 								),
 							),
 						),
@@ -390,14 +390,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									),
 								),
 								array(
-									'title'    => __( 'Login Only Option', 'user-registration' ),
+									'title'    => __( 'Allow users to login with', 'user-registration' ),
 									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options_with',
 									'default'  => 'default',
 									'type'     => 'select',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Allow users to login with Username, Email or any one out of both.', 'user-registration' ),
 									'options'  => ur_login_option_with(),
 								),
 								array(
@@ -411,10 +411,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
-									'desc'     => __( 'This option lets you to enable the ajax form submission', 'user-registration' ),
+									'desc'     => __( 'his option lets you enable ajax login on login form submission.', 'user-registration' ),
 									'id'       => 'ur_login_ajax_submission',
 									'type'     => 'checkbox',
-									'desc_tip' => __( 'Check to field to enable the ajax form submission.', 'user-registration' ),
+									'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -453,7 +453,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'checkbox',
-									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ), //phpcs:ignore
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank" style="color: #ff6700;">', '</a>' ), //phpcs:ignore
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -463,7 +463,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_registration_url_options',
 									'type'     => 'text',
-									'desc_tip' => true,
+									'desc_tip' => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 								),
 
@@ -478,22 +478,22 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'      => __( 'Prevent Core Login', 'user-registration' ),
-									'desc'       => __( 'Enable Prevent Core Login', 'user-registration' ),
+									'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
+									'desc'       => __( 'Disable WordPress login via wp-login.php', 'user-registration' ),
 									'id'         => 'user_registration_login_options_prevent_core_login',
 									'type'       => 'checkbox',
-									'desc_tip'   => __( 'Check to disable WordPress default login or registration page.', 'user-registration' ),
+									'desc_tip'   => __( 'CDefault WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
 									'css'        => 'min-width: 350px;',
 									'default'    => 'no',
 									'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target="_blank">here</a>.', 'user-registration' ),
 								),
 
 								array(
-									'title'    => __( 'Redirect to Login Page', 'user-registration' ),
+									'title'    => __( 'Redirect default WordPress login to', 'user-registration' ),
 									'desc'     => __( 'Select the login page where you wants to redirect.', 'user-registration' ),
 									'id'       => 'user_registration_login_options_login_redirect_url',
 									'type'     => 'single_select_page',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'class'    => 'ur-redirect-to-login-page',
 									'default'  => '',
@@ -512,7 +512,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'text',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
-									'default'  => __( 'Username or email address', 'user-registration' ),
+									'default'  => __( 'Username or Email', 'user-registration' ),
 								),
 
 								array(
@@ -532,7 +532,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'text',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
-									'default'  => __( 'Remember me', 'user-registration' ),
+									'default'  => __( 'Remember Me', 'user-registration' ),
 								),
 
 								array(
@@ -573,7 +573,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Password Field', 'user-registration' ),
-									'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
+									'desc'     => __( 'This option lets you set placeholder for the "Password" field.', 'user-registration' ),
 									'id'       => 'user_registration_placeholder_password',
 									'type'     => 'text',
 									'desc_tip' => true,
@@ -645,7 +645,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'        => __( 'Show this message when an account is has been denied.', 'user-registration' ),
 									'id'          => 'user_registration_message_denied_account',
 									'type'        => 'text',
-									'desc_tip'    => true,
+									'desc_tip'    => __( 'Show this message when an account is denied.', 'user-registration' ),
 									'css'         => 'min-width: 350px;',
 									'default'     => '',
 									'placeholder' => 'Default message from WordPress',
