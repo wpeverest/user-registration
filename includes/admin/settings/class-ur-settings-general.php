@@ -42,6 +42,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				''                  => __( 'General Options', 'user-registration' ),
 				'login-options'     => __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
+				'advanced'			=> __( 'Advanced', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -83,30 +84,21 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
-									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
+									'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
 									'default'  => array( 'subscriber' ),
 									'type'     => 'multiselect',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'options'  => $all_roles_except_admin,
 								),
 								array(
 									'title'    => __( 'Enable Hide/Show Password', 'user-registration' ),
-									'desc'     => __( 'Check this option to enable hide/show password icon beside the password field in both registration and login form.', 'user-registration' ),
+									'desc'     => __( 'Check to enable hide/show password icon.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_hide_show_password',
 									'type'     => 'checkbox',
-									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
-								),
-								array(
-									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
-									'desc'     => __( '<strong>Heads Up!</strong> All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.', 'user-registration' ),
-									'id'       => 'user_registration_general_setting_uninstall_option',
-									'type'     => 'checkbox',
-									'desc_tip' => 'All user registration forms, pages and users data will be unrecoverable.',
+									'desc_tip' => __( 'Check this option to enable hide/show password icon beside the password field in both registration and login form.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -668,6 +660,40 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
+		 * Get settings for Advanced tab
+		 *
+		 * @return array
+		 */
+		public function get_advanced_settings() {
+			$settings = apply_filters(
+				'user_registration_advanced_settings',
+				array(
+					'title'    => __( '', 'user-registration' ),
+					'sections' => array(
+						'advanced_settings'           => array(
+							'title'    => __( 'Miscellaneous', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
+							'settings' => array(
+								array(
+									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
+									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
+									'id'       => 'user_registration_advanced_uninstall_option',
+									'type'     => 'checkbox',
+									'desc_tip' => 'All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.',
+									'css'      => 'min-width: 350px;',
+									'default'  => 'no',
+								),
+							),
+						),
+					),
+				)
+			);
+
+			return apply_filters( 'user_registration_get_advanced_settings_' . $this->id, $settings );
+		}
+
+		/**
 		 * Output the settings.
 		 */
 		public function output() {
@@ -680,6 +706,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
+			} elseif ( 'advanced' === $current_section ) {
+				$settings = $this->get_advanced_settings();
 			} else {
 				$settings = array();
 			}
