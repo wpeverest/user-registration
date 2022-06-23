@@ -482,7 +482,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'       => __( 'Disable WordPress login via wp-login.php', 'user-registration' ),
 									'id'         => 'user_registration_login_options_prevent_core_login',
 									'type'       => 'checkbox',
-									'desc_tip'   => __( 'CDefault WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
+									'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
 									'css'        => 'min-width: 350px;',
 									'default'    => 'no',
 									'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target="_blank">here</a>.', 'user-registration' ),
