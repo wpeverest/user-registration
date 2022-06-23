@@ -390,7 +390,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									),
 								),
 								array(
-									'title'    => __( 'Allow users to login with', 'user-registration' ),
+									'title'    => __( 'Allow Users To Login With', 'user-registration' ),
 									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options_with',
 									'default'  => 'default',
@@ -453,7 +453,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'checkbox',
-									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank" style="color: #ff6700;">', '</a>' ), //phpcs:ignore
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank" style="color: #ff6700;font-weight: bold;">', '</a>' ), //phpcs:ignore
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -489,7 +489,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Redirect default WordPress login to', 'user-registration' ),
+									'title'    => __( 'Redirect Default WordPress Login To', 'user-registration' ),
 									'desc'     => __( 'Select the login page where you wants to redirect.', 'user-registration' ),
 									'id'       => 'user_registration_login_options_login_redirect_url',
 									'type'     => 'single_select_page',
