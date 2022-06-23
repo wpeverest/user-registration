@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - tweak/display-text-changes
     workflow_dispatch:
 jobs:
   sync:
