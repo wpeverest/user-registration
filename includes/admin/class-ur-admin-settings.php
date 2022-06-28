@@ -51,6 +51,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
+			$settings[] = include 'settings/class-ur-settings-extra.php';
 
 			if ( ! function_exists( 'is_plugin_active' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';

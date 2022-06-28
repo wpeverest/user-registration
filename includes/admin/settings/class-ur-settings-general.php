@@ -42,7 +42,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				''                  => __( 'General Options', 'user-registration' ),
 				'login-options'     => __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
-				'advanced'			=> __( 'Advanced', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -660,40 +659,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
-		 * Get settings for Advanced tab
-		 *
-		 * @return array
-		 */
-		public function get_advanced_settings() {
-			$settings = apply_filters(
-				'user_registration_advanced_settings',
-				array(
-					'title'    => __( '', 'user-registration' ),
-					'sections' => array(
-						'advanced_settings'           => array(
-							'title'    => __( 'Miscellaneous', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
-								array(
-									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
-									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
-									'id'       => 'user_registration_advanced_uninstall_option',
-									'type'     => 'checkbox',
-									'desc_tip' => 'All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.',
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
-								),
-							),
-						),
-					),
-				)
-			);
-
-			return apply_filters( 'user_registration_get_advanced_settings_' . $this->id, $settings );
-		}
-
-		/**
 		 * Output the settings.
 		 */
 		public function output() {
@@ -706,8 +671,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
-			} elseif ( 'advanced' === $current_section ) {
-				$settings = $this->get_advanced_settings();
 			} else {
 				$settings = array();
 			}
