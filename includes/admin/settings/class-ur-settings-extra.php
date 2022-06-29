@@ -84,10 +84,9 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 		 */
 		public function output() {
 			global $current_section;
-
-			if ( '' === $current_section ) {
-				$settings = $this->get_settings();
-			}
+			$settings = $this->get_settings();
+			
+			$settings = apply_filters( 'user_registration_get_output_settings_' . $this->id, $settings );
 
 			$settings = isset( $settings) ? $settings : $this->get_settings();
 
@@ -101,6 +100,8 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 
 			global $current_section;
 			$settings = $this->get_settings();
+
+			$settings = apply_filters( 'user_registration_get_save_settings_' . $this->id, $settings );
 
 			UR_Admin_Settings::save_fields( $settings );
 		}
