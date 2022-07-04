@@ -26,6 +26,9 @@ class UR_Email_Approval {
 
 	}
 
+	/**
+	 * Verify the token and approve the user if the token matches
+	 */
     public static function approve_user_after_verification() {
 
 		$user_approval_success = false;
@@ -66,6 +69,9 @@ class UR_Email_Approval {
 		}
 	}
 
+	/**
+	 * Message to show when passed token doesn't match with stored token
+	 */
 	public function invalid_approval_token_message() {
 		return __( 'The token is invalid. Please try again.', 'user-registration' );
 	}
