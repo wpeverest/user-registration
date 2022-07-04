@@ -350,20 +350,23 @@ class UR_Emailer {
 		$settings = new UR_Settings_Admin_Email();
 		$message = $settings->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
-		
-		//	If enabled approval via email setting
-		if ( true ) {
-			$message = $settings->ur_get_admin_approval_email();
-		}
-
-		$approval_token  = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+		$form_id 	= ur_get_form_id_by_userid( $user_id );
 
 		$values  = array(
 			'username'   	=> $username,
 			'email'      	=> $user_email,
 			'all_fields' 	=> $data_html,
-			'approval_token' 	=> $approval_token,
 		);
+
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
+
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+		
+		//	If enabled approval via email setting
+		if ( ( 'admin_approval' === $login_option) && ( 1 === absint( $email_approval_enabled ) ) ) {
+			$message = $settings->ur_get_admin_approval_email();
+			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values, $name_value );

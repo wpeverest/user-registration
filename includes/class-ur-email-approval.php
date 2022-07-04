@@ -21,7 +21,7 @@ class UR_Email_Approval {
 	 */
 	public function __construct() {
 
-    add_action( 'user_registration_after_register_user_action', array( $this, 'set_approval_status' ), 9, 3 );
+    add_action( 'user_registration_after_register_user_action', array( $this, 'set_approval_status' ), 5, 3 );
     add_action( 'admin_init', array( __CLASS__, 'approve_user_after_verification' ) );
 
 	}
@@ -30,10 +30,7 @@ class UR_Email_Approval {
 	 * Verify the token and approve the user if the token matches
 	 */
     public static function approve_user_after_verification() {
-
-		$user_approval_success = false;
-
-		if ( ! isset( $_GET['ur_approval_token'] ) ) {
+		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) {
 			return;
 		} else {
 			if ( current_user_can( 'edit_users' ) ) {
@@ -49,19 +46,28 @@ class UR_Email_Approval {
 				$output     = self::crypt_the_string( $token_string, 'd' );
 				$output     = explode( '_', $output );
 				$user_id    = absint( $output[0] );
+				$form_id 	= ur_get_form_id_by_userid( $user_id );
 
-				$saved_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+				$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 
-				if ( $ur_approval_token_raw === $saved_token ) {
-					$user_manager = new UR_Admin_User_Manager( $user_id );
-					$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
+				if ( $email_approval_enabled ) {
+					$saved_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
 
-					$redirect_url = admin_url() . 'users.php';
-					wp_redirect( $redirect_url );
-					exit;
+					if ( $ur_approval_token_raw === $saved_token ) {
+						$user_manager = new UR_Admin_User_Manager( $user_id );
+						$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
 
+						add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
+
+						$redirect_url = admin_url() . 'users.php';
+						wp_redirect( $redirect_url );
+						exit;
+
+					} else {
+						add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
+					}
 				} else {
-					add_action( 'admin_notices', 'invalid_approval_token_message' );
+					add_action( 'admin_notices', array( __CLASS__, 'email_approval_disabled_message' ) );
 				}
 			} else {
 				return;
@@ -70,10 +76,24 @@ class UR_Email_Approval {
 	}
 
 	/**
+	 * Message to show when user approved successfully
+	 */
+	public function approved_success() {
+		return __( 'User approved successfully.', 'user-registration' );
+	}
+
+	/**
 	 * Message to show when passed token doesn't match with stored token
 	 */
 	public function invalid_approval_token_message() {
 		return __( 'The token is invalid. Please try again.', 'user-registration' );
+	}
+
+	/**
+	 * Email Approval Disabled Message
+	 */
+	public function email_approval_disabled_message() {
+		return __( 'Failed to approve user. Email Approval Option is Disabled.', 'user-registration' );
 	}
 
 
@@ -141,10 +161,13 @@ class UR_Email_Approval {
 		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
-		if ( 'admin_approval' == $login_option ) {
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
+
+		if ( ( 'admin_approval' == $login_option ) && ( $email_approval_enabled ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
-
+		} else {
+			return;
 		}
 	}
 }
