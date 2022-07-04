@@ -82,6 +82,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => ur_login_option(),
 								),
 								array(
+									'title'    => __( 'Enable Email Approval', 'user-registration' ),
+									'desc'     => __( 'Check to enable user approval directly through email.' ),
+									'id'       => 'user_registration_login_option_enable_email_approval',
+									'type'     => 'checkbox',
+									'desc_tip' => __( 'Check this option to enable easy user approval using direct approval links.', 'user-registration' ),
+									'css'      => 'min-width: 350px;',
+									'default'  => 'no',
+								),
+								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
 									'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
@@ -489,7 +498,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Redirect Default WordPress Login To', 'user-registration' ),
-									'desc'     => __( 'Select the login page where you wants to redirect.', 'user-registration' ),
+									'desc'     => __( 'Select the login page where you want to redirect.', 'user-registration' ),
 									'id'       => 'user_registration_login_options_login_redirect_url',
 									'type'     => 'single_select_page',
 									'desc_tip' => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
