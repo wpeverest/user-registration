@@ -964,6 +964,15 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
+				'label'    => __( 'Enable Email Approval', 'user-registration' ),
+				'description'     => __( 'Check to enable user approval directly through email.' ),
+				'id'       => 'user_registration_form_setting_enable_email_approval',
+				'type'     => 'checkbox',
+				'tip' => __( 'Check this option to enable easy user approval using direct approval links.', 'user-registration' ),
+				'css'      => 'min-width: 350px;',
+				'default'  => ur_get_approval_default( $form_id ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -1127,6 +1136,7 @@ function ur_login_option() {
 		)
 	);
 }
+
 /**
  * User Login Option
  *
@@ -1142,6 +1152,20 @@ function ur_login_option_with() {
 			'email'    => __( 'Email', 'user-registration' ),
 		)
 	);
+}
+
+/**
+ * Get Default value for Enable Email Approval Checkbox
+ */
+function ur_get_approval_default( $form_id ) {
+	if ( isset( $form_id ) && 0 != absint( $form_id ) ) {
+		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+	} else {
+		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
+	}
+	$value = $value == 'yes' ? true : false;
+
+	return $value;
 }
 
 /**
