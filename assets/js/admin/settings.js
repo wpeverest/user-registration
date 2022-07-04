@@ -363,6 +363,22 @@
 		}
 	);
 
+	// Toggle display of enable email approval setting
+	$("#user_registration_general_setting_login_options").on(
+		"change",
+		function() {
+			var enable_approval_row = $('#user_registration_login_option_enable_email_approval').parent().parent().parent().parent();
+
+			if( $(this).val() === 'admin_approval' ) {
+				enable_approval_row.show();
+			} else {
+				enable_approval_row.hide();
+				$('#user_registration_login_option_enable_email_approval').prop('checked', false);
+
+			}
+		}
+	)
+
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];
