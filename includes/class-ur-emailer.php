@@ -350,12 +350,21 @@ class UR_Emailer {
 		$settings = new UR_Settings_Admin_Email();
 		$message = $settings->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
+		
+		//	If enabled approval via email setting
+		if ( true ) {
+			$message = $settings->ur_get_admin_approval_email();
+		}
+
+		$approval_token  = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
 
 		$values  = array(
-			'username'   => $username,
-			'email'      => $user_email,
-			'all_fields' => $data_html,
+			'username'   	=> $username,
+			'email'      	=> $user_email,
+			'all_fields' 	=> $data_html,
+			'approval_token' 	=> $approval_token,
 		);
+
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -367,7 +376,7 @@ class UR_Emailer {
 			}
 		}
 	}
-
+	
 	/**
 	 * Trigger status change email while admin changes users status on admin approval.
 	 *
@@ -592,6 +601,8 @@ class UR_Emailer {
 			'username'    => '',
 			'email'       => '',
 			'email_token' => '',
+			'approval_token' => '',
+			'admin_url'	  => admin_url(),
 			'blog_info'   => get_bloginfo(),
 			'home_url'    => get_home_url(),
 			'ur_login'    => $ur_login,
