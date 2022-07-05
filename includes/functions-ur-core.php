@@ -1163,8 +1163,8 @@ function ur_get_approval_default( $form_id ) {
 	} else {
 		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 	}
-	$value = $value == 'yes' ? true : false;
-
+	$value = ($value == 'yes' || $value == 1 ) ? true : false;
+	
 	return $value;
 }
 
