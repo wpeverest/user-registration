@@ -57,6 +57,8 @@ class UR_Email_Approval {
 						$user_manager = new UR_Admin_User_Manager( $user_id );
 						$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
 
+						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+
 						add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
 
 						$redirect_url = admin_url() . 'users.php';
@@ -78,22 +80,22 @@ class UR_Email_Approval {
 	/**
 	 * Message to show when user approved successfully
 	 */
-	public function approved_success() {
-		return __( 'User approved successfully.', 'user-registration' );
+	public static function approved_success() {
+		echo '<div class="notice notice-success"><p>' . esc_html__( 'User approved successfully.', 'user-registration' );
 	}
 
 	/**
 	 * Message to show when passed token doesn't match with stored token
 	 */
-	public function invalid_approval_token_message() {
-		return __( 'The token is invalid. Please try again.', 'user-registration' );
+	public static function invalid_approval_token_message() {
+		echo "<div class='notice notice-error'><p>" . esc_html__( 'The token is invalid. Please try again.', 'user-registration' ) . "</p></div>";
 	}
 
 	/**
 	 * Email Approval Disabled Message
 	 */
-	public function email_approval_disabled_message() {
-		return __( 'Failed to approve user. Email Approval Option is Disabled.', 'user-registration' );
+	public static function email_approval_disabled_message() {
+		echo '<div class="notice notice-warning"><p>' . esc_html__( 'Failed to approve user. Email Approval Option is Disabled.', 'user-registration' ) . '</p></div>';
 	}
 
 
