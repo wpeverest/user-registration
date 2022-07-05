@@ -2,7 +2,7 @@
 /**
  * UserRegistration Import Export Settings
  *
- * @class    UR_Settings_Extra
+ * @class    UR_Settings_Misc
  * @version  1.0.0
  * @package  UserRegistration/Admin
  */
@@ -11,20 +11,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'UR_Settings_Extra' ) ) :
+if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 
 	/**
-	 * UR_Settings_Extra Class
+	 * UR_Settings_Misc Class
 	 */
-	class UR_Settings_Extra extends UR_Settings_Page {
+	class UR_Settings_Misc extends UR_Settings_Page {
 
 		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 
-			$this->id    = 'extra';
-			$this->label = __( 'Extras', 'user-registration' );
+			$this->id    = 'misc';
+			$this->label = __( 'Misc', 'user-registration' );
 
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
@@ -57,7 +57,7 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'advanced_settings' => array(
-							'title'    => __( 'Miscellaneous', 'user-registration' ),
+							'title'    => __( 'Advanced', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
@@ -109,4 +109,4 @@ if ( ! class_exists( 'UR_Settings_Extra' ) ) :
 
 endif;
 
-return new UR_Settings_Extra();
+return new UR_Settings_Misc();
