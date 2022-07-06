@@ -54,7 +54,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 			$settings = apply_filters(
 				'user_registration_advanced_settings',
 				array(
-					'title'    => __( '', 'user-registration' ),
+					'title'    => '',
 					'sections' => array(
 						'advanced_settings' => array(
 							'title'    => __( 'Advanced', 'user-registration' ),
@@ -84,10 +84,8 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 		 */
 		public function output() {
 			global $current_section;
-			$settings = $this->get_settings();
-			
+			$settings = $this->get_settings();			
 			$settings = apply_filters( 'user_registration_get_output_settings_' . $this->id, $settings );
-
 			$settings = isset( $settings) ? $settings : $this->get_settings();
 
 			UR_Admin_Settings::output_fields( $settings );

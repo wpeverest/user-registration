@@ -20,10 +20,8 @@ class UR_Email_Approval {
 	 * UR_Email_Approval Constructor.
 	 */
 	public function __construct() {
-
-    add_action( 'user_registration_after_register_user_action', array( $this, 'set_approval_status' ), 5, 3 );
-    add_action( 'admin_init', array( __CLASS__, 'approve_user_after_verification' ) );
-
+		add_action( 'user_registration_after_register_user_action', array( $this, 'set_approval_status' ), 5, 3 );
+		add_action( 'admin_init', array( __CLASS__, 'approve_user_after_verification' ) );
 	}
 
 	/**
