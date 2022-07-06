@@ -205,7 +205,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_logout_endpoint',
 									'type'     => 'text',
 									'default'  => 'user-logout',
-									'desc_tip' => __( 'Endpoint for triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
+									'desc_tip' => true,
 								),
 							),
 						),
@@ -419,7 +419,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
-									'desc'     => __( 'his option lets you enable ajax login on login form submission.', 'user-registration' ),
+									'desc'     => __( 'This option lets you enable ajax login on login form submission.', 'user-registration' ),
 									'id'       => 'ur_login_ajax_submission',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
@@ -468,10 +468,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Registration URL', 'user-registration' ),
-									'desc'     => __( 'This option lets you enter the registration page url in login form.', 'user-registration' ),
+									'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_registration_url_options',
 									'type'     => 'text',
-									'desc_tip' => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
+									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 								),
 
@@ -650,10 +650,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'       => __( 'Denied Account', 'user-registration' ),
-									'desc'        => __( 'Show this message when an account is has been denied.', 'user-registration' ),
+									'desc'        => __( 'Show this message when an account is denied.', 'user-registration' ),
 									'id'          => 'user_registration_message_denied_account',
 									'type'        => 'text',
-									'desc_tip'    => __( 'Show this message when an account is denied.', 'user-registration' ),
+									'desc_tip'    => true,
 									'css'         => 'min-width: 350px;',
 									'default'     => '',
 									'placeholder' => 'Default message from WordPress',
