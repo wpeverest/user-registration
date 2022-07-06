@@ -42,7 +42,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 			$settings       = apply_filters(
 				'user_registration_integration_settings',
 				array(
-					'title'    => __( 'Integration', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'integration_options' => array(
 							'title'    => __( 'Captcha', 'user-registration' ),

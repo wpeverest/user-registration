@@ -59,7 +59,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			$settings = apply_filters(
 				'user_registration_license_settings',
 				array(
-					'title'    => __( 'License Options', 'user-registration' ),
+					'title'    => __( '', 'user-registration' ),
 					'sections' => array(
 						'license_options' => array(
 							'title'    => __( 'License Activation', 'user-registration' ),
