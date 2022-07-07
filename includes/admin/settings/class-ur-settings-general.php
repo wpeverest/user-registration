@@ -63,7 +63,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
-					'title'    => __( '', 'user-registration' ),
+					'title'    => '',
 					'sections' => array(
 						'general_options'    => array(
 							'title'    => __( 'General', 'user-registration' ),
@@ -83,7 +83,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Email Approval', 'user-registration' ),
-									'desc'     => __( 'Check to enable user approval directly through email.' ),
+									'desc'     => __( 'Check to enable user approval directly through email.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_enable_email_approval',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check this option to enable easy user approval using direct approval links.', 'user-registration' ),
@@ -92,13 +92,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
-									'desc'     => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
+									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
 									'default'  => array( 'subscriber' ),
 									'type'     => 'multiselect',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
+									'desc_tip' => true,
 									'options'  => $all_roles_except_admin,
 								),
 								array(
@@ -125,17 +125,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
 									'css'      => 'min-width:350px;',
-									'desc_tip' => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ),
+									'desc_tip' => true,
 								),
 								array(
 									'title'    => __( 'Layout', 'user-registration' ),
-									'desc'     => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
+									'desc'     => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
 									'id'       => 'user_registration_my_account_layout',
 									'default'  => 'horizontal',
 									'type'     => 'select',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
+									'desc_tip' => true,
 									'options'  => array(
 										'horizontal' => __( 'Horizontal', 'user-registration' ),
 										'vertical'   => __( 'Vertical', 'user-registration' ),
@@ -226,7 +226,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_frontend_messages_settings',
 				array(
-					'title'    => __( '', 'user-registration' ),
+					'title'    => '',
 					'sections' => array(
 						'frontend_success_messages_settings' => array(
 							'title'    => __( 'Success Messages', 'user-registration' ),
@@ -374,7 +374,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
 				array(
-					'title'    => __( '', 'user-registration' ),
+					'title'    => '',
 					'sections' => array(
 						'login_options_settings'           => array(
 							'title'    => __( 'General', 'user-registration' ),
@@ -399,13 +399,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Allow Users To Login With', 'user-registration' ),
-									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+									'desc'     => __( 'Allow users to login with Username, Email or any one out of both.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options_with',
 									'default'  => 'default',
 									'type'     => 'select',
 									'class'    => 'ur-enhanced-select',
 									'css'      => 'min-width: 350px;',
-									'desc_tip' => __( 'Allow users to login with Username, Email or any one out of both.', 'user-registration' ),
+									'desc_tip' => true,
 									'options'  => ur_login_option_with(),
 								),
 								array(
@@ -498,10 +498,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Redirect Default WordPress Login To', 'user-registration' ),
-									'desc'     => __( 'Select the login page where you want to redirect.', 'user-registration' ),
+									'desc'     => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
 									'id'       => 'user_registration_login_options_login_redirect_url',
 									'type'     => 'single_select_page',
-									'desc_tip' => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
+									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'class'    => 'ur-redirect-to-login-page',
 									'default'  => '',
@@ -686,24 +686,24 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
-		
+
 		/**
 		 * Save settings
 		 */
 		public function save() {
-			
+
 			global $current_section;
 			$settings = $this->get_settings();
-			
+
 			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
-				
+
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
 			}
-			
+
 			UR_Admin_Settings::save_fields( $settings );
 		}
 	}
