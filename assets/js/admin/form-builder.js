@@ -1064,13 +1064,13 @@
 						subject: email_body_item
 							.find(".uret_subject_input")
 							.val(),
-						content: email_body_item
-							.find(
-								"#user_registration_" +
+						content: tinymce
+							.get(
+								"user_registration_" +
 									$(this).prop("id") +
 									"_content"
 							)
-							.val(),
+							.getContent(),
 					};
 				});
 
