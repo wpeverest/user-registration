@@ -27,14 +27,14 @@ class UR_Email_Approval {
 	/**
 	 * Verify the token and approve the user if the token matches
 	 */
-    public static function approve_user_after_verification() {
+	public static function approve_user_after_verification() {
 		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) {
 			return;
 		} else {
 			if ( current_user_can( 'edit_users' ) ) {
 
 				$ur_approval_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_approval_token'] ) );
-				$ur_approval_token     = str_split( $ur_approval_token_raw , 50 );
+				$ur_approval_token     = str_split( $ur_approval_token_raw, 50 );
 				$token_string = $ur_approval_token[1];
 
 				if ( 2 < count( $ur_approval_token ) ) {
@@ -44,7 +44,7 @@ class UR_Email_Approval {
 				$output     = self::crypt_the_string( $token_string, 'd' );
 				$output     = explode( '_', $output );
 				$user_id    = absint( $output[0] );
-				$form_id 	= ur_get_form_id_by_userid( $user_id );
+				$form_id    = ur_get_form_id_by_userid( $user_id );
 
 				$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 
@@ -86,7 +86,7 @@ class UR_Email_Approval {
 	 * Message to show when passed token doesn't match with stored token
 	 */
 	public static function invalid_approval_token_message() {
-		echo "<div class='notice notice-error'><p>" . esc_html__( 'The token is invalid. Please try again.', 'user-registration' ) . "</p></div>";
+		echo "<div class='notice notice-error'><p>" . esc_html__( 'The token is invalid. Please try again.', 'user-registration' ) . '</p></div>';
 	}
 
 	/**
@@ -150,7 +150,7 @@ class UR_Email_Approval {
 		do_action( 'user_registration_get_token' );
 	}
 
-    /**
+	/**
 	 * Set the approval token of the user and update it to usermeta table in database.
 	 *
 	 * @param array $valid_form_data Form filled data.
