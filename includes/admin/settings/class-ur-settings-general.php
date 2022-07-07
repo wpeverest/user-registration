@@ -201,7 +201,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'User Logout', 'user-registration' ),
-									'desc'     => __( 'Endpoint for the triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
+									'desc'     => __( 'Endpoint for triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
 									'id'       => 'user_registration_logout_endpoint',
 									'type'     => 'text',
 									'default'  => 'user-logout',
@@ -398,7 +398,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									),
 								),
 								array(
-									'title'    => __( 'Allow Users To Login With', 'user-registration' ),
+									'title'    => __( 'Allow Users to Login With', 'user-registration' ),
 									'desc'     => __( 'Allow users to login with Username, Email or any one out of both.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options_with',
 									'default'  => 'default',
@@ -498,10 +498,10 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Redirect Default WordPress Login To', 'user-registration' ),
-									'desc'     => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
+									'desc'     => __( 'Select the login page where you want to redirect.', 'user-registration' ),
 									'id'       => 'user_registration_login_options_login_redirect_url',
 									'type'     => 'single_select_page',
-									'desc_tip' => true,
+									'desc_tip' => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'class'    => 'ur-redirect-to-login-page',
 									'default'  => '',
@@ -686,24 +686,24 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
-
+		
 		/**
 		 * Save settings
 		 */
 		public function save() {
-
+			
 			global $current_section;
 			$settings = $this->get_settings();
-
+			
 			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
-
+				
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
 			}
-
+			
 			UR_Admin_Settings::save_fields( $settings );
 		}
 	}
