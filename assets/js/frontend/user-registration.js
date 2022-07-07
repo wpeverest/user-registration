@@ -913,7 +913,7 @@
 																".ur-field-item"
 															)
 															.find(
-																".input-text"
+																".ur-frontend-field"
 															),
 														function (index) {
 															var $this = $(this);
