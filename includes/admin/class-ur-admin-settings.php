@@ -244,8 +244,6 @@ class UR_Admin_Settings {
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
-			$option_title   = isset( $options['title'] ) ? $options['title'] : '';
-			$settings      .= '<h3 class="ur-settings-section-header main_header">' . esc_html( ucwords( $option_title ) );
 			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
 
@@ -335,6 +333,9 @@ class UR_Admin_Settings {
 						if ( ! isset( $value['placeholder'] ) ) {
 							$value['placeholder'] = '';
 						}
+
+						// Capitalize Setting Label
+						$value['title'] = self::capitalize_title( $value['title'] );
 
 						// Custom attribute handling.
 						$custom_attributes = array();
@@ -896,5 +897,41 @@ class UR_Admin_Settings {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Capitalize Settings Title Phrase
+	 *
+	 * @params string $text Setting Label
+	 */
+	public static function capitalize_title( $text = null ) {
+		$prepositions = ['at', 'by', 'for', 'in', 'on', 'to', 'or'];
+
+		$words = explode( ' ', $text );
+
+		$capitalized_words = array();
+
+		foreach( $words as $word ) {
+			$word = trim( $word );
+			if ( ! in_array( $word, $prepositions ) ) {
+
+				// Check if the word is a shash separated terms. Eg: "Hide/Show"
+				if ( str_contains( $word, '/') ) {
+					$separate_terms = explode( '/', $word );
+					$capitalized_terms = array();
+
+					foreach ( $separate_terms as $term ) {
+						$capitalized_terms[] = ucfirst( $term );
+					}
+
+					$word = implode( '/', $capitalized_terms );
+				} else {
+					$word = ucfirst( $word );
+				}
+			}
+			$capitalized_words[] = $word;
+		}
+
+		return implode( ' ', $capitalized_words );
 	}
 }
