@@ -64,7 +64,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 								array(
 									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
 									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
-									'id'       => 'user_registration_advanced_uninstall_option',
+									'id'       => 'user_registration_general_setting_uninstall_option',
 									'type'     => 'checkbox',
 									'desc_tip' => 'All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.',
 									'css'      => 'min-width: 350px;',
