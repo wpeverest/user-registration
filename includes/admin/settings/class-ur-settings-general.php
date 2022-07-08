@@ -686,24 +686,23 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
-		
+
 		/**
 		 * Save settings
 		 */
 		public function save() {
-			
+
 			global $current_section;
 			$settings = $this->get_settings();
-			
+
 			if ( '' === $current_section ) {
 				$settings = $this->get_settings();
-				
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings = $this->get_login_options_settings();
 			}
-			
+
 			UR_Admin_Settings::save_fields( $settings );
 		}
 	}
