@@ -82,8 +82,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'options'  => ur_login_option(),
 								),
 								array(
-									'title'    => __( 'Enable Email Approval', 'user-registration' ),
-									'desc'     => __( 'Check this option to enable easy user approval using direct approval links.', 'user-registration' ),
+									'title'    => __( 'Send User Approval Link in Email', 'user-registration' ),
+									'desc'     => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_enable_email_approval',
 									'type'     => 'checkbox',
 									'desc_tip' => true,
@@ -431,7 +431,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => __( 'Enable', 'user-registration' ),
 									'id'       => 'user_registration_login_options_remember_me',
 									'type'     => 'checkbox',
-									'desc_tip' => __( 'Check to enable/disable remember me.', 'user-registration' ),
+									'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'yes',
 								),
@@ -535,7 +535,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Remember Me', 'user-registration' ),
-									'desc'     => __( 'This option lets you edit the "Remember me" option label.', 'user-registration' ),
+									'desc'     => __( 'This option lets you edit the "Remember Me" option label.', 'user-registration' ),
 									'id'       => 'user_registration_label_remember_me',
 									'type'     => 'text',
 									'desc_tip' => true,
