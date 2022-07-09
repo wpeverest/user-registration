@@ -61,6 +61,8 @@ class UR_AddOn_Updater {
 	 */
 	private $cache_key = '';
 
+	private $health_check_timeout = 5;
+
 	/**
 	 * Class constructor.
 	 *
@@ -74,7 +76,6 @@ class UR_AddOn_Updater {
 	public function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
 
 		global $edd_plugin_data;
-
 		$this->api_url  = trailingslashit( $_api_url );
 		$this->api_data = $_api_data;
 		$this->name     = plugin_basename( $_plugin_file );
@@ -87,9 +88,18 @@ class UR_AddOn_Updater {
 		$this->version     = $_api_data['version'];
 		$this->wp_override = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
 		$this->beta        = ! empty( $this->api_data['beta'] ) ? true : false;
-		$this->cache_key   = md5( serialize( $this->slug . $this->api_data['license'] . $this->beta ) );
+		$this->cache_key   = 'edd_sl_' . md5( serialize( $this->slug . $this->api_data['license'] . $this->beta ) );
 
 		$edd_plugin_data[ $this->slug ] = $this->api_data;
+
+		/**
+		 * Fires after the $edd_plugin_data is setup.
+		 *
+		 * @since 2.2.0
+		 *
+		 * @param array $edd_plugin_data Array of EDD SL plugin data.
+		 */
+		do_action( 'post_edd_sl_plugin_updater_setup', $edd_plugin_data );
 
 		// Set up hooks.
 		$this->init();
@@ -163,11 +173,16 @@ class UR_AddOn_Updater {
 
 				$_transient_data->response[ $this->name ] = $version_info;
 
+				// Make sure the plugin property is set to the plugin's name/location. See issue 1463 on Software Licensing's GitHub repo.
+				$_transient_data->response[ $this->name ]->plugin = $this->name;
 			} else {
 				$_transient_data->no_update[ $this->name ] = $version_info;
+
+				$_transient_data->no_update[ $this->name ]->plugin = $this->name;
+
 			}
 
-			$_transient_data->last_checked           = current_time( 'timestamp' );
+			$_transient_data->last_checked           = time();
 			$_transient_data->checked[ $this->name ] = $this->version;
 
 		}
@@ -219,6 +234,27 @@ class UR_AddOn_Updater {
 					)
 				);
 
+				// Since we disabled our filter for the transient, we aren't running our object conversion on banners, sections, or icons. Do this now:
+				if ( isset( $version_info->banners ) && ! is_array( $version_info->banners ) ) {
+					$version_info->banners = $this->convert_object_to_array( $version_info->banners );
+				}
+
+				if ( isset( $version_info->sections ) && ! is_array( $version_info->sections ) ) {
+					$version_info->sections = $this->convert_object_to_array( $version_info->sections );
+				}
+
+				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
+					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
+					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->contributors ) && ! is_array( $version_info->contributors ) ) {
+					$version_info->contributors = $this->convert_object_to_array( $version_info->contributors );
+				}
+
 				$this->set_version_info_cache( $version_info );
 			}
 
@@ -232,7 +268,7 @@ class UR_AddOn_Updater {
 
 			}
 
-			$update_cache->last_checked           = current_time( 'timestamp' );
+			$update_cache->last_checked           = time();
 			$update_cache->checked[ $this->name ] = $this->version;
 
 			set_site_transient( 'update_plugins', $update_cache );
@@ -296,7 +332,7 @@ class UR_AddOn_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( isset( $_REQUEST['tab'] ) &&'plugin_information' !== $_REQUEST['tab'] && 'https://wpeverest.com/edd-sl-api/' !== $this->api_url ) { //phpcs:ignore
+		if ( $_action != 'plugin_information' ) {
 
 			return $_data;
 
@@ -314,6 +350,7 @@ class UR_AddOn_Updater {
 			'fields' => array(
 				'banners' => array(),
 				'reviews' => false,
+				'icons'   => array(),
 			),
 		);
 
@@ -339,22 +376,26 @@ class UR_AddOn_Updater {
 
 		// Convert sections into an associative array, since we're getting an object, but Core expects an array.
 		if ( isset( $_data->sections ) && ! is_array( $_data->sections ) ) {
-			$new_sections = array();
-			foreach ( $_data->sections as $key => $value ) {
-				$new_sections[ $key ] = $value;
-			}
-
-			$_data->sections = $new_sections;
+			$_data->sections = $this->convert_object_to_array( $_data->sections );
 		}
 
 		// Convert banners into an associative array, since we're getting an object, but Core expects an array.
 		if ( isset( $_data->banners ) && ! is_array( $_data->banners ) ) {
-			$new_banners = array();
-			foreach ( $_data->banners as $key => $value ) {
-				$new_banners[ $key ] = $value;
-			}
+			$_data->banners = $this->convert_object_to_array( $_data->banners );
+		}
 
-			$_data->banners = $new_banners;
+		// Convert icons into an associative array, since we're getting an object, but Core expects an array.
+		if ( isset( $_data->icons ) && ! is_array( $_data->icons ) ) {
+			$_data->icons = $this->convert_object_to_array( $_data->icons );
+		}
+
+		// Convert contributors into an associative array, since we're getting an object, but Core expects an array.
+		if ( isset( $_data->contributors ) && ! is_array( $_data->contributors ) ) {
+			$_data->contributors = $this->convert_object_to_array( $_data->contributors );
+		}
+
+		if ( ! isset( $_data->plugin ) ) {
+			$_data->plugin = $this->name;
 		}
 
 		if ( ! isset( $_data->version ) ) {
@@ -362,6 +403,27 @@ class UR_AddOn_Updater {
 		}
 
 		return $_data;
+	}
+
+	/**
+	 * Convert some objects to arrays when injecting data into the update API
+	 *
+	 * Some data like sections, banners, and icons are expected to be an associative array, however due to the JSON
+	 * decoding, they are objects. This method allows us to pass in the object and return an associative array.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param stdClass $data Api response data.
+	 *
+	 * @return array
+	 */
+	private function convert_object_to_array( $data ) {
+		$new_data = array();
+		foreach ( $data as $key => $value ) {
+			$new_data[ $key ] = is_object( $value ) ? $this->convert_object_to_array( $value ) : $value;
+		}
+
+		return $new_data;
 	}
 
 	/**
@@ -394,16 +456,46 @@ class UR_AddOn_Updater {
 	 */
 	private function api_request( $_action, $_data ) {
 
-		global $wp_version;
+		global $wp_version, $edd_plugin_url_available;
 
-		$data = array_merge( $this->api_data, $_data );
+		$verify_ssl = $this->verify_ssl();
 
-		if ( $data['slug'] !== $this->slug ) {
+		// Do a quick status check on this domain if we haven't already checked it.
+		$store_hash = md5( $this->api_url );
+		if ( ! is_array( $edd_plugin_url_available ) || ! isset( $edd_plugin_url_available[ $store_hash ] ) ) {
+			$test_url_parts = parse_url( $this->api_url );
+
+			$scheme = ! empty( $test_url_parts['scheme'] ) ? $test_url_parts['scheme'] : 'http';
+			$host   = ! empty( $test_url_parts['host'] ) ? $test_url_parts['host'] : '';
+			$port   = ! empty( $test_url_parts['port'] ) ? ':' . $test_url_parts['port'] : '';
+
+			if ( empty( $host ) ) {
+				$edd_plugin_url_available[ $store_hash ] = false;
+			} else {
+				$test_url = $scheme . '://' . $host . $port;
+				$response = wp_remote_get(
+					$test_url,
+					array(
+						'timeout' => $this->health_check_timeout,
+						'sslverify' => $verify_ssl,
+					)
+				);
+				$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
+			}
+		}
+
+		if ( false === $edd_plugin_url_available[ $store_hash ] ) {
 			return;
 		}
 
-		if ( trailingslashit( home_url() ) === $this->api_url ) {
-			return false; // Don't allow a plugin to ping itself.
+		$data = array_merge( $this->api_data, $_data );
+
+		if ( $data['slug'] != $this->slug ) {
+			return;
+		}
+
+		if ( $this->api_url == trailingslashit( home_url() ) ) {
+			return false; // Don't allow a plugin to ping itself
 		}
 
 		$api_params = array(
@@ -418,13 +510,12 @@ class UR_AddOn_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$verify_ssl = $this->verify_ssl();
 		$request    = wp_remote_post(
 			$this->api_url,
 			array(
-				'timeout'   => 15,
+				'timeout' => 15,
 				'sslverify' => $verify_ssl,
-				'body'      => $api_params,
+				'body' => $api_params,
 			)
 		);
 
@@ -440,6 +531,10 @@ class UR_AddOn_Updater {
 
 		if ( $request && isset( $request->banners ) ) {
 			$request->banners = maybe_unserialize( $request->banners );
+		}
+
+		if ( $request && isset( $request->icons ) ) {
+			$request->icons = maybe_unserialize( $request->icons );
 		}
 
 		if ( ! empty( $request->sections ) ) {
@@ -541,11 +636,17 @@ class UR_AddOn_Updater {
 
 		$cache = get_option( $cache_key );
 
-		if ( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) {
+		if ( empty( $cache['timeout'] ) || time() > $cache['timeout'] ) {
 			return false; // Cache is expired.
 		}
 
-		return json_decode( $cache['value'] );
+		// We need to turn the icons into an array, thanks to WP Core forcing these into an object at some point.
+		$cache['value'] = json_decode( $cache['value'] );
+		if ( ! empty( $cache['value']->icons ) ) {
+			$cache['value']->icons = (array) $cache['value']->icons;
+		}
+
+		return $cache['value'];
 
 	}
 
@@ -562,7 +663,7 @@ class UR_AddOn_Updater {
 		}
 
 		$data = array(
-			'timeout' => strtotime( '+3 hours', current_time( 'timestamp' ) ),
+			'timeout' => strtotime( '+3 hours', time() ),
 			'value'   => wp_json_encode( $value ),
 		);
 
