@@ -54,6 +54,7 @@ class UR_AddOn_Updater {
 	 * @var bool
 	 */
 	private $wp_override = false;
+
 	/**
 	 * Cache Key.
 	 *
@@ -61,6 +62,11 @@ class UR_AddOn_Updater {
 	 */
 	private $cache_key = '';
 
+	/**
+	 * Time Out
+	 *
+	 * @var int
+	 */
 	private $health_check_timeout = 5;
 
 	/**
@@ -234,7 +240,7 @@ class UR_AddOn_Updater {
 					)
 				);
 
-				// Since we disabled our filter for the transient, we aren't running our object conversion on banners, sections, or icons. Do this now:
+				// Since we disabled our filter for the transient, we aren't running our object conversion on banners, sections, or icons. Do this now:.
 				if ( isset( $version_info->banners ) && ! is_array( $version_info->banners ) ) {
 					$version_info->banners = $this->convert_object_to_array( $version_info->banners );
 				}
@@ -332,7 +338,7 @@ class UR_AddOn_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( $_action != 'plugin_information' ) {
+		if ( 'plugin_information' != $_action ) {
 
 			return $_data;
 
@@ -494,8 +500,8 @@ class UR_AddOn_Updater {
 			return;
 		}
 
-		if ( $this->api_url == trailingslashit( home_url() ) ) {
-			return false; // Don't allow a plugin to ping itself
+		if ( trailingslashit( home_url() ) == $this->api_url ) {
+			return false; // Don't allow a plugin to ping itself.
 		}
 
 		$api_params = array(
