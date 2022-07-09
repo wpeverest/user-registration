@@ -296,7 +296,7 @@ class UR_AddOn_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( 'plugin_information' !== $_REQUEST['tab'] && 'https://wpeverest.com/edd-sl-api/' !== $this->api_url ) { //phpcs:ignore
+		if ( isset( $_REQUEST['tab'] ) &&'plugin_information' !== $_REQUEST['tab'] && 'https://wpeverest.com/edd-sl-api/' !== $this->api_url ) { //phpcs:ignore
 
 			return $_data;
 
@@ -355,6 +355,10 @@ class UR_AddOn_Updater {
 			}
 
 			$_data->banners = $new_banners;
+		}
+
+		if ( ! isset( $_data->version ) ) {
+			$_data->version = $_data->new_version;
 		}
 
 		return $_data;
