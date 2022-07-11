@@ -62,29 +62,25 @@
   color: #fff;
   background: #d54d21;
   padding: 1em;
-  margin: 9px 0;
-}
-.ur_plugin_upgrade_notice::before {
-  content: "\f348";
-  display: inline-block;
-  font: 400 18px/1 dashicons;
-  speak: none;
-  margin: 0 8px 0 -2px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: top;
-}
+  margin: 9px 0; }
+  .ur_plugin_upgrade_notice::before {
+    content: '\f348';
+    display: inline-block;
+    font: 400 18px/1 dashicons;
+    speak: none;
+    margin: 0 8px 0 -2px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: top; }
 
 /**
  * Plugin Updater.
  */
 .user-registration-updater-licensed th, .user-registration-updater-licensed td {
-  box-shadow: none !important;
-}
+  box-shadow: none !important; }
 
 .user-registration-deactivation-notice th, .user-registration-deactivation-notice td {
-  box-shadow: none !important;
-}
+  box-shadow: none !important; }
 
 .user-registration-updater-license-key {
   border: 0;
@@ -93,34 +89,29 @@
   padding: 6px 12px;
   margin: 5px 20px 15px 40px;
   background-color: rgba(0, 0, 0, 0.03);
-  line-height: 27px;
-}
-.user-registration-updater-license-key input {
-  margin: 0 4px;
-  vertical-align: middle;
-}
-.user-registration-updater-license-key::before {
-  color: #32373c;
-  content: "\f160";
-  margin: 0 8px 0 -2px;
-  display: inline-block;
-  font: 400 20px/27px dashicons;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: middle;
-}
+  line-height: 27px; }
+  .user-registration-updater-license-key input {
+    margin: 0 4px;
+    vertical-align: middle; }
+  .user-registration-updater-license-key::before {
+    color: #32373c;
+    content: '\f160';
+    margin: 0 8px 0 -2px;
+    display: inline-block;
+    font: 400 20px/27px dashicons;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: middle; }
 
 .wp-list-table.users .ur-user-notification td {
   padding: 0;
-  text-align: center;
-}
-.wp-list-table.users .ur-user-notification td a {
-  display: none;
-  padding: 10px;
-  box-shadow: none;
-  background: #e8ebf6;
-  border: 1px solid #a0aad9;
-}
+  text-align: center; }
+  .wp-list-table.users .ur-user-notification td a {
+    display: none;
+    padding: 10px;
+    box-shadow: none;
+    background: #e8ebf6;
+    border: 1px solid #a0aad9; }
 
 /**
  * Progressbar styles
@@ -129,25 +120,20 @@
   display: flex;
   height: 1rem;
   overflow: hidden;
-  font-size: 0.75rem;
+  font-size: .75rem;
   margin: 1rem 0;
   background-color: #f0f1f5;
-  border-radius: 0.25rem;
-}
-.user-registration-progress .user-registration-progress-bar {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: #ffffff;
-  text-align: center;
-  white-space: nowrap;
-  background-color: #475bb2;
-  transition: width 0.6s ease;
-}
+  border-radius: .25rem; }
+  .user-registration-progress .user-registration-progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #475bb2;
+    transition: width .6s ease; }
 
 #toplevel_page_user-registration ul li:last-child a {
   color: #ffd700 !important;
-  font-weight: bold;
-}
-
-/*# sourceMappingURL=menu.css.map */
+  font-weight: bold; }
