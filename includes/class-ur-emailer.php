@@ -366,6 +366,7 @@ class UR_Emailer {
 		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
 			$message = $settings->ur_get_admin_approval_email();
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['approval_link'] = '<a href="'. admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a>';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -580,6 +581,7 @@ class UR_Emailer {
 			'{{username}}',
 			'{{email}}',
 			'{{email_token}}',
+			'{{approval_link}}',
 			'{{blog_info}}',
 			'{{home_url}}',
 			'{{ur_login}}',

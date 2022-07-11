@@ -124,8 +124,8 @@ Thank You!',
 	A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
 	Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
-	Click on this link to approve this user directly :  <a href="{{admin_url}}?ur_approval_token={{approval_token}}">Approve Now</a><br />
-
+	Click on this link to approve this user directly :  {{approval_link}}
+	<br />
 	Thank You!',
 						'user-registration'
 					)
