@@ -91,46 +91,35 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		/**
 		 * Email format.
 		 */
-		public function ur_get_admin_email() {
+		public function ur_get_admin_email( $email_approval_enabled = false ) {
 
-			$message = apply_filters(
-				'user_registration_admin_email_message',
-				sprintf(
-					__(
-						'Hi Admin, <br/>
-
-A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-
-Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
-Thank You!',
-						'user-registration'
+			$general_msg = sprintf(
+				__(
+					'Hi Admin, <br/>
+					
+					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+					
+					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
+					Thank You!',
+					'user-registration'
 					)
-				)
-			);
+				);
 
-			return $message;
-		}
-
-		/**
-		 * Retrive Admin Approval Email format with token.
-		 */
-		public function ur_get_admin_approval_email() {
-			$message = apply_filters(
-				'user_registration_admin_approval_email_message',
-				sprintf(
-					__(
-						'Hi Admin, <br/>
-
-	A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-
-	Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
-	Click on this link to approve this user directly :  {{approval_link}}
-	<br />
-	Thank You!',
-						'user-registration'
+			$approval_msg = sprintf(
+				__(
+					'Hi Admin, <br/>
+					
+					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+					
+					Click on this link to approve this user directly :  {{approval_link}} <br /><br />
+					Thank You!',
+					'user-registration'
 					)
-				)
-			);
+				);
+
+			$message = $email_approval_enabled ? $approval_msg : $general_msg;
+
+			$message = apply_filters( 'user_registration_admin_email_message', $message );
 
 			return $message;
 		}

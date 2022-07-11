@@ -348,10 +348,13 @@ class UR_Emailer {
 
 		$subject = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
 		$settings = new UR_Settings_Admin_Email();
-		$message = $settings->ur_get_admin_email();
-		$message = get_option( 'user_registration_admin_email', $message );
-		$form_id    = ur_get_form_id_by_userid( $user_id );
 
+		$form_id    = ur_get_form_id_by_userid( $user_id );
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+
+		$message = $settings->ur_get_admin_email( $email_approval_enabled );
+		$message = get_option( 'user_registration_admin_email', $message );
+		
 		$values  = array(
 			'username'      => $username,
 			'email'         => $user_email,
@@ -360,13 +363,10 @@ class UR_Emailer {
 
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
 
-		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
-
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
-			$message = $settings->ur_get_admin_approval_email();
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['approval_link'] = '<a href="'. admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a>';
+			$values['approval_link'] = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -581,7 +581,6 @@ class UR_Emailer {
 			'{{username}}',
 			'{{email}}',
 			'{{email_token}}',
-			'{{approval_link}}',
 			'{{blog_info}}',
 			'{{home_url}}',
 			'{{ur_login}}',
@@ -607,6 +606,7 @@ class UR_Emailer {
 			'email'       => '',
 			'email_token' => '',
 			'approval_token' => '',
+			'approval_link' => '',
 			'admin_url'   => admin_url(),
 			'blog_info'   => get_bloginfo(),
 			'home_url'    => get_home_url(),
