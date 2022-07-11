@@ -90,32 +90,34 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 
 		/**
 		 * Email format.
+		 *
+		 * @param bool $email_approval_enabled Email Approval Enabled.
 		 */
 		public function ur_get_admin_email( $email_approval_enabled = false ) {
 
 			$general_msg = sprintf(
 				__(
 					'Hi Admin, <br/>
-					
+
 					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-					
+
 					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
 					Thank You!',
 					'user-registration'
-					)
-				);
+				)
+			);
 
 			$approval_msg = sprintf(
 				__(
 					'Hi Admin, <br/>
-					
+
 					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-					
+
 					Click on this link to approve this user directly :  {{approval_link}} <br /><br />
 					Thank You!',
 					'user-registration'
-					)
-				);
+				)
+			);
 
 			$message = $email_approval_enabled ? $approval_msg : $general_msg;
 

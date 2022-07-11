@@ -334,7 +334,7 @@ class UR_Admin_Settings {
 							$value['placeholder'] = '';
 						}
 
-						// Capitalize Setting Label
+						// Capitalize Setting Label.
 						$value['title'] = self::capitalize_title( $value['title'] );
 
 						// Custom attribute handling.
@@ -900,23 +900,23 @@ class UR_Admin_Settings {
 	}
 
 	/**
-	 * Capitalize Settings Title Phrase
+	 * Capitalize Settings Title Phrase.
 	 *
-	 * @params string $text Setting Label
+	 * @param string $text Setting Label.
 	 */
 	public static function capitalize_title( $text = null ) {
-		$prepositions = ['at', 'by', 'for', 'in', 'on', 'to', 'or'];
+		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
 
 		$words = explode( ' ', $text );
 
 		$capitalized_words = array();
 
-		foreach( $words as $word ) {
+		foreach ( $words as $word ) {
 			$word = trim( $word );
 			if ( ! in_array( $word, $prepositions ) ) {
 
-				// Check if the word is a shash separated terms. Eg: "Hide/Show"
-				if ( str_contains( $word, '/') ) {
+				// Check if the word is a shash separated terms. Eg: "Hide/Show".
+				if ( str_contains( $word, '/' ) ) {
 					$separate_terms = explode( '/', $word );
 					$capitalized_terms = array();
 

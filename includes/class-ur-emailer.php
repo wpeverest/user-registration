@@ -354,7 +354,7 @@ class UR_Emailer {
 
 		$message = $settings->ur_get_admin_email( $email_approval_enabled );
 		$message = get_option( 'user_registration_admin_email', $message );
-		
+
 		$values  = array(
 			'username'      => $username,
 			'email'         => $user_email,
