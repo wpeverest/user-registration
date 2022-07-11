@@ -895,12 +895,72 @@
 													).data
 														.success_message_positon;
 
-												form.show_message(
-													message,
-													type,
-													$this,
-													success_message_position
-												);
+												if (
+													!response.data.message
+														.individual
+												) {
+													form.show_message(
+														message,
+														type,
+														$this,
+														success_message_position
+													);
+												} else {
+													var $field_id = [];
+													$.each(
+														$this
+															.find(
+																".ur-field-item"
+															)
+															.find(
+																".ur-frontend-field"
+															),
+														function (index) {
+															var $this = $(this);
+															var $id =
+																$this.attr(
+																	"id"
+																);
+															$field_id.push($id);
+														}
+													);
+													$.each(
+														response.data.message,
+														function (
+															index,
+															value
+														) {
+															if (
+																$field_id.includes(
+																	index
+																)
+															) {
+																var error_message =
+																	'<label id="' +
+																	index +
+																	"-error" +
+																	'" class="user-registration-error" for="' +
+																	index +
+																	'">' +
+																	value +
+																	"</label>";
+																var wrapper =
+																	$this
+																		.find(
+																			".ur-field-item"
+																		)
+																		.find(
+																			"input[id='" +
+																				index +
+																				"']"
+																		);
+																wrapper.after(
+																	error_message
+																);
+															}
+														}
+													);
+												}
 
 												// Check the position set by the admin and scroll to the message postion accordingly.
 												if (
