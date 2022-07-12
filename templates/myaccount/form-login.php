@@ -36,9 +36,9 @@ if ( 'bordered' === $form_template ) {
 }
 
 $labels       = array(
-	'username'           => get_option( 'user_registration_label_username_or_email', __( 'Username or email address', 'user-registration' ) ),
+	'username'           => get_option( 'user_registration_label_username_or_email', __( 'Username or Email Address', 'user-registration' ) ),
 	'password'           => get_option( 'user_registration_label_password', __( 'Password', 'user-registration' ) ),
-	'remember_me'        => get_option( 'user_registration_label_remember_me', __( 'Remember me', 'user-registration' ) ),
+	'remember_me'        => get_option( 'user_registration_label_remember_me', __( 'Remember Me', 'user-registration' ) ),
 	'login'              => get_option( 'user_registration_label_login', __( 'Login', 'user-registration' ) ),
 	'lost_your_password' => get_option( 'user_registration_label_lost_your_password', __( 'Lost your password?', 'user-registration' ) ),
 );

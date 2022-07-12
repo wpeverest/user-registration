@@ -354,7 +354,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 				add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
-
+				add_submenu_page(
+					'user-registration',
+					__( 'All Forms', 'user-registration' ),
+					__( 'All Forms', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration',
+					array(
+						$this,
+						'registration_page',
+					)
+				);
 		}
 
 		/**
@@ -437,7 +447,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_submenu_page(
 				'user-registration',
 				__( 'User Registration extensions', 'user-registration' ),
-				__( 'Extensions', 'user-registration' ),
+				__(
+					'<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 2 25 25" style="fill: rgba(255, 215, 0, 1);transform: ;msFilter:;vertical-align:middle;"><path d="M19 10V7c0-1.103-.897-2-2-2h-3c0-1.654-1.346-3-3-3S8 3.346 8 5H5c-1.103 0-2 .897-2 2v4h1a2 2 0 0 1 0 4H3v4c0 1.103.897 2 2 2h4v-1a2 2 0 0 1 4 0v1h4c1.103 0 2-.897 2-2v-3c1.654 0 3-1.346 3-3s-1.346-3-3-3z"></path></svg><span style="margin-left:3px;">Extensions</span>',
+					'user-registration'
+				),
 				'manage_user_registration',
 				'user-registration-addons',
 				array(
