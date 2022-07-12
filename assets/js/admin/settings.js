@@ -363,6 +363,31 @@
 		}
 	);
 
+	// 	Hide Email Approval Setting if not set to admin approval
+	if( $("#user_registration_general_setting_login_options").val() !== 'admin_approval' ) {
+		$('#user_registration_login_option_enable_email_approval').parent().parent().parent().parent().hide();
+	} else {
+	// Store the initial value of checkbox
+		var user_registration_login_option_enable_email_approval_initial_value = $('#user_registration_login_option_enable_email_approval').prop('checked');
+	}
+
+	// Toggle display of enable email approval setting
+	$("#user_registration_general_setting_login_options").on(
+		"change",
+		function() {
+			var enable_approval_row = $('#user_registration_login_option_enable_email_approval').parent().parent().parent().parent();
+
+			if( $(this).val() === 'admin_approval' ) {
+				$('#user_registration_login_option_enable_email_approval').prop('checked', user_registration_login_option_enable_email_approval_initial_value );
+				enable_approval_row.show();
+			} else {
+				enable_approval_row.hide();
+				$('#user_registration_login_option_enable_email_approval').prop('checked', false);
+
+			}
+		}
+	)
+
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];

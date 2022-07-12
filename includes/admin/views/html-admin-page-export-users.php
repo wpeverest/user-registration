@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<h3 class="ur-settings-section-header main_header"><?php esc_html_e( 'Export Users', 'user-registration' ); ?></h3>
+<h3 class="ur-settings-section-header main_header"></h3>
 <div class="ur-export-users-page">
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<div class="inside">
 						<p class="help">
-							<?php echo wp_kses_post( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ); ?>
+							<?php echo wp_kses_post( __( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ) ); ?>
 						</p>
 
 						<p>

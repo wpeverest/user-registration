@@ -348,14 +348,27 @@ class UR_Emailer {
 
 		$subject = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
 		$settings = new UR_Settings_Admin_Email();
-		$message = $settings->ur_get_admin_email();
+
+		$form_id    = ur_get_form_id_by_userid( $user_id );
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+
+		$message = $settings->ur_get_admin_email( $email_approval_enabled );
 		$message = get_option( 'user_registration_admin_email', $message );
 
 		$values  = array(
-			'username'   => $username,
-			'email'      => $user_email,
-			'all_fields' => $data_html,
+			'username'      => $username,
+			'email'         => $user_email,
+			'all_fields'    => $data_html,
 		);
+
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
+
+		// If enabled approval via email setting.
+		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['approval_link'] = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
+		}
+
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -592,6 +605,9 @@ class UR_Emailer {
 			'username'    => '',
 			'email'       => '',
 			'email_token' => '',
+			'approval_token' => '',
+			'approval_link' => '',
+			'admin_url'   => admin_url(),
 			'blog_info'   => get_bloginfo(),
 			'home_url'    => get_home_url(),
 			'ur_login'    => $ur_login,

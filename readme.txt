@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.0
-Stable tag: 2.1.8
+Stable tag: 2.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,22 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.0    - 14/07/2022
+* Feature  - Approve User via Email Token Link​
+* Refactor - Settings title, options and tooltips typos change. ​
+* Refactor - Added new Misc settings tab for all advanced global settings.
+* Tweak    - Added missing translations.​
+* Tweak    - Make translatable Registration URL on Login form.​
+* Dev      - Hook after user meta update.​
+* Dev      - Validate unique field compatibility​
+* Dev      - Date format filter for registered log in users table.​
+* Fix      - Plugin path with invalid slashes.​
+* Fix      - Profile Picture removed when profile updated.​
+* Fix      - Email templates content overrider texts not saving.​
+* Fix      - Undefined Std::class $plugin in add new plugin page.
+* Fix      - Undefined Std::class $version in view details action.
+* Fix      - View details link in plugins row action broken for addons.​
 
 = 2.1.8    - 08/06/2022
 * Feature  - Native date Field.

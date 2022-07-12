@@ -1064,13 +1064,13 @@
 						subject: email_body_item
 							.find(".uret_subject_input")
 							.val(),
-						content: email_body_item
-							.find(
-								"#user_registration_" +
+						content: tinymce
+							.get(
+								"user_registration_" +
 									$(this).prop("id") +
 									"_content"
 							)
-							.val(),
+							.getContent(),
 					};
 				});
 
@@ -2823,6 +2823,25 @@
 									.toggle();
 							});
 							break;
+						case "validate_unique":
+						if ("false" === $this_node.val()) {
+							$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-advance-validation_message")
+								.hide();
+						}
+
+						$this_node.on("change", function () {
+							$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-advance-validation_message")
+								.toggle();
+
+							$(".ur-selected-item.ur-item-active")
+								.find(".ur-advance-validation_message")
+								.toggle();
+						});
+						break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 

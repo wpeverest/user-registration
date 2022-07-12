@@ -964,6 +964,15 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
+				'label'       => __( 'Send User Approval Link in Email', 'user-registration' ),
+				'description' => '',
+				'id'          => 'user_registration_form_setting_enable_email_approval',
+				'type'        => 'checkbox',
+				'tip'         => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
+				'css'         => 'min-width: 350px;',
+				'default'     => ur_get_approval_default( $form_id ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -1120,13 +1129,14 @@ function ur_login_option() {
 	return apply_filters(
 		'user_registration_login_options',
 		array(
-			'default'            => __( 'Manual login after registration', 'user-registration' ),
-			'email_confirmation' => __( 'Email confirmation to login', 'user-registration' ),
-			'auto_login'         => __( 'Auto login after registration', 'user-registration' ),
-			'admin_approval'     => __( 'Admin approval after registration', 'user-registration' ),
+			'default'            => __( 'Auto approval and manual login', 'user-registration' ),
+			'auto_login'         => __( 'Auto approval and auto login ', 'user-registration' ),
+			'admin_approval'     => __( 'Admin approval', 'user-registration' ),
+			'email_confirmation' => __( 'Auto approval after email confirmation', 'user-registration' ),
 		)
 	);
 }
+
 /**
  * User Login Option
  *
@@ -1142,6 +1152,22 @@ function ur_login_option_with() {
 			'email'    => __( 'Email', 'user-registration' ),
 		)
 	);
+}
+
+/**
+ * Get Default value for Enable Email Approval Checkbox
+ *
+ * @param int $form_id Form ID.
+ */
+function ur_get_approval_default( $form_id ) {
+	if ( isset( $form_id ) && 0 != absint( $form_id ) ) {
+		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+	} else {
+		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
+	}
+	$value = ( 'yes' == $value || 1 == $value ) ? true : false;
+
+	return $value;
 }
 
 /**

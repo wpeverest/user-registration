@@ -43,8 +43,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
 
 			?>
-				<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">
-			<?php } ?>
+					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">
+				<?php } ?>
 
 	</div>
 	<header>
@@ -72,14 +72,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 <?php
 	/* translators: 1 profile details url, 2: change password url */
-	echo sprintf( wp_kses( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url( 'edit-profile' ) ), esc_url( ur_get_endpoint_url( 'edit-password' ) ) );
+	echo wp_kses_post( sprintf( __( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url( 'edit-profile' ) ), esc_url( ur_get_endpoint_url( 'edit-password' ) ) ) );
 ?>
 </p>
 
 <p>
 	<?php
 		/* translators: 1: user display name 2: logout url */
-		echo sprintf( wp_kses( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ), '<strong>' . esc_html( $current_user->display_name ) . '</strong>', esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) );
+		echo wp_kses_post( sprintf( __( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ), '<strong>' . esc_html( $current_user->display_name ) . '</strong>', esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) ) );
 	?>
 </p>
 

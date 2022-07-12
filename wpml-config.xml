@@ -32,6 +32,7 @@
 		<key name="user_registration_profile_details_changed_email" />
 
 		<key name="user_registration_general_setting_registration_label" />
+		<key name="user_registration_general_setting_registration_url_options"/>
 
 		<key name="user_registration_label_username_or_email" />
 		<key name="user_registration_label_password" />

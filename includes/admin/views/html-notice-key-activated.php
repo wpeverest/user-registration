@@ -11,5 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div id="message" class="updated notice is-dismissible">
-	<p><?php printf( esc_html__( 'Your licence for <strong>%s</strong> has been activated. Thanks!', 'user-registration' ), esc_html( $this->plugin_data['Name'] ) ); ?></p>
+	<p>
+		<?php
+			/* translators: %s - Link to logout. */
+			echo wp_kses_post( sprintf( __( 'Your licence for <strong>%s</strong> has been activated. Thanks!', 'user-registration' ), esc_html( $this->plugin_data['Name'] ) ) );
+		?>
+	</p>
 </div>
