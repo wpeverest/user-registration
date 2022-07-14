@@ -896,8 +896,12 @@
 														.success_message_positon;
 
 												if (
-													!response.data.message
-														.individual
+													!response.data.hasOwnProperty(
+														"message"
+													) ||
+													!response.data.message.hasOwnProperty(
+														"individual"
+													)
 												) {
 													form.show_message(
 														message,

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<p>
 		<?php
 			/* translators: %s - Link to logout. */
-			wp_kses_post( sprintf( __( 'Your licence for <strong>%s</strong> has been activated. Thanks!', 'user-registration' ), esc_html( $this->plugin_data['Name'] ) ) );
+			echo wp_kses_post( sprintf( __( 'Your licence for <strong>%s</strong> has been activated. Thanks!', 'user-registration' ), esc_html( $this->plugin_data['Name'] ) ) );
 		?>
 	</p>
 </div>
