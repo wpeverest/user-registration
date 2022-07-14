@@ -168,7 +168,7 @@
 			padding: 0 10px;
 		}
 
-		.input-text {	
+		.input-text {
 			padding-left: 35px !important;
 		}
 	}
@@ -260,11 +260,6 @@
 				&::placeholder {
 					color: #ddd;
 				}
-			}
-
-			input[type="password"] {
-				display: inline;
-				margin-bottom: 0px;
 			}
 
 			.StripeElement {
@@ -988,10 +983,8 @@
 
 		.ur-icon {
 			position: absolute;
-			top: 50%;
-			padding: 8px;
-			left: 0;
-			transform: translateY(-50%);
+			top: 10px;
+			left: 10px;
 		}
 	}
 }
