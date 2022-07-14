@@ -262,6 +262,11 @@
 				}
 			}
 
+			input[type="password"] {
+				display: inline;
+				margin-bottom: 0px;
+			}
+
 			.StripeElement {
 				padding: 4px 8px;
 				border: 1px solid $border_color;
@@ -983,8 +988,10 @@
 
 		.ur-icon {
 			position: absolute;
-			top: 10px;
-			left: 10px;
+			top: 50%;
+			padding: 8px;
+			left: 0;
+			transform: translateY(-50%);
 		}
 	}
 }
