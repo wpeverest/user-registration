@@ -73,6 +73,63 @@
 							}
 						}
 					});
+					// Show Help Box on keypress.
+					$(window).on("keydown", function (e) {
+						if (e.ctrlKey || e.metaKey) {
+							if (
+								"h" ===
+									String.fromCharCode(
+										e.which
+									).toLowerCase() ||
+								85 === e.which
+							) {
+								e.preventDefault();
+								if (
+									! $('.jconfirm').length
+								) {
+									var shortcut_keys_html = '';
+
+									$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
+										shortcut_keys_html += `
+											<ul class="ur-shortcut-keyword">
+												<li>
+													<div class="ur-shortcut-title">${value}</div>
+												<div class="ur-key">
+													<span class="ur-key-ctrl">${key.split('+')[0]}</span>
+													<i class="ur-key-plus"> + </i> 
+													<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
+												</div>
+												</li>
+											</ul>
+										`;
+									});
+
+									jc = $.dialog({
+										title: user_registration_form_builder_data.i18n_shortcut_key_title,
+										content: shortcut_keys_html,
+										icon: 'dashicons dashicons-info',
+										type: 'blue',
+										useBootstrap: 'false',
+										boxWidth: '550px',
+										buttons : {
+											confirm : {
+												text: user_registration_form_builder_data.i18n_close,
+												btnClass: 'btn-confirm',
+												keys: ['enter']
+											}
+										},
+										escapeKey: true,
+										backgroundDismiss: function() {
+											return true;
+										},
+										theme: 'material',
+									});
+								} else {
+									jc.close();
+								}
+							}
+						}
+					});
 				}
 
 				// Save the form when Update Form button is clicked.
