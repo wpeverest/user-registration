@@ -138,40 +138,37 @@
 	height: auto !important;
 
 	.ur-shortcut-keyword {
+		display: flex;
+		align-items: center;
 		margin-bottom: 18px;
 		font-size: 18px;
-
+		
 		.ur-shortcut-title {
 			flex: 3;
 		}
-
-		li {
+		
+		.ur-key {
 			display: flex;
-			align-items: center;
+			flex: 2;
+			column-gap: 8px;
+			color: #3498DB;
 
-			.ur-key {
-				display: flex;
-				flex: 2;
-				column-gap: 8px;
-				color: #3498DB;
+			span {
+				border: 1px solid #3498DB;
+				background-color: #3498db13;
+				padding: 5px 15px;
+				border-radius: 2px;
+			}
+			
+			.ur-key-plus {
+				margin-top: 5px;
+				font-size: 1.2em;
+			}
 
-				span {
-					border: 1px solid #3498DB;
-					background-color: #3498db13;
-					padding: 5px 15px;
-					border-radius: 2px;
-				}
-				
-				.ur-key-plus {
-					margin-top: 5px;
-					font-size: 1.2em;
-				}
-
-				.ur-key-character {
-					width: 15px;
-					padding: 5px 10px;
-					text-align: center;
-				}
+			.ur-key-character {
+				width: 15px;
+				padding: 5px 10px;
+				text-align: center;
 			}
 		}
 	}
