@@ -339,7 +339,6 @@
 				}
 
 				.password-input-group {
-					display: block;
 					position: relative;
 
 					.password_preview {
@@ -979,8 +978,10 @@
 
 		.ur-icon {
 			position: absolute;
-			top: 10px;
-			left: 10px;
+			top: 50%;
+			padding: 8px;
+			left: 0;
+			transform: translateY(-50%);
 		}
 	}
 }
