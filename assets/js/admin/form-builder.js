@@ -91,6 +91,12 @@
 					});
 				}
 
+				// Show Help Dialog when quick link is clicked.
+				$('#ur-keyboard-shortcut-link').on('click', function(e) {
+					e.preventDefault();
+					URFormBuilder.ur_show_help();
+				})
+
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
 					URFormBuilder.ur_save_form();
@@ -108,6 +114,18 @@
 
 				// Initialize the actions on choice field options.
 				URFormBuilder.init_choice_field_options();
+
+				// Show Help Dialog when new form is created.
+				$(window).on('load', function() {
+					const queryString = window.location.search;
+					const urlParams = new URLSearchParams(queryString);
+					const urPage = urlParams.get('page')
+					const isEditPage = urlParams.get('edit-registration');
+				
+					if( "add-new-registration" === urPage && null === isEditPage ) {
+						URFormBuilder.ur_show_help();
+					}
+				})
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
