@@ -84,49 +84,8 @@
 								85 === e.which
 							) {
 								e.preventDefault();
-								if (
-									! $('.jconfirm').length
-								) {
-									var shortcut_keys_html = '<ul>';
-
-									$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
-										shortcut_keys_html += `										
-											<li class="ur-shortcut-keyword">
-												<div class="ur-shortcut-title">${value}</div>
-												<div class="ur-key">
-													<span class="ur-key-ctrl">${key.split('+')[0]}</span>
-													<i class="ur-key-plus"> + </i> 
-													<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
-												</div>
-											</li>				
-										`;
-									});
-
-									shortcut_keys_html += '</ul>';
-
-									jc = $.dialog({
-										title: user_registration_form_builder_data.i18n_shortcut_key_title,
-										content: shortcut_keys_html,
-										icon: 'dashicons dashicons-info',
-										type: 'blue',
-										useBootstrap: 'false',
-										boxWidth: '550px',
-										buttons : {
-											confirm : {
-												text: user_registration_form_builder_data.i18n_close,
-												btnClass: 'btn-confirm',
-												keys: ['enter']
-											}
-										},
-										escapeKey: true,
-										backgroundDismiss: function() {
-											return true;
-										},
-										theme: 'material',
-									});
-								} else {
-									jc.close();
-								}
+								URFormBuilder.ur_show_help();
+								return false;
 							}
 						}
 					});
@@ -298,6 +257,54 @@
 						}
 					},
 				});
+			},
+			/**
+			 * Show Help Popup 
+			 */
+			ur_show_help: function () {
+				if (
+					! $('.jconfirm').length
+				) {
+					var shortcut_keys_html = '<ul>';
+
+					$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
+						shortcut_keys_html += `										
+							<li class="ur-shortcut-keyword">
+								<div class="ur-shortcut-title">${value}</div>
+								<div class="ur-key">
+									<span class="ur-key-ctrl">${key.split('+')[0]}</span>
+									<i class="ur-key-plus"> + </i> 
+									<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
+								</div>
+							</li>				
+						`;
+					});
+
+					shortcut_keys_html += '</ul>';
+
+					jc = $.dialog({
+						title: user_registration_form_builder_data.i18n_shortcut_key_title,
+						content: shortcut_keys_html,
+						icon: 'dashicons dashicons-info',
+						type: 'blue',
+						useBootstrap: 'false',
+						boxWidth: '550px',
+						buttons : {
+							confirm : {
+								text: user_registration_form_builder_data.i18n_close,
+								btnClass: 'btn-confirm',
+								keys: ['enter']
+							}
+						},
+						escapeKey: true,
+						backgroundDismiss: function() {
+							return true;
+						},
+						theme: 'material',
+					});
+				} else {
+					jc.close();
+				}
 			},
 			/**
 			 * Returns all the validation messages for the specific form in form builder.
