@@ -1,14 +1,17 @@
 <?php
+/**
+ * Abstract UR_Meta_Boxes Class
+ *
+ * @since v2.0.0
+ * @package  UserRegistration/Abstracts
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Abstract UR_Meta_Boxes Class
- *
- * @since v2.0.0
- * @package  UserRegistration/Abstracts
+ * UR_Meta_Boxes Class
  */
 abstract class UR_Meta_Boxes {
 
@@ -35,7 +38,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo ur_help_tip( $field['desc'] );
+		echo wp_kses_post( ur_help_tip( $field['desc'] ) );
 		echo '</div>';
 
 		echo '<div class="ur-metabox-field-detail">';
@@ -45,12 +48,12 @@ abstract class UR_Meta_Boxes {
 
 		$metabox__allowedtags = array(
 			'input' => array(
-				'type' => array(),
-				'id' => array(),
-				'name' => array(),
-				'class' => array(),
+				'type'    => array(),
+				'id'      => array(),
+				'name'    => array(),
+				'class'   => array(),
 				'checked' => array(),
-				'style' => array(),
+				'style'   => array(),
 			),
 		);
 
@@ -80,7 +83,6 @@ abstract class UR_Meta_Boxes {
 		$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
 		$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
 		$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-
 		$field['desc']          = isset( $field['desc'] ) ? $field['desc'] : '';
 
 		$get_meta_data = get_post_meta( $post->ID, $field['id'], true );
@@ -89,7 +91,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo ur_help_tip( $field['desc'] );
+		echo wp_kses_post( ur_help_tip( $field['desc'] ) );
 		echo '</div>';
 		echo '<div class="ur-metabox-field-detail">';
 		echo '<select id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" >';
@@ -138,7 +140,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo ur_help_tip( $field['desc'] );
+		echo wp_kses_post( ur_help_tip( $field['desc'] ) );
 		echo '</div>';
 		echo '<div class="ur-metabox-field-detail">';
 		echo '<select multiple id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" >';
@@ -188,7 +190,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo ur_help_tip( $field['desc'] );
+		echo wp_kses_post( ur_help_tip( $field['desc'] ) );
 		echo '</div>';
 		echo '<div class="ur-metabox-field-detail">';
 		echo '<input type="text" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" value="' . esc_attr( $field['value'] ) . '" >';
@@ -220,7 +222,7 @@ abstract class UR_Meta_Boxes {
 		echo '<div class="ur-metabox-field-row">';
 		echo '<div class="ur-metabox-field-label">';
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
-		echo ur_help_tip( $field['desc'] );
+		echo wp_kses_post( ur_help_tip( $field['desc'] ) );
 		echo '</div>';
 
 		echo '<div class="ur-metabox-field-detail">';
@@ -233,12 +235,12 @@ abstract class UR_Meta_Boxes {
 
 		$metabox__allowedtags = array(
 			'input' => array(
-				'type' => array(),
-				'id' => array(),
-				'name' => array(),
-				'class' => array(),
+				'type'    => array(),
+				'id'      => array(),
+				'name'    => array(),
+				'class'   => array(),
 				'checked' => array(),
-				'style' => array(),
+				'style'   => array(),
 			),
 		);
 
