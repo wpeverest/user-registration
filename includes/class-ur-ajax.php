@@ -975,8 +975,10 @@ class UR_AJAX {
 					if ( ! current_user_can( 'unfiltered_html' ) ) {
 						$value = wp_kses_post( $value );
 					}
-				} else {
-					$value = sanitize_text_field( $value );
+				}
+				else {
+					$value = str_replace('"',"'",$value);
+					$value = wp_kses_post( $value );
 				}
 			}
 		}
