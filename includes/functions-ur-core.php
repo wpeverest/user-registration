@@ -1910,7 +1910,7 @@ function ur_get_registration_source_id( $user_id ) {
  */
 function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = null ) {
 	$start_ts       = strtotime( $start_date );
-	$end_ts         = strtotime( $end_date . " +1 Day" );
+	$end_ts         = strtotime( $end_date . ' +1 Day' );
 	$target_date_ts = strtotime( $target_date );
 
 	// If the starting and the ending date are set as same.
