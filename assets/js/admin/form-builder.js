@@ -73,7 +73,7 @@
 							}
 						}
 					});
-					// Show Help Box on keypress.
+					// Show Keyboard Shortcuts Help Dialog Box on keypress.
 					$(window).on("keydown", function (e) {
 						if (e.ctrlKey || e.metaKey) {
 							if (
@@ -117,7 +117,7 @@
 				URFormBuilder.init_choice_field_options();
 
 				// Show Help Dialog when new form is created.
-				$(window).on('load', function() {
+				$(document).ready( function() {
 					const queryString = window.location.search;
 					const urlParams = new URLSearchParams(queryString);
 					const urPage = urlParams.get('page')
