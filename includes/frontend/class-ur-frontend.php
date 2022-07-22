@@ -144,6 +144,11 @@ class UR_Frontend {
 							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						}
 					}
+				} elseif ( isset( $shortcode['innerHTML'] ) && ! empty( $shortcode['innerHTML'] ) ) {
+					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+					if ( 1 > absint( $matched ) ) {
+						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+					}
 				} else {
 					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
 					if ( 1 > absint( $matched ) ) {
