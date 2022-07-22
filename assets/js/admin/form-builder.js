@@ -94,6 +94,7 @@
 				// Show Help Dialog when quick link is clicked.
 				$('#ur-keyboard-shortcut-link').on('click', function(e) {
 					e.preventDefault();
+					$(".ur-quick-links-content").slideToggle();
 					URFormBuilder.ur_show_help();
 				})
 
@@ -121,7 +122,7 @@
 					const urlParams = new URLSearchParams(queryString);
 					const urPage = urlParams.get('page')
 					const isEditPage = urlParams.get('edit-registration');
-				
+
 					if( "add-new-registration" === urPage && null === isEditPage ) {
 						URFormBuilder.ur_show_help();
 					}
@@ -277,7 +278,7 @@
 				});
 			},
 			/**
-			 * Show Help Popup 
+			 * Show Help Popup
 			 */
 			ur_show_help: function () {
 				if (
@@ -286,15 +287,15 @@
 					var shortcut_keys_html = '<ul>';
 
 					$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
-						shortcut_keys_html += `										
+						shortcut_keys_html += `
 							<li class="ur-shortcut-keyword">
 								<div class="ur-shortcut-title">${value}</div>
 								<div class="ur-key">
 									<span class="ur-key-ctrl">${key.split('+')[0]}</span>
-									<i class="ur-key-plus"> + </i> 
+									<i class="ur-key-plus"> + </i>
 									<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
 								</div>
-							</li>				
+							</li>
 						`;
 					});
 
