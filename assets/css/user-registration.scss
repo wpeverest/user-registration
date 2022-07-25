@@ -244,8 +244,8 @@
 			input[type="phone"],
 			textarea,
 			select,
+
 			.__PrivateStripeElement {
-				display: block;
 				width: 100%;
 				padding: 4px 8px;
 				border-radius: 0;
@@ -256,6 +256,11 @@
 				&::placeholder {
 					color: #ddd;
 				}
+			}
+
+			input[type="password"] {
+				display: inline;
+				margin-bottom: 0px;
 			}
 
 			.StripeElement {
