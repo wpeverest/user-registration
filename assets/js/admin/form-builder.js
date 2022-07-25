@@ -73,7 +73,30 @@
 							}
 						}
 					});
+					// Show Keyboard Shortcuts Help Dialog Box on keypress.
+					$(window).on("keydown", function (e) {
+						if (e.ctrlKey || e.metaKey) {
+							if (
+								"h" ===
+									String.fromCharCode(
+										e.which
+									).toLowerCase() ||
+								85 === e.which
+							) {
+								e.preventDefault();
+								URFormBuilder.ur_show_help();
+								return false;
+							}
+						}
+					});
 				}
+
+				// Show Help Dialog when quick link is clicked.
+				$('#ur-keyboard-shortcut-link').on('click', function(e) {
+					e.preventDefault();
+					$(".ur-quick-links-content").slideToggle();
+					URFormBuilder.ur_show_help();
+				})
 
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
@@ -92,6 +115,18 @@
 
 				// Initialize the actions on choice field options.
 				URFormBuilder.init_choice_field_options();
+
+				// Show Help Dialog when new form is created.
+				$(document).ready( function() {
+					const queryString = window.location.search;
+					const urlParams = new URLSearchParams(queryString);
+					const urPage = urlParams.get('page')
+					const isEditPage = urlParams.get('edit-registration');
+
+					if( "add-new-registration" === urPage && null === isEditPage ) {
+						URFormBuilder.ur_show_help();
+					}
+				})
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -241,6 +276,54 @@
 						}
 					},
 				});
+			},
+			/**
+			 * Show Help Popup
+			 */
+			ur_show_help: function () {
+				if (
+					! $('.jconfirm').length
+				) {
+					var shortcut_keys_html = '<ul>';
+
+					$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
+						shortcut_keys_html += `
+							<li class="ur-shortcut-keyword">
+								<div class="ur-shortcut-title">${value}</div>
+								<div class="ur-key">
+									<span class="ur-key-ctrl">${key.split('+')[0]}</span>
+									<i class="ur-key-plus"> + </i>
+									<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
+								</div>
+							</li>
+						`;
+					});
+
+					shortcut_keys_html += '</ul>';
+
+					jc = $.dialog({
+						title: user_registration_form_builder_data.i18n_shortcut_key_title,
+						content: shortcut_keys_html,
+						icon: 'dashicons dashicons-info',
+						type: 'blue',
+						useBootstrap: 'false',
+						boxWidth: '550px',
+						buttons : {
+							confirm : {
+								text: user_registration_form_builder_data.i18n_close,
+								btnClass: 'btn-confirm',
+								keys: ['enter']
+							}
+						},
+						escapeKey: true,
+						backgroundDismiss: function() {
+							return true;
+						},
+						theme: 'material',
+					});
+				} else {
+					jc.close();
+				}
 			},
 			/**
 			 * Returns all the validation messages for the specific form in form builder.
