@@ -298,9 +298,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 
 		// Get selected_countries data of the field
 		foreach ( $fields as $field ) {
-			if ( "country" === $field->field_key && $field_name === $field->general_setting->field_name ) {
+			if ( 'country' === $field->field_key && $field_name === $field->general_setting->field_name ) {
 				$advance_setting = $field->advance_setting;
-				if ( isset ( $advance_setting->selected_countries ) ) {
+				if ( isset( $advance_setting->selected_countries ) ) {
 					$selected_countries = $advance_setting->selected_countries;
 					break;
 				}
@@ -330,7 +330,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
-					if ( 'confirm_user_pass' != $field->general_setting->field_name ) {
+					if ( isset( $field->general_setting->field_name ) && 'confirm_user_pass' != $field->general_setting->field_name ) {
 						array_push( $form_field_data_array, $field );
 					}
 				}
@@ -356,7 +356,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 
 	public function get_registered_admin_fields() {
 
-		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' .esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ). '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
+		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' . esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ) . '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
 	}
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
