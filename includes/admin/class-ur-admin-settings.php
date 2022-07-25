@@ -916,7 +916,7 @@ class UR_Admin_Settings {
 			if ( ! in_array( $word, $prepositions ) ) {
 
 				// Check if the word is a shash separated terms. Eg: "Hide/Show".
-				if ( str_contains( $word, '/' ) ) {
+				if ( strpos( $word, '/' ) ) {
 					$separate_terms = explode( '/', $word );
 					$capitalized_terms = array();
 

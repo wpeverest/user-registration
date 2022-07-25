@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.0
-Stable tag: 2.2.0
+Tested up to: 6.0.1
+Stable tag: 2.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,20 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.1    - 28/07/2022
+* Enhance  - Display Keyboard Shortcuts Popup when (Ctrl + H) is pressed.
+* Enhance  - Toggle introduced in metabox settings.
+* Tweak    - Added trigger after edit profile ajax submission.
+* Dev      - Replace str_contains with strpos in settings title capitalization function.
+* Fix      - Quick Links Content Toggle Issue.
+* Fix      - Replace str_contains with strpos.
+* Fix      - Remove whitespace before form fields.
+* Fix      - Form Field icon issue in firefox browser.
+* Fix      - Undefined index field_name in country field.
+* Fix      - Date Range not accepting end date in access rule.
+* Fix      - Required option value for field not rendered dynamically in form builder.
+* Fix      - File upload path permission denied due to no existence of file directory.
 
 = 2.2.0    - 14/07/2022
 * Feature  - Approve User via Email Token Link​
