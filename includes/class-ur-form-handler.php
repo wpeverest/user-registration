@@ -92,6 +92,11 @@ class UR_Form_Handler {
 					$upload_dir  = wp_upload_dir();
 					$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
+					// Checks if the upload directory exists and create one if not.
+					if ( ! file_exists( $upload_path ) ) {
+						wp_mkdir_p( $upload_path );
+					}
+
 					if ( ! wp_is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
 						ur_add_notice( 'Upload path permission deny.', 'error' );
 					}
