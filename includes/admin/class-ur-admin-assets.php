@@ -272,7 +272,7 @@ class UR_Admin_Assets {
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
 					'Ctrl+P' => esc_html__( 'Preview Form', 'user-registration' ),
-					'Ctrl+E' => esc_html__( 'Go to Entries', 'user-registration' ),
+					'Ctrl+U' => esc_html__( 'Go to Users', 'user-registration' ),
 					'Ctrl+H' => esc_html__( 'Open Help', 'user-registration' ),
 				),
 				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
