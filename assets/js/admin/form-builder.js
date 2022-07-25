@@ -3414,6 +3414,16 @@
 			 */
 			trigger_general_setting_required: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+				.find(".ur-general-setting-block")
+				.find(
+					'select[data-field="' +
+						$label.attr("data-field") +
+						'"] option:selected'
+				)
+				.removeAttr("selected");
+
 				wrapper.find(".ur-label").find("label").find("span").remove();
 				if ($label.val() === "yes") {
 					wrapper
@@ -3427,7 +3437,7 @@
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.find('option[value="' + $label.val() + '"]')
-					.prop("selected", true);
+					.attr("selected", true);
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
