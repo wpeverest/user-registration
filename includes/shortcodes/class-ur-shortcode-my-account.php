@@ -192,7 +192,9 @@ class UR_Shortcode_My_Account {
 			// Prepare values.
 			foreach ( $profile as $key => $field ) {
 				if ( isset( $field['custom_attributes']['data-locale'] ) ) {
-					wp_enqueue_script( 'flatpickr-localization_' . $field['custom_attributes']['data-locale'], 'https://npmcdn.com/flatpickr/dist/l10n/' . $field['custom_attributes']['data-locale'] . '.js', array(), '4.6.13' );
+					if ( wp_script_is( 'flatpickr' ) && 'en' !== $field['custom_attributes']['data-locale'] ) {
+						wp_enqueue_script( 'flatpickr-localization_' . $field['custom_attributes']['data-locale'], UR()->plugin_url() . '/assets/js/flatpickr/dist/I10n/' . $field['custom_attributes']['data-locale'] . '.js', array(), UR_VERSION, true );
+					}
 				}
 				$value                    = get_user_meta( get_current_user_id(), $key, true );
 				$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $value, $key );
