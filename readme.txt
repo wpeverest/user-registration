@@ -283,7 +283,6 @@ Yes, the plugin has a shortcode for the login form.
 * Tweak    - Added trigger after edit profile ajax submission.
 * Dev      - Replace str_contains with strpos in settings title capitalization function.
 * Fix      - Quick Links Content Toggle Issue.
-* Fix      - Replace str_contains with strpos.
 * Fix      - Remove whitespace before form fields.
 * Fix      - Form Field icon issue in firefox browser.
 * Fix      - Undefined index field_name in country field.
