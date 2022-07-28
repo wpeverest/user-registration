@@ -142,11 +142,11 @@
 		align-items: center;
 		margin-bottom: 18px;
 		font-size: 18px;
-		
+
 		.ur-shortcut-title {
 			flex: 3;
 		}
-		
+
 		.ur-key {
 			display: flex;
 			flex: 2;
@@ -159,7 +159,7 @@
 				padding: 5px 15px;
 				border-radius: 2px;
 			}
-			
+
 			.ur-key-plus {
 				margin-top: 5px;
 				font-size: 1.2em;
@@ -1832,16 +1832,22 @@
 	 display: inline-block;
 	 font-size: 22px;
 	 font-style: normal;
-	 height: 16px;
+	 height: 22px;
 	 line-height: 16px;
 	 position: relative;
 	 vertical-align: baseline;
-	 width: 16px;
+	 width: 22px;
 
 	 &::after {
 		 @include icon_dashicons("\f223");
 		 cursor: help;
 	 }
+ }
+
+ .ur-portal-tooltip {
+	font-size: 18px;
+	height: 14px;
+	width: 18px;
  }
 
  #smart-tags {
