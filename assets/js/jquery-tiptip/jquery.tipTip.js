@@ -19,7 +19,7 @@
  *   http://www.gnu.org/licenses/gpl.html
  */
 
-(function($){
+ (function($){
 	$.fn.tipTip = function(options) {
 		var defaults = {
 			activation: "hover",
@@ -61,20 +61,29 @@
 					org_elem.removeAttr(opts.attribute); //remove original Attribute
 				}
 				var timeout = false;
+				var myTimeout = false;
 
 				if(opts.activation == "hover"){
 					org_elem.hover(function(){
-						active_tiptip();
+						if( !timeout ) {
+							active_tiptip();
+						}
 					}, function(){
 						if(!opts.keepAlive){
 							deactive_tiptip();
+						} else {
+							tiptip_content
+							.hover(function(){
+								if( myTimeout ) { clearTimeout( myTimeout ); }
+							}, function() {
+								deactive_tiptip();
+							});
+
+							myTimeout = setTimeout(function() {
+								deactive_tiptip();
+							}, opts.delay);
 						}
 					});
-					if(opts.keepAlive){
-						tiptip_holder.hover(function(){}, function(){
-							deactive_tiptip();
-						});
-					}
 				} else if(opts.activation == "focus"){
 					org_elem.focus(function(){
 						active_tiptip();
@@ -184,6 +193,9 @@
 					opts.exit.call(this);
 					if (timeout){ clearTimeout(timeout); }
 					tiptip_holder.fadeOut(opts.fadeOut);
+					setTimeout(function() {
+						timeout=false;
+					},opts.delay);
 				}
 			}
 		});
