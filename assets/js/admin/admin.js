@@ -323,12 +323,12 @@ jQuery(function ($) {
 				{ keepAlive: false }
 			);
 
-			// Add tiptip to parent element for widefat tables
+			// Add Tooltipster to parent element for widefat tables
 			$(".parent-tips").each(function () {
 				$(this)
 					.closest("a, th")
 					.attr("data-tip", $(this).data("tip"))
-					.tipTip(tiptip_args)
+					.tooltipster()
 					.css("cursor", "help");
 			});
 		})
@@ -498,12 +498,22 @@ jQuery(function ($) {
  */
 function ur_init_tooltips($elements, options) {
 	if (undefined !== $elements && null !== $elements && "" !== $elements) {
+
 		var args = {
-			attribute: "data-tip",
-			fadeIn: 50,
-			fadeOut: 50,
-			delay: 200,
-			keepAlive: true,
+			theme: 'tooltipster-borderless',
+			maxWidth: 200,
+			multiple: true,
+			interactive: true,
+			position: 'bottom',
+			contentAsHTML: true,
+			functionInit: function( instance, helper ) {
+				var $origin = jQuery( helper.origin ),
+					dataTip = $origin.attr( 'data-tip' );
+
+				if ( dataTip ) {
+					instance.content( dataTip );
+				}
+			}
 		};
 
 		if (options && "object" === typeof options) {
@@ -513,9 +523,9 @@ function ur_init_tooltips($elements, options) {
 		}
 
 		if ("string" === typeof $elements) {
-			jQuery($elements).tipTip(args);
+			jQuery($elements).tooltipster(args);
 		} else {
-			$elements.tipTip(args);
+			$elements.tooltipster(args);
 		}
 	}
 }

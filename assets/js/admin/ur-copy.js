@@ -16,7 +16,8 @@ jQuery(function ($) {
 					URCopyShortcode.urSetClipboard(res, $this);
 
 					$this
-						.tipTip({
+						.tooltipster({
+							theme: 'tooltipster-borderless',
 							attribute: "data-copied",
 							activation: "focus",
 							fadeIn: 50,
