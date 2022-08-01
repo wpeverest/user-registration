@@ -92,11 +92,11 @@
 				}
 
 				// Show Help Dialog when quick link is clicked.
-				$('#ur-keyboard-shortcut-link').on('click', function(e) {
+				$("#ur-keyboard-shortcut-link").on("click", function (e) {
 					e.preventDefault();
 					$(".ur-quick-links-content").slideToggle();
 					URFormBuilder.ur_show_help();
-				})
+				});
 
 				// Save the form when Update Form button is clicked.
 				$(".ur_save_form_action_button").on("click", function () {
@@ -117,16 +117,19 @@
 				URFormBuilder.init_choice_field_options();
 
 				// Show Help Dialog when new form is created.
-				$(document).ready( function() {
-					const queryString = window.location.search;
-					const urlParams = new URLSearchParams(queryString);
-					const urPage = urlParams.get('page')
-					const isEditPage = urlParams.get('edit-registration');
+				$(document).ready(function () {
+					var queryString = window.location.search;
+					var urlParams = new URLSearchParams(queryString);
+					var urPage = urlParams.get("page");
+					var isEditPage = urlParams.get("edit-registration");
 
-					if( "add-new-registration" === urPage && null === isEditPage ) {
+					if (
+						"add-new-registration" === urPage &&
+						null === isEditPage
+					) {
 						URFormBuilder.ur_show_help();
 					}
-				})
+				});
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -281,45 +284,44 @@
 			 * Show Help Popup
 			 */
 			ur_show_help: function () {
-				if (
-					! $('.jconfirm').length
-				) {
-					var shortcut_keys_html = '<ul>';
+				if (!$(".jconfirm").length) {
+					var shortcut_keys_html = "<ul>";
 
-					$.each(user_registration_form_builder_data.i18n_shortcut_keys, function (key, value) {
-						shortcut_keys_html += `
-							<li class="ur-shortcut-keyword">
-								<div class="ur-shortcut-title">${value}</div>
-								<div class="ur-key">
-									<span class="ur-key-ctrl">${key.split('+')[0]}</span>
-									<i class="ur-key-plus"> + </i>
-									<span class="ur-key-character"><b>${key.split('+')[1]}</b></span>
-								</div>
-							</li>
-						`;
-					});
+					$.each(
+						user_registration_form_builder_data.i18n_shortcut_keys,
+						function (key, value) {
+							shortcut_keys_html +=
+								'<li class="ur-shortcut-keyword"><div class="ur-shortcut-title">' +
+								value +
+								'</div><div class="ur-key"><span class="ur-key-ctrl">' +
+								key.split("+")[0] +
+								'</span><i class="ur-key-plus"> + </i><span class="ur-key-character"><b>' +
+								key.split("+")[1] +
+								"</b></span></div></li>";
+						}
+					);
 
-					shortcut_keys_html += '</ul>';
+					shortcut_keys_html += "</ul>";
 
 					jc = $.dialog({
 						title: user_registration_form_builder_data.i18n_shortcut_key_title,
 						content: shortcut_keys_html,
-						icon: 'dashicons dashicons-info',
-						type: 'blue',
-						useBootstrap: 'false',
-						boxWidth: '550px',
-						buttons : {
-							confirm : {
+						icon: "dashicons dashicons-info",
+						type: "blue",
+						useBootstrap: "false",
+						boxWidth: "550px",
+						buttons: {
+							confirm: {
 								text: user_registration_form_builder_data.i18n_close,
-								btnClass: 'btn-confirm',
-								keys: ['enter']
-							}
+								btnClass: "btn-confirm",
+								keys: ["enter"],
+							},
 						},
 						escapeKey: true,
-						backgroundDismiss: function() {
+						backgroundDismiss: function () {
 							return true;
 						},
-						theme: 'material',
+						theme: "material",
 					});
 				} else {
 					jc.close();
@@ -2907,24 +2909,24 @@
 							});
 							break;
 						case "validate_unique":
-						if ("false" === $this_node.val()) {
-							$(this)
-								.closest(".ur-advance-setting-block")
-								.find(".ur-advance-validation_message")
-								.hide();
-						}
+							if ("false" === $this_node.val()) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-validation_message")
+									.hide();
+							}
 
-						$this_node.on("change", function () {
-							$(this)
-								.closest(".ur-advance-setting-block")
-								.find(".ur-advance-validation_message")
-								.toggle();
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-validation_message")
+									.toggle();
 
-							$(".ur-selected-item.ur-item-active")
-								.find(".ur-advance-validation_message")
-								.toggle();
-						});
-						break;
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-validation_message")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
@@ -3416,13 +3418,13 @@
 				var wrapper = $(".ur-selected-item.ur-item-active");
 
 				wrapper
-				.find(".ur-general-setting-block")
-				.find(
-					'select[data-field="' +
-						$label.attr("data-field") +
-						'"] option:selected'
-				)
-				.removeAttr("selected");
+					.find(".ur-general-setting-block")
+					.find(
+						'select[data-field="' +
+							$label.attr("data-field") +
+							'"] option:selected'
+					)
+					.removeAttr("selected");
 
 				wrapper.find(".ur-label").find("label").find("span").remove();
 				if ($label.val() === "yes") {
