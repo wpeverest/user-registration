@@ -306,7 +306,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					if ( 'yes' === $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
-						$field .= '<label class="ur-checkbox-label">  Select All</label></li>';
+						$field .= '<label class="ur-checkbox-label">  ' . esc_html__( 'Select All', 'user-registration' ) . '</label></li>';
 					}
 					foreach ( $choices as $choice_index => $choice ) {
 
