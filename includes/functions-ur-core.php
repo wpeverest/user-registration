@@ -2312,7 +2312,7 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 	 */
 	function user_registration_pro_get_checkbox_choices( $form_id, $field_name ) {
 
-		$form_data = user_registration_pro_get_field_data( $form_id, $field_name );
+		$form_data = (object) user_registration_pro_get_field_data( $form_id, $field_name );
 		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
 			$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
 			$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
