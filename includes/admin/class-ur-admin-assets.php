@@ -51,6 +51,8 @@ class UR_Admin_Assets {
 
 		wp_register_style( 'ur-notice', UR()->plugin_url() . '/assets/css/ur-notice.css', array(), UR_VERSION );
 
+		wp_register_style( 'jquery-confirm-style', UR()->plugin_url() . '/assets/css/jquery-confirm/jquery-confirm.css', array(), $jquery_version );
+
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
 		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
@@ -70,6 +72,7 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_style( 'perfect-scrollbar' );
 			wp_enqueue_style( 'sweetalert2' );
+			wp_enqueue_style( 'jquery-confirm-style' );
 		}
 		// Enqueue flatpickr on user profile screen.
 		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
@@ -143,6 +146,7 @@ class UR_Admin_Assets {
 		);
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', UR()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+		wp_register_script( 'jquery-confirm', UR()->plugin_url() . '/assets/js/jquery-confirm/jquery-confirm' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script(
 			'ur-backbone-modal',
 			UR()->plugin_url() . '/assets/js/admin/backbone-modal' . $suffix . '.js',
@@ -242,6 +246,7 @@ class UR_Admin_Assets {
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
 			wp_enqueue_script( 'user-registration-admin' );
 			wp_enqueue_script( 'user-registration-form-builder' );
+			wp_enqueue_script( 'jquery-confirm' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 			wp_enqueue_script( 'jquery-ui-widget' );
@@ -262,6 +267,14 @@ class UR_Admin_Assets {
 				'form_required_fields'           => ur_get_required_fields(),
 				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
 				'i18n_admin'                     => self::get_i18n_admin_data(),
+				'i18n_shortcut_key_title'      => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
+				'i18n_shortcut_keys'           => array(
+					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
+					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
+					'Ctrl+P' => esc_html__( 'Preview Form', 'user-registration' ),
+					'Ctrl+U' => esc_html__( 'Go to Users', 'user-registration' ),
+					'Ctrl+H' => esc_html__( 'Open Help', 'user-registration' ),
+				),
 				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
 				'max_upload_size_ini'            => wp_max_upload_size() / 1024,
 				'ur_preview'                     => add_query_arg(

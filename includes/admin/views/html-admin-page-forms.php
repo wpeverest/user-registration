@@ -131,6 +131,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="ur-builder-wrapper-footer">
 								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
 								<ul class="ur-quick-links-content" hidden>
+									<li><a href="#" id="ur-keyboard-shortcut-link"><?php echo esc_html__( 'Keyboard Shortcuts', 'user-registration' ); ?></a></li>
 									<li><a href="https://wpeverest.com/support/" target='_blank'><?php echo esc_html__( 'Get Support', 'user-registration' ); ?></a></li>
 									<li><a href="https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/" target='_blank'><?php echo esc_html__( 'Create Login Form', 'user-registration' ); ?></a></li>
 									<li><a href="https://docs.wpeverest.com/docs/user-registration/" target='_blank'><?php echo esc_html__( 'Documentation', 'user-registration' ); ?></a></li>

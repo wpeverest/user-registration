@@ -167,10 +167,6 @@
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
-
-		.input-text {	
-			padding-left: 35px !important;
-		}
 	}
 
 	* {
@@ -248,8 +244,8 @@
 			input[type="phone"],
 			textarea,
 			select,
+
 			.__PrivateStripeElement {
-				display: block;
 				width: 100%;
 				padding: 4px 8px;
 				border-radius: 0;
@@ -260,6 +256,11 @@
 				&::placeholder {
 					color: #ddd;
 				}
+			}
+
+			input[type="password"] {
+				display: inline;
+				margin-bottom: 0px;
 			}
 
 			.StripeElement {
@@ -343,7 +344,6 @@
 				}
 
 				.password-input-group {
-					display: block;
 					position: relative;
 
 					.password_preview {
@@ -983,8 +983,10 @@
 
 		.ur-icon {
 			position: absolute;
-			top: 10px;
-			left: 10px;
+			top: 50%;
+			padding: 8px;
+			left: 0;
+			transform: translateY(-50%);
 		}
 	}
 }

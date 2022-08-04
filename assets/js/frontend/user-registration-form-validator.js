@@ -194,7 +194,7 @@
 							) {
 								error.insertAfter(element.parent().parent());
 							} else {
-								error.insertAfter(element);
+								error.insertAfter(element.parent().parent());
 							}
 						}
 					},
