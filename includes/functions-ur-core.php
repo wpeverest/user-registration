@@ -412,8 +412,8 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  * @param  string $field_key field's field key.
  * @return string $field_type
  */
-function ur_get_field_type( $field_key ) {
 
+function ur_get_field_type( $field_key ) {
 	$fields = ur_get_registered_form_fields();
 
 	$field_type = 'text';
@@ -688,6 +688,7 @@ function ur_get_registered_form_fields() {
 			'checkbox',
 			'privacy_policy',
 			'radio',
+			'file',
 		)
 	);
 }
@@ -2640,5 +2641,59 @@ if ( ! function_exists( 'user_registration_incremental_file_name' ) ) {
 		}
 
 		return $file_name;
+	}
+}
+
+if ( ! function_exists( 'ur_format_field_values' ) ) {
+
+	/**
+	 * Get field type by meta key
+	 *
+	 * @param int    $field_meta_key Field key or meta key.
+	 * @param string $field_value Field's value .
+	 */
+	function ur_format_field_values( $field_meta_key, $field_value ) {
+		if ( strpos( $field_meta_key, 'user_registration_' ) ) {
+			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
+		}
+		$field_name = ur_get_field_data_by_field_name( ur_get_form_id_by_userid( get_current_user_id() ), $field_meta_key );
+		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
+
+		switch ( $field_key ) {
+			case 'country':
+				$countries   = UR_Form_Field_Country::get_instance()->get_country();
+				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
+				break;
+			case 'file':
+				$attachment_ids = explode( ',', $field_value );
+				$links          = array();
+
+				foreach ( $attachment_ids as $attachment_id ) {
+					$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
+					array_push( $links, $attachment_url );
+				}
+
+				$field_value = implode( ', ', $links );
+				break;
+			case 'privacy_policy':
+				if ( '1' === $field_value ) {
+					$field_value = 'Checked';
+				} else {
+					$field_value = 'Not Checked';
+				}
+				break;
+			case 'wysiwyg':
+				$field_value = html_entity_decode( $field_value );
+				break;
+			case 'profile_picture':
+				$field_value = '<img class="profile-preview" alt="Profile Picture" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
+				$field_value = wp_kses_post( $field_value );
+				break;
+			default:
+				$field_value = $field_value;
+				break;
+		}
+
+		return $field_value;
 	}
 }
