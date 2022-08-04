@@ -412,7 +412,6 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  * @param  string $field_key field's field key.
  * @return string $field_type
  */
-
 function ur_get_field_type( $field_key ) {
 	$fields = ur_get_registered_form_fields();
 
