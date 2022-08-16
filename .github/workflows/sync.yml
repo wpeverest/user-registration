@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - fix/remove-field-icon-code
     workflow_dispatch:
 jobs:
   sync:
