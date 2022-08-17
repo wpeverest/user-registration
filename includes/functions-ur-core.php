@@ -2028,10 +2028,36 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	$valid_form_data = array();
 	if ( isset( $profile[ $post_key ] ) ) {
 		$field_type = $profile[ $post_key ]['type'];
-		if ( 'checkbox' === $field_type || 'multi_select2' === $field_type ) {
-			if ( ! is_array( $value ) && ! empty( $value ) ) {
-				$value = maybe_unserialize( $value );
-			}
+
+		switch ( $field_type ) {
+			case 'checkbox':
+			case 'multi_select2':
+				if ( ! is_array( $value ) && ! empty( $value ) ) {
+					$value = maybe_unserialize( $value );
+				}
+				break;
+			case 'file':
+				$files = explode( ',', $value );
+
+				if ( is_array( $files ) && isset( $files[0] ) ) {
+					$attachment_ids = '';
+
+					foreach ( $files as $key => $file ) {
+						$seperator = 0 < $key ? ',' : '';
+
+						if ( wp_http_validate_url( $file ) ) {
+
+							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
+						}
+					}
+					$value = ! empty( $attachment_ids ) ? $attachment_ids : $value;
+				} else {
+
+					if ( wp_http_validate_url( $value ) ) {
+						$value = attachment_url_to_postid( $value );
+					}
+				}
+				break;
 		}
 		$valid_form_data[ $new_string ]               = new stdClass();
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
