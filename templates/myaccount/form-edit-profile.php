@@ -293,14 +293,14 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													}
 
 													// Remove files attachment id from user meta if file is deleted by admin.
-													if( '' !== $field['value'] ) {
-														$attachment_ids = explode( ',', $field['value']);
+													if ( '' !== $field['value'] ) {
+														$attachment_ids = explode( ',', $field['value'] );
 
-														foreach ($attachment_ids as $attachment_key => $attachment_id) {
+														foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
 															$attachment_url = get_attached_file( $attachment_id );
 
-															if( '' !== $attachment_url ) {
-																if( !file_exists($attachment_url) ) {
+															if ( '' !== $attachment_url ) {
+																if ( !file_exists( $attachment_url ) ) {
 																	unset( $attachment_ids[$attachment_key] );
 																}
 															}
