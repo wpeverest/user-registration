@@ -112,7 +112,7 @@ function ur_registration_template_redirect() {
 			$matched = true;
 		}
 
-		if( $matched ) {
+		if ( $matched ) {
 			preg_match_all( '!\d+!', $form_id, $form_id );
 
 			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
