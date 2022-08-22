@@ -300,13 +300,13 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 															$attachment_url = get_attached_file( $attachment_id );
 
 															if ( '' !== $attachment_url ) {
-																if ( !file_exists( $attachment_url ) ) {
-																	unset( $attachment_ids[$attachment_key] );
+																if ( ! file_exists( $attachment_url ) ) {
+																	unset( $attachment_ids[ $attachment_key ] );
 																}
 															}
 														}
 
-														$field['value'] = !empty( $attachment_ids ) ? implode(",", $attachment_ids ) : '';
+														$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
 														update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
 													}
 												}
