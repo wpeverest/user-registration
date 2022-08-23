@@ -299,11 +299,11 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 														foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
 															$attachment_url = get_attached_file( $attachment_id );
 
-															if ( '' !== $attachment_url ) {
-																if ( ! file_exists( $attachment_url ) ) {
-																	unset( $attachment_ids[ $attachment_key ] );
-																}
+															// Check to see if file actually exists or not.
+															if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
+																break;
 															}
+															unset( $attachment_ids[ $attachment_key ] );
 														}
 
 														$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
