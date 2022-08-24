@@ -1149,13 +1149,13 @@
 						subject: email_body_item
 							.find(".uret_subject_input")
 							.val(),
-						content: tinymce
-							.get(
-								"user_registration_" +
+						content: email_body_item
+							.find(
+								"#user_registration_" +
 									$(this).prop("id") +
 									"_content"
 							)
-							.getContent(),
+							.val(),
 					};
 				});
 
