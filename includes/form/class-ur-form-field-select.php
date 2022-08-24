@@ -53,12 +53,13 @@ class UR_Form_Field_Select extends UR_Form_Field {
 	}
 
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		$is_condition_enabled = isset( $single_form_field->advance_setting->enable_conditional_logic ) ? $single_form_field->advance_setting->enable_conditional_logic : '0';
 		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
 		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
 		$value                = isset( $form_data->value ) ? $form_data->value : '';
+		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
+		$field_name       = isset( $single_form_field->general_setting->field_name ) ? $single_form_field->general_setting->field_name : '';
 
-		if ( $is_condition_enabled !== '1' && 'yes' == $required && empty( $value ) ) {
+		if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' == $required && empty( $value ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
