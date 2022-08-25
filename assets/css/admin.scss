@@ -1739,6 +1739,22 @@
 		 margin: -1em 0 0 -3px;
 	 }
  }
+ 
+ .tooltipster-base {
+	.tooltipster-box {
+		background-color: #4c5477 !important;
+		padding: 4px 8px;
+		border-radius: 2px;
+	}
+
+	.tooltipster-arrow {
+		.tooltipster-arrow-uncropped {
+			.tooltipster-arrow-border {
+				border-bottom-color: #4c5477 !important;
+			}
+		}
+	}
+ }
 
  /**
   * Help Tip
@@ -1764,7 +1780,7 @@
  #smart-tags {
 	 text-align: center;
  }
-
+ 
  .form-settings-tab {
 	 cursor: pointer;
 	 padding: 10px 15px;
