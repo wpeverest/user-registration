@@ -127,8 +127,12 @@
 	 .user-registration-help-tip {
 		 margin-left: 2px;
 	 }
+
+	 label span:not(.ur-portal-tooltip) {
+		margin-left: 5px;
+	 }
  }
- 
+
  .jconfirm-cell {
 	padding-left: 30%;
 	padding-right: 30%;
