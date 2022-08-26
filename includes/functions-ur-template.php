@@ -243,8 +243,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			}
 		}
 
-		$tooltip_html = ! empty( $args['tip'] ) ? ur_help_tip( $args['tip'] ) : '';
-		$cl_html      = '';
+		$tooltip_html = '';
+
+		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
+			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
+		}
+
+		$cl_html = '';
 
 		if ( isset( $args['enable_conditional_logic'] ) && true === $args['enable_conditional_logic'] ) {
 			$cl_map  = isset( $args['cl_map'] ) ? $args['cl_map'] : '';
@@ -298,7 +303,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$choices = isset( $options ) ? $options : array();
 
 					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
-					$field .= $args['label'] . $required . $tooltip_html . '</label>';
+					$field .= $args['label'] . $tooltip_html . $required . '</label>';
 
 					$checkbox_start = 0;
 
@@ -327,7 +332,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-						. $args['label'] . $required . $tooltip_html . '</label>';
+						. $args['label'] . $tooltip_html . $required . '</label>';
 				}
 				break;
 
@@ -575,7 +580,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						),
 						'span' => array(),
 					)
-				) . $required . $tooltip_html . '</label>';
+				) . $tooltip_html . $required . '</label>';
 			}
 
 			$field_html     .= $field;
