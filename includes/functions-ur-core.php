@@ -2028,10 +2028,36 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	$valid_form_data = array();
 	if ( isset( $profile[ $post_key ] ) ) {
 		$field_type = $profile[ $post_key ]['type'];
-		if ( 'checkbox' === $field_type || 'multi_select2' === $field_type ) {
-			if ( ! is_array( $value ) && ! empty( $value ) ) {
-				$value = maybe_unserialize( $value );
-			}
+
+		switch ( $field_type ) {
+			case 'checkbox':
+			case 'multi_select2':
+				if ( ! is_array( $value ) && ! empty( $value ) ) {
+					$value = maybe_unserialize( $value );
+				}
+				break;
+			case 'file':
+				$files = explode( ',', $value );
+
+				if ( is_array( $files ) && isset( $files[0] ) ) {
+					$attachment_ids = '';
+
+					foreach ( $files as $key => $file ) {
+						$seperator = 0 < $key ? ',' : '';
+
+						if ( wp_http_validate_url( $file ) ) {
+
+							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
+						}
+					}
+					$value = ! empty( $attachment_ids ) ? $attachment_ids : $value;
+				} else {
+
+					if ( wp_http_validate_url( $value ) ) {
+						$value = attachment_url_to_postid( $value );
+					}
+				}
+				break;
 		}
 		$valid_form_data[ $new_string ]               = new stdClass();
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
@@ -2612,35 +2638,6 @@ if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
 		if ( file_exists( $pic_path ) ) {
 			unlink( $pic_path );
 		}
-	}
-}
-
-if ( ! function_exists( 'user_registration_incremental_file_name' ) ) {
-
-	/**
-	 * Create a incremental file name
-	 *
-	 * @param [type] $upload_path Path to the upload directory.
-	 * @param [type] $file Uploaded file.
-	 */
-	function user_registration_incremental_file_name( $upload_path, $file ) {
-
-		$file_name = sanitize_file_name( $file['name'] );
-		$file_ext  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
-
-		$file_counter = 0;
-		while ( file_exists( $upload_path . $file_name ) ) {
-			$file_name = pathinfo( $file_name, PATHINFO_FILENAME );
-
-			if ( 0 === $file_counter ) {
-				$file_name = $file_name . '-' . $file_counter;
-			}
-
-			$file_name = substr( $file_name, 0, strpos( $file_name, '-' ) );
-			$file_name = $file_name . '-' . ( $file_counter++ ) . '.' . $file_ext;
-		}
-
-		return $file_name;
 	}
 }
 

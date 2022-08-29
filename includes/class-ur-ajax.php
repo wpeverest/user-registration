@@ -437,7 +437,7 @@ class UR_AJAX {
 			$upload_path = $upload_path . '/';
 			$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
 
-			$file_name = user_registration_incremental_file_name( $upload_path, $upload );
+			$file_name = wp_unique_filename( $upload_path, $upload['name'] );
 
 			$file_path = $upload_path . sanitize_file_name( $file_name );
 

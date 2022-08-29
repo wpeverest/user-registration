@@ -291,6 +291,24 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 													if ( isset( $advance_data['advance_setting']->valid_file_type ) ) {
 														$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
 													}
+
+													// Remove files attachment id from user meta if file is deleted by admin.
+													if ( '' !== $field['value'] ) {
+														$attachment_ids = explode( ',', $field['value'] );
+
+														foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+															$attachment_url = get_attached_file( $attachment_id );
+
+															// Check to see if file actually exists or not.
+															if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
+																continue;
+															}
+															unset( $attachment_ids[ $attachment_key ] );
+														}
+
+														$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
+														update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+													}
 												}
 
 												if ( isset( $advance_data['general_setting']->required ) ) {
