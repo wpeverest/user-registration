@@ -301,7 +301,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 															// Check to see if file actually exists or not.
 															if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
-																break;
+																continue;
 															}
 															unset( $attachment_ids[ $attachment_key ] );
 														}
