@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - refactor/new-tooltip-library
+      - master
     workflow_dispatch:
 jobs:
   sync:
