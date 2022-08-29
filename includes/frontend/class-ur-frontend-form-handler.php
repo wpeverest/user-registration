@@ -219,6 +219,10 @@ class UR_Frontend_Form_Handler {
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
 				);
+
+				$field_hook_name = 'user_registration_before_dump_' . $single_form_field->field_key;
+				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
+
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 				$hook                                       = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook                                = $hook . '_message';
