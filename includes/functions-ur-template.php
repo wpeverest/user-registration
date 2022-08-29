@@ -255,16 +255,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '" ' . $cl_html . '>%3$s</div>';
-		$class = '';
+		$class           = '';
 		if ( ! is_admin() ) {
 			$form_id = isset( $args['form_id'] ) ? $args['form_id'] : '';
-			$enable_field_icon   = ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon' );
 
-			if ( '1' === $enable_field_icon ) {
-				$class = '';
-			} else {
-				$class = 'without_icon';
-			}
+			$class = apply_filters( 'user_registration_field_icon_enabled_class', $class, $form_id );
 		}
 
 		switch ( $args['type'] ) {
@@ -347,9 +342,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text  ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				if ( ! is_admin() ) {
-					if ( 'yes' === $enable_field_icon || '1' === $enable_field_icon ) {
-						$field .= '<span class="' . $args['icon'] . '"></span>';
-					}
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 				break;
@@ -410,9 +403,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ! is_admin() ) {
-					if ( 'yes' === $enable_field_icon || '1' === $enable_field_icon && 'file' != $args['type'] ) {
-						$field .= '<span class="' . esc_attr( $args['icon'] ) . '"></span>';
-					}
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 				break;
@@ -451,10 +442,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
 
-				if ( 'yes' === $enable_field_icon || '1' === $enable_field_icon ) {
-					if ( ! is_admin() ) {
-						$field .= '<span class="' . esc_attr( $args['icon'] ) . '"></span>';
-					}
+				if ( ! is_admin() ) {
+					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 				}
 				$field .= '</span> ';
 				break;
