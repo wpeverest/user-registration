@@ -2101,6 +2101,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
+
 			$upload_data = array();
 			$file_data = explode( ',', $form_data->value );
 
@@ -2695,33 +2696,4 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 
 		return $field_value;
 	}
-}
-
-function ur_get_all_form_fields($strip_fields) {
-	$all_forms = ur_get_all_user_registration_form();
-	$form_field_lists = array();
-
-	foreach ( $all_forms as $form_id => $form_label ) {
-		$post = get_post( $form_id );
-		$post_content       = isset( $post->post_content ) ? $post->post_content : '';
-		$post_content_array = json_decode( $post_content );
-		$specific_form_field_list = array();
-		$specific_form_field_list['form_label'] = $form_label;
-
-		foreach ( $post_content_array as $post_content_row ) {
-			foreach ( $post_content_row as $post_content_grid ) {
-				foreach ( $post_content_grid as $field ) {
-					if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) ) {
-						if ( in_array( $field->field_key, $strip_fields, true ) ) {
-							continue;
-						}
-
-						$specific_form_field_list['field_list'][ $field->general_setting->field_name ] = $field->general_setting->label;
-					}
-				}
-			}
-		}
-		array_push( $form_field_lists, $specific_form_field_list );
-	}
-	return $form_field_lists;
 }
