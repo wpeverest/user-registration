@@ -220,7 +220,7 @@ class UR_Frontend_Form_Handler {
 					'label'     => $single_field_label,
 				);
 
-				$field_hook_name = 'user_registration_before_dump_' . $single_form_field->field_key;
+				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
 				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
 
 				self::$valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
