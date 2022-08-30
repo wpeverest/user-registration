@@ -3,8 +3,6 @@
  * UR_Form_Field_Country.
  *
  * @package  UserRegistration/Form
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,8 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Form_Field_Country extends UR_Form_Field {
 
+	/**
+	 * Instance Variable.
+	 *
+	 * @var [mixed]
+	 */
 	private static $_instance;
 
+	/**
+	 * Get Instance of class.
+	 */
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -27,6 +33,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		return self::$_instance;
 	}
 
+	/**
+	 * Get Country List.
+	 */
 	public function get_country() {
 
 		return apply_filters(
@@ -287,6 +296,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 
 	/**
 	 * Get selected countries list of a Country field.
+	 *
+	 * @param [int]    $form_id Form id.
+	 * @param [string] $field_name Field Name.
 	 */
 	public function get_selected_countries( $form_id, $field_name ) {
 		$countries = $this->get_country();
@@ -296,7 +308,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$form_data = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
 		$fields = self::get_form_field_data( $form_data );
 
-		// Get selected_countries data of the field
+		// Get selected_countries data of the field.
 		foreach ( $fields as $field ) {
 			if ( 'country' === $field->field_key && $field_name === $field->general_setting->field_name ) {
 				$advance_setting = $field->advance_setting;
@@ -307,7 +319,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			}
 		}
 
-		// Filter countries with selected_countries data
+		// Filter countries with selected_countries data.
 		if ( is_array( $selected_countries ) ) {
 			foreach ( $countries as $iso => $country_name ) {
 				if ( in_array( $iso, $selected_countries, true ) ) {
@@ -339,6 +351,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		return ( $form_field_data_array );
 	}
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 
 		$this->id                       = 'user_registration_country';
@@ -354,23 +369,35 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		);
 	}
 
+	/**
+	 * Get Registered admin fields.
+	 */
 	public function get_registered_admin_fields() {
 
 		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' . esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ) . '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
 	}
 
+	/**
+	 * Validate field.
+	 *
+	 * @param [object] $single_form_field Field Data.
+	 * @param [object] $form_data Form Data.
+	 * @param [string] $filter_hook Hook.
+	 * @param [int]    $form_id Form id.
+	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
 		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
 		$value                = isset( $form_data->value ) ? $form_data->value : '';
-		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
+		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 		$field_name       = isset( $single_form_field->general_setting->field_name ) ? $single_form_field->general_setting->field_name : '';
 
 		if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' == $required && empty( $value ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
-					return esc_html__( $field_label . ' is required.', 'user-registration' );
+					/* translators: %1$s - Field Label */
+					return sprintf( __( '%1$s is required.', 'user-registration' ), $field_label );
 				}
 			);
 		}
