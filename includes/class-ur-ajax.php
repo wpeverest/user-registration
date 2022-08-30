@@ -919,7 +919,22 @@ class UR_AJAX {
 
 		foreach ( $array as $key => &$value ) {
 
-			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
+			if ( 'field_key' === $key ) {
+				$field_key = $value;
+			}
+
+			if ( 'checkbox' === $field_key ) {
+
+				if ( gettype( $value ) == 'object' ) {
+
+					if ( isset( $value->options ) && is_array( $value->options ) && ! empty( $value->options ) ) {
+						foreach ( $value->options as $index => $option_value ) {
+							$option_value = str_replace( '"', "'", $option_value );
+							$option_value = wp_kses_post( $option_value );
+						}
+					}
+				}
+			} elseif ( is_array( $value ) || gettype( $value ) == 'object' ) {
 				self::sweep_array( $value );
 
 			} else {
@@ -981,8 +996,7 @@ class UR_AJAX {
 						$value = wp_kses_post( $value );
 					}
 				} else {
-					$value = str_replace( '"', "'", $value );
-					$value = wp_kses_post( $value );
+						$value = sanitize_text_field( $value );
 				}
 			}
 		}
