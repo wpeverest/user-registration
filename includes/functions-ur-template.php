@@ -74,6 +74,7 @@ function ur_login_template_redirect() {
  * @since  1.5.1
  */
 function ur_registration_template_redirect() {
+
 	// Return if the user is not logged in.
 	if ( is_user_logged_in() === false ) {
 		return;
@@ -81,6 +82,7 @@ function ur_registration_template_redirect() {
 
 	$current_user    = wp_get_current_user();
 	$current_user_id = $current_user->ID;
+	$form_id = 0;
 
 	// Donot redirect for admins.
 	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
@@ -91,11 +93,26 @@ function ur_registration_template_redirect() {
 
 		$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
+		$shortcodes = parse_blocks( $post_content );
+		$matched = false;
+		foreach ( $shortcodes as $shortcode ) {
+			if ( ! empty( $shortcode['blockName'] ) ) {
+				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['formId'] ) ) {
+					$matched = true;
+					$form_id = $shortcode['attrs']['formId'];
+
+				}
+			}
+		}
+
 		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
 
 			$attributes = ur_get_shortcode_attr( $post_content );
 			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
+			$matched = true;
+		}
 
+		if ( $matched ) {
 			preg_match_all( '!\d+!', $form_id, $form_id );
 
 			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
