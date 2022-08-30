@@ -243,10 +243,10 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
-			'jquery-tiptip'              => array(
-				'src'     => self::get_asset_url( 'assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js' ),
+			'tooltipster'              => array(
+				'src'     => self::get_asset_url( 'assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.3.0',
+				'version' => '4.2.8',
 			),
 			'selectWoo'                  => array(
 				'src'     => self::get_asset_url( 'assets/js/selectWoo/selectWoo.full' . $suffix . '.js' ),

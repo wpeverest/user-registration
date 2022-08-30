@@ -16,7 +16,7 @@
 			this.add_validation_methods();
 			this.load_validation();
 			this.init_inputMask();
-			this.init_tiptip();
+			this.init_tooltipster();
 
 			// Inline validation
 			this.$user_registration.on(
@@ -30,15 +30,25 @@
 				$(".ur-masked-input").inputmask();
 			}
 		},
-		init_tiptip: function () {
-			if (typeof tipTip !== "undefined") {
-				var tiptip_args = {
-					attribute: "title",
-					fadeIn: 50,
-					fadeOut: 50,
-					delay: 200,
+		init_tooltipster: function () {
+			if (typeof tooltipster !== "undefined") {
+				var tooltipster_args = {
+					theme: 'tooltipster-borderless',
+					maxWidth: 200,
+					multiple: true,
+					interactive: true,
+					position: 'bottom',
+					contentAsHTML: true,
+					functionInit: function( instance, helper ) {
+						var $origin = jQuery( helper.origin ),
+							dataTip = $origin.attr( 'data-tip' );
+
+						if ( dataTip ) {
+							instance.content( dataTip );
+						}
+					}
 				};
-				$(".user-registration-help-tip").tipTip(tiptip_args);
+				$(".user-registration-help-tip").tooltipster(tooltipster_args);
 			}
 		},
 		/**
@@ -194,7 +204,7 @@
 							) {
 								error.insertAfter(element.parent().parent());
 							} else {
-								error.insertAfter(element);
+								error.insertAfter(element.parent().parent());
 							}
 						}
 					},

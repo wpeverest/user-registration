@@ -95,8 +95,8 @@ module.exports = function (grunt) {
 						[
 							"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js",
 						],
-					"<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js": [
-						"<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js",
+					"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
+						"<%= dirs.js %>/tooltipster/tooltipster.bundle.js",
 					],
 					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
 						[

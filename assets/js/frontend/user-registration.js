@@ -958,9 +958,9 @@
 																				index +
 																				"']"
 																		);
-																wrapper.after(
-																	error_message
-																);
+																	wrapper.closest('.form-row').append(
+																		error_message
+																	);
 															}
 														}
 													);

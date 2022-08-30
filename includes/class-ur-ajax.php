@@ -419,6 +419,11 @@ class UR_AJAX {
 			$upload_dir = wp_upload_dir();
 			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
+			// Checks if the upload directory exists and create one if not.
+			if ( ! file_exists( $upload_path ) ) {
+				wp_mkdir_p( $upload_path );
+			}
+
 			if ( ! is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
 				wp_send_json_error(
 					array(
@@ -432,7 +437,7 @@ class UR_AJAX {
 			$upload_path = $upload_path . '/';
 			$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
 
-			$file_name = user_registration_incremental_file_name( $upload_path, $upload );
+			$file_name = wp_unique_filename( $upload_path, $upload['name'] );
 
 			$file_path = $upload_path . sanitize_file_name( $file_name );
 

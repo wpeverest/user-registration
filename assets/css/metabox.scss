@@ -5,6 +5,8 @@
 #urcr-meta-box,
 #user_registration_frontend_listing_filter,
 #user_registration_frontend_listing_general,
+#user_registration_frontend_listing_search,
+#user_registration_frontend_listing_view_profile,
 #user_registration_frontend_listing_pagination,
 #user_registration_frontend_listing_shortcode {
 	.select2-container {
@@ -31,11 +33,11 @@
 	}
 	.ur-metabox-field-row {
 		display: flex;
-		flex-wrap: wrap;
-		padding-bottom: 20px;
+		flex-wrap: nowrap;
+		padding: 15px 0px 15px 0px;
 		color: #1d2327;
 		.ur-metabox-field-label {
-			width: 30%;
+			flex: 0 0 35%;
 			label {
 				font-weight: 600;
 			}
@@ -45,7 +47,7 @@
 			}
 		}
 		.ur-metabox-field-detail {
-			width: 70%;
+			flex: 0 0 65%;
 			@media (max-width: 767px) {
 				width: 100%;
 			}
