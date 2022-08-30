@@ -95,8 +95,8 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return ur_get_endpoint_url( $lost_password_endpoint, '', $ur_account_page_url );
 	} elseif ( $ur_login_page_exists && ! empty( $lost_password_endpoint ) ) {
 		return ur_get_endpoint_url( $lost_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
-	} elseif(  ! empty( $lost_password_endpoint ) && 'lost-password' !== $lost_password_endpoint ) {
-		return str_replace( 'lost-password' , $lost_password_endpoint, $default_url );
+	} elseif ( ! empty( $lost_password_endpoint ) && 'lost-password' !== $lost_password_endpoint ) {
+		return str_replace( 'lost-password', $lost_password_endpoint, $default_url );
 	} else {
 		return $default_url;
 	}
@@ -232,10 +232,10 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 	$profile_picture_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
 
 	if ( is_numeric( $profile_picture_url ) ) {
-		$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+		$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 	}
 
-	$class               = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
+	$class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
 	if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || ( isset( $args['force_default'] ) && $args['force_default'] ) ) {
 		$class[] = 'avatar-default';
