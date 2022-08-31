@@ -315,7 +315,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$choices = isset( $options ) ? $options : array();
 
 					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
-					$field .= $args['label'] . $tooltip_html . $required . '</label>';
+					$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
 					$checkbox_start = 0;
 
@@ -344,7 +344,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-						. $args['label'] . $tooltip_html . $required . '</label>';
+						. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
 
@@ -586,7 +586,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						),
 						'span' => array(),
 					)
-				) . $tooltip_html . $required . '</label>';
+				) . $required . $tooltip_html . '</label>';
 			}
 
 			$field_html     .= $field;
