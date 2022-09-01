@@ -591,7 +591,7 @@ class UR_Emailer {
 
 		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
 
-		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
 		$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
 
 		if ( ! $ur_account_page_exists ) {
@@ -631,6 +631,7 @@ class UR_Emailer {
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
 				$user_data = array_merge( $user_data, $name_value );
 			}
+
 			$values = array_merge( $values, $user_data );
 			array_walk(
 				$values,
@@ -652,7 +653,8 @@ class UR_Emailer {
 		}
 
 		foreach ( $values as $key => $value ) {
-			$content    = str_replace( '{{' . $key . '}}', $value, $content );
+			$value   = ur_format_field_values( $key, $value );
+			$content = str_replace( '{{' . $key . '}}', $value, $content );
 		}
 
 		return $content;
