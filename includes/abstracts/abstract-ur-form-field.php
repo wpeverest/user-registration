@@ -215,7 +215,9 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->date_localization ) ) {
-			wp_enqueue_script( 'flatpickr-localization_' . $data['advance_setting']->date_localization, 'https://npmcdn.com/flatpickr/dist/l10n/' . $data['advance_setting']->date_localization . '.js', array(), '4.6.13' );
+			if ( wp_script_is( 'flatpickr' ) && 'en' !== $data['advance_setting']->date_localization ) {
+				wp_enqueue_script( 'flatpickr-localization_' . $data['advance_setting']->date_localization, UR()->plugin_url() . '/assets/js/flatpickr/dist/I10n/' . $data['advance_setting']->date_localization . '.js', array(), UR_VERSION, true );
+			}
 			$form_data['custom_attributes']['data-locale'] = $data['advance_setting']->date_localization;
 		}
 

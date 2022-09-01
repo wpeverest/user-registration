@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.2.1\n"
+"Project-Id-Version: User Registration 2.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-28T08:54:30+00:00\n"
+"POT-Creation-Date: 2022-09-01T06:25:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: user-registration\n"
@@ -37,12 +37,12 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:649
+#: includes/abstracts/abstract-ur-form-field.php:651
 #: src/components/App.js:60
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:659
+#: includes/abstracts/abstract-ur-form-field.php:661
 msgid "Advance Settings"
 msgstr ""
 
@@ -112,94 +112,94 @@ msgstr ""
 msgid "Could not verify nonce"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:195
+#: includes/admin/class-ur-admin-assets.php:200
 msgid "Upload Profile Picture"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:196
+#: includes/admin/class-ur-admin-assets.php:201
 msgid "Select Image"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:219
-msgctxt "enhanced select"
-msgid "No matches found"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:220
-msgctxt "enhanced select"
-msgid "Loading failed"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:221
-msgctxt "enhanced select"
-msgid "Please enter 1 or more characters"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:222
-msgctxt "enhanced select"
-msgid "Please enter %qty% or more characters"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:223
-msgctxt "enhanced select"
-msgid "Please delete 1 character"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:224
 msgctxt "enhanced select"
-msgid "Please delete %qty% characters"
+msgid "No matches found"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:225
 msgctxt "enhanced select"
-msgid "You can only select 1 item"
+msgid "Loading failed"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:226
 msgctxt "enhanced select"
-msgid "You can only select %qty% items"
+msgid "Please enter 1 or more characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:227
 msgctxt "enhanced select"
-msgid "Loading more results&hellip;"
+msgid "Please enter %qty% or more characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:228
 msgctxt "enhanced select"
+msgid "Please delete 1 character"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:229
+msgctxt "enhanced select"
+msgid "Please delete %qty% characters"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:230
+msgctxt "enhanced select"
+msgid "You can only select 1 item"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:231
+msgctxt "enhanced select"
+msgid "You can only select %qty% items"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:232
+msgctxt "enhanced select"
+msgid "Loading more results&hellip;"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:233
+msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:240
+#: includes/admin/class-ur-admin-assets.php:245
 msgid "Could not install."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:270
+#: includes/admin/class-ur-admin-assets.php:275
 msgid "Keyboard Shortcut Keys"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:272
+#: includes/admin/class-ur-admin-assets.php:277
 msgid "Save Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:273
+#: includes/admin/class-ur-admin-assets.php:278
 msgid "Close Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:274
+#: includes/admin/class-ur-admin-assets.php:279
 #: includes/admin/views/html-admin-page-forms.php:46
 msgid "Preview Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:275
+#: includes/admin/class-ur-admin-assets.php:280
 msgid "Go to Users"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:276
+#: includes/admin/class-ur-admin-assets.php:281
 msgid "Open Help"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:278
+#: includes/admin/class-ur-admin-assets.php:283
 #: includes/admin/class-ur-admin-menus.php:432
 #: includes/admin/class-ur-admin-menus.php:433
 #: includes/admin/class-ur-admin-menus.php:773
@@ -207,167 +207,167 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:296
+#: includes/admin/class-ur-admin-assets.php:301
 #: includes/admin/views/html-admin-page-import-export-forms.php:50
 msgid "No file selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:308
+#: includes/admin/class-ur-admin-assets.php:313
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:309
+#: includes/admin/class-ur-admin-assets.php:314
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:378
+#: includes/admin/class-ur-admin-assets.php:383
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:378
+#: includes/admin/class-ur-admin-assets.php:383
 #: includes/admin/class-ur-admin-registrations-table-list.php:107
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:400
+#: includes/admin/class-ur-admin-assets.php:405
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:401
+#: includes/admin/class-ur-admin-assets.php:406
 #: includes/admin/class-ur-admin-form-modal.php:98
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:402
+#: includes/admin/class-ur-admin-assets.php:407
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:403
+#: includes/admin/class-ur-admin-assets.php:408
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:404
+#: includes/admin/class-ur-admin-assets.php:409
 msgctxt "user-registration admin"
 msgid "Payment"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:405
+#: includes/admin/class-ur-admin-assets.php:410
 msgctxt "user-registration admin"
 msgid "Stripe Gateway"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:406
+#: includes/admin/class-ur-admin-assets.php:411
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this row?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:407
+#: includes/admin/class-ur-admin-assets.php:412
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this field?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:408
+#: includes/admin/class-ur-admin-assets.php:413
 msgctxt "user registration admin"
 msgid "At least one row is required to create a registration form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:409
+#: includes/admin/class-ur-admin-assets.php:414
 msgctxt "user registration admin"
 msgid "Cannot delete row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:410
+#: includes/admin/class-ur-admin-assets.php:415
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:411
+#: includes/admin/class-ur-admin-assets.php:416
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:412
+#: includes/admin/class-ur-admin-assets.php:417
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:413
+#: includes/admin/class-ur-admin-assets.php:418
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:414
+#: includes/admin/class-ur-admin-assets.php:419
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:415
-msgid "Confirm Deletion"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:416
-msgctxt "user registration admin"
-msgid "At least one field needs to be selected."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:417
-msgctxt "user registration admin"
-msgid "Empty form name."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:418
-msgctxt "user registration admin"
-msgid "Previous save action on going."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:419
-msgctxt "user registration admin"
-msgid "Duplicate field name."
-msgstr ""
-
 #: includes/admin/class-ur-admin-assets.php:420
-msgctxt "user registration admin"
-msgid "Empty field label."
+msgid "Confirm Deletion"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:421
 msgctxt "user registration admin"
-msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
+msgid "At least one field needs to be selected."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:422
 msgctxt "user registration admin"
-msgid "Multiple field key "
+msgid "Empty form name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:423
 msgctxt "user registration admin"
-msgid "field is required."
+msgid "Previous save action on going."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:424
 msgctxt "user registration admin"
-msgid "Drag your first form item here."
+msgid "Duplicate field name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:425
 msgctxt "user registration admin"
-msgid "Please select at least one country."
+msgid "Empty field label."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:426
 msgctxt "user registration admin"
-msgid "input size must be greater than zero."
+msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:427
 msgctxt "user registration admin"
-msgid "input of min value must be less than max value."
+msgid "Multiple field key "
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:428
+msgctxt "user registration admin"
+msgid "field is required."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:429
+msgctxt "user registration admin"
+msgid "Drag your first form item here."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:430
+msgctxt "user registration admin"
+msgid "Please select at least one country."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:431
+msgctxt "user registration admin"
+msgid "input size must be greater than zero."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:432
+msgctxt "user registration admin"
+msgid "input of min value must be less than max value."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:433
 msgctxt "user registration admin"
 msgid "input of max upload size must less than "
 msgstr ""
@@ -452,7 +452,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:399
-#: includes/class-ur-install.php:651
+#: includes/class-ur-install.php:653
 msgid "Settings"
 msgstr ""
 
@@ -526,9 +526,9 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-profile.php:155
 #: includes/admin/class-ur-admin-profile.php:167
-#: includes/form/class-ur-form-field-select.php:35
-#: includes/form/class-ur-form-field-select.php:40
-#: includes/functions-ur-core.php:718
+#: includes/form/class-ur-form-field-select.php:44
+#: includes/form/class-ur-form-field-select.php:49
+#: includes/functions-ur-core.php:717
 msgid "Select"
 msgstr ""
 
@@ -549,9 +549,9 @@ msgid "Author"
 msgstr ""
 
 #: includes/admin/class-ur-admin-registrations-table-list.php:54
-#: includes/form/class-ur-form-field-date.php:37
-#: includes/form/class-ur-form-field-date.php:42
-#: includes/functions-ur-core.php:722
+#: includes/form/class-ur-form-field-date.php:46
+#: includes/form/class-ur-form-field-date.php:51
+#: includes/functions-ur-core.php:721
 msgid "Date"
 msgstr ""
 
@@ -930,7 +930,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:180
 #: includes/admin/settings/class-ur-settings-general.php:301
-#: includes/functions-ur-core.php:1152
+#: includes/functions-ur-core.php:1151
 msgid "Email"
 msgstr ""
 
@@ -968,26 +968,28 @@ msgid "User Approval And Login Option"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:75
-#: includes/functions-ur-core.php:955
+#: includes/functions-ur-core.php:954
 #: includes/RestApi/class-ur-rest-api.php:200
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:85
-#: includes/functions-ur-core.php:967
+#: includes/functions-ur-core.php:966
 msgid "Send User Approval Link in Email"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:86
-#: includes/functions-ur-core.php:971
+#: includes/functions-ur-core.php:970
 msgid "Check to receive a link with token in email to approve the users directly."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:94
+#: includes/RestApi/class-ur-rest-api.php:207
 msgid "Prevent WP Dashboard Access"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:95
+#: includes/RestApi/class-ur-rest-api.php:208
 msgid "Selected user roles will not be able to view and access the WP Dashboard area."
 msgstr ""
 
@@ -1077,7 +1079,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:187
 #: includes/class-ur-query.php:72
-#: includes/functions-ur-account.php:120
+#: includes/functions-ur-account.php:122
 #: templates/myaccount/form-edit-password.php:35
 msgid "Change Password"
 msgstr ""
@@ -1163,7 +1165,7 @@ msgid "Error Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:283
-#: includes/functions-ur-core.php:779
+#: includes/functions-ur-core.php:778
 msgid "Required"
 msgstr ""
 
@@ -1211,9 +1213,9 @@ msgid "Please enter a valid URL."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:321
-#: includes/form/class-ur-form-field-number.php:37
-#: includes/form/class-ur-form-field-number.php:42
-#: includes/functions-ur-core.php:721
+#: includes/form/class-ur-form-field-number.php:46
+#: includes/form/class-ur-form-field-number.php:51
+#: includes/functions-ur-core.php:720
 msgid "Number"
 msgstr ""
 
@@ -1227,7 +1229,7 @@ msgid "Please enter a valid number."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:331
-#: includes/form/class-ur-form-field-user-confirm-email.php:54
+#: includes/form/class-ur-form-field-user-confirm-email.php:52
 msgid "Confirm Email"
 msgstr ""
 
@@ -1241,7 +1243,7 @@ msgid "Email and confirm email not matched."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:341
-#: includes/form/class-ur-form-field-user-confirm-password.php:40
+#: includes/form/class-ur-form-field-user-confirm-password.php:49
 msgid "Confirm Password"
 msgstr ""
 
@@ -1271,7 +1273,7 @@ msgid "Captcha code error, please try again."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:385
-#: includes/functions-ur-core.php:1085
+#: includes/functions-ur-core.php:1084
 #: includes/RestApi/class-ur-rest-api.php:220
 #: includes/RestApi/class-ur-rest-api.php:267
 msgid "Form Template"
@@ -1283,35 +1285,35 @@ msgid "Choose the login form template."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:393
-#: includes/functions-ur-core.php:1092
+#: includes/functions-ur-core.php:1091
 #: includes/RestApi/class-ur-rest-api.php:226
 #: includes/RestApi/class-ur-rest-api.php:273
 msgid "Default"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:394
-#: includes/functions-ur-core.php:1093
+#: includes/functions-ur-core.php:1092
 #: includes/RestApi/class-ur-rest-api.php:227
 #: includes/RestApi/class-ur-rest-api.php:274
 msgid "Bordered"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:395
-#: includes/functions-ur-core.php:1094
+#: includes/functions-ur-core.php:1093
 #: includes/RestApi/class-ur-rest-api.php:228
 #: includes/RestApi/class-ur-rest-api.php:275
 msgid "Flat"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:396
-#: includes/functions-ur-core.php:1095
+#: includes/functions-ur-core.php:1094
 #: includes/RestApi/class-ur-rest-api.php:229
 #: includes/RestApi/class-ur-rest-api.php:276
 msgid "Rounded"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:397
-#: includes/functions-ur-core.php:1096
+#: includes/functions-ur-core.php:1095
 #: includes/RestApi/class-ur-rest-api.php:230
 #: includes/RestApi/class-ur-rest-api.php:277
 msgid "Rounded Edge"
@@ -1443,7 +1445,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:517
 #: includes/admin/settings/class-ur-settings-general.php:523
-#: includes/functions-ur-core.php:1150
+#: includes/functions-ur-core.php:1149
 msgid "Username or Email"
 msgstr ""
 
@@ -1453,7 +1455,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:527
 #: includes/admin/settings/class-ur-settings-general.php:533
-#: includes/functions-ur-core.php:716
+#: includes/functions-ur-core.php:715
 #: templates/myaccount/form-login.php:40
 msgid "Password"
 msgstr ""
@@ -1517,8 +1519,8 @@ msgid "This option lets you set placeholder for the \"Username or Email\" field.
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:583
-#: includes/form/class-ur-form-field-password.php:35
-#: includes/form/class-ur-form-field-password.php:40
+#: includes/form/class-ur-form-field-password.php:44
+#: includes/form/class-ur-form-field-password.php:49
 msgid "Password Field"
 msgstr ""
 
@@ -2410,12 +2412,12 @@ msgstr ""
 #. translators: 1: Link and username of user 2: Logout url
 #: includes/class-ur-ajax.php:188
 #: includes/class-ur-shortcodes.php:191
-#: includes/functions-ur-account.php:121
+#: includes/functions-ur-account.php:123
 msgid "Logout"
 msgstr ""
 
 #: includes/class-ur-ajax.php:297
-#: includes/form/class-ur-form-field-user-email.php:68
+#: includes/form/class-ur-form-field-user-email.php:87
 msgid "Email already exists."
 msgstr ""
 
@@ -2602,8 +2604,8 @@ msgstr ""
 msgid "Email not verified! Verify your email by clicking on the link sent to your email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:639
-#: includes/functions-ur-core.php:2125
+#: includes/class-ur-emailer.php:640
+#: includes/functions-ur-core.php:2151
 msgid "Chosen Password"
 msgstr ""
 
@@ -2626,7 +2628,7 @@ msgstr ""
 #. translators: %s - Field Label
 #. translators: %s - Field Label
 #: includes/class-ur-form-handler.php:233
-#: includes/frontend/class-ur-frontend-form-handler.php:474
+#: includes/frontend/class-ur-frontend-form-handler.php:478
 msgid "%s is a required field."
 msgstr ""
 
@@ -2745,25 +2747,25 @@ msgid "Please enter a stronger password."
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:393
-#: includes/functions-ur-core.php:1009
+#: includes/functions-ur-core.php:1008
 #: includes/RestApi/class-ur-rest-api.php:247
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:394
-#: includes/functions-ur-core.php:1010
+#: includes/functions-ur-core.php:1009
 #: includes/RestApi/class-ur-rest-api.php:248
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:395
-#: includes/functions-ur-core.php:1011
+#: includes/functions-ur-core.php:1010
 #: includes/RestApi/class-ur-rest-api.php:249
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:396
-#: includes/functions-ur-core.php:1012
+#: includes/functions-ur-core.php:1011
 #: includes/RestApi/class-ur-rest-api.php:250
 msgid "Strong"
 msgstr ""
@@ -2800,27 +2802,27 @@ msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-install.php:376
+#: includes/class-ur-install.php:378
 msgid "Default form"
 msgstr ""
 
-#: includes/class-ur-install.php:651
+#: includes/class-ur-install.php:653
 msgid "View User Registration settings"
 msgstr ""
 
-#: includes/class-ur-install.php:667
+#: includes/class-ur-install.php:669
 msgid "View User Registration documentation"
 msgstr ""
 
-#: includes/class-ur-install.php:667
+#: includes/class-ur-install.php:669
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ur-install.php:668
+#: includes/class-ur-install.php:670
 msgid "Visit free customer support"
 msgstr ""
 
-#: includes/class-ur-install.php:668
+#: includes/class-ur-install.php:670
 msgid "Free support"
 msgstr ""
 
@@ -2876,13 +2878,13 @@ msgstr ""
 #. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/class-ur-plugin-updater.php:366
-#: includes/functions-ur-core.php:2411
-#: includes/functions-ur-core.php:2430
-#: includes/functions-ur-core.php:2453
-#: includes/functions-ur-core.php:2471
-#: includes/functions-ur-core.php:2477
-#: includes/functions-ur-core.php:2482
-#: includes/functions-ur-core.php:2495
+#: includes/functions-ur-core.php:2438
+#: includes/functions-ur-core.php:2457
+#: includes/functions-ur-core.php:2480
+#: includes/functions-ur-core.php:2498
+#: includes/functions-ur-core.php:2504
+#: includes/functions-ur-core.php:2509
+#: includes/functions-ur-core.php:2522
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -3147,7 +3149,7 @@ msgid "Please see the <a href=\"https://mailchimp.com/legal/privacy/\">MailChimp
 msgstr ""
 
 #: includes/class-ur-query.php:75
-#: includes/functions-ur-account.php:119
+#: includes/functions-ur-account.php:121
 msgid "Profile Details"
 msgstr ""
 
@@ -3175,1148 +3177,1195 @@ msgstr ""
 msgid "Your account is still awaiting admin approval. Reset Password is not allowed."
 msgstr ""
 
-#: includes/form/class-ur-form-field-checkbox.php:35
-#: includes/form/class-ur-form-field-checkbox.php:40
-#: includes/functions-ur-core.php:723
+#: includes/form/class-ur-form-field-checkbox.php:44
+#: includes/form/class-ur-form-field-checkbox.php:49
+#: includes/functions-ur-core.php:722
 msgid "Checkbox"
 msgstr ""
 
-#: includes/form/class-ur-form-field-checkbox.php:43
-#: includes/form/class-ur-form-field-radio.php:46
-#: includes/form/class-ur-form-field-select.php:43
-#: includes/functions-ur-core.php:832
+#: includes/form/class-ur-form-field-checkbox.php:52
+#: includes/form/class-ur-form-field-radio.php:52
+#: includes/form/class-ur-form-field-select.php:52
+#: includes/functions-ur-core.php:831
 msgid "First Choice"
 msgstr ""
 
-#: includes/form/class-ur-form-field-checkbox.php:44
-#: includes/form/class-ur-form-field-radio.php:47
-#: includes/form/class-ur-form-field-select.php:44
-#: includes/functions-ur-core.php:833
+#: includes/form/class-ur-form-field-checkbox.php:53
+#: includes/form/class-ur-form-field-radio.php:53
+#: includes/form/class-ur-form-field-select.php:53
+#: includes/functions-ur-core.php:832
 msgid "Second Choice"
 msgstr ""
 
-#: includes/form/class-ur-form-field-checkbox.php:45
-#: includes/form/class-ur-form-field-radio.php:48
-#: includes/form/class-ur-form-field-select.php:45
-#: includes/functions-ur-core.php:834
+#: includes/form/class-ur-form-field-checkbox.php:54
+#: includes/form/class-ur-form-field-radio.php:54
+#: includes/form/class-ur-form-field-select.php:54
+#: includes/functions-ur-core.php:833
 msgid "Third Choice"
 msgstr ""
 
-#: includes/form/class-ur-form-field-country.php:35
-msgid "Afghanistan"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:36
-msgid "&#197;land Islands"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:37
-msgid "Albania"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:38
-msgid "Algeria"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:39
-msgid "American Samoa"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:40
-msgid "Andorra"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:41
-msgid "Angola"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:42
-msgid "Anguilla"
-msgstr ""
-
-#: includes/form/class-ur-form-field-country.php:43
-msgid "Antarctica"
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#. translators: %1$s - Field Label
+#: includes/form/class-ur-form-field-checkbox.php:87
+#: includes/form/class-ur-form-field-country.php:400
+#: includes/form/class-ur-form-field-date.php:86
+#: includes/form/class-ur-form-field-description.php:82
+#: includes/form/class-ur-form-field-display-name.php:82
+#: includes/form/class-ur-form-field-email.php:82
+#: includes/form/class-ur-form-field-first-name.php:82
+#: includes/form/class-ur-form-field-last-name.php:82
+#: includes/form/class-ur-form-field-nickname.php:82
+#: includes/form/class-ur-form-field-number.php:84
+#: includes/form/class-ur-form-field-password.php:82
+#: includes/form/class-ur-form-field-privacy-policy.php:83
+#: includes/form/class-ur-form-field-radio.php:87
+#: includes/form/class-ur-form-field-select.php:87
+#: includes/form/class-ur-form-field-text.php:83
+#: includes/form/class-ur-form-field-textarea.php:83
+#: includes/form/class-ur-form-field-user-url.php:83
+msgid "%1$s is required."
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:44
-msgid "Antigua and Barbuda"
+msgid "Afghanistan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:45
-msgid "Argentina"
+msgid "&#197;land Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:46
-msgid "Armenia"
+msgid "Albania"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:47
-msgid "Aruba"
+msgid "Algeria"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:48
-msgid "Australia"
+msgid "American Samoa"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:49
-msgid "Austria"
+msgid "Andorra"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:50
-msgid "Azerbaijan"
+msgid "Angola"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:51
-msgid "Bahamas"
+msgid "Anguilla"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:52
-msgid "Bahrain"
+msgid "Antarctica"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:53
-msgid "Bangladesh"
+msgid "Antigua and Barbuda"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:54
-msgid "Barbados"
+msgid "Argentina"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:55
-msgid "Belarus"
+msgid "Armenia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:56
-msgid "Belgium"
+msgid "Aruba"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:57
-msgid "Belau"
+msgid "Australia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:58
-msgid "Belize"
+msgid "Austria"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:59
-msgid "Benin"
+msgid "Azerbaijan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:60
-msgid "Bermuda"
+msgid "Bahamas"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:61
-msgid "Bhutan"
+msgid "Bahrain"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:62
-msgid "Bolivia"
+msgid "Bangladesh"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:63
-msgid "Bonaire, Saint Eustatius and Saba"
+msgid "Barbados"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:64
-msgid "Bosnia and Herzegovina"
+msgid "Belarus"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:65
-msgid "Botswana"
+msgid "Belgium"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:66
-msgid "Bouvet Island"
+msgid "Belau"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:67
-msgid "Brazil"
+msgid "Belize"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:68
-msgid "British Indian Ocean Territory"
+msgid "Benin"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:69
-msgid "British Virgin Islands"
+msgid "Bermuda"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:70
-msgid "Brunei"
+msgid "Bhutan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:71
-msgid "Bulgaria"
+msgid "Bolivia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:72
-msgid "Burkina Faso"
+msgid "Bonaire, Saint Eustatius and Saba"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:73
-msgid "Burundi"
+msgid "Bosnia and Herzegovina"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:74
-msgid "Cambodia"
+msgid "Botswana"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:75
-msgid "Cameroon"
+msgid "Bouvet Island"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:76
-msgid "Canada"
+msgid "Brazil"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:77
-msgid "Cape Verde"
+msgid "British Indian Ocean Territory"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:78
-msgid "Cayman Islands"
+msgid "British Virgin Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:79
-msgid "Central African Republic"
+msgid "Brunei"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:80
-msgid "Chad"
+msgid "Bulgaria"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:81
-msgid "Chile"
+msgid "Burkina Faso"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:82
-msgid "China"
+msgid "Burundi"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:83
-msgid "Christmas Island"
+msgid "Cambodia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:84
-msgid "Cocos (Keeling) Islands"
+msgid "Cameroon"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:85
-msgid "Colombia"
+msgid "Canada"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:86
-msgid "Comoros"
+msgid "Cape Verde"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:87
-msgid "Congo (Brazzaville)"
+msgid "Cayman Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:88
-msgid "Congo (Kinshasa)"
+msgid "Central African Republic"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:89
-msgid "Cook Islands"
+msgid "Chad"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:90
-msgid "Costa Rica"
+msgid "Chile"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:91
-msgid "Croatia"
+msgid "China"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:92
-msgid "Cuba"
+msgid "Christmas Island"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:93
-msgid "Cura&ccedil;ao"
+msgid "Cocos (Keeling) Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:94
-msgid "Cyprus"
+msgid "Colombia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:95
-msgid "Czech Republic"
+msgid "Comoros"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:96
-msgid "Denmark"
+msgid "Congo (Brazzaville)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:97
-msgid "Djibouti"
+msgid "Congo (Kinshasa)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:98
-msgid "Dominica"
+msgid "Cook Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:99
-msgid "Dominican Republic"
+msgid "Costa Rica"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:100
-msgid "Ecuador"
+msgid "Croatia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:101
-msgid "Egypt"
+msgid "Cuba"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:102
-msgid "El Salvador"
+msgid "Cura&ccedil;ao"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:103
-msgid "Equatorial Guinea"
+msgid "Cyprus"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:104
-msgid "Eritrea"
+msgid "Czech Republic"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:105
-msgid "Estonia"
+msgid "Denmark"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:106
-msgid "Ethiopia"
+msgid "Djibouti"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:107
-msgid "Falkland Islands"
+msgid "Dominica"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:108
-msgid "Faroe Islands"
+msgid "Dominican Republic"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:109
-msgid "Fiji"
+msgid "Ecuador"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:110
-msgid "Finland"
+msgid "Egypt"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:111
-msgid "France"
+msgid "El Salvador"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:112
-msgid "French Guiana"
+msgid "Equatorial Guinea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:113
-msgid "French Polynesia"
+msgid "Eritrea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:114
-msgid "French Southern Territories"
+msgid "Estonia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:115
-msgid "Gabon"
+msgid "Ethiopia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:116
-msgid "Gambia"
+msgid "Falkland Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:117
-msgid "Georgia"
+msgid "Faroe Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:118
-msgid "Germany"
+msgid "Fiji"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:119
-msgid "Ghana"
+msgid "Finland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:120
-msgid "Gibraltar"
+msgid "France"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:121
-msgid "Greece"
+msgid "French Guiana"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:122
-msgid "Greenland"
+msgid "French Polynesia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:123
-msgid "Grenada"
+msgid "French Southern Territories"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:124
-msgid "Guadeloupe"
+msgid "Gabon"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:125
-msgid "Guam"
+msgid "Gambia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:126
-msgid "Guatemala"
+msgid "Georgia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:127
-msgid "Guernsey"
+msgid "Germany"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:128
-msgid "Guinea"
+msgid "Ghana"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:129
-msgid "Guinea-Bissau"
+msgid "Gibraltar"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:130
-msgid "Guyana"
+msgid "Greece"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:131
-msgid "Haiti"
+msgid "Greenland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:132
-msgid "Heard Island and McDonald Islands"
+msgid "Grenada"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:133
-msgid "Honduras"
+msgid "Guadeloupe"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:134
-msgid "Hong Kong"
+msgid "Guam"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:135
-msgid "Hungary"
+msgid "Guatemala"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:136
-msgid "Iceland"
+msgid "Guernsey"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:137
-msgid "India"
+msgid "Guinea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:138
-msgid "Indonesia"
+msgid "Guinea-Bissau"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:139
-msgid "Iran"
+msgid "Guyana"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:140
-msgid "Iraq"
+msgid "Haiti"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:141
-msgid "Ireland"
+msgid "Heard Island and McDonald Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:142
-msgid "Isle of Man"
+msgid "Honduras"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:143
-msgid "Israel"
+msgid "Hong Kong"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:144
-msgid "Italy"
+msgid "Hungary"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:145
-msgid "Ivory Coast"
+msgid "Iceland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:146
-msgid "Jamaica"
+msgid "India"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:147
-msgid "Japan"
+msgid "Indonesia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:148
-msgid "Jersey"
+msgid "Iran"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:149
-msgid "Jordan"
+msgid "Iraq"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:150
-msgid "Kazakhstan"
+msgid "Ireland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:151
-msgid "Kenya"
+msgid "Isle of Man"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:152
-msgid "Kiribati"
+msgid "Israel"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:153
-msgid "Kuwait"
+msgid "Italy"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:154
-msgid "Kyrgyzstan"
+msgid "Ivory Coast"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:155
-msgid "Laos"
+msgid "Jamaica"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:156
-msgid "Latvia"
+msgid "Japan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:157
-msgid "Lebanon"
+msgid "Jersey"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:158
-msgid "Lesotho"
+msgid "Jordan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:159
-msgid "Liberia"
+msgid "Kazakhstan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:160
-msgid "Libya"
+msgid "Kenya"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:161
-msgid "Liechtenstein"
+msgid "Kiribati"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:162
-msgid "Lithuania"
+msgid "Kuwait"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:163
-msgid "Luxembourg"
+msgid "Kyrgyzstan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:164
-msgid "Macao S.A.R., China"
+msgid "Laos"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:165
-msgid "Macedonia"
+msgid "Latvia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:166
-msgid "Madagascar"
+msgid "Lebanon"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:167
-msgid "Malawi"
+msgid "Lesotho"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:168
-msgid "Malaysia"
+msgid "Liberia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:169
-msgid "Maldives"
+msgid "Libya"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:170
-msgid "Mali"
+msgid "Liechtenstein"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:171
-msgid "Malta"
+msgid "Lithuania"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:172
-msgid "Marshall Islands"
+msgid "Luxembourg"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:173
-msgid "Martinique"
+msgid "Macao S.A.R., China"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:174
-msgid "Mauritania"
+msgid "Macedonia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:175
-msgid "Mauritius"
+msgid "Madagascar"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:176
-msgid "Mayotte"
+msgid "Malawi"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:177
-msgid "Mexico"
+msgid "Malaysia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:178
-msgid "Micronesia"
+msgid "Maldives"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:179
-msgid "Moldova"
+msgid "Mali"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:180
-msgid "Monaco"
+msgid "Malta"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:181
-msgid "Mongolia"
+msgid "Marshall Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:182
-msgid "Montenegro"
+msgid "Martinique"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:183
-msgid "Montserrat"
+msgid "Mauritania"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:184
-msgid "Morocco"
+msgid "Mauritius"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:185
-msgid "Mozambique"
+msgid "Mayotte"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:186
-msgid "Myanmar"
+msgid "Mexico"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:187
-msgid "Namibia"
+msgid "Micronesia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:188
-msgid "Nauru"
+msgid "Moldova"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:189
-msgid "Nepal"
+msgid "Monaco"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:190
-msgid "Netherlands"
+msgid "Mongolia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:191
-msgid "New Caledonia"
+msgid "Montenegro"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:192
-msgid "New Zealand"
+msgid "Montserrat"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:193
-msgid "Nicaragua"
+msgid "Morocco"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:194
-msgid "Niger"
+msgid "Mozambique"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:195
-msgid "Nigeria"
+msgid "Myanmar"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:196
-msgid "Niue"
+msgid "Namibia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:197
-msgid "Norfolk Island"
+msgid "Nauru"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:198
-msgid "Northern Mariana Islands"
+msgid "Nepal"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:199
-msgid "North Korea"
+msgid "Netherlands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:200
-msgid "Norway"
+msgid "New Caledonia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:201
-msgid "Oman"
+msgid "New Zealand"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:202
-msgid "Pakistan"
+msgid "Nicaragua"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:203
-msgid "Palestinian Territory"
+msgid "Niger"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:204
-msgid "Panama"
+msgid "Nigeria"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:205
-msgid "Papua New Guinea"
+msgid "Niue"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:206
-msgid "Paraguay"
+msgid "Norfolk Island"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:207
-msgid "Peru"
+msgid "Northern Mariana Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:208
-msgid "Philippines"
+msgid "North Korea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:209
-msgid "Pitcairn"
+msgid "Norway"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:210
-msgid "Poland"
+msgid "Oman"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:211
-msgid "Portugal"
+msgid "Pakistan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:212
-msgid "Puerto Rico"
+msgid "Palestinian Territory"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:213
-msgid "Qatar"
+msgid "Panama"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:214
-msgid "Reunion"
+msgid "Papua New Guinea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:215
-msgid "Romania"
+msgid "Paraguay"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:216
-msgid "Russia"
+msgid "Peru"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:217
-msgid "Rwanda"
+msgid "Philippines"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:218
-msgid "Saint Barth&eacute;lemy"
+msgid "Pitcairn"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:219
-msgid "Saint Helena"
+msgid "Poland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:220
-msgid "Saint Kitts and Nevis"
+msgid "Portugal"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:221
-msgid "Saint Lucia"
+msgid "Puerto Rico"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:222
-msgid "Saint Martin (French part)"
+msgid "Qatar"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:223
-msgid "Saint Martin (Dutch part)"
+msgid "Reunion"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:224
-msgid "Saint Pierre and Miquelon"
+msgid "Romania"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:225
-msgid "Saint Vincent and the Grenadines"
+msgid "Russia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:226
-msgid "San Marino"
+msgid "Rwanda"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:227
-msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
+msgid "Saint Barth&eacute;lemy"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:228
-msgid "Saudi Arabia"
+msgid "Saint Helena"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:229
-msgid "Senegal"
+msgid "Saint Kitts and Nevis"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:230
-msgid "Serbia"
+msgid "Saint Lucia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:231
-msgid "Seychelles"
+msgid "Saint Martin (French part)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:232
-msgid "Sierra Leone"
+msgid "Saint Martin (Dutch part)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:233
-msgid "Singapore"
+msgid "Saint Pierre and Miquelon"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:234
-msgid "Slovakia"
+msgid "Saint Vincent and the Grenadines"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:235
-msgid "Slovenia"
+msgid "San Marino"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:236
-msgid "Solomon Islands"
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:237
-msgid "Somalia"
+msgid "Saudi Arabia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:238
-msgid "South Africa"
+msgid "Senegal"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:239
-msgid "South Georgia/Sandwich Islands"
+msgid "Serbia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:240
-msgid "South Korea"
+msgid "Seychelles"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:241
-msgid "South Sudan"
+msgid "Sierra Leone"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:242
-msgid "Spain"
+msgid "Singapore"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:243
-msgid "Sri Lanka"
+msgid "Slovakia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:244
-msgid "Sudan"
+msgid "Slovenia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:245
-msgid "Suriname"
+msgid "Solomon Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:246
-msgid "Svalbard and Jan Mayen"
+msgid "Somalia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:247
-msgid "Swaziland"
+msgid "South Africa"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:248
-msgid "Sweden"
+msgid "South Georgia/Sandwich Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:249
-msgid "Switzerland"
+msgid "South Korea"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:250
-msgid "Syria"
+msgid "South Sudan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:251
-msgid "Taiwan"
+msgid "Spain"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:252
-msgid "Tajikistan"
+msgid "Sri Lanka"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:253
-msgid "Tanzania"
+msgid "Sudan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:254
-msgid "Thailand"
+msgid "Suriname"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:255
-msgid "Timor-Leste"
+msgid "Svalbard and Jan Mayen"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:256
-msgid "Togo"
+msgid "Swaziland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:257
-msgid "Tokelau"
+msgid "Sweden"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:258
-msgid "Tonga"
+msgid "Switzerland"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:259
-msgid "Trinidad and Tobago"
+msgid "Syria"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:260
-msgid "Tunisia"
+msgid "Taiwan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:261
-msgid "Turkey"
+msgid "Tajikistan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:262
-msgid "Turkmenistan"
+msgid "Tanzania"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:263
-msgid "Turks and Caicos Islands"
+msgid "Thailand"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:264
-msgid "Tuvalu"
+msgid "Timor-Leste"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:265
-msgid "Uganda"
+msgid "Togo"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:266
-msgid "Ukraine"
+msgid "Tokelau"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:267
-msgid "United Arab Emirates"
+msgid "Tonga"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:268
-msgid "United Kingdom (UK)"
+msgid "Trinidad and Tobago"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:269
-msgid "United States (US)"
+msgid "Tunisia"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:270
-msgid "United States (US) Minor Outlying Islands"
+msgid "Turkey"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:271
-msgid "United States (US) Virgin Islands"
+msgid "Turkmenistan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:272
-msgid "Uruguay"
+msgid "Turks and Caicos Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:273
-msgid "Uzbekistan"
+msgid "Tuvalu"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:274
-msgid "Vanuatu"
+msgid "Uganda"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:275
-msgid "Vatican"
+msgid "Ukraine"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:276
-msgid "Venezuela"
+msgid "United Arab Emirates"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:277
-msgid "Vietnam"
+msgid "United Kingdom (UK)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:278
-msgid "Wallis and Futuna"
+msgid "United States (US)"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:279
-msgid "Western Sahara"
+msgid "United States (US) Minor Outlying Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:280
-msgid "Samoa"
+msgid "United States (US) Virgin Islands"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:281
-msgid "Yemen"
+msgid "Uruguay"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:282
-msgid "Zambia"
+msgid "Uzbekistan"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:283
+msgid "Vanuatu"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:284
+msgid "Vatican"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:285
+msgid "Venezuela"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:286
+msgid "Vietnam"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:287
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:288
+msgid "Western Sahara"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:289
+msgid "Samoa"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:290
+msgid "Yemen"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:291
+msgid "Zambia"
+msgstr ""
+
+#: includes/form/class-ur-form-field-country.php:292
 msgid "Zimbabwe"
 msgstr ""
 
-#: includes/form/class-ur-form-field-country.php:347
-#: includes/form/class-ur-form-field-country.php:352
-#: includes/functions-ur-core.php:719
+#: includes/form/class-ur-form-field-country.php:362
+#: includes/form/class-ur-form-field-country.php:367
+#: includes/functions-ur-core.php:718
 msgid "Country"
 msgstr ""
 
-#: includes/form/class-ur-form-field-description.php:36
-#: includes/form/class-ur-form-field-description.php:41
+#: includes/form/class-ur-form-field-description.php:44
+#: includes/form/class-ur-form-field-description.php:49
 msgid "User Bio"
 msgstr ""
 
-#: includes/form/class-ur-form-field-display-name.php:35
-#: includes/form/class-ur-form-field-display-name.php:40
-#: includes/functions-ur-core.php:713
+#: includes/form/class-ur-form-field-display-name.php:44
+#: includes/form/class-ur-form-field-display-name.php:49
+#: includes/functions-ur-core.php:712
 msgid "Display Name"
 msgstr ""
 
-#: includes/form/class-ur-form-field-email.php:35
+#: includes/form/class-ur-form-field-email.php:44
 msgid "Secondary Email "
 msgstr ""
 
-#: includes/form/class-ur-form-field-email.php:40
-#: includes/functions-ur-core.php:717
+#: includes/form/class-ur-form-field-email.php:49
+#: includes/functions-ur-core.php:716
 msgid "Secondary Email"
 msgstr ""
 
-#: includes/form/class-ur-form-field-first-name.php:35
-#: includes/form/class-ur-form-field-first-name.php:40
-#: includes/functions-ur-core.php:710
+#. translators: %1$s - Field Label
+#: includes/form/class-ur-form-field-email.php:92
+msgid "%1$s must be a valid email address."
+msgstr ""
+
+#: includes/form/class-ur-form-field-first-name.php:44
+#: includes/form/class-ur-form-field-first-name.php:49
+#: includes/functions-ur-core.php:709
 msgid "First Name"
 msgstr ""
 
-#: includes/form/class-ur-form-field-last-name.php:35
+#: includes/form/class-ur-form-field-last-name.php:44
 msgid "Last Name "
 msgstr ""
 
-#: includes/form/class-ur-form-field-last-name.php:40
-#: includes/functions-ur-core.php:711
+#: includes/form/class-ur-form-field-last-name.php:49
+#: includes/functions-ur-core.php:710
 msgid "Last Name"
 msgstr ""
 
-#: includes/form/class-ur-form-field-nickname.php:35
-#: includes/form/class-ur-form-field-nickname.php:40
-#: includes/functions-ur-core.php:709
+#: includes/form/class-ur-form-field-nickname.php:44
+#: includes/form/class-ur-form-field-nickname.php:49
+#: includes/functions-ur-core.php:708
 msgid "Nickname"
 msgstr ""
 
-#: includes/form/class-ur-form-field-privacy-policy.php:35
-#: includes/form/class-ur-form-field-privacy-policy.php:40
-#: includes/functions-ur-core.php:724
+#. translators: %1$s - Field Label
+#: includes/form/class-ur-form-field-number.php:94
+msgid "%1$s must be numeric value."
+msgstr ""
+
+#: includes/form/class-ur-form-field-privacy-policy.php:44
+#: includes/form/class-ur-form-field-privacy-policy.php:49
+#: includes/functions-ur-core.php:723
 msgid "Privacy Policy"
 msgstr ""
 
-#: includes/form/class-ur-form-field-radio.php:38
-#: includes/form/class-ur-form-field-radio.php:43
-#: includes/functions-ur-core.php:725
+#: includes/form/class-ur-form-field-radio.php:44
+#: includes/form/class-ur-form-field-radio.php:49
+#: includes/functions-ur-core.php:724
 msgid "Radio"
 msgstr ""
 
-#: includes/form/class-ur-form-field-text.php:35
-#: includes/form/class-ur-form-field-text.php:40
+#: includes/form/class-ur-form-field-text.php:44
+#: includes/form/class-ur-form-field-text.php:49
 msgid "Input Field"
 msgstr ""
 
-#: includes/form/class-ur-form-field-textarea.php:35
-#: includes/form/class-ur-form-field-textarea.php:40
-#: includes/functions-ur-core.php:720
+#: includes/form/class-ur-form-field-textarea.php:44
+#: includes/form/class-ur-form-field-textarea.php:49
+#: includes/functions-ur-core.php:719
 msgid "Textarea"
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-confirm-email.php:49
+#: includes/form/class-ur-form-field-user-confirm-email.php:47
 msgid "Confirm Email "
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-confirm-password.php:35
+#: includes/form/class-ur-form-field-user-confirm-password.php:44
 msgid "Confirm Password "
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-email.php:35
+#: includes/form/class-ur-form-field-user-email.php:44
 msgid "Email "
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-email.php:40
-#: includes/functions-ur-core.php:704
+#: includes/form/class-ur-form-field-user-email.php:49
+#: includes/functions-ur-core.php:703
 msgid "User Email"
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-email.php:59
+#: includes/form/class-ur-form-field-user-email.php:78
 msgid "Invalid email address."
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-login.php:35
-#: includes/form/class-ur-form-field-user-login.php:40
-#: includes/functions-ur-core.php:1151
+#: includes/form/class-ur-form-field-user-login.php:44
+#: includes/form/class-ur-form-field-user-login.php:49
+#: includes/functions-ur-core.php:1150
 msgid "Username"
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-login.php:57
+#: includes/form/class-ur-form-field-user-login.php:76
 msgid "Username already exists."
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-login.php:68
+#: includes/form/class-ur-form-field-user-login.php:87
 msgid "Invalid username ! "
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-pass.php:35
+#: includes/form/class-ur-form-field-user-pass.php:44
 msgid "Password "
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-pass.php:40
+#: includes/form/class-ur-form-field-user-pass.php:49
 msgid "User Password"
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-pass.php:57
+#: includes/form/class-ur-form-field-user-pass.php:77
 msgid "Empty password."
 msgstr ""
 
-#: includes/form/class-ur-form-field-user-url.php:35
-#: includes/form/class-ur-form-field-user-url.php:40
+#: includes/form/class-ur-form-field-user-url.php:44
+#: includes/form/class-ur-form-field-user-url.php:49
 msgid "Website"
 msgstr ""
 
@@ -4401,15 +4450,15 @@ msgstr ""
 
 #: includes/form/settings/class-ur-setting-checkbox.php:63
 #: includes/form/settings/class-ur-setting-user_login.php:63
-#: includes/functions-ur-core.php:784
-#: includes/functions-ur-core.php:797
+#: includes/functions-ur-core.php:783
+#: includes/functions-ur-core.php:796
 msgid "No"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-checkbox.php:64
 #: includes/form/settings/class-ur-setting-user_login.php:64
-#: includes/functions-ur-core.php:785
-#: includes/functions-ur-core.php:798
+#: includes/functions-ur-core.php:784
+#: includes/functions-ur-core.php:797
 msgid "Yes"
 msgstr ""
 
@@ -4574,23 +4623,23 @@ msgstr ""
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:400
+#: includes/frontend/class-ur-frontend-form-handler.php:404
 msgid "Empty confirm password"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:402
+#: includes/frontend/class-ur-frontend-form-handler.php:406
 msgid "Password and confirm password not matched"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:446
+#: includes/frontend/class-ur-frontend-form-handler.php:450
 msgid "Empty confirm email"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:448
+#: includes/frontend/class-ur-frontend-form-handler.php:452
 msgid "Email and confirm email not matched"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend-form-handler.php:508
+#: includes/frontend/class-ur-frontend-form-handler.php:512
 msgid "Password should not match with Username or Email address."
 msgstr ""
 
@@ -4599,258 +4648,262 @@ msgstr ""
 msgid "Invalid username. %1s"
 msgstr ""
 
-#: includes/functions-ur-account.php:118
+#: includes/functions-ur-account.php:120
 msgid "Dashboard"
 msgstr ""
 
-#: includes/functions-ur-core.php:558
+#: includes/functions-ur-core.php:557
 msgid "Username can not be changed."
 msgstr ""
 
-#: includes/functions-ur-core.php:562
+#: includes/functions-ur-core.php:561
 msgid "Passowrd can not be changed."
 msgstr ""
 
-#: includes/functions-ur-core.php:566
+#: includes/functions-ur-core.php:565
 msgid "Confirm password can not be changed."
 msgstr ""
 
-#: includes/functions-ur-core.php:569
+#: includes/functions-ur-core.php:568
 msgid "Confirm email can not be changed."
 msgstr ""
 
-#: includes/functions-ur-core.php:705
+#: includes/functions-ur-core.php:704
 msgid "User Confirm Email"
 msgstr ""
 
-#: includes/functions-ur-core.php:706
+#: includes/functions-ur-core.php:705
 msgid "User Pass"
 msgstr ""
 
-#: includes/functions-ur-core.php:707
+#: includes/functions-ur-core.php:706
 msgid "User Confirm Password"
 msgstr ""
 
-#: includes/functions-ur-core.php:708
+#: includes/functions-ur-core.php:707
 msgid "User Login"
 msgstr ""
 
-#: includes/functions-ur-core.php:712
+#: includes/functions-ur-core.php:711
 msgid "User URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:714
-#: includes/functions-ur-core.php:751
-#: includes/functions-ur-core.php:753
+#: includes/functions-ur-core.php:713
+#: includes/functions-ur-core.php:750
+#: includes/functions-ur-core.php:752
 msgid "Description"
 msgstr ""
 
-#: includes/functions-ur-core.php:715
+#: includes/functions-ur-core.php:714
 msgid "Text"
 msgstr ""
 
-#: includes/functions-ur-core.php:742
-#: includes/functions-ur-core.php:744
+#: includes/functions-ur-core.php:741
+#: includes/functions-ur-core.php:743
 msgid "Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:746
+#: includes/functions-ur-core.php:745
 msgid "Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings."
 msgstr ""
 
-#: includes/functions-ur-core.php:755
+#: includes/functions-ur-core.php:754
 msgid "Enter text for the form field description."
 msgstr ""
 
-#: includes/functions-ur-core.php:760
-#: includes/functions-ur-core.php:762
+#: includes/functions-ur-core.php:759
+#: includes/functions-ur-core.php:761
 msgid "Field Name"
 msgstr ""
 
-#: includes/functions-ur-core.php:764
+#: includes/functions-ur-core.php:763
 msgid "Unique key for the field."
 msgstr ""
 
-#: includes/functions-ur-core.php:770
-#: includes/functions-ur-core.php:772
+#: includes/functions-ur-core.php:769
+#: includes/functions-ur-core.php:771
 msgid "Placeholder"
 msgstr ""
 
-#: includes/functions-ur-core.php:774
+#: includes/functions-ur-core.php:773
 msgid "Enter placeholder for the field."
 msgstr ""
 
-#: includes/functions-ur-core.php:787
+#: includes/functions-ur-core.php:786
 msgid "Check this option to mark the field required. A form will not submit unless all required fields are provided."
 msgstr ""
 
-#: includes/functions-ur-core.php:792
+#: includes/functions-ur-core.php:791
 msgid "Hide Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:800
+#: includes/functions-ur-core.php:799
 msgid "Check this option to hide the label of this field."
 msgstr ""
 
-#: includes/functions-ur-core.php:827
+#: includes/functions-ur-core.php:826
 msgid "Options"
 msgstr ""
 
-#: includes/functions-ur-core.php:954
+#: includes/functions-ur-core.php:953
 #: includes/RestApi/class-ur-rest-api.php:199
 msgid "User login option"
 msgstr ""
 
-#: includes/functions-ur-core.php:964
+#: includes/functions-ur-core.php:963
 msgid "Login method that should be used by the users registered through this form."
 msgstr ""
 
-#: includes/functions-ur-core.php:977
+#: includes/functions-ur-core.php:976
 #: includes/RestApi/class-ur-rest-api.php:254
 msgid "Default User Role"
 msgstr ""
 
-#: includes/functions-ur-core.php:986
+#: includes/functions-ur-core.php:985
 #: includes/RestApi/class-ur-rest-api.php:255
 msgid "Default role for the users registered through this form."
 msgstr ""
 
-#: includes/functions-ur-core.php:990
+#: includes/functions-ur-core.php:989
 #: includes/RestApi/class-ur-rest-api.php:234
 msgid "Enable Strong Password"
 msgstr ""
 
-#: includes/functions-ur-core.php:998
+#: includes/functions-ur-core.php:997
 #: includes/RestApi/class-ur-rest-api.php:235
 msgid "Make strong password compulsary."
 msgstr ""
 
-#: includes/functions-ur-core.php:1002
+#: includes/functions-ur-core.php:1001
 #: includes/RestApi/class-ur-rest-api.php:241
 msgid "Minimum Password Strength"
 msgstr ""
 
-#: includes/functions-ur-core.php:1016
+#: includes/functions-ur-core.php:1015
 #: includes/RestApi/class-ur-rest-api.php:242
 msgid "Set minimum required password strength."
 msgstr ""
 
-#: includes/functions-ur-core.php:1020
+#: includes/functions-ur-core.php:1019
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:1022
+#: includes/functions-ur-core.php:1021
 msgid "This option lets you enter redirect path after successful user registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:1027
+#: includes/functions-ur-core.php:1026
 msgid "URL to redirect to after registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:1031
+#: includes/functions-ur-core.php:1030
 msgid "Form Submit Button Custom Class"
 msgstr ""
 
-#: includes/functions-ur-core.php:1039
+#: includes/functions-ur-core.php:1038
 msgid "Custom css class to embed in the submit button. You can enter multiple classes seperated with space."
 msgstr ""
 
-#: includes/functions-ur-core.php:1043
+#: includes/functions-ur-core.php:1042
 msgid "Form Submit Button Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:1051
+#: includes/functions-ur-core.php:1050
 msgid "Set label for the submit button."
 msgstr ""
 
-#: includes/functions-ur-core.php:1055
+#: includes/functions-ur-core.php:1054
 msgid "Success message position"
 msgstr ""
 
-#: includes/functions-ur-core.php:1062
+#: includes/functions-ur-core.php:1061
 msgid "Top"
 msgstr ""
 
-#: includes/functions-ur-core.php:1063
+#: includes/functions-ur-core.php:1062
 msgid "Bottom"
 msgstr ""
 
-#: includes/functions-ur-core.php:1067
+#: includes/functions-ur-core.php:1066
 msgid "Display success message either at the top or bottom after successful registration."
 msgstr ""
 
 #. translators: 1: Link tag open 2:: Link content 3:: Link tag close
-#: includes/functions-ur-core.php:1073
+#: includes/functions-ur-core.php:1072
 msgid "Enable %1$s %2$s Captcha %3$s Support"
 msgstr ""
 
-#: includes/functions-ur-core.php:1081
+#: includes/functions-ur-core.php:1080
 msgid "Enable Captcha for strong security from spams and bots."
 msgstr ""
 
-#: includes/functions-ur-core.php:1100
+#: includes/functions-ur-core.php:1099
 #: includes/RestApi/class-ur-rest-api.php:221
 msgid "Choose form template to use."
 msgstr ""
 
-#: includes/functions-ur-core.php:1104
+#: includes/functions-ur-core.php:1103
 msgid "Custom CSS class"
 msgstr ""
 
-#: includes/functions-ur-core.php:1112
+#: includes/functions-ur-core.php:1111
 msgid "Custom css class to embed in the registration form. You can enter multiple classes seperated with space."
 msgstr ""
 
-#: includes/functions-ur-core.php:1132
+#: includes/functions-ur-core.php:1131
 msgid "Auto approval and manual login"
 msgstr ""
 
-#: includes/functions-ur-core.php:1133
+#: includes/functions-ur-core.php:1132
 msgid "Auto approval and auto login "
 msgstr ""
 
-#: includes/functions-ur-core.php:1134
+#: includes/functions-ur-core.php:1133
 msgid "Admin approval"
 msgstr ""
 
-#: includes/functions-ur-core.php:1135
+#: includes/functions-ur-core.php:1134
 msgid "Auto approval after email confirmation"
 msgstr ""
 
 #. translators: %s: Class
-#: includes/functions-ur-core.php:1364
+#: includes/functions-ur-core.php:1363
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
-#: includes/functions-ur-core.php:1465
+#: includes/functions-ur-core.php:1464
 msgid "Disable emails"
 msgstr ""
 
-#: includes/functions-ur-core.php:1466
+#: includes/functions-ur-core.php:1465
 msgid "Disable all emails sent after registration."
 msgstr ""
 
-#: includes/functions-ur-core.php:2246
+#: includes/functions-ur-core.php:2264
+msgid "Conditional Logic"
+msgstr ""
+
+#: includes/functions-ur-core.php:2273
 msgid "Use conditional logic"
 msgstr ""
 
-#: includes/functions-ur-core.php:2250
+#: includes/functions-ur-core.php:2277
 msgid "Conditional Rules"
 msgstr ""
 
-#: includes/functions-ur-core.php:2251
+#: includes/functions-ur-core.php:2278
 msgid "Send data only if the following matches."
 msgstr ""
 
-#: includes/functions-ur-core.php:2289
+#: includes/functions-ur-core.php:2316
 msgid "Checked"
 msgstr ""
 
-#: includes/functions-ur-core.php:2408
+#: includes/functions-ur-core.php:2435
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: includes/functions-ur-core.php:2487
+#: includes/functions-ur-core.php:2514
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
@@ -4864,11 +4917,15 @@ msgstr ""
 msgid "This function should not be called before user_registration_init."
 msgstr ""
 
-#: includes/functions-ur-template.php:197
+#: includes/functions-ur-template.php:214
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:508
+#: includes/functions-ur-template.php:326
+msgid "Select All"
+msgstr ""
+
+#: includes/functions-ur-template.php:519
 msgid "Choose an option"
 msgstr ""
 
@@ -4894,14 +4951,6 @@ msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:193
 msgid "Check to enable users to register"
-msgstr ""
-
-#: includes/RestApi/class-ur-rest-api.php:207
-msgid "Prevent dashboard access"
-msgstr ""
-
-#: includes/RestApi/class-ur-rest-api.php:208
-msgid "This option lets you limit which roles you are willing to prevent dashboard access."
 msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:281
@@ -4956,24 +5005,24 @@ msgstr ""
 msgid "Are you sure you want to log out?&nbsp;<a href=\"%s\">Confirm and log out</a>"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:224
+#: includes/shortcodes/class-ur-shortcode-my-account.php:226
 msgid "No profile details found."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:325
+#: includes/shortcodes/class-ur-shortcode-my-account.php:327
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:346
-#: includes/shortcodes/class-ur-shortcode-my-account.php:351
+#: includes/shortcodes/class-ur-shortcode-my-account.php:348
+#: includes/shortcodes/class-ur-shortcode-my-account.php:353
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:361
+#: includes/shortcodes/class-ur-shortcode-my-account.php:363
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:374
+#: includes/shortcodes/class-ur-shortcode-my-account.php:376
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
@@ -5030,8 +5079,8 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:82
-#: templates/myaccount/form-edit-profile.php:388
-#: templates/myaccount/form-edit-profile.php:393
+#: templates/myaccount/form-edit-profile.php:406
+#: templates/myaccount/form-edit-profile.php:411
 msgid "Save changes"
 msgstr ""
 

@@ -1,3 +1,22 @@
+
+= 2.2.2    - 06/09/2022
+* Enhance  - Support links on the checkbox field option​.
+* Enhance  - Parse smart tag values in appropriate format to display​.
+* Refactor - Remove field icon code699.​
+* Refactor - Replace jQuery tiptip with Tooltipster for tooltip​.
+* Tweak    - Double quoted main font family ignored by browsers.​
+* Tweak    - Replace incremental file name function with WordPress default.​
+* Tweak    - Revert content overrider not saving code back to old working one.​
+* Tweak    - Settings option label made consistent​.
+* Fix 	   - Flatpickr localization issue.
+* Fix 	   - File type valid value format.​
+* Fix 	   - Select All option translation issue.​
+* Fix 	   - Conditional Logic enabled required field issue. ​
+* Fix 	   - Invalid argument error in foreach when updating pro.​
+* Fix 	   - Redirection after registration not working with block.​
+* Fix 	   - Error thrown when uploaded file is not found in upload directory.​
+* Fix 	   - Lost password not working when no default account page with forgot password endpoint​.
+
 = 2.2.1    - 28/07/2022
 * Enhance  - Display Keyboard Shortcuts Popup when (Ctrl + H) is pressed.
 * Enhance  - Toggle introduced in metabox settings.

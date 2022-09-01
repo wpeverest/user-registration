@@ -1149,13 +1149,13 @@
 						subject: email_body_item
 							.find(".uret_subject_input")
 							.val(),
-						content: tinymce
-							.get(
-								"user_registration_" +
+						content: email_body_item
+							.find(
+								"#user_registration_" +
 									$(this).prop("id") +
 									"_content"
 							)
-							.getContent(),
+							.val(),
 					};
 				});
 
@@ -1400,7 +1400,7 @@
 									.closest(".ur-selected-item")
 									.find(".ur-label")
 									.find("label");
-								label_node.find("span").remove();
+								label_node.find("span:contains('*')").remove();
 								label_node.append(
 									'<span style="color:red">*</span>'
 								);
@@ -3426,7 +3426,8 @@
 					)
 					.removeAttr("selected");
 
-				wrapper.find(".ur-label").find("label").find("span").remove();
+				wrapper.find(".ur-label").find("label").find("span:contains(*)").remove();
+
 				if ($label.val() === "yes") {
 					wrapper
 						.find(".ur-label")
@@ -3484,6 +3485,7 @@
 					.find('option[value="' + $label.val() + '"]')
 					.attr("selected", true);
 			},
+
 			/**
 			 * Reflects changes in hide advance settings of field settings into selected field in form builder area.
 			 *

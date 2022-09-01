@@ -5,8 +5,6 @@
  * @class    UR_Form_Field_Date
  * @since    1.0.5
  * @package  UserRegistration/Form
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,8 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Form_Field_Date extends UR_Form_Field {
 
+	/**
+	 * Instance Variable.
+	 *
+	 * @var [mixed]
+	 */
 	private static $_instance;
 
+	/**
+	 * Get Instance of class.
+	 */
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -29,6 +35,9 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		return self::$_instance;
 	}
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 
 		$this->id                       = 'user_registration_date';
@@ -44,24 +53,37 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		);
 	}
 
+	/**
+	 * Get Registered admin fields.
+	 */
 	public function get_registered_admin_fields() {
 
-		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' .esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ). '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
+		return '<li id="' . esc_attr( $this->id ) . '_list " class="ur-registered-item draggable" data-field-id="' . esc_attr( $this->id ) . '"><span class="' . esc_attr( $this->registered_fields_config['icon'] ) . '"></span>' . esc_html( $this->registered_fields_config['label'] ) . '</li>';
 	}
 
+	/**
+	 * Validate field.
+	 *
+	 * @param [object] $single_form_field Field Data.
+	 * @param [object] $form_data Form Data.
+	 * @param [string] $filter_hook Hook.
+	 * @param [int]    $form_id Form id.
+	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
-		$is_condition_enabled = isset( $single_form_field->advance_setting->enable_conditional_logic ) ? $single_form_field->advance_setting->enable_conditional_logic : '0';
 		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
 		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
 		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
 		$value                = isset( $form_data->value ) ? $form_data->value : '';
+		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+		$field_name       = isset( $single_form_field->general_setting->field_name ) ? $single_form_field->general_setting->field_name : '';
 
-		if ( $is_condition_enabled !== '1' && 'yes' == $required && empty( $value ) ) {
+		if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' == $required && empty( $value ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
-					return esc_html__( $field_label . ' is required.', 'user-registration' );
+					/* translators: %1$s - Field Label */
+					return sprintf( __( '%1$s is required.', 'user-registration' ), $field_label );
 				}
 			);
 		}
@@ -70,13 +92,13 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	/**
 	 * Checks for valid date
 	 *
-	 * @param string $date_string
+	 * @param string $date_string Date.
 	 */
 	private function is_valid_date( $date_string ) {
 
 		$date = date_parse( $date_string );
 
-		if ( $date['error_count'] == 0 && checkdate( $date['month'], $date['day'], $date['year'] ) ) {
+		if ( 0 == $date['error_count'] && checkdate( $date['month'], $date['day'], $date['year'] ) ) {
 			return true;
 		}
 

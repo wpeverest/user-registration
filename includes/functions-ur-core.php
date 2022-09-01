@@ -413,7 +413,6 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  * @return string $field_type
  */
 function ur_get_field_type( $field_key ) {
-
 	$fields = ur_get_registered_form_fields();
 
 	$field_type = 'text';
@@ -1349,7 +1348,7 @@ function ur_get_logger() {
 	static $logger = null;
 	if ( null === $logger ) {
 		$class      = apply_filters( 'user_registration_logging_class', 'UR_Logger' );
-		$implements = class_implements( $class );
+		$implements = $class instanceof UR_Logger;
 		if ( is_array( $implements ) && in_array( 'UR_Logger_Interface', $implements ) ) {
 			if ( is_object( $class ) ) {
 				$logger = $class;
@@ -2028,10 +2027,36 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	$valid_form_data = array();
 	if ( isset( $profile[ $post_key ] ) ) {
 		$field_type = $profile[ $post_key ]['type'];
-		if ( 'checkbox' === $field_type || 'multi_select2' === $field_type ) {
-			if ( ! is_array( $value ) && ! empty( $value ) ) {
-				$value = maybe_unserialize( $value );
-			}
+
+		switch ( $field_type ) {
+			case 'checkbox':
+			case 'multi_select2':
+				if ( ! is_array( $value ) && ! empty( $value ) ) {
+					$value = maybe_unserialize( $value );
+				}
+				break;
+			case 'file':
+				$files = explode( ',', $value );
+
+				if ( is_array( $files ) && isset( $files[0] ) ) {
+					$attachment_ids = '';
+
+					foreach ( $files as $key => $file ) {
+						$seperator = 0 < $key ? ',' : '';
+
+						if ( wp_http_validate_url( $file ) ) {
+
+							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
+						}
+					}
+					$value = ! empty( $attachment_ids ) ? $attachment_ids : $value;
+				} else {
+
+					if ( wp_http_validate_url( $value ) ) {
+						$value = attachment_url_to_postid( $value );
+					}
+				}
+				break;
 		}
 		$valid_form_data[ $new_string ]               = new stdClass();
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
@@ -2101,6 +2126,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Process for file upload.
 		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
+
 			$upload_data = array();
 			$file_data = explode( ',', $form_data->value );
 
@@ -2235,6 +2261,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
 		$output  = '<div class="ur_conditional_logic_container">';
+		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
 		$checked = '';
 
@@ -2311,7 +2338,7 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 	 */
 	function user_registration_pro_get_checkbox_choices( $form_id, $field_name ) {
 
-		$form_data = user_registration_pro_get_field_data( $form_id, $field_name );
+		$form_data = (object) user_registration_pro_get_field_data( $form_id, $field_name );
 		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
 			$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
 			$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
@@ -2614,31 +2641,56 @@ if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
 	}
 }
 
-if ( ! function_exists( 'user_registration_incremental_file_name' ) ) {
+if ( ! function_exists( 'ur_format_field_values' ) ) {
 
 	/**
-	 * Create a incremental file name
+	 * Get field type by meta key
 	 *
-	 * @param [type] $upload_path Path to the upload directory.
-	 * @param [type] $file Uploaded file.
+	 * @param int    $field_meta_key Field key or meta key.
+	 * @param string $field_value Field's value .
 	 */
-	function user_registration_incremental_file_name( $upload_path, $file ) {
+	function ur_format_field_values( $field_meta_key, $field_value ) {
+		if ( strpos( $field_meta_key, 'user_registration_' ) ) {
+			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
+		}
+		$field_name = ur_get_field_data_by_field_name( ur_get_form_id_by_userid( get_current_user_id() ), $field_meta_key );
+		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
 
-		$file_name = sanitize_file_name( $file['name'] );
-		$file_ext  = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+		switch ( $field_key ) {
+			case 'country':
+				$countries   = UR_Form_Field_Country::get_instance()->get_country();
+				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
+				break;
+			case 'file':
+				$attachment_ids = explode( ',', $field_value );
+				$links          = array();
 
-		$file_counter = 0;
-		while ( file_exists( $upload_path . $file_name ) ) {
-			$file_name = pathinfo( $file_name, PATHINFO_FILENAME );
+				foreach ( $attachment_ids as $attachment_id ) {
+					$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
+					array_push( $links, $attachment_url );
+				}
 
-			if ( 0 === $file_counter ) {
-				$file_name = $file_name . '-' . $file_counter;
-			}
-
-			$file_name = substr( $file_name, 0, strpos( $file_name, '-' ) );
-			$file_name = $file_name . '-' . ( $file_counter++ ) . '.' . $file_ext;
+				$field_value = implode( ', ', $links );
+				break;
+			case 'privacy_policy':
+				if ( '1' === $field_value ) {
+					$field_value = 'Checked';
+				} else {
+					$field_value = 'Not Checked';
+				}
+				break;
+			case 'wysiwyg':
+				$field_value = html_entity_decode( $field_value );
+				break;
+			case 'profile_picture':
+				$field_value = '<img class="profile-preview" alt="Profile Picture" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
+				$field_value = wp_kses_post( $field_value );
+				break;
+			default:
+				$field_value = $field_value;
+				break;
 		}
 
-		return $file_name;
+		return $field_value;
 	}
 }

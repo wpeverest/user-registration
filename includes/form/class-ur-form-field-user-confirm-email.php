@@ -3,8 +3,6 @@
  * UR_Form_Field_User_Confirm_Email.
  *
  * @package  UserRegistration/Form
- * @category Admin
- * @author   WPEverest
  * @since 1.6.0
  */
 
@@ -63,6 +61,14 @@ class UR_Form_Field_User_Confirm_Email extends UR_Form_Field {
 		return '<li id="' . $this->id . '_list "  class="ur-registered-item draggable" data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
 	}
 
+	/**
+	 * Validate field.
+	 *
+	 * @param [object] $single_form_field Field Data.
+	 * @param [object] $form_data Form Data.
+	 * @param [string] $filter_hook Hook.
+	 * @param [int]    $form_id Form id.
+	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {}
 }
 

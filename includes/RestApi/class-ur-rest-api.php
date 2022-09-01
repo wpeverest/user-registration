@@ -204,8 +204,8 @@ class UR_REST_API {
 						'options' => ur_login_option(),
 					),
 					array(
-						'title'   => __( 'Prevent dashboard access', 'user-registration' ),
-						'desc'    => __( 'This option lets you limit which roles you are willing to prevent dashboard access.', 'user-registration' ),
+						'title'   => __( 'Prevent WP Dashboard Access', 'user-registration' ),
+						'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 						'id'      => 'user_registration_general_setting_disabled_user_roles',
 						'type'    => 'multiselect',
 						'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
