@@ -2261,6 +2261,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
 		$output  = '<div class="ur_conditional_logic_container">';
+		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
 		$checked = '';
 
