@@ -3,8 +3,6 @@
  * UR_Form_Field_User_Pass
  *
  * @package  UserRegistration/Form
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,8 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Form_Field_User_Pass extends UR_Form_Field {
 
+	/**
+	 * Instance Variable.
+	 *
+	 * @var [mixed]
+	 */
 	private static $_instance;
 
+	/**
+	 * Get Instance of class.
+	 */
 	public static function get_instance() {
 		// If the single instance hasn't been set, set it now.
 		if ( is_null( self::$_instance ) ) {
@@ -27,6 +33,9 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		return self::$_instance;
 	}
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 
 		$this->id                       = 'user_registration_user_pass';
@@ -41,11 +50,22 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		);
 	}
 
+	/**
+	 * Html to display in builder fields list.
+	 */
 	public function get_registered_admin_fields() {
 
 		return '<li id="' . $this->id . '_list " class="ur-registered-item draggable" data-field-id="' . $this->id . '"><span class="' . $this->registered_fields_config['icon'] . '"></span>' . $this->registered_fields_config['label'] . '</li>';
 	}
 
+	/**
+	 * Validate field.
+	 *
+	 * @param [object] $single_form_field Field Data.
+	 * @param [object] $form_data Form Data.
+	 * @param [string] $filter_hook Hook.
+	 * @param [int]    $form_id Form id.
+	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$password = isset( $form_data->value ) ? $form_data->value : '';
@@ -60,6 +80,11 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 		}
 	}
 
+	/**
+	 * Check Password Length
+	 *
+	 * @param [string] $password Password.
+	 */
 	private static function check_password_length( $password ) {
 
 		$strength = 0;
