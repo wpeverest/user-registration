@@ -263,6 +263,7 @@ class UR_Emailer {
 			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
 		}
 		$values       = array(
+			'user_id'     => $user_id,
 			'username'    => $username,
 			'email'       => $email,
 			'all_fields'  => $data_html,
@@ -578,6 +579,7 @@ class UR_Emailer {
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
 		$smart_tags = array(
+			'{{user_id}}',
 			'{{username}}',
 			'{{email}}',
 			'{{email_token}}',
@@ -603,6 +605,7 @@ class UR_Emailer {
 
 		$default_values = array(
 			'username'    => '',
+			'user_id'    => get_current_user_id(),
 			'email'       => '',
 			'email_token' => '',
 			'approval_token' => '',
