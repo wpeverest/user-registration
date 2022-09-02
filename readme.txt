@@ -278,9 +278,8 @@ Yes, the plugin has a shortcode for the login form.
 == Changelog ==
 
 = 2.2.2    - 06/09/2022
-* Enhance  - Support links on the checkbox field option​.
 * Enhance  - Parse smart tag values in appropriate format to display​.
-* Refactor - Remove field icon code699.​
+* Refactor - Remove field icon code.​
 * Refactor - Replace jQuery tiptip with Tooltipster for tooltip​.
 * Tweak    - Double quoted main font family ignored by browsers.​
 * Tweak    - Replace incremental file name function with WordPress default.​
