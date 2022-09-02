@@ -293,6 +293,7 @@ Yes, the plugin has a shortcode for the login form.
 * Fix 	   - Invalid argument error in foreach when updating pro.​
 * Fix 	   - Redirection after registration not working with block.​
 * Fix 	   - Error thrown when uploaded file is not found in upload directory.​
+* Fix      - Ajax Submission not working in edit profile when required field empty.
 * Fix 	   - Lost password not working when no default account page with forgot password endpoint​.
 
 = 2.2.1    - 28/07/2022
