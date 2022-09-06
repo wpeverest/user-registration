@@ -5289,6 +5289,9 @@
 .ur-label .user-registration-help-tip {
   margin-right: 2px; }
 
+.ur-label label span:not(.ur-portal-tooltip) {
+  margin-right: 3px; }
+
 .jconfirm-cell {
   padding-right: 30%;
   padding-left: 30%; }
@@ -6371,65 +6374,6 @@
 img.tips {
   padding: 5px 0 0; }
 
-#tiptip_holder {
-  display: none;
-  z-index: 8675309;
-  position: absolute;
-  top: 0;
-  left: 0; }
-  #tiptip_holder.tip_top {
-    padding-bottom: 5px; }
-    #tiptip_holder.tip_top #tiptip_arrow_inner {
-      margin-top: -7px;
-      margin-right: -6px;
-      border-top-color: #dee0e9; }
-  #tiptip_holder.tip_bottom {
-    padding-top: 5px; }
-    #tiptip_holder.tip_bottom #tiptip_arrow_inner {
-      margin-top: -5px;
-      margin-right: -6px;
-      border-bottom-color: #4c5477; }
-  #tiptip_holder.tip_right {
-    padding-right: 5px; }
-    #tiptip_holder.tip_right #tiptip_arrow_inner {
-      margin-top: -6px;
-      margin-right: -5px;
-      border-left-color: #dee0e9; }
-  #tiptip_holder.tip_left {
-    padding-left: 5px; }
-    #tiptip_holder.tip_left #tiptip_arrow_inner {
-      margin-top: -6px;
-      margin-right: -7px;
-      border-right-color: #dee0e9; }
-
-#tiptip_content,
-.ur_error_tip {
-  color: #ffffff;
-  font-size: 0.9em;
-  max-width: 150px;
-  background: #4c5477;
-  text-align: center;
-  border-radius: 3px;
-  padding: 0.618em 1em;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
-  #tiptip_content code,
-  .ur_error_tip code {
-    padding: 1px;
-    background: #888; }
-
-#tiptip_arrow,
-#tiptip_arrow_inner {
-  position: absolute;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 6px;
-  height: 0;
-  width: 0; }
-
-#tiptip_arrow {
-	 right: 50%;
-	 margin-right: -6px;
- }
 .ur_error_tip {
   max-width: 20em;
   line-height: 1.8em;
@@ -6449,6 +6393,18 @@ img.tips {
     top: -3px;
     right: 50%;
     margin: -1em -3px 0 0; }
+
+.tooltipster-base .tooltipster-box {
+  background-color: #4c5477 !important;
+  padding: 4px 8px;
+  border-radius: 2px;
+  text-align: center; }
+  .tooltipster-base .tooltipster-box .tooltipster-content {
+    padding: 2px 0; }
+
+.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
+  border-bottom-color: #4c5477 !important;
+  border-top-color: #4c5477 !important; }
 
 /**
   * Help Tip

@@ -1090,7 +1090,7 @@
 								}
 
 								if (!$this.valid()) {
-									return;
+									return false;
 								}
 
 								event.preventDefault();
