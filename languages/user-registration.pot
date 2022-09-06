@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-09-01T06:25:49+00:00\n"
+"POT-Creation-Date: 2022-09-06T08:38:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: user-registration\n"
@@ -1812,7 +1812,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:69
-#: includes/class-ur-emailer.php:349
+#: includes/class-ur-emailer.php:350
 msgid "A New User Registered"
 msgstr ""
 
@@ -1877,7 +1877,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:60
-#: includes/class-ur-emailer.php:286
+#: includes/class-ur-emailer.php:287
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -1905,7 +1905,7 @@ msgid "Confirmation Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:51
-#: includes/class-ur-emailer.php:273
+#: includes/class-ur-emailer.php:274
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -1934,7 +1934,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:70
-#: includes/class-ur-emailer.php:516
+#: includes/class-ur-emailer.php:517
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -1964,7 +1964,7 @@ msgid "Enable this email sent to the user notifying the registration is approved
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:60
-#: includes/class-ur-emailer.php:434
+#: includes/class-ur-emailer.php:435
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -1993,8 +1993,8 @@ msgid "Enable this email sent to the user notifying the registration is denied b
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:60
-#: includes/class-ur-emailer.php:299
-#: includes/class-ur-emailer.php:421
+#: includes/class-ur-emailer.php:300
+#: includes/class-ur-emailer.php:422
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -2023,7 +2023,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:61
-#: includes/class-ur-emailer.php:408
+#: includes/class-ur-emailer.php:409
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -2054,7 +2054,7 @@ msgid "Enable this email sent to the user when a user requests for reset passwor
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:59
-#: includes/class-ur-emailer.php:466
+#: includes/class-ur-emailer.php:467
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -2087,7 +2087,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:60
-#: includes/class-ur-emailer.php:312
+#: includes/class-ur-emailer.php:313
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -2604,7 +2604,7 @@ msgstr ""
 msgid "Email not verified! Verify your email by clicking on the link sent to your email."
 msgstr ""
 
-#: includes/class-ur-emailer.php:640
+#: includes/class-ur-emailer.php:643
 #: includes/functions-ur-core.php:2151
 msgid "Chosen Password"
 msgstr ""
