@@ -122,10 +122,12 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var isTemplatePage = urlParams.get("create-form");
 
 					if (
 						"add-new-registration" === urPage &&
-						null === isEditPage
+						null === isEditPage &&
+						null === isTemplatePage
 					) {
 						URFormBuilder.ur_show_help();
 					}
@@ -3426,7 +3428,11 @@
 					)
 					.removeAttr("selected");
 
-				wrapper.find(".ur-label").find("label").find("span:contains(*)").remove();
+				wrapper
+					.find(".ur-label")
+					.find("label")
+					.find("span:contains(*)")
+					.remove();
 
 				if ($label.val() === "yes") {
 					wrapper

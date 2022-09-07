@@ -502,8 +502,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			// Forms view.
-			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
+			if ( isset( $_GET['create-form'] ) ) {
+				// Forms template area.
+				include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
+			} else {
+				// Forms view.
+				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
+			}
 		}
 
 
