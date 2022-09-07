@@ -1,188 +1,188 @@
 {
 	"templates": [
 		{
-		"title": "Start From Scratch",
-		"slug": "blank",
-		"feature_image": "extensions-json/user-registration/templates/images/new-form.jpg",
-		"plan": [
-			"free"
-		]
+      "title": "Start From Scratch",
+      "slug": "blank",
+      "image": "extensions-json/templates/images/new-form.png",
+      "plan": [
+        "free"
+      ]
 	 },
    {
-		"title": "Recaptcha Registration Form",
-		"slug": "user-registration-recaptcha-registration-form",
-		"feature_image": "extensions-json/user-registration/templates/images/recaptcha.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/recaptcha-registration-form/",
-		"plan" : [
-			"free"
-		],
+      "title": "Recaptcha Registration Form",
+      "slug": "user-registration-recaptcha-registration-form",
+      "image": "extensions-json/templates/images/recaptcha.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/recaptcha-registration-form/",
+      "plan" : [
+        "free"
+      ]
 	 },
    {
-		"title": "Profile Registration",
-		"slug": "user-registration-profile-registration",
-		"feature_image": "extensions-json/user-registration/templates/images/Profile.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/profile-registration-form/",
-		"plan" : [
-			"free"
-		]
+      "title": "Profile Registration",
+      "slug": "user-registration-profile-registration",
+      "image": "extensions-json/templates/images/Profile.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/profile-registration-form/",
+      "plan" : [
+        "free"
+      ]
 	 },
-	  {
-		"title": "Conditional Registration",
-		"slug": "user-registration-conditional-registration",
-		"feature_image": "extensions-json/user-registration/templates/images/conditional-registration.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/conditional-registration-form",
-		"plan" : [
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-conditional-logic": "User Registration Conditional Logic"
-    ]
-	 }
-	  {
-		"title": "Multi-part Form",
-		"slug": "user-registration-multi-part-form",
-		"feature_image": "extensions-json/user-registration/templates/images/multiform-1.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/multi-step-form/",
-		"plan" : [
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-multi-part": "User Registration Multi Part"
-    ]
+   {
+      "title": "Conditional Registration",
+      "slug": "user-registration-conditional-registration",
+      "image": "extensions-json/templates/images/conditional-registration.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/conditional-registration-form",
+      "plan" : [
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-conditional-logic": "User Registration Conditional Logic"
+      }
 	 },
+   {
+      "title": "Multi-part Form",
+      "slug": "user-registration-multi-part-form",
+      "image": "extensions-json/templates/images/multiform-1.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/multi-step-form/",
+      "plan" : [
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-multi-part": "User Registration Multi Part"
+      }
+	 },
+   {
+      "title": "Payment Form",
+      "slug": "user-registration-payment-form",
+      "image": "extensions-json/templates/images/payment.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/payment-with-stripe-form/",
+      "plan" : [
+        "plus",
+        "professional"
+        ],
+        "addons": {
+          "user-registration-pro": "User Registration Pro",
+          "user-registration-payments": "User Registration Payments",
+          "user-registration-stripe": "User Registration Stripe"
+        }
+    },
 	  {
-		"title": "Payment Form",
-		"slug": "user-registration-payment-form",
-		"feature_image": "extensions-json/user-registration/templates/images/payment.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/payment-with-stripe-form/",
-		"plan" : [
-			 "plus",
-			 "professional"
-			],
-      "addons": [
+      "title": "Social Registration Form",
+      "slug": "user-registration-social-registration-form",
+      "image": "extensions-json/templates/images/social-registration.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/social-registration-form/",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-social-connect": "User Registration Social Connect"
+      }
+    },
+	  {
+      "title": "File Upload Form",
+      "slug": "user-registration-file-upload-form",
+      "image": "extensions-json/templates/images/file-upload.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/file-upload-form/",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-file-upload": "User Registration File Upload"
+      }
+	 },
+   {
+      "title": "Restricted Registration Form",
+      "slug": "user-registration-restricted-registration-form",
+      "image": "extensions-json/templates/images/restricted-registration.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/restricted-registration-form/",
+      "plan" : [
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro"
+      }
+	 },
+   {
+      "title": "Course Registration Form",
+      "slug": "user-registration-course-registration-form",
+      "image": "extensions-json/templates/images/course.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/course-registration-form/",
+      "plan" : [
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-learndash": "User Registration LearnDash"
+      }
+	 },
+   {
+      "title": "Date and Time Form",
+      "slug": "user-registration-date-time-form",
+      "image": "extensions-json/templates/images/date-time.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/date-and-time-form/",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-advanced-fields": "User Registration Advanced Fields"
+      }
+	 },
+   {
+      "title": "Donation Form",
+      "slug": "user-registration-donation-form",
+      "image": "extensions-json/templates/images/donation.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/donation-form/",
+      "plan" : [
+        "plus",
+        "professional"
+      ],
+      "addons": {
+        "user-registration-pro": "User Registration Pro",
+        "user-registration-advanced-fields": "User Registration Advanced Fields",
+        "user-registration-payments": "User Registration Payments",
+        "user-registration-stripe": "User Registration Stripe"
+      }
+	 },
+   {
+      "title": "Paypal Integration Form",
+      "slug": "user-registration-paypal-integration-form",
+      "image": "extensions-json/templates/images/paypal.jpg",
+      "excerpt": "",
+      "preview_link": "https://demo.wpeverest.com/user-registration/paypal-integration-form/",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ],
+      "addons": {
         "user-registration-pro": "User Registration Pro",
         "user-registration-payments": "User Registration Payments"
-        "user-registration-stripe": "User Registration Stripe"
-      ]
-		},
-	  {
-		"title": "Social Registration Form",
-		"slug": "user-registration-social-registration-form",
-		"feature_image": "extensions-json/user-registration/templates/images/social-registration.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/social-registration-form/",
-		"plan" : [
-			"personal",
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-social-connect": "User Registration Social Connect"
-    ]
-     },
-	  {
-		"title": "File Upload Form",
-		"slug": "user-registration-file-upload-form",
-		"feature_image": "extensions-json/user-registration/templates/images/file-upload.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/file-upload-form/",
-		"plan" : [
-			"personal",
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-file-upload": "User Registration File Upload"
-    ]
-	 },
-	  {
-		"title": "Restricted Registration Form",
-		"slug": "user-registration-restricted-registration-form",
-		"feature_image": "extensions-json/user-registration/templates/images/restricted-registration.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/restricted-registration-form/",
-		"plan" : [
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-    ]
-	 },
-	  {
-		"title": "Course Registration Form",
-		"slug": "user-registration-course-registration-form",
-		"feature_image": "extensions-json/user-registration/templates/images/course.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/course-registration-form/",
-		"plan" : [
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-learndash": "User Registration LearnDash"
-    ]
-	 },
-	  {
-		"title": "Date and Time Form",
-		"slug": "user-registration-date-time-form",
-		"feature_image": "extensions-json/user-registration/templates/images/date-time.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/date-and-time-form/",
-		"plan" : [
-			"personal",
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-advanced-fields": "User Registration Advanced Fields"
-    ]
-	 },
-	  {
-		"title": "Donation Form",
-		"slug": "user-registration-donation-form",
-		"feature_image": "extensions-json/user-registration/templates/images/donation.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/donation-form/",
-		"plan" : [
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-advanced-fields": "User Registration Advanced Fields",
-      "user-registration-payments": "User Registration Payments",
-      "user-registration-stripe": "User Registration Stripe"
-    ]
-	 },
-	  {
-		"title": "Paypal Integration Form",
-		"slug": "user-registration-paypal-integration-form",
-		"feature_image": "extensions-json/user-registration/templates/images/paypal.jpg",
-		"excerpt": "",
-		"preview_link": "https://demo.wpeverest.com/user-registration/paypal-integration-form/",
-		"plan" : [
-			"personal",
-			"plus",
-			"professional"
-		],
-    "addons": [
-      "user-registration-pro": "User Registration Pro",
-      "user-registration-payments": "User Registration Payments",
-    ]
-	 },
+      }
+	 }
 	]
-  }
+}

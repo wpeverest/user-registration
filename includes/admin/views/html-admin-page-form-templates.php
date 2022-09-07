@@ -27,8 +27,8 @@ $license_plan    = ur_get_license_plan();
 	</div>
 	<div class="user-registration-setup user-registration-setup--form">
 		<div class="user-registration-setup-header">
-			<div class="user-registration-logo">
-				<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" viewBox="0 0 24 24"><path fill="#7e3bd0" d="M21.23,10H17.79L16.62,8h3.46ZM17.77,4l1.15,2H15.48L14.31,4Zm-15,16L12,4l5.77,10H10.85L12,12h2.31L12,8,6.23,18H20.08l1.16,2Z"/></svg>
+			<div class="ur-brand-logo ur-px-2">
+				<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
 			</div>
 			<h4><?php esc_html_e( 'Add New Form', 'user-registration' ); ?></h4>
 			<?php if ( apply_filters( 'user_registration_refresh_templates', true ) ) : ?>
@@ -90,12 +90,12 @@ $license_plan    = ur_get_license_plan();
 					?>
 					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>">
 						<figure class="user-registration-screenshot <?php echo esc_attr( $click_class ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>">
-							<img src="<?php echo esc_url( evf()->plugin_url() . '/assets/' . $template->image ); ?>"/>
+							<img src="<?php echo esc_url( ur()->plugin_url() . '/assets/' . $template->image ); ?>"/>
 							<?php echo wp_kses_post( $badge ); ?>
 							<?php if ( 'blank' !== $template->slug ) : ?>
 								<div class="form-action">
-									<a href="#" class="user-registration-btn user-registration-btn-primary <?php echo esc_attr( $upgrade_class ); ?>" data-licence-plan="<?php echo esc_attr( $license_plan ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></a>
-									<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="user-registration-btn user-registration-btn-secondary ur-template-preview"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
+									<a href="#" class="user-registration-btn button-primary <?php echo esc_attr( $upgrade_class ); ?>" data-licence-plan="<?php echo esc_attr( $license_plan ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></a>
+									<a href="<?php echo esc_url( $preview_link ); ?>" target="_blank" class="user-registration-btn button-secondary ur-template-preview"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 								</div>
 							<?php endif; ?>
 						</figure>

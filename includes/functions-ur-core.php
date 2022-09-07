@@ -2735,3 +2735,37 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 		return false;
 	}
 }
+
+/**
+ * UR Get json file contents.
+ *
+ * @param mixed $file File path.
+ * @param mixed $to_array Returned data in array.
+ */
+function ur_get_json_file_contents( $file, $to_array = false ) {
+	if ( $to_array ) {
+		return json_decode( ur_file_get_contents( $file ), true );
+	}
+	return json_decode( ur_file_get_contents( $file ) );
+}
+
+/**
+ * UR file get contents.
+ *
+ * @param mixed $file File path.
+ */
+function ur_file_get_contents( $file ) {
+
+	if ( $file ) {
+		global $wp_filesystem;
+		require_once ABSPATH . '/wp-admin/includes/file.php';
+		WP_Filesystem();
+		$local_file = preg_replace( '/\\\\|\/\//', '/', plugin_dir_path( UR_PLUGIN_FILE ) . $file );
+
+		if ( $wp_filesystem->exists( $local_file ) ) {
+			$response = $wp_filesystem->get_contents( $local_file );
+			return $response;
+		}
+	}
+	return;
+}

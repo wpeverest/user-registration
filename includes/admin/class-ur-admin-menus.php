@@ -503,6 +503,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			if ( isset( $_GET['create-form'] ) ) {
+
+				$templates       = array();
+				$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
+				$category  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
+				$templates = self::get_template_data( $category );
+
 				// Forms template area.
 				include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
 			} else {
@@ -854,6 +860,51 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
 			}
 
+		}
+
+		/**
+		 * Get section content for the template screen.
+		 *
+		 * @return array
+		 */
+		public static function get_template_data() {
+			delete_transient( 'ur_template_section_list' );
+			$template_data = get_transient( 'ur_template_section_list' );
+
+			if ( false === $template_data ) {
+				$template_data     = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+				// Removing directory so the templates can be reinitialized.
+				$folder_path = untrailingslashit(plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
+
+				foreach ( $template_data->templates as $template_tuple ) {
+					// We retrieve the image, then use them instead of the remote server.
+					$image = wp_remote_get( $template_tuple->image );
+					$type  = wp_remote_retrieve_header( $image, 'content-type' );
+
+					// Remote file check failed, we'll fallback to remote image.
+					if ( ! $type ) {
+						continue;
+					}
+
+					$temp_name     = explode( '/', $template_tuple->image );
+					$relative_path = $folder_path . '/' . end( $temp_name );
+					$exists        = file_exists( $relative_path );
+
+					// If it exists, utilize this file instead of remote file.
+					if ( $exists ) {
+						$template_tuple->image = plugin_dir_url(plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
+					}
+				}
+
+				if ( ! empty( $template_data->templates ) ) {
+					set_transient( 'ur_template_section_list', $template_data, WEEK_IN_SECONDS );
+				}
+			}
+
+			if ( ! empty( $template_data->templates ) ) {
+				return apply_filters( 'user_registration_template_section_data', $template_data->templates );
+			}
 		}
 	}
 
