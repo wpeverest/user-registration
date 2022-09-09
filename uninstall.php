@@ -43,11 +43,21 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' ===
 	// Delete form id and confirm key.
 	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key IN ( 'ur_form_id', 'ur_confirm_email', 'ur_confirm_email_token' ) " );
 
-	$all_forms = ur_get_all_user_registration_form();
+	$args = array(
+		'order'       => 'ASC',
+		'numberposts' => -1,
+		'status'      => 'publish',
+		'post_type'     => 'user_registration',
+		'orderby'       => 'ID',
+		'order'         => 'DESC',
+		'no_found_rows' => true,
+		'nopaging'      => true,
+	);
+	$all_forms = get_posts( $args );
 
-	foreach ( $all_forms as $form_id => $form_name ) {
-		wp_delete_post( $form_id );
-		$wpdb->delete( $wpdb->postmeta, array( 'post_id' => $form_id ) );
+	foreach ( $all_forms as $post ) {
+		$result = wp_delete_post( $post->ID );
+		$del_meta = $wpdb->delete( $wpdb->postmeta, array( 'post_id' => $post->ID ) );
 	}
 
 	// Clear any cached data that has been removed.
