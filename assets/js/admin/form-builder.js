@@ -1758,7 +1758,7 @@
 														);
 														single_row.remove();
 														$this.check_grid();
-														URFormBuilder.manage_draggable_users_fields();
+														builder.manage_draggable_users_fields();
 
 														Swal.fire({
 															icon: "success",
