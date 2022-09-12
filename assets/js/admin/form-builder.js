@@ -2101,6 +2101,10 @@
 															'"]'
 													).remove();
 
+													$(document.body).trigger(
+														"ur_field_removed"
+														);
+
 													// To prevent click on whole item.
 													return false;
 												},
