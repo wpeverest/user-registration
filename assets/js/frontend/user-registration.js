@@ -928,6 +928,7 @@
 															$field_id.push($id);
 														}
 													);
+													var field_name = "";
 													$.each(
 														response.data.message,
 														function (
@@ -939,6 +940,8 @@
 																	index
 																)
 															) {
+																field_name =
+																	index;
 																var error_message =
 																	'<label id="' +
 																	index +
@@ -958,11 +961,19 @@
 																				index +
 																				"']"
 																		);
-																	wrapper.closest('.form-row').append(
+																wrapper
+																	.closest(
+																		".form-row"
+																	)
+																	.append(
 																		error_message
 																	);
 															}
 														}
+													);
+													$(document).trigger(
+														"ur_handle_field_error_messages",
+														[$this, field_name]
 													);
 												}
 
