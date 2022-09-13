@@ -4,8 +4,6 @@
  *
  * Uninstalls the plugin and associated data.
  *
- * @author   WPEverest
- * @category Core
  * @package  UserRegistration/Uninstaller
  * @version  1.0.0
  */
@@ -55,9 +53,9 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' ===
 	);
 	$all_forms = get_posts( $args );
 
-	foreach ( $all_forms as $post ) {
-		$result = wp_delete_post( $post->ID );
-		$del_meta = $wpdb->delete( $wpdb->postmeta, array( 'post_id' => $post->ID ) );
+	foreach ( $all_forms as $form ) {
+		$result = wp_delete_post( $form->ID );
+		$del_meta = $wpdb->delete( $wpdb->postmeta, array( 'post_id' => $form->ID ) );
 	}
 
 	// Clear any cached data that has been removed.
