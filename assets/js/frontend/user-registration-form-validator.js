@@ -33,20 +33,20 @@
 		init_tooltipster: function () {
 			if (typeof tooltipster !== "undefined") {
 				var tooltipster_args = {
-					theme: 'tooltipster-borderless',
+					theme: "tooltipster-borderless",
 					maxWidth: 200,
 					multiple: true,
 					interactive: true,
-					position: 'bottom',
+					position: "bottom",
 					contentAsHTML: true,
-					functionInit: function( instance, helper ) {
-						var $origin = jQuery( helper.origin ),
-							dataTip = $origin.attr( 'data-tip' );
+					functionInit: function (instance, helper) {
+						var $origin = jQuery(helper.origin),
+							dataTip = $origin.attr("data-tip");
 
-						if ( dataTip ) {
-							instance.content( dataTip );
+						if (dataTip) {
+							instance.content(dataTip);
 						}
-					}
+					},
 				};
 				$(".user-registration-help-tip").tooltipster(tooltipster_args);
 			}
@@ -198,11 +198,20 @@
 									.find(".ur-range-number")
 							);
 						} else {
+							$(document).trigger(
+								"user-registration-append-error-messages",
+								element
+							);
 							if (
 								element.hasClass("urfu-file-input") ||
 								element.closest(".field-multi_select2").length
 							) {
 								error.insertAfter(element.parent().parent());
+							} else if (
+								"number" === element.attr("type") &&
+								element.hasClass("ur-quantity")
+							) {
+								error.insertAfter(element.parent());
 							} else {
 								error.insertAfter(element.parent().parent());
 							}
@@ -393,9 +402,9 @@
 			/**
 			 * Real time choice limit validation
 			 */
-			var checkbox_div 		= this_node.find(".field-checkbox"),
-				multiselect2_div 	= this_node.find(".field-multi_select2");
-			    multiple_choice_div = this_node.find(".field-multiple_choice");
+			var checkbox_div = this_node.find(".field-checkbox"),
+				multiselect2_div = this_node.find(".field-multi_select2"),
+				multiple_choice_div = this_node.find(".field-multiple_choice");
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
