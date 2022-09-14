@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - feature/export-custom-fields
+      - master
     workflow_dispatch:
 jobs:
   sync:
