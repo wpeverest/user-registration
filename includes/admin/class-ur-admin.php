@@ -31,6 +31,24 @@ class UR_Admin {
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
+		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+	}
+
+	/**
+	 * Add Tag for My Account to know which page is current my account page.
+	 *
+	 * @param mixed  $post_states Tags.
+	 * @param object $post Post.
+	 */
+	public function ur_add_post_state( $post_states, $post ) {
+
+		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+
+		if ( $post->ID == $my_account_page_id ) {
+			$post_states[] = __( 'UR My Account Page', 'user-registration' );
+		}
+
+		return $post_states;
 	}
 
 	/**
