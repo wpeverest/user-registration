@@ -2481,3 +2481,122 @@
 		}
 	}
 }
+
+
+.user-registration {
+	.swal2-container {
+		h3 {
+			font-size: 16px;
+			font-weight: 400;
+		}
+
+		.user-registration-recommend-addons {
+			margin-bottom: 20px;
+			padding-bottom: 16px;
+			border-bottom: 2px solid $color_gray-more-lighten;
+
+			.bulk-action-notice {
+				margin: 0 0 20px;
+
+				p {
+					padding: 0;
+					margin: 8px 0 !important;
+				}
+
+				&.notice-error {
+					.button-link {
+						text-decoration: none;
+						display: flex;
+						align-items: center;
+						margin-top: 8px;
+
+						.toggle-indicator {
+							display: inline-flex;
+						}
+					}
+
+					.bulk-action-errors {
+						margin-top: 0;
+					}
+				}
+			}
+
+			.plugins-list-table {
+				border-radius: 4px;
+
+				.plugin-name {
+					text-align: left;
+				}
+
+				.plugin-status {
+					float: right;
+
+					span {
+						width: 15px;
+						height: 15px;
+						overflow: hidden;
+						border-radius: 50%;
+						position: relative;
+						vertical-align: top;
+						white-space: nowrap;
+						text-indent: -9999px;
+						display: inline-block;
+						border: 2px solid $color_gray-lighten;
+
+						&.active,
+						&.activate-now {
+							&::after {
+								position: absolute;
+								left: 50%;
+								top: 50%;
+								opacity: 1;
+								width: 34%;
+								height: 50%;
+								content: '';
+								transform-origin: left top;
+								border-top: 2px solid $color_gray-lighten;
+								border-right: 2px solid $color_gray-lighten;
+								transform: scaleX(-1) rotate(135deg)
+									translate(-58%, -40%);
+							}
+						}
+
+						&.activate-now {
+							border-color: $color_gray-lighten;
+
+							&.updating-message {
+								border-color: $color_gray-lighten;
+								border-left-color: $green;
+							}
+						}
+
+						&.active {
+							border-color: $green;
+
+							&::after {
+								border-top: 2px solid $green;
+								border-right: 2px solid $green;
+							}
+						}
+
+						&.updating-message {
+							border-left-color: $green;
+							animation: spin 0.75s linear infinite;
+
+							&::after {
+								content: none;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.user-registration-template-install-addon {
+			margin-top: 20px;
+			color: $white;
+			text-decoration: none;
+		}
+	}
+
+}

@@ -62,6 +62,8 @@ class UR_AJAX {
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
+			'template_licence_check'     => false,
+			'install_extension'     => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1099,6 +1101,205 @@ class UR_AJAX {
 			)
 		);
 
+	}
+
+	/**
+	 * Ajax handler for licence check.
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem Subclass
+	 */
+	public static function template_licence_check() {
+		check_ajax_referer( 'user_registration_template_licence_check', 'security' );
+
+		if ( empty( $_POST['plan'] ) ) {
+			wp_send_json_error(
+				array(
+					'plan'         => '',
+					'errorCode'    => 'no_plan_specified',
+					'errorMessage' => esc_html__( 'No Plan specified.', 'user-registration' ),
+				)
+			);
+		}
+
+		$addons        = array();
+		$template_data = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+		if ( ! empty( $template_data->templates ) ) {
+			foreach ( $template_data->templates as $template ) {
+
+				if ( isset( $_POST['slug'] ) && $template->slug === $_POST['slug'] && in_array( trim( $_POST['plan'] ), $template->plan, true ) ) {
+					$addons = $template->addons;
+				}
+			}
+		}
+
+		$output  = '<div class="user-registration-recommend-addons">';
+		$output .= '<h3>' . esc_html__( 'This form template requires the following addons.', 'user-registration' ) . '</h3>';
+		$output .= '<table class="plugins-list-table widefat striped">';
+		$output .= '<thead><tr><th scope="col" class="manage-column required-plugins" colspan="2">' . esc_html__( 'Required Addons', 'user-registration' ) . '</th></tr></thead><tbody id="the-list">';
+		$output .= '</div>';
+
+		$activated = true;
+
+		foreach ( $addons as $slug => $addon ) {
+
+			$plugin = 'user-registration-pro' === $slug ? $slug . '/' . 'user-registration.php' : $slug . '/' . $slug . '.php';
+
+			if ( is_plugin_active( $plugin ) ) {
+				$class        = 'active';
+				$parent_class = '';
+			} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+				$class        = 'activate-now';
+				$parent_class = 'inactive';
+				$activated    = false;
+			} else {
+				$class        = 'install-now';
+				$parent_class = 'inactive';
+				$activated    = false;
+			}
+
+			$output .= '<tr class="plugin-card-' . $slug . ' plugin ' . $parent_class . '" data-slug="' . $slug . '" data-plugin="' . $plugin .'" data-name="' . $addon . '">';
+			$output .= '<td class="plugin-name">' . $addon . '</td>';
+			$output .= '<td class="plugin-status"><span class="' . esc_attr( $class ) . '"></span></td>';
+			$output .= '</tr>';
+		}
+		$output .= '</tbody></table></div>';
+
+		wp_send_json_success(
+			array(
+				'html'     => $output,
+				'activate' => $activated,
+			)
+		);
+	}
+
+	/**
+	 * Ajax handler for installing a extension.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @see Plugin_Upgrader
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem Subclass
+	 */
+	public static function install_extension() {
+		check_ajax_referer( 'updates' );
+
+		if ( empty( $_POST['slug'] ) ) {
+			wp_send_json_error(
+				array(
+					'slug'         => '',
+					'errorCode'    => 'no_plugin_specified',
+					'errorMessage' => esc_html__( 'No plugin specified.', 'user-registration' ),
+				)
+			);
+		}
+
+		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
+		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' );
+		$plugin = plugin_basename( sanitize_text_field( $plugin_slug ) );
+		$status = array(
+			'install' => 'plugin',
+			'slug'    => sanitize_key( wp_unslash( $_POST['slug'] ) ),
+		);
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'user-registration' );
+			wp_send_json_error( $status );
+		}
+
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+			$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+			$status['plugin']     = $plugin;
+			$status['pluginName'] = $plugin_data['Name'];
+
+			if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+				$result = activate_plugin( $plugin );
+
+				if ( is_wp_error( $result ) ) {
+					$status['errorCode']    = $result->get_error_code();
+					$status['errorMessage'] = $result->get_error_message();
+					wp_send_json_error( $status );
+				}
+
+				wp_send_json_success( $status );
+			}
+		}
+
+		$api = json_decode(
+			UR_Updater_Key_API::version(
+				array(
+					'license'   => get_option( 'user-registration_license_key' ),
+					'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				)
+			)
+		);
+
+		if ( is_wp_error( $api ) ) {
+			$status['errorMessage'] = $api->get_error_message();
+			wp_send_json_error( $status );
+		}
+
+		$status['pluginName'] = $api->name;
+
+		$skin     = new WP_Ajax_Upgrader_Skin();
+		$upgrader = new Plugin_Upgrader( $skin );
+		$result   = $upgrader->install( $api->download_link );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$status['debug'] = $skin->get_upgrade_messages();
+		}
+
+		if ( is_wp_error( $result ) ) {
+			$status['errorCode']    = $result->get_error_code();
+			$status['errorMessage'] = $result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( is_wp_error( $skin->result ) ) {
+			$status['errorCode']    = $skin->result->get_error_code();
+			$status['errorMessage'] = $skin->result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( $skin->get_errors()->get_error_code() ) {
+			$status['errorMessage'] = $skin->get_error_messages();
+			wp_send_json_error( $status );
+		} elseif ( is_null( $result ) ) {
+			global $wp_filesystem;
+
+			$status['errorCode']    = 'unable_to_connect_to_filesystem';
+			$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
+
+			// Pass through the error from WP_Filesystem if one was raised.
+			if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+				$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+			}
+
+			wp_send_json_error( $status );
+		}
+
+		$api->version = isset( $api->new_version ) ? $api->new_version : '';
+		$install_status = install_plugin_install_status( $api );
+
+		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+			if ( isset( $_POST['page'] ) && 'user-registration_page_add-new-registration' === $_POST['page'] ) {
+				activate_plugin( $install_status['file'] );
+			} else {
+				$status['activateUrl'] =
+				esc_url_raw(
+					add_query_arg(
+						array(
+							'action'   => 'activate',
+							'plugin'   => $install_status['file'],
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+						),
+						admin_url( 'admin.php?page=user-registration-addons' )
+					)
+				);
+			}
+		}
+
+		wp_send_json_success( $status );
 	}
 }
 

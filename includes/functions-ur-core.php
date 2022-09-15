@@ -2710,7 +2710,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+		if ( $license_key && is_plugin_active( 'user-registration/user-registration.php' ) ) {
 			delete_transient( 'ur_pro_license_plan' );
 			$license_data = get_transient( 'ur_pro_license_plan' );
 

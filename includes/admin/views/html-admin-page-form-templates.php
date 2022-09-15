@@ -82,7 +82,7 @@ $license_plan    = ur_get_license_plan();
 					if ( empty( $license_plan ) && ! in_array( 'free', $template->plan, true ) ) {
 						$upgrade_class = 'upgrade-modal';
 					} elseif ( ! in_array( str_replace( '-lifetime', '', $license_plan ), $template->plan, true ) && ! in_array( 'free', $template->plan, true ) ) {
-						$upgrade_class = 'upgrade-modal';
+						$upgrade_class = 'ur-template-select';
 					}
 
 					/* translators: %s: Template title */
