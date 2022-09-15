@@ -234,8 +234,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Manual Login After Registration', 'user-registration' ),
-									'desc'     => __( 'Enter the text message after successful form submission on manual login after registration.', 'user-registration' ),
+									'title'    => __( 'Auto Approval And Manual Login ', 'user-registration' ),
+									'desc'     => __( 'Enter the text message after successful form submission when auto approval and manual login is selected.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_manual_registation',
 									'type'     => 'textarea',
 									'desc_tip' => true,
@@ -244,8 +244,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Email Confirmation to Login', 'user-registration' ),
-									'desc'     => __( 'Enter the text message after successful form submission on email confirmation to login.', 'user-registration' ),
+									'title'    => __( 'Auto Approval After Email Confirmation', 'user-registration' ),
+									'desc'     => __( 'Enter the text message after successful form submission when auto approval and email confirmation is selected.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_email_confirmation',
 									'type'     => 'textarea',
 									'desc_tip' => true,
@@ -255,7 +255,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Email Verification Completed', 'user-registration' ),
-									'desc'     => __( 'Enter the text message after email successfully verified and have access to login.', 'user-registration' ),
+									'desc'     => __( 'Enter the text message that appears after the email is successfully verified and have access login access.', 'user-registration' ),
 									'id'       => 'user_registration_successful_email_verified_message',
 									'type'     => 'textarea',
 									'desc_tip' => true,
@@ -264,8 +264,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 
 								array(
-									'title'    => __( 'Admin Approval After Registration', 'user-registration' ),
-									'desc'     => __( 'Enter the text message after successful form submission on admin approval after registration.', 'user-registration' ),
+									'title'    => __( 'Admin Approval', 'user-registration' ),
+									'desc'     => __( 'Enter the text message that appears after successful form submission when admin approval is selected.', 'user-registration' ),
 									'id'       => 'user_registration_successful_form_submission_message_admin_approval',
 									'type'     => 'textarea',
 									'desc_tip' => true,
@@ -410,7 +410,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Login Title', 'user-registration' ),
-									'desc'     => __( 'This option lets you enable login title in login form.', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'user_registration_login_title',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
@@ -419,7 +419,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
-									'desc'     => __( 'This option lets you enable ajax login on login form submission.', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'ur_login_ajax_submission',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
@@ -428,7 +428,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Enable Remember Me', 'user-registration' ),
-									'desc'     => __( 'Enable', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'user_registration_login_options_remember_me',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
@@ -438,7 +438,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Enable Lost Password', 'user-registration' ),
-									'desc'     => __( 'Enable', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'user_registration_login_options_lost_password',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
@@ -448,7 +448,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Hide Field Labels', 'user-registration' ),
-									'desc'     => __( 'Hide', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'user_registration_login_options_hide_labels',
 									'type'     => 'checkbox',
 									'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
@@ -458,7 +458,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'    => __( 'Enable Captcha', 'user-registration' ),
-									'desc'     => __( 'Enable', 'user-registration' ),
+									'desc'     => '',
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'checkbox',
 									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
@@ -487,7 +487,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 								array(
 									'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
-									'desc'       => __( 'Disable WordPress login via wp-login.php', 'user-registration' ),
+									'desc'       => '',
 									'id'         => 'user_registration_login_options_prevent_core_login',
 									'type'       => 'checkbox',
 									'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),

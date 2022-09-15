@@ -950,7 +950,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 		'setting_data' => array(
 			array(
-				'label'             => __( 'User login option', 'user-registration' ),
+				'label'             => __( 'User Approval And Login Option', 'user-registration' ),
 				'description'       => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_login_options',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),

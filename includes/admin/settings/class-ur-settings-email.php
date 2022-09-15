@@ -135,7 +135,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'desc'     => __( 'Click to send test email.', 'user-registration' ),
 									'id'       => 'user_registration_email_test',
 									'type'     => 'link',
-									'css'      => 'min-width:300px;',
+									'css'      => 'min-width:90px;',
 									'buttons'  => array(
 										array(
 											'title' => __( 'Send Email', 'user-registration' ),
