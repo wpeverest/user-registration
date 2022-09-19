@@ -745,8 +745,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						if ( isset( $field->advance_setting->validate_unique ) ) {
-							$extra_params['validate_unique']  = $enable_validate_unique;
-							$extra_params['validate_message'] = $validate_message;
+							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
+							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
