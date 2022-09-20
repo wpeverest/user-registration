@@ -24,6 +24,14 @@
 				".input-text, select, input:checkbox input:radio",
 				this.validate_field
 			);
+
+			// Prevent invalid key input in number fields.
+			$("[type='number']").keypress(function (event) {
+				var keyCode = event.keyCode;
+				if ( keyCode < 48 || keyCode > 56 ) {
+					event.preventDefault();
+				}
+			});
 		},
 		init_inputMask: function () {
 			if (typeof $.fn.inputmask !== "undefined") {
