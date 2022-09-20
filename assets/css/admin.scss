@@ -249,7 +249,15 @@
 						background-color: #475BB2;
 						color: #fff;
 					 }
+					 .upgrade-now {
+						background: #475bb2 !important;
+						color: #fff;
+					 }
 
+					 .upgrade-now:hover {
+						background: #516be0 !important;
+						color: #fff;
+					 }
 					 &.upgrade-plan {
 						 margin: 0 auto;
 					 }
@@ -1753,6 +1761,9 @@
 
 		.tooltipster-content {
 			padding: 2px 0;
+		}
+		.tooltipster-content a {
+			color: #9EF01A !important;
 		}
 	}
 

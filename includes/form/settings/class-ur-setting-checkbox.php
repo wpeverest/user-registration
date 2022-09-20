@@ -50,7 +50,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Choice Limit', 'user-registration' ),
-				'tip'         => __( 'Enter minimum number choices that can be selected.', 'user-registration' ),
+				'tip'         => __( 'Enter maximum number choices that can be selected.', 'user-registration' ),
 			),
 			'select_all'          => array(
 				'label'       => __( 'Select All ', 'user-registration' ),
