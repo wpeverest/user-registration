@@ -319,7 +319,7 @@ jQuery(function ($) {
 		.on("init_tooltips", function () {
 			ur_init_tooltips(".tips, .help_tip, .user-registration-help-tip");
 			ur_init_tooltips(
-				".ur-copy-shortcode, #ur-setting-form .ur-portal-tooltip",
+				".ur-copy-shortcode, .ur-portal-tooltip",
 				{ keepAlive: false }
 			);
 
