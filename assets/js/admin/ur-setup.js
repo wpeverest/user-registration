@@ -466,7 +466,15 @@ jQuery(function ($) {
 					}
 
 					if (0 === wp.updates.queue.length) {
-						$(".user-registration-template-install-addon").remove();
+						$(".user-registration-template-install-addon")
+							.parent()
+							.prop("disabled", false);
+						$(".user-registration-template-install-addon")
+							.removeClass(
+								"user-registration-template-install-addon"
+							)
+							.addClass("user-registration-template-continue")
+							.text(ur_setup_params.i18n_form_ok);
 					}
 				}
 			);
