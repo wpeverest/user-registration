@@ -110,3 +110,77 @@ $license_plan    = ur_get_license_plan();
 		</div>
 	</div>
 </div>
+
+
+<?php
+/**
+ * Prints the JavaScript templates for install admin notices.
+ *
+ * Template takes one argument with four values:
+ *
+ *     param {object} data {
+ *         Arguments for admin notice.
+ *
+ *         @type string id        ID of the notice.
+ *         @type string className Class names for the notice.
+ *         @type string message   The notice's message.
+ *         @type string type      The type of update the notice is for. Either 'plugin' or 'theme'.
+ *     }
+ *
+ * @since 1.6.0
+ */
+function user_registration_print_admin_notice_templates() {
+	?>
+	<script id="tmpl-wp-installs-admin-notice" type="text/html">
+		<div <# if ( data.id ) { #>id="{{ data.id }}"<# } #> class="notice {{ data.className }}"><p>{{{ data.message }}}</p></div>
+	</script>
+	<script id="tmpl-wp-bulk-installs-admin-notice" type="text/html">
+		<div id="{{ data.id }}" class="{{ data.className }} notice <# if ( data.errors ) { #>notice-error<# } else { #>notice-success<# } #>">
+			<p>
+				<# if ( data.successes ) { #>
+					<# if ( 1 === data.successes ) { #>
+						<# if ( 'plugin' === data.type ) { #>
+							<?php
+							/* translators: %s: Number of plugins */
+							printf( esc_html__( '%s plugin successfully installed.', 'user-registration' ), '{{ data.successes }}' );
+							?>
+						<# } #>
+					<# } else { #>
+						<# if ( 'plugin' === data.type ) { #>
+							<?php
+							/* translators: %s: Number of plugins */
+							printf( esc_html__( '%s plugins successfully installed.', 'user-registration' ), '{{ data.successes }}' );
+							?>
+						<# } #>
+					<# } #>
+				<# } #>
+				<# if ( data.errors ) { #>
+					<button class="button-link bulk-action-errors-collapsed" aria-expanded="false">
+						<# if ( 1 === data.errors ) { #>
+							<?php
+							/* translators: %s: Number of failed installs */
+							printf( esc_html__( '%s install failed.', 'user-registration' ), '{{ data.errors }}' );
+							?>
+						<# } else { #>
+							<?php
+							/* translators: %s: Number of failed installs */
+							printf( esc_html__( '%s installs failed.', 'user-registration' ), '{{ data.errors }}' );
+							?>
+						<# } #>
+						<span class="screen-reader-text"><?php esc_html_e( 'Show more details', 'user-registration' ); ?></span>
+						<span class="toggle-indicator" aria-hidden="true"></span>
+					</button>
+				<# } #>
+			</p>
+			<# if ( data.errors ) { #>
+				<ul class="bulk-action-errors hidden">
+					<# _.each( data.errorMessages, function( errorMessage ) { #>
+						<li>{{ errorMessage }}</li>
+					<# } ); #>
+				</ul>
+			<# } #>
+		</div>
+	</script>
+	<?php
+}
+user_registration_print_admin_notice_templates();

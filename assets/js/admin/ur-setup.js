@@ -174,8 +174,6 @@
 	 */
 	wp.updates.installExtensionError = function (response) {
 		if ("user-registration_page_add-new-registration" === pagenow) {
-			console.log(response);
-
 			var $pluginRow = $('tr[data-slug="' + response.slug + '"]'),
 				$updateMessage = $pluginRow.find(".plugin-status span"),
 				errorMessage;
@@ -306,69 +304,10 @@
 		// Handle a queue job.
 		$document.trigger("wp-updates-queue-job", job);
 	};
-
-	$(function () {
-		var $pluginFilter = $("#extension-filter");
-
-		/**
-		 * Click handler for extension installs.
-		 *
-		 * @param {Event} event Event interface.
-		 */
-		$pluginFilter.on(
-			"click",
-			".extension-install .install-now",
-			function (event) {
-				var $button = $(event.target),
-					pluginName = $(this).data("name");
-
-				event.preventDefault();
-
-				if (
-					$button.hasClass("updating-message") ||
-					$button.hasClass("button-disabled")
-				) {
-					return;
-				}
-
-				if (
-					wp.updates.shouldRequestFilesystemCredentials &&
-					!wp.updates.ajaxLocked
-				) {
-					wp.updates.requestFilesystemCredentials(event);
-
-					$document.on("credential-modal-cancel", function () {
-						var $message = $(".install-now.updating-message");
-
-						$message
-							.removeClass("updating-message")
-							.attr(
-								"aria-label",
-								sprintf(
-									/* translators: %s: Plugin name. */
-									_x("Install %s now", "user-registration"),
-									pluginName
-								)
-							)
-							.text(__("Install Now"));
-
-						wp.a11y.speak(__("Update canceled."), "polite");
-					});
-				}
-
-				wp.updates.installExtension({
-					name: pluginName,
-					slug: $button.data("slug"),
-				});
-			}
-		);
-	});
 })(jQuery, window.wp);
 
 /* global ur_setup_params */
 jQuery(function ($) {
-	var install_addon_success = false;
-
 	/**
 	 * Setup actions.
 	 */
@@ -486,8 +425,8 @@ jQuery(function ($) {
 					).remove();
 
 					$(
-						".user-registration-recommend-addons .plugins-info"
-					).after(
+						".user-registration-recommend-addons .plugins-list-table"
+					).before(
 						wp.updates.adminNotice({
 							id: "bulk-action-notice",
 							className: "bulk-action-notice notice-alt",
@@ -529,8 +468,6 @@ jQuery(function ($) {
 					if (0 === wp.updates.queue.length) {
 						$(".user-registration-template-install-addon").remove();
 					}
-
-					install_addon_success = true;
 				}
 			);
 
@@ -578,7 +515,10 @@ jQuery(function ($) {
 				template = $this.data("template"),
 				templateName = $this.data("template-name-raw"),
 				formName = "",
-				button = ur_setup_params.i18n_form_ok,
+				button =
+					'<a href="#" class="user-registration-btn user-registration-btn-primary user-registration-template-continue">' +
+					ur_setup_params.i18n_form_ok +
+					"</a>",
 				namePrompt = "";
 
 			event.preventDefault();
@@ -654,9 +594,14 @@ jQuery(function ($) {
 					.closest(".ur-template")
 					.find(".user-registration-template-addons").length
 			) {
-				button = $(".user-registration-template-addons")
+				var installButton = $(".user-registration-template-addons")
 					.find(".ur-install-now")
 					.html();
+
+				if (typeof installButton !== "undefined") {
+					button = installButton;
+				}
+
 				$(".user-registration-template-addons")
 					.find(".ur-install-now")
 					.remove();
@@ -672,6 +617,8 @@ jQuery(function ($) {
 
 			namePrompt += "<h3>" + ur_setup_params.i18n_form_name + "</h3>";
 
+			var templateNameError = false;
+
 			Swal.fire({
 				customClass:
 					"user-registration-swal2-modal user-registration-swal2-modal--center",
@@ -682,24 +629,47 @@ jQuery(function ($) {
 				showCloseButton: true,
 				allowOutsideClick: false,
 				confirmButtonText: button,
+				inputValidator: (value) => {
+					if (
+						$(".user-registration-template-install-addon").length >
+						0
+					) {
+						return;
+					}
+
+					if ($(".swal2-validation-message").length > 0) {
+						$(".swal2-validation-message").remove();
+					}
+
+					if ("" === value) {
+						$(".swal2-content").append(
+							"<div class='swal2-validation-message' id='swal2-validation-message' style='display: flex;'>" +
+								ur_setup_params.i18n_form_error_name +
+								"</div>"
+						);
+						templateNameError = true;
+						return;
+					} else {
+						templateNameError = false;
+					}
+				},
 				preConfirm: function () {
-					if (install_addon_success) {
-						return true;
+					if (
+						$(".user-registration-template-install-addon").length >
+						0
+					) {
+						if (!templateNameError) {
+							return false;
+						}
+					} else {
+						if (!templateNameError) {
+							return true;
+						}
 					}
 
 					return false;
 				},
-			}).then(function (result) {
-				if (!result.value) {
-					$(".swal2-content").append(
-						"<div class='swal2-validation-message' id='swal2-validation-message' style='display: flex;'>" +
-							ur_setup_params.i18n_form_error_name +
-							"</div>"
-					);
-					return;
-				} else {
-				}
-			});
+			}).then(function (result) {});
 		},
 		input_keypress: function (e) {
 			var button = e.keyCode || e.which;

@@ -41,7 +41,8 @@
         "professional"
       ],
       "addons": {
-        "user-registration-conditional-logic": "User Registration Conditional Logic"
+        "user-registration-conditional-logic": "User Registration Conditional Logic",
+        "user-registration-customize-my-account": "User Registration Customize My Account"
       }
 	 },
    {
