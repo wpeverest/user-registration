@@ -325,7 +325,7 @@ class UR_Frontend_Form_Handler {
 					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
 				case 'checkbox':
-					$form_data->value = isset( $form_data->value ) ? $form_data->value : '';
+					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';
 			}
 		}
 		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
