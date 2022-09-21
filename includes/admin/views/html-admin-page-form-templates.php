@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 $refresh_url     = add_query_arg(
 	array(
-		'page'               => 'add-new-registration&create-form=1',
+		'page'               => 'add-new-registration',
 		'action'             => 'ur-template-refresh',
 		'ur-template-nonce' => wp_create_nonce( 'refresh' ),
 	),

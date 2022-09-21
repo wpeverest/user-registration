@@ -122,7 +122,7 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
-					var isTemplatePage = urlParams.get("create-form");
+					var isTemplatePage = $(".user-registration-setup").length;
 
 					if (
 						"add-new-registration" === urPage &&

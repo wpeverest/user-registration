@@ -429,8 +429,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function add_registration_menu() {
 			add_submenu_page(
 				'user-registration',
-				__( 'Add New', 'user-registration' ),
-				__( 'Add New', 'user-registration' ),
+				esc_html__( 'Add New', 'user-registration' ),
+				esc_html__( 'Add New', 'user-registration' ),
 				'manage_user_registration',
 				'add-new-registration',
 				array(
@@ -502,8 +502,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			if ( isset( $_GET['create-form'] ) ) {
-
+			if ( isset( $_GET['edit-registration'] ) ) {
+				// Forms view.
+				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
+			} else {
 				$templates       = array();
 				$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
 				$category  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
@@ -535,11 +537,22 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					)
 				);
 
+				wp_enqueue_script( 'ur-template-controller');
+				wp_localize_script(
+					'ur-template-controller',
+					'ur_templates',
+					array(
+						'ur_template_all' => self::get_template_data(),
+						'i18n_get_started' => esc_html__( 'Get Started', 'user-registration' ),
+						'i18n_get_preview' => esc_html__( 'Preview', 'user-registration' ),
+						'i18n_pro_feature' => esc_html__( 'Pro', 'user-registration' ),
+						'template_refresh' => esc_html__( 'Updating Templates', 'user-registration' ),
+						'ur_plugin_url'   => esc_url( UR()->plugin_url() ),
+					)
+				);
+
 				// Forms template area.
 				include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
-			} else {
-				// Forms view.
-				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 			}
 		}
 
@@ -894,7 +907,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * @return array
 		 */
 		public static function get_template_data() {
-			delete_transient( 'ur_template_section_list' );
 			$template_data = get_transient( 'ur_template_section_list' );
 
 			if ( false === $template_data ) {
