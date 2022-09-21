@@ -1018,12 +1018,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'text',
 				'label'             => __( 'Redirect URL', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_redirect_options',
-				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
-				'tip'               => __( 'URL to redirect to after registration.', 'user-registration' ),
+				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
