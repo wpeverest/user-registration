@@ -64,6 +64,7 @@ class UR_AJAX {
 			'import_form_action'     => false,
 			'template_licence_check'     => false,
 			'install_extension'     => false,
+			'create_form'            => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1300,6 +1301,41 @@ class UR_AJAX {
 		}
 
 		wp_send_json_success( $status );
+	}
+
+	/**
+	 * AJAX create new form.
+	 */
+	public static function create_form() {
+		ob_start();
+
+		check_ajax_referer( 'user_registration_create_form', 'security' );
+
+		$title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : esc_html__( 'Blank Form', 'user-registration' );
+		$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : 'blank';
+
+		$form_id = UR()->form->create( $title, $template );
+
+		if ( $form_id ) {
+			$data = array(
+				'id'       => $form_id,
+				'redirect' => add_query_arg(
+					array(
+						'tab'     => 'fields',
+						'form_id' => $form_id,
+					),
+					admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $form_id )
+				),
+			);
+
+			wp_send_json_success( $data );
+		}
+
+		wp_send_json_error(
+			array(
+				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
+			)
+		);
 	}
 }
 

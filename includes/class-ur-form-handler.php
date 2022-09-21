@@ -730,6 +730,101 @@ class UR_Form_Handler {
 
 		return $forms;
 	}
+
+	/**
+	 * Create new form.
+	 *
+	 * @since  2.2.4
+	 * @param  string $title    Form title.
+	 * @param  string $template Form template.
+	 * @param  array  $args     Form Arguments.
+	 * @param  array  $data     Additional data.
+	 * @return int|bool Form ID on successful creation else false.
+	 */
+	public function create( $title = '', $template = 'blank', $args = array(), $data = array() ) {
+
+		if ( empty( $title ) ) {
+			return false;
+		}
+
+		$args         = apply_filters( 'user_registration_create_form_args', $args, $data );
+
+		// Prevent content filters from corrupting JSON in post_content.
+		$has_kses = ( false !== has_filter( 'content_save_pre', 'wp_filter_post_kses' ) );
+		if ( $has_kses ) {
+			kses_remove_filters();
+		}
+		$has_targeted_link_rel_filters = ( false !== has_filter( 'content_save_pre', 'wp_targeted_link_rel' ) );
+		if ( $has_targeted_link_rel_filters ) {
+			wp_remove_targeted_link_rel_filters();
+		}
+
+
+		$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+		$form_data = array();
+
+		if ( ! empty( $templates ) ) {
+			foreach ( $templates->templates as $template_data ) {
+				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
+					$form_data = (object) json_decode( base64_decode( $template_data->settings ), true );
+				}
+			}
+		}
+
+		$form_id = 0;
+
+		// check for non empty post data array.
+		if ( ! empty( $form_data->form_post ) ) {
+			$form_data->form_post = (object) $form_data->form_post;
+
+			// If Form Title already exist concat it with imported tag.
+			$args  = array( 'post_type' => 'user_registration' );
+			$forms = get_posts( $args );
+			foreach ( $forms as $key => $form_obj ) {
+				if ( $form_data->form_post->post_title === $form_obj->post_title ) {
+					$form_data->form_post->post_title = sanitize_text_field($title );
+					break;
+				}
+			}
+
+			$form_id = wp_insert_post( $form_data->form_post );
+
+			// Check for any error while inserting.
+			if ( is_wp_error( $form_id ) ) {
+				return $form_id;
+			}
+			if ( $form_id ) {
+
+				// check for non empty post_meta array.
+				if ( ! empty( $form_data->form_post_meta ) ) {
+					$form_data->form_post_meta = (object) $form_data->form_post_meta;
+
+					$all_roles = ur_get_default_admin_roles();
+
+					foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+
+						// If user role does not exists in new site then set default as subscriber.
+						if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
+							$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
+						}
+						add_post_meta( $form_id, $meta_key, $meta_value );
+					}
+				}
+			}
+		}
+
+		// Restore removed content filters.
+		if ( $has_kses ) {
+			kses_init_filters();
+		}
+		if ( $has_targeted_link_rel_filters ) {
+			wp_init_targeted_link_rel_filters();
+		}
+
+		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
+
+		return $form_id;
+	}
 }
 
 UR_Form_Handler::init();
