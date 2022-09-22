@@ -363,25 +363,6 @@
 		}
 	);
 
-	// 	Hide Email Approval Setting if not set to admin approval
-	if (
-		$("#user_registration_general_setting_login_options").val() !==
-		"admin_approval"
-	) {
-		$("#user_registration_login_option_enable_email_approval")
-			.parent()
-			.parent()
-			.parent()
-			.parent()
-			.hide();
-	} else {
-		// Store the initial value of checkbox
-		var user_registration_login_option_enable_email_approval_initial_value =
-			$("#user_registration_login_option_enable_email_approval").prop(
-				"checked"
-			);
-	}
-
 	// Toggle display of enable email approval setting
 	$("#user_registration_general_setting_login_options").on(
 		"change",

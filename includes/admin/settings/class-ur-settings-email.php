@@ -74,7 +74,14 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							'type'     => 'card',
 							'desc'     => __( 'Email notifications sent from user registration are listed below. Click on an email to configure it.', 'user-registration' ),
 							'settings' => array(
-								ur_get_user_login_option(),
+								array(
+									'title'    => __( 'Disable emails', 'user-registration' ),
+									'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
+									'id'       => 'user_registration_email_setting_disable_email',
+									'default'  => 'no',
+									'type'     => 'checkbox',
+									'autoload' => false,
+								),
 								array(
 									'type' => 'email_notification',
 									'id'   => 'user_registration_email_notification_settings',

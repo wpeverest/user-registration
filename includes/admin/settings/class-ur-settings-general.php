@@ -71,26 +71,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'User Approval And Login Option', 'user-registration' ),
-									'desc'     => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
-									'id'       => 'user_registration_general_setting_login_options',
-									'default'  => 'default',
-									'type'     => 'select',
-									'class'    => 'ur-enhanced-select',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-									'options'  => ur_login_option(),
-								),
-								array(
-									'title'    => __( 'Send User Approval Link in Email', 'user-registration' ),
-									'desc'     => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
-									'id'       => 'user_registration_login_option_enable_email_approval',
-									'type'     => 'checkbox',
-									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
-								),
-								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
 									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
