@@ -503,7 +503,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			if ( isset( $_GET['onboarding-skipped'] ) ) {
-				update_option( "user_registration_onboarding_skipped", true );
+				update_option( 'user_registration_onboarding_skipped', true );
 			}
 
 			// Forms view.

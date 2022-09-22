@@ -2695,9 +2695,9 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	}
 }
 
-add_filter( "admin_init", "user_registration_install_pages_notice" );
+add_filter( 'admin_init', 'user_registration_install_pages_notice' );
 
-if ( !function_exists( "user_registration_install_pages_notice" ) ) {
+if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 	/**
 	 * Display install pages notice if the user has skipped getting started.
 	 *
@@ -2705,8 +2705,8 @@ if ( !function_exists( "user_registration_install_pages_notice" ) ) {
 	 */
 	function user_registration_install_pages_notice() {
 
-		if ( get_option("user_registration_onboarding_skipped", false ) ) {
-			UR_Admin_Notices::add_notice("install");
+		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
+			UR_Admin_Notices::add_notice( 'install' );
 		}
 
 	}
