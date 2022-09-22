@@ -402,6 +402,7 @@ if ( ! function_exists( 'UR' ) ) {
 			delete_transient( 'user_registration_pro_activated' );
 		}
 	}
+
 	add_action( 'admin_init', 'user_registration_free_deactivate' );
 
 	if ( ! function_exists( 'user_registration_free_notice' ) ) {
