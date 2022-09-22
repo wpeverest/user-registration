@@ -211,7 +211,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																					echo 'checked="checked"';
 																				}
 																				?>
-											 ><?php echo esc_html( trim( $choice ) ); ?></label><br/>
+											 ><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
 											<?php
 										}
 									} else {
