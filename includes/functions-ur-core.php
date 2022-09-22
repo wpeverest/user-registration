@@ -2694,3 +2694,20 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		return $field_value;
 	}
 }
+
+add_filter( "admin_init", "user_registration_install_pages_notice" );
+
+if ( !function_exists( "user_registration_install_pages_notice" ) ) {
+	/**
+	 * Display install pages notice if the user has skipped getting started.
+	 *
+	 * @since 2.2.3
+	 */
+	function user_registration_install_pages_notice() {
+
+		if ( get_option("user_registration_onboarding_skipped", false ) ) {
+			UR_Admin_Notices::add_notice("install");
+		}
+
+	}
+}
