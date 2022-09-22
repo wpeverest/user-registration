@@ -29,7 +29,7 @@ $options         = array_map( 'trim', $options );
 
 			$checked = in_array( $option, $default_values ) ? 'checked' : '';
 
-			echo "<label><input type = 'checkbox'  value='" . esc_attr( trim( $option ) ) . "' " . esc_attr( $checked ) . ' disabled/>' . esc_html( trim( $option ) ) . '</label>';
+			echo "<label><input type = 'checkbox'  value='" . esc_attr( trim( $option ) ) . "' " . esc_attr( $checked ) . ' disabled/>' . wp_kses_post( trim( $option ) ) . '</label>';
 		}
 		?>
 	</div>

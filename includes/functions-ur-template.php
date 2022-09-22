@@ -60,7 +60,7 @@ function ur_login_template_redirect() {
 		$redirect_url = apply_filters( 'user_registration_redirect_url_after_login', $redirect_url );
 
 		if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-			wp_redirect( $redirect_url );
+			wp_redirect( $redirect_url ); //PHPCS:ignore;
 			exit();
 		}
 	}
@@ -120,7 +120,7 @@ function ur_registration_template_redirect() {
 			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
 
 			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-				wp_redirect( $redirect_url );
+				wp_redirect( $redirect_url ); //PHPCS:ignore;
 				exit();
 			}
 		}
@@ -806,7 +806,7 @@ if ( ! function_exists( 'user_registration_account_edit_profile' ) ) {
 	 * My Account > Edit profile template.
 	 */
 	function user_registration_account_edit_profile() {
-		 UR_Shortcode_My_Account::edit_profile();
+		UR_Shortcode_My_Account::edit_profile();
 	}
 }
 
@@ -900,6 +900,6 @@ function ur_logout_url( $redirect = '' ) {
  */
 function is_elementor_editing_page() {
 	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
-		! empty( $_GET['elementor-preview'] ) ||
-		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] );
+		! empty( $_GET['elementor-preview'] ) || //PHPCS:ignore;
+		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] ); //PHPCS:ignore;
 }
