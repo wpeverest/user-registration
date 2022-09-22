@@ -125,6 +125,12 @@ class UR_Admin_Notices {
 
 			$hide_notice = sanitize_text_field( wp_unslash( $_GET['ur-hide-notice'] ) );
 			self::remove_notice( $hide_notice );
+
+			// Remove the onboarding skipped checker if install notice is removed.
+			if ( "install" === $hide_notice ) {
+				delete_option( "user_registration_onboarding_skipped" );
+			}
+
 			do_action( 'user_registration_hide_' . $hide_notice . '_notice' );
 		}
 	}
