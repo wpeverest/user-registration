@@ -2695,7 +2695,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	}
 }
 
-add_filter( 'admin_notices', 'user_registration_install_pages_notice', 99 );
+add_action( 'admin_notices', 'user_registration_install_pages_notice', 99 );
 
 if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 	/**
@@ -2709,7 +2709,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
 		}
 
-		$my_account_page = get_option( "user_registration_myaccount_page_id", 0 );
+		$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
 		$matched         = 0;
 		$myaccount_page  = array();
 
@@ -2719,8 +2719,8 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( ! empty( $myaccount_page ) ) {
 			$shortcodes = parse_blocks( $myaccount_page->post_content );
-			if ( ! empty( $shortcode['blockName'] ) ) {
-				foreach ( $shortcodes as $shortcode ) {
+			foreach ( $shortcodes as $shortcode ) {
+				if ( ! empty( $shortcode['blockName'] ) ) {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
 					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
@@ -2729,17 +2729,18 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						}
 					}
-				}
-			} else {
-				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-				if ( 1 > absint( $matched ) ) {
-					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				} else {
+					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+					if ( 1 > absint( $matched ) ) {
+						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+					}
 				}
 			}
 		}
 
-		if( 0 === $matched ) {
-			UR_Admin_Notices::add_custom_notice( 'select_my_account', 'Please select User Registration my account page in the <strong>User Registration -> Settings -> General -> My Account Section -> My Account Page </strong>.' );
+		if ( 0 === $matched ) {
+			$message = 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="' . admin_url() . '/admin.php?page=user-registration-settings#user_registration_myaccount_page_id" style="text-decoration:none;">My Account Page</a> )';
+			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
 		}

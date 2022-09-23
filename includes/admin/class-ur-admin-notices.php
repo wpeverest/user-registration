@@ -173,7 +173,7 @@ class UR_Admin_Notices {
 			'user-registration-mailchimp',
 		);
 
-		$pages_to_exclude = apply_filters( "user_registration_notice_excluded_pages", $pages_to_exclude );
+		$pages_to_exclude = apply_filters( 'user_registration_notice_excluded_pages', $pages_to_exclude );
 
 		// Return on other than user registraion builder page.
 		if ( empty( $_REQUEST['page'] ) || ! in_array( $_REQUEST['page'], $pages_to_exclude ) ) {
@@ -186,8 +186,6 @@ class UR_Admin_Notices {
 
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
-
-
 						// Remove all notices if the page is form builder page.
 						if ( 'add-new-registration' === $_REQUEST['page'] ) {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
@@ -197,12 +195,11 @@ class UR_Admin_Notices {
 								if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
 									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 								}
-							} else if ( str_contains($name, 'user_registration_' ) || str_contains($name, 'UR_Admin_Notices' ) ) {
+							} else if ( str_contains( $name, 'user_registration_' ) || str_contains( $name, 'UR_Admin_Notices' ) ) {
 								continue;
 							} else {
 								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}
-
 						}
 					}
 				}
