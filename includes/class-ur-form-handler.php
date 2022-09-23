@@ -732,11 +732,13 @@ class UR_Form_Handler {
 	}
 
 	/**
-	 * Create and return a dictionary of form_id->form_label for all form fields.
+	 * Create and return a dictionary of field_id->field_label for all form fields.
 	 *
 	 * @param [int] $form_id Form Id.
 	 * @param array $args Extra arguments.
 	 * @return array
+	 *
+	 * @since 2.2.3
 	 */
 	public function get_form_fields( $form_id, $args = array() ) {
 		$hide_fields = array(
