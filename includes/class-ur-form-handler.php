@@ -730,6 +730,48 @@ class UR_Form_Handler {
 
 		return $forms;
 	}
+
+	/**
+	 * Create and return a dictionary of field_id->field_label for all form fields.
+	 *
+	 * @param [int] $form_id Form Id.
+	 * @param array $args Extra arguments.
+	 * @return array
+	 *
+	 * @since 2.2.3
+	 */
+	public function get_form_fields( $form_id, $args = array() ) {
+		$hide_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+		);
+
+		$fields_dict = array();
+
+		if ( is_numeric( $form_id ) ) {
+
+			$form_data = $this->get_form( $form_id, $args );
+
+			foreach ( $form_data as $sec ) {
+				foreach ( $sec as $fields ) {
+					foreach ( $fields as $field ) {
+						$field_id    = $field->general_setting->field_name;
+						$field_label = $field->general_setting->label;
+						if ( ! in_array( $field_id, $hide_fields, true ) ) {
+							$fields_dict[ $field_id ] = $field_label;
+						}
+					}
+				}
+			}
+
+			if ( isset( $args['hide_fields'] ) && true === $args['hide_fields'] ) {
+				foreach ( $hide_fields as $hide_field ) {
+					unset( $fields_dict[ $hide_field ] );
+				}
+			}
+		}
+		return $fields_dict;
+	}
 }
 
 UR_Form_Handler::init();
