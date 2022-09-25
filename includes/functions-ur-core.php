@@ -2695,7 +2695,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	}
 }
 
-add_action( 'admin_notices', 'user_registration_install_pages_notice', 99 );
+add_action( 'admin_init', 'user_registration_install_pages_notice' );
 
 if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 	/**
