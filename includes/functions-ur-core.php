@@ -2705,6 +2705,10 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 	 */
 	function user_registration_install_pages_notice() {
 
+		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore
+			update_option( 'user_registration_myaccount_page_id', $_POST['user_registration_myaccount_page_id'] ); //phpcs:ignore
+		}
+
 		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
 		}
