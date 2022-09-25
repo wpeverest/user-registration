@@ -658,7 +658,7 @@ abstract class UR_Form_Field {
 
 		if ( ! empty( $advance_settings ) ) {
 			$settings .= "<div class='ur-advance-setting-block'>";
-			$settings .= '<h2 class="ur-toggle-heading">' . __( 'Advance Settings', 'user-registration' ) . '</h2><hr>';
+			$settings .= '<h2 class="ur-toggle-heading">' . __( 'Advanced Settings', 'user-registration' ) . '</h2><hr>';
 			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;
 			$settings .= '</div>';

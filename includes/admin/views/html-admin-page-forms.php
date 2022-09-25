@@ -65,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									?>
 
 									<li><a href="#ur-tab-field-settings"
-										class="nav-tab"><?php esc_html_e( 'Form Setting', 'user-registration' ); ?></a>
+										class="nav-tab"><?php esc_html_e( 'Form Settings', 'user-registration' ); ?></a>
 									</li>
 								</ul>
 								<div style="clear:both"></div>
