@@ -2705,20 +2705,21 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 	 */
 	function user_registration_install_pages_notice() {
 
-		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore
-			update_option( 'user_registration_myaccount_page_id', $_POST['user_registration_myaccount_page_id'] ); //phpcs:ignore
-		}
-
 		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
 		}
 
-		$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
+		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore
+			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore
+		} else {
+			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
+		}
+
 		$matched         = 0;
 		$myaccount_page  = array();
 
 		if ( $my_account_page ) {
-			$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
+			$myaccount_page = get_post( $my_account_page );
 		}
 
 		if ( ! empty( $myaccount_page ) ) {
