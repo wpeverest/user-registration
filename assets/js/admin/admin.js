@@ -323,18 +323,20 @@ jQuery(function ($) {
 		function show_password_strength_info($strength_value) {
 			switch ($strength_value) {
 				case "0":
-					strength_info = "Minimum one uppercase letter";
+					strength_info =
+						user_registration_form_builder_data.user_registration_very_weak_password_info;
 					break;
 				case "1":
-					strength_info = "Minimum one uppercase letter and a number";
+					strength_info =
+						user_registration_form_builder_data.user_registration_weak_password_info;
 					break;
 				case "2":
 					strength_info =
-						"Minimum one uppercase letter, a number and a special character";
+						user_registration_form_builder_data.user_registration_medium_password_info;
 					break;
 				case "3":
 					strength_info =
-						"Minimum one uppercase letter, a number, a special character and must be 8 characters";
+						user_registration_form_builder_data.user_registration_strong_password_info;
 					break;
 
 				default:
@@ -342,9 +344,7 @@ jQuery(function ($) {
 					break;
 			}
 			minimum_password_strength_wrapper_field.append(
-				"<span class='ur-pwd-strength-info'>" +
-					strength_info +
-					"</span>"
+				"<span class='description'>" + strength_info + "</span>"
 			);
 		}
 	});
