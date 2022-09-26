@@ -2727,16 +2727,23 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 				if ( ! empty( $shortcode['blockName'] ) ) {
 					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
 						$matched = 1;
+						break;
 					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
 						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
 						if ( 1 > absint( $matched ) ) {
 							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+						}
+						if ( 0 < absint( $matched ) ) {
+							break;
 						}
 					}
 				} else {
 					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
 					if ( 1 > absint( $matched ) ) {
 						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+					}
+					if ( 0 < absint( $matched ) ) {
+						break;
 					}
 				}
 			}
