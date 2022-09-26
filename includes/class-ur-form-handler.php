@@ -227,8 +227,10 @@ class UR_Form_Handler {
 					}
 				}
 
+				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+				$new_key = str_replace( 'user_registration_', '', $key );
 				// Validation: Required fields.
-				if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
+				if ( ! in_array( $new_key, $urcl_hide_fields, true ) && 'yes' == $field['required'] && empty( $_POST[ $key ] ) && ! $disabled ) {
 					/* translators: %s - Field Label */
 					ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 				}
