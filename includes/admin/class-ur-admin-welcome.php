@@ -153,7 +153,7 @@ class UR_Admin_Welcome {
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
 											<h3><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
 									</a>
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="button button-secondary">
+									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration&onboarding-skipped=1' ) ); ?>" class="button button-secondary">
 											<h3><?php esc_html_e( 'Create a First Form', 'user-registration' ); ?></h3>
 									</a>
 									<a href="<?php echo esc_url_raw( admin_url() . '/admin.php?page=user-registration&end-setup-wizard=' . true ); ?>" class="button button-tertiary">
