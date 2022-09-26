@@ -1183,24 +1183,99 @@
 											}
 
 											if (
-												typeof response.data.message ===
-												"object"
+												!response.data.hasOwnProperty(
+													"message"
+												) ||
+												!response.data.message.hasOwnProperty(
+													"individual"
+												)
 											) {
+												if (
+													typeof response.data
+														.message === "object"
+												) {
+													$.each(
+														response.data.message,
+														function (
+															index,
+															value
+														) {
+															message.append(
+																"<li>" +
+																	value +
+																	"</li>"
+															);
+														}
+													);
+												} else {
+													message.append(
+														"<li>" +
+															response.data
+																.message +
+															"</li>"
+													);
+												}
+												form.show_message(
+													message,
+													type,
+													$this,
+													"0"
+												);
+											} else {
+												var $field_id = [];
+												$.each(
+													$this
+														.find(".ur-form-row")
+														.find(".ur-field-item")
+														.find(
+															".ur-edit-profile-field"
+														),
+													function (index) {
+														var $this = $(this);
+														var $id =
+															$this.attr("id");
+														$field_id.push($id);
+													}
+												);
 												$.each(
 													response.data.message,
 													function (index, value) {
-														message.append(
-															"<li>" +
+														if (
+															$field_id.includes(
+																index
+															)
+														) {
+															var error_message =
+																'<label id="' +
+																index +
+																"-error" +
+																'" class="user-registration-error" for="' +
+																index +
+																'">' +
 																value +
-																"</li>"
-														);
+																"</label>";
+
+															var wrapper = $this
+																.find(
+																	".ur-form-row"
+																)
+																.find(
+																	".ur-field-item"
+																)
+																.find(
+																	"input[id='" +
+																		index +
+																		"']"
+																);
+															wrapper
+																.closest(
+																	".form-row"
+																)
+																.append(
+																	error_message
+																);
+														}
 													}
-												);
-											} else {
-												message.append(
-													"<li>" +
-														response.data.message +
-														"</li>"
 												);
 											}
 										} catch (e) {
@@ -1208,13 +1283,6 @@
 												"<li>" + e.message + "</li>"
 											);
 										}
-
-										form.show_message(
-											message,
-											type,
-											$this,
-											"0"
-										);
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
