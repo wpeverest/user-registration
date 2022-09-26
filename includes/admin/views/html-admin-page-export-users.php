@@ -31,6 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								?>
 							</select>
 						</p>
+						<?php do_action( 'user_registration_custom_export_template', array_keys( $all_forms )[0] ); ?>
 
 						<input type="submit" class="button button-primary" name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
 

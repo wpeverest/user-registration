@@ -196,7 +196,7 @@ class UR_REST_API {
 						'default' => 'yes',
 					),
 					array(
-						'title'   => __( 'User login option', 'user-registration' ),
+						'title'   => __( 'User Approval And Login Option', 'user-registration' ),
 						'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'      => 'user_registration_general_setting_login_options',
 						'type'    => 'select',

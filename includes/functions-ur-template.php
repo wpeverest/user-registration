@@ -264,6 +264,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
 			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
+		} elseif( isset( $args['tip'] ) ) {
+			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
 		}
 
 		$cl_html = '';
@@ -616,6 +618,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	 */
 	function user_registration_form_data( $user_id = 0, $form_id = 0 ) {
 		$all_meta_value = get_user_meta( $user_id );
+		$user_details   = get_user_by( 'ID', $user_id );
+		$user_info      = (array) $user_details->data;
 		$fields         = array();
 
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
@@ -642,6 +646,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
 					$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
+					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -709,7 +715,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 						}
 
-						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
+						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : ( isset( $all_meta_value[ $field_name ][0] ) ? $all_meta_value[ $field_name ][0] : '' );
+						if ( empty( $extra_params['default'] ) ) {
+							$extra_params['default'] = isset( $user_info[ $field_name ] ) ? $user_info[ $field_name ] : '';
+						}
 
 						if ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 
@@ -735,6 +744,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						if ( count( $custom_attributes ) > 0 ) {
 							$extra_params['custom_attributes'] = $custom_attributes;
+						}
+
+						if ( isset( $field->advance_setting->validate_unique ) ) {
+							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
+							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {

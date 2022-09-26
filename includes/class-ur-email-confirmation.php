@@ -332,6 +332,7 @@ class UR_Email_Confirmation {
 
 			if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 				update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'false' );
+				update_user_meta( $user_id, 'ur_user_status', 0 );
 			}
 
 			// update user status when login using social connect.
@@ -342,6 +343,7 @@ class UR_Email_Confirmation {
 
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
+					update_user_meta( $user_id, 'ur_user_status', 0 );
 				}
 			}
 		}
