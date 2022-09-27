@@ -1521,6 +1521,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
 				<?php
+				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
 				$rc_counter++;
 		}
 
