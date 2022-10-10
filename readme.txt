@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.0.2
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,21 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.3    - 27/09/2022
+* Enhance  - Delete forms when plugin uninstalled. ​
+* Tweak    - Install pages notice when onboarding skipped​.
+* Tweak    - Display notice to select my account page in settings.​
+* Tweak    - Change text typo and grammatical mistake in settings labels.​
+* Dev      - Function to get all form fields added.​
+* Dev      - Trigger added for field removal in JS.​
+* Dev      - Trigger added for handling field error messages.​
+* Fix      - Number field accepting text inputs.​
+* Fix      - Tooltip not properly displayed in form settings.​
+* Fix      - My Account vertical layout nav width responsiveness.​
+* Fix      - Required field issue in edit profile when field is conditionally hidden.​
+* Fix      - One time draggable fields inside a row not reinitialized after deleting it.​
+* Fix      - User with email confirmed but not approved by admin are not shown as pending in users table.
 
 = 2.2.2    - 06/09/2022
 * Enhance  - Parse smart tag values in appropriate format to display​.
