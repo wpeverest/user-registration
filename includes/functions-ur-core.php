@@ -2481,6 +2481,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			}
 
 			$status['pluginName'] = $api->name;
+			$api->version = isset( $api->new_version ) ? $api->new_version : '1.0.0';
 
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
