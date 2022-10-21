@@ -1516,13 +1516,16 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 				'is_invisible'      => $invisible_recaptcha,
 			);
 
-			?>
+			if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+				?>
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
 					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
 				<?php
+			} else {
 				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
-				$rc_counter++;
+			}
+			$rc_counter++;
 		}
 
 		if ( 'v3' === $recaptcha_type ) {
