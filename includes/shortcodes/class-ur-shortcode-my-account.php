@@ -76,9 +76,11 @@ class UR_Shortcode_My_Account {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
 			}
 
+			$render_default = apply_filters( 'user_registration_my_account_render_default', true, $atts );
+
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				self::lost_password();
-			} else {
+			} elseif ( $render_default ) {
 				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 				$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 				ob_start();
@@ -111,6 +113,8 @@ class UR_Shortcode_My_Account {
 				} else {
 					echo $login_form; // phpcs:ignore
 				}
+			} else {
+				do_action( 'user_registration_my_account_custom_render' );
 			}
 		} else {
 
