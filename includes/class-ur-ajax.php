@@ -1144,7 +1144,7 @@ class UR_AJAX {
 
 		foreach ( $addons as $slug => $addon ) {
 
-			$plugin = 'user-registration-pro' === $slug ? $slug . '/' . 'user-registration.php' : $slug . '/' . $slug . '.php';
+			$plugin = 'user-registration-pro' === $slug ? $slug . '/user-registration.php' : $slug . '/' . $slug . '.php';
 
 			if ( is_plugin_active( $plugin ) ) {
 				$class        = 'active';
@@ -1159,7 +1159,7 @@ class UR_AJAX {
 				$activated    = false;
 			}
 
-			$output .= '<tr class="plugin-card-' . $slug . ' plugin ' . $parent_class . '" data-slug="' . $slug . '" data-plugin="' . $plugin .'" data-name="' . $addon . '">';
+			$output .= '<tr class="plugin-card-' . $slug . ' plugin ' . $parent_class . '" data-slug="' . $slug . '" data-plugin="' . $plugin . '" data-name="' . $addon . '">';
 			$output .= '<td class="plugin-name">' . $addon . '</td>';
 			$output .= '<td class="plugin-status"><span class="' . esc_attr( $class ) . '"></span></td>';
 			$output .= '</tr>';
@@ -1197,7 +1197,7 @@ class UR_AJAX {
 		}
 
 		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
-		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' );
+		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' ); // phpcs:ignore
 		$plugin = plugin_basename( sanitize_text_field( $plugin_slug ) );
 		$status = array(
 			'install' => 'plugin',

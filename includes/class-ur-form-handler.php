@@ -804,7 +804,6 @@ class UR_Form_Handler {
 			wp_remove_targeted_link_rel_filters();
 		}
 
-
 		$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
 		$form_data = array();
@@ -830,7 +829,7 @@ class UR_Form_Handler {
 			$forms = get_posts( $args );
 			foreach ( $forms as $key => $form_obj ) {
 				if ( $form_data->form_post->post_title === $form_obj->post_title ) {
-					$form_data->form_post->post_title = sanitize_text_field($title );
+					$form_data->form_post->post_title = sanitize_text_field( $title );
 					break;
 				}
 			}
