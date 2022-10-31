@@ -761,11 +761,14 @@ class UR_Form_Handler {
 
 
 		$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
 		$form_data = array();
 
 		if ( ! empty( $templates ) ) {
 			foreach ( $templates->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
+					error_log( print_r( json_decode( base64_decode( $template_data->settings ), true ), true ) );
+
 					$form_data = (object) json_decode( base64_decode( $template_data->settings ), true );
 				}
 			}
