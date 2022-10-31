@@ -148,7 +148,7 @@ jQuery(function ($) {
 
 			if ("blank" !== template.slug) {
 				html +=
-					'<div class="form-action"><a href="#" class="user-registration-btn user-registration-btn-primary ' +
+					'<div class="form-action"><a href="#" class="user-registration-btn button-primary ' +
 					modal +
 					'" data-licence-plan="' +
 					data_plan +
@@ -164,7 +164,7 @@ jQuery(function ($) {
 				html +=
 					'<a href="' +
 					template.preview_link +
-					'" target="_blank" class="user-registration-btn user-registration-btn-secondary">' +
+					'" target="_blank" class="user-registration-btn button-secondary ur-template-preview">' +
 					ur_templates.i18n_get_preview +
 					"</a></div>";
 			}
