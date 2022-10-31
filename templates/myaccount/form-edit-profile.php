@@ -123,7 +123,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									$found_field = false;
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
-										if ( !isset( $single_item->general_setting->field_name ) ) {
+										if ( ! isset( $single_item->general_setting->field_name ) ) {
 											continue;
 										}
 
@@ -140,7 +140,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
 
-										if( !isset( $single_item->general_setting->field_name  ) ) {
+										if ( ! isset( $single_item->general_setting->field_name ) ) {
 											continue;
 										}
 

@@ -516,7 +516,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$templates = self::get_template_data( $category );
 				$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-				wp_enqueue_script( 'ur-setup');
+				wp_enqueue_script( 'ur-setup' );
 				wp_localize_script(
 					'ur-setup',
 					'ur_setup_params',
@@ -541,7 +541,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					)
 				);
 
-				wp_enqueue_script( 'ur-template-controller');
+				wp_enqueue_script( 'ur-template-controller' );
 				wp_localize_script(
 					'ur-template-controller',
 					'ur_templates',
@@ -920,7 +920,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$template_data     = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
 				// Removing directory so the templates can be reinitialized.
-				$folder_path = untrailingslashit(plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
+				$folder_path = untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
 
 				foreach ( $template_data->templates as $template_tuple ) {
 					// We retrieve the image, then use them instead of the remote server.
@@ -938,7 +938,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 					// If it exists, utilize this file instead of remote file.
 					if ( $exists ) {
-						$template_tuple->image = plugin_dir_url(plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
+						$template_tuple->image = plugin_dir_url( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
 					}
 				}
 
