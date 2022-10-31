@@ -125,6 +125,12 @@ class UR_Admin_Notices {
 
 			$hide_notice = sanitize_text_field( wp_unslash( $_GET['ur-hide-notice'] ) );
 			self::remove_notice( $hide_notice );
+
+			// Remove the onboarding skipped checker if install notice is removed.
+			if ( 'install' === $hide_notice ) {
+				delete_option( 'user_registration_onboarding_skipped' );
+			}
+
 			do_action( 'user_registration_hide_' . $hide_notice . '_notice' );
 		}
 	}
@@ -167,28 +173,32 @@ class UR_Admin_Notices {
 			'user-registration-mailchimp',
 		);
 
+		$pages_to_exclude = apply_filters( 'user_registration_notice_excluded_pages', $pages_to_exclude );
+
 		// Return on other than user registraion builder page.
 		if ( empty( $_REQUEST['page'] ) || ! in_array( $_REQUEST['page'], $pages_to_exclude ) ) {
 			return;
 		}
 
 		foreach ( array( 'user_admin_notices', 'admin_notices', 'all_admin_notices' ) as $wp_notice ) {
+
 			if ( ! empty( $wp_filter[ $wp_notice ]->callbacks ) && is_array( $wp_filter[ $wp_notice ]->callbacks ) ) {
+
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
-
 						// Remove all notices if the page is form builder page.
 						if ( 'add-new-registration' === $_REQUEST['page'] ) {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 						} else {
 							// Remove all notices except user registration plugins notices.
-							if ( ! strstr( $name, 'user_registration_' ) ) {
-								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
-							} elseif ( strstr( $name, 'user_registration_error_notices' ) ) {
-
+							if ( strstr( $name, 'user_registration_error_notices' ) ) {
 								if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
 									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 								}
+							} else if ( str_contains( $name, 'user_registration_' ) || str_contains( $name, 'UR_Admin_Notices' ) ) {
+								continue;
+							} else {
+								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}
 						}
 					}

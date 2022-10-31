@@ -1760,7 +1760,7 @@
 														);
 														single_row.remove();
 														$this.check_grid();
-														URFormBuilder.manage_draggable_users_fields();
+														builder.manage_draggable_users_fields();
 
 														Swal.fire({
 															icon: "success",
@@ -2102,6 +2102,10 @@
 															removed_item +
 															'"]'
 													).remove();
+
+													$(document.body).trigger(
+														"ur_field_removed"
+														);
 
 													// To prevent click on whole item.
 													return false;

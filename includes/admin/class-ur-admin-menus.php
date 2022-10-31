@@ -502,6 +502,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
+			if ( isset( $_GET['onboarding-skipped'] ) ) {
+				update_option( 'user_registration_onboarding_skipped', true );
+			}
+
 			if ( isset( $_GET['edit-registration'] ) ) {
 				// Forms view.
 				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
@@ -554,6 +558,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				// Forms template area.
 				include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
 			}
+
+			// Forms view.
+			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 		}
 
 

@@ -292,6 +292,10 @@ class UR_Admin_Assets {
 					home_url()
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
+				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one uppercase letter', 'user-registration' ),
+				'user_registration_weak_password_info' => esc_html__( 'Minimum one uppercase letter and a number', 'user-registration' ),
+				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and a special character', 'user-registration' ),
+				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
 			);
 
 			wp_localize_script(
