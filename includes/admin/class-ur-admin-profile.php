@@ -198,16 +198,17 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									if ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
+											$option = ur_sanitize_tooltip( trim( $choice ) );
 											?>
 											<label><input type="checkbox"
 															name="<?php echo esc_attr( $key ); ?>[]"
 															id="<?php echo esc_attr( $key ); ?>"
-															value="<?php echo esc_attr( trim( $choice ) ); ?>"
+															value="<?php echo esc_attr( $option ); ?>"
 															class="<?php echo esc_attr( $field['class'] ); ?>"
 																			  <?php
-																				if ( is_array( $value ) && in_array( trim( $choice ), $value ) ) {
+																				if ( is_array( $value ) && in_array( $option, $value ) ) {
 																					echo 'checked="checked"';
-																				} elseif ( $value == $choice ) {
+																				} elseif ( $value == $option ) {
 																					echo 'checked="checked"';
 																				}
 																				?>
