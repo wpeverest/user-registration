@@ -1,7 +1,8 @@
 <?php
 /**
- * @package  UserRegistration/Form/Views/Admin/Checkbox
  * Form View: Input Type Checkbox
+ *
+ * @package  UserRegistration/Form/Views/Admin/Checkbox
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
