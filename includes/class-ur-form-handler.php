@@ -811,8 +811,6 @@ class UR_Form_Handler {
 		if ( ! empty( $templates ) ) {
 			foreach ( $templates->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
-					error_log( print_r( json_decode( base64_decode( $template_data->settings ), true ), true ) );
-
 					$form_data = (object) json_decode( base64_decode( $template_data->settings ), true );
 				}
 			}
