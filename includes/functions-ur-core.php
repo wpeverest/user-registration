@@ -950,7 +950,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 		'setting_data' => array(
 			array(
-				'label'             => __( 'User login option', 'user-registration' ),
+				'label'             => __( 'User Approval And Login Option', 'user-registration' ),
 				'description'       => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_login_options',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
@@ -1018,12 +1018,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'text',
 				'label'             => __( 'Redirect URL', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_redirect_options',
-				'description'       => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
-				'tip'               => __( 'URL to redirect to after registration.', 'user-registration' ),
+				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -1517,12 +1516,16 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 				'is_invisible'      => $invisible_recaptcha,
 			);
 
-			?>
+			if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+				?>
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
 					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
 				<?php
-				$rc_counter++;
+			} else {
+				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
+			}
+			$rc_counter++;
 		}
 
 		if ( 'v3' === $recaptcha_type ) {
@@ -2481,6 +2484,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			}
 
 			$status['pluginName'] = $api->name;
+			$api->version = isset( $api->new_version ) ? $api->new_version : '1.0.0';
 
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
@@ -2692,5 +2696,69 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		}
 
 		return $field_value;
+	}
+}
+
+add_action( 'admin_init', 'user_registration_install_pages_notice' );
+
+if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
+	/**
+	 * Display install pages notice if the user has skipped getting started.
+	 *
+	 * @since 2.2.3
+	 */
+	function user_registration_install_pages_notice() {
+
+		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
+			UR_Admin_Notices::add_notice( 'install' );
+		}
+
+		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore
+			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore
+		} else {
+			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
+		}
+
+		$matched         = 0;
+		$myaccount_page  = array();
+
+		if ( $my_account_page ) {
+			$myaccount_page = get_post( $my_account_page );
+		}
+
+		if ( ! empty( $myaccount_page ) ) {
+			$shortcodes = parse_blocks( $myaccount_page->post_content );
+			foreach ( $shortcodes as $shortcode ) {
+				if ( ! empty( $shortcode['blockName'] ) ) {
+					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
+						$matched = 1;
+						break;
+					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
+						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+						if ( 1 > absint( $matched ) ) {
+							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+						}
+						if ( 0 < absint( $matched ) ) {
+							break;
+						}
+					}
+				} else {
+					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+					if ( 1 > absint( $matched ) ) {
+						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+					}
+					if ( 0 < absint( $matched ) ) {
+						break;
+					}
+				}
+			}
+		}
+
+		if ( 0 === $matched ) {
+			$message = 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="' . admin_url() . '/admin.php?page=user-registration-settings#user_registration_myaccount_page_id" style="text-decoration:none;">My Account Page</a> )';
+			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
+		} else {
+			UR_Admin_Notices::remove_notice( 'select_my_account' );
+		}
 	}
 }
