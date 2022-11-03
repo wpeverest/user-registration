@@ -126,7 +126,7 @@
 						.removeClass(
 							"install-now installed button-disabled updated-message"
 						)
-						.addClass("activate-now button-primary")
+						.addClass("activate-now")
 						.attr("href", response.activateUrl);
 
 					if ("plugins-network" === pagenow) {
@@ -524,7 +524,7 @@ jQuery(function ($) {
 				templateName = $this.data("template-name-raw"),
 				formName = "",
 				button =
-					'<a href="#" class="user-registration-btn button-primary user-registration-template-continue">' +
+					'<a href="#" class="user-registration-btn user-registration-template-continue">' +
 					ur_setup_params.i18n_form_ok +
 					"</a>",
 				namePrompt = "";
@@ -587,7 +587,7 @@ jQuery(function ($) {
 							button = ur_setup_params.i18n_install_only;
 						}
 						var installButton =
-							'<a href="#" class="user-registration-btn button-primary user-registration-template-install-addon">' +
+							'<a href="#" class="user-registration-btn user-registration-template-install-addon">' +
 							button +
 							"</a>";
 						$(".user-registration-template-addons").append(
@@ -625,7 +625,6 @@ jQuery(function ($) {
 					.remove();
 			}
 
-			console.log(button);
 			namePrompt += "<h3>" + ur_setup_params.i18n_form_name + "</h3>";
 
 			var templateNameError = false;
@@ -706,10 +705,18 @@ jQuery(function ($) {
 							window.location.href = response.data.redirect;
 						} else {
 							$(".user-registartion-setup-name").focus();
-							window.console.log(response);
+							Swal.fire({
+								icon: "error",
+								title: "Oops...",
+								text: response.data.error,
+							});
 						}
 					}).fail(function (xhr) {
-						window.console.log(xhr.responseText);
+						Swal.fire({
+							icon: "error",
+							title: "Oops...",
+							text: xhr.responseText,
+						});
 					});
 				}
 			});

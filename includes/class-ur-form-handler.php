@@ -811,49 +811,59 @@ class UR_Form_Handler {
 		if ( ! empty( $templates ) ) {
 			foreach ( $templates->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
-					$form_data = (object) json_decode( base64_decode( $template_data->settings ), true );
+					$form_data = json_decode( base64_decode( $template_data->settings ), true );
 				}
 			}
 		}
 
-		$form_id = 0;
-
 		// check for non empty post data array.
-		if ( ! empty( $form_data->form_post ) ) {
-			$form_data->form_post = (object) $form_data->form_post;
+		$form_data['form_post'] = isset( $form_data['form_post'] ) ? $form_data['form_post'] : array();
+		$form_data['form_post'] = ( object ) $form_data['form_post'];
 
-			// If Form Title already exist concat it with imported tag.
-			$args  = array( 'post_type' => 'user_registration' );
-			$forms = get_posts( $args );
-			foreach ( $forms as $key => $form_obj ) {
-				if ( $form_data->form_post->post_title === $form_obj->post_title ) {
-					$form_data->form_post->post_title = sanitize_text_field( $title );
-					break;
-				}
+		$form_data = (object) $form_data;
+
+		// If Form Title already exist concat it with imported tag.
+		$args  = array( 'post_type' => 'user_registration' );
+		$forms = get_posts( $args );
+		foreach ( $forms as $key => $form_obj ) {
+			if ( isset( $form_data->form_post->post_title ) && ( $form_data->form_post->post_title === $form_obj->post_title ) ) {
+				$form_data->form_post->post_title = sanitize_text_field( $title );
+				break;
 			}
+		}
 
-			$form_id = wp_insert_post( $form_data->form_post );
+		if( empty( (array) $form_data->form_post ) ){
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
+			$form_data->form_post = array(
+				'post_type'      => 'user_registration',
+				'post_title'     => $title,
+				'post_content'   => $post_content,
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			);
+		}
 
-			// Check for any error while inserting.
-			if ( is_wp_error( $form_id ) ) {
-				return $form_id;
-			}
-			if ( $form_id ) {
+		$form_id = wp_insert_post( $form_data->form_post );
 
-				// check for non empty post_meta array.
-				if ( ! empty( $form_data->form_post_meta ) ) {
-					$form_data->form_post_meta = (object) $form_data->form_post_meta;
+		// Check for any error while inserting.
+		if ( is_wp_error( $form_id ) ) {
+			return $form_id;
+		}
+		if ( $form_id ) {
 
-					$all_roles = ur_get_default_admin_roles();
+			// check for non empty post_meta array.
+			if ( ! empty( $form_data->form_post_meta ) ) {
+				$form_data->form_post_meta = (object) $form_data->form_post_meta;
 
-					foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+				$all_roles = ur_get_default_admin_roles();
 
-						// If user role does not exists in new site then set default as subscriber.
-						if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
-							$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
-						}
-						add_post_meta( $form_id, $meta_key, $meta_value );
+				foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+
+					// If user role does not exists in new site then set default as subscriber.
+					if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
+						$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
 					}
+					add_post_meta( $form_id, $meta_key, $meta_value );
 				}
 			}
 		}
