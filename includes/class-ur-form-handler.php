@@ -818,7 +818,7 @@ class UR_Form_Handler {
 
 		// check for non empty post data array.
 		$form_data['form_post'] = isset( $form_data['form_post'] ) ? $form_data['form_post'] : array();
-		$form_data['form_post'] = ( object ) $form_data['form_post'];
+		$form_data['form_post'] = (object) $form_data['form_post'];
 
 		$form_data = (object) $form_data;
 
@@ -832,7 +832,9 @@ class UR_Form_Handler {
 			}
 		}
 
-		if( empty( (array) $form_data->form_post ) ){
+		$form_content = (array) $form_data->form_post;
+
+		if ( empty( $form_content ) ) {
 			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
 			$form_data->form_post = array(
 				'post_type'      => 'user_registration',

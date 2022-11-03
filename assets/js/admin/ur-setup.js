@@ -2,6 +2,7 @@
 	var $document = $(document);
 	(__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf);
 
+	$(".user-registration__wrap.ur-form-container").remove();
 	/**
 	 * Sends an Ajax request to the server to install a extension.
 	 *
