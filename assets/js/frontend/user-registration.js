@@ -565,6 +565,16 @@
 											.after(error_message);
 									}
 
+									$(document).trigger(
+										"user_registration_frontend_validate_before_form_submit",
+										[$this]
+									);
+									if (
+										$this.find(".user-registration-error")
+											.length > 0
+									) {
+										return;
+									}
 									if (!$this.valid()) {
 										return;
 									}
