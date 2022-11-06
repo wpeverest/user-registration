@@ -812,6 +812,7 @@ class UR_Form_Handler {
 			foreach ( $templates->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
 					$form_data = json_decode( base64_decode( $template_data->settings ), true );
+					$form_data['form_post']['post_title'] = $title;
 				}
 			}
 		}
