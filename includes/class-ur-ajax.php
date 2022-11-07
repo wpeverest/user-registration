@@ -919,6 +919,8 @@ class UR_AJAX {
 
 		foreach ( $array as $key => &$value ) {
 
+			$field_key = '';
+
 			if ( 'field_key' === $key ) {
 				$field_key = $value;
 			}
