@@ -23,7 +23,7 @@ class UR_AJAX {
 	 *
 	 * @var array
 	 */
-	private static $field_key_aray    = array();
+	private static $field_key_aray = array();
 	/**
 	 * Check whether is field key pass
 	 *
@@ -35,7 +35,7 @@ class UR_AJAX {
 	 *
 	 * @var array
 	 */
-	private static $failed_key_value  = array();
+	private static $failed_key_value = array();
 
 	/**
 	 * Initialization of ajax.
@@ -98,20 +98,20 @@ class UR_AJAX {
 			);
 		}
 
-		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
-		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
-		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
-		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$form_id             = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$nonce               = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
+		$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
+		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$recaptcha_enabled   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data       = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data       = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -122,13 +122,13 @@ class UR_AJAX {
 					}
 				} else {
 					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
 					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
@@ -530,12 +530,12 @@ class UR_AJAX {
 	public static function ajax_login_submit() {
 		// Custom error messages.
 		$messages = array(
-			'empty_username'       => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
-			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
-			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
-			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
-			'pending_approval'     => get_option( 'user_registration_message_pending_approval', null ),
-			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
+			'empty_username'   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_password'   => get_option( 'user_registration_message_empty_password', null ),
+			'invalid_username' => get_option( 'user_registration_message_invalid_username', null ),
+			'unknown_email'    => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
+			'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
+			'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 		);
 
 		check_ajax_referer( 'ur_login_form_save_nonce', 'security' );
@@ -553,21 +553,21 @@ class UR_AJAX {
 			);
 		}
 
-		$info = array();
-		$info['user_login'] = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
+		$info                  = array();
+		$info['user_login']    = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
 		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : ''; //phpcs:ignore
-		$info['remember'] = isset( $_POST['rememberme'] );
-		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+		$info['remember']      = isset( $_POST['rememberme'] );
+		$captcha_response      = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
+		$recaptcha_enabled     = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_type        = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data       = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data       = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -578,13 +578,13 @@ class UR_AJAX {
 					}
 				} else {
 					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
 					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
@@ -609,10 +609,10 @@ class UR_AJAX {
 
 		// To check the specific login.
 		if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data = get_user_by( 'email', $info['user_login'] );
+			$user_data          = get_user_by( 'email', $info['user_login'] );
 			$info['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $info['user_login'] );
 		} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data = get_user_by( 'login', $info['user_login'] );
+			$user_data          = get_user_by( 'login', $info['user_login'] );
 			$info['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $info['user_login'] );
 		} else {
 			$info['user_login'] = $info['user_login'];
@@ -919,7 +919,24 @@ class UR_AJAX {
 
 		foreach ( $array as $key => &$value ) {
 
-			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
+			$field_key = '';
+
+			if ( 'field_key' === $key ) {
+				$field_key = $value;
+			}
+
+			if ( 'checkbox' === $field_key ) {
+
+				if ( gettype( $value ) == 'object' ) {
+
+					if ( isset( $value->options ) && is_array( $value->options ) && ! empty( $value->options ) ) {
+						foreach ( $value->options as $index => $option_value ) {
+							$option_value = str_replace( '"', "'", $option_value );
+							$option_value = wp_kses_post( $option_value );
+						}
+					}
+				}
+			} elseif ( is_array( $value ) || gettype( $value ) == 'object' ) {
 				self::sweep_array( $value );
 
 			} else {
@@ -943,14 +960,14 @@ class UR_AJAX {
 					$value = wp_kses(
 						$value,
 						array(
-							'a'      => array(
+							'a'          => array(
 								'href'   => array(),
 								'title'  => array(),
 								'target' => array(),
 							),
-							'br'     => array(),
-							'em'     => array(),
-							'strong' => array(),
+							'br'         => array(),
+							'em'         => array(),
+							'strong'     => array(),
 							'u'          => array(),
 							'i'          => array(),
 							'q'          => array(),
@@ -966,12 +983,12 @@ class UR_AJAX {
 							'div'        => array(),
 							'span'       => array(),
 							'p'          => array(),
-							'h1'          => array(),
-							'h2'          => array(),
-							'h3'          => array(),
-							'h4'          => array(),
-							'h5'          => array(),
-							'h6'          => array(),
+							'h1'         => array(),
+							'h2'         => array(),
+							'h3'         => array(),
+							'h4'         => array(),
+							'h5'         => array(),
+							'h6'         => array(),
 						)
 					);
 
@@ -981,7 +998,7 @@ class UR_AJAX {
 						$value = wp_kses_post( $value );
 					}
 				} else {
-					$value = sanitize_text_field( $value );
+						$value = sanitize_text_field( $value );
 				}
 			}
 		}

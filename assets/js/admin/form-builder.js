@@ -3214,6 +3214,10 @@
 
 				for (var i = 0; i < array_value.length; i++) {
 					if (array_value[i] !== "") {
+						array_value[i].value = array_value[i].value.replaceAll(
+							'"',
+							"'"
+						);
 						checkbox.append(
 							'<label><input value="' +
 								array_value[i].value.trim() +
@@ -3430,7 +3434,11 @@
 					)
 					.removeAttr("selected");
 
-				wrapper.find(".ur-label").find("label").find("span:contains(*)").remove();
+				wrapper
+					.find(".ur-label")
+					.find("label")
+					.find("span:contains(*)")
+					.remove();
 
 				if ($label.val() === "yes") {
 					wrapper
