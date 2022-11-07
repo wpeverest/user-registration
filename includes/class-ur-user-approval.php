@@ -264,7 +264,11 @@ class UR_User_Approval {
 			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
 
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
+			$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
+			if ( ! empty( $message ) ) {
+				return new WP_Error( 'user_payment_pending', $message );
+			}
 			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
 
 				$user_id      = $user->ID;
