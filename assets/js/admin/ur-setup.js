@@ -643,7 +643,7 @@ jQuery(function ($) {
 				showCloseButton: true,
 				allowOutsideClick: false,
 				confirmButtonText: button,
-				inputValidator: (value) => {
+				inputValidator: function(value) {
 					if (
 						$(".user-registration-template-install-addon").length >
 						0
