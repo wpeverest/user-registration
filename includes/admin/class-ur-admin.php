@@ -31,6 +31,7 @@ class UR_Admin {
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
+		add_action( 'admin_init', array( $this, 'template_actions' ) );
 	}
 
 	/**
@@ -382,6 +383,30 @@ class UR_Admin {
 		if ( '1' === get_option( 'user_registration_first_time_activation_flag' ) ) {
 			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
 			exit;
+		}
+	}
+
+	/**
+	 * Handle redirects after template refresh.
+	 */
+	public function template_actions() {
+		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
+			$action        = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$templatres = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+			if ( 'ur-template-refresh' === $action && ! empty( $templatres ) ) {
+				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
+					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
+				}
+
+				foreach ( array( 'ur_pro_license_plan', 'ur_template_section_list' ) as $transient ) {
+					delete_transient( $transient );
+				}
+
+				// Redirect to the builder page normally.
+				wp_safe_redirect( admin_url( 'admin.php?page=add-new-registration' ) );
+				exit;
+			}
 		}
 	}
 }

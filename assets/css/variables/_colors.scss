@@ -18,6 +18,8 @@ $black: #000;
 // Gray Shades
 $white: #ffffff;
 $gray_base: #2d3559;
+$color_gray-lighten:			#cdd0d8;
+$color_gray-more-lighten:		#e9ebf1;
 $color_gray_one: adjust-color(
 	$gray_base,
 	$saturation: -11%,

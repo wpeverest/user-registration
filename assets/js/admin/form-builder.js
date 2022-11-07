@@ -122,10 +122,16 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var isTemplatePage = $(".user-registration-setup").length;
+
+					var previousPage = document.referrer.split("page=")[1];
 
 					if (
 						"add-new-registration" === urPage &&
-						null === isEditPage
+						(null === isEditPage ||
+							(null !== isEditPage &&
+								"add-new-registration" === previousPage)) &&
+						0 === isTemplatePage
 					) {
 						URFormBuilder.ur_show_help();
 					}
@@ -2103,7 +2109,7 @@
 
 													$(document.body).trigger(
 														"ur_field_removed"
-														);
+													);
 
 													// To prevent click on whole item.
 													return false;

@@ -139,7 +139,6 @@ class UR_Admin_Import_Export_Forms {
 
 				// read json file.
 				$form_data = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) ); // @codingStandardsIgnoreLine
-
 				// check for non empty json file.
 				if ( ! empty( $form_data ) ) {
 
