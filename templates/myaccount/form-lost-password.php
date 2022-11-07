@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ur_print_notices(); ?>
 
 <div class="ur-frontend-form login" id="ur-frontend-form">
-	<form method="post" class="user-registration-ResetPassword lost_reset_password">
+	<form method="post" class="user-registration-ResetPassword ur_lost_reset_password">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<p><?php echo esc_html( apply_filters( 'user_registration_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'user-registration' ) ) ); ?></p>

@@ -106,7 +106,7 @@ class UR_Frontend_Form_Handler {
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( wp_unslash( $_POST['ur_stripe_payment_method'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
@@ -127,7 +127,7 @@ class UR_Frontend_Form_Handler {
 				$success_params['form_login_option']       = $login_option;
 				$success_params                            = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) && 'ideal' === sanitize_text_field( wp_unslash( $_POST['ur_stripe_payment_method'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 					wp_send_json_success( $success_params );
 				} else {
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
@@ -319,7 +319,6 @@ class UR_Frontend_Form_Handler {
 				case 'display_name':
 				case 'text':
 				case 'radio':
-				case 'checkbox':
 				case 'privacy_policy':
 				case 'mailchimp':
 				case 'mailerlite':
@@ -329,6 +328,8 @@ class UR_Frontend_Form_Handler {
 				case 'date':
 					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
+				case 'checkbox':
+					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';
 			}
 		}
 		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );

@@ -565,6 +565,16 @@
 											.after(error_message);
 									}
 
+									$(document).trigger(
+										"user_registration_frontend_validate_before_form_submit",
+										[$this]
+									);
+									if (
+										$this.find(".user-registration-error")
+											.length > 0
+									) {
+										return;
+									}
 									if (!$this.valid()) {
 										return;
 									}
@@ -682,18 +692,19 @@
 										async: true,
 										complete: function (ajax_response) {
 											var ajaxFlag = [];
-											ajaxFlag["status"] = false;
+											ajaxFlag["status"] = true;
 											$(document).trigger(
 												"user_registration_frontend_before_ajax_complete_success_message",
-												[ajax_response, ajaxFlag]
+												[ajax_response, ajaxFlag, $this]
 											);
-											if (!ajaxFlag["status"]) {
+											if (ajaxFlag["status"]) {
 												$this
 													.find(".ur-submit-button")
 													.find("span")
 													.removeClass(
 														"ur-front-spinner"
 													);
+
 												var redirect_url = $this
 													.find(
 														'input[name="ur-redirect-url"]'

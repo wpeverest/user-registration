@@ -1516,13 +1516,16 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = 'no' ) {
 				'is_invisible'      => $invisible_recaptcha,
 			);
 
-			?>
+			if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+				?>
 				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
 					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
 				</script>
 				<?php
+			} else {
 				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
-				$rc_counter++;
+			}
+			$rc_counter++;
 		}
 
 		if ( 'v3' === $recaptcha_type ) {
@@ -2481,6 +2484,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			}
 
 			$status['pluginName'] = $api->name;
+			$api->version = isset( $api->new_version ) ? $api->new_version : '1.0.0';
 
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
@@ -2756,5 +2760,87 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_license_plan' ) ) {
+
+	/**
+	 * Get a license plan.
+	 *
+	 * @return bool|string Plan on success, false on failure.
+	 * @since  2.2.4
+	 */
+	function ur_get_license_plan() {
+		$license_key = get_option( 'user-registration_license_key' );
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( $license_key && is_plugin_active( 'user-registration/user-registration.php' ) ) {
+			$license_data = get_transient( 'ur_pro_license_plan' );
+
+			if ( false === $license_data ) {
+				$license_data = json_decode(
+					UR_Updater_Key_API::check(
+						array(
+							'license' => $license_key,
+						)
+					)
+				);
+
+				if ( ! empty( $license_data->item_name ) ) {
+					$license_data->item_plan = strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) );
+					set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
+				}
+			}
+
+			return isset( $license_data->item_plan ) ? $license_data->item_plan : false;
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'ur_get_json_file_contents' ) ) {
+
+	/**
+	 * UR Get json file contents.
+	 *
+	 * @param mixed $file File path.
+	 * @param mixed $to_array Returned data in array.
+	 * @since  2.2.4
+	 */
+	function ur_get_json_file_contents( $file, $to_array = false ) {
+		if ( $to_array ) {
+			return json_decode( ur_file_get_contents( $file ), true );
+		}
+		return json_decode( ur_file_get_contents( $file ) );
+	}
+}
+
+if ( ! function_exists( 'ur_file_get_contents' ) ) {
+
+	/**
+	 * UR file get contents.
+	 *
+	 * @param mixed $file File path.
+	 * @since  2.2.4
+	 */
+	function ur_file_get_contents( $file ) {
+
+		if ( $file ) {
+			global $wp_filesystem;
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+			$local_file = preg_replace( '/\\\\|\/\//', '/', plugin_dir_path( UR_PLUGIN_FILE ) . $file );
+
+			if ( $wp_filesystem->exists( $local_file ) ) {
+				$response = $wp_filesystem->get_contents( $local_file );
+				return $response;
+			}
+		}
+		return;
 	}
 }

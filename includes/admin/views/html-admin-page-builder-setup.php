@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <div id="user-registration-welcome" >
-	<div class="evuser-registration-welcome-header">
-		<div class="evuser-registration-welcome-header__logo-wrap">
-			<div class="evuser-registration-welcome-header__logo-icon">
+	<div class="user-registration-welcome-header">
+		<div class="user-registration-welcome-header__logo-wrap">
+			<div class="user-registration-welcome-header__logo-icon">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.88,3l1.37,2.25H15.89L14.52,3ZM21,21H1L12,3.15l6.84,11.11H10.6L12,12H14.8L12,7.43,5,18.74H21.58L23,21ZM18.64,9.77,17.27,7.53h4.36L23,9.77Z"/></svg>
 			</div>
 			<span><?php esc_html_e( 'Getting Started', 'user-registration' ); ?></span>
@@ -54,5 +54,3 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 	</div>
 </div>
-
-<?php

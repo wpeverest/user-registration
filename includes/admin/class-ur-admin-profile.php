@@ -198,20 +198,21 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									if ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
+											$option = ur_sanitize_tooltip( trim( $choice ) );
 											?>
 											<label><input type="checkbox"
 															name="<?php echo esc_attr( $key ); ?>[]"
 															id="<?php echo esc_attr( $key ); ?>"
-															value="<?php echo esc_attr( trim( $choice ) ); ?>"
+															value="<?php echo esc_attr( $option ); ?>"
 															class="<?php echo esc_attr( $field['class'] ); ?>"
 																			  <?php
-																				if ( is_array( $value ) && in_array( trim( $choice ), $value ) ) {
+																				if ( is_array( $value ) && in_array( $option, $value ) ) {
 																					echo 'checked="checked"';
-																				} elseif ( $value == $choice ) {
+																				} elseif ( $value == $option ) {
 																					echo 'checked="checked"';
 																				}
 																				?>
-											 ><?php echo esc_html( trim( $choice ) ); ?></label><br/>
+											 ><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
 											<?php
 										}
 									} else {
@@ -258,6 +259,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   value="<?php echo esc_attr( $actual_value ); ?>"
 										   class="regular-text"
 										   data-id = '<?php echo esc_attr( $key ); ?>'
+										   <?php echo $attribute_string; //phpcs:ignore?>
 										   readonly />
 										   <input type="hidden" id="formated_date" value="<?php echo esc_attr( $value ); ?>"/>
 										   <input type="text" name="<?php echo esc_attr( $key ); ?>"
@@ -265,7 +267,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										   value="<?php echo esc_attr( $value ); ?>"
 										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 										   style="display:none"
-												  <?php echo esc_attr( $attribute_string ); ?>
+												  <?php echo $attribute_string; //phpcs:ignore?>
 											/>
 
 												  <?php
