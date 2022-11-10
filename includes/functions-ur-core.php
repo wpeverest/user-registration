@@ -1607,22 +1607,23 @@ function ur_get_meta_key_label( $form_id ) {
  * @return array
  */
 function ur_get_user_extra_fields( $user_id ) {
-
-	global $wpdb;
 	$name_value        = array();
-	$user_extra_fields = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key LIKE 'user_registration\_%' AND user_id = " . $user_id . ' ;' ); // phpcs:ignore
 
-	foreach ( $user_extra_fields as $extra_field ) {
+	$admin_profile = new UR_Admin_Profile();
+	$extra_data = $admin_profile->get_user_meta_by_form_fields( $user_id );
+	$form_fields = array_column( $extra_data, 'fields' )[0];
 
-		// Get meta key remove user_registration_ from the beginning.
-		$key   = isset( $extra_field->meta_key ) ? substr( $extra_field->meta_key, 18 ) : '';
-		$value = isset( $extra_field->meta_value ) ? $extra_field->meta_value : '';
+	foreach( $form_fields as $field_key => $field_data ) {
+		$value = get_user_meta( $user_id, $field_key, true );
+		$field_key = str_replace( 'user_registration_', '', $field_key );
 
 		if ( is_serialized( $value ) ) {
 			$value = unserialize( $value );
 			$value = implode( ',', $value );
 		}
-			$name_value[ $key ] = $value;
+
+		$name_value[ $field_key ] = $value;
+
 	}
 
 	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
