@@ -277,7 +277,7 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.2.4    - 09/11/2022
+= 2.2.4    - 10/11/2022
 * Feature  - Form Templates.
 * Enhance  - Support links on the checkbox field option.
 * Dev      - Stripe Addon Refactor Compatibility.
