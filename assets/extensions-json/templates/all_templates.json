@@ -16,7 +16,6 @@
     "excerpt": "",
     "preview_link": "https://demo.wpeverest.com/user-registration/ad-submission-form/",
     "plan" : [
-      "personal",
       "plus",
       "professional"
     ],
@@ -28,7 +27,8 @@
     ],
     "addons": {
       "user-registration-pro": "User Registration Pro",
-      "user-registration-file-upload": "User Registration File Upload"
+      "user-registration-file-upload": "User Registration File Upload",
+      "user-registration-multi-part": "User Registration Multi Part"
     }
   },
   {
@@ -86,7 +86,6 @@
     "excerpt": "",
     "preview_link": "https://demo.wpeverest.com/user-registration/car-race-registration-form/",
     "plan" : [
-      "personal",
       "plus",
       "professional"
     ],

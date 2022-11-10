@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.0.2
-Stable tag: 2.2.3
+Tested up to: 6.1
+Stable tag: 2.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,18 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.4    - 10/11/2022
+* Feature  - Form Templates.
+* Enhance  - Support links on the checkbox field option.
+* Dev      - Stripe Addon Refactor Compatibility.
+* Dev      - Two Factor Authentication Addon Compatibility.
+* Tweak    - Add page state for user registration my account page.
+* Fix      - Localize reCAPTCHA script conditionally.
+* Fix      - Date not fetched in proper format in admin edit profile.
+* Fix      - Undefined index version while entering and activating license.
+* Fix      - Disable Default WordPress Login Screen not working on custom login page.
+* Fix      - WooCommerce password strength meter conflicting with reset password page.
 
 = 2.2.3    - 27/09/2022
 * Enhance  - Delete forms when plugin uninstalled. ​

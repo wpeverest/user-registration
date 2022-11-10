@@ -569,12 +569,24 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
+
 									if (
-										$this.find(".user-registration-error")
-											.length > 0
+										$this
+											.find(
+												"#user_registration_stripe_gateway"
+											)
+											.find(".user-registration-error")
+											.length > 0 &&
+										$this
+											.find(
+												"#user_registration_stripe_gateway"
+											)
+											.find(".user-registration-error")
+											.is(":visible")
 									) {
 										return;
 									}
+
 									if (!$this.valid()) {
 										return;
 									}

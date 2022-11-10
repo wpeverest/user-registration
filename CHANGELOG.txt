@@ -1,3 +1,15 @@
+= 2.2.4    - 10/11/2022
+* Feature  - Form Templates.
+* Enhance  - Support links on the checkbox field option.
+* Dev      - Stripe Addon Refactor Compatibility.
+* Dev      - Two Factor Authentication Addon Compatibility.
+* Tweak    - Add page state for user registration my account page.
+* Fix      - Localize reCAPTCHA script conditionally.
+* Fix      - Date not fetched in proper format in admin edit profile.
+* Fix      - Undefined index version while entering and activating license.
+* Fix      - Disable Default WordPress Login Screen not working on custom login page.
+* Fix      - WooCommerce password strength meter conflicting with reset password page.
+
 = 2.2.3    - 27/09/2022
 * Enhance  - Delete forms when plugin uninstalled. ​
 * Tweak    - Install pages notice when onboarding skipped​.
