@@ -1,3 +1,7 @@
+= 2.2.4.1  - 14/11/2022
+* Fix      - Security issue in profile picture upload.
+* Tweak    - Parse user extra information according to form fields order.
+
 = 2.2.4    - 10/11/2022
 * Feature  - Form Templates.
 * Enhance  - Support links on the checkbox field option.
