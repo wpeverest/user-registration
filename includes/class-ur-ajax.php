@@ -398,7 +398,12 @@ class UR_AJAX {
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
-			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( $_REQUEST['valid_extension'] ) : ''; // phpcs:ignore
+			$valid_extensions = 'image/jpeg,image/jpg,image/gif,image/png';
+
+			$form_id    = ur_get_form_id_by_userid( $user_id );
+			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+
+			$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext            = array();
 

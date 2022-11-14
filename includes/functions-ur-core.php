@@ -2192,6 +2192,8 @@ function ur_get_field_data_by_field_name( $form_id, $field_name ) {
 				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) && $field->general_setting->field_name === $field_name ) {
 					$field_data = array(
 						'field_key' => $field->field_key,
+						'general_setting' => $field->general_setting,
+						'advance_setting' => $field->advance_setting,
 					);
 				}
 			}
