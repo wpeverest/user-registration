@@ -107,39 +107,59 @@ class UR_Form_Handler {
 					$file_name = wp_unique_filename( $upload_path, $upload['name'] );
 
 					$file_path = $upload_path . sanitize_file_name( $file_name );
+					// valid extension for image.
+					$valid_extensions     = 'image/jpeg,image/jpg,image/gif,image/png';
+					$form_id              = ur_get_form_id_by_userid( $user_id );
+					$field_data           = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+					$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+					$valid_extension_type = explode( ',', $valid_extensions );
+					$valid_ext            = array();
 
-					if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+					foreach ( $valid_extension_type as $key => $value ) {
+						$image_extension   = explode( '/', $value );
+						$valid_ext[ $key ] = $image_extension[1];
+					}
 
-						$attachment_id = wp_insert_attachment(
-							array(
-								'guid'           => $file_path,
-								'post_mime_type' => $file_ext,
-								'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
-								'post_content'   => '',
-								'post_status'    => 'inherit',
-							),
-							$file_path
-						);
+					$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
+					$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
 
-						if ( is_wp_error( $attachment_id ) ) {
-
-							wp_send_json_error(
-								array(
-
-									'message' => $attachment_id->get_error_message(),
-								)
-							);
-						}
-
-						include_once ABSPATH . 'wp-admin/includes/image.php';
-
-						// Generate and save the attachment metas into the database.
-						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
-
-						update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
-
+					// Validates if the uploaded file has the acceptable extension.
+					if ( ! in_array( $file_extension, $valid_ext ) ) {
+						ur_add_notice( __( 'Invalid file type, please contact with site administrator.', 'user-registration' ), 'error' );
 					} else {
-						ur_add_notice( 'File cannot be uploaded.', 'error' );
+						if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+
+							$attachment_id = wp_insert_attachment(
+								array(
+									'guid'           => $file_path,
+									'post_mime_type' => $file_ext,
+									'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+									'post_content'   => '',
+									'post_status'    => 'inherit',
+								),
+								$file_path
+							);
+
+							if ( is_wp_error( $attachment_id ) ) {
+
+								wp_send_json_error(
+									array(
+
+										'message' => $attachment_id->get_error_message(),
+									)
+								);
+							}
+
+							include_once ABSPATH . 'wp-admin/includes/image.php';
+
+							// Generate and save the attachment metas into the database.
+							wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+
+							update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+
+						} else {
+							ur_add_notice( 'File cannot be uploaded.', 'error' );
+						}
 					}
 				} elseif ( isset( $_FILES['profile-pic']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 
