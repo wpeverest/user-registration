@@ -2660,10 +2660,17 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		if ( strpos( $field_meta_key, 'user_registration_' ) ) {
 			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
 		}
-		$field_name = ur_get_field_data_by_field_name( ur_get_form_id_by_userid( get_current_user_id() ), $field_meta_key );
+
+		$user_id = isset( $_GET['user'] ) ? $_GET['user'] : get_current_user_id();
+
+		$form_id = isset( $_POST['form_id'] ) ? $_POST['form_id'] : ur_get_form_id_by_userid( $user_id );
+		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
 		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
 
 		switch ( $field_key ) {
+			case 'checkbox':
+				$field_value = ( is_array( $field_value ) && ! empty( $field_value) ) ? implode( ', ', $field_value ) : $field_value ;
+				break;
 			case 'country':
 				$countries   = UR_Form_Field_Country::get_instance()->get_country();
 				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
