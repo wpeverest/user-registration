@@ -84,7 +84,13 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) {
-					return __( 'Invalid username ! ', 'user-registration' );
+					$invalid_msg = get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) );
+
+					if ( ! empty( $invalid_msg ) ) {
+						return $invalid_msg;
+					} else {
+						return __( 'Invalid username !', 'user-registration' );
+					}
 				}
 			);
 		}
