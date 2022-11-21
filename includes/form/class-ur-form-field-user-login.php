@@ -87,7 +87,7 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 					$invalid_msg = get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) );
 
 					if ( empty( $invalid_msg ) ) {
-						$invalid_msg = __( 'Invalid username !', 'user-registration' );
+						$invalid_msg = esc_html__( 'Please enter a valid username.', 'user-registration' );
 					}
 
 					return $invalid_msg;
