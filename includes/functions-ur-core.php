@@ -1607,23 +1607,25 @@ function ur_get_meta_key_label( $form_id ) {
  * @return array
  */
 function ur_get_user_extra_fields( $user_id ) {
-	$name_value        = array();
+	$name_value = array();
 
 	$admin_profile = new UR_Admin_Profile();
-	$extra_data = $admin_profile->get_user_meta_by_form_fields( $user_id );
-	$form_fields = array_column( $extra_data, 'fields' )[0];
+	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
+	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore
 
-	foreach( $form_fields as $field_key => $field_data ) {
-		$value = get_user_meta( $user_id, $field_key, true );
-		$field_key = str_replace( 'user_registration_', '', $field_key );
+	if ( ! empty( $form_fields ) ) {
+		foreach ( $form_fields as $field_key => $field_data ) {
+			$value = get_user_meta( $user_id, $field_key, true );
+			$field_key = str_replace( 'user_registration_', '', $field_key );
 
-		if ( is_serialized( $value ) ) {
-			$value = unserialize( $value );
-			$value = implode( ',', $value );
+			if ( is_serialized( $value ) ) {
+				$value = unserialize( $value );
+				$value = implode( ',', $value );
+			}
+
+			$name_value[ $field_key ] = $value;
+
 		}
-
-		$name_value[ $field_key ] = $value;
-
 	}
 
 	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
@@ -2660,10 +2662,17 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		if ( strpos( $field_meta_key, 'user_registration_' ) ) {
 			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
 		}
-		$field_name = ur_get_field_data_by_field_name( ur_get_form_id_by_userid( get_current_user_id() ), $field_meta_key );
+
+		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
+		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore
+
+		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
 		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
 
 		switch ( $field_key ) {
+			case 'checkbox':
+				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
+				break;
 			case 'country':
 				$countries   = UR_Form_Field_Country::get_instance()->get_country();
 				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
@@ -2781,7 +2790,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key && is_plugin_active( 'user-registration/user-registration.php' ) ) {
+		if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 			$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( false === $license_data ) {

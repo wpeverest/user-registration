@@ -1665,8 +1665,6 @@ msgid "Site Key (reCAPTCHA v2)"
 msgstr ""
 
 #. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:69
 #: includes/admin/settings/class-ur-settings-integration.php:94
 #: includes/admin/settings/class-ur-settings-integration.php:130
@@ -1677,8 +1675,6 @@ msgstr ""
 msgid "Secret Key ( reCAPTCHA v2)"
 msgstr ""
 
-#. translators: %1$s - Google reCAPTCHA docs url
-#. translators: %1$s - Google reCAPTCHA docs url
 #. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-integration.php:82
 #: includes/admin/settings/class-ur-settings-integration.php:107
@@ -3002,12 +2998,6 @@ msgstr ""
 msgid "The provided license key could not be found. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
-#. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/class-ur-plugin-updater.php:366
 #: includes/functions-ur-core.php:2444

@@ -195,8 +195,8 @@ class UR_Admin_Notices {
 								if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
 									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 								}
-							} else if ( str_contains( $name, 'user_registration_' ) || str_contains( $name, 'UR_Admin_Notices' ) ) {
-								continue;
+							} else if ( strpos( $name, 'user_registration_' ) || strpos( $name, 'UR_Admin_Notices' ) ) {
+								break;
 							} else {
 								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}

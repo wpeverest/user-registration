@@ -1,3 +1,11 @@
+= 2.2.5    - 22/11/2022
+* Fix      - User Registration string translation issue.
+* Fix      - Auto approving users even when admin approval was enabled.
+* Fix      - Critical error while approving or updating user details by admin.
+* Fix      - Replace str_contains with strpos for compatibility below php version 8.
+* Fix      - Upgrade plan button in extensions page even when license was activated.
+* Dev      - Added trigger before redirect to another page after registration in JS.
+
 = 2.2.4.1  - 14/11/2022
 * Fix      - Security issue in profile picture upload.
 * Tweak    - Parse user extra information according to form fields order.
