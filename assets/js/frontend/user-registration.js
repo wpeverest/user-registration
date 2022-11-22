@@ -853,6 +853,10 @@
 																typeof redirect_url &&
 															redirect_url !== ""
 														) {
+															$(document).trigger(
+																"user_registration_frontend_before_redirect_url",
+																[redirect_url]
+															);
 															window.setTimeout(
 																function () {
 																	window.location =
@@ -869,6 +873,9 @@
 																response.data
 																	.auto_login
 															) {
+																$(document).trigger(
+																	"user_registration_frontend_before_auto_login"
+																);
 																location.reload();
 															}
 														}
