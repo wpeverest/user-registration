@@ -280,6 +280,7 @@ Yes, the plugin has a shortcode for the login form.
 = 2.2.5    - 22/11/2022
 * Fix      - User Registration string translation issue.
 * Fix      - Auto approving users even when admin approval was enabled.
+* Fix      - Default role set to administrator after getting started end.
 * Fix      - Critical error while approving or updating user details by admin.
 * Fix      - Replace str_contains with strpos for compatibility below php version 8.
 * Fix      - Upgrade plan button in extensions page even when license was activated.
