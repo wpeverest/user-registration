@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-22T09:11:54+00:00\n"
+"POT-Creation-Date: 2022-11-23T02:59:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -940,7 +940,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:27
 #: includes/admin/settings/class-ur-settings-general.php:69
 #: includes/admin/settings/class-ur-settings-general.php:360
-#: includes/RestApi/class-ur-rest-api.php:189
+#: includes/RestApi/class-ur-rest-api.php:194
 #: src/components/App.js:59
 msgid "General"
 msgstr ""
@@ -1053,12 +1053,12 @@ msgid "Frontend Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:74
-#: includes/RestApi/class-ur-rest-api.php:207
+#: includes/RestApi/class-ur-rest-api.php:212
 msgid "Prevent WP Dashboard Access"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:75
-#: includes/RestApi/class-ur-rest-api.php:208
+#: includes/RestApi/class-ur-rest-api.php:213
 msgid "Selected user roles will not be able to view and access the WP Dashboard area."
 msgstr ""
 
@@ -1092,12 +1092,12 @@ msgid "This option lets you choose the layout for the user registration my accou
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:120
-#: includes/RestApi/class-ur-rest-api.php:314
+#: includes/RestApi/class-ur-rest-api.php:319
 msgid "Horizontal"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:121
-#: includes/RestApi/class-ur-rest-api.php:315
+#: includes/RestApi/class-ur-rest-api.php:320
 msgid "Vertical"
 msgstr ""
 
@@ -1114,7 +1114,7 @@ msgid "Disable Profile Picture"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:135
-#: includes/RestApi/class-ur-rest-api.php:320
+#: includes/RestApi/class-ur-rest-api.php:325
 msgid "Check to disable profile picture in edit profile page."
 msgstr ""
 
@@ -1343,48 +1343,48 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:365
 #: includes/functions-ur-core.php:1083
-#: includes/RestApi/class-ur-rest-api.php:220
-#: includes/RestApi/class-ur-rest-api.php:267
+#: includes/RestApi/class-ur-rest-api.php:225
+#: includes/RestApi/class-ur-rest-api.php:272
 msgid "Form Template"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:366
-#: includes/RestApi/class-ur-rest-api.php:268
+#: includes/RestApi/class-ur-rest-api.php:273
 msgid "Choose the login form template."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:373
 #: includes/functions-ur-core.php:1090
-#: includes/RestApi/class-ur-rest-api.php:226
-#: includes/RestApi/class-ur-rest-api.php:273
+#: includes/RestApi/class-ur-rest-api.php:231
+#: includes/RestApi/class-ur-rest-api.php:278
 msgid "Default"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:374
 #: includes/functions-ur-core.php:1091
-#: includes/RestApi/class-ur-rest-api.php:227
-#: includes/RestApi/class-ur-rest-api.php:274
+#: includes/RestApi/class-ur-rest-api.php:232
+#: includes/RestApi/class-ur-rest-api.php:279
 msgid "Bordered"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:375
 #: includes/functions-ur-core.php:1092
-#: includes/RestApi/class-ur-rest-api.php:228
-#: includes/RestApi/class-ur-rest-api.php:275
+#: includes/RestApi/class-ur-rest-api.php:233
+#: includes/RestApi/class-ur-rest-api.php:280
 msgid "Flat"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:376
 #: includes/functions-ur-core.php:1093
-#: includes/RestApi/class-ur-rest-api.php:229
-#: includes/RestApi/class-ur-rest-api.php:276
+#: includes/RestApi/class-ur-rest-api.php:234
+#: includes/RestApi/class-ur-rest-api.php:281
 msgid "Rounded"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:377
 #: includes/functions-ur-core.php:1094
-#: includes/RestApi/class-ur-rest-api.php:230
-#: includes/RestApi/class-ur-rest-api.php:277
+#: includes/RestApi/class-ur-rest-api.php:235
+#: includes/RestApi/class-ur-rest-api.php:282
 msgid "Rounded Edge"
 msgstr ""
 
@@ -1425,7 +1425,7 @@ msgid "Enable Lost Password"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:424
-#: includes/RestApi/class-ur-rest-api.php:282
+#: includes/RestApi/class-ur-rest-api.php:287
 msgid "Check to enable/disable lost password."
 msgstr ""
 
@@ -1523,7 +1523,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:527
 #: includes/admin/settings/class-ur-settings-general.php:533
-#: includes/RestApi/class-ur-rest-api.php:264
+#: includes/RestApi/class-ur-rest-api.php:269
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
 #: src/components/App.js:81
@@ -2877,25 +2877,25 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:393
 #: includes/functions-ur-core.php:1008
-#: includes/RestApi/class-ur-rest-api.php:247
+#: includes/RestApi/class-ur-rest-api.php:252
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:394
 #: includes/functions-ur-core.php:1009
-#: includes/RestApi/class-ur-rest-api.php:248
+#: includes/RestApi/class-ur-rest-api.php:253
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:395
 #: includes/functions-ur-core.php:1010
-#: includes/RestApi/class-ur-rest-api.php:249
+#: includes/RestApi/class-ur-rest-api.php:254
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:396
 #: includes/functions-ur-core.php:1011
-#: includes/RestApi/class-ur-rest-api.php:250
+#: includes/RestApi/class-ur-rest-api.php:255
 msgid "Strong"
 msgstr ""
 
@@ -2908,25 +2908,25 @@ msgid "Hint: To make password stronger, use upper and lower case letters, number
 msgstr ""
 
 #: includes/class-ur-install.php:313
-#: includes/RestApi/class-ur-rest-api.php:151
+#: includes/RestApi/class-ur-rest-api.php:156
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
 #: includes/class-ur-install.php:314
-#: includes/RestApi/class-ur-rest-api.php:152
+#: includes/RestApi/class-ur-rest-api.php:157
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
 #: includes/class-ur-install.php:324
-#: includes/RestApi/class-ur-rest-api.php:144
+#: includes/RestApi/class-ur-rest-api.php:149
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
 #: includes/class-ur-install.php:325
-#: includes/RestApi/class-ur-rest-api.php:145
+#: includes/RestApi/class-ur-rest-api.php:150
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
@@ -3080,7 +3080,7 @@ msgid "Registrations"
 msgstr ""
 
 #: includes/class-ur-post-types.php:49
-#: includes/RestApi/class-ur-rest-api.php:217
+#: includes/RestApi/class-ur-rest-api.php:222
 #: src/components/App.js:70
 msgid "Registration"
 msgstr ""
@@ -4875,12 +4875,12 @@ msgid "Options"
 msgstr ""
 
 #: includes/functions-ur-core.php:953
-#: includes/RestApi/class-ur-rest-api.php:199
+#: includes/RestApi/class-ur-rest-api.php:204
 msgid "User Approval And Login Option"
 msgstr ""
 
 #: includes/functions-ur-core.php:954
-#: includes/RestApi/class-ur-rest-api.php:200
+#: includes/RestApi/class-ur-rest-api.php:205
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
@@ -4897,32 +4897,32 @@ msgid "Check to receive a link with token in email to approve the users directly
 msgstr ""
 
 #: includes/functions-ur-core.php:976
-#: includes/RestApi/class-ur-rest-api.php:254
+#: includes/RestApi/class-ur-rest-api.php:259
 msgid "Default User Role"
 msgstr ""
 
 #: includes/functions-ur-core.php:985
-#: includes/RestApi/class-ur-rest-api.php:255
+#: includes/RestApi/class-ur-rest-api.php:260
 msgid "Default role for the users registered through this form."
 msgstr ""
 
 #: includes/functions-ur-core.php:989
-#: includes/RestApi/class-ur-rest-api.php:234
+#: includes/RestApi/class-ur-rest-api.php:239
 msgid "Enable Strong Password"
 msgstr ""
 
 #: includes/functions-ur-core.php:997
-#: includes/RestApi/class-ur-rest-api.php:235
+#: includes/RestApi/class-ur-rest-api.php:240
 msgid "Make strong password compulsary."
 msgstr ""
 
 #: includes/functions-ur-core.php:1001
-#: includes/RestApi/class-ur-rest-api.php:241
+#: includes/RestApi/class-ur-rest-api.php:246
 msgid "Minimum Password Strength"
 msgstr ""
 
 #: includes/functions-ur-core.php:1015
-#: includes/RestApi/class-ur-rest-api.php:242
+#: includes/RestApi/class-ur-rest-api.php:247
 msgid "Set minimum required password strength."
 msgstr ""
 
@@ -4976,7 +4976,7 @@ msgid "Enable Captcha for strong security from spams and bots."
 msgstr ""
 
 #: includes/functions-ur-core.php:1098
-#: includes/RestApi/class-ur-rest-api.php:221
+#: includes/RestApi/class-ur-rest-api.php:226
 msgid "Choose form template to use."
 msgstr ""
 
@@ -5063,56 +5063,56 @@ msgstr ""
 msgid "This method should not be called before plugins_loaded."
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:111
+#: includes/RestApi/class-ur-rest-api.php:116
 msgid "OnBoarding completed successfully"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:131
+#: includes/RestApi/class-ur-rest-api.php:136
 msgid "Pages cannot be installed"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:192
+#: includes/RestApi/class-ur-rest-api.php:197
 msgid "Anyone can register"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:193
+#: includes/RestApi/class-ur-rest-api.php:198
 msgid "Check to enable users to register"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:281
+#: includes/RestApi/class-ur-rest-api.php:286
 msgid "Enable lost password"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:288
+#: includes/RestApi/class-ur-rest-api.php:293
 msgid "Enable remember me"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:289
+#: includes/RestApi/class-ur-rest-api.php:294
 msgid "Check to enable/disable remember me."
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:296
+#: includes/RestApi/class-ur-rest-api.php:301
 msgid "Enable hide/show password"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:297
+#: includes/RestApi/class-ur-rest-api.php:302
 msgid "Check to enable hide/show password icon."
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:305
+#: includes/RestApi/class-ur-rest-api.php:310
 #: src/components/App.js:92
 msgid "My Account"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:308
+#: includes/RestApi/class-ur-rest-api.php:313
 msgid "My Account Page Layout"
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:309
+#: includes/RestApi/class-ur-rest-api.php:314
 msgid "This option lets you choose layout for user registration my account tab."
 msgstr ""
 
-#: includes/RestApi/class-ur-rest-api.php:319
+#: includes/RestApi/class-ur-rest-api.php:324
 msgid "Disable profile picture"
 msgstr ""
 

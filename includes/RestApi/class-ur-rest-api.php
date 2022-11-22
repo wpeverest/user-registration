@@ -94,18 +94,11 @@ class UR_REST_API {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_minimum_password_strength', $settings_to_update['user_registration_form_setting_minimum_password_strength'] );
 		}
 		if ( isset( $settings_to_update['user_registration_form_setting_default_user_role'] ) ) {
-			$all_roles = ur_get_default_admin_roles();
-			$all_roles_except_admin = $all_roles;
-
-			$role_to_update =  $settings_to_update['user_registration_form_setting_default_user_role'];
-
-			unset( $all_roles_except_admin['administrator'] );
-
-			if( ! isset( $all_roles_except_admin[ $role_to_update ] ) ) {
-				$role_to_update = isset( array_keys( $all_roles_except_admin )[$role_to_update] ) ? array_keys( $all_roles_except_admin )[$role_to_update] : 'subscriber';
+			$all_roles      = ur_get_default_admin_roles();
+			$role_to_update = $settings_to_update['user_registration_form_setting_default_user_role'];
+			if ( ! isset( $all_roles[ $role_to_update ] ) ) {
+				$role_to_update = isset( array_keys( $all_roles )[ $role_to_update ] ) ? array_keys( $all_roles )[ $role_to_update ] : 'subscriber';
 			}
-
-
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_default_user_role', $role_to_update );
 		}
 
