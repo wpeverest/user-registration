@@ -59,7 +59,7 @@ class UR_Form_Block {
 			'forms'    => ur_get_all_user_registration_form(),
 			'logo_url' => UR()->plugin_url() . '/assets/images/logo.png',
 			'i18n'     => array(
-				'title'         => esc_html__( 'User Registration', 'user-registration' ),
+				'title'         => esc_html( 'User Registration' ),
 				'description'   => esc_html__( 'Select &#38; display one of your form.', 'user-registration' ),
 				'form_select'   => esc_html__( 'Select a Form', 'user-registration' ),
 				'form_settings' => esc_html__( 'Form Settings', 'user-registration' ),
