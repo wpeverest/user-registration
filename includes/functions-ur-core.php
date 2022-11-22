@@ -1607,13 +1607,14 @@ function ur_get_meta_key_label( $form_id ) {
  * @return array
  */
 function ur_get_user_extra_fields( $user_id ) {
-	$name_value        = array();
+	$name_value = array();
 
 	$admin_profile = new UR_Admin_Profile();
-	$extra_data = $admin_profile->get_user_meta_by_form_fields( $user_id );
-	$form_fields = array_column( $extra_data, 'fields' )[0];
+	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
 
-	foreach( $form_fields as $field_key => $field_data ) {
+	$form_fields = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array();
+
+	foreach ( $form_fields as $field_key => $field_data ) {
 		$value = get_user_meta( $user_id, $field_key, true );
 		$field_key = str_replace( 'user_registration_', '', $field_key );
 
