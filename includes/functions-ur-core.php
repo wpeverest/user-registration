@@ -1611,7 +1611,7 @@ function ur_get_user_extra_fields( $user_id ) {
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
-	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array();
+	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore
 
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
@@ -2663,15 +2663,15 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
 		}
 
-		$user_id = isset( $_GET['user'] ) ? $_GET['user'] : get_current_user_id();
+		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
+		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore
 
-		$form_id = isset( $_POST['form_id'] ) ? $_POST['form_id'] : ur_get_form_id_by_userid( $user_id );
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
 		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
 
 		switch ( $field_key ) {
 			case 'checkbox':
-				$field_value = ( is_array( $field_value ) && ! empty( $field_value) ) ? implode( ', ', $field_value ) : $field_value ;
+				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
 				break;
 			case 'country':
 				$countries   = UR_Form_Field_Country::get_instance()->get_country();
