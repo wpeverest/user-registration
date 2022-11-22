@@ -196,7 +196,7 @@ class UR_Admin_Notices {
 									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 								}
 							} else if ( strpos( $name, 'user_registration_' ) || strpos( $name, 'UR_Admin_Notices' ) ) {
-								continue;
+								break;
 							} else {
 								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}
