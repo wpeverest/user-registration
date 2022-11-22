@@ -1611,20 +1611,21 @@ function ur_get_user_extra_fields( $user_id ) {
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
+	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array();
 
-	$form_fields = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array();
+	if ( ! empty( $form_fields ) ) {
+		foreach ( $form_fields as $field_key => $field_data ) {
+			$value = get_user_meta( $user_id, $field_key, true );
+			$field_key = str_replace( 'user_registration_', '', $field_key );
 
-	foreach ( $form_fields as $field_key => $field_data ) {
-		$value = get_user_meta( $user_id, $field_key, true );
-		$field_key = str_replace( 'user_registration_', '', $field_key );
+			if ( is_serialized( $value ) ) {
+				$value = unserialize( $value );
+				$value = implode( ',', $value );
+			}
 
-		if ( is_serialized( $value ) ) {
-			$value = unserialize( $value );
-			$value = implode( ',', $value );
+			$name_value[ $field_key ] = $value;
+
 		}
-
-		$name_value[ $field_key ] = $value;
-
 	}
 
 	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
