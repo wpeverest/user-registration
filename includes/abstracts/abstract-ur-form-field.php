@@ -514,11 +514,11 @@ abstract class UR_Form_Field {
 					if ( 'multiple_choice' === $strip_prefix ) {
 
 						foreach ( $options as $key => $option ) {
-							$label = is_array( $option ) ? $option['label'] : $option->label;
-							$value = is_array( $option ) ? $option['value'] : $option->value;
-							$currency   = get_option( 'user_registration_payment_currency', 'USD' );
-							$currencies = ur_payment_integration_get_currencies();
-							$currency = $currency . ' ' . $currencies[ $currency ]['symbol'];
+							$label                    = is_array( $option ) ? $option['label'] : $option->label;
+							$value                    = is_array( $option ) ? $option['value'] : $option->value;
+							$currency                 = get_option( 'user_registration_payment_currency', 'USD' );
+							$currencies               = ur_payment_integration_get_currencies();
+							$currency                 = $currency . ' ' . $currencies[ $currency ]['symbol'];
 							$general_setting_wrapper .= '<li>';
 							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
@@ -657,7 +657,7 @@ abstract class UR_Form_Field {
 		$advance_settings = $this->get_field_advance_settings();
 
 		if ( ! empty( $advance_settings ) ) {
-			$settings .= "<div class='ur-advance-setting-block'>";
+			$settings .= "<div class='user-registration-field-option-group ur-advance-setting-block closed'>";
 			$settings .= '<h2 class="ur-toggle-heading">' . __( 'Advanced Settings', 'user-registration' ) . '</h2><hr>';
 			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;

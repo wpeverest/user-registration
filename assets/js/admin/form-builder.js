@@ -2502,6 +2502,7 @@
 
 				$(document.body).trigger("ur_rendered_field_options");
 				$(document.body).trigger("init_tooltips");
+				$( document.body ).trigger( 'init_field_options_toggle' );
 			},
 			/**
 			 * Render the advance setting for selected field.
@@ -3803,12 +3804,20 @@
 			} else {
 				$(this).addClass("closed");
 			}
+			$( this ).parent( '.user-registration-field-option-group' ).toggleClass( 'closed' ).toggleClass( 'open' );
 			var field_list = $(this).find(" ~ .ur-registered-list")[0];
 			$(field_list).slideToggle();
 
 			// For `Field Options` section
-			$(this).siblings(".ur-toggle-content").slideToggle();
+			$(this).siblings(".ur-toggle-content").stop().slideToggle();
 		});
+
+		$( document.body ).on( 'init_field_options_toggle', function() {
+			$( '.user-registration-field-option-group.closed' ).each( function() {
+				$( this ).find( '.ur-toggle-content' ).hide();
+			});
+
+		} ).trigger( 'init_field_options_toggle' );
 
 		/**
 		 * For toggling quick links content.
