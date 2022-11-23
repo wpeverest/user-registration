@@ -1,7 +1,12 @@
 <?php
+/**
+ * User Registration Abstract List Table class
+ *
+ * @package UserRegistrationAbstractListTable
+ */
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
@@ -24,32 +29,44 @@ abstract class UR_List_Table extends WP_List_Table {
 
 	/**
 	 * The Page name
+	 *
+	 * @var $page
 	 */
 	protected $page;
 
 	/**
 	 * Post type name, used to get options
+	 *
+	 * @var $post_type
 	 */
 	protected $post_type;
 
 	/**
 	 * Option name for per page.
+	 *
+	 * @var $per_page_option
 	 */
 	protected $per_page_option;
 
 	/**
 	 * Option name for per page.
+	 *
+	 * @var $addnew_action
 	 */
 	protected $addnew_action;
 
 	/**
 	 * How many items do we render per page?
+	 *
+	 * @var $items_per_page
 	 */
 	protected $items_per_page = 10;
 
 	/**
 	 * Enables search in this table listing. If this array
 	 * is empty it means the listing is not searchable.
+	 *
+	 * @var $search_by
 	 */
 	protected $search_by = array();
 
@@ -57,6 +74,8 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * Columns to show in the table listing. It is a key => value pair. The
 	 * key must much the table column name and the value is the label, which is
 	 * automatically translated.
+	 *
+	 * @var $columns
 	 */
 	protected $columns = array();
 
@@ -67,16 +86,20 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * The array of actions are key => value, where key is the method name
 	 * (with the prefix row_action_<key>) and the value is the label
 	 * and title.
+	 *
+	 * @var $row_actions
 	 */
 	protected $row_actions = array();
 
 	/**
 	 * Enables sorting, it expects an array
 	 * of columns (the column names are the values)
+	 *
+	 * @var $sort_by
 	 */
 	protected $sort_by = array(
 		'title'  => array( 'title', false ),
-		'date'  => array( 'date', false ),
+		'date'   => array( 'date', true ),
 		'author' => array( 'author', false ),
 	);
 
@@ -90,6 +113,8 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * validations and afterwards will execute the bulk method, with two arguments. The first argument
 	 * is the array with primary keys, the second argument is a string with a list of the primary keys,
 	 * escaped and ready to use (with `IN`).
+	 *
+	 * @var $bulk_actions
 	 */
 	protected $bulk_actions = array();
 
@@ -97,6 +122,8 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * Reads `$this->bulk_actions` and returns an array that WP_List_Table understands. It
 	 * also validates that the bulk method handler exists. It throws an exception because
 	 * this is a library meant for developers and missing a bulk method is a development-time error.
+	 *
+	 * @throws RuntimeException RuntimeException.
 	 */
 	protected function get_bulk_actions() {
 		if ( isset( $_GET['status'] ) && ( 'trashed' == $_GET['status'] || 'trash' == $_GET['status'] ) ) {
@@ -195,13 +222,13 @@ abstract class UR_List_Table extends WP_List_Table {
 		}
 
 		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created';
-		$args['order']   = isset( $_REQUEST['order'] ) && 'DESC' === strtoupper( $_REQUEST['order'] ) ? 'DESC' : 'ASC';
+		$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( $_REQUEST['order'] ) ? 'ASC' : 'DESC';
 
-		// Get the registrations
+		// Get the registrations.
 		$query_posts = new WP_Query( $args );
-		$this->items       = $query_posts->posts;
+		$this->items = $query_posts->posts;
 
-		// Set the pagination
+		// Set the pagination.
 		$this->set_pagination_args(
 			array(
 				'total_items' => $query_posts->found_posts,
@@ -213,9 +240,6 @@ abstract class UR_List_Table extends WP_List_Table {
 
 	/**
 	 * Implements the logic behind processing an action once an action link is clicked on the list table.
-	 *
-	 * @param int    $action_id
-	 * @param string $row_action_type The type of action to perform on the action.
 	 */
 	protected function process_row_actions() {
 		if ( isset( $_GET['page'] ) ) {
@@ -284,6 +308,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Duplicate a content access post.
 	 *
+	 * @param mixed $post_id Post Id.
 	 * @since 2.0.0
 	 */
 	public function duplicate_post( $post_id ) {
@@ -339,7 +364,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					}
 					if ( substr( $meta_key, 0, 18 ) === 'user_registration_' ) {
 
-						$meta_value      = addslashes( $meta_info->meta_value );
+						$meta_value = addslashes( $meta_info->meta_value );
 						if ( ! add_post_meta( $new_post_id, $meta_key, $meta_value, true ) ) {
 							update_post_meta( $new_post_id, $meta_key, $meta_value );
 						}
@@ -361,7 +386,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $post_list
+	 * @param array $post_list Post List.
 	 */
 	public function bulk_trash( $post_list = array() ) {
 		foreach ( $post_list as $post_id ) {
@@ -380,7 +405,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $post_list
+	 * @param array $post_list Post List.
 	 */
 	private function bulk_untrash( $post_list = array() ) {
 		foreach ( $post_list as $post_id ) {
@@ -396,7 +421,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $post_list
+	 * @param array $post_list Post List.
 	 */
 	private function bulk_delete( $post_list = array() ) {
 		foreach ( $post_list as $post_id ) {
@@ -437,7 +462,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
-	 * @param string $which
+	 * @param string $which Which.
 	 */
 	protected function extra_tablenav( $which ) {
 		if ( 'top' === $which && isset( $_GET['status'] ) && 'trash' === $_GET['status'] && current_user_can( 'delete_posts' ) ) {
@@ -455,6 +480,8 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * Renders the checkbox for each row, this is the first column and it is named ID regardless
 	 * of how the primary key is named (to keep the code simpler). The bulk actions will do the proper
 	 * name transformation though using `$this->ID`.
+	 *
+	 * @param object $row Row.
 	 */
 	public function column_cb( $row ) {
 		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s" />', esc_attr( $this->_args['singular'] ), esc_attr( $row->ID ) );
@@ -463,7 +490,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Column: Title.
 	 *
-	 * @param  object $post
+	 * @param  object $post Post.
 	 *
 	 * @return string
 	 */
@@ -509,7 +536,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Column: Created Date.
 	 *
-	 * @param  object $items
+	 * @param  object $items Items.
 	 *
 	 * @return string
 	 */
@@ -527,12 +554,13 @@ abstract class UR_List_Table extends WP_List_Table {
 		);
 		$m_time = $post->post_date;
 		$time   = mysql2date( 'G', $post->post_date )
-				  - get_option( 'gmt_offset' ) * 3600;
+				- get_option( 'gmt_offset' ) * 3600;
 
 		$time_diff = time() - $time;
 
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
 			$h_time = sprintf(
+				/* translators: %s - Human readable time */
 				__( '%s ago', 'user-registration' ),
 				human_time_diff( $time )
 			);
@@ -546,7 +574,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	/**
 	 * Return author column.
 	 *
-	 * @param  object $items
+	 * @param  object $items Items.
 	 *
 	 * @return string
 	 */
@@ -574,17 +602,23 @@ abstract class UR_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * @param mixed $post
+	 * Display row action.
+	 *
+	 * @param mixed $post Post.
 	 */
 	abstract public function get_row_actions( $post );
 
 	/**
-	 * @param mixed $post
+	 * Display edit links.
+	 *
+	 * @param mixed $post Post.
 	 */
 	abstract public function get_edit_links( $post );
 
 	/**
-	 * @param mixed $post
+	 * Display duplicate links.
+	 *
+	 * @param mixed $post Post.
 	 */
 	abstract public function get_duplicate_link( $post );
 
@@ -614,7 +648,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			'<a href="admin.php?page=%s" %s >%s (%s)</a>',
 			$this->page,
 			$class,
-			esc_html__( 'All', $this->page ),
+			esc_html__( 'All', 'user-registration' ),
 			number_format_i18n( $total_posts )
 		);
 
