@@ -1943,14 +1943,12 @@
 											);
 											builder.manage_empty_grid();
 										},
-										revert: true,
 										connectWith: ".ur-grid-list-item",
 									})
 									.disableSelection();
 								$(".ur-input-grids").sortable({
 									containment: ".ur-builder-wrapper",
 									tolerance: "pointer",
-									revert: "invalid",
 									placeholder: "ur-single-row",
 									forceHelperSize: true,
 									over: function () {
@@ -1979,7 +1977,6 @@
 														)
 												);
 										},
-										revert: "invalid",
 										// start: function (event, ui) {
 										// },
 										stop: function (event, ui) {
