@@ -305,6 +305,7 @@ class UR_Admin_Assets {
 					'ajax_url'            => admin_url( 'admin-ajax.php' ),
 					'ur_import_form_save' => wp_create_nonce( 'ur_import_form_save_nonce' ),
 					'no_file_selected'    => esc_html__( 'No file selected.', 'user-registration' ),
+					'ur_get_form_fields'  => wp_create_nonce( 'ur_get_form_fields' ),
 				)
 			);
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );

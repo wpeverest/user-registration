@@ -62,9 +62,10 @@ class UR_AJAX {
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
-			'template_licence_check'     => false,
-			'install_extension'     => false,
+			'template_licence_check' => false,
+			'install_extension'      => false,
 			'create_form'            => true,
+			'get_form_fields'        => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1356,6 +1357,35 @@ class UR_AJAX {
 				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
 			)
 		);
+	}
+
+
+	/**
+	 * AJAX Get form fields key->label pairs.
+	 *
+	 * @since 2.2.6
+	 */
+	public static function get_form_fields() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $security, 'ur_get_form_fields' ) ) {
+			wp_send_json_error( esc_html( __( 'Nonce error. Please reload the page.', 'user-registration' ) ) );
+		}
+
+		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : 0;
+
+		if ( ! empty( $form_id ) ) {
+			$fields = ur_get_form_fields(
+				$form_id,
+				array(
+					'content_only' => true,
+					'hide_fields'  => true,
+				)
+			);
+			return wp_send_json_success( $fields );
+		}
+
+		return wp_send_json_error();
 	}
 }
 

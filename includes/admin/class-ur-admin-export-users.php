@@ -59,7 +59,6 @@ class UR_Admin_Export_Users {
 		if ( isset( $_POST['all_fields_dict'] ) ) {
 			$all_fields = sanitize_text_field( wp_unslash( $_POST['all_fields_dict'] ) );
 			$all_fields = (array) json_decode( $all_fields );
-			$all_fields = array_keys( $all_fields );
 
 			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );

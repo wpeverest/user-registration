@@ -2856,3 +2856,37 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 		return;
 	}
 }
+
+
+/**
+ * Return form fields key->label pairs with some fields hidden.
+ * To get all fields, use ur_get_meta_key_label()
+ *
+ * @param [int] $form_id Form Id.
+ * @param array $args Extra arguments.
+ * @since 2.2.6
+ *
+ * @return array
+ */
+function ur_get_form_fields( $form_id, $args = array() ) {
+	if ( isset( $args['hide_fields'] ) && true === $args['hide_fields'] ) {
+		$hide_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+			'html',
+			'section_title'
+		);
+	} else {
+		$hide_fields = array();
+	}
+
+	$fields_dict = ur_get_meta_key_label( $form_id );
+
+	foreach ( array_keys( $fields_dict ) as $key ) {
+		if ( in_array( $key, $hide_fields, true ) ) {
+			unset( $field_dict[ $key ] );
+		}
+	}
+
+	return apply_filters( 'user_registration_get_form_fields', $fields_dict, $form_id, $args );
+}
