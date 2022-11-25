@@ -61,7 +61,7 @@ class UR_Admin_Export_Users {
 			$all_fields = (array) json_decode( $all_fields );
 			$all_fields = array_keys( $all_fields );
 
-			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array();
+			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
 		} else {
 			$unchecked_fields = array();
@@ -220,8 +220,8 @@ class UR_Admin_Export_Users {
 							}
 						}
 						$user_extra_row[ $user_extra_data_key ] = $file_link;
-					} else if ( isset( $field_data['field_key'] ) && ( 'checkbox' === $field_data['field_key'] || 'multi_select2' === $field_data['field_key'] ) ) {
-						$values = ( is_array(  $user_extra_data ) && ! empty(  $user_extra_data ) ) ? implode( ',', $user_extra_data ) : $user_extra_data;
+					} elseif ( isset( $field_data['field_key'] ) && ( 'checkbox' === $field_data['field_key'] || 'multi_select2' === $field_data['field_key'] ) ) {
+						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : $user_extra_data; //phpcs:ignore
 						$user_extra_row[ $user_extra_data_key ] = $values;
 					}
 				}
