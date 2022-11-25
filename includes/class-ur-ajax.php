@@ -814,6 +814,11 @@ class UR_AJAX {
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 
+			$post_data_array = apply_filters( 'user_registration_form_data_before_save', array( $post_data, $form_row_ids ) );
+
+			$post_data    = $post_data_array[0];
+			$form_row_ids = $post_data_array[1];
+
 			$post_data = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => sanitize_text_field( $form_name ),
@@ -1362,8 +1367,6 @@ class UR_AJAX {
 
 	/**
 	 * AJAX Get form fields key->label pairs.
-	 *
-	 * @since 2.2.6
 	 */
 	public static function get_form_fields() {
 		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
