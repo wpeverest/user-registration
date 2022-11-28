@@ -149,7 +149,7 @@ class UR_Admin_Status {
 
 			foreach ( $files as $key => $value ) {
 
-				if ( ! in_array( $value, array( '.', '..' ) ) ) {
+				if ( ! in_array( $value, array( '.', '..' ) ) && null !== $value ) {
 					if ( ! is_dir( $value ) && strstr( $value, '.log' ) ) {
 						$result[ sanitize_title( $value ) ] = $value;
 					}

@@ -73,7 +73,7 @@ function ur_get_page_id( $page ) {
 
 	if ( $page > 0 && function_exists( 'pll_current_language' ) && ! empty( pll_current_language() ) ) {
 		$translations = pll_get_post_translations( $page );
-		$page = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+		$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
 	}
 
 	return $page ? absint( $page ) : - 1;
@@ -152,8 +152,10 @@ function ur_nav_menu_items( $items ) {
 				$path  = parse_url( $item->url, PHP_URL_PATH );
 				$query = parse_url( $item->url, PHP_URL_QUERY );
 
-				if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
-					unset( $items[ $key ] );
+				if ( null !== $path && null !== $customer_logout ) {
+					if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
+						unset( $items[ $key ] );
+					}
 				}
 			}
 		}
