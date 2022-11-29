@@ -2664,6 +2664,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		}
 
 		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
+		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id;
 		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
@@ -2671,6 +2672,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 
 		switch ( $field_key ) {
 			case 'checkbox':
+			case 'multi_select2':
 				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
 				break;
 			case 'country':
