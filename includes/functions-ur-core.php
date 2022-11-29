@@ -1347,7 +1347,7 @@ function ur_get_logger() {
 	static $logger = null;
 	if ( null === $logger ) {
 		$class      = apply_filters( 'user_registration_logging_class', 'UR_Logger' );
-		$implements = $class instanceof UR_Logger;
+		$implements = class_implements( $class );
 		if ( is_array( $implements ) && in_array( 'UR_Logger_Interface', $implements ) ) {
 			if ( is_object( $class ) ) {
 				$logger = $class;
