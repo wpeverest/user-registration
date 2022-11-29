@@ -65,7 +65,7 @@ class UR_Admin_Welcome {
 			),
 		);
 
-		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element','wp-blocks','wp-editor' ), UR()->version, true );
+		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_localize_script( 'ur-setup-wizard-script', 'ur_form_block_data', $form_block_data );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
