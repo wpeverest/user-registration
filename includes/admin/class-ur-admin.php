@@ -38,16 +38,16 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-			include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
-			include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
+		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 
-			// Setup/welcome.
+		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			switch ( $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				case 'user-registration-welcome':
@@ -391,7 +391,7 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action        = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$action     = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 			$templatres = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templatres ) ) {
