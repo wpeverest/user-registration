@@ -2433,7 +2433,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 	function ur_install_extensions( $name, $slug ) {
 		try {
 
-			$plugin = plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
+			$plugin = 'user-registration-pro' === $slug ? plugin_basename( sanitize_text_field( wp_unslash( $slug . '/user-registration.php' ) ) ) :  plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
 			$status = array(
 				'install' => 'plugin',
 				'slug'    => sanitize_key( wp_unslash( $slug ) ),
@@ -2754,6 +2754,22 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 						}
 						if ( 0 < absint( $matched ) ) {
 							break;
+						}
+					} elseif ( 'core/group' ===  $shortcode['blockName'] && isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
+						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
+							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
+								error_log( print_r( $inner_block['blockName'], true ) );
+								$matched = 1;
+								break;
+							} elseif ( ( 'core/shortcode' === $inner_block['blockName'] || 'core/paragraph' === $inner_block['blockName'] ) && isset( $inner_block['innerHTML'] ) ) {
+								$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
+								if ( 1 > absint( $matched ) ) {
+									$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
+								}
+								if ( 0 < absint( $matched ) ) {
+									break;
+								}
+							}
 						}
 					}
 				} else {
