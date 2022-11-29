@@ -61,7 +61,7 @@ class UR_Admin_Export_Users {
 			$all_fields = (array) json_decode( $all_fields );
 			$all_fields = array_keys( $all_fields );
 
-			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array();
+			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
 		} else {
 			$unchecked_fields = array();
@@ -96,7 +96,7 @@ class UR_Admin_Export_Users {
 		header( 'Content-Type: application/download' );
 
 		// Disposition / Encoding on response body.
-		header( "Content-Disposition: attachment;filename={$file_name}" );
+		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
 		header( 'Content-Transfer-Encoding: binary' );
 
 		$handle = fopen( 'php://output', 'w' );
