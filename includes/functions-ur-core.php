@@ -2758,7 +2758,6 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 					} elseif ( 'core/group' ===  $shortcode['blockName'] && isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
 						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
 							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
-								error_log( print_r( $inner_block['blockName'], true ) );
 								$matched = 1;
 								break;
 							} elseif ( ( 'core/shortcode' === $inner_block['blockName'] || 'core/paragraph' === $inner_block['blockName'] ) && isset( $inner_block['innerHTML'] ) ) {
