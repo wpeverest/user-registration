@@ -66,6 +66,9 @@
       #user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
       #user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
       #user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
         border-radius: 50%;
         margin: 0 auto; }
     #user-registration.horizontal .user-registration-MyAccount-content .edit-profile,

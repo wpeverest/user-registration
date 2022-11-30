@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.2.5\n"
+"Project-Id-Version: User Registration 2.2.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-23T02:59:55+00:00\n"
+"POT-Creation-Date: 2022-12-01T03:12:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -35,7 +35,8 @@ msgid "https://wpeverest.com"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:651
-#: src/components/App.js:60
+#: src/components/App.js:61
+#: chunks/main.js:46189
 msgid "General Settings"
 msgstr ""
 
@@ -438,20 +439,20 @@ msgstr ""
 msgid "Add Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-import-export-forms.php:180
+#: includes/admin/class-ur-admin-import-export-forms.php:179
 msgid "Imported Successfully."
 msgstr ""
 
-#: includes/admin/class-ur-admin-import-export-forms.php:188
-#: includes/admin/class-ur-admin-import-export-forms.php:195
+#: includes/admin/class-ur-admin-import-export-forms.php:187
+#: includes/admin/class-ur-admin-import-export-forms.php:194
 msgid "Invalid file content. Please export file from user registration plugin."
 msgstr ""
 
-#: includes/admin/class-ur-admin-import-export-forms.php:202
+#: includes/admin/class-ur-admin-import-export-forms.php:201
 msgid "Invalid file format. Only Json File Allowed."
 msgstr ""
 
-#: includes/admin/class-ur-admin-import-export-forms.php:209
+#: includes/admin/class-ur-admin-import-export-forms.php:208
 msgid "Please select json file to import form data."
 msgstr ""
 
@@ -550,7 +551,7 @@ msgid "Uplift your form experience to the next level."
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:550
-#: includes/admin/class-ur-admin-welcome.php:154
+#: includes/admin/class-ur-admin-welcome.php:168
 #: includes/admin/views/html-admin-page-form-templates.php:97
 msgid "Get Started"
 msgstr ""
@@ -808,40 +809,61 @@ msgid "denied"
 msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:39
-#: includes/admin/class-ur-admin-welcome.php:143
+#: includes/admin/class-ur-admin-welcome.php:157
 msgid "Welcome to User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:97
+#: includes/admin/class-ur-admin-welcome.php:61
+#: includes/class-ur-form-block.php:63
+msgid "Select &#38; display one of your form."
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:62
+#: includes/class-ur-form-block.php:64
+msgid "Select a Form"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:63
+#: includes/admin/views/html-admin-page-forms.php:68
+#: includes/class-ur-form-block.php:65
+msgid "Form Settings"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:64
+#: includes/class-ur-form-block.php:66
+msgid "Form"
+msgstr ""
+
+#: includes/admin/class-ur-admin-welcome.php:111
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:144
+#: includes/admin/class-ur-admin-welcome.php:158
 msgid "Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:148
-#: includes/admin/class-ur-admin-welcome.php:170
+#: includes/admin/class-ur-admin-welcome.php:162
+#: includes/admin/class-ur-admin-welcome.php:184
 msgid "Watch how to create your first form with User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:157
+#: includes/admin/class-ur-admin-welcome.php:171
 msgid "Create a First Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:160
+#: includes/admin/class-ur-admin-welcome.php:174
 msgid "Skip to Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:167
+#: includes/admin/class-ur-admin-welcome.php:181
 msgid "Check Our Awesome Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:174
+#: includes/admin/class-ur-admin-welcome.php:188
 msgid "See All Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:187
+#: includes/admin/class-ur-admin-welcome.php:201
 msgid "Contact support"
 msgstr ""
 
@@ -872,7 +894,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:208
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -909,13 +931,13 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:267
 msgid ""
-"<strong>Hey there!</strong> <br>\n"
+"<strong>Hey there!</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/class-ur-admin.php:278
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -941,7 +963,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:69
 #: includes/admin/settings/class-ur-settings-general.php:360
 #: includes/RestApi/class-ur-rest-api.php:194
-#: src/components/App.js:59
+#: src/components/App.js:60
+#: chunks/main.js:46188
 msgid "General"
 msgstr ""
 
@@ -1076,6 +1099,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:101
 #: src/components/screens/InstallPage.js:68
+#: chunks/main.js:34490
 msgid "My Account Page"
 msgstr ""
 
@@ -1526,7 +1550,8 @@ msgstr ""
 #: includes/RestApi/class-ur-rest-api.php:269
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
-#: src/components/App.js:81
+#: src/components/App.js:82
+#: chunks/main.js:46210
 msgid "Login"
 msgstr ""
 
@@ -1705,7 +1730,7 @@ msgid "Secret Key (reCAPTCHA v3)"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:153
-msgid "Site Key ( hCaptcha )"
+msgid "Site Key (hCaptcha)"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:154
@@ -1713,7 +1738,7 @@ msgid "Get site key from %1$s hCaptcha %2$s."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:164
-msgid "Secret Key ( hCaptcha )"
+msgid "Secret Key (hCaptcha)"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:165
@@ -1889,21 +1914,21 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:99
 msgid ""
-"Hi Admin, <br/>\n"
-"\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"\t\t\t\t\tPlease review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/><br />\n"
+"Hi Admin, <br/>\r\n"
+"\r\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"\t\t\t\t\tPlease review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/><br />\r\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:111
 msgid ""
-"Hi Admin, <br/>\n"
-"\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"\t\t\t\t\tClick on this link to approve this user directly :  {{approval_link}} <br /><br />\n"
+"Hi Admin, <br/>\r\n"
+"\r\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"\t\t\t\t\tClick on this link to approve this user directly :  {{approval_link}} <br /><br />\r\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -1930,12 +1955,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1958,12 +1983,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:82
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please click on this verification link {{home_url}}/{{ur_login}}?ur_token={{email_token}} to confirm registration. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please click on this verification link <a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\">Click here</a> to confirm registration. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -1987,13 +2012,13 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:102
 msgid ""
-"User has changed profile information for the following account:<br/>\n"
-"\n"
-"SiteName: {{blog_info}} <br/>\n"
-"Username: {{username}} <br/>\n"
-"\n"
-"{{all_fields}}\n"
-"<br/>\n"
+"User has changed profile information for the following account:<br/>\r\n"
+"\r\n"
+"SiteName: {{blog_info}} <br/>\r\n"
+"Username: {{username}} <br/>\r\n"
+"\r\n"
+"{{all_fields}}\r\n"
+"<br/>\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2017,12 +2042,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\n"
-"\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\r\n"
+"\r\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2047,12 +2072,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2076,14 +2101,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:92
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\n"
-"\n"
-"Sorry for the inconvenience. <br/>\n"
-"\n"
-"You will be notified after it is approved. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\r\n"
+"\r\n"
+"Sorry for the inconvenience. <br/>\r\n"
+"\r\n"
+"You will be notified after it is approved. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2107,16 +2132,16 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:89
 msgid ""
-"Someone has requested a password reset for the following account: <br/>\n"
-"\n"
-"SiteName: {{blog_info}} <br/>\n"
-"Username: {{username}} <br/>\n"
-"\n"
-"If this was a mistake, just ignore this email and nothing will happen. <br/>\n"
-"\n"
-"To reset your password, visit the following address: <br/>\n"
-"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\n"
-"\n"
+"Someone has requested a password reset for the following account: <br/>\r\n"
+"\r\n"
+"SiteName: {{blog_info}} <br/>\r\n"
+"Username: {{username}} <br/>\r\n"
+"\r\n"
+"If this was a mistake, just ignore this email and nothing will happen. <br/>\r\n"
+"\r\n"
+"To reset your password, visit the following address: <br/>\r\n"
+"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2140,12 +2165,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\n"
-"\n"
-"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
-"\n"
+"Hi {{username}}, <br/>\r\n"
+"\r\n"
+"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
+"\r\n"
 "Thank You!"
 msgstr ""
 
@@ -2304,11 +2329,6 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:60
 msgid "Field Options"
-msgstr ""
-
-#: includes/admin/views/html-admin-page-forms.php:68
-#: includes/class-ur-form-block.php:65
-msgid "Form Settings"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:84
@@ -2742,18 +2762,6 @@ msgstr ""
 msgid "Chosen Password"
 msgstr ""
 
-#: includes/class-ur-form-block.php:63
-msgid "Select &#38; display one of your form."
-msgstr ""
-
-#: includes/class-ur-form-block.php:64
-msgid "Select a Form"
-msgstr ""
-
-#: includes/class-ur-form-block.php:66
-msgid "Form"
-msgstr ""
-
 #. translators: %s - Field Label
 #. translators: %s - Field Label
 #: includes/class-ur-form-handler.php:255
@@ -3081,7 +3089,8 @@ msgstr ""
 
 #: includes/class-ur-post-types.php:49
 #: includes/RestApi/class-ur-rest-api.php:222
-#: src/components/App.js:70
+#: src/components/App.js:71
+#: chunks/main.js:46199
 msgid "Registration"
 msgstr ""
 
@@ -5100,7 +5109,8 @@ msgid "Check to enable hide/show password icon."
 msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:310
-#: src/components/App.js:92
+#: src/components/App.js:93
+#: chunks/main.js:46221
 msgid "My Account"
 msgstr ""
 
@@ -5287,92 +5297,116 @@ msgstr ""
 msgid "As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
-#: src/components/App.js:48
 #: src/components/App.js:49
+#: src/components/App.js:50
+#: chunks/main.js:46177
+#: chunks/main.js:46178
 msgid "Install Pages"
 msgstr ""
 
-#: src/components/App.js:50
+#: src/components/App.js:51
+#: chunks/main.js:46179
 msgid "The following pages will be installed automatically."
 msgstr ""
 
-#: src/components/App.js:61
+#: src/components/App.js:62
+#: chunks/main.js:46190
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:71
+#: src/components/App.js:72
+#: chunks/main.js:46200
 msgid "Registration Settings"
 msgstr ""
 
-#: src/components/App.js:72
+#: src/components/App.js:73
+#: chunks/main.js:46201
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:82
+#: src/components/App.js:83
+#: chunks/main.js:46211
 msgid "Login Settings"
 msgstr ""
 
-#: src/components/App.js:83
+#: src/components/App.js:84
+#: chunks/main.js:46212
 msgid "Customize your login settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:93
+#: src/components/App.js:94
+#: chunks/main.js:46222
 msgid "My Account Settings"
 msgstr ""
 
-#: src/components/App.js:94
+#: src/components/App.js:95
+#: chunks/main.js:46223
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
-#: src/components/App.js:103
+#: src/components/App.js:104
+#: chunks/main.js:46232
 msgid "Final Step"
 msgstr ""
 
-#: src/components/App.js:346
+#: src/components/App.js:347
+#: chunks/main.js:46475
 msgid "Go To Dashboard"
 msgstr ""
 
-#: src/components/App.js:355
+#: src/components/App.js:356
+#: chunks/main.js:46484
 msgid "Back"
 msgstr ""
 
-#: src/components/App.js:373
+#: src/components/App.js:374
+#: chunks/main.js:46502
 msgid "Edit Default Form"
 msgstr ""
 
-#: src/components/App.js:383
+#: src/components/App.js:384
+#: chunks/main.js:46512
 msgid "Create New Form"
 msgstr ""
 
-#: src/components/App.js:396
+#: src/components/App.js:397
+#: chunks/main.js:46525
 msgid "Skip"
 msgstr ""
 
-#: src/components/App.js:407
+#: src/components/App.js:408
+#: chunks/main.js:46536
 msgid "Install & Proceed"
 msgstr ""
 
-#: src/components/App.js:421
+#: src/components/App.js:422
+#: chunks/main.js:46550
 msgid "Next"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:67
+#: chunks/main.js:34489
 msgid "Registration Page"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:79
+#: chunks/main.js:34501
 msgid "Installing..."
 msgstr ""
 
 #: src/components/screens/InstallPage.js:92
 #: src/components/screens/InstallPage.js:124
+#: chunks/main.js:34514
+#: chunks/main.js:34546
 msgid "Installed"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:113
+#: chunks/main.js:34535
 msgid "Default Registration Form"
 msgstr ""
 
 #: src/components/screens/LastPage.js:22
+#: chunks/main.js:46118
 msgid "Congratulations!! You are all set up."
 msgstr ""

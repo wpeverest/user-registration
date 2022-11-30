@@ -86,9 +86,8 @@ class UR_Admin_Import_Export_Forms {
 		header( 'Content-Type: application/force-download' );
 
 		// Disposition / Encoding on response body.
-		header( "Content-Disposition: attachment;filename={$file_name}" );
+		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
 		header( 'Content-type: application/json' );
-
 		echo wp_json_encode( $export_data );
 		exit();
 	}

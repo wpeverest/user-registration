@@ -39,7 +39,8 @@ function App () {
         defaultFormURL,
         newFormURL,
         urRestApiNonce,
-        onBoardIconsURL
+        onBoardIconsURL,
+        restURL,
     } = typeof _UR_ !== "undefined" && _UR_;
 
     const [steps, setSteps] = useState([
@@ -112,7 +113,7 @@ function App () {
 	 */
     useEffect(() => {
         apiFetch({
-            path: "/wp-json/user-registration/v1/getting-started",
+            path: restURL + "user-registration/v1/getting-started",
             headers: {
                 "X-WP-Nonce": urRestApiNonce
             }
@@ -200,7 +201,7 @@ function App () {
         setInitiateInstall(true);
         // POST
         apiFetch({
-            path: "/wp-json/user-registration/v1/getting-started/install-pages",
+            path: restURL + "user-registration/v1/getting-started/install-pages",
             method: "POST",
             headers: {
                 "X-WP-Nonce": urRestApiNonce
@@ -278,7 +279,7 @@ function App () {
 
         // POST
         apiFetch({
-            path: "/wp-json/user-registration/v1/getting-started/save",
+            path: restURL + "user-registration/v1/getting-started/save",
             method: "POST",
             headers: {
                 "X-WP-Nonce": urRestApiNonce
