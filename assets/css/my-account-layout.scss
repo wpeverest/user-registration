@@ -85,6 +85,9 @@
 					margin-bottom: 15px;
 
 					img {
+						width: 100px;
+						height: 100px;
+						object-fit: cover;
 						border-radius: 50%;
 						margin: 0 auto;
 					}
@@ -104,7 +107,13 @@
 			}
 		}
 	}
+
+	&.horizontal {
+
+	}
 }
+
+
 @media screen and (max-width: 980px) {
 	#user-registration {
 		&.vertical {
