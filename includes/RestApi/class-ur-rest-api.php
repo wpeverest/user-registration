@@ -260,7 +260,7 @@ class UR_REST_API {
 						'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
 						'id'      => 'user_registration_form_setting_default_user_role',
 						'type'    => 'select',
-						'default' => array_search( 'subscriber', array_keys( $all_roles ) ),
+						'default' => 'subscriber',
 						'options' => $all_roles,
 					),
 				),
