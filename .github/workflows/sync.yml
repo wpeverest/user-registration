@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - tweak/new-addons-in-extension-page
     workflow_dispatch:
 jobs:
   sync:
