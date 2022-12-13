@@ -1657,7 +1657,7 @@ function ur_includes(arr, item) {
 		}
 	});
 	// Restrict copy,cut,paste on confirm email and password field.
-	$("#user_confirm_email,#user_confirm_password").bind(
+	$("#user_confirm_email,#user_confirm_password").on(
 		"cut copy paste",
 		function (e) {
 			e.preventDefault();
