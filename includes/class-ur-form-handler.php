@@ -586,7 +586,7 @@ class UR_Form_Handler {
 
 			$hcaptca_response    = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
-			$recaptcha_enabled   = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+			$recaptcha_enabled   = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
 			$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
@@ -621,7 +621,6 @@ class UR_Form_Handler {
 							ur_add_notice( __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
 							return false;
 						}
-						error_log( 'CAPTCHA verification successful' );
 					}
 				} else {
 					ur_add_notice( get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ), 'error' );

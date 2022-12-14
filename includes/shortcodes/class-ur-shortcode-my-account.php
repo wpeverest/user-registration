@@ -305,7 +305,7 @@ class UR_Shortcode_My_Account {
 			}
 		}
 
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_enabled = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			wp_enqueue_script( 'user-registration' );
