@@ -35,6 +35,12 @@ ur_print_notices(); ?>
 
 				<div class="clear"></div>
 
+				<?php
+				if ( ! empty( $recaptcha_node ) ) {
+					echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
+
 				<?php do_action( 'user_registration_lostpassword_form' ); ?>
 
 				<p class="user-registration-form-row form-row">
