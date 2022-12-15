@@ -22,10 +22,6 @@ jQuery(function ($) {
 			var formData = new FormData();
 			var $this = $node;
 			formData.append("file", $this[0].files[0]);
-			formData.append(
-				"valid_extension",
-				$('input[name="profile-pic"]').attr("accept")
-			);
 
 			var upload_node = $this
 				.closest(".button-group")

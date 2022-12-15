@@ -58,15 +58,15 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'class'    => '',
 									'desc_tip' => true,
 									'options'  => array(
-										'v2' => 'reCaptcha v2',
-										'v3' => 'reCaptcha v3',
+										'v2' => 'reCAPTCHA v2',
+										'v3' => 'reCAPTCHA v3',
 										'hCaptcha' => 'hCaptcha',
 									),
 								),
 								array(
-									'title'    => __( 'Site Key (reCaptcha v2)', 'user-registration' ),
+									'title'    => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key',
 									'default'  => '',
 									'type'     => 'text',
@@ -77,9 +77,9 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key ( reCaptcha v2)', 'user-registration' ),
+									'title'    => __( 'Secret Key ( reCAPTCHA v2)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret',
 									'default'  => '',
 									'type'     => 'text',
@@ -89,9 +89,9 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Site Key (reCaptcha v2)', 'user-registration' ),
+									'title'    => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_invisible_site_key',
 									'default'  => '',
 									'type'     => 'text',
@@ -102,9 +102,9 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key (reCaptcha v2)', 'user-registration' ),
+									'title'    => __( 'Secret Key (reCAPTCHA v2)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_invisible_site_secret',
 									'default'  => '',
 									'type'     => 'text',
@@ -116,7 +116,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 								array(
 									'title'    => __( 'Invisible reCAPTCHA', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'check this to enable invisible recaptcha.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'check this to enable invisible reCAPTCHA.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_invisible_recaptcha_v2',
 									'default'  => 'no',
 									'type'     => 'checkbox',
@@ -125,9 +125,9 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Site Key (reCaptcha v3)', 'user-registration' ),
+									'title'    => __( 'Site Key (reCAPTCHA v3)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get site key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_v3',
 									'default'  => '',
 									'type'     => 'text',
@@ -138,9 +138,9 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key (reCaptcha v3)', 'user-registration' ),
+									'title'    => __( 'Secret Key (reCAPTCHA v3)', 'user-registration' ),
 									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'     => sprintf( __( 'Get secret key from google %1$s reCaptcha %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
+									'desc'     => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" target="_blank">', '</a>' ),
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_v3',
 									'default'  => '',
 									'type'     => 'text',
@@ -150,7 +150,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Site Key ( hCaptcha )', 'user-registration' ),
+									'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_hcaptcha',
 									'default'  => '',
@@ -161,7 +161,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key ( hCaptcha )', 'user-registration' ),
+									'title'    => __( 'Secret Key (hCaptcha)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), 	//phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha',
 									'default'  => '',

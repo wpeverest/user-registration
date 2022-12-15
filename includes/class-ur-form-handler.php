@@ -107,39 +107,59 @@ class UR_Form_Handler {
 					$file_name = wp_unique_filename( $upload_path, $upload['name'] );
 
 					$file_path = $upload_path . sanitize_file_name( $file_name );
+					// valid extension for image.
+					$valid_extensions     = 'image/jpeg,image/jpg,image/gif,image/png';
+					$form_id              = ur_get_form_id_by_userid( $user_id );
+					$field_data           = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+					$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+					$valid_extension_type = explode( ',', $valid_extensions );
+					$valid_ext            = array();
 
-					if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+					foreach ( $valid_extension_type as $key => $value ) {
+						$image_extension   = explode( '/', $value );
+						$valid_ext[ $key ] = $image_extension[1];
+					}
 
-						$attachment_id = wp_insert_attachment(
-							array(
-								'guid'           => $file_path,
-								'post_mime_type' => $file_ext,
-								'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
-								'post_content'   => '',
-								'post_status'    => 'inherit',
-							),
-							$file_path
-						);
+					$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
+					$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
 
-						if ( is_wp_error( $attachment_id ) ) {
-
-							wp_send_json_error(
-								array(
-
-									'message' => $attachment_id->get_error_message(),
-								)
-							);
-						}
-
-						include_once ABSPATH . 'wp-admin/includes/image.php';
-
-						// Generate and save the attachment metas into the database.
-						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
-
-						update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
-
+					// Validates if the uploaded file has the acceptable extension.
+					if ( ! in_array( $file_extension, $valid_ext ) ) {
+						ur_add_notice( __( 'Invalid file type, please contact with site administrator.', 'user-registration' ), 'error' );
 					} else {
-						ur_add_notice( 'File cannot be uploaded.', 'error' );
+						if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+
+							$attachment_id = wp_insert_attachment(
+								array(
+									'guid'           => $file_path,
+									'post_mime_type' => $file_ext,
+									'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+									'post_content'   => '',
+									'post_status'    => 'inherit',
+								),
+								$file_path
+							);
+
+							if ( is_wp_error( $attachment_id ) ) {
+
+								wp_send_json_error(
+									array(
+
+										'message' => $attachment_id->get_error_message(),
+									)
+								);
+							}
+
+							include_once ABSPATH . 'wp-admin/includes/image.php';
+
+							// Generate and save the attachment metas into the database.
+							wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+
+							update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+
+						} else {
+							ur_add_notice( 'File cannot be uploaded.', 'error' );
+						}
 					}
 				} elseif ( isset( $_FILES['profile-pic']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
 
@@ -227,8 +247,10 @@ class UR_Form_Handler {
 					}
 				}
 
+				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+				$new_key = str_replace( 'user_registration_', '', $key );
 				// Validation: Required fields.
-				if ( ! empty( $field['required'] ) && empty( $_POST[ $key ] ) && ! $disabled ) {
+				if ( ! in_array( $new_key, $urcl_hide_fields, true ) && 'yes' == $field['required'] && empty( $_POST[ $key ] ) && ! $disabled ) {
 					/* translators: %s - Field Label */
 					ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 				}
@@ -729,6 +751,157 @@ class UR_Form_Handler {
 		}
 
 		return $forms;
+	}
+
+	/**
+	 * Create and return a dictionary of field_id->field_label for all form fields.
+	 *
+	 * @param [int] $form_id Form Id.
+	 * @param array $args Extra arguments.
+	 * @return array
+	 *
+	 * @since 2.2.3
+	 */
+	public function get_form_fields( $form_id, $args = array() ) {
+		$hide_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+		);
+
+		$fields_dict = array();
+
+		if ( is_numeric( $form_id ) ) {
+
+			$form_data = $this->get_form( $form_id, $args );
+
+			foreach ( $form_data as $sec ) {
+				foreach ( $sec as $fields ) {
+					foreach ( $fields as $field ) {
+						$field_id    = $field->general_setting->field_name;
+						$field_label = $field->general_setting->label;
+						if ( ! in_array( $field_id, $hide_fields, true ) ) {
+							$fields_dict[ $field_id ] = $field_label;
+						}
+					}
+				}
+			}
+
+			if ( isset( $args['hide_fields'] ) && true === $args['hide_fields'] ) {
+				foreach ( $hide_fields as $hide_field ) {
+					unset( $fields_dict[ $hide_field ] );
+				}
+			}
+		}
+		return $fields_dict;
+	}
+
+
+	/**
+	 * Create new form.
+	 *
+	 * @since  2.2.4
+	 * @param  string $title    Form title.
+	 * @param  string $template Form template.
+	 * @param  array  $args     Form Arguments.
+	 * @param  array  $data     Additional data.
+	 * @return int|bool Form ID on successful creation else false.
+	 */
+	public function create( $title = '', $template = 'blank', $args = array(), $data = array() ) {
+
+		if ( empty( $title ) ) {
+			return false;
+		}
+
+		$args         = apply_filters( 'user_registration_create_form_args', $args, $data );
+
+		// Prevent content filters from corrupting JSON in post_content.
+		$has_kses = ( false !== has_filter( 'content_save_pre', 'wp_filter_post_kses' ) );
+		if ( $has_kses ) {
+			kses_remove_filters();
+		}
+		$has_targeted_link_rel_filters = ( false !== has_filter( 'content_save_pre', 'wp_targeted_link_rel' ) );
+		if ( $has_targeted_link_rel_filters ) {
+			wp_remove_targeted_link_rel_filters();
+		}
+
+		$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+		$form_data = array();
+
+		if ( ! empty( $templates ) ) {
+			foreach ( $templates->templates as $template_data ) {
+				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
+					$form_data = json_decode( base64_decode( $template_data->settings ), true );
+					$form_data['form_post']['post_title'] = $title;
+				}
+			}
+		}
+
+		// check for non empty post data array.
+		$form_data['form_post'] = isset( $form_data['form_post'] ) ? $form_data['form_post'] : array();
+		$form_data['form_post'] = (object) $form_data['form_post'];
+
+		$form_data = (object) $form_data;
+
+		// If Form Title already exist concat it with imported tag.
+		$args  = array( 'post_type' => 'user_registration' );
+		$forms = get_posts( $args );
+		foreach ( $forms as $key => $form_obj ) {
+			if ( isset( $form_data->form_post->post_title ) && ( $form_data->form_post->post_title === $form_obj->post_title ) ) {
+				$form_data->form_post->post_title = sanitize_text_field( $title );
+				break;
+			}
+		}
+
+		$form_content = (array) $form_data->form_post;
+
+		if ( empty( $form_content ) ) {
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
+			$form_data->form_post = array(
+				'post_type'      => 'user_registration',
+				'post_title'     => $title,
+				'post_content'   => $post_content,
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			);
+		}
+
+		$form_id = wp_insert_post( $form_data->form_post );
+
+		// Check for any error while inserting.
+		if ( is_wp_error( $form_id ) ) {
+			return $form_id;
+		}
+		if ( $form_id ) {
+
+			// check for non empty post_meta array.
+			if ( ! empty( $form_data->form_post_meta ) ) {
+				$form_data->form_post_meta = (object) $form_data->form_post_meta;
+
+				$all_roles = ur_get_default_admin_roles();
+
+				foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+
+					// If user role does not exists in new site then set default as subscriber.
+					if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
+						$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
+					}
+					add_post_meta( $form_id, $meta_key, $meta_value );
+				}
+			}
+		}
+
+		// Restore removed content filters.
+		if ( $has_kses ) {
+			kses_init_filters();
+		}
+		if ( $has_targeted_link_rel_filters ) {
+			wp_init_targeted_link_rel_filters();
+		}
+
+		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
+
+		return $form_id;
 	}
 }
 

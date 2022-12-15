@@ -429,8 +429,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function add_registration_menu() {
 			add_submenu_page(
 				'user-registration',
-				__( 'Add New', 'user-registration' ),
-				__( 'Add New', 'user-registration' ),
+				esc_html__( 'Add New', 'user-registration' ),
+				esc_html__( 'Add New', 'user-registration' ),
 				'manage_user_registration',
 				'add-new-registration',
 				array(
@@ -500,6 +500,63 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					),
 					home_url()
 				);
+			}
+
+			if ( isset( $_GET['onboarding-skipped'] ) ) {
+				update_option( 'user_registration_onboarding_skipped', true );
+			}
+
+			if ( isset( $_GET['edit-registration'] ) ) {
+				// Forms view.
+				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
+			} else {
+				$templates       = array();
+				$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
+				$category  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
+				$templates = self::get_template_data( $category );
+				$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+				wp_enqueue_script( 'ur-setup' );
+				wp_localize_script(
+					'ur-setup',
+					'ur_setup_params',
+					array(
+						'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+						'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
+						'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
+						'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
+						'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
+						'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
+						'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
+						'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
+						'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
+						'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+						'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+						'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
+						'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
+						'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
+						'i18n_form_ok'                 => esc_html__( 'Continue', 'user-registration' ),
+						'i18n_form_placeholder'        => esc_html__( 'Untitled Form', 'user-registration' ),
+						'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
+					)
+				);
+
+				wp_enqueue_script( 'ur-template-controller' );
+				wp_localize_script(
+					'ur-template-controller',
+					'ur_templates',
+					array(
+						'ur_template_all' => self::get_template_data(),
+						'i18n_get_started' => esc_html__( 'Get Started', 'user-registration' ),
+						'i18n_get_preview' => esc_html__( 'Preview', 'user-registration' ),
+						'i18n_pro_feature' => esc_html__( 'Pro', 'user-registration' ),
+						'template_refresh' => esc_html__( 'Updating Templates', 'user-registration' ),
+						'ur_plugin_url'   => esc_url( UR()->plugin_url() ),
+					)
+				);
+
+				// Forms template area.
+				include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
 			}
 
 			// Forms view.
@@ -849,6 +906,50 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo wp_kses_post( $class_name::get_instance()->get_registered_admin_fields() );
 			}
 
+		}
+
+		/**
+		 * Get section content for the template screen.
+		 *
+		 * @return array
+		 */
+		public static function get_template_data() {
+			$template_data = get_transient( 'ur_template_section_list' );
+
+			if ( false === $template_data ) {
+				$template_data     = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+				// Removing directory so the templates can be reinitialized.
+				$folder_path = untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
+
+				foreach ( $template_data->templates as $template_tuple ) {
+					// We retrieve the image, then use them instead of the remote server.
+					$image = wp_remote_get( $template_tuple->image );
+					$type  = wp_remote_retrieve_header( $image, 'content-type' );
+
+					// Remote file check failed, we'll fallback to remote image.
+					if ( ! $type ) {
+						continue;
+					}
+
+					$temp_name     = explode( '/', $template_tuple->image );
+					$relative_path = $folder_path . '/' . end( $temp_name );
+					$exists        = file_exists( $relative_path );
+
+					// If it exists, utilize this file instead of remote file.
+					if ( $exists ) {
+						$template_tuple->image = plugin_dir_url( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
+					}
+				}
+
+				if ( ! empty( $template_data->templates ) ) {
+					set_transient( 'ur_template_section_list', $template_data, WEEK_IN_SECONDS );
+				}
+			}
+
+			if ( ! empty( $template_data->templates ) ) {
+				return apply_filters( 'user_registration_template_section_data', $template_data->templates );
+			}
 		}
 	}
 

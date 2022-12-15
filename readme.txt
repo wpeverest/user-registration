@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.0.2
-Stable tag: 2.2.2
+Tested up to: 6.1.1
+Stable tag: 2.2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,56 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.6    - 01/12/2022
+* Fix      - Critical error while updating user details by admin.
+* Fix      - Form export issue when the form name has special characters.
+* Fix      - Getting Started Page now works properly in local environment.
+* Fix      - User profile picture design issue in dashboard of my account page.
+* Fix      - Convert email verification plain text to link in the confirmation email.
+* Fix      - My Account selection notice keep appearing when group block enabled in the page.
+* Dev      - UR Logger function called incorrectly.
+* Tweak    - Renamed hCaptcha according to brand name.​
+
+= 2.2.5    - 22/11/2022
+* Fix      - User Registration string translation issue.
+* Fix      - Auto approving users even when admin approval was enabled.
+* Fix      - Default role set to administrator after getting started end.
+* Fix      - Critical error while approving or updating user details by admin.
+* Fix      - Replace str_contains with strpos for compatibility below php version 8.
+* Fix      - Upgrade plan button in extensions page even when license was activated.
+* Dev      - Added trigger before redirect to another page after registration in JS.
+
+= 2.2.4.1  - 14/11/2022
+* Fix      - Security issue in profile picture upload.
+* Tweak    - Parse user extra information according to form fields order.
+
+= 2.2.4    - 10/11/2022
+* Feature  - Form Templates.
+* Enhance  - Support links on the checkbox field option.
+* Dev      - Stripe Addon Refactor Compatibility.
+* Dev      - Two Factor Authentication Addon Compatibility.
+* Tweak    - Add page state for user registration my account page.
+* Fix      - Localize reCAPTCHA script conditionally.
+* Fix      - Date not fetched in proper format in admin edit profile.
+* Fix      - Undefined index version while entering and activating license.
+* Fix      - Disable Default WordPress Login Screen not working on custom login page.
+* Fix      - WooCommerce password strength meter conflicting with reset password page.
+
+= 2.2.3    - 27/09/2022
+* Enhance  - Delete forms when plugin uninstalled. ​
+* Tweak    - Install pages notice when onboarding skipped​.
+* Tweak    - Display notice to select my account page in settings.​
+* Tweak    - Change text typo and grammatical mistake in settings labels.​
+* Dev      - Function to get all form fields added.​
+* Dev      - Trigger added for field removal in JS.​
+* Dev      - Trigger added for handling field error messages.​
+* Fix      - Number field accepting text inputs.​
+* Fix      - Tooltip not properly displayed in form settings.​
+* Fix      - My Account vertical layout nav width responsiveness.​
+* Fix      - Required field issue in edit profile when field is conditionally hidden.​
+* Fix      - One time draggable fields inside a row not reinitialized after deleting it.​
+* Fix      - User with email confirmed but not approved by admin are not shown as pending in users table.
 
 = 2.2.2    - 06/09/2022
 * Enhance  - Parse smart tag values in appropriate format to display​.

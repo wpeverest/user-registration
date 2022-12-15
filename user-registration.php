@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 2.2.2
+ * Version: 2.2.6
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.2.2';
+		public $version = '2.2.6';
 
 		/**
 		 * Session instance.
@@ -402,6 +402,7 @@ if ( ! function_exists( 'UR' ) ) {
 			delete_transient( 'user_registration_pro_activated' );
 		}
 	}
+
 	add_action( 'admin_init', 'user_registration_free_deactivate' );
 
 	if ( ! function_exists( 'user_registration_free_notice' ) ) {

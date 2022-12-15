@@ -657,7 +657,9 @@ class UR_Emailer {
 
 		foreach ( $values as $key => $value ) {
 			$value   = ur_format_field_values( $key, $value );
-			$content = str_replace( '{{' . $key . '}}', $value, $content );
+			if( ! is_array( $value ) ) {
+				$content = str_replace( '{{' . $key . '}}', $value, $content );
+			}
 		}
 
 		return $content;

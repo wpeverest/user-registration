@@ -191,6 +191,8 @@ class UR_Admin_Assets {
 		wp_register_script( 'perfect-scrollbar', UR()->plugin_url() . '/assets/js/perfect-scrollbar/perfect-scrollbar.min.js', array( 'jquery' ), '1.5.0', false );
 		wp_register_script( 'chartjs', UR()->plugin_url() . '/assets/js/chartjs/Chart.min.js', array( 'jquery' ), '3.2.1', false );
 		wp_register_script( 'sweetalert2', UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js', array( 'jquery' ), '10.16.7', false );
+		wp_register_script( 'ur-setup', UR()->plugin_url() . '/assets/js/admin/ur-setup' . $suffix . '.js', array( 'jquery', 'sweetalert2', 'updates', 'wp-i18n' ), UR_VERSION, false );
+		wp_register_script( 'ur-template-controller', UR()->plugin_url() . '/assets/js/admin/form-template-controller' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery', UR_VERSION, false );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
 		wp_localize_script(
@@ -290,6 +292,10 @@ class UR_Admin_Assets {
 					home_url()
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
+				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one uppercase letter', 'user-registration' ),
+				'user_registration_weak_password_info' => esc_html__( 'Minimum one uppercase letter and a number', 'user-registration' ),
+				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and a special character', 'user-registration' ),
+				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
 			);
 
 			wp_localize_script(

@@ -23,7 +23,7 @@ class UR_AJAX {
 	 *
 	 * @var array
 	 */
-	private static $field_key_aray    = array();
+	private static $field_key_aray = array();
 	/**
 	 * Check whether is field key pass
 	 *
@@ -35,7 +35,7 @@ class UR_AJAX {
 	 *
 	 * @var array
 	 */
-	private static $failed_key_value  = array();
+	private static $failed_key_value = array();
 
 	/**
 	 * Initialization of ajax.
@@ -62,6 +62,9 @@ class UR_AJAX {
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
+			'template_licence_check'     => false,
+			'install_extension'     => false,
+			'create_form'            => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -98,20 +101,20 @@ class UR_AJAX {
 			);
 		}
 
-		$form_id           = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		$nonce             = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
-		$captcha_response  = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
-		$flag              = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
-		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$form_id             = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$nonce               = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
+		$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
+		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$recaptcha_enabled   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data       = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data       = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -122,13 +125,13 @@ class UR_AJAX {
 					}
 				} else {
 					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
 					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
@@ -395,7 +398,12 @@ class UR_AJAX {
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
-			$valid_extensions = isset( $_REQUEST['valid_extension'] ) ? wp_unslash( $_REQUEST['valid_extension'] ) : ''; // phpcs:ignore
+			$valid_extensions = 'image/jpeg,image/jpg,image/gif,image/png';
+
+			$form_id    = ur_get_form_id_by_userid( $user_id );
+			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+
+			$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext            = array();
 
@@ -530,12 +538,12 @@ class UR_AJAX {
 	public static function ajax_login_submit() {
 		// Custom error messages.
 		$messages = array(
-			'empty_username'       => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
-			'empty_password'       => get_option( 'user_registration_message_empty_password', null ),
-			'invalid_username'     => get_option( 'user_registration_message_invalid_username', null ),
-			'unknown_email'        => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
-			'pending_approval'     => get_option( 'user_registration_message_pending_approval', null ),
-			'denied_access'        => get_option( 'user_registration_message_denied_account', null ),
+			'empty_username'   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
+			'empty_password'   => get_option( 'user_registration_message_empty_password', null ),
+			'invalid_username' => get_option( 'user_registration_message_invalid_username', null ),
+			'unknown_email'    => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
+			'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
+			'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 		);
 
 		check_ajax_referer( 'ur_login_form_save_nonce', 'security' );
@@ -553,21 +561,21 @@ class UR_AJAX {
 			);
 		}
 
-		$info = array();
-		$info['user_login'] = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
+		$info                  = array();
+		$info['user_login']    = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
 		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : ''; //phpcs:ignore
-		$info['remember'] = isset( $_POST['rememberme'] );
-		$captcha_response  = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+		$info['remember']      = isset( $_POST['rememberme'] );
+		$captcha_response      = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
+		$recaptcha_enabled     = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_type        = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
 		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key        = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+					$data       = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data       = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -578,13 +586,13 @@ class UR_AJAX {
 					}
 				} else {
 					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
 					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
 						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
 					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
@@ -609,10 +617,10 @@ class UR_AJAX {
 
 		// To check the specific login.
 		if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data = get_user_by( 'email', $info['user_login'] );
+			$user_data          = get_user_by( 'email', $info['user_login'] );
 			$info['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $info['user_login'] );
 		} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data = get_user_by( 'login', $info['user_login'] );
+			$user_data          = get_user_by( 'login', $info['user_login'] );
 			$info['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $info['user_login'] );
 		} else {
 			$info['user_login'] = $info['user_login'];
@@ -919,7 +927,22 @@ class UR_AJAX {
 
 		foreach ( $array as $key => &$value ) {
 
-			if ( is_array( $value ) || gettype( $value ) == 'object' ) {
+			if ( 'field_key' === $key ) {
+				$field_key = $value;
+			}
+
+			if ( isset( $field_key ) && 'checkbox' === $field_key ) {
+
+				if ( gettype( $value ) == 'object' ) {
+
+					if ( isset( $value->options ) && is_array( $value->options ) && ! empty( $value->options ) ) {
+						foreach ( $value->options as $index => $option_value ) {
+							$option_value = str_replace( '"', "'", $option_value );
+							$option_value = wp_kses_post( $option_value );
+						}
+					}
+				}
+			} elseif ( is_array( $value ) || gettype( $value ) == 'object' ) {
 				self::sweep_array( $value );
 
 			} else {
@@ -943,14 +966,14 @@ class UR_AJAX {
 					$value = wp_kses(
 						$value,
 						array(
-							'a'      => array(
+							'a'          => array(
 								'href'   => array(),
 								'title'  => array(),
 								'target' => array(),
 							),
-							'br'     => array(),
-							'em'     => array(),
-							'strong' => array(),
+							'br'         => array(),
+							'em'         => array(),
+							'strong'     => array(),
 							'u'          => array(),
 							'i'          => array(),
 							'q'          => array(),
@@ -966,12 +989,12 @@ class UR_AJAX {
 							'div'        => array(),
 							'span'       => array(),
 							'p'          => array(),
-							'h1'          => array(),
-							'h2'          => array(),
-							'h3'          => array(),
-							'h4'          => array(),
-							'h5'          => array(),
-							'h6'          => array(),
+							'h1'         => array(),
+							'h2'         => array(),
+							'h3'         => array(),
+							'h4'         => array(),
+							'h5'         => array(),
+							'h6'         => array(),
 						)
 					);
 
@@ -981,7 +1004,7 @@ class UR_AJAX {
 						$value = wp_kses_post( $value );
 					}
 				} else {
-					$value = sanitize_text_field( $value );
+						$value = sanitize_text_field( $value );
 				}
 			}
 		}
@@ -1099,6 +1122,240 @@ class UR_AJAX {
 			)
 		);
 
+	}
+
+	/**
+	 * Ajax handler for licence check.
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem Subclass
+	 */
+	public static function template_licence_check() {
+		check_ajax_referer( 'user_registration_template_licence_check', 'security' );
+
+		if ( empty( $_POST['plan'] ) ) {
+			wp_send_json_error(
+				array(
+					'plan'         => '',
+					'errorCode'    => 'no_plan_specified',
+					'errorMessage' => esc_html__( 'No Plan specified.', 'user-registration' ),
+				)
+			);
+		}
+
+		$addons        = array();
+		$template_data = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+		if ( ! empty( $template_data->templates ) ) {
+			foreach ( $template_data->templates as $template ) {
+
+				if ( isset( $_POST['slug'] ) && $template->slug === $_POST['slug'] && in_array( trim( $_POST['plan'] ), $template->plan, true ) ) {
+					$addons = $template->addons;
+				}
+			}
+		}
+
+		$output  = '<div class="user-registration-recommend-addons">';
+		$output .= '<h3>' . esc_html__( 'This form template requires the following addons.', 'user-registration' ) . '</h3>';
+		$output .= '<table class="plugins-list-table widefat striped">';
+		$output .= '<thead><tr><th scope="col" class="manage-column required-plugins" colspan="2">' . esc_html__( 'Required Addons', 'user-registration' ) . '</th></tr></thead><tbody id="the-list">';
+		$output .= '</div>';
+
+		$activated = true;
+
+		foreach ( $addons as $slug => $addon ) {
+
+			$plugin = 'user-registration-pro' === $slug ? $slug . '/user-registration.php' : $slug . '/' . $slug . '.php';
+
+			if ( is_plugin_active( $plugin ) ) {
+				$class        = 'active';
+				$parent_class = '';
+			} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+				$class        = 'activate-now';
+				$parent_class = 'inactive';
+				$activated    = false;
+			} else {
+				$class        = 'install-now';
+				$parent_class = 'inactive';
+				$activated    = false;
+			}
+
+			$output .= '<tr class="plugin-card-' . $slug . ' plugin ' . $parent_class . '" data-slug="' . $slug . '" data-plugin="' . $plugin . '" data-name="' . $addon . '">';
+			$output .= '<td class="plugin-name">' . $addon . '</td>';
+			$output .= '<td class="plugin-status"><span class="' . esc_attr( $class ) . '"></span></td>';
+			$output .= '</tr>';
+		}
+		$output .= '</tbody></table></div>';
+
+		wp_send_json_success(
+			array(
+				'html'     => $output,
+				'activate' => $activated,
+			)
+		);
+	}
+
+	/**
+	 * Ajax handler for installing a extension.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @see Plugin_Upgrader
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem Subclass
+	 */
+	public static function install_extension() {
+		check_ajax_referer( 'updates' );
+
+		if ( empty( $_POST['slug'] ) ) {
+			wp_send_json_error(
+				array(
+					'slug'         => '',
+					'errorCode'    => 'no_plugin_specified',
+					'errorMessage' => esc_html__( 'No plugin specified.', 'user-registration' ),
+				)
+			);
+		}
+
+		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
+		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' ); // phpcs:ignore
+		$plugin = plugin_basename( sanitize_text_field( $plugin_slug ) );
+		$status = array(
+			'install' => 'plugin',
+			'slug'    => sanitize_key( wp_unslash( $_POST['slug'] ) ),
+		);
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			$status['errorMessage'] = esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'user-registration' );
+			wp_send_json_error( $status );
+		}
+
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
+			$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+			$status['plugin']     = $plugin;
+			$status['pluginName'] = $plugin_data['Name'];
+
+			if ( current_user_can( 'activate_plugin', $plugin ) && is_plugin_inactive( $plugin ) ) {
+				$result = activate_plugin( $plugin );
+
+				if ( is_wp_error( $result ) ) {
+					$status['errorCode']    = $result->get_error_code();
+					$status['errorMessage'] = $result->get_error_message();
+					wp_send_json_error( $status );
+				}
+
+				wp_send_json_success( $status );
+			}
+		}
+
+		$api = json_decode(
+			UR_Updater_Key_API::version(
+				array(
+					'license'   => get_option( 'user-registration_license_key' ),
+					'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				)
+			)
+		);
+
+		if ( is_wp_error( $api ) ) {
+			$status['errorMessage'] = $api->get_error_message();
+			wp_send_json_error( $status );
+		}
+
+		$status['pluginName'] = $api->name;
+
+		$skin     = new WP_Ajax_Upgrader_Skin();
+		$upgrader = new Plugin_Upgrader( $skin );
+		$result   = $upgrader->install( $api->download_link );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$status['debug'] = $skin->get_upgrade_messages();
+		}
+
+		if ( is_wp_error( $result ) ) {
+			$status['errorCode']    = $result->get_error_code();
+			$status['errorMessage'] = $result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( is_wp_error( $skin->result ) ) {
+			$status['errorCode']    = $skin->result->get_error_code();
+			$status['errorMessage'] = $skin->result->get_error_message();
+			wp_send_json_error( $status );
+		} elseif ( $skin->get_errors()->get_error_code() ) {
+			$status['errorMessage'] = $skin->get_error_messages();
+			wp_send_json_error( $status );
+		} elseif ( is_null( $result ) ) {
+			global $wp_filesystem;
+
+			$status['errorCode']    = 'unable_to_connect_to_filesystem';
+			$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
+
+			// Pass through the error from WP_Filesystem if one was raised.
+			if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+				$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
+			}
+
+			wp_send_json_error( $status );
+		}
+
+		$api->version = isset( $api->new_version ) ? $api->new_version : '';
+		$install_status = install_plugin_install_status( $api );
+
+		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
+			if ( isset( $_POST['page'] ) && 'user-registration_page_add-new-registration' === $_POST['page'] ) {
+				activate_plugin( $install_status['file'] );
+			} else {
+				$status['activateUrl'] =
+				esc_url_raw(
+					add_query_arg(
+						array(
+							'action'   => 'activate',
+							'plugin'   => $install_status['file'],
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+						),
+						admin_url( 'admin.php?page=user-registration-addons' )
+					)
+				);
+			}
+		}
+
+		wp_send_json_success( $status );
+	}
+
+	/**
+	 * AJAX create new form.
+	 */
+	public static function create_form() {
+		ob_start();
+
+		check_ajax_referer( 'user_registration_create_form', 'security' );
+
+		$title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : esc_html__( 'Blank Form', 'user-registration' );
+		$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : 'blank';
+
+		$form_id = UR()->form->create( $title, $template );
+
+		if ( $form_id ) {
+			$data = array(
+				'id'       => $form_id,
+				'redirect' => add_query_arg(
+					array(
+						'tab'     => 'fields',
+						'form_id' => $form_id,
+					),
+					admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $form_id )
+				),
+			);
+
+			wp_send_json_success( $data );
+		}
+
+		wp_send_json_error(
+			array(
+				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
+			)
+		);
 	}
 }
 

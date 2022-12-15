@@ -565,6 +565,28 @@
 											.after(error_message);
 									}
 
+									$(document).trigger(
+										"user_registration_frontend_validate_before_form_submit",
+										[$this]
+									);
+
+									if (
+										$this
+											.find(
+												"#user_registration_stripe_gateway"
+											)
+											.find(".user-registration-error")
+											.length > 0 &&
+										$this
+											.find(
+												"#user_registration_stripe_gateway"
+											)
+											.find(".user-registration-error")
+											.is(":visible")
+									) {
+										return;
+									}
+
 									if (!$this.valid()) {
 										return;
 									}
@@ -682,18 +704,19 @@
 										async: true,
 										complete: function (ajax_response) {
 											var ajaxFlag = [];
-											ajaxFlag["status"] = false;
+											ajaxFlag["status"] = true;
 											$(document).trigger(
 												"user_registration_frontend_before_ajax_complete_success_message",
-												[ajax_response, ajaxFlag]
+												[ajax_response, ajaxFlag, $this]
 											);
-											if (!ajaxFlag["status"]) {
+											if (ajaxFlag["status"]) {
 												$this
 													.find(".ur-submit-button")
 													.find("span")
 													.removeClass(
 														"ur-front-spinner"
 													);
+
 												var redirect_url = $this
 													.find(
 														'input[name="ur-redirect-url"]'
@@ -830,6 +853,10 @@
 																typeof redirect_url &&
 															redirect_url !== ""
 														) {
+															$(document).trigger(
+																"user_registration_frontend_before_redirect_url",
+																[redirect_url]
+															);
 															window.setTimeout(
 																function () {
 																	window.location =
@@ -846,6 +873,9 @@
 																response.data
 																	.auto_login
 															) {
+																$(document).trigger(
+																	"user_registration_frontend_before_auto_login"
+																);
 																location.reload();
 															}
 														}
@@ -928,6 +958,7 @@
 															$field_id.push($id);
 														}
 													);
+													var field_name = "";
 													$.each(
 														response.data.message,
 														function (
@@ -939,6 +970,8 @@
 																	index
 																)
 															) {
+																field_name =
+																	index;
 																var error_message =
 																	'<label id="' +
 																	index +
@@ -958,11 +991,19 @@
 																				index +
 																				"']"
 																		);
-																	wrapper.closest('.form-row').append(
+																wrapper
+																	.closest(
+																		".form-row"
+																	)
+																	.append(
 																		error_message
 																	);
 															}
 														}
+													);
+													$(document).trigger(
+														"ur_handle_field_error_messages",
+														[$this, field_name]
 													);
 												}
 
@@ -1172,24 +1213,99 @@
 											}
 
 											if (
-												typeof response.data.message ===
-												"object"
+												!response.data.hasOwnProperty(
+													"message"
+												) ||
+												!response.data.message.hasOwnProperty(
+													"individual"
+												)
 											) {
+												if (
+													typeof response.data
+														.message === "object"
+												) {
+													$.each(
+														response.data.message,
+														function (
+															index,
+															value
+														) {
+															message.append(
+																"<li>" +
+																	value +
+																	"</li>"
+															);
+														}
+													);
+												} else {
+													message.append(
+														"<li>" +
+															response.data
+																.message +
+															"</li>"
+													);
+												}
+												form.show_message(
+													message,
+													type,
+													$this,
+													"0"
+												);
+											} else {
+												var $field_id = [];
+												$.each(
+													$this
+														.find(".ur-form-row")
+														.find(".ur-field-item")
+														.find(
+															".ur-edit-profile-field"
+														),
+													function (index) {
+														var $this = $(this);
+														var $id =
+															$this.attr("id");
+														$field_id.push($id);
+													}
+												);
 												$.each(
 													response.data.message,
 													function (index, value) {
-														message.append(
-															"<li>" +
+														if (
+															$field_id.includes(
+																index
+															)
+														) {
+															var error_message =
+																'<label id="' +
+																index +
+																"-error" +
+																'" class="user-registration-error" for="' +
+																index +
+																'">' +
 																value +
-																"</li>"
-														);
+																"</label>";
+
+															var wrapper = $this
+																.find(
+																	".ur-form-row"
+																)
+																.find(
+																	".ur-field-item"
+																)
+																.find(
+																	"input[id='" +
+																		index +
+																		"']"
+																);
+															wrapper
+																.closest(
+																	".form-row"
+																)
+																.append(
+																	error_message
+																);
+														}
 													}
-												);
-											} else {
-												message.append(
-													"<li>" +
-														response.data.message +
-														"</li>"
 												);
 											}
 										} catch (e) {
@@ -1197,13 +1313,6 @@
 												"<li>" + e.message + "</li>"
 											);
 										}
-
-										form.show_message(
-											message,
-											type,
-											$this,
-											"0"
-										);
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(

@@ -122,10 +122,16 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var isTemplatePage = $(".user-registration-setup").length;
+
+					var previousPage = document.referrer.split("page=")[1];
 
 					if (
 						"add-new-registration" === urPage &&
-						null === isEditPage
+						(null === isEditPage ||
+							(null !== isEditPage &&
+								"add-new-registration" === previousPage)) &&
+						0 === isTemplatePage
 					) {
 						URFormBuilder.ur_show_help();
 					}
@@ -1758,7 +1764,7 @@
 														);
 														single_row.remove();
 														$this.check_grid();
-														URFormBuilder.manage_draggable_users_fields();
+														builder.manage_draggable_users_fields();
 
 														Swal.fire({
 															icon: "success",
@@ -2100,6 +2106,10 @@
 															removed_item +
 															'"]'
 													).remove();
+
+													$(document.body).trigger(
+														"ur_field_removed"
+													);
 
 													// To prevent click on whole item.
 													return false;
@@ -3210,6 +3220,10 @@
 
 				for (var i = 0; i < array_value.length; i++) {
 					if (array_value[i] !== "") {
+						array_value[i].value = array_value[i].value.replaceAll(
+							'"',
+							"'"
+						);
 						checkbox.append(
 							'<label><input value="' +
 								array_value[i].value.trim() +
@@ -3426,7 +3440,11 @@
 					)
 					.removeAttr("selected");
 
-				wrapper.find(".ur-label").find("label").find("span:contains(*)").remove();
+				wrapper
+					.find(".ur-label")
+					.find("label")
+					.find("span:contains(*)")
+					.remove();
 
 				if ($label.val() === "yes") {
 					wrapper

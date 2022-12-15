@@ -94,7 +94,12 @@ class UR_REST_API {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_minimum_password_strength', $settings_to_update['user_registration_form_setting_minimum_password_strength'] );
 		}
 		if ( isset( $settings_to_update['user_registration_form_setting_default_user_role'] ) ) {
-			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_default_user_role', $settings_to_update['user_registration_form_setting_default_user_role'] );
+			$all_roles      = ur_get_default_admin_roles();
+			$role_to_update = $settings_to_update['user_registration_form_setting_default_user_role'];
+			if ( ! isset( $all_roles[ $role_to_update ] ) ) {
+				$role_to_update = isset( array_keys( $all_roles )[ $role_to_update ] ) ? array_keys( $all_roles )[ $role_to_update ] : 'subscriber';
+			}
+			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_default_user_role', $role_to_update );
 		}
 
 		foreach ( $settings_to_update as $option => $value ) {
@@ -196,7 +201,7 @@ class UR_REST_API {
 						'default' => 'yes',
 					),
 					array(
-						'title'   => __( 'User login option', 'user-registration' ),
+						'title'   => __( 'User Approval And Login Option', 'user-registration' ),
 						'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 						'id'      => 'user_registration_general_setting_login_options',
 						'type'    => 'select',
@@ -255,7 +260,7 @@ class UR_REST_API {
 						'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
 						'id'      => 'user_registration_form_setting_default_user_role',
 						'type'    => 'select',
-						'default' => array_search( 'subscriber', array_keys( $all_roles ) ),
+						'default' => 'subscriber',
 						'options' => $all_roles,
 					),
 				),

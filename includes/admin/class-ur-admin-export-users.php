@@ -56,6 +56,16 @@ class UR_Admin_Export_Users {
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
 			return;
 		}
+		if ( isset( $_POST['all_fields_dict'] ) ) {
+			$all_fields = sanitize_text_field( wp_unslash( $_POST['all_fields_dict'] ) );
+			$all_fields = (array) json_decode( $all_fields );
+			$all_fields = array_keys( $all_fields );
+
+			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array();
+			$unchecked_fields = array_diff( $all_fields, $checked_fields );
+		} else {
+			$unchecked_fields = array();
+		}
 
 		$users = get_users(
 			array(
@@ -68,8 +78,8 @@ class UR_Admin_Export_Users {
 			return;
 		}
 
-		$columns = $this->generate_columns( $form_id );
-		$rows    = $this->generate_rows( $users, $form_id );
+		$columns = $this->generate_columns( $form_id, $unchecked_fields );
+		$rows    = $this->generate_rows( $users, $form_id, $unchecked_fields );
 
 		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
 		$form_name = str_replace( '&#8211;', '-', $form_name );
@@ -110,10 +120,11 @@ class UR_Admin_Export_Users {
 	/**
 	 * Generate Column for CSV export.
 	 *
-	 * @param  int $form_id  Form ID.
+	 * @param int   $form_id  Form ID.
+	 * @param array $unchecked_fields Unchecked Fields.
 	 * @return array    $columns  CSV Export Columns.
 	 */
-	public function generate_columns( $form_id ) {
+	public function generate_columns( $form_id, $unchecked_fields = array() ) {
 
 		// Default Columns.
 		$default_columns = apply_filters(
@@ -136,12 +147,17 @@ class UR_Admin_Export_Users {
 		$columns = ur_get_meta_key_label( $form_id );
 		remove_filter( 'user_registration_meta_key_label', array( __CLASS__, 'exclude_field_key' ) );
 
-		$exclude_columns = apply_filters(
-			'user_registration_csv_export_exclude_columns',
+		$exclude_columns = array_merge(
+			$unchecked_fields,
 			array(
 				'user_confirm_password',
 				'user_confirm_email',
 			)
+		);
+
+		$exclude_columns = apply_filters(
+			'user_registration_csv_export_exclude_columns',
+			$exclude_columns
 		);
 
 		foreach ( $exclude_columns as $exclude_column ) {
@@ -157,11 +173,12 @@ class UR_Admin_Export_Users {
 	/**
 	 * Generate rows for CSV export
 	 *
-	 * @param  obj $users   Users Data.
-	 * @param int $form_id Form ID.
+	 * @param obj   $users   Users Data.
+	 * @param int   $form_id Form ID.
+	 * @param array $unchecked_fields Unchecked Fields.
 	 * @return array    $rows    CSV export rows.
 	 */
-	public function generate_rows( $users, $form_id ) {
+	public function generate_rows( $users, $form_id, $unchecked_fields = array() ) {
 
 		$rows = array();
 
@@ -183,26 +200,27 @@ class UR_Admin_Export_Users {
 			$user_id_row    = array( 'user_id' => $user->data->ID );
 			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
 
+			$columns = $this->generate_columns( $form_id, $unchecked_fields );
+
 			foreach ( $user_extra_row as $user_extra_data_key => $user_extra_data ) {
-				$columns = $this->generate_columns( $form_id );
 
 				if ( ! isset( $columns[ $user_extra_data_key ] ) ) {
 
 					// Remove the rows value that are not in columns.
 					unset( $user_extra_row[ $user_extra_data_key ] );
-				}
-
-				$field_data = ur_get_field_data_by_field_name( $form_id, $user_extra_data_key );
-				if ( isset( $field_data['field_key'] ) && 'file' === $field_data['field_key'] ) {
-					$attachment_ids = explode( ',', $user_extra_data );
-					$file_link      = '';
-					foreach ( $attachment_ids as $attachment_id ) {
-						$file_path = wp_get_attachment_url( $attachment_id );
-						if ( $file_path ) {
-							$file_link .= esc_url( $file_path ) . ' ; ';
+				} else {
+					$field_data = ur_get_field_data_by_field_name( $form_id, $user_extra_data_key );
+					if ( isset( $field_data['field_key'] ) && 'file' === $field_data['field_key'] ) {
+						$attachment_ids = explode( ',', $user_extra_data );
+						$file_link      = '';
+						foreach ( $attachment_ids as $attachment_id ) {
+							$file_path = wp_get_attachment_url( $attachment_id );
+							if ( $file_path ) {
+								$file_link .= esc_url( $file_path ) . ' ; ';
+							}
 						}
+						$user_extra_row[ $user_extra_data_key ] = $file_link;
 					}
-					$user_extra_row[ $user_extra_data_key ] = $file_link;
 				}
 			}
 
@@ -211,7 +229,7 @@ class UR_Admin_Export_Users {
 
 			// Get user table data that are on column.
 			foreach ( $user_table_data as $data ) {
-				$columns = $this->generate_columns( $form_id );
+				$columns = $this->generate_columns( $form_id, $unchecked_fields );
 
 				if ( isset( $columns[ $data ] ) ) {
 					$user_table_data_row = array_merge( $user_table_data_row, array( $data => $user->$data ) );
@@ -223,7 +241,7 @@ class UR_Admin_Export_Users {
 
 			// Get user meta table data that are on column.
 			foreach ( $user_meta_data as $meta_data ) {
-				$columns = $this->generate_columns( $form_id );
+				$columns = $this->generate_columns( $form_id, $unchecked_fields );
 
 				if ( isset( $columns[ $meta_data ] ) ) {
 					$user_meta_data_row = array_merge( $user_meta_data_row, array( $meta_data => get_user_meta( $user->data->ID, $meta_data, true ) ) );
@@ -249,7 +267,7 @@ class UR_Admin_Export_Users {
 			 *
 			 * @see https://stackoverflow.com/a/44774818/9520912
 			 */
-			$user_row = array_merge( array_fill_keys( array_keys( $this->generate_columns( $form_id ) ), '' ), $user_row );
+			$user_row = array_merge( array_fill_keys( array_keys( $this->generate_columns( $form_id, $unchecked_fields ) ), '' ), $user_row );
 
 			$rows[] = $user_row;
 		}

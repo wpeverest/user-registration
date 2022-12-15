@@ -21,7 +21,7 @@
     width: 100%; }
   #user-registration.vertical .user-registration-MyAccount-navigation {
     background: #f0f1f5;
-    width: 20%; }
+    width: 25%; }
     #user-registration.vertical .user-registration-MyAccount-navigation ul {
       flex-direction: column;
       flex-wrap: nowrap; }
@@ -29,7 +29,7 @@
         background: #dee0e9;
         border-color: #475bb2; }
   #user-registration.vertical .user-registration-MyAccount-content {
-    width: 80%; }
+    width: 75%; }
     #user-registration.vertical .user-registration-MyAccount-content .user-registration-profile-header {
       display: flex;
       flex-wrap: wrap;
@@ -66,6 +66,9 @@
       #user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
       #user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
       #user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
         border-radius: 50%;
         margin: 0 auto; }
     #user-registration.horizontal .user-registration-MyAccount-content .edit-profile,

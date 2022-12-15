@@ -41,7 +41,7 @@ function ur_template_redirect() {
  * Handle redirects before content is output - hooked into template_redirect so is_page works.
  */
 function ur_login_template_redirect() {
-	 global $post;
+	global $post;
 
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
@@ -60,7 +60,7 @@ function ur_login_template_redirect() {
 		$redirect_url = apply_filters( 'user_registration_redirect_url_after_login', $redirect_url );
 
 		if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-			wp_redirect( $redirect_url );
+			wp_redirect( $redirect_url ); //PHPCS:ignore;
 			exit();
 		}
 	}
@@ -82,7 +82,7 @@ function ur_registration_template_redirect() {
 
 	$current_user    = wp_get_current_user();
 	$current_user_id = $current_user->ID;
-	$form_id = 0;
+	$form_id         = 0;
 
 	// Donot redirect for admins.
 	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
@@ -94,7 +94,7 @@ function ur_registration_template_redirect() {
 		$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
 		$shortcodes = parse_blocks( $post_content );
-		$matched = false;
+		$matched    = false;
 		foreach ( $shortcodes as $shortcode ) {
 			if ( ! empty( $shortcode['blockName'] ) ) {
 				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['formId'] ) ) {
@@ -109,7 +109,7 @@ function ur_registration_template_redirect() {
 
 			$attributes = ur_get_shortcode_attr( $post_content );
 			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
-			$matched = true;
+			$matched    = true;
 		}
 
 		if ( $matched ) {
@@ -120,7 +120,7 @@ function ur_registration_template_redirect() {
 			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
 
 			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-				wp_redirect( $redirect_url );
+				wp_redirect( $redirect_url ); //PHPCS:ignore;
 				exit();
 			}
 		}
@@ -264,6 +264,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
 			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
+		} elseif( isset( $args['tip'] ) ) {
+			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
 		}
 
 		$cl_html = '';
@@ -295,12 +297,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'checkbox':
-				$field_key     = isset( $args['field_key'] ) ? $args['field_key'] : '';
-				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
-				$default       = ! empty( $value ) ? $value : $default_value;
-				$select_all    = isset( $args['select_all'] ) ? $args['select_all'] : '';
-				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
-				$choice_limit = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+				$field_key         = isset( $args['field_key'] ) ? $args['field_key'] : '';
+				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$default           = ! empty( $value ) ? $value : $default_value;
+				$select_all        = isset( $args['select_all'] ) ? $args['select_all'] : '';
+				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
 				if ( '' !== $choice_limit ) {
 					$choice_limit_attr = 'data-choice-limit="' . $choice_limit . '"';
@@ -329,14 +331,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$value = '';
 						if ( '' !== $default ) {
-							if ( is_array( $default ) && in_array( trim( $choice_index ), $default ) ) {
+
+							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
 								$value = 'checked="checked"';
 							} elseif ( $default === $choice_index ) {
 								$value = 'checked="checked"';
 							}
 						}
 						$field .= '<li class="ur-checkbox-list">';
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . trim( $choice_index ) . '"' . esc_attr( $value ) . ' /> ';
+						$choice_index = ur_sanitize_tooltip( $choice_index );
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
 						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						$checkbox_start++;
 					}
@@ -351,7 +355,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'password':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$field .= ' <span class="input-wrapper"> ';
+				$field           .= ' <span class="input-wrapper"> ';
 				if ( empty( $extra_params ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
 					$field          .= '<span class="password-input-group input-form-field-icons">';
@@ -376,15 +380,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'url':
 			case 'file':
 			case 'timepicker':
-				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$current_time     = isset( $args['current_time'] ) ? $args['current_time'] : '';
-				$time_interval    = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
-				$time_min    = isset( $args['time_min'] ) ? $args['time_min'] : '';
-				$time_max    = isset( $args['time_max'] ) ? $args['time_max'] : '';
-				$username_length  = isset( $args['username_length'] ) ? $args['username_length'] : '';
+				$extra_params_key   = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
+				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
+				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
+				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
-				$attr = '';
+				$attr               = '';
 				if ( '' !== $username_length ) {
 					$attr .= 'data-username-length="' . $username_length . '"';
 				}
@@ -616,6 +620,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	 */
 	function user_registration_form_data( $user_id = 0, $form_id = 0 ) {
 		$all_meta_value = get_user_meta( $user_id );
+		$user_details   = get_user_by( 'ID', $user_id );
+		$user_info      = (array) $user_details->data;
 		$fields         = array();
 
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
@@ -642,6 +648,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
 					$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
+					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -709,7 +717,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 						}
 
-						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : '';
+						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : ( isset( $all_meta_value[ $field_name ][0] ) ? $all_meta_value[ $field_name ][0] : '' );
+						if ( empty( $extra_params['default'] ) ) {
+							$extra_params['default'] = isset( $user_info[ $field_name ] ) ? $user_info[ $field_name ] : '';
+						}
 
 						if ( in_array( $field_key, ur_get_user_profile_field_only() ) ) {
 
@@ -735,6 +746,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						if ( count( $custom_attributes ) > 0 ) {
 							$extra_params['custom_attributes'] = $custom_attributes;
+						}
+
+						if ( isset( $field->advance_setting->validate_unique ) ) {
+							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
+							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
@@ -806,7 +822,7 @@ if ( ! function_exists( 'user_registration_account_edit_profile' ) ) {
 	 * My Account > Edit profile template.
 	 */
 	function user_registration_account_edit_profile() {
-		 UR_Shortcode_My_Account::edit_profile();
+		UR_Shortcode_My_Account::edit_profile();
 	}
 }
 
@@ -816,7 +832,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
 	 * My Account > Edit account template.
 	 */
 	function user_registration_account_edit_account() {
-		 UR_Shortcode_My_Account::edit_account();
+		UR_Shortcode_My_Account::edit_account();
 	}
 }
 
@@ -831,12 +847,12 @@ function ur_logout_url( $redirect = '' ) {
 	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
 
 	global $post;
-	$wp_version = '5.0';
+	$wp_version   = '5.0';
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
-			$blocks = parse_blocks( $post_content );
+			$blocks        = parse_blocks( $post_content );
 			$new_shortcode = '';
 
 			foreach ( $blocks as $block ) {
@@ -857,7 +873,7 @@ function ur_logout_url( $redirect = '' ) {
 		}
 
 		$matches_attr = isset( $matches[3] ) ? $matches[3] : '';
-		$attributes = shortcode_parse_atts( $matches_attr );
+		$attributes   = shortcode_parse_atts( $matches_attr );
 		/**
 		 * Introduced logout_redirect parameter in user_registration_my_account shortcode.
 		 *
@@ -900,6 +916,6 @@ function ur_logout_url( $redirect = '' ) {
  */
 function is_elementor_editing_page() {
 	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
-		! empty( $_GET['elementor-preview'] ) ||
-		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] );
+		! empty( $_GET['elementor-preview'] ) || //PHPCS:ignore;
+		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] ); //PHPCS:ignore;
 }

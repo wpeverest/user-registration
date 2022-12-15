@@ -49,7 +49,7 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 
-											if ( 'profile_picture' === $single_item->field_key ) {
+											if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
 												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
 													$edit_profile_valid_file_type = implode( ', ', $single_item->advance_setting->valid_file_type );
 												}
@@ -123,6 +123,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									$found_field = false;
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
+										if ( ! isset( $single_item->general_setting->field_name ) ) {
+											continue;
+										}
+
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $single_item->field_key ) && isset( $profile[ $key ] ) ) {
 											$found_field = true;
@@ -135,6 +139,10 @@ do_action( 'user_registration_before_edit_profile_form' ); ?>
 									}
 
 									foreach ( $grid_data as $grid_data_key => $single_item ) {
+
+										if ( ! isset( $single_item->general_setting->field_name ) ) {
+											continue;
+										}
 
 										$key = 'user_registration_' . $single_item->general_setting->field_name;
 										if ( isset( $profile[ $key ] ) ) {

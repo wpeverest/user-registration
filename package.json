@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "2.2.2",
+  "version": "2.2.6",
   "homepage": "https://wpeverest.com/wordpress-plugins/user-registration/",
   "repository": {
     "type": "git",
@@ -51,7 +51,7 @@
     "grunt-sass": "3.1.0",
     "grunt-stylelint": "^0.18.0",
     "html-webpack-plugin": "^5.5.0",
-    "node-sass": "7.0.1",
+    "node-sass": "7.0.3",
     "reflect-metadata": "^0.1.13",
     "sass": "^1.52.3",
     "sass-loader": "^12.3.0",

@@ -31,6 +31,7 @@ class UR_Admin {
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
+		add_action( 'admin_init', array( $this, 'template_actions' ) );
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
 	}
 
@@ -55,16 +56,16 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-			include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-			include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
-			include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
+		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 
-			// Setup/welcome.
+		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			switch ( $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				case 'user-registration-welcome':
@@ -148,7 +149,7 @@ class UR_Admin {
 					sprintf(
 						/* translators: 1: User Registration 2:: five stars */
 						__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
-						sprintf( '<strong>%s</strong>', esc_html__( 'User Registration', 'user-registration' ) ),
+						sprintf( '<strong>%s</strong>', esc_html( 'User Registration' ) ),
 						'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 					)
 				);
@@ -400,6 +401,30 @@ class UR_Admin {
 		if ( '1' === get_option( 'user_registration_first_time_activation_flag' ) ) {
 			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
 			exit;
+		}
+	}
+
+	/**
+	 * Handle redirects after template refresh.
+	 */
+	public function template_actions() {
+		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
+			$action     = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$templatres = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+			if ( 'ur-template-refresh' === $action && ! empty( $templatres ) ) {
+				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
+					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
+				}
+
+				foreach ( array( 'ur_pro_license_plan', 'ur_template_section_list' ) as $transient ) {
+					delete_transient( $transient );
+				}
+
+				// Redirect to the builder page normally.
+				wp_safe_redirect( admin_url( 'admin.php?page=add-new-registration' ) );
+				exit;
+			}
 		}
 	}
 }
