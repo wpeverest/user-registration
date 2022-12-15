@@ -228,7 +228,7 @@ class UR_Frontend_Form_Handler {
 				$filter_hook                                = $hook . '_message';
 
 				if ( 'user_email' === $single_form_field->field_key ) {
-					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook );
+					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field );
 				}
 
 				if ( 'honeypot' === $single_form_field->field_key ) {
