@@ -96,7 +96,7 @@ class UR_Admin_Export_Users {
 		header( 'Content-Type: application/download' );
 
 		// Disposition / Encoding on response body.
-		header( "Content-Disposition: attachment;filename={$file_name}" );
+		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
 		header( 'Content-Transfer-Encoding: binary' );
 
 		$handle = fopen( 'php://output', 'w' );
