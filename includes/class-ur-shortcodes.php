@@ -119,6 +119,8 @@ class UR_Shortcodes {
 	 * User Registration Edit password form shortcode.
 	 *
 	 * @param mixed $atts Extra attributes.
+	 *
+	 * @since 2.2.7
 	 */
 	public static function edit_password( $atts ) {
 		return self::shortcode_wrapper( array( __CLASS__, 'render_edit_password' ), $atts );
@@ -126,10 +128,19 @@ class UR_Shortcodes {
 
 	/**
 	 * Edit password page shortcode.
+	 *
+	 * @since 2.2.7
 	 */
 	public static function render_edit_password() {
-		include_once 'shortcodes/class-ur-shortcode-my-account.php';
-		UR_Shortcode_My_Account::edit_password();
+		if ( is_user_logged_in() ) {
+			include_once 'shortcodes/class-ur-shortcode-my-account.php';
+			UR_Shortcode_My_Account::edit_password();
+		} else {
+			do_action( 'user_registration_edit_password_shortcode' );
+
+			/* translators: %s - Link to login form. */
+			echo wp_kses_post( apply_filters( 'user_registration_edit_password_shortcode_message', sprintf( __( 'Please Login to edit password. <a href="%s">Login Here?</a>', 'user-registration' ), isset( $page_id ) ? get_permalink( $page_id ) : wp_login_url() ) ) );
+		}
 	}
 
 	/**

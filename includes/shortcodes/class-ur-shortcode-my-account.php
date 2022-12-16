@@ -259,6 +259,8 @@ class UR_Shortcode_My_Account {
 
 	/**
 	 * Change Password page.
+	 *
+	 * @since 2.2.7
 	 */
 	public static function edit_password() {
 		$user_id                   = get_current_user_id();
