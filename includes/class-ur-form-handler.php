@@ -604,7 +604,7 @@ class UR_Form_Handler {
 				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
 			}
 
-			if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			if ( 'yes' === $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 				if ( ! empty( $recaptcha_value ) ) {
 					if ( 'hCaptcha' === $recaptcha_type ) {
 						$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
