@@ -129,6 +129,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'label' => 'Profile Picture',
 							'icon'  => 'ur-icon ur-icon-user-display-name',
 						),
+						array(
+							'id'    => 'user_registration_range',
+							'label' => 'Range',
+							'icon'  => 'ur-icon ur-icon-range',
+						),
+						array(
+							'id'    => 'user_registration_custom_url',
+							'label' => 'Custom URL',
+							'icon'  => 'ur-icon ur-icon-website',
+						),
 					),
 				),
 				array(
