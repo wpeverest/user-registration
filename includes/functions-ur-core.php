@@ -2748,6 +2748,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( 0 === $matched ) {
 			$message = 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="' . admin_url() . '/admin.php?page=user-registration-settings#user_registration_myaccount_page_id" style="text-decoration:none;">My Account Page</a> )';
+			/* translators: %s - My account Selection Notice. */
 			$message = sprintf( __( '%1$s', 'user-registration' ), wp_kses_post( $message ) );
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
