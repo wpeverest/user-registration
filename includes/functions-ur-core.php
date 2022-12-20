@@ -2874,7 +2874,7 @@ function ur_get_form_fields( $form_id, $args = array() ) {
 			'user_confirm_password',
 			'user_confirm_email',
 			'html',
-			'section_title'
+			'section_title' //phpcs:ignore
 		);
 	} else {
 		$hide_fields = array();
