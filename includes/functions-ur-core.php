@@ -2433,7 +2433,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 	function ur_install_extensions( $name, $slug ) {
 		try {
 
-			$plugin = 'user-registration-pro' === $slug ? plugin_basename( sanitize_text_field( wp_unslash( $slug . '/user-registration.php' ) ) ) :  plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
+			$plugin = 'user-registration-pro' === $slug ? plugin_basename( sanitize_text_field( wp_unslash( $slug . '/user-registration.php' ) ) ) : plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
 			$status = array(
 				'install' => 'plugin',
 				'slug'    => sanitize_key( wp_unslash( $slug ) ),
@@ -2742,7 +2742,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( ! empty( $myaccount_page ) ) {
 			$shortcodes = parse_blocks( $myaccount_page->post_content );
-			$matched = ur_find_my_account_in_page( $shortcodes, $myaccount_page , $matched );
+			$matched = ur_find_my_account_in_page( $shortcodes, $myaccount_page, $matched );
 
 		}
 
@@ -2760,12 +2760,13 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 	/**
 	 * Find My Account Shortcode.
 	 *
+	 * @param array $shortcodes Shortcode.
 	 * @param mixed $myaccount_page My Account Page.
 	 * @param int $matched Default 0.
 	 * @return int If matched then 1 else 0.
 	 * @since  2.2.7
 	 */
-	function ur_find_my_account_in_page(  $shortcodes, $myaccount_page , $matched ) {
+	function ur_find_my_account_in_page( $shortcodes, $myaccount_page, $matched ) {
 
 		foreach ( $shortcodes as $shortcode ) {
 			if ( ! empty( $shortcode['blockName'] ) ) {
@@ -2780,7 +2781,7 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 					if ( 0 < absint( $matched ) ) {
 						return $matched;
 					}
-				} elseif ( 'core/group' ===  $shortcode['blockName'] ) {
+				} elseif ( 'core/group' === $shortcode['blockName'] ) {
 					if ( isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
 						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
 							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
@@ -2794,13 +2795,13 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 								if ( 0 < absint( $matched ) ) {
 									return $matched;
 								}
-							} elseif ( 'core/group' ===  $inner_block['blockName'] ) {
+							} elseif ( 'core/group' === $inner_block['blockName'] ) {
 								$matched = ur_find_my_account_in_page(  $shortcode['innerBlocks'], $myaccount_page, $matched );
 
 								if ( 0 < absint( $matched ) ) {
 									return $matched;
 								}
-							}  elseif ( 'core/block' ===  $inner_block['blockName'] ) {
+							}  elseif ( 'core/block' === $inner_block['blockName'] ) {
 								if ( isset( $inner_block['attrs']['ref'] ) && ! empty( $inner_block['attrs']['ref'] ) ) {
 									$resuable_block_page = get_post( $inner_block['attrs']['ref'] );
 									if ( ! empty( $resuable_block_page ) ) {
@@ -2814,7 +2815,7 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 							}
 						}
 					}
-				} elseif ( 'core/block' ===  $shortcode['blockName'] ) {
+				} elseif ( 'core/block' === $shortcode['blockName'] ) {
 
 					if ( isset( $shortcode['attrs']['ref'] ) && ! empty( $shortcode['attrs']['ref'] ) ) {
 						$resuable_block_page = get_post( $shortcode['attrs']['ref'] );
