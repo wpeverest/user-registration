@@ -2798,8 +2798,8 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 									return $matched;
 								}
 							} elseif ( 'core/group' === $inner_block['blockName'] || 'core/column' === $inner_block['blockName'] || 'core/columns' === $inner_block['blockName'] ) {
-								$matched = ur_find_my_account_in_page( $inner_block['innerBlocks'], $myaccount_page, $matched );
 
+								$matched = ur_find_my_account_in_page( $shortcode['innerBlocks'], $myaccount_page, $matched );
 								if ( 0 < absint( $matched ) ) {
 									return $matched;
 								}
@@ -2831,13 +2831,8 @@ if ( ! function_exists( 'ur_find_my_account_in_blocks' ) ) {
 								if ( 0 < absint( $matched ) ) {
 									return $matched;
 								}
-							} elseif ( 'core/group' === $inner_block['blockName'] ) {
-								$matched = ur_find_my_account_in_page( $inner_block['innerBlocks'], $myaccount_page, $matched );
+							} elseif ( 'core/group' === $inner_block['blockName'] || 'core/column' === $inner_block['blockName'] || 'core/columns' === $inner_block['blockName'] ) {
 
-								if ( 0 < absint( $matched ) ) {
-									return $matched;
-								}
-							} elseif ( 'core/column' === $inner_block['blockName'] || 'core/columns' === $inner_block['blockName'] ) {
 								$matched = ur_find_my_account_in_page( $inner_block['innerBlocks'], $myaccount_page, $matched );
 
 								if ( 0 < absint( $matched ) ) {
