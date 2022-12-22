@@ -62,8 +62,8 @@ class UR_AJAX {
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
-			'template_licence_check'     => false,
-			'install_extension'     => false,
+			'template_licence_check' => false,
+			'install_extension'      => false,
 			'create_form'            => true,
 		);
 
@@ -403,7 +403,7 @@ class UR_AJAX {
 			$form_id    = ur_get_form_id_by_userid( $user_id );
 			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
 
-			$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+			$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext            = array();
 
@@ -424,7 +424,7 @@ class UR_AJAX {
 				);
 			}
 
-			$upload_dir = wp_upload_dir();
+			$upload_dir  = wp_upload_dir();
 			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
 			// Checks if the upload directory exists and create one if not.
@@ -648,7 +648,11 @@ class UR_AJAX {
 				$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 			}
 			if ( ! empty( $user->errors['invalid_email'] ) ) {
-				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), __( 'Unknown email address. Check again or try your username.', 'user-registration' ) ) );
+				if ( empty( $messages['unknown_email'] ) ) {
+					$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
+				}
+
+				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['unknown_email'] ) );
 			}
 			if ( ! empty( $user->errors['incorrect_password'] ) ) {
 				/* translators: 1 User login, 2: lost password url */
@@ -1216,10 +1220,10 @@ class UR_AJAX {
 			);
 		}
 
-		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
+		$slug        = sanitize_key( wp_unslash( $_POST['slug'] ) );
 		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' ); // phpcs:ignore
-		$plugin = plugin_basename( sanitize_text_field( $plugin_slug ) );
-		$status = array(
+		$plugin      = plugin_basename( sanitize_text_field( $plugin_slug ) );
+		$status      = array(
 			'install' => 'plugin',
 			'slug'    => sanitize_key( wp_unslash( $_POST['slug'] ) ),
 		);
@@ -1299,7 +1303,7 @@ class UR_AJAX {
 			wp_send_json_error( $status );
 		}
 
-		$api->version = isset( $api->new_version ) ? $api->new_version : '';
+		$api->version   = isset( $api->new_version ) ? $api->new_version : '';
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {

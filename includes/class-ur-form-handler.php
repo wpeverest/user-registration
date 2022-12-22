@@ -505,7 +505,11 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+						if ( empty( $messages['unknown_email'] ) ) {
+							$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
+						}
+
+						throw new Exception( '<strong>' . __( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				} else {
 					$creds['user_login'] = $username;
