@@ -207,22 +207,22 @@ abstract class UR_List_Table extends WP_List_Table {
 			'paged'               => $current_page,
 		);
 		// End setup wizard when skipped to list table.
-		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && $_REQUEST['end-setup-wizard'] ) {
+		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			update_option( 'user_registration_first_time_activation_flag', false );
 		}
 
 		// Handle the status query.
-		if ( ! empty( $_REQUEST['status'] ) ) {
-			$args['post_status'] = sanitize_text_field( $_REQUEST['status'] );
+		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$args['post_status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
 		}
 
 		// Handle the search query.
-		if ( ! empty( $_REQUEST['s'] ) ) {
+		if ( ! empty( $_REQUEST['s'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$args['s'] = sanitize_text_field( trim( wp_unslash( $_REQUEST['s'] ) ) );
 		}
 
-		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created';
-		$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( $_REQUEST['order'] ) ? 'ASC' : 'DESC';
+		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ? 'ASC' : 'DESC'; //phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		// Get the registrations.
 		$query_posts = new WP_Query( $args );
@@ -243,15 +243,15 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	protected function process_row_actions() {
 		if ( isset( $_GET['page'] ) ) {
-			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
-			$action = $action ? $action : ( ! empty( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : '' );
-			$action = ( $action && '-1' !== $action ) ? $action : ( ! empty( $_POST['action2'] ) ? sanitize_text_field( $_POST['action2'] ) : '' );
+			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : null;
+			$action = $action ? $action : ( ! empty( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '' );
+			$action = ( $action && '-1' !== $action ) ? $action : ( ! empty( $_POST['action2'] ) ? sanitize_text_field( wp_unslash( $_POST['action2'] ) ) : '' );
 			$action = ! empty( $action ) ? $action : ( ( isset( $_REQUEST['empty_trash'] ) && ! empty( $_REQUEST['empty_trash'] ) ) ? 'empty_trash' : '' );
-			$nonce  = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : null;
-			$nonce  = $nonce ? $nonce : ( isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '' );
+			$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : null;
+			$nonce  = $nonce ? $nonce : ( isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '' );
 			switch ( $action ) {
 				case 'duplicate':
-					$post_id = isset( $_GET['post-id'] ) && is_numeric( $_GET['post-id'] ) ? $_GET['post-id'] : '';
+					$post_id = isset( $_GET['post-id'] ) && is_numeric( $_GET['post-id'] ) ? sanitize_text_field( wp_unslash( $_GET['post-id'] ) ) : '';
 
 					if ( ! current_user_can( 'publish_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to create post!', 'user-registration' ) );
@@ -267,7 +267,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to trash posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
+						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_trash( $post_ids );
 					}
 					break;
@@ -277,7 +277,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'edit_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to untrash posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
+						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_untrash( $post_ids );
 					}
 					break;
@@ -287,7 +287,7 @@ abstract class UR_List_Table extends WP_List_Table {
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to delete posts!', 'user-registration' ) );
 					} else {
-						$post_ids = array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] );
+						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_delete( $post_ids );
 					}
 					break;
@@ -394,7 +394,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		}
 
 		$qty    = count( $post_list );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( $_GET['status'] ) : '';
+		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
 
 		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&trashed=' . $qty ) );
 		exit;
@@ -429,7 +429,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		}
 
 		$qty    = count( $post_list );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( $_GET['status'] ) : '';
+		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
 
 		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );
 		exit();
