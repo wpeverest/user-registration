@@ -1026,7 +1026,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Form Submit Button Custom Class', 'user-registration' ),
+				'label'             => __( 'Submit Button Class', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_form_submit_class',
@@ -1034,11 +1034,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', '' ),
-				'tip'               => __( 'Custom css class to embed in the submit button. You can enter multiple classes seperated with space.', 'user-registration' ),
+				'tip'               => __( 'Enter CSS class names for the Submit Button. Multiple class names should be separated with spaces.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Form Submit Button Label', 'user-registration' ),
+				'label'             => __( 'Submit Button Text', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_form_submit_label',
@@ -1046,7 +1046,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
-				'tip'               => __( 'Set label for the submit button.', 'user-registration' ),
+				'tip'               => __( 'Enter desired text for the Submit Button.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -1099,7 +1099,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Custom CSS class', 'user-registration' ),
+				'label'             => __( 'Form Class', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_custom_class',
@@ -1107,7 +1107,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
-				'tip'               => __( 'Custom css class to embed in the registration form. You can enter multiple classes seperated with space.', 'user-registration' ),
+				'tip'               => __( 'Enter CSS class names for the Form Wrapper. Multiple class names should be separated with spaces.', 'user-registration' ),
 			),
 		),
 	);
