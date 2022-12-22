@@ -2750,53 +2750,139 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( ! empty( $myaccount_page ) ) {
 			$shortcodes = parse_blocks( $myaccount_page->post_content );
-			foreach ( $shortcodes as $shortcode ) {
-				if ( ! empty( $shortcode['blockName'] ) ) {
-					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
-						$matched = 1;
-						break;
-					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						}
-						if ( 0 < absint( $matched ) ) {
-							break;
-						}
-					} elseif ( 'core/group' === $shortcode['blockName'] && isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
-						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
-							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
-								$matched = 1;
-								break;
-							} elseif ( ( 'core/shortcode' === $inner_block['blockName'] || 'core/paragraph' === $inner_block['blockName'] ) && isset( $inner_block['innerHTML'] ) ) {
-								$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
-								if ( 1 > absint( $matched ) ) {
-									$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
-								}
-								if ( 0 < absint( $matched ) ) {
-									break;
-								}
-							}
-						}
-					}
-				} else {
-					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					if ( 1 > absint( $matched ) ) {
-						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					}
-					if ( 0 < absint( $matched ) ) {
-						break;
-					}
-				}
-			}
+			$matched    = ur_find_my_account_in_page( $shortcodes, $myaccount_page, $matched );
 		}
 
 		if ( 0 === $matched ) {
-			$message = 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="' . admin_url() . '/admin.php?page=user-registration-settings#user_registration_myaccount_page_id" style="text-decoration:none;">My Account Page</a> )';
+			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
+			/* translators: %s - My account Link. */
+			$message = sprintf( __( 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="%s" style="text-decoration:none;">My Account Page</a> )', 'user-registration' ), $my_account_setting_link );
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
+
+	/**
+	 * Find My Account Shortcode.
+	 *
+	 * @param array $shortcodes Shortcode.
+	 * @param mixed $myaccount_page My Account Page.
+	 * @param int   $matched Default 0.
+	 * @return int If matched then 1 else 0.
+	 * @since  2.2.7
+	 */
+	function ur_find_my_account_in_page( $shortcodes, $myaccount_page, $matched ) {
+
+		foreach ( $shortcodes as $shortcode ) {
+			if ( ! empty( $shortcode['blockName'] ) ) {
+				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
+					$matched = 1;
+					return $matched;
+				} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
+					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+					if ( 1 > absint( $matched ) ) {
+						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+					}
+					if ( 0 < absint( $matched ) ) {
+						return $matched;
+					}
+				} elseif ( 'core/group' === $shortcode['blockName'] ) {
+					if ( isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
+						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
+							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
+								$matched = 1;
+								return $matched;
+							} elseif ( ( 'core/shortcode' === $inner_block['blockName'] || 'core/paragraph' === $inner_block['blockName'] ) && isset( $inner_block['innerHTML'] ) ) {
+								$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
+								if ( 1 > absint( $matched ) ) {
+									$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+								}
+								if ( 0 < absint( $matched ) ) {
+									return $matched;
+								}
+							} elseif ( 'core/group' === $inner_block['blockName'] || 'core/column' === $inner_block['blockName'] || 'core/columns' === $inner_block['blockName'] ) {
+
+								$matched = ur_find_my_account_in_page( $shortcode['innerBlocks'], $myaccount_page, $matched );
+								if ( 0 < absint( $matched ) ) {
+									return $matched;
+								}
+							} elseif ( 'core/block' === $inner_block['blockName'] ) {
+								if ( isset( $inner_block['attrs']['ref'] ) && ! empty( $inner_block['attrs']['ref'] ) ) {
+									$resuable_block_page = get_post( $inner_block['attrs']['ref'] );
+									if ( ! empty( $resuable_block_page ) ) {
+										$resuable_block = parse_blocks( $resuable_block_page->post_content );
+										$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+										if ( 0 < absint( $matched ) ) {
+											return $matched;
+										}
+									}
+								}
+							}
+						}
+					}
+				} elseif ( 'core/columns' === $shortcode['blockName'] ) {
+					if ( isset( $shortcode['innerBlocks'] ) && ! empty( $shortcode['innerBlocks'] ) ) {
+						foreach ( $shortcode['innerBlocks'] as $inner_block ) {
+							if ( 'user-registration/form-selector' === $inner_block['blockName'] && isset( $inner_block['attrs']['shortcode'] ) ) {
+								$matched = 1;
+								return $matched;
+							} elseif ( ( 'core/shortcode' === $inner_block['blockName'] || 'core/paragraph' === $inner_block['blockName'] ) && isset( $inner_block['innerHTML'] ) ) {
+								$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $inner_block['innerHTML'] );
+								if ( 1 > absint( $matched ) ) {
+									$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
+								}
+								if ( 0 < absint( $matched ) ) {
+									return $matched;
+								}
+							} elseif ( 'core/group' === $inner_block['blockName'] || 'core/column' === $inner_block['blockName'] || 'core/columns' === $inner_block['blockName'] ) {
+
+								$matched = ur_find_my_account_in_page( $inner_block['innerBlocks'], $myaccount_page, $matched );
+
+								if ( 0 < absint( $matched ) ) {
+									return $matched;
+								}
+							} elseif ( 'core/block' === $inner_block['blockName'] ) {
+								if ( isset( $inner_block['attrs']['ref'] ) && ! empty( $inner_block['attrs']['ref'] ) ) {
+									$resuable_block_page = get_post( $inner_block['attrs']['ref'] );
+									if ( ! empty( $resuable_block_page ) ) {
+										$resuable_block = parse_blocks( $resuable_block_page->post_content );
+										$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+										if ( 0 < absint( $matched ) ) {
+											return $matched;
+										}
+									}
+								}
+							}
+						}
+					}
+				} elseif ( 'core/block' === $shortcode['blockName'] ) {
+
+					if ( isset( $shortcode['attrs']['ref'] ) && ! empty( $shortcode['attrs']['ref'] ) ) {
+						$resuable_block_page = get_post( $shortcode['attrs']['ref'] );
+						if ( ! empty( $resuable_block_page ) ) {
+							$resuable_block = parse_blocks( $resuable_block_page->post_content );
+							$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+							if ( 0 < absint( $matched ) ) {
+								return $matched;
+							}
+						}
+					}
+				}
+			} else {
+				$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				if ( 1 > absint( $matched ) ) {
+					$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
+				}
+				if ( 0 < absint( $matched ) ) {
+					return $matched;
+				}
+			}
+		}
+		return $matched;
 	}
 }
 

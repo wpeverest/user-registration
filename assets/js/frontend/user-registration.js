@@ -873,7 +873,9 @@
 																response.data
 																	.auto_login
 															) {
-																$(document).trigger(
+																$(
+																	document
+																).trigger(
 																	"user_registration_frontend_before_auto_login"
 																);
 																location.reload();
@@ -1635,6 +1637,11 @@ function ur_includes(arr, item) {
 			$password_field = $(this)
 				.closest(".user-registration-form-row")
 				.find('input[name="password_2"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".field-password")
+				.find(".input-password");
 		}
 
 		if ($password_field.length > 0) {
