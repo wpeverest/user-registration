@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -34,6 +33,12 @@ ur_print_notices(); ?>
 				</p>
 
 				<div class="clear"></div>
+
+				<?php
+				if ( ! empty( $recaptcha_node ) ) {
+					echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
 
 				<?php do_action( 'user_registration_lostpassword_form' ); ?>
 
