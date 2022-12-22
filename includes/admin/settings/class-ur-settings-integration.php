@@ -150,7 +150,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Site Key ( hCaptcha )', 'user-registration' ),
+									'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_key_hcaptcha',
 									'default'  => '',
@@ -161,7 +161,7 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 
 								),
 								array(
-									'title'    => __( 'Secret Key ( hCaptcha )', 'user-registration' ),
+									'title'    => __( 'Secret Key (hCaptcha)', 'user-registration' ),
 									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), 	//phpcs:ignore
 									'id'       => 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha',
 									'default'  => '',

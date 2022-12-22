@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.1
-Stable tag: 2.2.4.1
+Tested up to: 6.1.1
+Stable tag: 2.2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -276,6 +276,26 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.2.6    - 01/12/2022
+* Fix      - Critical error while updating user details by admin.
+* Fix      - Form export issue when the form name has special characters.
+* Fix      - Getting Started Page now works properly in local environment.
+* Fix      - User profile picture design issue in dashboard of my account page.
+* Fix      - Convert email verification plain text to link in the confirmation email.
+* Fix      - My Account selection notice keep appearing when group block enabled in the page.
+* Dev      - UR Logger function called incorrectly.
+* Tweak    - Renamed hCaptcha according to brand name.​
+
+= 2.2.5    - 22/11/2022
+* Fix      - User Registration string translation issue.
+* Fix      - Auto approving users even when admin approval was enabled.
+* Fix      - Default role set to administrator after getting started end.
+* Fix      - Critical error while approving or updating user details by admin.
+* Fix      - Replace str_contains with strpos for compatibility below php version 8.
+* Fix      - Upgrade plan button in extensions page even when license was activated.
+* Dev      - Added trigger before redirect to another page after registration in JS.
+
 = 2.2.4.1  - 14/11/2022
 * Fix      - Security issue in profile picture upload.
 * Tweak    - Parse user extra information according to form fields order.

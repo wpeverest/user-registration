@@ -508,7 +508,11 @@ class UR_Form_Handler {
 					if ( isset( $user->user_login ) ) {
 						$creds['user_login'] = $user->user_login;
 					} else {
-						throw new Exception( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+						if ( empty( $messages['unknown_email'] ) ) {
+							$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
+						}
+
+						throw new Exception( '<strong>' . __( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				} else {
 					$creds['user_login'] = $username;
@@ -586,6 +590,51 @@ class UR_Form_Handler {
 	 */
 	public static function process_lost_password() {
 		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'lost_password' ) ) {
+
+			$hcaptca_response    = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
+			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
+			$recaptcha_enabled   = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
+			$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+			$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+			if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+			} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+			} elseif ( 'v3' === $recaptcha_type ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+			} elseif ( 'hCaptcha' === $recaptcha_type ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+			}
+
+			if ( 'yes' === $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
+				if ( ! empty( $recaptcha_value ) ) {
+					if ( 'hCaptcha' === $recaptcha_type ) {
+						$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
+						$data = json_decode( wp_remote_retrieve_body( $data ) );
+
+						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
+							ur_add_notice( __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
+							return false;
+						}
+					} else {
+						$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
+						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score <= get_option( 'user_registration_integration_setting_recaptcha_threshold_score_v3', apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) ) {
+							ur_add_notice( __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
+							return false;
+						}
+					}
+				} else {
+					ur_add_notice( get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ), 'error' );
+					return false;
+				}
+			}
+
 			$success = UR_Shortcode_My_Account::retrieve_password();
 
 			// If successful, redirect to my account with query arg set.
