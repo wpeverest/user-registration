@@ -42,7 +42,7 @@ class UR_Admin_Status {
 		$logs = self::scan_log_files();
 
 		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( $_REQUEST['log_file'] ) ] ) ) {
-			$viewed_log = $logs[ sanitize_title( wp_unslash( ( $_REQUEST['log_file'] ) ) ];
+			$viewed_log = $logs[ sanitize_title( wp_unslash( ( $_REQUEST['log_file'] ) ) ) ];
 		} elseif ( ! empty( $logs ) ) {
 			$viewed_log = current( $logs );
 		}
