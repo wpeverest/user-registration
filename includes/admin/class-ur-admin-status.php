@@ -41,8 +41,8 @@ class UR_Admin_Status {
 
 		$logs = self::scan_log_files();
 
-		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( $_REQUEST['log_file'] ) ] ) ) {
-			$viewed_log = $logs[ sanitize_title( wp_unslash( ( $_REQUEST['log_file'] ) ) ) ];
+		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( wp_unslash( $_REQUEST['log_file'] ) ) ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$viewed_log = $logs[ sanitize_title( wp_unslash( $_REQUEST['log_file'] ) ) ]; // phpcs:ignore WordPress.Security.NonceVerification
 		} elseif ( ! empty( $logs ) ) {
 			$viewed_log = current( $logs );
 		}
@@ -163,13 +163,13 @@ class UR_Admin_Status {
 	 */
 	public static function remove_log() {
 
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'remove_log' ) ) {
-			wp_die( __( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'remove_log' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
 		if ( ! empty( $_REQUEST['handle'] ) ) {
 			$log_handler = new UR_Log_Handler_File();
-			$log_handler->remove( $_REQUEST['handle'] );
+			$log_handler->remove( sanitize_text_field( wp_unslash( $_REQUEST['handle'] ) ) );
 		}
 
 		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );

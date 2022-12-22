@@ -31,9 +31,10 @@ function ur_page_endpoint_title( $title ) {
 	global $wp_query;
 
 	if ( ! is_null( $wp_query ) && ! is_admin() && is_main_query() && in_the_loop() && is_page() && is_ur_endpoint_url() ) {
-		$endpoint = UR()->query->get_current_endpoint();
+		$endpoint       = UR()->query->get_current_endpoint();
+		$endpoint_title = UR()->query->get_endpoint_title( $endpoint );
 
-		if ( $endpoint_title = UR()->query->get_endpoint_title( $endpoint ) ) {
+		if ( ! empty( $endpoint_title ) ) {
 			$title = $endpoint_title;
 		}
 
@@ -69,9 +70,12 @@ function ur_get_page_id( $page ) {
 		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
 	}
 
-	if ( $page > 0 && function_exists( 'pll_current_language' ) && ! empty( pll_current_language() ) ) {
-		$translations = pll_get_post_translations( $page );
-		$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+	if ( $page > 0 && function_exists( 'pll_current_language' ) ) {
+		$current_language = pll_current_language();
+		if ( ! empty( $current_language ) ) {
+			$translations = pll_get_post_translations( $page );
+			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+		}
 	}
 
 	return $page ? absint( $page ) : - 1;
@@ -108,7 +112,8 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 	}
 
 	// Map endpoint to options.
-	$endpoint = ! empty( UR()->query->query_vars[ $endpoint ] ) ? UR()->query->query_vars[ $endpoint ] : $endpoint;
+	$slug     = UR()->query->query_vars[ $endpoint ];
+	$endpoint = ! empty( $slug ) ? $slug : $endpoint;
 
 	if ( get_option( 'permalink_structure' ) ) {
 		if ( strstr( $permalink, '?' ) ) {
