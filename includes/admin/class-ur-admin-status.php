@@ -2,8 +2,6 @@
 /**
  * Debug/Status page
  *
- * @author      WPEverest
- * @category    Admin
  * @package     UserRegistration/Admin/System Status
  * @version     1.0.5
  */
@@ -44,7 +42,7 @@ class UR_Admin_Status {
 		$logs = self::scan_log_files();
 
 		if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( $_REQUEST['log_file'] ) ] ) ) {
-			$viewed_log = $logs[ sanitize_title( $_REQUEST['log_file'] ) ];
+			$viewed_log = $logs[ sanitize_title( wp_unslash( ( $_REQUEST['log_file'] ) ) ];
 		} elseif ( ! empty( $logs ) ) {
 			$viewed_log = current( $logs );
 		}
@@ -60,13 +58,13 @@ class UR_Admin_Status {
 	 *
 	 * @since  2.1.1
 	 *
-	 * @param  string $file Path to the file
+	 * @param  string $file Path to the file.
 	 *
 	 * @return string
 	 */
 	public static function get_file_version( $file ) {
 
-		// Avoid notices if file does not exist
+		// Avoid notices if file does not exist.
 		if ( ! file_exists( $file ) ) {
 			return '';
 		}
@@ -94,7 +92,7 @@ class UR_Admin_Status {
 	/**
 	 * Return the log file handle.
 	 *
-	 * @param string $filename
+	 * @param string $filename Filename.
 	 *
 	 * @return string
 	 */
@@ -105,7 +103,7 @@ class UR_Admin_Status {
 	/**
 	 * Scan the template files.
 	 *
-	 * @param  string $template_path
+	 * @param  string $template_path Template Path.
 	 *
 	 * @return array
 	 */
