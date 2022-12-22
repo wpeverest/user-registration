@@ -647,7 +647,11 @@ class UR_AJAX {
 			if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
 				$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 			}
-			if ( ! empty( $user->errors['invalid_email'] ) && ! empty( $messages['unknown_email'] ) ) {
+			if ( ! empty( $user->errors['invalid_email'] ) ) {
+				if ( empty( $messages['unknown_email'] ) ) {
+					$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
+				}
+
 				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['unknown_email'] ) );
 			}
 			if ( ! empty( $user->errors['incorrect_password'] ) ) {
