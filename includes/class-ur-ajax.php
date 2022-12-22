@@ -951,7 +951,10 @@ class UR_AJAX {
 						}
 					}
 				}
-			} elseif ( is_array( $value ) || gettype( $value ) == 'object' ) {
+			} elseif ( is_array( $value ) || gettype( $value ) === 'object' ) {
+				if ( isset( $value->field_key ) ) {
+					$value = apply_filters( 'user_registration_field_setting_' . $value->field_key, $value );
+				}
 				self::sweep_array( $value );
 
 			} else {
