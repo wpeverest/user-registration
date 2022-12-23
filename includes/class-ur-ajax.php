@@ -945,10 +945,37 @@ class UR_AJAX {
 				if ( gettype( $value ) == 'object' ) {
 
 					if ( isset( $value->options ) && is_array( $value->options ) && ! empty( $value->options ) ) {
+						$sanitized_options = array();
+						$allowed_tags      = array(
+							array(),
+							'a' => array(
+								'href'      => true,
+								'title'     => true,
+								'target'    => true,
+								'download'  => true,
+								'rel'       => true,
+								'hreflang'  => true,
+								'type'      => true,
+								'name'      => true,
+								'accesskey' => true,
+								'tabindex'  => true,
+							),
+						);
+
 						foreach ( $value->options as $index => $option_value ) {
 							$option_value = str_replace( '"', "'", $option_value );
-							$option_value = wp_kses_post( $option_value );
+							$option_value = wp_kses( trim( $option_value ), $allowed_tags );
+
+							// Check if the option_value contains an open <a> tag but not a closing </a> tag.
+							if ( preg_match( '/<a\s[^>]*>/i', $option_value ) && ! preg_match( '/<\/a>/i', $option_value ) ) {
+								// Add a closing </a> tag to the end of the option_value.
+								$option_value .= '</a>';
+							}
+
+							$sanitized_options [] = $option_value;
 						}
+
+						$value->options = $sanitized_options;
 					}
 				}
 			} elseif ( is_array( $value ) || gettype( $value ) === 'object' ) {
