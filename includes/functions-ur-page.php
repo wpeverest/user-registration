@@ -4,14 +4,12 @@
  *
  * Functions related to pages and menus.
  *
- * @author   WPEverest
- * @category Core
  * @package  UserRegistration/Functions
  * @version  1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 add_filter( 'body_class', 'ur_body_class' );
@@ -25,7 +23,7 @@ add_action( 'user_registration_account_edit-password_endpoint', 'user_registrati
 /**
  * Replace a page title with the endpoint title.
  *
- * @param  string $title
+ * @param  string $title Page Title.
  *
  * @return string
  */
@@ -33,9 +31,10 @@ function ur_page_endpoint_title( $title ) {
 	global $wp_query;
 
 	if ( ! is_null( $wp_query ) && ! is_admin() && is_main_query() && in_the_loop() && is_page() && is_ur_endpoint_url() ) {
-		$endpoint = UR()->query->get_current_endpoint();
+		$endpoint       = UR()->query->get_current_endpoint();
+		$endpoint_title = UR()->query->get_endpoint_title( $endpoint );
 
-		if ( $endpoint_title = UR()->query->get_endpoint_title( $endpoint ) ) {
+		if ( ! empty( $endpoint_title ) ) {
 			$title = $endpoint_title;
 		}
 
@@ -51,7 +50,7 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
 /**
  * Retrieve page ids - used for myaccount, edit_profile. returns -1 if no page is found.
  *
- * @param  string $page
+ * @param  string $page Page ID.
  *
  * @return int
  */
@@ -71,9 +70,12 @@ function ur_get_page_id( $page ) {
 		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
 	}
 
-	if ( $page > 0 && function_exists( 'pll_current_language' ) && ! empty( pll_current_language() ) ) {
-		$translations = pll_get_post_translations( $page );
-		$page = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+	if ( $page > 0 && function_exists( 'pll_current_language' ) ) {
+		$current_language = pll_current_language();
+		if ( ! empty( $current_language ) ) {
+			$translations = pll_get_post_translations( $page );
+			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+		}
 	}
 
 	return $page ? absint( $page ) : - 1;
@@ -82,7 +84,7 @@ function ur_get_page_id( $page ) {
 /**
  * Retrieve page permalink.
  *
- * @param string $page
+ * @param string $page Page ID.
  *
  * @return string
  */
@@ -98,9 +100,9 @@ function ur_get_page_permalink( $page ) {
  *
  * Gets the URL for an endpoint, which varies depending on permalink settings.
  *
- * @param  string $endpoint
- * @param  string $value
- * @param  string $permalink
+ * @param  string $endpoint Endpoint.
+ * @param  string $value Value.
+ * @param  string $permalink Permalink.
  *
  * @return string
  */
@@ -109,8 +111,9 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 		$permalink = get_permalink();
 	}
 
-	// Map endpoint to options
-	$endpoint = ! empty( UR()->query->query_vars[ $endpoint ] ) ? UR()->query->query_vars[ $endpoint ] : $endpoint;
+	// Map endpoint to options.
+	$slug     = UR()->query->query_vars[ $endpoint ];
+	$endpoint = ! empty( $slug ) ? $slug : $endpoint;
 
 	if ( get_option( 'permalink_structure' ) ) {
 		if ( strstr( $permalink, '?' ) ) {
@@ -125,7 +128,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 	}
 
 	if (
-		$endpoint === get_option( 'user_registration_logout_endpoint', 'user-logout' ) &&
+		 get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
 		'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
@@ -152,8 +155,10 @@ function ur_nav_menu_items( $items ) {
 				$path  = parse_url( $item->url, PHP_URL_PATH );
 				$query = parse_url( $item->url, PHP_URL_QUERY );
 
-				if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
-					unset( $items[ $key ] );
+				if ( null !== $path && null !== $customer_logout ) {
+					if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
+						unset( $items[ $key ] );
+					}
 				}
 			}
 		}
@@ -162,7 +167,7 @@ function ur_nav_menu_items( $items ) {
 
 	foreach ( $items as $item ) {
 
-		if ( $item->post_name === 'logout' && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		if ( 'logout' === $item->post_name && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
 			 $item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}
