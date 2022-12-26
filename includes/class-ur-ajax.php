@@ -565,7 +565,7 @@ class UR_AJAX {
 
 		$info                  = array();
 		$info['user_login']    = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
-		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : ''; //phpcs:ignore
+		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; //phpcs:ignore
 		$info['remember']      = isset( $_POST['rememberme'] );
 		$captcha_response      = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
 		$recaptcha_enabled     = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
