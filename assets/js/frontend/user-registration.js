@@ -857,12 +857,20 @@
 																"user_registration_frontend_before_redirect_url",
 																[redirect_url]
 															);
+															var timeout =
+																response.data
+																	.redirect_timeout
+																	? response
+																			.data
+																			.redirect_timeout
+																	: 1000;
+
 															window.setTimeout(
 																function () {
 																	window.location =
 																		redirect_url;
 																},
-																1000
+																timeout
 															);
 														} else {
 															if (
