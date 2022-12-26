@@ -125,7 +125,7 @@ class UR_Frontend_Form_Handler {
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
 				$success_params['form_login_option']       = $login_option;
-				$success_params['redirect_timeout']        =  apply_filters( 'user_registration_hold_success_message_before_redirect', 1000 );
+				$success_params['redirect_timeout']        =  apply_filters( 'user_registration_hold_success_message_before_redirect', 2000 );
 				$success_params                            = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
 				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification

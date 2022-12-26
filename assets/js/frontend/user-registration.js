@@ -863,7 +863,7 @@
 																	? response
 																			.data
 																			.redirect_timeout
-																	: 1000;
+																	: 2000;
 
 															window.setTimeout(
 																function () {
