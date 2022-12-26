@@ -112,8 +112,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 	}
 
 	// Map endpoint to options.
-	$slug     = UR()->query->query_vars[ $endpoint ];
-	$endpoint = ! empty( $slug ) ? $slug : $endpoint;
+	$endpoint = isset( UR()->query->query_vars[ $endpoint ] ) ? UR()->query->query_vars[ $endpoint ] : $endpoint;
 
 	if ( get_option( 'permalink_structure' ) ) {
 		if ( strstr( $permalink, '?' ) ) {
