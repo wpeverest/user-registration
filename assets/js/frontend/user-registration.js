@@ -731,6 +731,11 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+													var timeout = response.data
+														.redirect_timeout
+														? response.data
+																.redirect_timeout
+														: 2000;
 
 													if (
 														typeof response.success !==
@@ -741,8 +746,13 @@
 															.paypal_redirect !==
 															"undefined"
 													) {
-														window.location =
-															response.data.paypal_redirect;
+														window.setTimeout(
+															function () {
+																window.location =
+																	response.data.paypal_redirect;
+															},
+															timeout
+														);
 													}
 
 													if (
@@ -857,13 +867,6 @@
 																"user_registration_frontend_before_redirect_url",
 																[redirect_url]
 															);
-															var timeout =
-																response.data
-																	.redirect_timeout
-																	? response
-																			.data
-																			.redirect_timeout
-																	: 2000;
 
 															window.setTimeout(
 																function () {
@@ -886,7 +889,13 @@
 																).trigger(
 																	"user_registration_frontend_before_auto_login"
 																);
-																location.reload();
+
+																window.setTimeout(
+																	function () {
+																		location.reload();
+																	},
+																	timeout
+																);
 															}
 														}
 													} else if (
