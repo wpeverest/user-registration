@@ -1,6 +1,8 @@
 <?php
 /**
  * Form View: Country
+ *
+ * @package UserRegistration/Form/Views/Admin/Country
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,4 +21,3 @@ $instance = UR_Form_Field_Country::get_instance();
 		</select>
 	</div>
 </div>
-

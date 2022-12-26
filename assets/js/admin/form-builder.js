@@ -1943,14 +1943,12 @@
 											);
 											builder.manage_empty_grid();
 										},
-										revert: true,
 										connectWith: ".ur-grid-list-item",
 									})
 									.disableSelection();
 								$(".ur-input-grids").sortable({
 									containment: ".ur-builder-wrapper",
 									tolerance: "pointer",
-									revert: "invalid",
 									placeholder: "ur-single-row",
 									forceHelperSize: true,
 									over: function () {
@@ -1979,7 +1977,6 @@
 														)
 												);
 										},
-										revert: "invalid",
 										// start: function (event, ui) {
 										// },
 										stop: function (event, ui) {
@@ -2502,6 +2499,7 @@
 
 				$(document.body).trigger("ur_rendered_field_options");
 				$(document.body).trigger("init_tooltips");
+				$(document.body).trigger("init_field_options_toggle");
 			},
 			/**
 			 * Render the advance setting for selected field.
@@ -3136,6 +3134,10 @@
 						.find("input.ur-type-radio-label")
 						.val();
 					value = value.trim();
+
+					// To remove all HTML tags from a value.
+					value = value.replace(/<\/?[^>]+(>|$)/g, "");
+
 					radio = $(element)
 						.find("input.ur-type-radio-value")
 						.is(":checked");
@@ -3201,6 +3203,21 @@
 						.find("input.ur-type-checkbox-label")
 						.val();
 					value = value.trim();
+
+					// To remove all HTML tags (opening or closing or self closing)from a string except for anchor tags.
+					value = value.replace(/<(?!\/?a\b)[^>]+>/gi, "");
+
+					// To remove attributes except "href, target, download, rel, hreflang, type, name, accesskey, tabindex, title" from anchor tag.
+					value = value.replace(
+						/(?!href|target|download|rel|hreflang|type|name|accesskey|tabindex|title)\b\w+=['"][^'"]*['"]/g,
+						""
+					);
+
+					// To add a closing </a> tag to a string if an open <a> tag is present but not closed.
+					if (/<a(?:(?!<\/a>).)*$/.test(value)) {
+						value += "</a>";
+					}
+
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
 						.is(":checked");
@@ -3803,12 +3820,26 @@
 			} else {
 				$(this).addClass("closed");
 			}
+			$(this)
+				.parent(".user-registration-field-option-group")
+				.toggleClass("closed")
+				.toggleClass("open");
 			var field_list = $(this).find(" ~ .ur-registered-list")[0];
 			$(field_list).slideToggle();
 
 			// For `Field Options` section
-			$(this).siblings(".ur-toggle-content").slideToggle();
+			$(this).siblings(".ur-toggle-content").stop().slideToggle();
 		});
+
+		$(document.body)
+			.on("init_field_options_toggle", function () {
+				$(".user-registration-field-option-group.closed").each(
+					function () {
+						$(this).find(".ur-toggle-content").hide();
+					}
+				);
+			})
+			.trigger("init_field_options_toggle");
 
 		/**
 		 * For toggling quick links content.

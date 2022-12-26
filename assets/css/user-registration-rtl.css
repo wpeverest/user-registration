@@ -248,6 +248,9 @@
 .ur-icon-total::before {
   content: ""; }
 
+.ur-icon-quantity::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,
@@ -424,13 +427,17 @@
   .user-registration-page.user-registration-modal-open .user-registration-modal {
     max-width: 100%; }
 
+.user-registration-modal-link:hover {
+  cursor: pointer; }
+
 .user-registration-modal {
   display: flex;
+  place-content: center;
   position: fixed;
-  top: 0;
+  top: 50px;
   right: 0;
   left: 0;
-  height: 100%;
+  max-height: 90%;
   width: 100%;
   margin: 0 auto !important;
   overflow-x: hidden;
@@ -497,7 +504,7 @@
   .user-registration-modal .user-registration-modal__body {
     position: relative;
     padding: 16px;
-    max-height: 75vh;
+    max-height: 67vh;
     overflow-y: scroll; }
     .user-registration-modal .user-registration-modal__body #user-registration,
     .user-registration-modal .user-registration-modal__body .user-registration,

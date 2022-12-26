@@ -1,6 +1,8 @@
 <?php
 /**
  * Form View: Textarea
+ *
+ * @package UserRegistration/Form/Views/Admin/TextArea
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
 	<div class="ur-field" data-field-key="textarea">
-		<textarea id="ur-input-type-textarea" disabled></textarea>
+		<textarea id="ur-input-type-<?php echo esc_attr( $this->get_general_setting_data( 'field_name' ) ); ?>" disabled></textarea>
 	</div>
 </div>
-

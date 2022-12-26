@@ -62,8 +62,8 @@ class UR_AJAX {
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
-			'template_licence_check'     => false,
-			'install_extension'     => false,
+			'template_licence_check' => false,
+			'install_extension'      => false,
 			'create_form'            => true,
 		);
 
@@ -109,12 +109,24 @@ class UR_AJAX {
 		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
-		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
+		if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+		if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data       = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data       = json_decode( wp_remote_retrieve_body( $data ) );
+					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -124,16 +136,6 @@ class UR_AJAX {
 						);
 					}
 				} else {
-					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
-					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
-					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
@@ -403,7 +405,7 @@ class UR_AJAX {
 			$form_id    = ur_get_form_id_by_userid( $user_id );
 			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
 
-			$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+			$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext            = array();
 
@@ -424,7 +426,7 @@ class UR_AJAX {
 				);
 			}
 
-			$upload_dir = wp_upload_dir();
+			$upload_dir  = wp_upload_dir();
 			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
 
 			// Checks if the upload directory exists and create one if not.
@@ -563,19 +565,32 @@ class UR_AJAX {
 
 		$info                  = array();
 		$info['user_login']    = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
-		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( sanitize_text_field( $_POST['password'] ) ) : ''; //phpcs:ignore
+		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; //phpcs:ignore
 		$info['remember']      = isset( $_POST['rememberme'] );
 		$captcha_response      = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
 		$recaptcha_enabled     = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
 		$recaptcha_type        = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
 
-		if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
+		if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+		} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+
+		if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
-					$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-					$data       = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data       = json_decode( wp_remote_retrieve_body( $data ) );
+					$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
@@ -585,16 +600,6 @@ class UR_AJAX {
 						);
 					}
 				} else {
-					if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-					} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
-					} elseif ( 'v3' === $recaptcha_type ) {
-						$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
-						$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
-					}
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
 
@@ -648,7 +653,11 @@ class UR_AJAX {
 				$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 			}
 			if ( ! empty( $user->errors['invalid_email'] ) ) {
-				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), __( 'Unknown email address. Check again or try your username.', 'user-registration' ) ) );
+				if ( empty( $messages['unknown_email'] ) ) {
+					$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
+				}
+
+				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['unknown_email'] ) );
 			}
 			if ( ! empty( $user->errors['incorrect_password'] ) ) {
 				/* translators: 1 User login, 2: lost password url */
@@ -936,13 +945,43 @@ class UR_AJAX {
 				if ( gettype( $value ) == 'object' ) {
 
 					if ( isset( $value->options ) && is_array( $value->options ) && ! empty( $value->options ) ) {
+						$sanitized_options = array();
+						$allowed_tags      = array(
+							array(),
+							'a' => array(
+								'href'      => true,
+								'title'     => true,
+								'target'    => true,
+								'download'  => true,
+								'rel'       => true,
+								'hreflang'  => true,
+								'type'      => true,
+								'name'      => true,
+								'accesskey' => true,
+								'tabindex'  => true,
+							),
+						);
+
 						foreach ( $value->options as $index => $option_value ) {
 							$option_value = str_replace( '"', "'", $option_value );
-							$option_value = wp_kses_post( $option_value );
+							$option_value = wp_kses( trim( $option_value ), $allowed_tags );
+
+							// Check if the option_value contains an open <a> tag but not a closing </a> tag.
+							if ( preg_match( '/<a\s[^>]*>/i', $option_value ) && ! preg_match( '/<\/a>/i', $option_value ) ) {
+								// Add a closing </a> tag to the end of the option_value.
+								$option_value .= '</a>';
+							}
+
+							$sanitized_options [] = $option_value;
 						}
+
+						$value->options = $sanitized_options;
 					}
 				}
-			} elseif ( is_array( $value ) || gettype( $value ) == 'object' ) {
+			} elseif ( is_array( $value ) || gettype( $value ) === 'object' ) {
+				if ( isset( $value->field_key ) ) {
+					$value = apply_filters( 'user_registration_field_setting_' . $value->field_key, $value );
+				}
 				self::sweep_array( $value );
 
 			} else {
@@ -1216,10 +1255,10 @@ class UR_AJAX {
 			);
 		}
 
-		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
+		$slug        = sanitize_key( wp_unslash( $_POST['slug'] ) );
 		$plugin_slug = 'user-registration-pro' === $slug ? wp_unslash( $_POST['slug'] . '/user-registration.php' ) : wp_unslash( $_POST['slug'] . '/' . $_POST['slug'] . '.php' ); // phpcs:ignore
-		$plugin = plugin_basename( sanitize_text_field( $plugin_slug ) );
-		$status = array(
+		$plugin      = plugin_basename( sanitize_text_field( $plugin_slug ) );
+		$status      = array(
 			'install' => 'plugin',
 			'slug'    => sanitize_key( wp_unslash( $_POST['slug'] ) ),
 		);
@@ -1299,7 +1338,7 @@ class UR_AJAX {
 			wp_send_json_error( $status );
 		}
 
-		$api->version = isset( $api->new_version ) ? $api->new_version : '';
+		$api->version   = isset( $api->new_version ) ? $api->new_version : '';
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {

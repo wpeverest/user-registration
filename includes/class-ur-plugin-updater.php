@@ -103,9 +103,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$this->api_key     = get_option( $this->plugin_slug . '_license_key' );
 		$this->plugin_data = get_plugin_data( $this->plugin_file );
 
-		// Check to make sure we've RP extensions and plugin update capability.
-		$extensions = $this->get_plugins_with_header( self::VERSION_TESTED_HEADER );
-		if ( ( ! empty( $extensions ) || file_exists( WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php' ) ) && current_user_can( 'update_plugins' ) ) {
+		// Check if pro is activated to display license notices.
+		if ( ( file_exists( WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php' ) && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) && current_user_can( 'update_plugins' ) ) {
+
 			$this->plugin_requests();
 			add_action( 'in_admin_header', array( $this, 'user_registration_upgrade_to_pro_notice' ) );
 			$this->plugin_license_view();
