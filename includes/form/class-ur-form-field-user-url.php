@@ -84,6 +84,16 @@ class UR_Form_Field_User_Url extends UR_Form_Field {
 				}
 			);
 		}
+
+		if ( $value !== filter_var( $value, FILTER_VALIDATE_URL ) ) {
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $field_label ) {
+					/* translators: %1$s - Field Label */
+					return sprintf( __( 'Please provide a valid url for %1$s field.', 'user-registration' ), $field_label );
+				}
+			);
+		}
 	}
 }
 
