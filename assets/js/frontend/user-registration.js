@@ -571,6 +571,13 @@
 									);
 
 									if (
+										0 <
+										$this.find(".dz-error-message").length
+									) {
+										return;
+									}
+
+									if (
 										$this
 											.find(
 												"#user_registration_stripe_gateway"

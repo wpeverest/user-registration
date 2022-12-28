@@ -298,6 +298,7 @@ Yes, the plugin has a shortcode for the login form.
 * Fix      - User export issue when form name has special characters.​
 * Fix      - User export issue while checkbox or multi-select2 exists.​
 * Fix      - Form not submitting issue while captcha keys are not set.​
+* Fix      - Form submitting when error message exists for file upload.
 * Fix      – Special Character in Password Field caused invalid password while login.​
 * Fix      - 'Special Character Validation in Username' and 'Unknown Email' messages not customized properly.​
 * Dev      - Add hook to hold success message before redirect.

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-26T11:50:01+00:00\n"
+"POT-Creation-Date: 2022-12-28T04:41:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -36,7 +36,6 @@ msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:651
 #: src/components/App.js:61
-#: chunks/main.js:46189
 msgid "General Settings"
 msgstr ""
 
@@ -974,7 +973,6 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:360
 #: includes/RestApi/class-ur-rest-api.php:194
 #: src/components/App.js:60
-#: chunks/main.js:46188
 msgid "General"
 msgstr ""
 
@@ -1109,7 +1107,6 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:101
 #: src/components/screens/InstallPage.js:68
-#: chunks/main.js:34490
 msgid "My Account Page"
 msgstr ""
 
@@ -1562,7 +1559,6 @@ msgstr ""
 #: templates/form-login-registration.php:31
 #: templates/myaccount/form-login.php:42
 #: src/components/App.js:82
-#: chunks/main.js:46210
 msgid "Login"
 msgstr ""
 
@@ -3102,7 +3098,6 @@ msgstr ""
 #: includes/class-ur-post-types.php:49
 #: includes/RestApi/class-ur-rest-api.php:222
 #: src/components/App.js:71
-#: chunks/main.js:46199
 msgid "Registration"
 msgstr ""
 
@@ -4515,6 +4510,11 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+#. translators: %1$s - Field Label
+#: includes/form/class-ur-form-field-user-url.php:93
+msgid "Please provide a valid url for %1$s field."
+msgstr ""
+
 #: includes/form/settings/class-ur-setting-checkbox.php:42
 #: includes/form/settings/class-ur-setting-checkbox.php:49
 #: includes/form/settings/class-ur-setting-country.php:34
@@ -5123,7 +5123,6 @@ msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:310
 #: src/components/App.js:93
-#: chunks/main.js:46221
 msgid "My Account"
 msgstr ""
 
@@ -5312,114 +5311,90 @@ msgstr ""
 
 #: src/components/App.js:49
 #: src/components/App.js:50
-#: chunks/main.js:46177
-#: chunks/main.js:46178
 msgid "Install Pages"
 msgstr ""
 
 #: src/components/App.js:51
-#: chunks/main.js:46179
 msgid "The following pages will be installed automatically."
 msgstr ""
 
 #: src/components/App.js:62
-#: chunks/main.js:46190
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:72
-#: chunks/main.js:46200
 msgid "Registration Settings"
 msgstr ""
 
 #: src/components/App.js:73
-#: chunks/main.js:46201
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:83
-#: chunks/main.js:46211
 msgid "Login Settings"
 msgstr ""
 
 #: src/components/App.js:84
-#: chunks/main.js:46212
 msgid "Customize your login settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:94
-#: chunks/main.js:46222
 msgid "My Account Settings"
 msgstr ""
 
 #: src/components/App.js:95
-#: chunks/main.js:46223
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:104
-#: chunks/main.js:46232
 msgid "Final Step"
 msgstr ""
 
 #: src/components/App.js:347
-#: chunks/main.js:46475
 msgid "Go To Dashboard"
 msgstr ""
 
 #: src/components/App.js:356
-#: chunks/main.js:46484
 msgid "Back"
 msgstr ""
 
 #: src/components/App.js:374
-#: chunks/main.js:46502
 msgid "Edit Default Form"
 msgstr ""
 
 #: src/components/App.js:384
-#: chunks/main.js:46512
 msgid "Create New Form"
 msgstr ""
 
 #: src/components/App.js:397
-#: chunks/main.js:46525
 msgid "Skip"
 msgstr ""
 
 #: src/components/App.js:408
-#: chunks/main.js:46536
 msgid "Install & Proceed"
 msgstr ""
 
 #: src/components/App.js:422
-#: chunks/main.js:46550
 msgid "Next"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:67
-#: chunks/main.js:34489
 msgid "Registration Page"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:79
-#: chunks/main.js:34501
 msgid "Installing..."
 msgstr ""
 
 #: src/components/screens/InstallPage.js:92
 #: src/components/screens/InstallPage.js:126
-#: chunks/main.js:34514
-#: chunks/main.js:34546
 msgid "Installed"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:113
-#: chunks/main.js:34535
 msgid "Default Registration Form"
 msgstr ""
 
 #: src/components/screens/LastPage.js:22
-#: chunks/main.js:46118
 msgid "Congratulations!! You are all set up."
 msgstr ""
