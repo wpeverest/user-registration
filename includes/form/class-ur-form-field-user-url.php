@@ -85,7 +85,7 @@ class UR_Form_Field_User_Url extends UR_Form_Field {
 			);
 		}
 
-		if ( $value !== filter_var( $value, FILTER_VALIDATE_URL ) ) {
+		if ( ! empty( $value ) && empty( filter_var( $value, FILTER_VALIDATE_URL ) ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
