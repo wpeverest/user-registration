@@ -2198,13 +2198,15 @@ function ur_get_field_data_by_field_name( $form_id, $field_name ) {
 
 	foreach ( $post_content_array as $post_content_row ) {
 		foreach ( $post_content_row as $post_content_grid ) {
-			foreach ( $post_content_grid as $field ) {
-				if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) && $field->general_setting->field_name === $field_name ) {
-					$field_data = array(
-						'field_key'       => $field->field_key,
-						'general_setting' => $field->general_setting,
-						'advance_setting' => $field->advance_setting,
-					);
+			if ( is_array( $post_content_grid ) || is_object( $post_content_grid ) ) {
+				foreach ( $post_content_grid as $field ) {
+					if ( isset( $field->field_key ) && isset( $field->general_setting->field_name ) && $field->general_setting->field_name === $field_name ) {
+						$field_data = array(
+							'field_key'       => $field->field_key,
+							'general_setting' => $field->general_setting,
+							'advance_setting' => $field->advance_setting,
+						);
+					}
 				}
 			}
 		}
@@ -2815,7 +2817,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 									$resuable_block_page = get_post( $inner_block['attrs']['ref'] );
 									if ( ! empty( $resuable_block_page ) ) {
 										$resuable_block = parse_blocks( $resuable_block_page->post_content );
-										$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+										$matched        = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
 										if ( 0 < absint( $matched ) ) {
 											return $matched;
 										}
@@ -2850,7 +2852,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 									$resuable_block_page = get_post( $inner_block['attrs']['ref'] );
 									if ( ! empty( $resuable_block_page ) ) {
 										$resuable_block = parse_blocks( $resuable_block_page->post_content );
-										$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+										$matched        = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
 										if ( 0 < absint( $matched ) ) {
 											return $matched;
 										}
@@ -2865,7 +2867,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 						$resuable_block_page = get_post( $shortcode['attrs']['ref'] );
 						if ( ! empty( $resuable_block_page ) ) {
 							$resuable_block = parse_blocks( $resuable_block_page->post_content );
-							$matched = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
+							$matched        = ur_find_my_account_in_page( $resuable_block, $resuable_block_page, $matched );
 							if ( 0 < absint( $matched ) ) {
 								return $matched;
 							}
