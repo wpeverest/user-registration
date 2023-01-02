@@ -2684,7 +2684,13 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
 				break;
 			case 'country':
-				$countries   = UR_Form_Field_Country::get_instance()->get_country();
+				$countries = UR_Form_Field_Country::get_instance()->get_country();
+				if ( ! isset( $countries[ $field_value ] ) ) {
+					$key = array_search( $field_value, $countries );
+					if ( $key ) {
+						$field_value = $key;
+					}
+				}
 				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
 				break;
 			case 'file':
