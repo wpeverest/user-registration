@@ -1,4 +1,4 @@
-# Copyright (C) 2022 WPEverest
+# Copyright (C) 2023 WPEverest
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-28T04:41:00+00:00\n"
+"POT-Creation-Date: 2023-01-02T07:38:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -472,7 +472,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:409
-#: includes/class-ur-install.php:654
+#: user-registration.php:338
 msgid "Settings"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:226
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -940,13 +940,13 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:285
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/class-ur-admin.php:296
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -1921,21 +1921,21 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:99
 msgid ""
-"Hi Admin, <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tPlease review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/><br />\r\n"
+"Hi Admin, <br/>\n"
+"\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"\t\t\t\t\tPlease review the user role and details at '<b>Users</b>' menu in your WP dashboard. <br/><br />\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:111
 msgid ""
-"Hi Admin, <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tClick on this link to approve this user directly :  {{approval_link}} <br /><br />\r\n"
+"Hi Admin, <br/>\n"
+"\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"\t\t\t\t\tClick on this link to approve this user directly :  {{approval_link}} <br /><br />\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -1962,12 +1962,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -1990,12 +1990,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:82
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"Please click on this verification link <a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\">Click here</a> to confirm registration. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"Please click on this verification link <a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\">Click here</a> to confirm registration. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2019,13 +2019,13 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:102
 msgid ""
-"User has changed profile information for the following account:<br/>\r\n"
-"\r\n"
-"SiteName: {{blog_info}} <br/>\r\n"
-"Username: {{username}} <br/>\r\n"
-"\r\n"
-"{{all_fields}}\r\n"
-"<br/>\r\n"
+"User has changed profile information for the following account:<br/>\n"
+"\n"
+"SiteName: {{blog_info}} <br/>\n"
+"Username: {{username}} <br/>\n"
+"\n"
+"{{all_fields}}\n"
+"<br/>\n"
 "Thank You!"
 msgstr ""
 
@@ -2049,12 +2049,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\r\n"
-"\r\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>  has been approved. <br/>\n"
+"\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2079,12 +2079,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"You have registered on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"Unfortunately your registration is denied. Sorry for the inconvenience. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2108,14 +2108,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:92
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\r\n"
-"\r\n"
-"Sorry for the inconvenience. <br/>\r\n"
-"\r\n"
-"You will be notified after it is approved. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been changed to pending. <br/>\n"
+"\n"
+"Sorry for the inconvenience. <br/>\n"
+"\n"
+"You will be notified after it is approved. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2139,16 +2139,16 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:89
 msgid ""
-"Someone has requested a password reset for the following account: <br/>\r\n"
-"\r\n"
-"SiteName: {{blog_info}} <br/>\r\n"
-"Username: {{username}} <br/>\r\n"
-"\r\n"
-"If this was a mistake, just ignore this email and nothing will happen. <br/>\r\n"
-"\r\n"
-"To reset your password, visit the following address: <br/>\r\n"
-"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\r\n"
-"\r\n"
+"Someone has requested a password reset for the following account: <br/>\n"
+"\n"
+"SiteName: {{blog_info}} <br/>\n"
+"Username: {{username}} <br/>\n"
+"\n"
+"If this was a mistake, just ignore this email and nothing will happen. <br/>\n"
+"\n"
+"To reset your password, visit the following address: <br/>\n"
+"<a href=\"{{home_url}}/{{ur_login}}?action=rp&key={{key}}&login={{username}} \" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a><br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2172,12 +2172,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:90
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"You have successfully completed user registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"Please visit '<b>My Account</b>' page to edit your account details and create your user profile on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
 "Thank You!"
 msgstr ""
 
@@ -2923,52 +2923,32 @@ msgstr ""
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
 msgstr ""
 
-#: includes/class-ur-install.php:313
+#: includes/class-ur-install.php:311
 #: includes/RestApi/class-ur-rest-api.php:156
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:314
+#: includes/class-ur-install.php:312
 #: includes/RestApi/class-ur-rest-api.php:157
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:324
+#: includes/class-ur-install.php:322
 #: includes/RestApi/class-ur-rest-api.php:149
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:325
+#: includes/class-ur-install.php:323
 #: includes/RestApi/class-ur-rest-api.php:150
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-install.php:379
+#: includes/class-ur-install.php:377
 msgid "Default form"
-msgstr ""
-
-#: includes/class-ur-install.php:654
-msgid "View User Registration settings"
-msgstr ""
-
-#: includes/class-ur-install.php:670
-msgid "View User Registration documentation"
-msgstr ""
-
-#: includes/class-ur-install.php:670
-msgid "Docs"
-msgstr ""
-
-#: includes/class-ur-install.php:671
-msgid "Visit free customer support"
-msgstr ""
-
-#: includes/class-ur-install.php:671
-msgid "Free support"
 msgstr ""
 
 #: includes/class-ur-logger.php:58
@@ -5047,7 +5027,7 @@ msgid "Checked"
 msgstr ""
 
 #. translators: %s - My account Link.
-#: includes/functions-ur-core.php:2759
+#: includes/functions-ur-core.php:2765
 msgid "Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href=\"%s\" style=\"text-decoration:none;\">My Account Page</a> )"
 msgstr ""
 
@@ -5305,7 +5285,27 @@ msgstr ""
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
 msgstr ""
 
-#: user-registration.php:423
+#: user-registration.php:338
+msgid "View User Registration settings"
+msgstr ""
+
+#: user-registration.php:354
+msgid "View User Registration documentation"
+msgstr ""
+
+#: user-registration.php:354
+msgid "Docs"
+msgstr ""
+
+#: user-registration.php:355
+msgid "Visit free customer support"
+msgstr ""
+
+#: user-registration.php:355
+msgid "Free support"
+msgstr ""
+
+#: user-registration.php:460
 msgid "As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 

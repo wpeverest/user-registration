@@ -279,8 +279,10 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.3.0    - 29/12/2022
+= 2.3.0    - 02/01/2023
 * Feature  - CAPTCHA verification on lost password page.​
+* Dev      - Add hook to hold success message before redirect.
+* Dev      - Add functions to get login and my account page urls.
 * Tweak    - New addons in extensions page.​
 * Tweak    - Delete popup modal layout size changes.​
 * Tweak    - Add UR tag for selected my account page.​
@@ -293,6 +295,7 @@ Yes, the plugin has a shortcode for the login form.
 * Fix      - Field not appended in the droppable zone.​
 * Fix      - Errors and warnings in the browser console.​
 * Fix      - Show Password icon for Extra Password field.​
+* Fix      - Smart tag for country field in email content.
 * Fix      – My Account endpoint translation issue in WPML.​
 * Fix      - Gutenberg compatibility issue with my account.
 * Fix      - User export issue when form name has special characters.​
@@ -301,7 +304,6 @@ Yes, the plugin has a shortcode for the login form.
 * Fix      - Form submitting when error message exists for file upload.
 * Fix      – Special Character in Password Field caused invalid password while login.​
 * Fix      - 'Special Character Validation in Username' and 'Unknown Email' messages not customized properly.​
-* Dev      - Add hook to hold success message before redirect.
 
 = 2.2.6    - 01/12/2022
 * Fix      - Critical error while updating user details by admin.
