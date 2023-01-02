@@ -113,6 +113,32 @@ function ur_get_page_permalink( $page ) {
 	return apply_filters( 'user_registration_get_' . $page . '_page_permalink', $permalink );
 }
 
+if ( ! function_exists( 'ur_get_login_url' ) ) {
+	/**
+	 * Returns the full url of the login redirection page.
+	 *
+	 * @return string Complete Login Page address.
+	 */
+	function ur_get_login_url() {
+		$page_id   = absint( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
+		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
+		return $permalink;
+	}
+}
+
+if ( ! function_exists( 'ur_get_my_account_url' ) ) {
+	/**
+	 * Returns the full url of the selected My Account page.
+	 *
+	 * @return string
+	 */
+	function ur_get_my_account_url() {
+		$page_id   = absint( get_option( 'user_registration_myaccount_page_id', 'unset' ) );
+		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
+		return $permalink;
+	}
+}
+
 /**
  * Get endpoint URL.
  *
