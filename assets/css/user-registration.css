@@ -248,6 +248,9 @@
 .ur-icon-total::before {
   content: ""; }
 
+.ur-icon-quantity::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,

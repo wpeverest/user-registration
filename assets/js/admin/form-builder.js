@@ -136,6 +136,95 @@
 						URFormBuilder.ur_show_help();
 					}
 				});
+
+				// Toggle `Bulk Add` option.
+				$(document.body).on(
+					"click",
+					".ur-toggle-bulk-options",
+					function (e) {
+						e.preventDefault();
+						$this = $(this);
+
+						var bulk_options_html = "";
+						bulk_options_html +=
+							'<div class="ur-bulk-options-container">';
+						bulk_options_html +=
+							'<div class="ur-general-setting ur-setting-textarea ur-general-setting-bulk-options ur-bulk-options-container"><label for="ur-type-textarea">' +
+							$this.data("bulk-options-label") +
+							'<span class="ur-portal-tooltip tooltipstered" data-tip="' +
+							$this.data("bulk-options-tip") +
+							'"></span></label>';
+						bulk_options_html +=
+							'<textarea data-field="description" class="ur-general-setting-field ur-type-textarea"></textarea></div>';
+						bulk_options_html +=
+							'<a class="button button-small ur-add-bulk-options" href="#">' +
+							$this.data("bulk-options-button") +
+							"</a></div>";
+
+						if (
+							$this.parent().next(".ur-bulk-options-container")
+								.length
+						) {
+							if (
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.css("display") === "none"
+							) {
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.show();
+							} else {
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.hide();
+							}
+						} else {
+							$(bulk_options_html).insertAfter($this.parent()).trigger('init_tooltips');
+						}
+					}
+				);
+
+				// Add custom list of options.
+				$(document.body).on(
+					"click",
+					".ur-add-bulk-options",
+					function (e) {
+						e.preventDefault();
+						var options = $(this).parent().next(".ur-options-list");
+						var bulk_options_container = $(this).parent(
+							".ur-bulk-options-container"
+						);
+						if (options.length) {
+							var options_texts = bulk_options_container
+								.find(".ur-type-textarea")
+								.val()
+								.replace(/<\/?[^>]+(>|$)/g, "")
+								.split("\n");
+
+							options_texts = $.unique(options_texts);
+
+							options_texts.forEach(function (option_text) {
+								if ("" !== option_text) {
+									var $add_button = options
+										.find("li")
+										.last()
+										.find("a.add");
+
+									URFormBuilder.add_choice_field_option(
+										$add_button,
+										option_text.trim()
+									);
+								}
+							});
+							bulk_options_container
+								.find(".ur-type-textarea")
+								.val("");
+						}
+					}
+				);
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -3651,13 +3740,16 @@
 			 * Add a new option in choice field when called.
 			 *
 			 * @param object $this_obj The field option to add.
+			 * @param string value The value of the option.
 			 */
-			add_choice_field_option: function ($this) {
+			add_choice_field_option: function ($this, value) {
 				var $wrapper = $(".ur-selected-item.ur-item-active"),
 					this_index = $this.parent("li").index(),
 					cloning_element = $this.parent("li").clone(true, true);
 
-				cloning_element.find('input[data-field="options"]').val("");
+				cloning_element
+					.find('input[data-field="options"]')
+					.val(typeof value !== "undefined" ? value : "");
 				cloning_element
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);

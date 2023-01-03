@@ -840,6 +840,9 @@
 .ur-icon-total::before {
   content: ""; }
 
+.ur-icon-quantity::before {
+  content: ""; }
+
 .user-registration-table {
   width: 100%;
   background: #ffffff;
@@ -6920,6 +6923,11 @@ body {
 .user-registration .swal2-container h3 {
   font-size: 16px;
   font-weight: 400; }
+
+.user-registration .swal2-container .swal2-popup {
+  width: 400px;
+  border-top: 6px solid #ff4f55;
+  border-radius: 10px; }
 
 .user-registration .swal2-container .user-registration-recommend-addons {
   margin-bottom: 20px;
