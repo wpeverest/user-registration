@@ -59,6 +59,7 @@ class UR_Shortcode_My_Account {
 		global $wp, $post;
 		wp_enqueue_script( 'tooltipster' );
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_script( 'ur-common' );
 
 		if ( ! is_user_logged_in() ) {
 
