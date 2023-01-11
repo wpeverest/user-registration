@@ -318,7 +318,17 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				// validation for unsupported currency by paypal.
+				if (
+					data.data.ur_invalid_currency_status[0]
+						.validation_status === false
+				) {
+					URFormBuilder.show_message(
+						data.data.ur_invalid_currency_status[0]
+							.validation_message
+					);
+					return;
+				}
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
