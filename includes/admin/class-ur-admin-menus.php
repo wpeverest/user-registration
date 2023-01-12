@@ -523,7 +523,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$templates       = array();
 				$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
 				$category  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
-				$templates = self::get_template_data( $category );
+				$templates = self::get_template_data();
 				$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 				wp_enqueue_script( 'ur-setup' );
@@ -926,15 +926,32 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public static function get_template_data() {
 			$template_data = get_transient( 'ur_template_section_list' );
 
+			$template_url = "https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/";
+
 			if ( false === $template_data ) {
-				$template_data     = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+
+				$template_json_url = $template_url.'templates.json';
+				try{
+					$content = wp_remote_get($template_json_url);
+					$content_json = wp_remote_retrieve_body($content);
+					$template_data = json_decode($content_json);
+				}catch(Exception $e){
+
+				}
+
 
 				// Removing directory so the templates can be reinitialized.
 				$folder_path = untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
+				if (  isset( $template_data->templates ) ) {
 
-				foreach ( $template_data->templates as $template_tuple ) {
+					foreach ( $template_data->templates as $template_tuple ) {
+
+					$image_url = isset($template_tuple->image) ? $template_tuple->image: ($template_url.'images/'.$template_tuple->slug.'.png');
 					// We retrieve the image, then use them instead of the remote server.
-					$image = wp_remote_get( $template_tuple->image );
+					$image = wp_remote_get( $image_url );
+
+					$template_tuple->image = $image_url;
+
 					$type  = wp_remote_retrieve_header( $image, 'content-type' );
 
 					// Remote file check failed, we'll fallback to remote image.
@@ -942,7 +959,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						continue;
 					}
 
-					$temp_name     = explode( '/', $template_tuple->image );
+
+					$temp_name     = explode( '/', $image_url );
 					$relative_path = $folder_path . '/' . end( $temp_name );
 					$exists        = file_exists( $relative_path );
 
@@ -952,14 +970,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					}
 				}
 
-				if ( ! empty( $template_data->templates ) ) {
 					set_transient( 'ur_template_section_list', $template_data, WEEK_IN_SECONDS );
 				}
 			}
 
-			if ( ! empty( $template_data->templates ) ) {
-				return apply_filters( 'user_registration_template_section_data', $template_data->templates );
-			}
+			return isset($template_data->templates) ? apply_filters( 'user_registration_template_section_data', $template_data->templates ): new stdClass();
 		}
 	}
 

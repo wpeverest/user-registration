@@ -90,7 +90,7 @@ $license_plan    = ur_get_license_plan();
 					?>
 					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>">
 						<figure class="user-registration-screenshot <?php echo esc_attr( $click_class ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>">
-							<img src="<?php echo esc_url( ur()->plugin_url() . '/assets/' . $template->image ); ?>"/>
+							<img src="<?php echo esc_url( $template->image ); ?>"/>
 							<?php echo wp_kses_post( $badge ); ?>
 							<?php if ( 'blank' !== $template->slug ) : ?>
 								<div class="form-action">
