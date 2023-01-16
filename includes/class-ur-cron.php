@@ -47,7 +47,7 @@ class UR_Cron
 		/*Adds once in biweekly to the existing schedules*/
 		$schedules['biweekly'] = array(
 			'interval' => (DAY_IN_SECONDS*15),
-			'display' => __('UR: Once in 15 days', 'user-registration'),
+			'display' => __('Every 15 days', 'user-registration'),
 		);
 
 		return $schedules;
