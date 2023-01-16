@@ -367,9 +367,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';
-		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';
-		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : ''; //phpcs:ignore;
+		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : ''; //phpcs:ignore;
+		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : ''; //phpcs:ignore;
 		$save_pass               = true;
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
@@ -451,7 +451,7 @@ class UR_Form_Handler {
 
 			try {
 				$creds = array(
-					'user_password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '',
+					'user_password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', //phpcs:ignore;
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
