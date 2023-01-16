@@ -93,6 +93,8 @@ class UR_Form_Field_Email extends UR_Form_Field {
 				}
 			);
 		}
+
+		do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash(  $value ) ), $filter_hook, $single_form_field, $form_id );
 	}
 }
 
