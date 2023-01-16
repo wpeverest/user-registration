@@ -177,7 +177,7 @@
     },
     {
       "title": "LearnDash",
-      "slug" : "user-registration-learnDash",
+      "slug" : "user-registration-learndash",
       "name" : "User Registration LearnDash",
       "image": "extensions-json/sections/images/learndash.png",
       "excerpt": "Allows you to view user’s registered learndash courses, automatically enroll users to specified learndash courses and more.",
