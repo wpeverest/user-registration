@@ -31,7 +31,7 @@
     "@babel/preset-react": "7.12.13",
     "autoprefixer": "^10.4.7",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.3.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "cross-env": "~5.2.1",
     "eslint": "^7.32.0",
