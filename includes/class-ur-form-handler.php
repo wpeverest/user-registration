@@ -256,7 +256,7 @@ class UR_Form_Handler {
 				}
 
 				if ( 'user_email' === $field['field_key'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field );
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field, $form_id );
 
 					// Check if email already exists before updating user details.
 					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
