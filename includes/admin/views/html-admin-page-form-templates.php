@@ -25,7 +25,7 @@ $license_plan    = ur_get_license_plan();
 	<div class="user-registration-loader-overlay" style="display:none">
 		<div class="ur-loading ur-loading-active"></div>
 	</div>
-	<div class="user-registration-setup user-registration-setup--form">
+	<div class="user-registration-setup user-registration-setup--form user-registration-form-template-wrapper">
 		<div class="user-registration-setup-header">
 			<div class="ur-brand-logo ur-px-2">
 				<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
@@ -37,13 +37,13 @@ $license_plan    = ur_get_license_plan();
 			<nav class="user-registration-tab">
 				<ul>
 					<li class="user-registration-tab-nav active">
-						<a href="#" id="ur-form-all" class="user-registration-tab-nav-link"><?php esc_html_e( 'All', 'user-registration' ); ?></a>
+						<a href="#" id="ur-form-all" class="user-registration-tab-nav-link" data-plan="all"><?php esc_html_e( 'All', 'user-registration' ); ?></a>
 					</li>
 					<li class="user-registration-tab-nav">
-						<a href="#" id="ur-form-basic" class="user-registration-tab-nav-link"><?php esc_html_e( 'Free', 'user-registration' ); ?></a>
+						<a href="#" id="ur-form-basic" class="user-registration-tab-nav-link" data-plan="free"><?php esc_html_e( 'Free', 'user-registration' ); ?></a>
 					</li>
 					<li class="user-registration-tab-nav">
-						<a href="#" id="ur-form-pro" class="user-registration-tab-nav-link"><?php esc_html_e( 'Premium', 'user-registration' ); ?></a>
+						<a href="#" id="ur-form-pro" class="user-registration-tab-nav-link" data-plan="premium"><?php esc_html_e( 'Premium', 'user-registration' ); ?></a>
 					</li>
 				</ul>
 			</nav>
@@ -77,18 +77,20 @@ $license_plan    = ur_get_license_plan();
 					if ( 'blank' === $template->slug ) {
 						$click_class = 'ur-template-select';
 					}
-
+					$license_plan_string = 'free';
 					// Upgrade checks.
 					if ( empty( $license_plan ) && ! in_array( 'free', $template->plan, true ) ) {
+						$license_plan_string = 'premium';
 						$upgrade_class = 'upgrade-modal';
 					} elseif ( ! in_array( str_replace( '-lifetime', '', $license_plan ), $template->plan, true ) && ! in_array( 'free', $template->plan, true ) ) {
 						$upgrade_class = 'ur-template-select';
+
 					}
 
 					/* translators: %s: Template title */
 					$template_name = sprintf( esc_attr_x( '%s template', 'Template name', 'user-registration' ), esc_attr( $template->title ) );
 					?>
-					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>">
+					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>" data-plan="<?php echo esc_attr( $license_plan_string ); ?>">
 						<figure class="user-registration-screenshot <?php echo esc_attr( $click_class ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>">
 							<img src="<?php echo esc_url( $template->image ); ?>"/>
 							<?php echo wp_kses_post( $badge ); ?>

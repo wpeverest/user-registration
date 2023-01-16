@@ -64,6 +64,8 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-templates.php';
+
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
