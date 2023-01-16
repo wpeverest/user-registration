@@ -571,6 +571,13 @@
 									);
 
 									if (
+										0 <
+										$this.find(".dz-error-message").length
+									) {
+										return;
+									}
+
+									if (
 										$this
 											.find(
 												"#user_registration_stripe_gateway"
@@ -731,6 +738,11 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+													var timeout = response.data
+														.redirect_timeout
+														? response.data
+																.redirect_timeout
+														: 2000;
 
 													if (
 														typeof response.success !==
@@ -741,8 +753,13 @@
 															.paypal_redirect !==
 															"undefined"
 													) {
-														window.location =
-															response.data.paypal_redirect;
+														window.setTimeout(
+															function () {
+																window.location =
+																	response.data.paypal_redirect;
+															},
+															timeout
+														);
 													}
 
 													if (
@@ -857,12 +874,13 @@
 																"user_registration_frontend_before_redirect_url",
 																[redirect_url]
 															);
+
 															window.setTimeout(
 																function () {
 																	window.location =
 																		redirect_url;
 																},
-																1000
+																timeout
 															);
 														} else {
 															if (
@@ -873,10 +891,18 @@
 																response.data
 																	.auto_login
 															) {
-																$(document).trigger(
+																$(
+																	document
+																).trigger(
 																	"user_registration_frontend_before_auto_login"
 																);
-																location.reload();
+
+																window.setTimeout(
+																	function () {
+																		location.reload();
+																	},
+																	timeout
+																);
 															}
 														}
 													} else if (
@@ -1635,6 +1661,11 @@ function ur_includes(arr, item) {
 			$password_field = $(this)
 				.closest(".user-registration-form-row")
 				.find('input[name="password_2"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".field-password")
+				.find(".input-password");
 		}
 
 		if ($password_field.length > 0) {

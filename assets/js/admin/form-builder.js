@@ -136,6 +136,95 @@
 						URFormBuilder.ur_show_help();
 					}
 				});
+
+				// Toggle `Bulk Add` option.
+				$(document.body).on(
+					"click",
+					".ur-toggle-bulk-options",
+					function (e) {
+						e.preventDefault();
+						$this = $(this);
+
+						var bulk_options_html = "";
+						bulk_options_html +=
+							'<div class="ur-bulk-options-container">';
+						bulk_options_html +=
+							'<div class="ur-general-setting ur-setting-textarea ur-general-setting-bulk-options ur-bulk-options-container"><label for="ur-type-textarea">' +
+							$this.data("bulk-options-label") +
+							'<span class="ur-portal-tooltip tooltipstered" data-tip="' +
+							$this.data("bulk-options-tip") +
+							'"></span></label>';
+						bulk_options_html +=
+							'<textarea data-field="description" class="ur-general-setting-field ur-type-textarea"></textarea></div>';
+						bulk_options_html +=
+							'<a class="button button-small ur-add-bulk-options" href="#">' +
+							$this.data("bulk-options-button") +
+							"</a></div>";
+
+						if (
+							$this.parent().next(".ur-bulk-options-container")
+								.length
+						) {
+							if (
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.css("display") === "none"
+							) {
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.show();
+							} else {
+								$this
+									.parent()
+									.next(".ur-bulk-options-container")
+									.hide();
+							}
+						} else {
+							$(bulk_options_html).insertAfter($this.parent()).trigger('init_tooltips');
+						}
+					}
+				);
+
+				// Add custom list of options.
+				$(document.body).on(
+					"click",
+					".ur-add-bulk-options",
+					function (e) {
+						e.preventDefault();
+						var options = $(this).parent().next(".ur-options-list");
+						var bulk_options_container = $(this).parent(
+							".ur-bulk-options-container"
+						);
+						if (options.length) {
+							var options_texts = bulk_options_container
+								.find(".ur-type-textarea")
+								.val()
+								.replace(/<\/?[^>]+(>|$)/g, "")
+								.split("\n");
+
+							options_texts = $.unique(options_texts);
+
+							options_texts.forEach(function (option_text) {
+								if ("" !== option_text) {
+									var $add_button = options
+										.find("li")
+										.last()
+										.find("a.add");
+
+									URFormBuilder.add_choice_field_option(
+										$add_button,
+										option_text.trim()
+									);
+								}
+							});
+							bulk_options_container
+								.find(".ur-type-textarea")
+								.val("");
+						}
+					}
+				);
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -1943,14 +2032,12 @@
 											);
 											builder.manage_empty_grid();
 										},
-										revert: true,
 										connectWith: ".ur-grid-list-item",
 									})
 									.disableSelection();
 								$(".ur-input-grids").sortable({
 									containment: ".ur-builder-wrapper",
 									tolerance: "pointer",
-									revert: "invalid",
 									placeholder: "ur-single-row",
 									forceHelperSize: true,
 									over: function () {
@@ -1979,7 +2066,6 @@
 														)
 												);
 										},
-										revert: "invalid",
 										// start: function (event, ui) {
 										// },
 										stop: function (event, ui) {
@@ -2502,6 +2588,7 @@
 
 				$(document.body).trigger("ur_rendered_field_options");
 				$(document.body).trigger("init_tooltips");
+				$(document.body).trigger("init_field_options_toggle");
 			},
 			/**
 			 * Render the advance setting for selected field.
@@ -3136,6 +3223,10 @@
 						.find("input.ur-type-radio-label")
 						.val();
 					value = value.trim();
+
+					// To remove all HTML tags from a value.
+					value = value.replace(/<\/?[^>]+(>|$)/g, "");
+
 					radio = $(element)
 						.find("input.ur-type-radio-value")
 						.is(":checked");
@@ -3201,6 +3292,21 @@
 						.find("input.ur-type-checkbox-label")
 						.val();
 					value = value.trim();
+
+					// To remove all HTML tags (opening or closing or self closing)from a string except for anchor tags.
+					value = value.replace(/<(?!\/?a\b)[^>]+>/gi, "");
+
+					// To remove attributes except "href, target, download, rel, hreflang, type, name, accesskey, tabindex, title" from anchor tag.
+					value = value.replace(
+						/(?!href|target|download|rel|hreflang|type|name|accesskey|tabindex|title)\b\w+=['"][^'"]*['"]/g,
+						""
+					);
+
+					// To add a closing </a> tag to a string if an open <a> tag is present but not closed.
+					if (/<a(?:(?!<\/a>).)*$/.test(value)) {
+						value += "</a>";
+					}
+
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
 						.is(":checked");
@@ -3634,13 +3740,16 @@
 			 * Add a new option in choice field when called.
 			 *
 			 * @param object $this_obj The field option to add.
+			 * @param string value The value of the option.
 			 */
-			add_choice_field_option: function ($this) {
+			add_choice_field_option: function ($this, value) {
 				var $wrapper = $(".ur-selected-item.ur-item-active"),
 					this_index = $this.parent("li").index(),
 					cloning_element = $this.parent("li").clone(true, true);
 
-				cloning_element.find('input[data-field="options"]').val("");
+				cloning_element
+					.find('input[data-field="options"]')
+					.val(typeof value !== "undefined" ? value : "");
 				cloning_element
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
@@ -3803,12 +3912,26 @@
 			} else {
 				$(this).addClass("closed");
 			}
+			$(this)
+				.parent(".user-registration-field-option-group")
+				.toggleClass("closed")
+				.toggleClass("open");
 			var field_list = $(this).find(" ~ .ur-registered-list")[0];
 			$(field_list).slideToggle();
 
 			// For `Field Options` section
-			$(this).siblings(".ur-toggle-content").slideToggle();
+			$(this).siblings(".ur-toggle-content").stop().slideToggle();
 		});
+
+		$(document.body)
+			.on("init_field_options_toggle", function () {
+				$(".user-registration-field-option-group.closed").each(
+					function () {
+						$(this).find(".ur-toggle-content").hide();
+					}
+				);
+			})
+			.trigger("init_field_options_toggle");
 
 		/**
 		 * For toggling quick links content.

@@ -203,24 +203,26 @@ class UR_Admin_Settings {
 			return $default;
 		} else {
 			// Array value.
-			if ( strstr( $option_name, '[' ) ) {
-				parse_str( $option_name, $option_array );
+			if ( null !== $option_name ) {
+				if ( strstr( $option_name, '[' ) ) {
+					parse_str( $option_name, $option_array );
 
-				// Option name is first key.
-				$option_name = current( array_keys( $option_array ) );
+					// Option name is first key.
+					$option_name = current( array_keys( $option_array ) );
 
-				// Get value.
-				$option_values = get_option( $option_name, '' );
+					// Get value.
+					$option_values = get_option( $option_name, '' );
 
-				$key = key( $option_array[ $option_name ] );
+					$key = key( $option_array[ $option_name ] );
 
-				if ( isset( $option_values[ $key ] ) ) {
-					$option_value = $option_values[ $key ];
+					if ( isset( $option_values[ $key ] ) ) {
+						$option_value = $option_values[ $key ];
+					} else {
+						$option_value = null;
+					}
 				} else {
-					$option_value = null;
+					$option_value = get_option( $option_name, null );
 				}
-			} else {
-				$option_value = get_option( $option_name, null );
 			}
 
 			if ( is_array( $option_value ) ) {
@@ -819,16 +821,18 @@ class UR_Admin_Settings {
 
 			foreach ( $section['settings'] as $option ) {
 				// Get posted value.
-				if ( strstr( $option['id'], '[' ) ) {
-					parse_str( $option['id'], $option_name_array );
-					$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );
+				if ( null !== $option['id'] ) {
+					if ( strstr( $option['id'], '[' ) ) {
+						parse_str( $option['id'], $option_name_array );
+						$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );
 
-					$setting_name = key( $option_name_array[ $option_name ] );
-					$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				} else {
-					$option_name  = sanitize_text_field( $option['id'] );
-					$setting_name = '';
-					$raw_value    = isset( $_POST[ $option['id'] ] ) ? wp_unslash( $_POST[ $option['id'] ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						$setting_name = key( $option_name_array[ $option_name ] );
+						$raw_value    = isset( $_POST[ $option_name ][ $setting_name ] ) ? wp_unslash( $_POST[ $option_name ][ $setting_name ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					} else {
+						$option_name  = sanitize_text_field( $option['id'] );
+						$setting_name = '';
+						$raw_value    = isset( $_POST[ $option['id'] ] ) ? wp_unslash( $_POST[ $option['id'] ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					}
 				}
 
 				// Format the value based on option type.
@@ -917,7 +921,7 @@ class UR_Admin_Settings {
 
 				// Check if the word is a shash separated terms. Eg: "Hide/Show".
 				if ( strpos( $word, '/' ) ) {
-					$separate_terms = explode( '/', $word );
+					$separate_terms    = explode( '/', $word );
 					$capitalized_terms = array();
 
 					foreach ( $separate_terms as $term ) {

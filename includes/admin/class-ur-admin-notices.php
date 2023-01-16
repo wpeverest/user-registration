@@ -191,14 +191,16 @@ class UR_Admin_Notices {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 						} else {
 							// Remove all notices except user registration plugins notices.
-							if ( strstr( $name, 'user_registration_error_notices' ) ) {
-								if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
+							if ( null !== $name ) {
+								if ( strstr( $name, 'user_registration_error_notices' ) ) {
+									if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
+										unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+									}
+								} elseif ( strpos( $name, 'user_registration_' ) || strpos( $name, 'UR_Admin_Notices' ) ) {
+									break;
+								} else {
 									unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 								}
-							} else if ( strpos( $name, 'user_registration_' ) || strpos( $name, 'UR_Admin_Notices' ) ) {
-								break;
-							} else {
-								unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 							}
 						}
 					}
