@@ -411,7 +411,7 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action     = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$action    = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 			$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
