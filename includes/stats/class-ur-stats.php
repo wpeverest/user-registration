@@ -22,9 +22,9 @@ if (!class_exists('UR_Stats')) {
 		/**
 		 * Remote URl Constant.
 		 */
-		const REMOTE_URL = 'https://stats.wpeverest.com/wp-json/tgreporting/v1/process-premium/';
+		const REMOTE_URL = 'https://stats.wpeverest.com/wp-json/tgreporting/v1/process-free/';
 
-		const LAST_SEND = 'user_registration_send_usage_last_run';
+		const LAST_RUN_STAMP = 'user_registration_send_usage_last_run';
 
 
 		/**
@@ -125,11 +125,12 @@ if (!class_exists('UR_Stats')) {
 
 		public function process()
 		{
+
 			if(!$this->is_usage_allowed()){
 				return;
 			}
 
-			$last_send = get_option(self::LAST_SEND);
+			$last_send = get_option(self::LAST_RUN_STAMP);
 
 			// Make sure we do not run it more than once on each 15 days
 			if (
@@ -139,22 +140,69 @@ if (!class_exists('UR_Stats')) {
 				return;
 			}
 
-			$this->call_api();
 
+			$this->call_api();
 			// Update the last run option to the current timestamp.
-			update_option(self::LAST_SEND, time());
+			update_option(self::LAST_RUN_STAMP, time());
 		}
 
 		public function call_api()
 		{
+			global $wpdb;
+			$theme        = wp_get_theme();
 			$data = array();
 			$data['product_data'] = $this->get_plugin_lists();
 			$data['admin_email'] = get_bloginfo('admin_email');
 			$data['website_url'] = get_bloginfo('url');
 			$data['wp_version'] = get_bloginfo('version');
+			$data['php_version'] = phpversion();
+			$data['mysql_version'] = $wpdb->db_version();
+			$data['server_software'] = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
+			$data['is_ssl'] = is_ssl();
+			$data['is_multisite'] = is_multisite();
+			$data['is_wp_com'] = defined( 'IS_WPCOM' ) && IS_WPCOM;
+			$data['is_wp_com_vip'] = ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) || ( function_exists( 'wpcom_is_vip' ) && wpcom_is_vip() );
+			$data['is_wp_cache'] = defined( 'WP_CACHE' ) && WP_CACHE;
+			$data['multi_site_count'] = $this->get_sites_total();
+			$data['active_theme'] = $theme->name;
+			$data['active_theme_version'] = $theme->version;
+			$data['locale'] = get_locale();
+			$data['timezone'] = $this->get_timezone_offset();
 			$data['base_product'] = $this->get_base_product();
 
 			$this->send_request(self::REMOTE_URL, $data);
+		}
+		private function get_sites_total() {
+
+			return function_exists( 'get_blog_count' ) ? (int) get_blog_count() : 1;
+		}
+		private function get_timezone_offset() {
+
+			// It was added in WordPress 5.3.
+			if ( function_exists( 'wp_timezone_string' ) ) {
+				return wp_timezone_string();
+			}
+
+			/*
+			 * The code below is basically a copy-paste from that function.
+			 */
+
+			$timezone_string = get_option( 'timezone_string' );
+
+			if ( $timezone_string ) {
+				return $timezone_string;
+			}
+
+			$offset  = (float) get_option( 'gmt_offset' );
+			$hours   = (int) $offset;
+			$minutes = ( $offset - $hours );
+
+			$sign      = ( $offset < 0 ) ? '-' : '+';
+			$abs_hour  = abs( $hours );
+			$abs_mins  = abs( $minutes * 60 );
+			$tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+
+			return $tz_offset;
 		}
 
 		/**
@@ -178,7 +226,7 @@ if (!class_exists('UR_Stats')) {
 					'httpversion' => '1.0',
 					'blocking' => true,
 					'headers' => $headers,
-					'body' => array('premium_data' => $data)
+					'body' => array('free_data' => $data)
 				)
 			);
 			return json_decode(wp_remote_retrieve_body($response), true);
