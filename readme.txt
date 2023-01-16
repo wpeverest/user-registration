@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.1.1
-Stable tag: 2.2.6
+Stable tag: 2.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,7 +61,7 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [MailerLite](https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpeverest.com/wordpress-plugins/user-registration/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
 
 * **[Premium] [Drag and Drop Multi File Upload:](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
@@ -120,6 +120,8 @@ Here’s a brief look at the features that make User Registration one of the bes
 * **[Premium] [Front-end Listing:](https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to display all your registered users on your website, the Front-end Listing addon is your answer. Users and guests alike can view individual profiles of your users from this front-end list.
 
 * **[Premium] [Customize My Account:](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing and deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, and more.
+
+* **[Premium] [Two Factor Authentication:](https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to protect your website from lousy hackers and digital vulnerabilities, the Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.
 
 ### Who is User Registration for?
 * Schools and Universities
@@ -276,6 +278,32 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.3.0    - 02/01/2023
+* Feature  - CAPTCHA verification on lost password page.​
+* Dev      - Add hook to hold success message before redirect.
+* Dev      - Add functions to get login and my account page urls.
+* Tweak    - New addons in extensions page.​
+* Tweak    - Delete popup modal layout size changes.​
+* Tweak    - Add UR tag for selected my account page.​
+* Tweak    - Collapse accordion by default except general in form builder. ​
+* Tweak    - Submit Button Class, Text, Form Class label and tooltip text changes.​
+* Fix      - PHP 8.1 Compatibility issue​s.
+* Fix      - Forms table sorting by latest update.​
+* Fix      - Form Id empty issue in getting started page.​
+* Fix      - Misplaced error message for url fields.​
+* Fix      - Field not appended in the droppable zone.​
+* Fix      - Errors and warnings in the browser console.​
+* Fix      - Show Password icon for Extra Password field.​
+* Fix      - Smart tag for country field in email content.
+* Fix      – My Account endpoint translation issue in WPML.​
+* Fix      - Gutenberg compatibility issue with my account.
+* Fix      - User export issue when form name has special characters.​
+* Fix      - User export issue while checkbox or multi-select2 exists.​
+* Fix      - Form not submitting issue while captcha keys are not set.​
+* Fix      - Form submitting when error message exists for file upload.
+* Fix      – Special Character in Password Field caused invalid password while login.​
+* Fix      - 'Special Character Validation in Username' and 'Unknown Email' messages not customized properly.​
 
 = 2.2.6    - 01/12/2022
 * Fix      - Critical error while updating user details by admin.

@@ -8,13 +8,18 @@
 	}
 }
 
+.user-registration-modal-link:hover {
+	cursor: pointer;
+}
+
 .user-registration-modal {
 	display: flex;
+	place-content: center;
 	position: fixed;
-	top: 0;
+	top: 50px;
 	left: 0;
 	right: 0;
-	height: 100%;
+	max-height: 90%;
 	width: 100%;
 	margin: 0 auto !important;
 	overflow-x: hidden;
@@ -106,7 +111,7 @@
 	.user-registration-modal__body {
 		position: relative;
 		padding: 16px;
-		max-height: 75vh;
+		max-height: 67vh;
 		overflow-y: scroll;
 
 		// Customize UR form for modal

@@ -514,7 +514,7 @@ function ur_format_setting_data( $setting_data ) {
 	foreach ( $key_value as $key => $value ) {
 		$settings[] = array(
 			'name'  => $key,
-			'value' => $value,
+			'value' => apply_filters( 'user_registration_form_setting_' . $key, $value ),
 		);
 	}
 
