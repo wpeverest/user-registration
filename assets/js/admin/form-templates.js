@@ -14,8 +14,10 @@ jQuery(function ($) {
 			$this.closest('li').addClass('active');
 			var template_wrap = ur_form_templates.wrapper.find('.user-registration-form-template');
 			template_wrap.attr('data-filter-template', plan_type);
+		},
 
-		}
 	};
-	ur_form_templates.init();
+	$(document).ready(function() {
+		ur_form_templates.init();
+	});
 });

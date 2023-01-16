@@ -54,18 +54,8 @@ class UR_Admin_Form_Templates
 				foreach ($template_data->templates as $template_tuple) {
 
 					$image_url = isset($template_tuple->image) ? $template_tuple->image : ($template_url . 'images/' . $template_tuple->slug . '.png');
-					// We retrieve the image, then use them instead of the remote server.
-					$image = wp_remote_get($image_url);
 
 					$template_tuple->image = $image_url;
-
-					$type = wp_remote_retrieve_header($image, 'content-type');
-
-					// Remote file check failed, we'll fallback to remote image.
-					if (!$type) {
-						continue;
-					}
-
 
 					$temp_name = explode('/', $image_url);
 					$relative_path = $folder_path . '/' . end($temp_name);
@@ -73,7 +63,7 @@ class UR_Admin_Form_Templates
 
 					// If it exists, utilize this file instead of remote file.
 					if ($exists) {
-						$template_tuple->image = untrailingslashit(plugin_dir_url(UR_PLUGIN_FILE)) . '/assets/images/templates/' . end($temp_name);
+						$template_tuple->image = untrailingslashit(plugin_dir_url(UR_PLUGIN_FILE)) . '/assets/images/templates/'.untrailingslashit($template_tuple->slug).'.png';
 					}
 				}
 
