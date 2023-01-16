@@ -522,9 +522,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			} else {
 				$templates       = array();
 				$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
-				$category  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
-				$templates = self::get_template_data();
-				$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+				$category        = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
+				$templates       = self::get_template_data();
+				$suffix          = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 				wp_enqueue_script( 'ur-setup' );
 				wp_localize_script(
@@ -556,12 +556,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'ur-template-controller',
 					'ur_templates',
 					array(
-						'ur_template_all' => self::get_template_data(),
+						'ur_template_all'  => self::get_template_data(),
 						'i18n_get_started' => esc_html__( 'Get Started', 'user-registration' ),
 						'i18n_get_preview' => esc_html__( 'Preview', 'user-registration' ),
 						'i18n_pro_feature' => esc_html__( 'Pro', 'user-registration' ),
 						'template_refresh' => esc_html__( 'Updating Templates', 'user-registration' ),
-						'ur_plugin_url'   => esc_url( UR()->plugin_url() ),
+						'ur_plugin_url'    => esc_url( UR()->plugin_url() ),
 					)
 				);
 
@@ -926,55 +926,54 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public static function get_template_data() {
 			$template_data = get_transient( 'ur_template_section_list' );
 
-			$template_url = "https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/";
+			$template_url = 'https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/';
 
 			if ( false === $template_data ) {
 
-				$template_json_url = $template_url.'templates.json';
-				try{
-					$content = wp_remote_get($template_json_url);
-					$content_json = wp_remote_retrieve_body($content);
-					$template_data = json_decode($content_json);
-				}catch(Exception $e){
-
+				$template_json_url = $template_url . 'templates.json';
+				try {
+					$content       = wp_remote_get( $template_json_url );
+					$content_json  = wp_remote_retrieve_body( $content );
+					$template_data = json_decode( $content_json );
+				} catch ( Exception $e ) {
+					// Handle exception here.
+					return;
 				}
-
 
 				// Removing directory so the templates can be reinitialized.
 				$folder_path = untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) . '/assets/images/templates' );
-				if (  isset( $template_data->templates ) ) {
+				if ( isset( $template_data->templates ) ) {
 
 					foreach ( $template_data->templates as $template_tuple ) {
 
-					$image_url = isset($template_tuple->image) ? $template_tuple->image: ($template_url.'images/'.$template_tuple->slug.'.png');
-					// We retrieve the image, then use them instead of the remote server.
-					$image = wp_remote_get( $image_url );
+						$image_url = isset( $template_tuple->image ) ? $template_tuple->image : ( $template_url . 'images/' . $template_tuple->slug . '.png' );
+						// We retrieve the image, then use them instead of the remote server.
+						$image = wp_remote_get( $image_url );
 
-					$template_tuple->image = $image_url;
+						$template_tuple->image = $image_url;
 
-					$type  = wp_remote_retrieve_header( $image, 'content-type' );
+						$type = wp_remote_retrieve_header( $image, 'content-type' );
 
-					// Remote file check failed, we'll fallback to remote image.
-					if ( ! $type ) {
-						continue;
+						// Remote file check failed, we'll fallback to remote image.
+						if ( ! $type ) {
+							continue;
+						}
+
+						$temp_name     = explode( '/', $image_url );
+						$relative_path = $folder_path . '/' . end( $temp_name );
+						$exists        = file_exists( $relative_path );
+
+						// If it exists, utilize this file instead of remote file.
+						if ( $exists ) {
+							$template_tuple->image = plugin_dir_url( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
+						}
 					}
-
-
-					$temp_name     = explode( '/', $image_url );
-					$relative_path = $folder_path . '/' . end( $temp_name );
-					$exists        = file_exists( $relative_path );
-
-					// If it exists, utilize this file instead of remote file.
-					if ( $exists ) {
-						$template_tuple->image = plugin_dir_url( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/assets/images/templates/' . end( $temp_name );
-					}
-				}
 
 					set_transient( 'ur_template_section_list', $template_data, WEEK_IN_SECONDS );
 				}
 			}
 
-			return isset($template_data->templates) ? apply_filters( 'user_registration_template_section_data', $template_data->templates ): new stdClass();
+			return isset( $template_data->templates ) ? apply_filters( 'user_registration_template_section_data', $template_data->templates ) : new stdClass();
 		}
 	}
 
