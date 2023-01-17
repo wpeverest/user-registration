@@ -255,9 +255,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 														$value      = date_i18n( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date_i18n( $date_format, strtotime( trim( $date_range[1] ) ) );
 													}
 													?>
-									<input type="text" id="load_flatpickr"
+									<input type="text" 
 										   value="<?php echo esc_attr( $actual_value ); ?>"
-										   class="regular-text"
+										   class="ur-flatpickr-field regular-text"
 										   data-id = '<?php echo esc_attr( $key ); ?>'
 										   <?php echo $attribute_string; //phpcs:ignore?>
 										   readonly />
@@ -563,7 +563,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									}
 
 									if ( ! empty( $field->advance_setting->date_localization ) ) {
-										$date_localization                    = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
+										$date_localization                                   = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : 'en';
 										$fields[ $field_index ]['attributes']['data-locale'] = $date_localization;
 									}
 									break;

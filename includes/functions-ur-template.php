@@ -264,7 +264,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
 			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
-		} elseif( isset( $args['tip'] ) ) {
+		} elseif ( isset( $args['tip'] ) ) {
 			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
 		}
 
@@ -338,10 +338,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$value = 'checked="checked"';
 							}
 						}
-						$field .= '<li class="ur-checkbox-list">';
+						$field       .= '<li class="ur-checkbox-list">';
 						$choice_index = ur_sanitize_tooltip( $choice_index );
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
-						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
+						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
+						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						$checkbox_start++;
 					}
 					$field .= '</ul>';
@@ -459,11 +459,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= ' <span class="input-wrapper"> ';
 
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '" class="regular-text ' . esc_attr( $class ) . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" value="' . esc_attr( $actual_value ) . '" class="ur-flatpickr-field regular-text ' . esc_attr( $class ) . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
 				} else {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" id="load_flatpickr" value="' . esc_attr( $actual_value ) . '"  class="regular-text ' . $class . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" value="' . esc_attr( $actual_value ) . '"  class="ur-flatpickr-field regular-text ' . $class . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
 				}
@@ -636,18 +636,18 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
-					$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
-					$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
-					$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
-					$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
-					$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
-					$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
-					$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
-					$required          = 'yes' == $required ? true : false;
-					$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
-					$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
-					$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+					$field_name             = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+					$field_label            = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+					$field_description      = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+					$placeholder            = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+					$options                = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+					$field_key              = isset( $field->field_key ) ? ( $field->field_key ) : '';
+					$field_type             = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
+					$required               = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
+					$required               = 'yes' == $required ? true : false;
+					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
+					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
+					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
 
