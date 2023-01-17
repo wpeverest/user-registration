@@ -19,10 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-do_action( 'user_registration_before_edit_profile_form' ); ?>
+do_action( 'user_registration_before_edit_profile_form' );
+
+$user_id = get_current_user_id();
+$form_id = ur_get_form_id_by_userid( $user_id );
+?>
 
 <div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
-	<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data">
+	<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data" data-form-id="<?php echo esc_attr( $form_id ); ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">

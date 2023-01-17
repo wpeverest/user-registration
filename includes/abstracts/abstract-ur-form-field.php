@@ -445,7 +445,7 @@ abstract class UR_Form_Field {
 				case 'text':
 					$extra_attribute          = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
 					$value                    = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? trim( str_replace( 'user_registration_', '', $this->id ) ) : $this->get_general_setting_data( $setting_key );
-					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="text" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '" type="text" name="' . esc_attr( $setting_value['name'] ) . '"  placeholder="' . esc_attr( $setting_value['placeholder'] ) . '"';
 
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required ';
@@ -477,14 +477,14 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 						</div>';
-						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="radio" name="' . $unique . '_value" ';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="radio" name="' . esc_attr( $unique ) . '_value" ';
 
 						if ( true == $setting_value['required'] ) {
 							$general_setting_wrapper .= ' required ';
 						}
 
 						$general_setting_wrapper .= '' . checked( $option, $default_value, false ) . ' />';
-						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+						$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
 
 						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
@@ -523,7 +523,7 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 							</div>';
-							$general_setting_wrapper .= '<input value="' . $label . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="checkbox" name="' . $unique . '_value" ';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="checkbox" name="' . esc_attr( $unique ) . '_value" ';
 							if ( true == $setting_value['required'] ) {
 								$general_setting_wrapper .= ' required ';
 							}
@@ -533,8 +533,8 @@ abstract class UR_Form_Field {
 							} else {
 								$general_setting_wrapper .= '/>';
 							}
-							$general_setting_wrapper .= '<input value="' . $label . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
-							$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" data-field-name="' . $strip_prefix . '" class="ur-general-setting-field  ur-type-' . $setting_value['type'] . '-money-input" type="text" name="' . $setting_value['name'] . '_value" data-currency=" ' . $currency . ' " >';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " >';
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
 							$general_setting_wrapper .= '</li>';
@@ -547,7 +547,7 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 						</div>';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-value" type="checkbox" name="' . $unique . '_value" ';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="checkbox" name="' . esc_attr( $unique ) . '_value" ';
 
 							if ( true == $setting_value['required'] ) {
 								$general_setting_wrapper .= ' required ';
@@ -559,7 +559,7 @@ abstract class UR_Form_Field {
 								$general_setting_wrapper .= '/>';
 							}
 
-							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '-label" type="text" name="' . $setting_value['name'] . '_label" >';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
 
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
@@ -580,11 +580,11 @@ abstract class UR_Form_Field {
 							$disabled = 'disabled';
 						}
 
-						$general_setting_wrapper .= '<select data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" ' . $disabled . '>';
+						$general_setting_wrapper .= '<select data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $disabled . '>';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
 							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
-							$general_setting_wrapper .= '<option ' . $selected . " value='" . $option_key . "'>" . $option_value . '</option>';
+							$general_setting_wrapper .= '<option ' . esc_attr( $selected ) . " value='" . esc_attr( $option_key ) . "'>" . esc_html( $option_value ) . '</option>';
 						}
 
 						$general_setting_wrapper .= '</select>';
@@ -592,19 +592,18 @@ abstract class UR_Form_Field {
 					break;
 
 				case 'textarea':
-					$general_setting_wrapper .= '<textarea data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . $setting_value['name'] . '" placeholder= "' . esc_attr( $setting_value['placeholder'] ) . '" ';
+					$general_setting_wrapper .= '<textarea data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '"  name="' . esc_attr( $setting_value['name'] ) . '" placeholder= "' . esc_attr( $setting_value['placeholder'] ) . '" ';
 
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required >';
 					}
-
-					$general_setting_wrapper .= $this->get_general_setting_data( $setting_key ) . '</textarea>';
+					$general_setting_wrapper .= esc_html( $this->get_general_setting_data( $setting_key ) ) . '</textarea>';
 					break;
 
 				case 'hidden':
 					$value = isset( $setting_value['default'] ) ? $setting_value['default'] : '';
 
-					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="hidden" name="' . $setting_value['name'] . '"  placeholder="' . $setting_value['placeholder'] . '"';
+					$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '" type="hidden" name="' . esc_attr( $setting_value['name'] ) . '"  placeholder="' . esc_attr( $setting_value['placeholder'] ) . '"';
 
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required ';
@@ -616,7 +615,7 @@ abstract class UR_Form_Field {
 				case 'number':
 					$val                      = $this->get_general_setting_data( $setting_key );
 					$value                    = ! empty( $val ) ? $val : $setting_value['default'];
-					$general_setting_wrapper .= '<input value="' . $value . '" data-field="' . $setting_key . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '" type="number" name="' . $setting_value['name'] . '" min = "1"';
+					$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '" type="number" name="' . esc_attr( $setting_value['name'] ) . '" min = "1"';
 
 					if ( true == $setting_value['required'] ) {
 						$general_setting_wrapper .= ' required ';
