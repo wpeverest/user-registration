@@ -45,7 +45,7 @@ class UR_Admin {
 
 		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
 
-		if ( $post->ID == $my_account_page_id ) {
+		if ( $post->ID === $my_account_page_id ) {
 			$post_states[] = __( 'UR My Account Page', 'user-registration' );
 		}
 
@@ -64,6 +64,7 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-templates.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -409,10 +410,10 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action     = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
-			$templatres = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+			$action    = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
-			if ( 'ur-template-refresh' === $action && ! empty( $templatres ) ) {
+			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
 					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
 				}
