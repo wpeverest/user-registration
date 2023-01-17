@@ -251,6 +251,11 @@ class UR_AJAX {
 		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
 
 		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+
+			if ( ! is_numeric( $profile_picture_attachment_id ) ) {
+				$profile_picture_attachment_id = attachment_url_to_postid( $profile_picture_attachment_id );
+			}
+
 			if ( '' === $profile_picture_attachment_id ) {
 				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
 			} else {

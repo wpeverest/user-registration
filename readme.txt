@@ -281,9 +281,10 @@ Yes, the plugin has a shortcode for the login form.
 = 2.3.1    - 17/01/2023
 * Enhance  - Fetch Form templates from remote server.
 * Fix 	   - XSS vulnerability in field settings.
-* Fix 	   - Flatpickr throwing an error in console
+* Fix 	   - Flatpickr throwing an error in console,
 * Fix 	   - LearnDash slug typo in extemsions page.
 * Fix      - Disallow Reset Password for not approved users.
+* Fix 	   - Profile picture being removed while updating profile.
 * Fix      - Invalid argument warning while fetching form settings.
 * Fix      - Registration form id with which user is registered referenced in edit profile form.
 
