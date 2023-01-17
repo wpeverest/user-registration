@@ -192,7 +192,7 @@ class UR_Admin_Assets {
 		wp_register_script( 'chartjs', UR()->plugin_url() . '/assets/js/chartjs/Chart.min.js', array( 'jquery' ), '3.2.1', false );
 		wp_register_script( 'sweetalert2', UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js', array( 'jquery' ), '10.16.7', false );
 		wp_register_script( 'ur-setup', UR()->plugin_url() . '/assets/js/admin/ur-setup' . $suffix . '.js', array( 'jquery', 'sweetalert2', 'updates', 'wp-i18n' ), UR_VERSION, false );
-		wp_register_script( 'ur-template-controller', UR()->plugin_url() . '/assets/js/admin/form-template-controller' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+		wp_register_script( 'ur-form-templates', UR()->plugin_url() . '/assets/js/admin/form-templates' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery', UR_VERSION, false );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
 		wp_localize_script(
@@ -261,30 +261,30 @@ class UR_Admin_Assets {
 
 			$form_id = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;//phpcs:ignore WordPress.Security.NonceVerification
 			$params  = array(
-				'required_form_html'             => self::get_form_required_html(),
-				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
-				'user_input_dropped'             => wp_create_nonce( 'user_input_dropped_nonce' ),
-				'ur_form_save'                   => wp_create_nonce( 'ur_form_save_nonce' ),
-				'number_of_grid'                 => UR_Config::$ur_form_grid,
-				'active_grid'                    => UR_Config::$default_active_grid,
-				'is_edit_form'                   => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
-				'is_form_builder'                => ( isset( $_GET['page'] ) && 'add-new-registration' === $_GET['page'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
-				'post_id'                        => $form_id,
-				'admin_url'                      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
-				'form_required_fields'           => ur_get_required_fields(),
-				'form_one_time_draggable_fields' => ur_get_one_time_draggable_fields(),
-				'i18n_admin'                     => self::get_i18n_admin_data(),
-				'i18n_shortcut_key_title'      => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
-				'i18n_shortcut_keys'           => array(
+				'required_form_html'                     => self::get_form_required_html(),
+				'ajax_url'                               => admin_url( 'admin-ajax.php' ),
+				'user_input_dropped'                     => wp_create_nonce( 'user_input_dropped_nonce' ),
+				'ur_form_save'                           => wp_create_nonce( 'ur_form_save_nonce' ),
+				'number_of_grid'                         => UR_Config::$ur_form_grid,
+				'active_grid'                            => UR_Config::$default_active_grid,
+				'is_edit_form'                           => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
+				'is_form_builder'                        => ( isset( $_GET['page'] ) && 'add-new-registration' === $_GET['page'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
+				'post_id'                                => $form_id,
+				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
+				'form_required_fields'                   => ur_get_required_fields(),
+				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
+				'i18n_admin'                             => self::get_i18n_admin_data(),
+				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
+				'i18n_shortcut_keys'                     => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
 					'Ctrl+P' => esc_html__( 'Preview Form', 'user-registration' ),
 					'Ctrl+U' => esc_html__( 'Go to Users', 'user-registration' ),
 					'Ctrl+H' => esc_html__( 'Open Help', 'user-registration' ),
 				),
-				'add_new'                        => esc_html__( 'Add New', 'user-registration' ),
-				'max_upload_size_ini'            => wp_max_upload_size() / 1024,
-				'ur_preview'                     => add_query_arg(
+				'add_new'                                => esc_html__( 'Add New', 'user-registration' ),
+				'max_upload_size_ini'                    => wp_max_upload_size() / 1024,
+				'ur_preview'                             => add_query_arg(
 					array(
 						'ur_preview' => 'true',
 						'form_id'    => $form_id,
@@ -293,7 +293,7 @@ class UR_Admin_Assets {
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one uppercase letter', 'user-registration' ),
-				'user_registration_weak_password_info' => esc_html__( 'Minimum one uppercase letter and a number', 'user-registration' ),
+				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and a number', 'user-registration' ),
 				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and a special character', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
 			);

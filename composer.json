@@ -12,6 +12,9 @@
       "roots/wordpress-core-installer": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "composer/installers": true
+    },
+    "platform": {
+      "php": "7.4.3"
     }
   },
   "require": {

@@ -26,7 +26,6 @@ class UR_Email_Confirmation {
 			add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		}
 
-		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2 );
 		add_action( 'wp_authenticate', array( $this, 'check_token_before_authenticate' ), 40, 2 );
@@ -379,29 +378,6 @@ class UR_Email_Confirmation {
 			return $user;
 		}
 		return $user;
-	}
-
-	/**
-	 * If the user is not approved, disalow to reset the password fom Lost Passwod form and display an error message
-	 *
-	 * @param mixed $result Result.
-	 * @param int   $user_id User Id.
-	 *
-	 * @return \WP_Error
-	 */
-	public function allow_password_reset( $result, $user_id ) {
-		$form_id = ur_get_form_id_by_userid( $user_id );
-
-		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
-
-			$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
-
-			if ( '0' === $email_status ) {
-				$error_message = __( 'Email not verified! Verify your email by clicking on the link sent to your email.', 'user-registration' );
-				$result        = new WP_Error( 'user_email_not_verified', $error_message );
-			}
-		}
-		return $result;
 	}
 
 	/**
