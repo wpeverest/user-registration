@@ -31,7 +31,10 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * Constructor of the class.
 		 */
 		public function __construct() {
-			 add_action( 'init', array( $this, 'init_usage' ), 4 );
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			add_action( 'init', array( $this, 'init_usage' ), 4 );
 		}
 
 		/**
