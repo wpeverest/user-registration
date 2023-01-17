@@ -112,49 +112,8 @@ class UR_Admin_Deactivation_Feedback
 			],
 		];
 
-		?>
-		<div id="ur-deactivate-feedback-dialog-wrapper">
-			<div class="ur-deactivate-feedback-dialog-inner">
-				<div id="ur-deactivate-feedback-dialog-header">
-				<span
-					id="ur-deactivate-feedback-dialog-header-title"><?php echo esc_html__('Quick Feedback', 'user-registration'); ?></span>
-				</div>
-				<form id="ur-deactivate-feedback-dialog-form" method="post">
-					<?php
-					wp_nonce_field('_ur_deactivate_feedback_nonce');
-					?>
-					<input type="hidden" name="action" value="ur_deactivate_feedback"/>
+		include_once UR_ABSPATH . 'includes/admin/views/html-deactivation-popup.php';
 
-					<div
-						id="ur-deactivate-feedback-dialog-form-caption"><?php echo esc_html__('If you have a moment, please share why you are deactivating User Registration:', 'user-registration'); ?></div>
-					<div id="ur-deactivate-feedback-dialog-form-body">
-						<?php foreach ($deactivate_reasons as $reason_key => $reason) : ?>
-							<div class="ur-deactivate-feedback-dialog-input-wrapper">
-								<input id="ur-deactivate-feedback-<?php echo esc_attr($reason_key); ?>"
-									   class="ur-deactivate-feedback-dialog-input" type="radio" name="reason_key"
-									   value="<?php echo esc_attr($reason_key); ?>"/>
-								<label for="ur-deactivate-feedback-<?php echo esc_attr($reason_key); ?>"
-									   class="ur-deactivate-feedback-dialog-label"><?php echo esc_html($reason['title']); ?></label>
-								<?php if (!empty($reason['input_placeholder'])) : ?>
-									<input class="ur-feedback-text" type="text"
-										   name="reason_<?php echo esc_attr($reason_key); ?>"
-										   placeholder="<?php echo esc_attr($reason['input_placeholder']); ?>"/>
-								<?php endif; ?>
-								<?php if (!empty($reason['alert'])) : ?>
-									<div class="ur-feedback-text"><?php echo esc_html($reason['alert']); ?></div>
-								<?php endif; ?>
-							</div>
-						<?php endforeach; ?>
-					</div>
-					<div id="ur-deactivate-feedback-dialog-form-footer">
-						<button class="submit">Submit &amp; Deactivate
-						</button>
-						<button class="skip">Skip &amp; Deactivate</button>
-					</div>
-				</form>
-			</div>
-		</div>
-		<?php
 	}
 
 	public function send()
@@ -164,20 +123,19 @@ class UR_Admin_Deactivation_Feedback
 		}
 
 		$reason_text = '';
-		$reason_key = '';
+		$reason_slug = '';
 
-		if (!empty($_POST['reason_key'])) {
-			$reason_key = $_POST['reason_key'];
+		if (!empty($_POST['reason_slug'])) {
+			$reason_slug = $_POST['reason_slug'];
 		}
 
-		if (!empty($_POST["reason_{$reason_key}"])) {
-			$reason_text = $_POST["reason_{$reason_key}"];
+		if (!empty($_POST["reason_{$reason_slug}"])) {
+			$reason_text = $_POST["reason_{$reason_slug}"];
 		}
-
 		wp_remote_post(self::FEEDBACK_URL, [
 			'timeout' => 30,
 			'body' => [
-				'feedback_key' => $reason_key,
+				'feedback_key' => $reason_slug,
 				'feedback' => $reason_text,
 			],
 		]);
