@@ -255,8 +255,11 @@ class UR_Form_Handler {
 					ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
 				}
 
+				if ( 'email' === $field['type'] ) {
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field, $form_id );
+				}
+
 				if ( 'user_email' === $field['field_key'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '' );
 
 					// Check if email already exists before updating user details.
 					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
@@ -367,9 +370,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';
-		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';
-		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : ''; //phpcs:ignore;
+		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : ''; //phpcs:ignore;
+		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : ''; //phpcs:ignore;
 		$save_pass               = true;
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
@@ -451,7 +454,7 @@ class UR_Form_Handler {
 
 			try {
 				$creds = array(
-					'user_password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '',
+					'user_password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', //phpcs:ignore;
 					'remember'      => isset( $_POST['rememberme'] ),
 				);
 
