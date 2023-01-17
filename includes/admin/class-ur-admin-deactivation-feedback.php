@@ -85,30 +85,30 @@ class UR_Admin_Deactivation_Feedback
 		$deactivate_reasons = [
 			'feature_unavailable' => [
 				'title' => esc_html__('I didn’t find the feature I was looking for', 'user-registration'),
-				'input_placeholder' => esc_html__('Please share the reason', 'user-registration'),			],
+				'input_placeholder' => esc_html__('If possible, please elaborate on this', 'user-registration'),],
 			'complex_to_use' => [
 				'title' => esc_html__('I found the plugin complex to use', 'user-registration'),
-				'input_placeholder' => esc_html__('Please share which plugin', 'user-registration'),
+				'input_placeholder' => esc_html__('If possible, please elaborate on this', 'user-registration'),
 			],
 			'couldnt_build_the_form' => [
 				'title' => esc_html__('I couldn\'t build the form', 'user-registration'),
-				'input_placeholder' => esc_html__('Please share the reason', 'user-registration'),
+				'input_placeholder' => esc_html__('If possible, please elaborate on this', 'user-registration'),
 			],
 			'found_a_better_plugin' => [
 				'title' => esc_html__('I found better alternative', 'user-registration'),
-				'input_placeholder' => esc_html__('Please share the reason', 'user-registration'),
+				'input_placeholder' => esc_html__('If possible, please mention the alternatives', 'user-registration'),
 			],
 			'temporary_deactivation' => [
-				'title' => esc_html__('It\'s temporary deactivation', 'user-registration'),
+				'title' => esc_html__('Temporary deactivation', 'user-registration'),
 				'input_placeholder' => '',
 			],
 			'no_longer_needed' => [
-				'title' => esc_html__('No longer need the plugin', 'user-registration'),
+				'title' => esc_html__('I no longer need the plugin', 'user-registration'),
 				'input_placeholder' => '',
 			],
 			'other' => [
 				'title' => esc_html__('Other', 'user-registration'),
-				'input_placeholder' => esc_html__('Please share the reason', 'user-registration'),
+				'input_placeholder' => esc_html__('If possible, please elaborate on this', 'user-registration'),
 			],
 		];
 
@@ -135,8 +135,10 @@ class UR_Admin_Deactivation_Feedback
 		wp_remote_post(self::FEEDBACK_URL, [
 			'timeout' => 30,
 			'body' => [
-				'feedback_key' => $reason_slug,
-				'feedback' => $reason_text,
+				'feedback_slug' => $reason_slug,
+				'feedback_text' => $reason_text,
+				'admin_email' => get_bloginfo('admin_email'),
+				'website_url' => get_bloginfo('url')
 			],
 		]);
 

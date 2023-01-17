@@ -50,6 +50,7 @@ $deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . UR
 				</button>
 				<a href="<?php echo esc_url($deactivate_url) ?>" class="skip"><?php esc_html_e('Skip &amp; Deactivate', 'user-registration'); ?></a>
 			</div>
+			<span class="consent">* <?php esc_html_e('By submitting this form, you will also be sending us your email address & website URL.', 'user-registration'); ?></span>
 		</form>
 	</div>
 </div>
