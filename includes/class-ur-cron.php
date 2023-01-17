@@ -1,14 +1,15 @@
 <?php
 /**
  * UR Cron
- *UR
+ * UR
+ *
  * @package     UR
  * @subpackage  Classes/Cron
  * @since 2.3.1
  */
 
 // Exit if accessed directly
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -19,8 +20,8 @@ if (!defined('ABSPATH')) {
  *
  * @since 2.3.1
  */
-class UR_Cron
-{
+class UR_Cron {
+
 
 	/**
 	 * Init WordPress hook
@@ -28,10 +29,9 @@ class UR_Cron
 	 * @since 2.3.1
 	 * @see UR_Cron::weekly_events()
 	 */
-	public function __construct()
-	{
-		add_filter('cron_schedules', array($this, 'add_schedules'));
-		add_action('init', array($this, 'schedule_events'));
+	public function __construct() {
+		 add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_action( 'init', array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -40,14 +40,12 @@ class UR_Cron
 	 * @param array $schedules
 	 * @return array
 	 * @since 2.3.1
-	 *
 	 */
-	public function add_schedules($schedules = array())
-	{
+	public function add_schedules( $schedules = array() ) {
 		/*Adds once in biweekly to the existing schedules*/
 		$schedules['biweekly'] = array(
-			'interval' => (DAY_IN_SECONDS*15),
-			'display' => __('Every 15 days', 'user-registration'),
+			'interval' => ( DAY_IN_SECONDS * 15 ),
+			'display'  => __( 'Every 15 days', 'user-registration' ),
 		);
 
 		return $schedules;
@@ -59,9 +57,8 @@ class UR_Cron
 	 * @return void
 	 * @since 2.3.1
 	 */
-	public function schedule_events()
-	{
-		$this->biweekly_events();
+	public function schedule_events() {
+		 $this->biweekly_events();
 	}
 
 	/**
@@ -71,10 +68,9 @@ class UR_Cron
 	 * @return void
 	 * @since 2.3.1
 	 */
-	private function biweekly_events()
-	{
-		if (!wp_next_scheduled('user_registration_biweekly_scheduled_events')) {
-			wp_schedule_event(time(), 'biweekly', 'user_registration_biweekly_scheduled_events');
+	private function biweekly_events() {
+		if ( ! wp_next_scheduled( 'user_registration_biweekly_scheduled_events' ) ) {
+			wp_schedule_event( time(), 'biweekly', 'user_registration_biweekly_scheduled_events' );
 		}
 	}
 
