@@ -20,27 +20,6 @@ class UR_Admin_Deactivation_Feedback
 
 		// Ajax.
 		add_action('wp_ajax_ur_deactivate_feedback', [$this, 'send']);
-
-		//add_action('wp_ajax_user_registration_deactivation_notice', [$this, 'deactivation_notice']);
-	}
-
-	/**
-	 * AJAX plugin deactivation notice.
-	 *
-	 * @since  1.4.2
-	 */
-	public static function deactivation_notice()
-	{
-
-		check_ajax_referer('deactivation-notice', 'security');
-
-		ob_start();
-
-		include_once UR_ABSPATH . 'includes/admin/views/html-notice-deactivation.php';
-
-		$content = ob_get_clean();
-
-		wp_send_json($content); // WPCS: XSS OK.
 	}
 
 	public function scripts()
@@ -72,7 +51,6 @@ class UR_Admin_Deactivation_Feedback
 			'ur_plugins_params',
 			array(
 				'ajax_url' => admin_url('admin-ajax.php'),
-				'deactivation_nonce' => wp_create_nonce('deactivation-notice'),
 			)
 		);
 

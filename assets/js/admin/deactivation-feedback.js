@@ -1,42 +1,5 @@
 /* global ur_plugins_params */
 jQuery(function ($) {
-	$(document.body).on(
-		"click",
-		'tr[data-plugin="user-registration/user-registration.php"] span.deactivate a',
-		function (e) {
-			e.preventDefault();
-
-			/*var data = {
-				action: "user_registration_deactivation_notice",
-				security: ur_plugins_params.deactivation_nonce,
-			};
-
-			$.post(ur_plugins_params.ajax_url, data, function (response) {
-				$(
-					'tr[data-plugin="user-registration/user-registration.php"] span.deactivate a'
-				).addClass("hasNotice");
-
-				if ($('tr[id="user-registration-license-row"]').length !== 0) {
-					$('tr[id="user-registration-license-row"]')
-						.addClass(
-							"update user-registration-deactivation-notice"
-						)
-						.after(response);
-				} else {
-					$(
-						'tr[data-plugin="user-registration/user-registration.php"]'
-					)
-						.addClass(
-							"update user-registration-deactivation-notice"
-						)
-						.after(response);
-				}
-			}).fail(function (xhr) {
-				window.console.log(xhr.responseText);
-			});*/
-		}
-	);
-
 	var ur_deactivation_feedback = {
 		init: function () {
 			this.event_init();
@@ -67,7 +30,7 @@ jQuery(function ($) {
 				alert('Please select at least one option from the list');
 				return;
 			}
-			if(form.find('button.submit').hasClass('button-disabled')){
+			if (form.find('button.submit').hasClass('button-disabled')) {
 				return;
 			}
 			var reason_text = '';
