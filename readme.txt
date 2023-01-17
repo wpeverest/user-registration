@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.1.1
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,14 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+= 2.3.1    - 17/01/2023
+* Enhance  - Fetch Form templates from remote server.
+* Fix 	   - XSS vulnerability in field settings.
+* Fix 	   - Flatpickr throwing an error in console
+* Fix 	   - LearnDash slug typo in extemsions page.
+* Fix      - Disallow Reset Password for not approved users.
+* Fix      - Invalid argument warning while fetching form settings.
+* Fix      - Registration form id with which user is registered referenced in edit profile form.
 
 = 2.3.0    - 02/01/2023
 * Feature  - CAPTCHA verification on lost password page.​
