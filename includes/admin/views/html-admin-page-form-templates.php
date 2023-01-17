@@ -10,15 +10,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$refresh_url     = add_query_arg(
+$refresh_url  = add_query_arg(
 	array(
-		'page'               => 'add-new-registration',
-		'action'             => 'ur-template-refresh',
+		'page'              => 'add-new-registration',
+		'action'            => 'ur-template-refresh',
 		'ur-template-nonce' => wp_create_nonce( 'refresh' ),
 	),
 	admin_url( 'admin.php' )
 );
-$license_plan    = ur_get_license_plan();
+$license_plan = ur_get_license_plan();
 
 ?>
 <div class ="wrap user-registration">
@@ -81,7 +81,7 @@ $license_plan    = ur_get_license_plan();
 					// Upgrade checks.
 					if ( empty( $license_plan ) && ! in_array( 'free', $template->plan, true ) ) {
 						$license_plan_string = 'premium';
-						$upgrade_class = 'upgrade-modal';
+						$upgrade_class       = 'upgrade-modal';
 					} elseif ( ! in_array( str_replace( '-lifetime', '', $license_plan ), $template->plan, true ) && ! in_array( 'free', $template->plan, true ) ) {
 						$upgrade_class = 'ur-template-select';
 
@@ -94,7 +94,7 @@ $license_plan    = ur_get_license_plan();
 					<div class="user-registration-template-wrap ur-template"  id="user-registration-template-<?php echo esc_attr( $template->slug ); ?>" data-plan="<?php echo esc_attr( $license_plan_string ); ?>">
 						<figure class="user-registration-screenshot <?php echo esc_attr( $click_class ); ?>" data-template-name-raw="<?php echo esc_attr( $template->title ); ?>" data-template="<?php echo esc_attr( $template->slug ); ?>" data-template-name="<?php echo esc_attr( $template_name ); ?>">
 							<img src="<?php echo esc_url( $template->image ); ?>"
-								 data-failover="<?php echo esc_url($fallback_image) ?>"
+								data-failover="<?php echo esc_url( $fallback_image ); ?>"
 							/>
 							<?php echo wp_kses_post( $badge ); ?>
 							<?php if ( 'blank' !== $template->slug ) : ?>

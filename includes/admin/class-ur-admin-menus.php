@@ -653,7 +653,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$form_data_content = str_replace( '"noopener noreferrer"', "'noopener noreferrer'", $form_data_content );
 				$form_data_array   = json_decode( $form_data_content );
 
-				if ( json_last_error() != JSON_ERROR_NONE ) {
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
 					throw new Exception( '' );
 				}
 			} catch ( Exception $e ) {
@@ -663,7 +663,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			try {
 				$form_row_ids_array = json_decode( $form_row_ids );
 
-				if ( json_last_error() != JSON_ERROR_NONE ) {
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
 					throw new Exception( '' );
 				}
 			} catch ( Exception $e ) {
@@ -778,7 +778,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							}
 						}
 
-						if ( count( $grid_lists ) == 0 ) {
+						if ( count( $grid_lists ) === 0 ) {
 							echo '<div class="user-registration-dragged-me">
 						<div class="user-registration-dragged-me-text"><p>' . esc_html__( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
 						</div>';

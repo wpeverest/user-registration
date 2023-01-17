@@ -45,7 +45,7 @@ class UR_Admin {
 
 		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
 
-		if ( $post->ID == $my_account_page_id ) {
+		if ( $post->ID === $my_account_page_id ) {
 			$post_states[] = __( 'UR My Account Page', 'user-registration' );
 		}
 
@@ -65,7 +65,6 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-templates.php';
-
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
