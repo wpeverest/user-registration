@@ -3835,7 +3835,7 @@
 		$(document).ready(function () {
 			var date_flatpickrs = {};
 
-			$(document.body).on("click", "#load_flatpickr", function () {
+			$(document.body).on("click", ".ur-flatpickr-field", function () {
 				var field_id = $(this).data("id");
 				var date_flatpickr = date_flatpickrs[field_id];
 
@@ -3901,11 +3901,9 @@
 				}
 			});
 		});
-
 		/**
 		 * For toggling headings.
 		 */
-
 		$(document).on("click", ".ur-toggle-heading", function () {
 			if ($(this).hasClass("closed")) {
 				$(this).removeClass("closed");
