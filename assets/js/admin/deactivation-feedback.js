@@ -2,11 +2,11 @@
 jQuery(function ($) {
 	$(document.body).on(
 		"click",
-		'tr[data-plugin="user-registration/user-registration.php"] span.deactivate a:not(.hasNotice)',
+		'tr[data-plugin="user-registration/user-registration.php"] span.deactivate a',
 		function (e) {
 			e.preventDefault();
 
-			var data = {
+			/*var data = {
 				action: "user_registration_deactivation_notice",
 				security: ur_plugins_params.deactivation_nonce,
 			};
@@ -33,7 +33,7 @@ jQuery(function ($) {
 				}
 			}).fail(function (xhr) {
 				window.console.log(xhr.responseText);
-			});
+			});*/
 		}
 	);
 });
