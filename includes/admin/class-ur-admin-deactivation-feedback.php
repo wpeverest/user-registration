@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 class UR_Admin_Deactivation_Feedback
 {
-	const FEEDBACK_URL = '';
+	const FEEDBACK_URL = 'https://stats.wpeverest.com/wp-json/tgreporting/v1/deactivation/';
 
 	public function __construct()
 	{
