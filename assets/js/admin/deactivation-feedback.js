@@ -43,14 +43,16 @@ jQuery(function ($) {
 			};
 			data[('reason_' + reason_slug)] = reason_text;
 			$.ajax({
-					url: ur_plugins_params.ajax_url,
-					data: form.serializeArray(),
-					type: "post",
-					beforeSend: function () {
-						form.find('button.submit').addClass('button-disabled');
-					},
-				}
-			);
+				url: ur_plugins_params.ajax_url,
+				data: form.serializeArray(),
+				type: "post",
+				beforeSend: function () {
+					form.find('button.submit').addClass('button-disabled button updating-message');
+				},
+
+			}).done(function () { //use this
+				window.location = form.find('a.skip').attr('href');
+			});
 		}
 	};
 

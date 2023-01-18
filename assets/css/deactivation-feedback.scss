@@ -89,10 +89,12 @@
 				line-height: 1;
 				padding: 12px 20px;
 				font-size: 13px;
-				width: 180px;
 				height: 38px;
 				border: none;
 				cursor: pointer;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 			}
 
 			a.skip {
