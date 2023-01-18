@@ -35,6 +35,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 			add_action( 'init', array( $this, 'init_usage' ), 4 );
+			add_action( 'update_option_user_registration_allow_usage_tracking', array( $this, 'run_on_save' ), 10, 3 );
 		}
 
 		/**
@@ -109,8 +110,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		public function is_usage_allowed() {
-			$allowed = get_option( 'user_registration_allow_usage_tracking', 'no' );
-			return 'yes' === $allowed || '1' === $allowed;
+			return 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' );
 		}
 
 		public function init_usage() {
@@ -119,7 +119,20 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			}
 		}
 
+		/**
+		 * Run the process once when user gives consent.
+		 *
+		 * @return void
+		 */
+		public function run_on_save( $old_value, $value, $option) {
+			if ( $value !== $old_value && $value==='yes' && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
+				$this->process();
+			}
+			return $value;
+		}
+
 		public function process() {
+
 			if ( ! $this->is_usage_allowed() ) {
 				return;
 			}
