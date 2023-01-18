@@ -109,7 +109,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		public function is_usage_allowed() {
-			return (bool) get_option( 'user_registration_allow_usage_tracking', false );
+			$allowed = get_option( 'user_registration_allow_usage_tracking', 'no' );
+			return 'yes' === $allowed || '1' === $allowed;
 		}
 
 		public function init_usage() {
