@@ -35,6 +35,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 			add_action( 'init', array( $this, 'init_usage' ), 4 );
+			add_filter( 'pre_update_option_user_registration_allow_usage_tracking', array( $this, 'run_on_save' ), 10, 3 );
 		}
 
 		/**
@@ -116,6 +117,18 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			if ( wp_doing_cron() ) {
 				add_action( 'user_registration_biweekly_scheduled_events', array( $this, 'process' ) );
 			}
+		}
+
+		/**
+		 * Run the process once when user gives consent.
+		 *
+		 * @return void
+		 */
+		public function run_on_save( $value, $old_value, $option ) {
+			if ( $value !== $old_value && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
+				$this->process();
+			}
+			return $value;
 		}
 
 		public function process() {
