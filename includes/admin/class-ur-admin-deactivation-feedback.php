@@ -119,6 +119,7 @@ class UR_Admin_Deactivation_Feedback
 			'website_url' => get_bloginfo('url'),
 			'base_product' => 'user-registration/user-registration.php',
 		];
+
 		$this->send_api_request($deactivation_data);
 
 		wp_send_json_success();
@@ -142,7 +143,7 @@ class UR_Admin_Deactivation_Feedback
 				'body' => array('deactivation_data' => $deactivation_data)
 			)
 		);
-		return json_decode(wp_remote_retrieve_body($response), true);
+		return wp_remote_retrieve_body($response);
 	}
 
 	private function is_plugins_screen()
