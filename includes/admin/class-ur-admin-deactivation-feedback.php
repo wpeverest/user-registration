@@ -110,17 +110,39 @@ class UR_Admin_Deactivation_Feedback
 		if (!empty($_POST["reason_{$reason_slug}"])) {
 			$reason_text = $_POST["reason_{$reason_slug}"];
 		}
-		wp_remote_post(self::FEEDBACK_URL, [
-			'timeout' => 30,
-			'body' => [
-				'feedback_slug' => $reason_slug,
-				'feedback_text' => $reason_text,
-				'admin_email' => get_bloginfo('admin_email'),
-				'website_url' => get_bloginfo('url')
-			],
-		]);
+
+
+		$deactivation_data = [
+			'reason_slug' => $reason_slug,
+			'reason_text' => $reason_text,
+			'admin_email' => get_bloginfo('admin_email'),
+			'website_url' => get_bloginfo('url'),
+			'base_product' => 'user-registration/user-registration.php',
+		];
+		$this->send_api_request($deactivation_data);
 
 		wp_send_json_success();
+	}
+
+	private function send_api_request($deactivation_data)
+	{
+		$headers = array(
+			'user-agent' => 'UserRegistration/' . UR()->version . '; ' . get_bloginfo('url'),
+		);
+
+		$response = wp_remote_post(
+			self::FEEDBACK_URL,
+			array(
+				'method' => 'POST',
+				'timeout' => 45,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking' => true,
+				'headers' => $headers,
+				'body' => array('deactivation_data' => $deactivation_data)
+			)
+		);
+		return json_decode(wp_remote_retrieve_body($response), true);
 	}
 
 	private function is_plugins_screen()
