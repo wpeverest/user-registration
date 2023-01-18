@@ -109,7 +109,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		public function is_usage_allowed() {
-			return (bool) get_option( 'user_registration_allow_usage_tracking', false );
+			return 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' );
 		}
 
 		public function init_usage() {

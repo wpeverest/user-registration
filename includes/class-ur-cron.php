@@ -30,7 +30,7 @@ class UR_Cron {
 	 * @see UR_Cron::weekly_events()
 	 */
 	public function __construct() {
-		 add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
 		add_action( 'init', array( $this, 'schedule_events' ) );
 	}
 
@@ -58,7 +58,7 @@ class UR_Cron {
 	 * @since 2.3.1
 	 */
 	public function schedule_events() {
-		 $this->biweekly_events();
+		$this->biweekly_events();
 	}
 
 	/**
