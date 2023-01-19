@@ -63,8 +63,24 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				return false;
 			}
 		}
+		public function get_user_count( ) {
+			global $wpdb;
 
+			return $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) FROM $wpdb->users
+		LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
+		WHERE meta_key = %s
+		AND meta_value != ''", 'ur_form_id'));
+		}
+
+		public function get_form_count( ) {
+			global $wpdb;
+
+			return $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) FROM $wpdb->posts WHERE post_type=%s AND post_status=%s", 'user_registration', 'publish'));
+		}
 		public function get_plugin_lists() {
+
 			$is_premium = $this->is_premium();
 
 			$base_product = $this->get_base_product();
@@ -75,10 +91,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$product_meta = array();
 
+			$product_meta['form_count']= $this->get_form_count();
+
+			$product_meta['user_count']= $this->get_user_count();
+
 			$license_key = $this->get_base_product_license();
 
 			if ( $is_premium ) {
-				$product_meta = array( 'license_key' => $license_key );
+				$product_meta['license_key'] = $license_key;
 			}
 
 			$addons_data = array(
@@ -96,13 +116,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 				$addon_file      = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin;
 				$addon_file_data = get_plugin_data( $addon_file );
-
-				$addons_data[ $plugin ] = array(
-					'product_name'    => isset( $addon_file_data['Name'] ) ? trim( $addon_file_data['Name'] ) : '',
-					'product_version' => isset( $addon_file_data['Version'] ) ? trim( $addon_file_data['Version'] ) : '',
-					'product_type'    => 'plugin',
-					'product_slug'    => $plugin,
-				);
+				if($base_product!==$plugin) {
+					$addons_data[$plugin] = array(
+						'product_name' => isset($addon_file_data['Name']) ? trim($addon_file_data['Name']) : '',
+						'product_version' => isset($addon_file_data['Version']) ? trim($addon_file_data['Version']) : '',
+						'product_type' => 'plugin',
+						'product_slug' => $plugin,
+					);
+				}
 
 			}
 
@@ -175,6 +196,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['timezone']             = $this->get_timezone_offset();
 			$data['base_product']         = $this->get_base_product();
 
+			echo '<pre>';
+			print_r($data);exit;
 			$this->send_request( self::REMOTE_URL, $data );
 		}
 		private function get_sites_total() {
