@@ -130,12 +130,32 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 	/**
 	 * Returns the full url of the selected My Account page.
 	 *
+	 * If My Account Page is not set:
+	 * 1. Checks if Prevent Core Login is enabled.
+	 * 2. Returns Login Redirection Page url if set.
+	 * 3. Else, returns default WordPress login url.
+	 *
 	 * @return string
 	 */
 	function ur_get_my_account_url() {
 		$page_id   = absint( get_option( 'user_registration_myaccount_page_id', 'unset' ) );
 		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
-		return $permalink;
+
+		if ( $permalink ) {
+			return $permalink;
+		}
+
+		$prevent_core_login = get_option( 'user_registration_login_options_prevent_core_login', 'no' );
+
+		if ( 'yes' === $prevent_core_login ) {
+			$login_redirect_page_id = get_option( 'user_registration_login_options_login_redirect_url', 'unset' );
+
+			if ( 0 < $login_redirect_page_id ) {
+				return get_permalink( $login_redirect_page_id );
+			}
+		}
+
+		return wp_login_url();
 	}
 }
 
