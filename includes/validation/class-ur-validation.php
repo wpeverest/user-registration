@@ -26,11 +26,28 @@ class UR_Validation {
 	 * @param [string] $value Value.
 	 * @return boolean or WP_Error.
 	 */
-	public static function required( $value ) {
+	public static function required( $value )
+	{
 		if ( empty( $value ) ) {
 			return new WP_Error(
 				'user_registration_validation_empty_field',
 				__( 'Please enter a valid value', 'user-registration' )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validates if a field is numeric.
+	 *
+	 * @param [mixed] $value Value to check.
+	 * @return boolean or WP_Error.
+	 */
+	public static function is_numeric( $value ) {
+		if ( ! is_numeric( $value ) ) {
+			return new WP_Error(
+				'user_registration_validation_non_numeric_data',
+				__( 'Please enter a numeric value', 'user-registration' )
 			);
 		}
 		return true;
@@ -79,6 +96,24 @@ class UR_Validation {
 			return new WP_Error(
 				'user_registration_validation_invalid_date',
 				__( 'Please input a valid date', 'user-registration' )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validates if the value is boolean.
+	 *
+	 * @param [mixed] $value Value to check.
+	 * @return boolean or WP_Error.
+	 */
+	public static function is_boolean( $value ) {
+		$boolean_values = array( true, false, null, 0, 1, '0', '1', 'yes', 'Yes', 'YES', 'no', 'No', 'NO', 'true', 'True', 'TRUE', 'false', 'False', 'FALSE' );
+
+		if ( ! in_array( $value, $boolean_values, true ) ) {
+			return new WP_Error(
+				'user_registration_validation_non_boolean_value',
+				__( 'Please input a valid value', 'user-registration' )
 			);
 		}
 		return true;

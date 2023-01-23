@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles validations for all frontend submitted forms.
  */
-class UR_Form_Validation {
+class UR_Form_Validation extends UR_Validation {
 
 	/**
 	 * Response array variable.
@@ -131,17 +131,10 @@ class UR_Form_Validation {
 			}
 		}
 
-		/**
-		 * Validate form fields according to the validations set in $validations array.
-		 *
-		 * @see this->get_field_validations()
-		 */
-		$this->validate_fields( $form_field_data, $form_data );
-
 		foreach ( $form_data as $data ) {
 
-			if ( in_array( $data->field_name, $form_key_list ) ) {
-				$form_data_index    = array_search( $data->field_name, $form_key_list );
+			if ( in_array( $data->field_name, $form_key_list, true ) ) {
+				$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 				$single_form_field  = $form_field_data[ $form_data_index ];
 				$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 				$single_field_key   = $single_form_field->field_key;
@@ -151,11 +144,40 @@ class UR_Form_Validation {
 					'label'     => $single_field_label,
 				);
 
+				/**
+				 * Validate form fields according to the validations set in $validations array.
+				 *
+				 * @see this->get_field_validations()
+				 */
+
+				$single_field_value = $form_data[ $form_data_index ]->value;
+				$validations        = $this->get_field_validations( $single_field_key );
+
+				if ( $this->is_field_required( $single_form_field ) ) {
+					array_push( $validations, 'required' );
+				}
+
+				if ( ! empty( $validations ) ) {
+					foreach ( $validations as $validation ) {
+						$result = self::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$this->add_error( $result, $single_field_label );
+						}
+					}
+				}
+
+				/**
+				 * Hook to update form field data.
+				 */
 				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
 				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
 
 				$this->valid_form_data[ $data->field_name ] = $this->get_sanitize_value( $data );
 
+				/**
+				 * Hook to custom validate form field.
+				 */
 				$hook        = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook = $hook . '_message';
 
@@ -423,44 +445,19 @@ class UR_Form_Validation {
 
 
 	/**
-	 * Validate user submitted form data.
+	 * Returns validation set for a field.
 	 *
-	 * @param array $form_field_data Form Field Data.
-	 * @param array $form_data Form Data.
-	 * @return void
+	 * @param string $field_key Field Key.
+	 * @return array
 	 */
-	public function validate_fields( $form_field_data = array(), $form_data = array() ) {
-
-		foreach ( $form_field_data as $index => $field ) {
-			$key         = $field->field_key;
-			$label       = $field->general_setting->label;
-			$value       = $form_data[ $index ]->value;
-			$validations = $this->get_field_validations( $key );
-
-			if ( $this->is_field_required( $field ) ) {
-				array_push( $validations, 'required' );
-			}
-
-			if ( ! empty( $validations ) ) {
-				foreach ( $validations as $validation ) {
-					$result = UR_Validation::$validation( $value );
-
-					if ( is_wp_error( $result ) ) {
-						$this->add_error( $result, $label );
-					}
-				}
-			}
-		}
-	}
-
-
 	public function get_field_validations( $field_key = '' ) {
 		$validations = array(
-			'user_email' => array( 'is_email' ),
-			'user_pass'  => array(),
-			'text'       => array( 'is_email', 'is_url' ),
-			'user_url'   => array( 'required', 'is_url' ),
-			'date'       => array( 'is_date' ),
+			'user_email'     => array( 'is_email' ),
+			'email'          => array( 'is_email' ),
+			'user_url'       => array( 'is_url' ),
+			'date'           => array( 'is_date' ),
+			'privacy_policy' => array( 'is_boolean' ),
+
 		);
 
 		$validations = apply_filters( 'user_registration_field_validations', $validations );
@@ -495,10 +492,11 @@ class UR_Form_Validation {
 	 */
 	public function get_error_message( $error_code = '', $field_label = '' ) {
 		$errors = array(
-			'empty_field'   => '%s is required.',
-			'invalid_email' => 'Please enter a valid email for %s.',
-			'invalid_url'   => 'Please enter a valid url for %s.',
-			'invalid_date'  => 'Please enter a valid date for %s.',
+			'invalid_email'     => 'Please enter a valid email for %s.',
+			'invalid_url'       => 'Please enter a valid url for %s.',
+			'invalid_date'      => 'Please enter a valid date for %s.',
+			'empty_field'       => '%s is a required field.',
+			'non_boolean_value' => 'Please enter a valid value for %s.',
 		);
 
 		$error_code = str_replace( 'user_registration_validation_', '', $error_code );
@@ -510,7 +508,7 @@ class UR_Form_Validation {
 			);
 		} else {
 			return sprintf(
-				'The value you entered for %s is invalid.',
+				'The value you entered for <strong>%s</strong> is invalid.',
 				$field_label
 			);
 		}

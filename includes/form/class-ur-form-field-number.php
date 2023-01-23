@@ -70,7 +70,8 @@ class UR_Form_Field_Number extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// Perform custom validation for the field here ...
+		$field_label = isset( $form_data->label ) ? $form_data->label : '';
+		$value       = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( ! is_numeric( $value ) ) {
 			add_filter(
