@@ -26,8 +26,7 @@ class UR_Validation {
 	 * @param [string] $value Value.
 	 * @return boolean or WP_Error.
 	 */
-	public static function required( $value )
-	{
+	public static function required( $value ) {
 		if ( empty( $value ) ) {
 			return new WP_Error(
 				'user_registration_validation_empty_field',

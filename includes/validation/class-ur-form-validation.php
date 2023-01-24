@@ -47,6 +47,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
+		add_action( 'user_registration_validate_update_profile_form_data', array( $this, 'validate_update_profile' ), 10, 2 );
 	}
 
 
@@ -154,7 +155,7 @@ class UR_Form_Validation extends UR_Validation {
 				$validations        = $this->get_field_validations( $single_field_key );
 
 				if ( $this->is_field_required( $single_form_field ) ) {
-					array_push( $validations, 'required' );
+					array_unshift( $validations, 'required' );
 				}
 
 				if ( ! empty( $validations ) ) {
@@ -163,6 +164,7 @@ class UR_Form_Validation extends UR_Validation {
 
 						if ( is_wp_error( $result ) ) {
 							$this->add_error( $result, $single_field_label );
+							break;
 						}
 					}
 				}
@@ -535,6 +537,67 @@ class UR_Form_Validation extends UR_Validation {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Validate form data on update profile from My Account page.
+	 *
+	 * @param [array] $form_fields Form Field Settings.
+	 * @param [array] $form_data Form Data.
+	 * @return void
+	 */
+	public function validate_update_profile( $form_fields, $form_data ) {
+
+		$form_key_list = array_map(
+			function( $el ) {
+				return str_replace( 'user_registration_', '', $el );
+			},
+			array_keys( $form_fields )
+		);
+
+		foreach ( $form_data as $data ) {
+			$single_field_name = $data->field_name;
+
+			if ( in_array( $single_field_name, $form_key_list, true ) ) {
+				$field_setting      = $form_fields[ 'user_registration_' . $single_field_name ];
+				$single_field_label = $field_setting['label'] ?? '';
+				$single_field_key   = $field_setting['field_key'];
+				$single_field_value = $data->value ?? '';
+				$data->extra_params = array(
+					'field_key' => $single_field_key,
+					'label'     => $single_field_label,
+				);
+
+				/**
+				 * Validate form field according to the validations set in $validations array.
+				 *
+				 * @see this->get_field_validations()
+				 */
+
+				$validations = $this->get_field_validations( $single_field_key );
+
+				$required         = $field_setting['required'] ?? 0;
+				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+
+				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required ) {
+					array_unshift( $validations, 'required' );
+				}
+
+				if ( ! empty( $validations ) ) {
+					foreach ( $validations as $validation ) {
+						$result = self::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$error_code = $result->get_error_code();
+							$message    = $this->get_error_message( $error_code, $single_field_label );
+							ur_add_notice( $message, 'error' );
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

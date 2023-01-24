@@ -248,6 +248,7 @@ class UR_AJAX {
 			}
 		}
 
+
 		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
 
 		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
@@ -320,6 +321,9 @@ class UR_AJAX {
 
 		}// End foreach().
 
+
+		do_action( 'user_registration_validate_update_profile_form_data', $profile, $form_data );
+
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
@@ -364,6 +368,14 @@ class UR_AJAX {
 				)
 			);
 
+		} else {
+			$errors = ur_get_notices( 'error' );
+			ur_clear_notices();
+			wp_send_json_error(
+				array(
+					'message' => $errors,
+				)
+			);
 		}
 	}
 
