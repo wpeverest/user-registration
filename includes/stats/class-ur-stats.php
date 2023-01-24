@@ -196,8 +196,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['timezone']             = $this->get_timezone_offset();
 			$data['base_product']         = $this->get_base_product();
 
-			echo '<pre>';
-			print_r($data);exit;
 			$this->send_request( self::REMOTE_URL, $data );
 		}
 		private function get_sites_total() {
