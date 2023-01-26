@@ -69,18 +69,6 @@ class UR_Form_Field_Email extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Perform custom validation for the field here ...
-
-		if ( ! empty( $value ) && ! is_email( $value ) ) {
-			add_filter(
-				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					/* translators: %1$s - Field Label */
-					return sprintf( __( '%1$s must be a valid email address.', 'user-registration' ), $field_label );
-				}
-			);
-		}
-
-		do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $value ) ), $filter_hook, $single_form_field, $form_id );
 	}
 }
 

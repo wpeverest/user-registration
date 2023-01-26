@@ -47,7 +47,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update_AJAX', array( $this, 'validate_update_profile_AJAX' ), 10, 2 );
+		add_action( 'user_registration_validate_profile_update_AJAX', array( $this, 'validate_update_profile_AJAX' ), 10, 3 );
 		add_action( 'user_registration_validate_profile_update_POST', array( $this, 'validate_update_profile_POST' ), 10, 2 );
 	}
 
@@ -152,7 +152,7 @@ class UR_Form_Validation extends UR_Validation {
 				 * @see this->get_field_validations()
 				 */
 
-				$single_field_value = $form_data[ $form_data_index ]->value;
+				$single_field_value = $data->value;
 				$validations        = $this->get_field_validations( $single_field_key );
 
 				if ( $this->is_field_required( $single_form_field ) ) {
@@ -184,7 +184,7 @@ class UR_Form_Validation extends UR_Validation {
 				$hook        = "user_registration_validate_{$single_form_field->field_key}";
 				$filter_hook = $hook . '_message';
 
-				if ( 'user_email' === $single_form_field->field_key ) {
+				if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
 					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field, $form_id );
 				}
 
@@ -548,7 +548,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [array] $form_data Form Data.
 	 * @return void
 	 */
-	public function validate_update_profile_AJAX( $form_fields, $form_data ) {
+	public function validate_update_profile_AJAX( $form_fields, $form_data, $form_id ) {
 
 		$form_key_list = array_map(
 			function( $el ) {
@@ -596,6 +596,10 @@ class UR_Form_Validation extends UR_Validation {
 							break;
 						}
 					}
+				}
+
+				if ( 'email' === $field_setting['type'] ) {
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
 				}
 			}
 		}
