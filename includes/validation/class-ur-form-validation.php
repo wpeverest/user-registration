@@ -47,7 +47,8 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_update_profile_form_data', array( $this, 'validate_update_profile' ), 10, 2 );
+		add_action( 'user_registration_validate_profile_update_AJAX', array( $this, 'validate_update_profile_AJAX' ), 10, 2 );
+		add_action( 'user_registration_validate_profile_update_POST', array( $this, 'validate_update_profile_POST' ), 10, 2 );
 	}
 
 
@@ -332,7 +333,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( $has_confirm_email ) {
 			if ( empty( $confirm_email_value ) ) {
-				array_push( $this->response_array, __( 'Empty confirm email', 'user-registration' ) );
+				array_push( $this->response_array, __( '<strong>Confirm Email</strong> is required.', 'user-registration' ) );
 			} elseif ( strcasecmp( $confirm_email_value, $email ) != 0 ) {
 				array_push( $this->response_array, get_option( 'user_registration_form_submission_error_message_confirm_email', __( 'Email and confirm email not matched', 'user-registration' ) ) );
 			}
@@ -377,7 +378,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( $has_confirm_password ) {
 			if ( empty( $confirm_password ) ) {
-				array_push( $this->response_array, __( 'Empty confirm password', 'user-registration' ) );
+				array_push( $this->response_array, __( '<strong>Confirm Password</strong> is required.', 'user-registration' ) );
 			} elseif ( strcmp( $confirm_password, $password ) != 0 ) {
 				array_push( $this->response_array, get_option( 'user_registration_form_submission_error_message_confirm_password', __( 'Password and confirm password not matched', 'user-registration' ) ) );
 			}
@@ -547,7 +548,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [array] $form_data Form Data.
 	 * @return void
 	 */
-	public function validate_update_profile( $form_fields, $form_data ) {
+	public function validate_update_profile_AJAX( $form_fields, $form_data ) {
 
 		$form_key_list = array_map(
 			function( $el ) {
@@ -596,6 +597,109 @@ class UR_Form_Validation extends UR_Validation {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	public function validate_update_profile_POST( $form_fields, $form_id ) {
+		$user_id = get_current_user_id();
+
+		foreach ( $form_fields as $key => $field ) {
+			if ( isset( $field['field_key'] ) ) {
+				if ( ! isset( $field['type'] ) ) {
+					$field['type'] = 'text';
+				}
+
+				// Get Value.
+				switch ( $field['type'] ) {
+					case 'checkbox':
+						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
+						} else {
+							$_POST[ $key ] = (int) isset( $_POST[ $key ] );
+						}
+						break;
+
+					case 'wysiwyg':
+						if ( isset( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
+						} else {
+							$_POST[ $key ] = '';
+						}
+						break;
+
+					case 'email':
+						if ( isset( $_POST[ $key ] ) ) {
+							$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+						} else {
+							$user_data     = get_userdata( $user_id );
+							$_POST[ $key ] = $user_data->data->user_email;
+						}
+						break;
+
+					default:
+						$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						break;
+				}
+
+				$single_field_name  = $key;
+				$single_field_label = $field['label'] ?? '';
+				$single_field_key   = $field['field_key'];
+				$single_field_value = $_POST[ $key ];
+
+				/**
+				 * Validate form field according to the validations set in $validations array.
+				 *
+				 * @see this->get_field_validations()
+				 */
+
+				$validations = $this->get_field_validations( $single_field_key );
+
+				$required         = $field_setting['required'] ?? 0;
+				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+
+				$disabled = false;
+				if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
+					if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
+						$disabled = true;
+					}
+				}
+
+				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required && ! $disabled ) {
+					array_unshift( $validations, 'required' );
+				}
+
+				if ( ! empty( $validations ) ) {
+					foreach ( $validations as $validation ) {
+						$result = self::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$error_code = $result->get_error_code();
+							$message    = $this->get_error_message( $error_code, $single_field_label );
+							ur_add_notice( $message, 'error' );
+							break;
+						}
+					}
+				}
+
+				// Hook to allow modification of value.
+				$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+				if ( 'email' === $field['type'] ) {
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field, $form_id );
+				}
+
+				if ( 'user_email' === $field['field_key'] ) {
+
+					// Check if email already exists before updating user details.
+					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
+						ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
+					}
+				}
+
+				// Action to add extra validation to edit profile fields.
+				do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
 			}
 		}
 	}

@@ -321,8 +321,10 @@ class UR_AJAX {
 
 		}// End foreach().
 
-
-		do_action( 'user_registration_validate_update_profile_form_data', $profile, $form_data );
+		/**
+		 * Hook to perform validation of edit profile form.
+		 */
+		do_action( 'user_registration_validate_profile_update_AJAX', $profile, $form_data );
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
