@@ -2975,3 +2975,31 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 		return;
 	}
 }
+
+if ( ! function_exists( 'crypt_the_string' ) ) {
+/**
+	 * Encrypt/Decrypt the provided string.
+	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
+	 *
+	 * @param  string $string String to encrypt/decrypt.
+	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
+	 * @return string Encrypted/Decrypted string.
+	 */
+	function crypt_the_string( $string, $action = 'e' ) {
+		$secret_key = 'ur_secret_key';
+		$secret_iv  = 'ur_secret_iv';
+
+		$output         = false;
+		$encrypt_method = 'AES-256-CBC';
+		$key            = hash( 'sha256', $secret_key );
+		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+		if ( 'e' == $action ) {
+			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+		} elseif ( 'd' == $action ) {
+			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+		}
+
+		return $output;
+	}
+}
