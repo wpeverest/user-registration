@@ -928,7 +928,7 @@ class UR_Form_Handler {
 			return $form_id;
 		}
 		if ( $form_id ) {
-
+			add_post_meta( $form_id, 'user_registration_imported_form_template_slug', $template );
 			// check for non empty post_meta array.
 			if ( ! empty( $form_data->form_post_meta ) ) {
 				$form_data->form_post_meta = (object) $form_data->form_post_meta;
