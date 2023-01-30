@@ -47,8 +47,8 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update_AJAX', array( $this, 'validate_update_profile_AJAX' ), 10, 3 );
-		add_action( 'user_registration_validate_profile_update_POST', array( $this, 'validate_update_profile_POST' ), 10, 2 );
+		add_action( 'user_registration_validate_profile_update_ajax', array( $this, 'validate_update_profile_AJAX' ), 10, 3 );
+		add_action( 'user_registration_validate_profile_update_post', array( $this, 'validate_update_profile_POST' ), 10, 2 );
 	}
 
 
@@ -506,7 +506,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( in_array( $error_code, array_keys( $errors ), true ) ) {
 			return sprintf(
-				__( $errors[ $error_code ], 'user-registration' ),
+				__( $errors[ $error_code ], 'user-registration' ), // phpcs:ignore
 				"<strong>$field_label</strong>"
 			);
 		} else {
@@ -562,9 +562,9 @@ class UR_Form_Validation extends UR_Validation {
 
 			if ( in_array( $single_field_name, $form_key_list, true ) ) {
 				$field_setting      = $form_fields[ 'user_registration_' . $single_field_name ];
-				$single_field_label = $field_setting['label'] ?? '';
+				$single_field_label = isset( $field_setting['label'] ) ? $field_setting['label'] : '';
 				$single_field_key   = $field_setting['field_key'];
-				$single_field_value = $data->value ?? '';
+				$single_field_value = isset( $data->value ) ? $data->value : '';
 				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
@@ -578,7 +578,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = $field_setting['required'] ?? 0;
+				$required         = isset( $field_setting['required'] ) ? $field_setting['required'] : 0;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required ) {
@@ -649,7 +649,7 @@ class UR_Form_Validation extends UR_Validation {
 				$single_field_name  = $key;
 				$single_field_label = $field['label'] ?? '';
 				$single_field_key   = $field['field_key'];
-				$single_field_value = $_POST[ $key ];
+				$single_field_value = isset( $_POST[ $key ] ) ? sanitize_text_field( $_POST[ $key ] ) : '';
 
 				/**
 				 * Validate form field according to the validations set in $validations array.
@@ -687,22 +687,22 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				// Hook to allow modification of value.
-				$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $single_field_value ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 				if ( 'email' === $field['type'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field, $form_id );
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $single_field_value ) ), '', $field, $form_id );
 				}
 
 				if ( 'user_email' === $field['field_key'] ) {
 
 					// Check if email already exists before updating user details.
-					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
+					if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
 						ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 					}
 				}
 
 				// Action to add extra validation to edit profile fields.
-				do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				do_action( 'user_registration_validate_' . $key, wp_unslash( $single_field_value ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			}
 		}

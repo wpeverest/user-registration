@@ -248,7 +248,6 @@ class UR_AJAX {
 			}
 		}
 
-
 		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
 
 		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
@@ -324,7 +323,7 @@ class UR_AJAX {
 		/**
 		 * Hook to perform validation of edit profile form.
 		 */
-		do_action( 'user_registration_validate_profile_update_AJAX', $profile, $form_data, $form_id );
+		do_action( 'user_registration_validate_profile_update_ajax', $profile, $form_data, $form_id );
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 

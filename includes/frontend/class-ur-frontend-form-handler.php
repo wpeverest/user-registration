@@ -69,7 +69,7 @@ class UR_Frontend_Form_Handler {
 				$form_data,
 				$form_id,
 				&self::$response_array,
-				&$user_pass
+				&$user_pass,
 			)
 		);
 

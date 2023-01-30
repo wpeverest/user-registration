@@ -199,7 +199,7 @@ class UR_Form_Handler {
 
 		$profile = user_registration_form_data( $user_id, $form_id );
 
-		do_action( 'user_registration_validate_profile_update_POST', $profile, $form_id );
+		do_action( 'user_registration_validate_profile_update_post', $profile, $form_id );
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
