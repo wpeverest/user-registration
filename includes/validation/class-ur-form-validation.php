@@ -141,10 +141,27 @@ class UR_Form_Validation extends UR_Validation {
 				$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 				$single_field_key   = $single_form_field->field_key;
 				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+				$single_field_value = $data->value;
 				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
 				);
+
+				// Validate max-length.
+				if ( isset( $single_form_field->advance_setting->size ) ) {
+					$max_size = $single_form_field->advance_setting->size;
+					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
+						array_push(
+							$this->response_array,
+							sprintf(
+								'Please enter a value of length less than %d for %s',
+								$max_size,
+								"<strong>$single_field_label</strong>."
+							)
+						);
+						continue;
+					}
+				}
 
 				/**
 				 * Validate form fields according to the validations set in $validations array.
@@ -152,8 +169,7 @@ class UR_Form_Validation extends UR_Validation {
 				 * @see this->get_field_validations()
 				 */
 
-				$single_field_value = $data->value;
-				$validations        = $this->get_field_validations( $single_field_key );
+				$validations = $this->get_field_validations( $single_field_key );
 
 				if ( $this->is_field_required( $single_form_field ) ) {
 					array_unshift( $validations, 'required' );
@@ -567,7 +583,10 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( array_diff( $form_key_list, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
+			return;
 		}
+
+		$form_field_settings = $this->get_form_field_settings( $form_id );
 
 		foreach ( $form_data as $data ) {
 			$single_field_name = $data->field_name;
@@ -581,6 +600,24 @@ class UR_Form_Validation extends UR_Validation {
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
 				);
+
+				$form_field = $form_field_settings[ $single_field_name ];
+
+				// Max-length validation.
+				if ( isset( $form_field->advance_setting->size ) ) {
+					$max_size = $form_field->advance_setting->size;
+					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
+						ur_add_notice(
+							sprintf(
+								'Please enter a value of length less than %d for %s',
+								$max_size,
+								"<strong>$single_field_label</strong>."
+							),
+							'error'
+						);
+						continue;
+					}
+				}
 
 				/**
 				 * Validate form field according to the validations set in $validations array.
@@ -618,6 +655,31 @@ class UR_Form_Validation extends UR_Validation {
 	}
 
 	/**
+	 * Returns settings for all form fields in array.
+	 *
+	 * @param integer $form_id Form Id.
+	 * @return array
+	 */
+	public function get_form_field_settings( $form_id = 0 ) {
+		if ( ! $form_id ) {
+			return array();
+		}
+
+		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+		$fields             = array();
+
+		foreach ( $post_content_array as $section ) {
+			foreach ( $section as $row ) {
+				foreach ( $row as $field ) {
+					$fields[ $field->general_setting->field_name ] = $field;
+				}
+			}
+		}
+
+		return $fields;
+	}
+
+	/**
 	 * Validate update profile data submitted via POST http request.
 	 *
 	 * @param [array] $form_fields Form Fields.
@@ -635,6 +697,8 @@ class UR_Form_Validation extends UR_Validation {
 		if ( array_diff( $form_fields_keys, $post_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form.', 'error' );
 		}
+
+		$form_field_settings = $this->get_form_field_settings( $form_id );
 
 		foreach ( $form_fields as $key => $field ) {
 			if ( isset( $field['field_key'] ) ) {
@@ -678,6 +742,24 @@ class UR_Form_Validation extends UR_Validation {
 				$single_field_label = isset( $field['label'] ) ? $field['label'] : '';
 				$single_field_key   = $field['field_key'];
 				$single_field_value = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+
+				$form_field = $form_field_settings[ str_replace( 'user_registration_', '', $key ) ];
+
+				// Max-length validation.
+				if ( isset( $form_field->advance_setting->size ) ) {
+					$max_size = $form_field->advance_setting->size;
+					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
+						ur_add_notice(
+							sprintf(
+								'Please enter a value of length less than %d for %s',
+								$max_size,
+								"<strong>$single_field_label</strong>."
+							),
+							'error'
+						);
+						continue;
+					}
+				}
 
 				/**
 				 * Validate form field according to the validations set in $validations array.

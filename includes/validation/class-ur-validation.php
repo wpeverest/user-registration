@@ -120,6 +120,23 @@ class UR_Validation {
 		}
 		return true;
 	}
+
+	/**
+	 * Validate if a string is longer than max length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Max Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_length( $value, $size ) {
+		if ( strlen( $value ) > $size ) {
+			return new WP_Error(
+				'user_registration_validation_max_size_exceeded',
+				'Please enter value of length less than ' . $size
+			);
+		}
+		return true;
+	}
 }
 
 new UR_Validation();
