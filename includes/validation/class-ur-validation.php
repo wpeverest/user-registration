@@ -75,7 +75,10 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function is_url( $url ) {
-		if ( false === filter_var( $url, FILTER_VALIDATE_URL ) ) {
+
+		$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url ) ) {
 			return new WP_Error(
 				'user_registration_validation_invalid_url',
 				__( 'Please input a valid url', 'user-registration' )
