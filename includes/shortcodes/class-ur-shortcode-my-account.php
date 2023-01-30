@@ -337,11 +337,20 @@ class UR_Shortcode_My_Account {
 			}
 		}
 
+		$recaptcha_enabled = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
+
+		if ( 'yes' === $recaptcha_enabled ) {
+			wp_enqueue_script( 'user-registration' );
+		}
+		$recaptcha_node = ur_get_recaptcha_node( 'lost_password', $recaptcha_enabled );
+
 		// Show lost password form by default.
 		ur_get_template(
 			'myaccount/form-lost-password.php',
 			array(
-				'form' => 'lost_password',
+				'form'           => 'lost_password',
+				'recaptcha_node' => $recaptcha_node,
+
 			)
 		);
 	}

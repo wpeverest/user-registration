@@ -571,6 +571,13 @@
 									);
 
 									if (
+										0 <
+										$this.find(".dz-error-message").length
+									) {
+										return;
+									}
+
+									if (
 										$this
 											.find(
 												"#user_registration_stripe_gateway"
@@ -731,6 +738,11 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+													var timeout = response.data
+														.redirect_timeout
+														? response.data
+																.redirect_timeout
+														: 2000;
 
 													if (
 														typeof response.success !==
@@ -741,8 +753,13 @@
 															.paypal_redirect !==
 															"undefined"
 													) {
-														window.location =
-															response.data.paypal_redirect;
+														window.setTimeout(
+															function () {
+																window.location =
+																	response.data.paypal_redirect;
+															},
+															timeout
+														);
 													}
 
 													if (
@@ -857,12 +874,13 @@
 																"user_registration_frontend_before_redirect_url",
 																[redirect_url]
 															);
+
 															window.setTimeout(
 																function () {
 																	window.location =
 																		redirect_url;
 																},
-																1000
+																timeout
 															);
 														} else {
 															if (
@@ -873,10 +891,18 @@
 																response.data
 																	.auto_login
 															) {
-																$(document).trigger(
+																$(
+																	document
+																).trigger(
 																	"user_registration_frontend_before_auto_login"
 																);
-																location.reload();
+
+																window.setTimeout(
+																	function () {
+																		location.reload();
+																	},
+																	timeout
+																);
 															}
 														}
 													} else if (
@@ -1360,61 +1386,78 @@
 				}
 			});
 
-			var date_flatpickrs = {};
+			// Initialize the flatpickr when the document is ready to be manipulated.
+			$(document).ready(function () {
+				if ($(".ur-flatpickr-field").length) {
+					// create an array to store the flatpickr instances.
+					var flatpickrInstances = [];
+					$(".ur-flatpickr-field").each(function () {
+						var field = $(this);
+						// check if flatpickr has already been initialized for the field.
+						var instance = flatpickrInstances.find(function (i) {
+							return i.element == field[0];
+						});
 
-			$(document.body).on("click", "#load_flatpickr", function () {
-				var field_id = $(this).data("id");
-				var date_flatpickr = date_flatpickrs[field_id];
+						if (instance) {
+							// flatpickr has already been initialized for the field, so open the instance.
+							instance.open();
+						} else {
+							var field_id = field.data("id");
+							var formated_date = field
+								.closest(".ur-field-item")
+								.find("#formated_date")
+								.val();
 
-				// Load a flatpicker for the field, if hasn't been loaded.
-				if (!date_flatpickr) {
-					var formated_date = $(this)
-						.closest(".ur-field-item")
-						.find("#formated_date")
-						.val();
+							if (0 < $(".ur-frontend-form").length) {
+								var date_selector = $(
+									".ur-frontend-form #" + field_id
+								)
+									.attr("type", "text")
+									.val(formated_date);
+							} else {
+								var date_selector = $(
+									".woocommerce-MyAccount-content #" +
+										field_id
+								)
+									.attr("type", "text")
+									.val(formated_date);
+							}
 
-					if (0 < $(".ur-frontend-form").length) {
-						var date_selector = $(".ur-frontend-form #" + field_id)
-							.attr("type", "text")
-							.val(formated_date);
-					} else {
-						var date_selector = $(
-							".woocommerce-MyAccount-content #" + field_id
-						)
-							.attr("type", "text")
-							.val(formated_date);
-					}
+							field.attr(
+								"data-date-format",
+								date_selector.data("date-format")
+							);
 
-					$(this).attr(
-						"data-date-format",
-						date_selector.data("date-format")
-					);
-					$(this).attr("data-mode", date_selector.data("mode"));
-					$(this).attr("data-locale", date_selector.data("locale"));
-					$(this).attr(
-						"data-min-date",
-						date_selector.data("min-date")
-					);
-					$(this).attr(
-						"data-max-date",
-						date_selector.data("max-date")
-					);
-					$(this).attr("data-default-date", formated_date);
-					date_flatpickr = $(this).flatpickr({
-						disableMobile: true,
-						onChange: function (
-							selectedDates,
-							dateString,
-							instance
-						) {
-							$("#" + field_id).val(dateString);
-						},
+							field.attr("data-mode", date_selector.data("mode"));
+							field.attr(
+								"data-locale",
+								date_selector.data("locale")
+							);
+							field.attr(
+								"data-min-date",
+								date_selector.data("min-date")
+							);
+							field.attr(
+								"data-max-date",
+								date_selector.data("max-date")
+							);
+							field.attr("data-default-date", formated_date);
+
+							// flatpickr has not been initialized for the field, so create a new instance.
+							instance = field.flatpickr({
+								disableMobile: true,
+								onChange: function (
+									selectedDates,
+									dateString,
+									instance
+								) {
+									$("#" + field_id).val(dateString);
+								},
+							});
+
+							flatpickrInstances.push(instance);
+						}
 					});
-					date_flatpickrs[field_id] = date_flatpickr;
-				}
-
-				if (date_flatpickr) {
-					date_flatpickr.open();
 				}
 			});
 
@@ -1635,6 +1678,11 @@ function ur_includes(arr, item) {
 			$password_field = $(this)
 				.closest(".user-registration-form-row")
 				.find('input[name="password_2"]');
+		}
+		if ($password_field.length === 0) {
+			$password_field = $(this)
+				.closest(".field-password")
+				.find(".input-password");
 		}
 
 		if ($password_field.length > 0) {

@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpeverest.com/plugins/user-registration
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 2.2.6
+ * Version: 2.3.1
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.2.6';
+		public $version = '2.3.1';
 
 		/**
 		 * Session instance.
@@ -106,6 +106,9 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
+
+			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
+			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		}
 
 		/**
@@ -322,6 +325,40 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public function ajax_url() {
 			return admin_url( 'admin-ajax.php', 'relative' );
+		}
+
+		/**
+		 * Display action links in the Plugins list table.
+		 *
+		 * @param  array $actions Plugin Action links.
+		 * @return array
+		 */
+		public static function plugin_action_links( $actions ) {
+			$new_actions = array(
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
+			);
+
+			return array_merge( $new_actions, $actions );
+		}
+
+		/**
+		 * Display row meta in the Plugins list table.
+		 *
+		 * @param  array  $plugin_meta Plugin Row Meta.
+		 * @param  string $plugin_file Plugin Row Meta.
+		 * @return array
+		 */
+		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
+			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
+				$new_plugin_meta = array(
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpeverest.com/user-registration/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpeverest.com/support-forum/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
+				);
+
+				return array_merge( $plugin_meta, $new_plugin_meta );
+			}
+
+			return (array) $plugin_meta;
 		}
 	}
 

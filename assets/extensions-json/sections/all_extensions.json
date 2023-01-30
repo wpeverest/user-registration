@@ -177,7 +177,7 @@
     },
     {
       "title": "LearnDash",
-      "slug" : "user-registration-learnDash",
+      "slug" : "user-registration-learndash",
       "name" : "User Registration LearnDash",
       "image": "extensions-json/sections/images/learndash.png",
       "excerpt": "Allows you to view user’s registered learndash courses, automatically enroll users to specified learndash courses and more.",
@@ -282,7 +282,31 @@
         "plus",
         "professional"
       ]
+	  },
+	  {
+      "title": "ActiveCampaign",
+      "slug" : "user-registration-activecampaign",
+      "name" : "User Registration ActiveCampaign",
+      "image": "extensions-json/sections/images/activecampaign.jpg",
+      "excerpt": "You can connect your ActiveCampaign account to your User Registration Forms using the ActiveCampaign add-on. Users who complete the User Registration form will be added to your ActiveCampaign subscriber list. You can then use the information collected for email marketing.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/activecampaign/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=activecampaign",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Two Factor Authentication",
+      "slug" : "user-registration-two-factor-authentication",
+      "name" : "User Registration Two Factor Authentication",
+      "image": "extensions-json/sections/images/two-factor-authentication.png",
+      "excerpt": "Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching. When you enable two-factor authentication for your logins, you must confirm your identity through an additional authentication step after entering your correct username and password.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=two-factor-authentication",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
 	  }
-
   ]
 }

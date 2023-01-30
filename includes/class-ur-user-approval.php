@@ -266,9 +266,6 @@ class UR_User_Approval {
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 			$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
-			if ( ! empty( $message ) ) {
-				return new WP_Error( 'user_payment_pending', $message );
-			}
 			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
 
 				$user_id      = $user->ID;
@@ -360,18 +357,12 @@ class UR_User_Approval {
 	 */
 	public function allow_password_reset( $result, $user_id ) {
 
-		$form_id = ur_get_form_id_by_userid( $user_id );
+		$user_manager = new UR_Admin_User_Manager( $user_id );
 
-		// Check if the form is our form and the login option is admin approval.
-		if ( 0 !== $form_id && 'admin_approval' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) ) ) {
-			$user_manager = new UR_Admin_User_Manager( $user_id );
-
-			if ( ! $user_manager->is_approved() ) {
-				$error_message = __( 'Your account is still awaiting admin approval. Reset Password is not allowed.', 'user-registration' );
-				$result        = new WP_Error( 'user_not_approved', $error_message );
-			}
+		if ( ! $user_manager->is_approved() ) {
+			$error_message = __( 'Your account is still pending approval. Reset Password is not allowed.', 'user-registration' );
+			$result        = new WP_Error( 'user_not_approved', $error_message );
 		}
-
 		return $result;
 	}
 

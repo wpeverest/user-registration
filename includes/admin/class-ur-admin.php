@@ -32,6 +32,24 @@ class UR_Admin {
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'template_actions' ) );
+		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+	}
+
+	/**
+	 * Add Tag for My Account to know which page is current my account page.
+	 *
+	 * @param mixed  $post_states Tags.
+	 * @param object $post Post.
+	 */
+	public function ur_add_post_state( $post_states, $post ) {
+
+		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+
+		if ( $post->ID === $my_account_page_id ) {
+			$post_states[] = __( 'UR My Account Page', 'user-registration' );
+		}
+
+		return $post_states;
 	}
 
 	/**
@@ -46,6 +64,7 @@ class UR_Admin {
 		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
 		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
+		include_once dirname( __FILE__ ) . '/class-ur-admin-form-templates.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -391,10 +410,10 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action     = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
-			$templatres = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+			$action    = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
 
-			if ( 'ur-template-refresh' === $action && ! empty( $templatres ) ) {
+			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
 					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
 				}

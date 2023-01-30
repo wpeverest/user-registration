@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "2.2.6",
+  "version": "2.3.1",
   "homepage": "https://wpeverest.com/wordpress-plugins/user-registration/",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "@babel/preset-react": "7.12.13",
     "autoprefixer": "^10.4.7",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.3.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "cross-env": "~5.2.1",
     "eslint": "^7.32.0",
@@ -71,7 +71,7 @@
     "chakra-react-select": "^3.0.1",
     "css-loader": "^6.5.1",
     "framer-motion": "^5.5.7",
-    "grunt-cli": "~1.4.3",
+    "grunt-cli": "^1.4.3",
     "makepot": "^0.3.0",
     "path-parse": "^1.0.7",
     "promise": "^8.1.0",

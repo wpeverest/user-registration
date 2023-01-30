@@ -213,7 +213,7 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'password-strength-meter' ),
 				'version' => UR_VERSION,
 			),
-			'ur-recaptcha'              => array(
+			'ur-recaptcha'               => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration-recaptcha' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
@@ -228,7 +228,7 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => '3.0.0',
 			),
-			'ur-recaptcha-hcaptcha'     => array(
+			'ur-recaptcha-hcaptcha'      => array(
 				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
 				'version' => UR_VERSION,
@@ -238,12 +238,12 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery', 'user-registration' ),
 				'version' => UR_VERSION,
 			),
-			'ur-login'              => array(
+			'ur-login'                   => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/ur-login' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => UR_VERSION,
 			),
-			'tooltipster'              => array(
+			'tooltipster'                => array(
 				'src'     => self::get_asset_url( 'assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
 				'version' => '4.2.8',
@@ -351,29 +351,29 @@ class UR_Frontend_Scripts {
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
-					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-					'user_registration_form_data_save' => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
+					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
-					'form_required_fields'             => ur_get_required_fields(),
-					'login_option'                     => get_option( 'user_registration_general_setting_login_options' ),
-					'recaptcha_type'                   => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					'form_required_fields'              => ur_get_required_fields(),
+					'login_option'                      => get_option( 'user_registration_general_setting_login_options' ),
+					'recaptcha_type'                    => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'  => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
-					'message_required_fields'          => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
-					'message_email_fields'             => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
-					'message_url_fields'               => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
-					'message_number_fields'            => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
-					'message_confirm_password_fields'  => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
-					'message_validate_phone_number'    => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
-					'message_username_character_fields'   => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
-					'message_confirm_email_fields'     => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
-					'message_confirm_number_field_max'     => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_min'     => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_step'     => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
-					'ursL10n'                          => array(
+					'ajax_submission_on_edit_profile'   => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
+					'message_required_fields'           => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
+					'message_email_fields'              => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
+					'message_url_fields'                => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
+					'message_number_fields'             => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
+					'message_confirm_password_fields'   => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_validate_phone_number'     => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
+					'message_username_character_fields' => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
+					'message_confirm_email_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
+					'message_confirm_number_field_max'  => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
+					'ursL10n'                           => array(
 						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
@@ -402,10 +402,10 @@ class UR_Frontend_Scripts {
 				break;
 			case 'ur-login':
 				return array(
-					'ajax_url'                         => admin_url( 'admin-ajax.php' ),
-					'ur_login_form_save_nonce'         => wp_create_nonce( 'ur_login_form_save_nonce' ),
-					'ajax_submission_on_ur_login'      => get_option( 'ur_login_ajax_submission', 'no' ),
-					'recaptcha_type'                   => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
+					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
+					'ajax_submission_on_ur_login' => get_option( 'ur_login_ajax_submission', 'no' ),
+					'recaptcha_type'              => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 				);
 					break;
 		}
