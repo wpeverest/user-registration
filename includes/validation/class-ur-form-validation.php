@@ -53,7 +53,7 @@ class UR_Form_Validation extends UR_Validation {
 
 
 	/**
-	 * Validates the user submitted form field values.
+	 * Validates the user submitted registration form field values.
 	 *
 	 * @param [arary]  $valid_form_data UR_Frontend_Form_Handler::$valid_form_data reference.
 	 * @param [arary]  $form_field_data Form Field Data.
@@ -558,6 +558,17 @@ class UR_Form_Validation extends UR_Validation {
 			array_keys( $form_fields )
 		);
 
+		$request_form_keys = array_map(
+			function( $el ) {
+				return $el->field_name;
+			},
+			$form_data
+		);
+
+		if ( array_diff( $form_key_list, $request_form_keys ) ) {
+			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
+		}
+
 		foreach ( $form_data as $data ) {
 			$single_field_name = $data->field_name;
 
@@ -617,6 +628,13 @@ class UR_Form_Validation extends UR_Validation {
 		$user_id = get_current_user_id();
 
 		// phpcs:disable WordPress.Security.NonceVerification
+
+		$form_fields_keys = array_keys( $form_fields );
+		$post_keys        = array_keys( $_POST );
+
+		if ( array_diff( $form_fields_keys, $post_keys ) ) {
+			ur_add_notice( 'Some fields are missing in the submitted form.', 'error' );
+		}
 
 		foreach ( $form_fields as $key => $field ) {
 			if ( isset( $field['field_key'] ) ) {
