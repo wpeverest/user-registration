@@ -139,7 +139,7 @@ class UR_Shortcodes {
 			do_action( 'user_registration_edit_password_shortcode' );
 
 			/* translators: %s - Link to login form. */
-			echo wp_kses_post( apply_filters( 'user_registration_edit_password_shortcode_message', sprintf( __( 'Please Login to edit password. <a href="%s">Login Here?</a>', 'user-registration' ), isset( $page_id ) ? get_permalink( $page_id ) : wp_login_url() ) ) );
+			echo wp_kses_post( apply_filters( 'user_registration_edit_password_shortcode_message', sprintf( __( 'Please Login to edit password. <a href="%s">Login Here?</a>', 'user-registration' ), ur_get_my_account_url() ) ) );
 		}
 	}
 
