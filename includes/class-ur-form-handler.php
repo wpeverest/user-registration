@@ -209,22 +209,24 @@ class UR_Form_Handler {
 				if ( isset( $field['field_key'] ) ) {
 					$new_key = str_replace( 'user_registration_', '', $key );
 
-					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+					if ( in_array( $new_key, ur_get_user_table_fields(), true ) ) {
 
 						if ( 'display_name' === $new_key ) {
-							$user_data['display_name'] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+							$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 						} else {
-							$user_data[ $new_key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						}
 					} else {
 						$update_key = $key;
 
-						if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+						if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
 							$update_key = str_replace( 'user_', '', $new_key );
 						}
 						$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 						if ( 'disabled' !== $disabled ) {
-							update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							if ( isset( $_POST[ $key ] ) ) {
+								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							}
 						}
 					}
 				}

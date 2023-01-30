@@ -546,6 +546,7 @@ class UR_Form_Validation extends UR_Validation {
 	 *
 	 * @param [array] $form_fields Form Field Settings.
 	 * @param [array] $form_data Form Data.
+	 * @param [int]   $form_id Form Id.
 	 * @return void
 	 */
 	public function validate_update_profile_AJAX( $form_fields, $form_data, $form_id ) {
@@ -605,8 +606,17 @@ class UR_Form_Validation extends UR_Validation {
 		}
 	}
 
+	/**
+	 * Validate update profile data submitted via POST http request.
+	 *
+	 * @param [array] $form_fields Form Fields.
+	 * @param [int]   $form_id Form Id.
+	 * @return void
+	 */
 	public function validate_update_profile_POST( $form_fields, $form_id ) {
 		$user_id = get_current_user_id();
+
+		// phpcs:disable WordPress.Security.NonceVerification
 
 		foreach ( $form_fields as $key => $field ) {
 			if ( isset( $field['field_key'] ) ) {
@@ -642,14 +652,14 @@ class UR_Form_Validation extends UR_Validation {
 						break;
 
 					default:
-						$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 						break;
 				}
 
 				$single_field_name  = $key;
-				$single_field_label = $field['label'] ?? '';
+				$single_field_label = isset( $field['label'] ) ? $field['label'] : '';
 				$single_field_key   = $field['field_key'];
-				$single_field_value = isset( $_POST[ $key ] ) ? sanitize_text_field( $_POST[ $key ] ) : '';
+				$single_field_value = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 
 				/**
 				 * Validate form field according to the validations set in $validations array.
@@ -659,7 +669,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = $field_setting['required'] ?? 0;
+				$required         = isset( $field_setting['required'] ) ? $field_setting['required'] : 0;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				$disabled = false;
@@ -687,7 +697,7 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				// Hook to allow modification of value.
-				$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $single_field_value ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $single_field_value ) );
 
 				if ( 'email' === $field['type'] ) {
 					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $single_field_value ) ), '', $field, $form_id );
@@ -703,6 +713,8 @@ class UR_Form_Validation extends UR_Validation {
 
 				// Action to add extra validation to edit profile fields.
 				do_action( 'user_registration_validate_' . $key, wp_unslash( $single_field_value ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+				//phpcs:enable WordPress.Security.NonceVerification
 
 			}
 		}
