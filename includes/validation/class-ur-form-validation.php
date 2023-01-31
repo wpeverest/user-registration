@@ -455,7 +455,7 @@ class UR_Form_Validation extends UR_Validation {
 				} else {
 					$field_label = $form_field_data[ $key ]->general_setting->label;
 					/* translators: %s - Field Label */
-					$response = sprintf( __( '%s is a required field.', 'user-registration' ), $field_label );
+					$response = sprintf( __( '<strong>%s</strong> is a required field.', 'user-registration' ), $field_label );
 					array_push( $this->response_array, $response );
 				}
 			}

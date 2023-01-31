@@ -94,7 +94,7 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function is_date( $date ) {
-		if ( false === strtotime( $date ) ) {
+		if ( ! empty( $date ) && false === strtotime( $date ) ) {
 			return new WP_Error(
 				'user_registration_validation_invalid_date',
 				__( 'Please input a valid date', 'user-registration' )
