@@ -123,9 +123,13 @@
 				h2 {
 					font-size: 24px;
 					line-height: 130%;
-					color: #475BB2;
+					color: #2D3559;
 					font-weight: 600;
 					margin-top: 1em;
+				}
+
+				p {
+					color: gray;
 				}
 
 				img {
@@ -149,20 +153,25 @@
 					cursor: pointer;
 					align-items: center;
 
+					.dashicons-controls-play::before {
+						font-size: 40px;
+						font-weight: 600;
+					}
 					.user-registration-welcome-video__button {
 						border: none;
 						cursor: pointer;
 						font-size: 24px;
-						height: 40px;
-						width: 54px;
-						border-radius: 12px;
+						height: 65px;
+						width: 65px;
+						border-radius: 50%;
+						border: 0.10em solid #d1dada;
 						padding: 8px 15px;
 						position: absolute;
 						top: 50%;
 						left: 50%;
 						transform: translate(-50%, -50%);
 						color: $white;
-						background: $red;
+						background: $primary_color;
 
 						svg {
 							height: 24px;
@@ -170,7 +179,7 @@
 						}
 
 						&:hover {
-							background-color: #d51319;
+							filter: brightness(0.85);
 						}
 					}
 
@@ -180,6 +189,35 @@
 						border: 1px solid #DDE3FF;
 						width: 540px;
 						height: 300px;
+					}
+					@keyframes user-registration-welcome-video__button {
+						0% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+						50% {
+							box-shadow: none;
+						}
+						100% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+					}
+					@-webkit-keyframes user-registration-welcome-video__button {
+						0% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+						50% {
+							box-shadow: 0 0 0;
+						}
+						100% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+					}
+					.user-registration-welcome-video__button {
+						-webkit-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+						-moz-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+						-ms-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+						-o-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+						animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
 					}
 				}
 			}

@@ -2,7 +2,14 @@
  *  Internal Dependencies
  */
 import React, { useState, useEffect, Fragment } from "react";
-import { Flex, Text, Box, Checkbox, CircularProgress } from "@chakra-ui/react";
+import {
+	Flex,
+	Text,
+	Box,
+	Checkbox,
+	CircularProgress,
+	CircularProgressLabel,
+} from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
 /**
@@ -24,14 +31,14 @@ const InstallPage = () => {
 		) {
 			const timer = setInterval(() => {
 				setCounter((prevCounter) => {
-					if (prevCounter <= 100) {
+					if (prevCounter < 100) {
 						return prevCounter + 20;
 					} else {
 						prevCounter = 0;
 						return prevCounter;
 					}
 				});
-			}, 700);
+			}, 1400);
 
 			return () => {
 				clearInterval(timer);
@@ -84,7 +91,11 @@ const InstallPage = () => {
 								thickness="15px"
 								color="blue.300"
 								ml={3}
-							/>
+							>
+								<CircularProgressLabel>
+									{counter} %
+								</CircularProgressLabel>
+							</CircularProgress>
 						</Flex>
 					) : (
 						page.status === "installed" && (
