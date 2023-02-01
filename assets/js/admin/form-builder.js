@@ -320,6 +320,8 @@
 				);
 				// validation for unsupported currency by paypal.
 				if (
+					typeof data.data.ur_invalid_currency_status !==
+						"undefined" &&
 					data.data.ur_invalid_currency_status[0]
 						.validation_status === false
 				) {
