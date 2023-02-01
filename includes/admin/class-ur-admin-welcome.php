@@ -110,7 +110,7 @@ class UR_Admin_Welcome {
 					<title>
 						<?php esc_html_e( 'User Registration - Setup Wizard', 'user-registration' ); ?>
 					</title>
-					<?php wp_print_head_scripts(); ?>
+					<?php wp_head(); ?>
 					<script>
 						// To play welcome video.
 						jQuery(document).on(
