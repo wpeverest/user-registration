@@ -182,7 +182,9 @@
 									.hide();
 							}
 						} else {
-							$(bulk_options_html).insertAfter($this.parent()).trigger('init_tooltips');
+							$(bulk_options_html)
+								.insertAfter($this.parent())
+								.trigger("init_tooltips");
 						}
 					}
 				);
@@ -907,6 +909,7 @@
 						message +
 						'</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 				} else {
+					$(".ur-error").remove();
 					message_string =
 						'<div class="ur-message"><div class="ur-error"><p><strong>' +
 						user_registration_form_builder_data.i18n_admin
@@ -923,7 +926,7 @@
 
 				setTimeout(function () {
 					URFormBuilder.removeMessage($message);
-				}, 2000);
+				}, 3000);
 			},
 			/**
 			 * Remove the validation message when calles.
