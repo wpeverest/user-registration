@@ -330,6 +330,8 @@ class UR_AJAX {
 		if ( 0 === ur_notice_count( 'error' ) ) {
 			$user_data = array();
 
+			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
 

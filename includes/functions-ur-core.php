@@ -2050,7 +2050,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 			case 'file':
-				$files = explode( ',', $value );
+				$files = is_array( $value) ? $value : explode( ',', $value );
 
 				if ( is_array( $files ) && isset( $files[0] ) ) {
 					$attachment_ids = '';
