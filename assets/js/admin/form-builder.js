@@ -264,6 +264,10 @@
 					URFormBuilder.show_message(validation_response.message);
 					return;
 				}
+				if ( typeof tinyMCE !== 'undefined' ) {
+					tinyMCE.triggerSave();
+				}
+
 
 				var form_data = URFormBuilder.get_form_data();
 				var form_row_ids = URFormBuilder.get_form_row_ids();
