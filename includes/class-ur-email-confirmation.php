@@ -29,6 +29,7 @@ class UR_Email_Confirmation {
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2 );
 		add_action( 'wp_authenticate', array( $this, 'check_token_before_authenticate' ), 40, 2 );
+		add_action( 'template_redirect', array( $this, 'edit_email_confirmation_handler' ) );
 	}
 
 	/**
@@ -183,7 +184,7 @@ class UR_Email_Confirmation {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
+			$output  = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
 			$user    = get_user_by( 'id', $user_id );
@@ -261,6 +262,47 @@ class UR_Email_Confirmation {
 	}
 
 	/**
+	 * Handler for edit confirmation email.
+	 *
+	 * @return void
+	 */
+	public function edit_email_confirmation_handler() {
+		global $wp;
+
+		if ( ! isset( $_GET['confirm_email'] ) || ! isset( $_GET['confirm_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		// Verify the confirmation key.
+		$user_id     = absint( wp_unslash( $_GET['confirm_email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$confirm_key = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$stored_key  = get_user_meta( $user_id, 'user_registration_email_confirm_key', true );
+		$expiration  = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+
+		if ( time() > $expiration || $confirm_key !== $stored_key ) {
+			return;
+		}
+
+		// Update the user's email address to the new one.
+		wp_update_user(
+			array(
+				'ID'         => $user_id,
+				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true )
+			)
+		);
+
+		// Remove the confirmation key, pending email and expiry date.
+		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
+		delete_user_meta( $user_id, 'user_registration_pending_email' );
+		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
+
+		$redirect_url = ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
+		wp_safe_redirect( $redirect_url );
+		// wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) ); // Need to remove the comment.
+		exit;
+	}
+
+	/**
 	 * Encrypt/Decrypt the provided string.
 	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
 	 *
@@ -295,12 +337,12 @@ class UR_Email_Confirmation {
 	 */
 	public function get_token( $user_id ) {
 
-		$length        = 50;
-		$token         = '';
+		$length         = 50;
+		$token          = '';
 		$code_alphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$code_alphabet .= 'abcdefghijklmnopqrstuvwxyz';
 		$code_alphabet .= '0123456789';
-		$max           = strlen( $code_alphabet );
+		$max            = strlen( $code_alphabet );
 
 		for ( $i = 0; $i < $length; $i++ ) {
 			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
@@ -321,7 +363,7 @@ class UR_Email_Confirmation {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = isset( $form_id ) ? $form_id : 0;
+		$form_id      = isset( $form_id ) ? $form_id : 0;
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
@@ -366,9 +408,9 @@ class UR_Email_Confirmation {
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
-			$url = substr( $url, 0, strpos( $url, '?' ) );
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url     = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
+			$url     = substr( $url, 0, strpos( $url, '?' ) );
+			$url     = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $email_status ) {
 					/* translators: %s - Resend Verification Link. */

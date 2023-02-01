@@ -1270,6 +1270,50 @@
 																.message +
 															"</li>"
 													);
+
+													if (
+														undefined !==
+														response.data
+															.userEmailPendingMessage
+													) {
+														message.append(
+															"<li>" +
+																response.data
+																	.userEmailUpdateMessage +
+																"</li>"
+														);
+
+														if (
+															$(
+																"input#user_registration_user_email"
+															).next(
+																"div.email-updated"
+															).length
+														) {
+															$(
+																"input#user_registration_user_email"
+															)
+																.next(
+																	"div.email-updated"
+																)
+																.remove();
+														}
+
+														$(
+															response.data
+																.userEmailPendingMessage
+														).insertAfter(
+															$(
+																"input#user_registration_user_email"
+															)
+														);
+														$(
+															"input#user_registration_user_email"
+														).val(
+															response.data
+																.oldUserEmail
+														);
+													}
 												}
 												form.show_message(
 													message,

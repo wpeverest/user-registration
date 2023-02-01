@@ -41,10 +41,10 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
 								if ( is_numeric( $profile_picture_url ) ) {
-									$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
 
@@ -386,7 +386,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-												user_registration_form_field( $key, $field, $value );
+												$field = user_registration_form_field( $key, $field, $value );
 
 												/**
 												 * Embed the current country value to allow to remove it if it's not allowed.

@@ -295,10 +295,25 @@ class UR_Form_Handler {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
+			$user_data     = array();
+			$email_updated = false;
+			$pending_email = '';
+			$user          = wp_get_current_user();
+
 			foreach ( $profile as $key => $field ) {
 				if ( isset( $field['field_key'] ) ) {
 					$new_key = str_replace( 'user_registration_', '', $key );
+
+					if ( 'user_email' === $new_key ) {
+
+						if ( $user ) {
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) {
+								$email_updated = true;
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+							}
+							continue;
+						}
+					}
 
 					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
@@ -326,12 +341,59 @@ class UR_Form_Handler {
 				wp_update_user( $user_data );
 			}
 
-			ur_add_notice( apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) ) );
+			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+
+			if ( $email_updated ) {
+				self::send_confirmation_email( $user, $pending_email );
+				/* translators: user_email */
+				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+				ur_add_notice( $user_email_update_message );
+			}
+
+			ur_add_notice( $message );
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
+			// wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) ); // Need to remove the comment.
+			$redirect_url = ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
+			wp_safe_redirect( $redirect_url );
 			exit;
+		}
+	}
+
+	/**
+	 * Send confirmation email.
+	 *
+	 * @param object $user User.
+	 * @param email  $new_email Email.
+	 * @return void
+	 */
+	public static function send_confirmation_email( $user, $new_email ) {
+		// Generate a confirmation key for the email change.
+		$confirm_key = wp_generate_password( 20, false );
+
+		// Save the confirmation key.
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+
+		// Send an email to the new address with confirmation link.
+		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$to           = $new_email;
+		$subject      = 'Confirm Your Email Address Change';
+		$message      = 'Dear ' . $user->display_name . ",\n\n";
+		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . ".\n\n";
+		$message     .= "To confirm this change, please click on the following link:\n\n";
+		$message     .= $confirm_link . "\n\n";
+		$message     .= "This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.\n\n";
+		$message     .= "Best regards,\n\n";
+		$message     .= get_bloginfo( 'name' );
+		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
+
+		$email_sent = wp_mail( $to, $subject, $message, $headers );
+
+		if ( $email_sent ) {
+			update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+			update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+			update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 		}
 	}
 

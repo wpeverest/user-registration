@@ -65,6 +65,7 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
+			'cancel_email_change'    => false
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -328,10 +329,23 @@ class UR_AJAX {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
+			$user_data     = array();
+			$email_updated = false;
+			$pending_email = '';
+			$user          = wp_get_current_user();
 
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
+
+				if ( 'user_email' === $new_key ) {
+					if ( $user ) {
+						if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
+							$email_updated = true;
+							$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
+						}
+						continue;
+					}
+				}
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
@@ -363,12 +377,70 @@ class UR_AJAX {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			wp_send_json_success(
-				array(
-					'message' => $message,
-				)
+			$response = array(
+				'message' => $message,
 			);
 
+			if ( $email_updated ) {
+				self::send_confirmation_email( $user, $pending_email );
+				$response['oldUserEmail'] = $user->user_email;
+				/* translators: %s : user email */
+				$response['userEmailUpdateMessage'] = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+
+				$cancel_url = esc_url(
+					add_query_arg(
+						array(
+							'cancel_email_change' => $user_id,
+							'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' )
+						),
+						ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+					)
+				);
+
+				$response['userEmailPendingMessage'] = '<div class="email-updated inline"><p>' . __( 'There is a pending change of your email to', 'user-registration' ) . ' <code>' . $pending_email . '</code>. <a href="' . $cancel_url . '">' . __( 'Cancel', 'user-registration' ) . '</a></p></div>';
+			}
+
+			wp_send_json_success(
+				$response
+			);
+
+		}
+	}
+
+
+	/**
+	 * Send confirmation email.
+	 *
+	 * @param object $user User.
+	 * @param email  $new_email Email.
+	 * @return void
+	 */
+	public static function send_confirmation_email( $user, $new_email ) {
+		// Generate a confirmation key for the email change.
+		$confirm_key = wp_generate_password( 20, false );
+
+		// Save the confirmation key.
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+
+		// Send an email to the new address with confirmation link.
+		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$to           = $new_email;
+		$subject      = 'Confirm Your Email Address Change';
+		$message      = 'Dear ' . $user->display_name . ",\n\n";
+		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . ".\n\n";
+		$message     .= "To confirm this change, please click on the following link:\n\n";
+		$message     .= $confirm_link . "\n\n";
+		$message     .= "This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.\n\n";
+		$message     .= "Best regards,\n\n";
+		$message     .= get_bloginfo( 'name' );
+		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
+
+		$email_sent = wp_mail( $to, $subject, $message, $headers );
+
+		if ( $email_sent ) {
+			update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+			update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+			update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 		}
 	}
 
@@ -1403,6 +1475,33 @@ class UR_AJAX {
 				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
 			)
 		);
+	}
+
+	/**
+	 * Cancel a pending email change.
+	 *
+	 * @return void
+	 */
+	public static function cancel_email_change() {
+		check_ajax_referer( 'cancel_email_change_nonce', '_wpnonce' );
+
+		$user_id = isset( $_POST['cancel_email_change'] ) ? absint( wp_unslash( $_POST['cancel_email_change'] ) ) : false;
+
+		if ( ! $user_id ) {
+			wp_die( -1 );
+		}
+
+		// Remove the confirmation key, pending email and expiry date.
+		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
+		delete_user_meta( $user_id, 'user_registration_pending_email' );
+		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Changed email cancelled successfully.', 'user-registration' )
+			)
+		);
+
 	}
 }
 
