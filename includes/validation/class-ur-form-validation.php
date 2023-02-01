@@ -147,22 +147,6 @@ class UR_Form_Validation extends UR_Validation {
 					'label'     => $single_field_label,
 				);
 
-				// Validate max-length.
-				if ( isset( $single_form_field->advance_setting->size ) ) {
-					$max_size = $single_form_field->advance_setting->size;
-					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
-						array_push(
-							$this->response_array,
-							sprintf(
-								'Please enter a value of length less than %d for %s',
-								$max_size,
-								"<strong>$single_field_label</strong>."
-							)
-						);
-						continue;
-					}
-				}
-
 				/**
 				 * Validate form fields according to the validations set in $validations array.
 				 *
@@ -238,8 +222,8 @@ class UR_Form_Validation extends UR_Validation {
 	public function add_hook( $form_field_data = array(), $form_data = array() ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		foreach ( $form_data as $data ) {
-			if ( in_array( $data->field_name, $form_key_list ) ) {
-				$form_data_index   = array_search( $data->field_name, $form_key_list );
+			if ( in_array( $data->field_name, $form_key_list, true ) ) {
+				$form_data_index   = array_search( $data->field_name, $form_key_list, true );
 				$single_form_field = $form_field_data[ $form_data_index ];
 				$class_name        = ur_load_form_field_class( $single_form_field->field_key );
 				$hook              = "user_registration_validate_{$single_form_field->field_key}";
@@ -586,7 +570,11 @@ class UR_Form_Validation extends UR_Validation {
 			return;
 		}
 
-		$form_field_settings = $this->get_form_field_settings( $form_id );
+		$form_field_data = $this->get_form_field_data( $form_id );
+		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		// Triger validation method for user fields. Useful for custom fields validation.
+		$this->add_hook( $form_field_data, $form_data );
 
 		foreach ( $form_data as $data ) {
 			$single_field_name = $data->field_name;
@@ -601,23 +589,8 @@ class UR_Form_Validation extends UR_Validation {
 					'label'     => $single_field_label,
 				);
 
-				$form_field = $form_field_settings[ $single_field_name ];
-
-				// Max-length validation.
-				if ( isset( $form_field->advance_setting->size ) ) {
-					$max_size = $form_field->advance_setting->size;
-					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
-						ur_add_notice(
-							sprintf(
-								'Please enter a value of length less than %d for %s',
-								$max_size,
-								"<strong>$single_field_label</strong>."
-							),
-							'error'
-						);
-						continue;
-					}
-				}
+				$form_data_index   = array_search( $data->field_name, $form_key_list, true );
+				$single_form_field = $form_field_data[ $form_data_index ];
 
 				/**
 				 * Validate form field according to the validations set in $validations array.
@@ -650,34 +623,96 @@ class UR_Form_Validation extends UR_Validation {
 				if ( 'email' === $field_setting['type'] ) {
 					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
 				}
+
+				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
 			}
 		}
 	}
 
 	/**
-	 * Returns settings for all form fields in array.
+	 * Run all validations and checks defined in the validation() method of field class.
+	 *
+	 * @param [string] $single_field_key Field Key.
+	 * @param [array]  $single_form_field Field Settings.
+	 * @param [object] $data Field Data.
+	 * @param [int]    $form_id Form Id.
+	 * @return void
+	 */
+	public function run_field_validations( $single_field_key, $single_form_field, $data, $form_id ) {
+
+		// Bypass validations for these fields on update profile.
+		if ( in_array( $single_field_key, array( 'user_login', 'user_email' ), true ) ) {
+			return;
+		}
+
+		// Validate custom field validations of field class.
+		$hook        = "user_registration_validate_{$single_field_key}";
+		$filter_hook = $hook . '_message';
+		do_action( $hook, $single_form_field, $data, $filter_hook, $this->form_id );
+
+		$response = apply_filters( $filter_hook, '' );
+		if ( ! empty( $response ) ) {
+			ur_add_notice( $response, 'error' );
+		}
+	}
+
+	/**
+	 * Returns settings for all form fields in proper array format.
+	 *
+	 * Uses UR_FrontEnd_Form_Handler::get_form_field_data() function.
 	 *
 	 * @param integer $form_id Form Id.
 	 * @return array
 	 */
-	public function get_form_field_settings( $form_id = 0 ) {
-		if ( ! $form_id ) {
-			return array();
-		}
+	public function get_form_field_data( $form_id = 0 ) {
 
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
-		$fields             = array();
 
-		foreach ( $post_content_array as $section ) {
-			foreach ( $section as $row ) {
-				foreach ( $row as $field ) {
-					$fields[ $field->general_setting->field_name ] = $field;
+		$form_field_data = UR_Frontend_Form_Handler::get_form_field_data( $post_content_array );
+
+		return $form_field_data;
+	}
+
+
+	/**
+	 * This format returns form field data in object format.
+	 *
+	 * In Non-ajax method of update profile, form data is received in key => value format
+	 * which is different from the data received while using ajax submission.
+	 *
+	 * So, to maintain consistency of form data object while passing to different functions,
+	 * data is formatted properly.
+	 *
+	 * @param [array] $form_field_data Form Field Data.
+	 * @return array
+	 */
+	public function get_form_data_from_post( $form_field_data ) {
+
+		$fields = array();
+
+		foreach ( $form_field_data as $field ) {
+			$field_name = $field->general_setting->field_name;
+			$key        = 'user_registration_' . $field_name;
+
+			if ( isset( $_POST[ $key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$field_obj             = new StdClass();
+				$field_obj->value      = $_POST[ $key ]; // phpcs:ignore
+				$field_obj->field_name = $field_name;
+
+				if ( isset( $field->field_key ) ) {
+					$field_obj->field_type = $field->field_key;
 				}
+
+				if ( isset( $field->general_setting->label ) ) {
+					$field_obj->label = $field->general_setting->label;
+				}
+
+				$fields[ $field_name ] = $field_obj;
 			}
 		}
-
 		return $fields;
 	}
+	
 
 	/**
 	 * Validate update profile data submitted via POST http request.
@@ -698,7 +733,13 @@ class UR_Form_Validation extends UR_Validation {
 			ur_add_notice( 'Some fields are missing in the submitted form.', 'error' );
 		}
 
-		$form_field_settings = $this->get_form_field_settings( $form_id );
+		$form_field_data = $this->get_form_field_data( $form_id );
+		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		$form_data = $this->get_form_data_from_post( $form_field_data );
+
+		// Triger validation method for user fields. Useful for custom fields validation.
+		$this->add_hook( $form_field_data, $form_data );
 
 		foreach ( $form_fields as $key => $field ) {
 			if ( isset( $field['field_key'] ) ) {
@@ -738,28 +779,13 @@ class UR_Form_Validation extends UR_Validation {
 						break;
 				}
 
-				$single_field_name  = $key;
+				$single_field_name  = str_replace( 'user_registration_', '', $key );
 				$single_field_label = isset( $field['label'] ) ? $field['label'] : '';
 				$single_field_key   = $field['field_key'];
-				$single_field_value = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+				$single_field_value = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
 
-				$form_field = $form_field_settings[ str_replace( 'user_registration_', '', $key ) ];
-
-				// Max-length validation.
-				if ( isset( $form_field->advance_setting->size ) ) {
-					$max_size = $form_field->advance_setting->size;
-					if ( is_wp_error( UR_Validation::validate_length( $single_field_value, $max_size ) ) ) {
-						ur_add_notice(
-							sprintf(
-								'Please enter a value of length less than %d for %s',
-								$max_size,
-								"<strong>$single_field_label</strong>."
-							),
-							'error'
-						);
-						continue;
-					}
-				}
+				$form_data_index   = array_search( $single_field_name, $form_key_list, true );
+				$single_form_field = $form_field_data[ $form_data_index ];
 
 				/**
 				 * Validate form field according to the validations set in $validations array.
@@ -769,7 +795,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = isset( $field_setting['required'] ) ? $field_setting['required'] : 0;
+				$required         = isset( $single_form_field->general_setting->required ) ? 'yes' === $single_form_field->general_setting->required : 0;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				$disabled = false;
@@ -779,7 +805,7 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required && ! $disabled ) {
+				if ( ! in_array( $key, $urcl_hide_fields, true ) && $required && ! $disabled ) {
 					array_unshift( $validations, 'required' );
 				}
 
@@ -810,6 +836,13 @@ class UR_Form_Validation extends UR_Validation {
 						ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 					}
 				}
+
+				$this->run_field_validations(
+					$single_field_key,
+					$single_form_field,
+					$form_data[ $single_field_name ],
+					$form_id
+				);
 
 				// Action to add extra validation to edit profile fields.
 				do_action( 'user_registration_validate_' . $key, wp_unslash( $single_field_value ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

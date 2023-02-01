@@ -69,6 +69,26 @@ class UR_Form_Field_Text extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Custom Field Validation here..
+
+		$value = isset( $form_data->value ) ? $form_data->value : '';
+		$label = $single_form_field->general_setting->label;
+
+		// Validate size.
+		if ( isset( $single_form_field->advance_setting->size ) ) {
+			$max_size = $single_form_field->advance_setting->size;
+			if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
+				add_filter(
+					$filter_hook,
+					function ( $msg ) use ( $max_size, $label ) {
+						return sprintf(
+							'Please enter a value of length less than %d for %s',
+							$max_size,
+							"<strong>$label</strong>."
+						);
+					}
+				);
+			}
+		}
 	}
 }
 
