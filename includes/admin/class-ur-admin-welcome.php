@@ -153,7 +153,7 @@ class UR_Admin_Welcome {
 						<div class="user-registration-welcome-card" >
 							<div class="user-registration-welcome-container">
 								<div class="user-registration-welcome-container__header">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-logo.png' ); ?>" alt="">
+									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
 									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
