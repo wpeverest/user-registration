@@ -1199,6 +1199,11 @@
 									form_data: form_data,
 								};
 
+								$(document).trigger(
+									"user_registration_frontend_before_edit_profile_submit",
+									[data, $this]
+								);
+
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
