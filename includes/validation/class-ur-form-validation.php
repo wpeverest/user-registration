@@ -460,7 +460,7 @@ class UR_Form_Validation extends UR_Validation {
 			'user_url'       => array( 'is_url' ),
 			'date'           => array( 'is_date' ),
 			'privacy_policy' => array( 'is_boolean' ),
-
+			'number'         => array( 'is_numeric' ),
 		);
 
 		$validations = apply_filters( 'user_registration_field_validations', $validations );
@@ -500,6 +500,7 @@ class UR_Form_Validation extends UR_Validation {
 			'invalid_date'      => 'Please enter a valid date for %s.',
 			'empty_field'       => '%s is a required field.',
 			'non_boolean_value' => 'Please enter a valid value for %s.',
+			'non_numeric_data'  => 'Please enter a numeric value for %s.',
 		);
 
 		$error_code = str_replace( 'user_registration_validation_', '', $error_code );

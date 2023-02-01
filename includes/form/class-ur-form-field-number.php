@@ -70,17 +70,39 @@ class UR_Form_Field_Number extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		$field_label = isset( $form_data->label ) ? $form_data->label : '';
-		$value       = isset( $form_data->value ) ? $form_data->value : '';
+		$label = $single_form_field->general_setting->label;
+		$value = isset( $form_data->value ) ? $form_data->value : '';
 
-		if ( ! is_numeric( $value ) ) {
-			add_filter(
-				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					/* translators: %1$s - Field Label */
-					return sprintf( __( '%1$s must be numeric value.', 'user-registration' ), $field_label );
-				}
-			);
+		if ( isset( $single_form_field->advance_setting->max ) ) {
+			$max_value = $single_form_field->advance_setting->max;
+			if ( floatval( $value ) > floatval( $max_value ) ) {
+				add_filter(
+					$filter_hook,
+					function ( $msg ) use ( $max_value, $label ) {
+						return sprintf(
+							'Please enter a value less than %d for %s',
+							$max_value,
+							"<strong>$label</strong>."
+						);
+					}
+				);
+			}
+		}
+
+		if ( isset( $single_form_field->advance_setting->min ) ) {
+			$min_value = $single_form_field->advance_setting->min;
+			if ( floatval( $value ) < floatval( $min_value ) ) {
+				add_filter(
+					$filter_hook,
+					function ( $msg ) use ( $min_value, $label ) {
+						return sprintf(
+							'Please enter a value greater than %d for %s',
+							$min_value,
+							"<strong>$label</strong>."
+						);
+					}
+				);
+			}
 		}
 	}
 }
