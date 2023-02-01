@@ -74,6 +74,28 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Custom Field Validation here..
+
+		$field_label = $single_form_field->general_setting->label;
+		$value       = $form_data->value;
+
+		if ( ! empty( $single_form_field->advance_setting->choice_limit ) ) {
+
+			$checked_count = is_array( $value ) ? count( $value ) : count( json_decode( $value ) );
+			$limit         = $single_form_field->advance_setting->choice_limit;
+
+			if ( $checked_count > $limit ) {
+				add_filter(
+					$filter_hook,
+					function ( $msg ) use ( $limit, $field_label ) {
+						return sprintf(
+							'Only %d options can be selected for %s.',
+							$limit,
+							"<strong>$field_label</strong>"
+						);
+					}
+				);
+			}
+		}
 	}
 }
 
