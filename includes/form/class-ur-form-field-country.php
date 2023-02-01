@@ -387,6 +387,23 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Perform custom validation for the field here ...
+
+		$field_label     = $single_form_field->general_setting->label;
+		$value           = isset( $form_data->value ) ? $form_data->value : '';
+		$valid_countries = $single_form_field->advance_setting->selected_countries;
+
+		if ( ! in_array( $value, $valid_countries, true ) ) {
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $field_label ) {
+					/* translators: %1$s - Field Label */
+					return sprintf(
+						__( 'Please choose a different country for %1$s.', 'user-registration' ),
+						"<strong>$field_label</strong>"
+					);
+				}
+			);
+		}
 	}
 }
 

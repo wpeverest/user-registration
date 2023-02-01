@@ -712,7 +712,7 @@ class UR_Form_Validation extends UR_Validation {
 		}
 		return $fields;
 	}
-	
+
 
 	/**
 	 * Validate update profile data submitted via POST http request.
@@ -782,7 +782,7 @@ class UR_Form_Validation extends UR_Validation {
 				$single_field_name  = str_replace( 'user_registration_', '', $key );
 				$single_field_label = isset( $field['label'] ) ? $field['label'] : '';
 				$single_field_key   = $field['field_key'];
-				$single_field_value = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : '';
+				$single_field_value = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : ''; // phpcs:ignore
 
 				$form_data_index   = array_search( $single_field_name, $form_key_list, true );
 				$single_form_field = $form_field_data[ $form_data_index ];
