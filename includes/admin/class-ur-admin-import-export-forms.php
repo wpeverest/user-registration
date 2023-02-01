@@ -176,7 +176,7 @@ class UR_Admin_Import_Export_Forms {
 								}
 								wp_send_json_success(
 									array(
-										'message' => __( 'Imported Successfully.', 'user-registration' ),
+										'message' => esc_html__("Imported Successfully.", 'user-registration' ).'<a href="'.esc_url(admin_url('admin.php?page=add-new-registration&edit-registration='.$post_id)).'">'.esc_html__("View Form", "user-registration").'</a>',
 									)
 								);
 							}
