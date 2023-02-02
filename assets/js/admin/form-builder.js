@@ -16,17 +16,20 @@
 
 				//Initialize Form Builder.
 				URFormBuilder.init_form_builder();
-				//
+				//Field option tab
 				$(document).on(
 					"click",
 					'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
 					function () {
-
-					firstItem = $('.ur-selected-item:first');
-						console.log(firstItem);
-					URFormBuilder.handle_selected_item(firstItem);
-					// $(firstItem).trigger('click');
-					// console.log('3');
+						// Hide the form settings in fields panel.
+						$(".ur-selected-inputs").find("form#ur-field-settings").hide();
+						//Show field panels
+						$(".ur-builder-wrapper-content").show();
+						$(".ur-builder-wrapper-footer").show();
+						if($('.ur-selected-item.ur-item-active').length == 0) {
+							//Selecting first ur selected item
+							URFormBuilder.handle_selected_item($('.ur-selected-item:first'));
+						}
 				});
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
@@ -2420,9 +2423,6 @@
 			 * Handles all the operations performed on a selected field.
 			 */
 			handle_selected_item: function (selected_item) {
-				$(".ur-registered-inputs")
-					.find("ul li.ur-no-pointer")
-					.removeClass("ur-no-pointer");
 				$(".ur-selected-item").removeClass("ur-item-active");
 				$(selected_item).addClass("ur-item-active");
 				URFormBuilder.render_advance_setting($(selected_item));

@@ -1,5 +1,5 @@
 <?php
-/**ur-tab-field-options
+/**
  * Admin View: Form Templates Selector
  *
  * @package UserRegistration/Admin/FormTemplates
