@@ -3003,3 +3003,58 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		return $output;
 	}
 }
+
+if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
+    /**
+	 * Clean up the tmp folder - remove all old files every day (filterable interval).
+	 */
+	function ur_clean_tmp_files() {
+		$files = glob( trailingslashit( ur_get_tmp_dir() ) . '*' );
+
+		if ( ! is_array( $files ) || empty( $files ) ) {
+			return;
+		}
+
+		$lifespan = (int) apply_filters( 'user_registration_clean_tmp_files_lifespan', DAY_IN_SECONDS );
+
+		foreach ( $files as $file ) {
+			if ( ! is_file( $file ) ) {
+				continue;
+			}
+
+			// In some cases filemtime() can return false, in that case - pretend this is a new file and do nothing.
+			$modified = (int) filemtime( $file );
+			if ( empty( $modified ) ) {
+				$modified = time();
+			}
+
+			if ( ( time() - $modified ) >= $lifespan ) {
+				@unlink( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
+/**
+	 * Get tmp dir for files.
+	 *
+	 * @return string
+	 */
+	function ur_get_tmp_dir() {
+		$uploads  = wp_upload_dir();
+		$tmp_root = untrailingslashit( $uploads['basedir'] ) . '/user_registration_uploads/temp-uploads';
+
+		if ( ! file_exists( $tmp_root ) || ! wp_is_writable( $tmp_root ) ) {
+			wp_mkdir_p( $tmp_root );
+		}
+
+		$index = trailingslashit( $tmp_root ) . 'index.html';
+
+		if ( ! file_exists( $index ) ) {
+			file_put_contents( $index, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		}
+
+		return $tmp_root;
+	}
+}
