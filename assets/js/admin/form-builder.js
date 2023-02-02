@@ -16,12 +16,22 @@
 
 				//Initialize Form Builder.
 				URFormBuilder.init_form_builder();
+				//
+				$(document).on(
+					"click",
+					'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
+					function () {
 
+					firstItem = $('.ur-selected-item:first');
+						console.log(firstItem);
+					URFormBuilder.handle_selected_item(firstItem);
+					// $(firstItem).trigger('click');
+					// console.log('3');
+				});
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
 					URFormBuilder.handle_selected_item($(this));
 				});
-
 				// Run keyboard shortcuts action in form builder area only.
 				if (user_registration_form_builder_data.is_form_builder) {
 					$(window).on("keydown", function (event) {
@@ -2286,14 +2296,6 @@
 									.find("a")
 									.eq(0)
 									.trigger("click", ["triggered_click"]);
-								$(".ur-tabs")
-									.find(
-										'[aria-controls="ur-tab-field-options"]'
-									)
-									.addClass("ur-no-pointer");
-								$(".ur-selected-item").removeClass(
-									"ur-item-active"
-								);
 							},
 						};
 						builder.init();
@@ -2607,7 +2609,7 @@
 				form.append(general_setting);
 				form.append(advance_setting);
 				$("#ur-tab-field-options").append(form);
-				//$('#ur-tab-field-options').append(advance_setting);
+				$('#ur-tab-field-options').append(advance_setting);
 				$("#ur-tab-field-options")
 					.find(".ur-advance-setting-block")
 					.show();
