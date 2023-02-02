@@ -376,23 +376,34 @@ class UR_Form_Handler {
 		// Send an email to the new address with confirmation link.
 		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
 		$to           = $new_email;
-		$subject      = 'Confirm Your Email Address Change';
+		$subject      = apply_filters( 'user_registration_email_change_email_subject', 'Confirm Your Email Address Change' );
 		$message      = 'Dear ' . $user->display_name . ",\n\n";
 		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . ".\n\n";
-		$message     .= "To confirm this change, please click on the following link:\n\n";
+		$message     .= "To confirm this change, please click on the following link:\n";
 		$message     .= $confirm_link . "\n\n";
 		$message     .= "This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.\n\n";
-		$message     .= "Best regards,\n\n";
+		$message     .= "Best regards,\n";
 		$message     .= get_bloginfo( 'name' );
+		$message      = apply_filters( 'user_registration_email_change_email_content', $message );
 		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
 
-		$email_sent = wp_mail( $to, $subject, $message, $headers );
+		wp_mail( $to, $subject, $message, $headers );
 
-		if ( $email_sent ) {
-			update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-			update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
-			update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
-		}
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Delete a pending email change.
+	 *
+	 * @param integer $user_id User ID.
+	 * @return void
+	 */
+	public static function delete_pending_email_change( $user_id ) {
+		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
+		delete_user_meta( $user_id, 'user_registration_pending_email' );
+		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
 	}
 
 	/**

@@ -292,9 +292,7 @@ class UR_Email_Confirmation {
 		);
 
 		// Remove the confirmation key, pending email and expiry date.
-		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
-		delete_user_meta( $user_id, 'user_registration_pending_email' );
-		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
+		UR_Form_Handler::delete_pending_email_change( $user_id );
 
 		wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
 		exit;

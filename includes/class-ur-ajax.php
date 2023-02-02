@@ -382,7 +382,7 @@ class UR_AJAX {
 			);
 
 			if ( $email_updated ) {
-				self::send_confirmation_email( $user, $pending_email );
+				UR_Form_Handler::send_confirmation_email( $user, $pending_email );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
 				$response['userEmailUpdateMessage'] = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
@@ -404,40 +404,6 @@ class UR_AJAX {
 				$response
 			);
 
-		}
-	}
-
-
-	/**
-	 * Send confirmation email.
-	 *
-	 * @param object $user User.
-	 * @param email  $new_email Email.
-	 * @return void
-	 */
-	public static function send_confirmation_email( $user, $new_email ) {
-		// Generate a confirmation key for the email change.
-		$confirm_key = wp_generate_password( 20, false );
-
-		// Send an email to the new address with confirmation link.
-		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
-		$to           = $new_email;
-		$subject      = 'Confirm Your Email Address Change';
-		$message      = 'Dear ' . $user->display_name . ",\n\n";
-		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . ".\n\n";
-		$message     .= "To confirm this change, please click on the following link:\n";
-		$message     .= $confirm_link . "\n\n";
-		$message     .= "This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.\n\n";
-		$message     .= "Best regards,\n";
-		$message     .= get_bloginfo( 'name' );
-		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
-
-		$email_sent = wp_mail( $to, $subject, $message, $headers );
-
-		if ( $email_sent ) {
-			update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-			update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
-			update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 		}
 	}
 
@@ -1489,9 +1455,7 @@ class UR_AJAX {
 		}
 
 		// Remove the confirmation key, pending email and expiry date.
-		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
-		delete_user_meta( $user_id, 'user_registration_pending_email' );
-		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
+		UR_Form_Handler::delete_pending_email_change( $user_id );
 
 		wp_send_json_success(
 			array(

@@ -447,9 +447,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<div class="email-updated inline"><p>' . __( 'There is a pending change of your email to', 'user-registration' ) . ' <code>' . $pending_email . '</code>. <a href="' . $cancel_url . '">' . __( 'Cancel', 'user-registration' ) . '</a></p></div>';
 					} else {
 						// Remove the confirmation key, pending email and expiry date.
-						delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
-						delete_user_meta( $user_id, 'user_registration_pending_email' );
-						delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
+						UR_Form_Handler::delete_pending_email_change( $user_id );
 					}
 				}
 
