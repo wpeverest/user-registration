@@ -347,16 +347,14 @@ class UR_Form_Handler {
 				self::send_confirmation_email( $user, $pending_email );
 				/* translators: user_email */
 				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
-				ur_add_notice( $user_email_update_message );
+				ur_add_notice( $user_email_update_message, 'notice' );
 			}
 
 			ur_add_notice( $message );
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			// wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) ); // Need to remove the comment.
-			$redirect_url = ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
-			wp_safe_redirect( $redirect_url );
+			wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
 			exit;
 		}
 	}

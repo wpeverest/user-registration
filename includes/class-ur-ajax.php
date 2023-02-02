@@ -419,19 +419,16 @@ class UR_AJAX {
 		// Generate a confirmation key for the email change.
 		$confirm_key = wp_generate_password( 20, false );
 
-		// Save the confirmation key.
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-
 		// Send an email to the new address with confirmation link.
 		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
 		$to           = $new_email;
 		$subject      = 'Confirm Your Email Address Change';
 		$message      = 'Dear ' . $user->display_name . ",\n\n";
 		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . ".\n\n";
-		$message     .= "To confirm this change, please click on the following link:\n\n";
+		$message     .= "To confirm this change, please click on the following link:\n";
 		$message     .= $confirm_link . "\n\n";
 		$message     .= "This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.\n\n";
-		$message     .= "Best regards,\n\n";
+		$message     .= "Best regards,\n";
 		$message     .= get_bloginfo( 'name' );
 		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
 

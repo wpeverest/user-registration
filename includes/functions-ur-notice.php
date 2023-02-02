@@ -138,7 +138,7 @@ function ur_print_notices() {
 	}
 
 	$all_notices  = UR()->session->get( 'ur_notices', array() );
-	$notice_types = apply_filters( 'user_registration_types', array( 'error', 'success', 'notice' ) );
+	$notice_types = apply_filters( 'user_registration_types', array( 'notice', 'error', 'success' ) );
 
 	foreach ( $notice_types as $notice_type ) {
 		if ( ur_notice_count( $notice_type ) > 0 ) {

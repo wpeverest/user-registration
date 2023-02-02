@@ -296,9 +296,7 @@ class UR_Email_Confirmation {
 		delete_user_meta( $user_id, 'user_registration_pending_email' );
 		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
 
-		$redirect_url = ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
-		wp_safe_redirect( $redirect_url );
-		// wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) ); // Need to remove the comment.
+		wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
 		exit;
 	}
 

@@ -1270,17 +1270,24 @@
 																.message +
 															"</li>"
 													);
-
 													if (
 														undefined !==
 														response.data
 															.userEmailPendingMessage
 													) {
-														message.append(
-															"<li>" +
-																response.data
-																	.userEmailUpdateMessage +
-																"</li>"
+														form.show_message(
+															$(
+																'<ul class=""/>'
+															).append(
+																"<li>" +
+																	response
+																		.data
+																		.userEmailUpdateMessage +
+																	"</li>"
+															),
+															"info",
+															$this,
+															"0"
 														);
 
 														if (
@@ -1298,7 +1305,6 @@
 																)
 																.remove();
 														}
-
 														$(
 															response.data
 																.userEmailPendingMessage

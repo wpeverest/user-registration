@@ -193,7 +193,7 @@ jQuery(function ($) {
 	/**
 	 * Dismiss  a pending change of user email.
 	 */
-	$(document).on("click", "div.email-updated.inline a", function (e) {
+	$(document).on("click", "input#user_registration_user_email + div.email-updated.inline a", function (e) {
 		e.preventDefault();
 
 		var $this = $(this);
