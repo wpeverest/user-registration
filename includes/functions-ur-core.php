@@ -2050,7 +2050,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 			case 'file':
-				$files = explode( ',', $value );
+				$files = is_array( $value ) ? $value : explode( ',', $value );
 
 				if ( is_array( $files ) && isset( $files[0] ) ) {
 					$attachment_ids = '';
@@ -2696,12 +2696,17 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
 				break;
 			case 'file':
-				$attachment_ids = explode( ',', $field_value );
+				$attachment_ids = is_array( $field_value ) ? $field_value : explode( ',', $field_value );
 				$links          = array();
 
 				foreach ( $attachment_ids as $attachment_id ) {
-					$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
-					array_push( $links, $attachment_url );
+					if ( is_numeric( $attachment_id ) ) {
+						$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
+						array_push( $links, $attachment_url );
+					} else if ( ur_is_valid_url( $attachment_id ) ) {
+						$attachment_url = '<a href="' . $attachment_id . '">' . $attachment_id . '</a>';
+						array_push( $links, $attachment_url );
+					}
 				}
 
 				$field_value = implode( ', ', $links );
@@ -2948,6 +2953,28 @@ if ( ! function_exists( 'ur_get_json_file_contents' ) ) {
 			return json_decode( ur_file_get_contents( $file ), true );
 		}
 		return json_decode( ur_file_get_contents( $file ) );
+	}
+}
+
+if ( ! function_exists( 'ur_is_valid_url' ) ) {
+
+	/**
+	 * UR file get contents.
+	 *
+	 * @param mixed $url URL.
+	 */
+	function ur_is_valid_url( $url ) {
+		// Must start with http:// or https://.
+		if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+			return false;
+		}
+
+		// Must pass validation.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }
 

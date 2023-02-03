@@ -37,7 +37,7 @@ class UR_Admin_Form_Templates {
 	public static function get_template_data() {
 		$template_data = get_transient( 'ur_template_section_list' );
 
-		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
+		$template_url = 'https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/';
 
 		if ( false === $template_data ) {
 
