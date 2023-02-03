@@ -309,7 +309,7 @@ class UR_Emailer {
 			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
-		} elseif ( 'default' === $login_option || 'auto_login' === $login_option ) {
+		} elseif ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) {
 			$subject = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message = $settings->ur_get_successfully_registered_email();
@@ -656,8 +656,8 @@ class UR_Emailer {
 		}
 
 		foreach ( $values as $key => $value ) {
-			$value   = ur_format_field_values( $key, $value );
-			if( ! is_array( $value ) ) {
+			$value = ur_format_field_values( $key, $value );
+			if ( ! is_array( $value ) ) {
 				$content = str_replace( '{{' . $key . '}}', $value, $content );
 			}
 		}
