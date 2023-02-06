@@ -1275,6 +1275,9 @@
 														response.data
 															.userEmailPendingMessage
 													) {
+														$(
+															".user-registration-info.user-email-change-update-notice"
+														).remove();
 														form.show_message(
 															$(
 																'<ul class=""/>'
@@ -1285,7 +1288,7 @@
 																		.userEmailUpdateMessage +
 																	"</li>"
 															),
-															"info",
+															"info user-email-change-update-notice",
 															$this,
 															"0"
 														);
