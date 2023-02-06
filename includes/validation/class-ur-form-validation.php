@@ -41,6 +41,13 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	private $form_id = 0;
 
+	/**
+	 * Field Validations map.
+	 *
+	 * @var [array]
+	 */
+	private $field_validations;
+
 
 	/**
 	 * Class Constructor.
@@ -446,14 +453,10 @@ class UR_Form_Validation extends UR_Validation {
 		}
 	}
 
-
 	/**
-	 * Returns validation set for a field.
-	 *
-	 * @param string $field_key Field Key.
-	 * @return array
+	 * Set default validations for fields.
 	 */
-	public function get_field_validations( $field_key = '' ) {
+	public function set_fields_validations() {
 		$validations = array(
 			'user_email'     => array( 'is_email' ),
 			'email'          => array( 'is_email' ),
@@ -463,7 +466,23 @@ class UR_Form_Validation extends UR_Validation {
 			'number'         => array( 'is_numeric' ),
 		);
 
-		$validations = apply_filters( 'user_registration_field_validations', $validations );
+		$this->field_validations = apply_filters( 'user_registration_field_validations', $validations );
+	}
+
+
+	/**
+	 * Returns validation set for a field.
+	 *
+	 * @param string $field_key Field Key.
+	 * @return array
+	 */
+	public function get_field_validations( $field_key = '' ) {
+
+		if ( is_null( $this->field_validations ) ) {
+			$this->set_fields_validations();
+		}
+
+		$validations = $this->field_validations;
 
 		return isset( $validations[ $field_key ] ) ? $validations[ $field_key ] : array();
 	}
@@ -543,7 +562,8 @@ class UR_Form_Validation extends UR_Validation {
 
 
 	/**
-	 * Validate form data on update profile from My Account page.
+	 * Validate form data on update profile from My Account page
+	 * when submitted using AJAX submission.
 	 *
 	 * @param [array] $form_fields Form Field Settings.
 	 * @param [array] $form_data Form Data.
@@ -573,6 +593,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		$form_field_data = $this->get_form_field_data( $form_id );
 		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+		$form_key_list   = apply_filters( 'user_registration_form_key_list', $form_key_list );
 
 		// Triger validation method for user fields. Useful for custom fields validation.
 		$this->add_hook( $form_field_data, $form_data );
@@ -601,7 +622,10 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = isset( $field_setting['required'] ) ? $field_setting['required'] : 0;
+				$required = isset( $single_form_field->general_setting->required ) ?
+							'yes' === $single_form_field->general_setting->required :
+							false;
+
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required ) {
@@ -630,6 +654,7 @@ class UR_Form_Validation extends UR_Validation {
 		}
 	}
 
+
 	/**
 	 * Run all validations and checks defined in the validation() method of field class.
 	 *
@@ -657,6 +682,8 @@ class UR_Form_Validation extends UR_Validation {
 		}
 	}
 
+
+
 	/**
 	 * Returns settings for all form fields in proper array format.
 	 *
@@ -673,6 +700,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		return $form_field_data;
 	}
+
 
 
 	/**
@@ -695,24 +723,23 @@ class UR_Form_Validation extends UR_Validation {
 			$field_name = $field->general_setting->field_name;
 			$key        = 'user_registration_' . $field_name;
 
-			if ( isset( $_POST[ $key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				$field_obj             = new StdClass();
-				$field_obj->value      = $_POST[ $key ]; // phpcs:ignore
-				$field_obj->field_name = $field_name;
+			$field_obj             = new StdClass();
+			$field_obj->field_name = $field_name;
+			$field_obj->value      = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : ''; // phpcs:ignore
 
-				if ( isset( $field->field_key ) ) {
-					$field_obj->field_type = $field->field_key;
-				}
-
-				if ( isset( $field->general_setting->label ) ) {
-					$field_obj->label = $field->general_setting->label;
-				}
-
-				$fields[ $field_name ] = $field_obj;
+			if ( isset( $field->field_key ) ) {
+				$field_obj->field_type = $field->field_key;
 			}
+
+			if ( isset( $field->general_setting->label ) ) {
+				$field_obj->label = $field->general_setting->label;
+			}
+
+			$fields[ $field_name ] = $field_obj;
 		}
 		return $fields;
 	}
+
 
 
 	/**
@@ -726,13 +753,6 @@ class UR_Form_Validation extends UR_Validation {
 		$user_id = get_current_user_id();
 
 		// phpcs:disable WordPress.Security.NonceVerification
-
-		$form_fields_keys = array_keys( $form_fields );
-		$post_keys        = array_keys( $_POST );
-
-		if ( array_diff( $form_fields_keys, $post_keys ) ) {
-			ur_add_notice( 'Some fields are missing in the submitted form.', 'error' );
-		}
 
 		$form_field_data = $this->get_form_field_data( $form_id );
 		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
@@ -776,7 +796,7 @@ class UR_Form_Validation extends UR_Validation {
 						break;
 
 					default:
-						$_POST[ $key ] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+						$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 						break;
 				}
 
