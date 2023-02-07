@@ -498,16 +498,19 @@ jQuery(function ($) {
 	// Email Status
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
-		var status = $('#awaiting_admin_approval_email').val();
+		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var id = $(this).find('input[type="checkbox"]').attr('id');
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,
+			type: "POST",
 			data: {
-				type: "POST",
 				action: "user_registration_email_setting_status",
 				status: status,
+				id : id,
+				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
 			},
 			success: function (response) {
-					console.log('hello');
+					console.log(response);
 			},
 		});
 	});

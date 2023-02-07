@@ -364,6 +364,7 @@ class UR_Admin_Assets {
 				'user_registration_email_setting_status',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'user_registration_email_setting_status_nonce' => wp_create_nonce( 'email_setting_status_nonce' ),
 				)
 			);
 		}
