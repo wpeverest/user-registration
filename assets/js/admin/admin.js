@@ -510,7 +510,7 @@ jQuery(function ($) {
 				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
 			},
 			success: function (response) {
-					console.log(response);
+
 			},
 		});
 	});

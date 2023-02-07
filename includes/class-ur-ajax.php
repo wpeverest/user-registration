@@ -1416,9 +1416,9 @@ class UR_AJAX {
 			$value  = 'on' === $status ? 'yes' : 'no';
 			$key    = 'user_registration_enable_' . $id;
 			if ( update_option( $key, $value ) ) {
-				wp_send_json( 'Successfully Updated' );
+				wp_send_json_success( 'Successfully Updated' );
 			} else {
-				wp_send_json( 'Update failed !' );
+				wp_send_json_error( 'Update failed !' );
 			};
 
 		}

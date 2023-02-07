@@ -206,7 +206,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$label     = 'email_confirmation' === $email->id ? '<div class="ur-toggle-section"><span class="user-registration-toggle-form" ><input type="checkbox" name="email_status[' . $email->id . ']" value="yes"  checked disabled/><span class="slider round"></span></span></div>' : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . $email->id . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
+				$label     = 'email_confirmation' === $email->id ? '<div class="ur-toggle-section"><span class="user-registration-toggle-form" ><input type="checkbox" name="email_status[' . esc_attr( $email->id ) . ']" value="yes"  checked disabled/><span class="slider round"></span></span></div>' : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
 				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
 				$settings .= $label;
 				$settings .= '</label>';
