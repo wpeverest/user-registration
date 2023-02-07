@@ -65,6 +65,7 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
+			'email_setting_status'   => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1403,6 +1404,12 @@ class UR_AJAX {
 				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
 			)
 		);
+	}
+	/**
+	 * Email setting status
+	 */
+	public function email_setting_status() {
+		wp_send_json( 'dfsdf' );
 	}
 }
 

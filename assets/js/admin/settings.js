@@ -429,4 +429,21 @@
 				$(this).closest("label").addClass("selected");
 			});
 		});
+
+		$('.user-registration-email-status-toggle').on("change", function(e) {
+			email_status();
+
+		});
+		function email_status(val){
+			val = $('#awaiting_admin_approval_email').val();
+			$.ajax({
+				url:user_registration_settings_params.ajax_url,
+				method:'post',
+				data:{action: 'email_setting_status', 'id':'awaiting_admin_approval_email' ,'value':val },
+				success: function(res) {
+					 console.log(res);
+				}
+
+			})
+		}
 })(jQuery);
