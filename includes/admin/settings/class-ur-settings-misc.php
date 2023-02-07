@@ -72,9 +72,8 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 								),
 								array(
 									'title'    => __( 'Allow Usage Tracking', 'user-registration' ),
-									'desc'     => __( 'Tracking usage data enables us to optimize our support by identifying popular WordPress configurations, themes, and plugins. This allows us to focus our testing on areas that will benefit the most users.', 'user-registration' ),
-									'desc_tip'=> 'By gathering usage data, we can improve the support we provide to our users by gaining insight into which WordPress configurations, themes, and plugins are most commonly used. This knowledge allows us to focus our testing efforts on the areas that will have the greatest impact on our users\' experience.',
-									'id'       => 'user_registration_allow_usage_tracking',
+									'desc'     => __( ' Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/misc-settings/#2-toc-title" target="_blank">non-sensitive plugin data</a> with us.', 'user-registration' ),
+ 									'id'       => 'user_registration_allow_usage_tracking',
 									'type'     => 'checkbox',
  									'css'      => 'min-width: 350px;',
 									'default'  => 'no',

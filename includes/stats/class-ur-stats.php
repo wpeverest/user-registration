@@ -136,7 +136,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 		public function init_usage() {
 			if ( wp_doing_cron() ) {
-				add_action( 'user_registration_biweekly_scheduled_events', array( $this, 'process' ) );
+				add_action( 'user_registration_usage_stats_scheduled_events', array( $this, 'process' ) );
 			}
 		}
 
@@ -163,7 +163,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			// Make sure we do not run it more than once on each 15 days
 			if (
 				$last_send !== false &&
-				( time() - $last_send ) < ( DAY_IN_SECONDS * 15 )
+				( time() - $last_send ) < ( DAY_IN_SECONDS * 14 )
 			) {
 				return;
 			}
