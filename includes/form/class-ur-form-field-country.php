@@ -396,8 +396,8 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $field_label ) {
-					/* translators: %1$s - Field Label */
 					return sprintf(
+						/* translators: %1$s - Field Label */
 						__( 'Please choose a different country for %1$s.', 'user-registration' ),
 						"<strong>$field_label</strong>"
 					);
