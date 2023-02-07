@@ -86,7 +86,7 @@ $license_plan = ur_get_license_plan();
 						$upgrade_class = 'ur-template-select';
 
 					}
-					$fallback_image = untrailingslashit(plugin_dir_url(UR_PLUGIN_FILE)) . '/assets/images/templates/placeholder.png';
+					$fallback_image = untrailingslashit( plugin_dir_url( UR_PLUGIN_FILE ) ) . '/assets/images/templates/placeholder.png';
 
 					/* translators: %s: Template title */
 					$template_name = sprintf( esc_attr_x( '%s template', 'Template name', 'user-registration' ), esc_attr( $template->title ) );
