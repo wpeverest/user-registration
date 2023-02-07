@@ -131,7 +131,7 @@ class UR_Form_Validation extends UR_Validation {
 
 			foreach ( $missing_item as $key => $value ) {
 
-				$ignorable_field = array( 'user_pass', 'user_confirm_password', 'user_confirm_email', 'invite_code', 'stripe_gateway' );
+				$ignorable_field = array( 'user_pass', 'user_confirm_password', 'user_confirm_email', 'stripe_gateway' );
 
 				// Ignoring confirm password and confirm email field, since they are handled separately.
 				if ( ! in_array( $value, $ignorable_field, true ) ) {
