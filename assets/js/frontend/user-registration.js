@@ -1160,6 +1160,13 @@
 									return false;
 								}
 
+								var profile_picture_error = $this
+									.find(".user-registration-profile-picture-error")
+									.find(".user-registration-error").length;
+								if (1 === profile_picture_error) {
+									return false;
+								}
+
 								event.preventDefault();
 								$this
 									.find(".user-registration-submit-Button")

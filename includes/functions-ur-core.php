@@ -3058,3 +3058,80 @@ if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
 		return $tmp_root;
 	}
 }
+
+if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
+	/**
+	 * Upload Profile Picture
+	 *
+	 * @param [type] $valid_form_data
+	 * @param [type] $user_id
+	 */
+	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
+		$attachment_id = array();
+		$upload_dir   = wp_upload_dir();
+		$upload_path  = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
+
+		// Checks if the upload directory exists and create one if not.
+		if ( ! file_exists( $upload_path ) ) {
+			wp_mkdir_p( $upload_path );
+		}
+
+		$upload_file = $valid_form_data["profile_pic_url"]->value;
+
+		if ( ! is_numeric( $upload_file ) ) {
+			$upload = maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) ) {
+				$upload_path = $upload_path . '/';
+				$file_name = wp_unique_filename( $upload_path, $upload['file_name'] );
+				$file_path = $upload_path . sanitize_file_name( $file_name );
+
+				$moved = rename($upload['file_path'], $file_path);
+
+				if ( $moved ) {
+					$attachment_id= wp_insert_attachment(
+						array(
+							'guid'           => $file_path,
+							'post_mime_type' => $upload['file_extension'],
+							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+							'post_content'   => '',
+							'post_status'    => 'inherit',
+						),
+						$file_path
+					);
+
+					if ( ! is_wp_error( $attachment_id ) ) {
+						include_once ABSPATH . 'wp-admin/includes/image.php';
+
+						// Generate and save the attachment metas into the database.
+						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+					}
+
+				}
+			}
+		} else {
+			$attachment_id = $upload_file;
+		}
+		$attachment_id = ! empty( $attachment_id ) ? $attachment_id : '';
+		update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+	}
+}
+
+/**
+ * Check given string is valid url or not.
+ */
+if ( ! function_exists( 'ur_is_valid_url' ) ) {
+	function ur_is_valid_url( $url ) {
+
+		// Must start with http:// or https://.
+		if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+			return false;
+		}
+
+		// Must pass validation.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
+	}
+}

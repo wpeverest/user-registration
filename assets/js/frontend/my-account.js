@@ -64,10 +64,11 @@ jQuery(function ($) {
 						// Gets the profile picture url and displays the picture on frontend
 						profile_pic_url = response_obj.data.url;
 						attachment_id = response_obj.data.attachment_id;
+						upload_files = response_obj.data.upload_files;
 						$this
 							.closest(".button-group")
 							.find("#profile_pic_url")
-							.val(attachment_id);
+							.val(upload_files);
 						$this
 							.closest(".user-registration-profile-header")
 							.find(".profile-preview")
@@ -128,59 +129,60 @@ jQuery(function ($) {
 			);
 		},
 		remove_avatar: function ($node) {
-			var url =
-				user_registration_params.ajax_url +
-				"?action=user_registration_profile_pic_remove&security=" +
-				user_registration_params.user_registration_profile_picture_remove_nonce;
+			var attachment_id = $node.data("attachment-id");
+			if (
+				$node.closest("form").find(".ur_removed_profile_pic").length <=
+				0
+			) {
+				var ur_removed_profile_pic = document.createElement("input");
+				ur_removed_profile_pic.setAttribute("type", "hidden");
+				ur_removed_profile_pic.setAttribute(
+					"class",
+					"ur_removed_profile_pic"
+				);
+				ur_removed_profile_pic.setAttribute(
+					"name",
+					"ur_removed_profile_pic"
+				);
+				ur_removed_profile_pic.setAttribute("value", "");
+				$node.closest("form").append(ur_removed_profile_pic);
+			}
 
-			$.ajax({
-				url: url,
-				type: "POST",
-				data: {
-					attachment_id: $node.data("attachment-id"),
-				},
-				success: function (response) {
-					if (response.success) {
-						var input_file = $node
-							.closest("form")
-							.find('input[name="profile-pic"]');
-						input_hidden = $node
-							.closest("form")
-							.find('input[name="profile-pic-url"]');
-						profile_default_input_hidden = $node
-							.closest("form")
-							.find('input[name="profile-default-image"]');
-						preview = $node
-							.closest("form")
-							.find("img.profile-preview");
+			var el_value = $node
+				.closest("form")
+				.find(".ur_removed_profile_pic")
+				.val();
+			var ur_removed_pic = new Set(
+				!!el_value ? JSON.parse(el_value) : []
+			);
+			ur_removed_pic.add(attachment_id);
+			$node
+				.closest("form")
+				.find(".ur_removed_profile_pic")
+				.val(JSON.stringify(Array.from(ur_removed_pic)));
 
-						input_hidden.val("");
-						preview.attr("src", profile_default_input_hidden.val());
-						$node.hide();
+			var input_file = $node
+				.closest("form")
+				.find('input[name="profile-pic"]');
+			input_hidden = $node
+				.closest("form")
+				.find('input[name="profile-pic-url"]');
+			profile_default_input_hidden = $node
+				.closest("form")
+				.find('input[name="profile-default-image"]');
+			preview = $node.closest("form").find("img.profile-preview");
 
-						// Check if ajax submission on edit profile is enabled.
-						if (
-							"yes" ===
-							user_registration_params.ajax_submission_on_edit_profile
-						) {
-							$node
-								.closest(".button-group")
-								.find(
-									".user_registration_profile_picture_upload"
-								)
-								.show();
-							$node
-								.closest(".user-registration-profile-header")
-								.find(
-									".user-registration-profile-picture-error"
-								)
-								.remove();
-						} else {
-							input_file.val("").show();
-						}
-					}
-				},
-			});
+			input_hidden.val("");
+			preview.attr("src", profile_default_input_hidden.val());
+			$node.hide();
+			$node
+				.closest(".button-group")
+				.find(".user_registration_profile_picture_upload")
+				.show();
+			$node
+				.closest(".user-registration-profile-header")
+				.find(".user-registration-profile-picture-error")
+				.remove();
 		},
 	};
 
@@ -190,44 +192,52 @@ jQuery(function ($) {
 		user_registration_profile_picture_upload.remove_avatar($(this));
 	});
 
+	$(document).bind(
+		"user_registration_frontend_before_edit_profile_submit",
+		function (e, data, form) {
+			var files = $(".ur_removed_profile_pic");
+			$.each(files, function () {
+				data["ur_removed_profile_pic"] = $(this).val();
+			});
+		}
+	);
+
 	// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 	if (
 		!$(".ur-frontend-form")
 			.find(".user-registration-profile-header")
 			.find(".uraf-profile-picture-upload").length
 	) {
-		if (
-			$(".ur-frontend-form")
-				.find("form.edit-profile")
-				.hasClass("user-registration-EditProfileForm") &&
-			"yes" === user_registration_params.ajax_submission_on_edit_profile
-		) {
-			user_registration_profile_picture_upload.init();
-		} else {
-			$(".edit-profile").on("submit", function (evt) {
-				var $el = $(".ur-smart-phone-field");
+		user_registration_profile_picture_upload.init();
+		$(".edit-profile").on("submit", function (evt) {
+			var $el = $(".ur-smart-phone-field");
 
-				if ("true" === $el.attr("aria-invalid")) {
-					evt.preventDefault();
-					var wrapper = $el.closest("p.form-row");
-					wrapper.find("#" + $el.data("id") + "-error").remove();
-					var phone_error_msg_dom =
-						'<label id="' +
-						$el.data("id") +
-						"-error" +
-						'" class="user-registration-error" for="' +
-						$el.data("id") +
-						'">' +
-						user_registration_params.message_validate_phone_number +
-						"</label>";
-					wrapper.append(phone_error_msg_dom);
-					wrapper
-						.find("#" + $el.data("id"))
-						.attr("aria-invalid", true);
-					return true;
-				}
-			});
-		}
+			if ("true" === $el.attr("aria-invalid")) {
+				evt.preventDefault();
+				var wrapper = $el.closest("p.form-row");
+				wrapper.find("#" + $el.data("id") + "-error").remove();
+				var phone_error_msg_dom =
+					'<label id="' +
+					$el.data("id") +
+					"-error" +
+					'" class="user-registration-error" for="' +
+					$el.data("id") +
+					'">' +
+					user_registration_params.message_validate_phone_number +
+					"</label>";
+				wrapper.append(phone_error_msg_dom);
+				wrapper.find("#" + $el.data("id")).attr("aria-invalid", true);
+				return true;
+			}
+
+			var profile_picture_error = $(this)
+				.find(".user-registration-profile-picture-error")
+				.find(".user-registration-error").length;
+			if (1 === profile_picture_error) {
+				evt.preventDefault();
+				return true;
+			}
+		});
 	}
 
 	// Fix - Date field is required error even when the "value" attribute is present in Chrome.
