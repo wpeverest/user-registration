@@ -494,6 +494,23 @@ jQuery(function ($) {
 			},
 		});
 	});
+
+	// Email Status
+	$(".user-registration-email-status-toggle").on("change", function (e) {
+		e.preventDefault();
+		var status = $('#awaiting_admin_approval_email').val();
+		$.ajax({
+			url: user_registration_email_setting_status.ajax_url,
+			data: {
+				type: "POST",
+				action: "user_registration_email_setting_status",
+				status: status,
+			},
+			success: function (response) {
+					console.log('hello');
+			},
+		});
+	});
 });
 
 (function ($, user_registration_admin_data) {

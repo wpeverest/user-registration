@@ -357,6 +357,17 @@ class UR_Admin_Assets {
 			);
 		}
 
+		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
+		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
+			wp_localize_script(
+				'user-registration-admin',
+				'user_registration_email_setting_status',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+				)
+			);
+		}
+
 		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION, false );
 		wp_enqueue_script( 'ur-live-user-notice' );
 	}
