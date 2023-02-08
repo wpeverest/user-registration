@@ -27,16 +27,29 @@
    background-color: #E5E5E5;
  }
 
+ .user-registration-welcome {
+	background-color: #E5E5E5;
+ }
+
 #user-registration-welcome {
-	.user-registration-welcome-card,
-	.user-registration-extensions-card,
-	.user-registration-support-card {
+	padding: 10px 48px 43px;
+
+	> img {
+		position: absolute;
+		top: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-radius: 50%;
+	}
+
+	.user-registration-welcome-card {
 		max-width: 760px;
-		border-radius: 4px;
+		border-radius: 15px;
 		margin: 3rem auto;
 		background: $white;
 		border: 1px solid $white;
 		box-shadow: 0 2px 10px transparentize($gray_base, 0.9);
+		padding: 70px 48px 43px;
 	}
 
 	a.button {
@@ -75,10 +88,6 @@
 		h3 {
 			font-weight: 400;
 		}
-	}
-
-	a.button:hover {
-		filter: brightness(0.85);
 	}
 
 	p {
@@ -326,23 +335,27 @@
 }
 
 #user-registration-setup-wizard {
-	margin: 24px 200px;
+	margin: 10px 200px;
 	min-width: 980px;
 	border-radius: 4px;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	flex-wrap: wrap;
+	align-content: center;
 
 	.user-registration-setup-wizard {
 		&__header {
 			flex: 0 0 25%;
 			margin-bottom: 25px;
+			display: flex;
+			flex-direction: column;
+			gap: 70px;
 
 			&--logo {
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				margin-bottom: 100px;
 
 				h1 {
 					font-size: 24px;
@@ -351,7 +364,7 @@
 					margin-left: 20px;
 				}
 				img {
-					width: 50px;
+					width: 70px;
 				}
 			}
 
@@ -411,11 +424,16 @@
 			flex: 0 0 50%;
 			padding: 30px 48px;
 			background-color: $white;
-			border-radius: 4px;
+			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;
+			width: 796px;
 
 			&--select {
 				flex: 1 0 60%;
+
+				input {
+					border: none;
+				}
 			}
 
 			.chakra-checkbox__control {
@@ -435,8 +453,13 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
-			background-color: $white;
-			padding: 20px 40px;
+			align-items: flex-end;
+			gap: 26px;
+			background-color: #FAFAFA;
+			padding: 24px 32px;
+			border: 1px solid #E1E1E1;
+			border-radius: 0px 0px 13px 13px;
+			width: 796px;
 
 			&--left,
 			&--right {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	Flex,
 	Switch,
@@ -10,6 +10,7 @@ import {
 	useRadioGroup,
 	HStack,
 	Image,
+	Icon,
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
@@ -57,24 +58,29 @@ function InputHandler({ setting, onBoardIconsURL }) {
 	};
 
 	const RadioCard = (props) => {
-		const { radioProps, label, identifier } = props;
+		const { radioProps, label, identifier, color, backgroundColor } = props;
 		const { state, getInputProps, getCheckboxProps } = useRadio(radioProps);
 
 		const input = getInputProps();
 		const checkbox = getCheckboxProps();
 		return (
-			<Box as="label" marginLeft="0px !important">
+			<Box as="label" marginLeft="0px !important" marginBottom="0px">
 				<input {...input} />
 				<Box
 					{...checkbox}
 					cursor="pointer"
 					borderWidth="1px"
-					borderRadius="md"
+					borderRadius="7px"
 					boxShadow="md"
+					borderColor={
+						setting.id ===
+						"user_registration_form_setting_minimum_password_strength"
+							? "#6B6B6B"
+							: "#E9E9E9"
+					}
 					_checked={{
-						bg: "#F5F7FF",
-						color: "#475BB2",
-						borderColor: "#475BB2",
+						bg: backgroundColor,
+						borderColor: color,
 					}}
 					_focus={{
 						boxShadow: "outline",
@@ -94,9 +100,9 @@ function InputHandler({ setting, onBoardIconsURL }) {
 								src={`${onBoardIconsURL}/${identifier}.png`}
 							/>
 							<Text
-								fontSize="14px"
-								fontWeight="500"
-								color={state.isChecked && "#475BB2"}
+								fontSize="12px"
+								fontWeight="600"
+								color={state.isChecked && color}
 								mt={2}
 							>
 								{label}
@@ -104,9 +110,16 @@ function InputHandler({ setting, onBoardIconsURL }) {
 						</Flex>
 					) : (
 						<Text
-							fontSize="18px"
-							fontWeight="500"
-							color={state.isChecked && "#475BB2"}
+							fontSize="14px"
+							fontWeight="600"
+							color={
+								state.isChecked
+									? color
+									: setting.id ===
+									  "user_registration_form_setting_minimum_password_strength"
+									? "#6B6B6B"
+									: "#212121"
+							}
 						>
 							{label}
 						</Text>
@@ -144,6 +157,19 @@ function InputHandler({ setting, onBoardIconsURL }) {
 		});
 	};
 
+	const CarretDownIcon = (props) => (
+		<Icon viewBox="0 0 24 24" {...props}>
+			<path
+				fill="#6B6B6B"
+				stroke="#6B6B6B"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="m6 9 6 6 6-6H6Z"
+			/>
+		</Icon>
+	);
+
 	const renderElement = () => {
 		switch (setting.type) {
 			case "checkbox":
@@ -163,6 +189,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 			case "select":
 				return (
 					<Select
+						icon={<CarretDownIcon />}
 						flex={"0 0 60%"}
 						focusBorderColor="blue.500"
 						className="user-registration-setup-wizard__body--select"
@@ -173,6 +200,8 @@ function InputHandler({ setting, onBoardIconsURL }) {
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultValue={renderOptions()[renderOptions().default]}
+						placeholder="medium size"
+						variant="outline"
 					/>
 				);
 			case "multiselect":
@@ -182,6 +211,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 				});
 				return (
 					<Select
+						icon={<CarretDownIcon />}
 						flex={"0 0 60%"}
 						isMulti
 						focusBorderColor="blue.500"
@@ -202,6 +232,21 @@ function InputHandler({ setting, onBoardIconsURL }) {
 						Object.entries(obj).map((a) => a.reverse())
 					);
 
+				var color = {
+					activeBackgroundColor: "#F9FAFC",
+					activeFontColor: "#475BB2",
+				};
+				if (
+					setting.id ===
+						"user_registration_form_setting_minimum_password_strength" &&
+					setting.default == 3 &&
+					!setting.color
+				) {
+					setting["color"] = {
+						activeBackgroundColor: "#F5FFF4",
+						activeFontColor: "#4CC741",
+					};
+				}
 				const { getRootProps, getRadioProps } = useRadioGroup({
 					name: setting.id,
 					defaultValue: settings[setting.id]
@@ -210,9 +255,30 @@ function InputHandler({ setting, onBoardIconsURL }) {
 						  ]
 						: setting.default.toString(),
 					onChange: (data) => {
+						if (
+							setting.id ===
+							"user_registration_form_setting_minimum_password_strength"
+						) {
+							if (data == 0) {
+								color.activeBackgroundColor = "#FFF4F4";
+								color.activeFontColor = "#F25656";
+							} else if (data == 1) {
+								color.activeBackgroundColor = "#FFFAF5";
+								color.activeFontColor = "#EE9936";
+							} else if (data == 2) {
+								color.activeBackgroundColor = "#FFFCF1";
+								color.activeFontColor = "#FFC700";
+							} else {
+								color.activeBackgroundColor = "#F5FFF4";
+								color.activeFontColor = "#4CC741";
+							}
+						}
+						setting.color = color;
+
 						handleInputChange(setting.type, setting.id, data);
 					},
 				});
+
 				const group = getRootProps();
 
 				return (
@@ -230,6 +296,19 @@ function InputHandler({ setting, onBoardIconsURL }) {
 									})}
 									label={setting.options[value]}
 									identifier={value}
+									color={
+										setting.color &&
+										setting.color.activeFontColor
+											? setting.color.activeFontColor
+											: "#475BB2"
+									}
+									backgroundColor={
+										setting.color &&
+										setting.color.activeBackgroundColor
+											? setting.color
+													.activeBackgroundColor
+											: "#F9FAFC"
+									}
 								/>
 							);
 						})}
@@ -240,11 +319,23 @@ function InputHandler({ setting, onBoardIconsURL }) {
 	return (
 		<Flex justify={"space-between"} align="center">
 			<Flex align="center" flex="0 0 40%">
-				<FormLabel sx={{ fontWeight: "bold", fontSize: "18px" }}>
+				<FormLabel sx={{ fontWeight: "600", fontSize: "15px" }}>
 					{setting.title}
 				</FormLabel>
-				<Tooltip label={setting.desc} hasArrow fontSize="xs">
-					<span className="dashicons dashicons-editor-help" />
+				<Tooltip
+					label={setting.desc}
+					hasArrow
+					fontSize="14px"
+					fontWeight="400px"
+					backgroundColor="#383838"
+				>
+					<span
+						className="dashicons dashicons-editor-help"
+						style={{
+							color: "#BABABA",
+							marginBottom: "5px",
+						}}
+					/>
 				</Tooltip>
 			</Flex>
 			{renderElement()}

@@ -150,10 +150,10 @@ class UR_Admin_Welcome {
 				} else {
 					?>
 					<div id="user-registration-welcome" >
+						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
 						<div class="user-registration-welcome-card" >
 							<div class="user-registration-welcome-container">
 								<div class="user-registration-welcome-container__header">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
 									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
@@ -175,32 +175,6 @@ class UR_Admin_Welcome {
 							<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
 							</svg></p>
 						</a>
-						<div class="user-registration-extensions-card" >
-							<div class="user-registration-extensions-container__header">
-								<h2><?php esc_html_e( 'Check Our Awesome Extensions', 'user-registration' ); ?></h2>
-							</div>
-							<div class="user-registration-extensions-container__body">
-								<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-extensions.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
-							</div>
-							<div class="user-registration-extensions-container__footer">
-								<a href=<?php echo esc_url( admin_url( 'admin.php' ) . '?page=user-registration-addons' ); ?> class="button button-secondary" target="blank">
-									<h3><?php esc_html_e( 'See All Extensions', 'user-registration' ); ?></h3>
-								</a>
-							</div>
-						</div>
-						<div class="user-registration-support-card" >
-							<div class="user-registration-support-container__header">
-								<h2><?php echo wp_kses_post( 'Feeling Lost? </br> Contact Our Support Team', 'user-registration' ); ?></h2>
-							</div>
-							<div class="user-registration-support-container__body">
-								<p>Feel free to get in touch with one of our sales representative if you have any queries related to our product.</p>
-							</div>
-							<div class="user-registration-support-container__footer">
-								<a href=<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?> class="button button-secondary" target="blank">
-									<h3><?php esc_html_e( 'Contact support', 'user-registration' ); ?></h3>
-								</a>
-							</div>
-						</div>
 					</div>
 					<?php
 				}

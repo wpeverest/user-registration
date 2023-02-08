@@ -300,7 +300,7 @@ function App() {
 			<div className="user-registration-setup-wizard__body">
 				{steps[steps.length - 1].key === activeStep.key ? (
 					cloneElement(activeStep.component, {
-						sectionSettings: activeStep.sectionSettings,
+						sectionSettings: activeStep.sectionSettings && {},
 						siteURL: siteURL,
 						onBoardIconsURL: onBoardIconsURL,
 					})
@@ -311,12 +311,19 @@ function App() {
 						alignItems="left"
 					>
 						{activeStep.title && (
-							<Heading as="h2" size="lg" fontSize="24px" mb={4}>
+							<Heading
+								as="h2"
+								size="lg"
+								fontSize="22px"
+								mb={4}
+								color="#383838"
+								fontWeight="600"
+							>
 								{activeStep.title}
 							</Heading>
 						)}
 						{activeStep.description && (
-							<Text fontSize="16px" as="i">
+							<Text fontSize="16px" as="i" color="#6B6B6B">
 								{activeStep.description}
 							</Text>
 						)}
@@ -334,8 +341,12 @@ function App() {
 					steps[0].key !== activeStep.key ? (
 						<Button
 							variant="outline"
-							colorScheme="blue"
 							onClick={handleBack}
+							style={{
+								backgroundColor: "#FAFAFA",
+								color: "#6B6B6B",
+								border: "1px solid #999999",
+							}}
 						>
 							{__("Back", "user-registration")}
 						</Button>
@@ -384,7 +395,8 @@ function App() {
 									ml={10}
 									fontStyle="italic"
 									textDecoration="underline"
-									size="sm"
+									fontSize="14px"
+									fontWeight="400"
 								>
 									{__("Skip this step", "user-registration")}
 								</Button>
@@ -423,7 +435,7 @@ function App() {
 				<Link href={`${adminURL}/admin.php?page=user-registration`}>
 					<Button
 						variant="link"
-						colorScheme="gray"
+						color="#6B6B6B"
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
@@ -436,7 +448,10 @@ function App() {
 						pt="6"
 						fontStyle="italic"
 						textDecoration="underline"
-						size="sm"
+						fontSize="16px"
+						fontWeight="400"
+						gap="10px"
+						className="button-tertiary"
 					>
 						{__("Go to dashboard", "user-registration")}
 						<svg
@@ -446,6 +461,7 @@ function App() {
 							fill="currentColor"
 							class="bi bi-arrow-right"
 							viewBox="0 0 16 16"
+							marginLeft="100px"
 						>
 							<path
 								fill-rule="evenodd"
