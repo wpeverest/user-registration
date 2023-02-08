@@ -229,7 +229,7 @@ function App() {
 				});
 
 				new Promise(function (resolve, reject) {
-					setTimeout(resolve, 5000);
+					setTimeout(resolve, 8500);
 				}).then(function () {
 					newInstallPageRef.registration_page.status = "installed";
 					newInstallPageRef.my_account_page.status = "installing";
@@ -242,7 +242,7 @@ function App() {
 					});
 
 					new Promise(function (resolve, reject) {
-						setTimeout(resolve, 5000);
+						setTimeout(resolve, 8500);
 					}).then(function () {
 						newInstallPageRef.my_account_page.status = "installed";
 
@@ -337,8 +337,24 @@ function App() {
 			</div>
 			<div className="user-registration-setup-wizard__footer">
 				<div className="user-registration-setup-wizard__footer--left">
-					{steps[steps.length - 1].key === activeStep.key ||
-					steps[0].key !== activeStep.key ? (
+					{steps[steps.length - 1].key === activeStep.key ? (
+						<Button
+							variant="outline"
+							colorScheme="gray"
+							onClick={() => {
+								setDisabledLink(true);
+								handleSaveSettings(defaultFormURL);
+							}}
+							disabled={disabledLink}
+							style={{
+								backgroundColor: "#FAFAFA",
+								color: "#6B6B6B",
+								border: "1px solid #999999",
+							}}
+						>
+							{__("Edit Default Form", "user-registration")}
+						</Button>
+					) : steps[0].key !== activeStep.key ? (
 						<Button
 							variant="outline"
 							onClick={handleBack}
@@ -356,34 +372,18 @@ function App() {
 				</div>
 				<div className="user-registration-setup-wizard__footer--right">
 					{steps[steps.length - 1].key === activeStep.key ? (
-						<React.Fragment>
-							<Button
-								variant="link"
-								colorScheme="gray"
-								onClick={() => {
-									setDisabledLink(true);
-									handleSaveSettings(defaultFormURL);
-								}}
-								mr={10}
-								ml={10}
-								fontStyle="italic"
-								textDecoration="underline"
-								size="sm"
-								disabled={disabledLink}
-							>
-								{__("Edit Default Form", "user-registration")}
-							</Button>
-							<Button
-								colorScheme="blue"
-								onClick={() => {
-									setDisabledLink(true);
-									handleSaveSettings(newFormURL);
-								}}
-								disabled={disabledLink}
-							>
-								{__("Create New Form", "user-registration")}
-							</Button>
-						</React.Fragment>
+						<Button
+							colorScheme="blue"
+							backgroundColor="#475BB2 !important"
+							color="#FAFAFA !important"
+							onClick={() => {
+								setDisabledLink(true);
+								handleSaveSettings(newFormURL);
+							}}
+							disabled={disabledLink}
+						>
+							{__("Create New Form", "user-registration")}
+						</Button>
 					) : (
 						<React.Fragment>
 							{steps[0].key !== activeStep.key && (
@@ -397,6 +397,9 @@ function App() {
 									textDecoration="underline"
 									fontSize="14px"
 									fontWeight="400"
+									background="none !important"
+									color="#6B6B6B !important"
+									border="none !important"
 								>
 									{__("Skip this step", "user-registration")}
 								</Button>
@@ -406,7 +409,8 @@ function App() {
 								"installed" ? (
 								<Button
 									variant="solid"
-									colorScheme="blue"
+									backgroundColor="#475BB2 !important"
+									color="#FAFAFA !important"
 									disabled={initiateInstall}
 									onClick={handleInstallPages}
 								>
@@ -418,6 +422,8 @@ function App() {
 							) : (
 								<Button
 									colorScheme="blue"
+									backgroundColor="#475BB2 !important"
+									color="#FAFAFA !important"
 									disabled={
 										steps[steps.length - 1].key ===
 										activeStep.key
@@ -435,7 +441,6 @@ function App() {
 				<Link href={`${adminURL}/admin.php?page=user-registration`}>
 					<Button
 						variant="link"
-						color="#6B6B6B"
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
@@ -452,6 +457,9 @@ function App() {
 						fontWeight="400"
 						gap="10px"
 						className="button-tertiary"
+						background="none !important"
+						color="#6B6B6B !important"
+						border="none !important"
 					>
 						{__("Go to dashboard", "user-registration")}
 						<svg
