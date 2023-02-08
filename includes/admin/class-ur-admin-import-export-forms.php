@@ -51,44 +51,46 @@ class UR_Admin_Import_Export_Forms {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		$form_id = isset( $_POST['formid'] ) ? absint( $_POST['formid'] ) : 0;
-
+		$form_ids = isset( $_POST['formid'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['formid'] ) ) : array();
 		// Return if form id is not set and current user doesnot have export capability.
-		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
+		if ( empty( $form_ids ) || ! current_user_can( 'export' ) ) {
 			return;
 		}
+		$export_all_forms = array();
+		foreach ( $form_ids as $key => $form_id ) {
+			$form_id         = absint( wp_unslash( $form_id ) );
+			$form_post       = get_post( $form_id );
+			$meta_key_prefix = 'user_registration';
+			$form_post_meta  = $this->get_post_meta_by_prefix( $form_id, $meta_key_prefix );
 
-		$form_post       = get_post( $form_id );
-		$meta_key_prefix = 'user_registration';
-		$form_post_meta  = $this->get_post_meta_by_prefix( $form_id, $meta_key_prefix );
+			$form_post->post_content = str_replace( '\\', '\\\\', $form_post->post_content );
 
-		$form_post->post_content = str_replace( '\\', '\\\\', $form_post->post_content );
+			$export_data = array(
+				'form_post'      => array(
+					'post_content' => $form_post->post_content,
+					'post_title'   => $form_post->post_title,
+					'post_name'    => $form_post->post_name,
+					'post_type'    => $form_post->post_type,
+					'post_status'  => $form_post->post_status,
+				),
+				'form_post_meta' => (array) $form_post_meta,
+			);
+			$form_name   = strtolower( str_replace( ' ', '-', get_the_title( $form_id ) ) );
+			$file_name   = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
 
-		$export_data = array(
-			'form_post'      => array(
-				'post_content' => $form_post->post_content,
-				'post_title'   => $form_post->post_title,
-				'post_name'    => $form_post->post_name,
-				'post_type'    => $form_post->post_type,
-				'post_status'  => $form_post->post_status,
-			),
-			'form_post_meta' => (array) $form_post_meta,
-		);
-
-		$form_name = strtolower( str_replace( ' ', '-', get_the_title( $form_id ) ) );
-		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
-
-		if ( ob_get_contents() ) {
-			ob_clean();
+			if ( ob_get_contents() ) {
+				ob_clean();
+			}
+			$export_all_forms[] = $export_data;
 		}
-
+		$forms['forms'] = $export_all_forms;
 		// Force download.
 		header( 'Content-Type: application/force-download' );
 
 		// Disposition / Encoding on response body.
 		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
 		header( 'Content-type: application/json' );
-		echo wp_json_encode( $export_data );
+		echo wp_json_encode( $forms );
 		exit();
 	}
 
@@ -135,51 +137,59 @@ class UR_Admin_Import_Export_Forms {
 
 			// Check for file format.
 			if ( 'json' === $ext ) {
-
+				$post_ids = array();
 				// read json file.
-				$form_data = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) ); // @codingStandardsIgnoreLine
+				$form_datas = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) ); // @codingStandardsIgnoreLine
 				// check for non empty json file.
-				if ( ! empty( $form_data ) ) {
+				if ( ! empty( $form_datas ) ) {
 
 					// check for non empty post data array.
-					if ( ! empty( $form_data->form_post ) ) {
-
+					if ( ! empty( $form_datas->forms ) ) {
 						// If Form Title already exist concat it with imported tag.
-						$args  = array( 'post_type' => 'user_registration' );
-						$forms = get_posts( $args );
-						foreach ( $forms as $key => $form_obj ) {
-							if ( $form_data->form_post->post_title === $form_obj->post_title ) {
-								$form_data->form_post->post_title = $form_data->form_post->post_title . ' (Imported)';
-								break;
-							}
-						}
-
-						$post_id = wp_insert_post( $form_data->form_post );
-
-						// Check for any error while inserting.
-						if ( is_wp_error( $post_id ) ) {
-							return $post_id;
-						}
-						if ( $post_id ) {
-
-							// check for non empty post_meta array.
-							if ( ! empty( $form_data->form_post_meta ) ) {
-								$all_roles = ur_get_default_admin_roles();
-
-								foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
-
-									// If user role does not exists in new site then set default as subscriber.
-									if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
-										$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
-									}
-									add_post_meta( $post_id, $meta_key, $meta_value );
+						foreach ( $form_datas->forms as $key => $form_data ) {
+							$args  = array( 'post_type' => 'user_registration' );
+							$forms = get_posts( $args );
+							foreach ( $forms as $key => $form_obj ) {
+								if ( $form_data->form_post->post_title === $form_obj->post_title ) {
+									$form_data->form_post->post_title = $form_data->form_post->post_title . ' (Imported)';
+									break;
 								}
-								wp_send_json_success(
-									array(
-										'message' => sprintf( "%s <a href='%s'>%s</a>", esc_html__( 'Imported Successfully.', 'user-registration' ), esc_url( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id ) ), esc_html__( 'View Form', 'user-registration' ) ),
-									)
-								);
 							}
+							$post_id = wp_insert_post( $form_data->form_post );
+							// Check for any error while inserting.
+							if ( is_wp_error( $post_id ) ) {
+								return $post_id;
+							}
+							array_push( $post_ids, $post_id );
+							if ( $post_id ) {
+
+								// check for non empty post_meta array.
+								if ( ! empty( $form_data->form_post_meta ) ) {
+									$all_roles = ur_get_default_admin_roles();
+
+									foreach ( $form_data->form_post_meta  as $meta_key => $meta_value ) {
+
+										// If user role does not exists in new site then set default as subscriber.
+										if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
+											$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
+										}
+										add_post_meta( $post_id, $meta_key, $meta_value );
+									}
+								}
+							}
+						}
+						if ( 1 === count( $post_ids ) ) {
+							wp_send_json_success(
+								array(
+									'message' => sprintf( "%s <a href='%s'>%s</a>", esc_html__( 'Imported Successfully.', 'user-registration' ), esc_url( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $post_id ) ), esc_html__( 'View Form', 'user-registration' ) ),
+								)
+							);
+						} else {
+							wp_send_json_success(
+								array(
+									'message' => __( 'Imported Successfully.', 'user-registration' ),
+								)
+							);
 						}
 					} else {
 						wp_send_json_error(
