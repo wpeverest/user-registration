@@ -395,9 +395,9 @@
 						display: inline-block;
 						vertical-align: middle;
 						background-color: #E5E5E5;
-						width: 13px;
-						height: 13px;
-						border: solid 3px #BFBFBF;
+						width: 14px;
+						height: 14px;
+						border: solid 4px #BFBFBF;
 						border-radius: 50%;
 						position: absolute;
 						top: -6px;
@@ -407,7 +407,6 @@
 
 				.done,
 				.active {
-					background-color: #475BB2;
 
 					p.step-identifier {
 						border-color: #475BB2 ;
@@ -415,6 +414,22 @@
 
 					.step-label {
 						color: #475BB2;
+					}
+				}
+
+				.done {
+					background-color: #475BB2;
+				}
+
+				.active:not(#step-6) {
+					background: linear-gradient(to right, #475BB2 50%, #bfbfbf 50%);
+				}
+
+				.active {
+					background-color: #475BB2;
+
+					p.step-identifier {
+						border: 3px solid #475BB2 ;
 					}
 				}
 			}
@@ -433,6 +448,10 @@
 
 				input {
 					border: none;
+				}
+
+				span.css-1f1glkn {
+					height: 29px;
 				}
 			}
 
@@ -454,7 +473,6 @@
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: flex-end;
-			gap: 26px;
 			background-color: #FAFAFA;
 			padding: 24px 32px;
 			border: 1px solid #E1E1E1;
