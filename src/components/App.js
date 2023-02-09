@@ -20,7 +20,6 @@ import * as Promise from "promise";
  */
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
-import LoginSettings from "./screens/LoginSettings";
 import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
 import MyAccountSettings from "./screens/MyAccountSettings";
@@ -77,17 +76,6 @@ function App() {
 			),
 			isDone: false,
 			component: <RegistrationSettings />,
-		},
-		{
-			key: "login_settings",
-			label: __("Login", "user-registration"),
-			title: __("Login Settings", "user-registration"),
-			description: __(
-				"Customize your login settings as per your preference.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <LoginSettings />,
 		},
 		{
 			key: "my_account_settings",
