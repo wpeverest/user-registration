@@ -1408,7 +1408,7 @@ class UR_AJAX {
 	/**
 	 * Email setting status
 	 */
-	public function email_setting_status() {
+	public static function email_setting_status() {
 
 		if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_key( $_POST['security'] ), 'email_setting_status_nonce' ) ) {
 			$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
