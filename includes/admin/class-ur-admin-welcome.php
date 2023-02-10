@@ -160,7 +160,6 @@ class UR_Admin_Welcome {
 								</div>
 								<div class="user-registration-welcome-video">
 									<a class="welcome-video-play">
-										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-feature.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
 										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play">
 											<span class="dashicons dashicons-controls-play"></span>
 										</button>
@@ -168,7 +167,7 @@ class UR_Admin_Welcome {
 								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
-											<h3><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
+										<h3 style="font-size: 18px; margin: 0px;"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
 									</a>
 								</div>
 							</div>
