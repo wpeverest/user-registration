@@ -23,10 +23,11 @@ class UR_Shortcodes {
 	 */
 	public static function init() {
 		$shortcodes = array(
-			'user_registration_form'         => __CLASS__ . '::form', // change it to user_registration_form.
-			'user_registration_my_account'   => __CLASS__ . '::my_account',
-			'user_registration_login'        => __class__ . '::login',
-			'user_registration_edit_profile' => __class__ . '::edit_profile',
+			'user_registration_form'          => __CLASS__ . '::form', // change it to user_registration_form.
+			'user_registration_my_account'    => __CLASS__ . '::my_account',
+			'user_registration_login'         => __class__ . '::login',
+			'user_registration_edit_profile'  => __class__ . '::edit_profile',
+			'user_registration_edit_password' => __class__ . '::edit_password',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 ); // phpcs:ignore
 
@@ -112,6 +113,34 @@ class UR_Shortcodes {
 				)
 			)
 		);
+	}
+
+	/**
+	 * User Registration Edit password form shortcode.
+	 *
+	 * @param mixed $atts Extra attributes.
+	 *
+	 * @since 2.2.7
+	 */
+	public static function edit_password( $atts ) {
+		return self::shortcode_wrapper( array( __CLASS__, 'render_edit_password' ), $atts );
+	}
+
+	/**
+	 * Edit password page shortcode.
+	 *
+	 * @since 2.2.7
+	 */
+	public static function render_edit_password() {
+		if ( is_user_logged_in() ) {
+			include_once 'shortcodes/class-ur-shortcode-my-account.php';
+			UR_Shortcode_My_Account::edit_password();
+		} else {
+			do_action( 'user_registration_edit_password_shortcode' );
+
+			/* translators: %s - Link to login form. */
+			echo wp_kses_post( apply_filters( 'user_registration_edit_password_shortcode_message', sprintf( __( 'Please Login to edit password. <a href="%s">Login Here?</a>', 'user-registration' ), ur_get_my_account_url() ) ) );
+		}
 	}
 
 	/**
