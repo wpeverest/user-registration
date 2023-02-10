@@ -75,13 +75,17 @@ class UR_Admin_Import_Export_Forms {
 				),
 				'form_post_meta' => (array) $form_post_meta,
 			);
-			$form_name   = strtolower( str_replace( ' ', '-', get_the_title( $form_id ) ) );
-			$file_name   = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
 
 			if ( ob_get_contents() ) {
 				ob_clean();
 			}
 			$export_all_forms[] = $export_data;
+		}
+		if ( count( $form_ids ) > 1 ) {
+			$file_name = 'user-registration-forms-' . current_time( 'Y-m-d-H:i:s' ) . '.json';
+		} else {
+			$form_name = strtolower( str_replace( ' ', '-', get_the_title( $form_ids[0] ) ) );
+			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
 		}
 		$forms['forms'] = $export_all_forms;
 		// Force download.
