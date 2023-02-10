@@ -139,6 +139,7 @@ class UR_REST_API {
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+		$is_pro = false !== ur_get_license_plan() ? true : false;
 
 		if ( $default_form_page_id ) {
 			$pages['registration'] = array(
@@ -165,6 +166,7 @@ class UR_REST_API {
 				'success'         => true,
 				'page_slug'       => $page_slug,
 				'default_form_id' => $default_form_page_id,
+				'is_pro' => $is_pro,
 			),
 			200
 		);

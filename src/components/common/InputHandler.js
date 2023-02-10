@@ -64,7 +64,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 		const input = getInputProps();
 		const checkbox = getCheckboxProps();
 		return (
-			<Box as="label" marginLeft="0px !important" marginBottom="0px">
+			<Box as="label" marginleft="0px !important" marginBottom="0px">
 				<input {...input} />
 				<Box
 					{...checkbox}

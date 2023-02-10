@@ -15,11 +15,13 @@ import { __ } from "@wordpress/i18n";
 /**
  * Internal Dependencies
  */
+import ConsentModal from "../common/ConsentModal";
 import { useStateValue } from "../../context/StateProvider";
 
 const InstallPage = () => {
 	const [{ installPage, defaultFormId }] = useStateValue();
 	const [counter, setCounter] = useState(0);
+	const [allowTracking, setAllowTracking] = useState(false);
 
 	/**
 	 * Change counter every time installPage state is changed to show spinner while installing.
@@ -119,6 +121,8 @@ const InstallPage = () => {
 	};
 	return (
 		<Fragment>
+			{!allowTracking ? <ConsentModal openPopup={true} /> : ""}
+
 			<Box
 				bg="#F8F9FC"
 				w="100%"
