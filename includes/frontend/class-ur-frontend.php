@@ -59,7 +59,6 @@ class UR_Frontend {
 
 				foreach ( $form_data as $data ) {
 					if( 'user_registration_profile_pic_url' == $data->field_name ){
-						error_log( print_r( $data, true ) );
 						if( !is_array($data->value) && ! ur_is_valid_url( $data->value ) ) {
 							$valid_form_data[ 'profile_pic_url' ]        = new stdClass();
 							$valid_form_data[ 'profile_pic_url' ]->value = isset( $data->value ) ? $data->value : '';
@@ -81,6 +80,9 @@ class UR_Frontend {
 				}
 			}
 			ur_upload_profile_pic( $valid_form_data, $user_id );
+		}
+		if ( isset( $profile['user_registration_profile_pic_url'] ) ){
+			unset( $profile['user_registration_profile_pic_url'] );
 		}
 		return $profile;
 	}

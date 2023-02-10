@@ -351,9 +351,13 @@ class UR_AJAX {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
+			$profile_pic_id =  get_user_meta( $user_id, 'user_registration_profile_pic_url' );
+			$profile_pic_id = ! empty( $profile_pic_id ) ?  $profile_pic_id[0] : '';
+
 			wp_send_json_success(
 				array(
 					'message' => $message,
+					'profile_pic_id' => $profile_pic_id,
 				)
 			);
 
