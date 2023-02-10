@@ -19,6 +19,7 @@ class UR_Admin_Welcome {
 	 * Hook in methods.
 	 */
 	public static function init() {
+		// update_option( 'user_registration_first_time_activation_flag', false );
 		$wizard_ran = get_option( 'user_registration_first_time_activation_flag', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
@@ -160,7 +161,9 @@ class UR_Admin_Welcome {
 								<div class="user-registration-welcome-video">
 									<a class="welcome-video-play">
 										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-feature.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
-										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play"></button>
+										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play">
+											<span class="dashicons dashicons-controls-play"></span>
+										</button>
 									</a>
 								</div>
 								<div class="user-registration-welcome-container__action">
@@ -170,11 +173,14 @@ class UR_Admin_Welcome {
 								</div>
 							</div>
 						</div>
-						<a href="<?php echo esc_url_raw( admin_url() . '/admin.php?page=user-registration&end-setup-wizard=' . true ); ?>">
-							<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-							<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-							</svg></p>
-						</a>
+
+						<div class="user-registration-skip-btn">
+							<a href="<?php echo esc_url_raw( admin_url() . '/admin.php?page=user-registration&end-setup-wizard=' . true ); ?>">
+								<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+								</svg></p>
+							</a>
+						</div>
 					</div>
 					<?php
 				}
