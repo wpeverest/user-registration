@@ -139,12 +139,18 @@ class UR_Admin_Import_Export_Forms {
 			if ( 'json' === $ext ) {
 				$post_ids = array();
 				// read json file.
-				$form_datas = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) ); // @codingStandardsIgnoreLine
+				$form_datas_obj = json_decode( file_get_contents( $_FILES['jsonfile']['tmp_name'] ) ); // @codingStandardsIgnoreLine
 				// check for non empty json file.
-				if ( ! empty( $form_datas ) ) {
-
+				if ( ! empty( $form_datas_obj ) ) {
 					// check for non empty post data array.
-					if ( ! empty( $form_datas->forms ) ) {
+					if ( ! empty( $form_datas_obj->forms ) || ! empty( $form_datas_obj->form_post ) ) {
+						if ( ! empty( $form_datas_obj->form_post ) ) {
+							// For the importing old form.
+							$arr['forms'] = array( $form_datas_obj );
+							$form_datas   = (object) $arr;
+						} else {
+							$form_datas = $form_datas_obj;
+						}
 						// If Form Title already exist concat it with imported tag.
 						foreach ( $form_datas->forms as $key => $form_data ) {
 							$args  = array( 'post_type' => 'user_registration' );
