@@ -5,7 +5,7 @@
  *
  * @package     UR
  * @subpackage  Classes/Cron
- * @since 2.3.1
+ * @since 2.3.2
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles scheduled events
  *
- * @since 2.3.1
+ * @since 2.3.2
  */
 class UR_Cron {
 
@@ -26,7 +26,7 @@ class UR_Cron {
 	/**
 	 * Init WordPress hook
 	 *
-	 * @since 2.3.1
+	 * @since 2.3.2
 	 * @see UR_Cron::weekly_events()
 	 */
 	public function __construct() {
@@ -39,7 +39,7 @@ class UR_Cron {
 	 *
 	 * @param array $schedules
 	 * @return array
-	 * @since 2.3.1
+	 * @since 2.3.2
 	 */
 	public function add_schedules( $schedules = array() ) {
 		/*Adds once in biweekly to the existing schedules*/
@@ -55,7 +55,7 @@ class UR_Cron {
 	 * Schedules our events
 	 *
 	 * @return void
-	 * @since 2.3.1
+	 * @since 2.3.2
 	 */
 	public function schedule_events() {
 		$this->usage_cron();
@@ -66,7 +66,7 @@ class UR_Cron {
 	 *
 	 * @access private
 	 * @return void
-	 * @since 2.3.1
+	 * @since 2.3.2
 	 */
 	private function usage_cron() {
 		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && 'yes'=== get_option( 'user_registration_allow_usage_tracking', 'no' ) ) {
