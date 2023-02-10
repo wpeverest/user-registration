@@ -433,14 +433,14 @@ function App() {
 				</div>
 			</div>
 			<center>
-				<Link href={`${adminURL}/admin.php?page=user-registration`}>
+				<Link href={`${adminURL}admin.php?page=user-registration`}>
 					<Button
 						variant="link"
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
 							handleSaveSettings(
-								`${adminURL}/admin.php?page=user-registration`
+								`${adminURL}admin.php?page=user-registration&end-setup-wizard=1`
 							);
 						}}
 						mr={10}
