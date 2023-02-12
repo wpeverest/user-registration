@@ -400,7 +400,7 @@ class UR_AJAX {
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
-			$valid_extensions = 'image/jpeg,image/jpg,image/gif,image/png';
+			$valid_extensions = 'image/jpeg,image/gif,image/png';
 
 			$form_id    = ur_get_form_id_by_userid( $user_id );
 			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
@@ -412,6 +412,11 @@ class UR_AJAX {
 			foreach ( $valid_extension_type as $key => $value ) {
 				$image_extension   = explode( '/', $value );
 				$valid_ext[ $key ] = $image_extension[1];
+				
+				if ('jpeg' === $image_extension[1] ) {
+					$index = count( $valid_extension_type );
+					$valid_ext[ $index ] = 'jpg';
+				}
 			}
 
 			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
