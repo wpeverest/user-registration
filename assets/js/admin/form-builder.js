@@ -195,7 +195,9 @@
 									.hide();
 							}
 						} else {
-							$(bulk_options_html).insertAfter($this.parent()).trigger('init_tooltips');
+							$(bulk_options_html)
+								.insertAfter($this.parent())
+								.trigger("init_tooltips");
 						}
 					}
 				);
@@ -331,7 +333,19 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				// validation for unsupported currency by paypal.
+				if (
+					typeof data.data.ur_invalid_currency_status !==
+						"undefined" &&
+					data.data.ur_invalid_currency_status[0]
+						.validation_status === false
+				) {
+					URFormBuilder.show_message(
+						data.data.ur_invalid_currency_status[0]
+							.validation_message
+					);
+					return;
+				}
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
@@ -908,6 +922,7 @@
 						message +
 						'</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 				} else {
+					$(".ur-error").remove();
 					message_string =
 						'<div class="ur-message"><div class="ur-error"><p><strong>' +
 						user_registration_form_builder_data.i18n_admin
@@ -924,7 +939,7 @@
 
 				setTimeout(function () {
 					URFormBuilder.removeMessage($message);
-				}, 2000);
+				}, 3000);
 			},
 			/**
 			 * Remove the validation message when calles.
