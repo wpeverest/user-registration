@@ -1347,7 +1347,7 @@
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
-											"user_registration_edit_profile_after_ajax_complete"
+											"user_registration_edit_profile_after_ajax_complete", [ajax_response, $this]
 										);
 										$this
 											.find(
