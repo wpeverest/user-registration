@@ -72,8 +72,10 @@ class UR_Shortcode_My_Account {
 			}
 
 			// After password reset, add confirmation message.
-			if ( ! empty( $_GET['password-reset'] ) ) {
+			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
+			if ( ! empty( $is_password_resetted ) ) {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+				delete_transient( 'ur_password_resetted_flag' );
 			}
 
 			$render_default = apply_filters( 'user_registration_my_account_render_default', true, $atts );

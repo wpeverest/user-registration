@@ -716,6 +716,7 @@ class UR_Form_Handler {
 					$ur_login_or_account_page = ur_get_page_permalink( 'login' );
 				}
 
+				set_transient( 'ur_password_resetted_flag', true, 60 );
 				wp_redirect( add_query_arg( 'password-reset', 'true', $ur_login_or_account_page ) );
 				exit;
 			}
