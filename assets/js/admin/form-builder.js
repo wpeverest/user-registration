@@ -22,15 +22,20 @@
 					'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
 					function () {
 						// Hide the form settings in fields panel.
-						$(".ur-selected-inputs").find("form#ur-field-settings").hide();
+						$(".ur-selected-inputs")
+							.find("form#ur-field-settings")
+							.hide();
 						//Show field panels
 						$(".ur-builder-wrapper-content").show();
 						$(".ur-builder-wrapper-footer").show();
-						if($('.ur-selected-item.ur-item-active').length == 0) {
+						if ($(".ur-selected-item.ur-item-active").length == 0) {
 							//Selecting first ur selected item
-							URFormBuilder.handle_selected_item($('.ur-selected-item:first'));
+							URFormBuilder.handle_selected_item(
+								$(".ur-selected-item:first")
+							);
 						}
-				});
+					}
+				);
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
 					URFormBuilder.handle_selected_item($(this));
@@ -2628,7 +2633,7 @@
 				form.append(general_setting);
 				form.append(advance_setting);
 				$("#ur-tab-field-options").append(form);
-				$('#ur-tab-field-options').append(advance_setting);
+				$("#ur-tab-field-options").append(advance_setting);
 				$("#ur-tab-field-options")
 					.find(".ur-advance-setting-block")
 					.show();
@@ -3657,7 +3662,7 @@
 								.find(
 									'option[value="' + $this_node.val() + '"]'
 								)
-								.attr("selected", "selected");
+								.prop("selected", true);
 						}
 						break;
 					case "textarea":
