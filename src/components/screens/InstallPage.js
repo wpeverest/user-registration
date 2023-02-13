@@ -40,7 +40,7 @@ const InstallPage = () => {
 						return prevCounter;
 					}
 				});
-			}, 1400);
+			}, 840);
 
 			return () => {
 				clearInterval(timer);

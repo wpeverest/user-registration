@@ -224,7 +224,7 @@ function App() {
 				});
 
 				new Promise(function (resolve, reject) {
-					setTimeout(resolve, 8500);
+					setTimeout(resolve, 5000);
 				}).then(function () {
 					newInstallPageRef.registration_page.status = "installed";
 					newInstallPageRef.my_account_page.status = "installing";
@@ -237,7 +237,7 @@ function App() {
 					});
 
 					new Promise(function (resolve, reject) {
-						setTimeout(resolve, 8500);
+						setTimeout(resolve, 5000);
 					}).then(function () {
 						newInstallPageRef.my_account_page.status = "installed";
 

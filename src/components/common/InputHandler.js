@@ -284,7 +284,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 				return (
 					<HStack
 						{...group}
-						sx={{ flexWrap: "wrap", gap: "20px" }}
+						sx={{ flexWrap: "wrap", gap: "10px" }}
 						flex={"1 0 60%"}
 					>
 						{Object.keys(setting.options).map((value, key) => {
