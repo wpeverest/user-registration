@@ -295,16 +295,17 @@ class UR_Form_Handler {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data     = array();
-			$email_updated = false;
-			$pending_email = '';
-			$user          = wp_get_current_user();
+			$user_data                    = array();
+			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+			$email_updated                = false;
+			$pending_email                = '';
+			$user                         = wp_get_current_user();
 
 			foreach ( $profile as $key => $field ) {
 				if ( isset( $field['field_key'] ) ) {
 					$new_key = str_replace( 'user_registration_', '', $key );
 
-					if ( 'user_email' === $new_key ) {
+					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
 							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) {
@@ -376,17 +377,27 @@ class UR_Form_Handler {
 		// Send an email to the new address with confirmation link.
 		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
 		$to           = $new_email;
-		$subject      = apply_filters( 'user_registration_email_change_email_subject', 'Confirm Your Email Address Change' );
-		$message      = 'Dear ' . $user->display_name . ',<br /><br />';
-		$message     .= 'You recently requested to change your email address associated with your account to ' . $new_email . '.<br /><br />';
-		$message     .= 'To confirm this change, please click on the following link:<br />';
-		$message     .= '<a href="' . $confirm_link . '">' . $confirm_link . '</a><br /><br />';
-		$message     .= 'This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />';
-		$message     .= 'Best regards,<br />';
-		$message     .= get_bloginfo( 'name' );
-		$message      = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers      = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
-		$headers     .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+		$message      = sprintf(
+		/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
+			__(
+				'Dear %1$s,<br /><br />
+		You recently requested to change your email address associated with your account to %2$s.<br /><br />
+		To confirm this change, please click on the following link:<br />
+		<a href="%3$s">%3$s</a><br /><br />
+		This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />
+		Best regards,<br />
+		%4$s',
+				'user-registration'
+			),
+			$user->display_name,
+			$new_email,
+			$confirm_link,
+			get_bloginfo( 'name' )
+		);
+		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
+		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
+		$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
 		wp_mail( $to, $subject, $message, $headers );
 

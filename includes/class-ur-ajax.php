@@ -329,15 +329,16 @@ class UR_AJAX {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data     = array();
-			$email_updated = false;
-			$pending_email = '';
-			$user          = wp_get_current_user();
+			$user_data                    = array();
+			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+			$email_updated                = false;
+			$pending_email                = '';
+			$user                         = wp_get_current_user();
 
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
 
-				if ( 'user_email' === $new_key ) {
+				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 					if ( $user ) {
 						if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
 							$email_updated = true;
