@@ -5,7 +5,7 @@ const Header = ({ steps, activeStep, siteURL }) => {
 		<div className="user-registration-setup-wizard__header">
 			<div className="user-registration-setup-wizard__header--logo">
 				<img
-					src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-icons/Logo.png`}
+					src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-icons/logo.png`}
 					alt=""
 				/>
 			</div>
