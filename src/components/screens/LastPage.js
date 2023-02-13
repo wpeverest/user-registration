@@ -65,7 +65,6 @@ function LastPage({ onBoardIconsURL }) {
 						borderRadius="7px"
 						_hover={{
 							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
-							cursor: "pointer",
 						}}
 						bg="#FAFAFA"
 					>
@@ -108,8 +107,6 @@ function LastPage({ onBoardIconsURL }) {
 						borderRadius="7px"
 						_hover={{
 							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
-							borderRadius: "7px",
-							cursor: "pointer",
 						}}
 						bg="#FAFAFA"
 					>
@@ -151,7 +148,6 @@ function LastPage({ onBoardIconsURL }) {
 						borderRadius="7px"
 						_hover={{
 							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
-							cursor: "pointer",
 						}}
 						bg="#FAFAFA"
 						gap="20px"
@@ -194,7 +190,6 @@ function LastPage({ onBoardIconsURL }) {
 						borderRadius="7px"
 						_hover={{
 							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
-							cursor: "pointer",
 						}}
 						bg="#FAFAFA"
 						width="358px"
