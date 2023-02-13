@@ -56,6 +56,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			}
 		}
 
+		/**
+		 * Check if user is using premium version.
+		 *
+		 * @return boolean
+		 */
 		public function is_premium() {
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				return true;
@@ -63,22 +68,48 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				return false;
 			}
 		}
-		public function get_user_count( ) {
+
+		/**
+		 * Returns total users registered from User Registration forms.
+		 *
+		 * @return int
+		 */
+		public function get_user_count() {
 			global $wpdb;
 
-			return $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM $wpdb->users
+			return $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM $wpdb->users
 		LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
 		WHERE meta_key = %s
-		AND meta_value != ''", 'ur_form_id'));
+		AND meta_value != ''",
+					'ur_form_id'
+				)
+			);
 		}
 
-		public function get_form_count( ) {
+		/**
+		 * Returns total number of  registration forms created using this plugin.
+		 *
+		 * @return int
+		 */
+		public function get_form_count() {
 			global $wpdb;
 
-			return $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM $wpdb->posts WHERE post_type=%s AND post_status=%s", 'user_registration', 'publish'));
+			return $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM $wpdb->posts WHERE post_type=%s AND post_status=%s",
+					'user_registration',
+					'publish'
+				)
+			);
 		}
+
+		/**
+		 * Returns list of all active plugins.
+		 *
+		 * @return array
+		 */
 		public function get_plugin_lists() {
 
 			$is_premium = $this->is_premium();
@@ -91,9 +122,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$product_meta = array();
 
-			$product_meta['form_count']= $this->get_form_count();
+			$product_meta['form_count'] = $this->get_form_count();
 
-			$product_meta['user_count']= $this->get_user_count();
+			$product_meta['user_count'] = $this->get_user_count();
 
 			$license_key = $this->get_base_product_license();
 
@@ -116,24 +147,33 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 				$addon_file      = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin;
 				$addon_file_data = get_plugin_data( $addon_file );
-				if($base_product!==$plugin) {
-					$addons_data[$plugin] = array(
-						'product_name' => isset($addon_file_data['Name']) ? trim($addon_file_data['Name']) : '',
-						'product_version' => isset($addon_file_data['Version']) ? trim($addon_file_data['Version']) : '',
-						'product_type' => 'plugin',
-						'product_slug' => $plugin,
+				if ( $base_product !== $plugin ) {
+					$addons_data[ $plugin ] = array(
+						'product_name'    => isset( $addon_file_data['Name'] ) ? trim( $addon_file_data['Name'] ) : '',
+						'product_version' => isset( $addon_file_data['Version'] ) ? trim( $addon_file_data['Version'] ) : '',
+						'product_type'    => 'plugin',
+						'product_slug'    => $plugin,
 					);
 				}
-
 			}
 
 			return $addons_data;
 		}
 
+		/**
+		 * Checks if usage is allowed.
+		 *
+		 * @return boolean
+		 */
 		public function is_usage_allowed() {
 			return 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' );
 		}
 
+		/**
+		 * Start process.
+		 *
+		 * @return void
+		 */
 		public function init_usage() {
 			if ( wp_doing_cron() ) {
 				add_action( 'user_registration_usage_stats_scheduled_events', array( $this, 'process' ) );
@@ -143,15 +183,24 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Run the process once when user gives consent.
 		 *
-		 * @return void
+		 * @param int   $old_value Old Value.
+		 * @param int   $value Value.
+		 * @param mixed $option Options.
+		 *
+		 * @return mixed
 		 */
-		public function run_on_save( $old_value, $value, $option) {
-			if ( $value !== $old_value && $value==='yes' && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
+		public function run_on_save( $old_value, $value, $option ) {
+			if ( $value !== $old_value && 'yes' === $value && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
 				$this->process();
 			}
 			return $value;
 		}
 
+		/**
+		 * Start process.
+		 *
+		 * @return void
+		 */
 		public function process() {
 
 			if ( ! $this->is_usage_allowed() ) {
@@ -160,9 +209,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$last_send = get_option( self::LAST_RUN_STAMP );
 
-			// Make sure we do not run it more than once on each 15 days
+			// Make sure we do not run it more than once on each 15 days.
 			if (
-				$last_send !== false &&
+				false !== $last_send &&
 				( time() - $last_send ) < ( DAY_IN_SECONDS * 14 )
 			) {
 				return;
@@ -173,6 +222,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			update_option( self::LAST_RUN_STAMP, time() );
 		}
 
+		/**
+		 * Call API.
+		 *
+		 * @return void
+		 */
 		public function call_api() {
 			global $wpdb;
 			$theme                        = wp_get_theme();
@@ -198,10 +252,20 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$this->send_request( self::REMOTE_URL, $data );
 		}
+
+		/**
+		 * Returns total sites.
+		 *
+		 * @return int
+		 */
 		private function get_sites_total() {
 
 			return function_exists( 'get_blog_count' ) ? (int) get_blog_count() : 1;
 		}
+
+		/**
+		 * Get Timezone Offset.
+		 */
 		private function get_timezone_offset() {
 
 			// It was added in WordPress 5.3.

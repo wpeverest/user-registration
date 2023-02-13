@@ -8,7 +8,7 @@
  * @since 2.3.2
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -37,7 +37,7 @@ class UR_Cron {
 	/**
 	 * Registers new cron schedules
 	 *
-	 * @param array $schedules
+	 * @param array $schedules Schedules.
 	 * @return array
 	 * @since 2.3.2
 	 */
@@ -64,12 +64,11 @@ class UR_Cron {
 	/**
 	 * Schedule biweekly events
 	 *
-	 * @access private
 	 * @return void
 	 * @since 2.3.2
 	 */
 	private function usage_cron() {
-		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && 'yes'=== get_option( 'user_registration_allow_usage_tracking', 'no' ) ) {
+		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' ) ) {
 			wp_schedule_event( time(), 'biweekly', 'user_registration_usage_stats_scheduled_events' );
 		}
 	}
