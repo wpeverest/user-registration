@@ -439,15 +439,24 @@ function App() {
 				</div>
 			</div>
 			<center>
-				<Link href={`${adminURL}admin.php?page=user-registration`}>
+				<Link>
 					<Button
 						variant="link"
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
-							handleSaveSettings(
-								`${adminURL}admin.php?page=user-registration&end-setup-wizard=1`
-							);
+							if (
+								installPage.my_account_page.status ===
+								"installed"
+							) {
+								handleSaveSettings(
+									`${adminURL}admin.php?page=user-registration`
+								);
+							} else {
+								handleSaveSettings(
+									`${adminURL}admin.php?page=user-registration&end-setup-wizard=1`
+								);
+							}
 						}}
 						mr={10}
 						ml={10}
