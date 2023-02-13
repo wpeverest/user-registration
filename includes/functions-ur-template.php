@@ -444,7 +444,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					);
 
 					if ( ! empty( $pending_email ) && time() <= $expiration ) {
-						$field .= '<div class="email-updated inline"><p>' . __( 'There is a pending change of your email to', 'user-registration' ) . ' <code>' . $pending_email . '</code>. <a href="' . $cancel_url . '">' . __( 'Cancel', 'user-registration' ) . '</a></p></div>';
+						$field .= sprintf(
+							'<div class="email-updated inline"><p>%s <code>%s</code>. <a href="%s">%s</a></p></div>',
+							__( 'There is a pending change of your email to', 'user-registration' ),
+							$pending_email,
+							$cancel_url,
+							__( 'Cancel', 'user-registration' )
+						);
+
 					} else {
 						// Remove the confirmation key, pending email and expiry date.
 						UR_Form_Handler::delete_pending_email_change( $user_id );

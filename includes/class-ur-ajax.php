@@ -398,7 +398,14 @@ class UR_AJAX {
 					)
 				);
 
-				$response['userEmailPendingMessage'] = '<div class="email-updated inline"><p>' . __( 'There is a pending change of your email to', 'user-registration' ) . ' <code>' . $pending_email . '</code>. <a href="' . $cancel_url . '">' . __( 'Cancel', 'user-registration' ) . '</a></p></div>';
+				$response['userEmailPendingMessage'] = sprintf(
+					'<div class="email-updated inline"><p>%s <code>%s</code>. <a href="%s">%s</a></p></div>',
+					__( 'There is a pending change of your email to', 'user-registration' ),
+					$pending_email,
+					$cancel_url,
+					__( 'Cancel', 'user-registration' )
+				);
+
 			}
 
 			wp_send_json_success(
