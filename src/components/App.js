@@ -284,7 +284,11 @@ function App() {
 			data: { settings: newSettingsRef },
 		}).then((res) => {
 			if (res.success) {
-				window.location.href = redirectLink;
+				if ("" !== redirectLink) {
+					window.location.href = redirectLink;
+				} else {
+					handleNext();
+				}
 			}
 		});
 	};
@@ -423,7 +427,9 @@ function App() {
 										steps[steps.length - 1].key ===
 										activeStep.key
 									}
-									onClick={handleNext}
+									onClick={() => {
+										handleSaveSettings("");
+									}}
 								>
 									{__("Next", "user-registration")}
 								</Button>
