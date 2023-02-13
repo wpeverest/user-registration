@@ -225,7 +225,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-cron.php';
 			include_once UR_ABSPATH . 'includes/stats/class-ur-stats.php';
 
-
 			$this->query = new UR_Query();
 		}
 
