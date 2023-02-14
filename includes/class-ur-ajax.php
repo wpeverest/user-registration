@@ -57,7 +57,6 @@ class UR_AJAX {
 			'profile_pic_remove'     => true,
 			'ajax_login_submit'      => true,
 			'send_test_email'        => true,
-			'deactivation_notice'    => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
@@ -921,22 +920,6 @@ class UR_AJAX {
 			);
 
 		}// End try().
-	}
-
-	/**
-	 * AJAX plugin deactivation notice.
-	 *
-	 * @since  1.4.2
-	 */
-	public static function deactivation_notice() {
-
-		check_ajax_referer( 'deactivation-notice', 'security' );
-
-		ob_start();
-		include_once UR_ABSPATH . 'includes/admin/views/html-notice-deactivation.php';
-
-		$content = ob_get_clean();
-		wp_send_json( $content ); // WPCS: XSS OK.
 	}
 
 	/**
