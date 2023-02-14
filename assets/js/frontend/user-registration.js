@@ -1160,6 +1160,15 @@
 									return false;
 								}
 
+								var profile_picture_error = $this
+									.find(
+										".user-registration-profile-picture-error"
+									)
+									.find(".user-registration-error").length;
+								if (1 === profile_picture_error) {
+									return false;
+								}
+
 								event.preventDefault();
 								$this
 									.find(".user-registration-submit-Button")
@@ -1241,6 +1250,48 @@
 												response.success === true
 											) {
 												type = "message";
+												if (
+													typeof response.data
+														.profile_pic_id !==
+													"undefined"
+												) {
+													$this
+														.find(
+															".ur_removed_profile_pic"
+														)
+														.val("");
+
+													if (
+														$this.find(
+															".uraf-profile-picture-remove"
+														).length > 0
+													) {
+														$this
+															.find(
+																".uraf-profile-picture-remove"
+															)
+															.data(
+																"attachment-id",
+																response.data
+																	.profile_pic_id
+															);
+													}
+													if (
+														$this.find(
+															".profile-pic-remove"
+														).length > 0
+													) {
+														$this
+															.find(
+																".profile-pic-remove"
+															)
+															.data(
+																"attachment-id",
+																response.data
+																	.profile_pic_id
+															);
+													}
+												}
 											}
 
 											if (
