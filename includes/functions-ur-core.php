@@ -3004,7 +3004,7 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 }
 
 if ( ! function_exists( 'crypt_the_string' ) ) {
-/**
+	/**
 	 * Encrypt/Decrypt the provided string.
 	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
 	 *
