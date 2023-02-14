@@ -398,12 +398,14 @@ class UR_AJAX {
 					)
 				);
 
+				/* translators: %s - Email Change Pending Message. */
 				$response['userEmailPendingMessage'] = sprintf(
-					'<div class="email-updated inline"><p>%s <code>%s</code>. <a href="%s">%s</a></p></div>',
-					__( 'There is a pending change of your email to', 'user-registration' ),
+					'<div class="email-updated inline"><p>%s</p></div>',
+					/* translators: 1: Pending email message 2: Cancel Link */
+					sprintf(
+						__('There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>','user-registration' ),
 					$pending_email,
-					$cancel_url,
-					__( 'Cancel', 'user-registration' )
+					$cancel_url)
 				);
 
 			}
