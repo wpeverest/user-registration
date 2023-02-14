@@ -211,12 +211,16 @@ class UR_Admin_Export_Users {
 				} else {
 					$field_data = ur_get_field_data_by_field_name( $form_id, $user_extra_data_key );
 					if ( isset( $field_data['field_key'] ) && 'file' === $field_data['field_key'] ) {
-						$attachment_ids = explode( ',', $user_extra_data );
+						$attachment_ids = is_array( $user_extra_data ) ? $user_extra_data : explode( ',', $user_extra_data );
 						$file_link      = '';
 						foreach ( $attachment_ids as $attachment_id ) {
-							$file_path = wp_get_attachment_url( $attachment_id );
-							if ( $file_path ) {
-								$file_link .= esc_url( $file_path ) . ' ; ';
+							if ( is_numeric( $attachment_id ) ) {
+								$file_path = wp_get_attachment_url( $attachment_id );
+								if ( $file_path ) {
+									$file_link .= esc_url( $file_path ) . ' ; ';
+								}
+							} else if ( ur_is_valid_url( $attachment_id ) ) {
+								$file_link .= esc_url( $attachment_id ) . ' ; ';
 							}
 						}
 						$user_extra_row[ $user_extra_data_key ] = $file_link;

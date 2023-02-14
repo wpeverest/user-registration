@@ -29,6 +29,7 @@ class UR_Email_Confirmation {
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2 );
 		add_action( 'wp_authenticate', array( $this, 'check_token_before_authenticate' ), 40, 2 );
+		add_action( 'template_redirect', array( $this, 'edit_email_confirmation_handler' ) );
 	}
 
 	/**
@@ -183,7 +184,7 @@ class UR_Email_Confirmation {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
+			$output  = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
 			$user    = get_user_by( 'id', $user_id );
@@ -242,6 +243,14 @@ class UR_Email_Confirmation {
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
+					$user        = get_user_by( 'id', $user_id );
+					$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
+					$name_value  = ur_get_user_extra_fields( $user_id );
+						// Get selected email template id for specific form.
+					$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+					UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
+
 					if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 						add_filter( 'login_message', array( $this, 'custom_email_confirmed_admin_await_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_email_confirmed_admin_await_message' ) );
@@ -258,6 +267,43 @@ class UR_Email_Confirmation {
 			do_action( 'user_registration_check_token_complete', $user_id, $user_reg_successful );
 		}
 
+	}
+
+	/**
+	 * Handler for edit confirmation email.
+	 *
+	 * @return void
+	 */
+	public function edit_email_confirmation_handler() {
+		global $wp;
+
+		if ( ! isset( $_GET['confirm_email'] ) || ! isset( $_GET['confirm_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		// Verify the confirmation key.
+		$user_id     = absint( wp_unslash( $_GET['confirm_email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$confirm_key = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$stored_key  = get_user_meta( $user_id, 'user_registration_email_confirm_key', true );
+		$expiration  = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+
+		if ( time() > $expiration || $confirm_key !== $stored_key ) {
+			return;
+		}
+
+		// Update the user's email address to the new one.
+		wp_update_user(
+			array(
+				'ID'         => $user_id,
+				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
+			)
+		);
+
+		// Remove the confirmation key, pending email and expiry date.
+		UR_Form_Handler::delete_pending_email_change( $user_id );
+
+		wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
+		exit;
 	}
 
 	/**
@@ -295,12 +341,12 @@ class UR_Email_Confirmation {
 	 */
 	public function get_token( $user_id ) {
 
-		$length        = 50;
-		$token         = '';
+		$length         = 50;
+		$token          = '';
 		$code_alphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$code_alphabet .= 'abcdefghijklmnopqrstuvwxyz';
 		$code_alphabet .= '0123456789';
-		$max           = strlen( $code_alphabet );
+		$max            = strlen( $code_alphabet );
 
 		for ( $i = 0; $i < $length; $i++ ) {
 			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
@@ -321,7 +367,7 @@ class UR_Email_Confirmation {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = isset( $form_id ) ? $form_id : 0;
+		$form_id      = isset( $form_id ) ? $form_id : 0;
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
@@ -366,9 +412,9 @@ class UR_Email_Confirmation {
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
-			$url = substr( $url, 0, strpos( $url, '?' ) );
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url     = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
+			$url     = substr( $url, 0, strpos( $url, '?' ) );
+			$url     = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $email_status ) {
 					/* translators: %s - Resend Verification Link. */
