@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.1.1
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,31 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.3.2    - 16/02/2023
+* Feature  - Shortcode for 'Change Password' Page.
+* Feature  - Email confirmation for email change on the edit profile page.
+* Refactor - Profile Picture save after profile update.
+* Enhance  - Setup wizard options and design.
+* Enhance  - Bulk form import/export.
+* Enhance  - Add {{user_roles}} smart tag.
+* Enhance  - View form link after importing form.
+* Enhance  - Fetch Form templates from remote server.
+* Enhance  - Send success email after email confirmation done by user.
+* Enhance  - Add toggle to enable/disable email from email list in global settings.
+* Dev      - Common code for Select2.
+* Dev      - Common js for preview password icon.
+* Dev      - Return login url from ur_get_my_account_url function if My Account is not set.
+* Tweak    - Deactivation popup.
+* Tweak    - Add Private notes in extension page.
+* Tweak    - Field option made clickable when no any field is selected.
+* Fix      - TinyMce data not saving issue.
+* Fix      - Smart tag in email issue for file type.
+* Fix      - Field Visibility Setting value not saving in safari.
+* Fix      - MyAccount redirection issue on plain permalink structure.
+* Fix      - Reset and incorrect password message appears at same time.
+* Fix 	   - Preview password icon not working when reCAPTCHA is enabled.
+
 = 2.3.1    - 17/01/2023
 * Enhance  - Fetch Form templates from remote server.
 * Fix 	   - XSS vulnerability in field settings.

@@ -83,10 +83,6 @@ class UR_REST_API {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_login_options', $settings_to_update['user_registration_general_setting_login_options'] );
 		}
 
-		if ( isset( $settings_to_update['user_registration_form_template'] ) ) {
-			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_template', ucwords( str_replace( '_', ' ', $settings_to_update['user_registration_form_template'] ) ) );
-		}
-
 		if ( isset( $settings_to_update['user_registration_form_setting_enable_strong_password'] ) ) {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_enable_strong_password', $settings_to_update['user_registration_form_setting_enable_strong_password'] );
 		}
@@ -143,6 +139,7 @@ class UR_REST_API {
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+		$is_pro = false !== ur_get_license_plan() ? true : false;
 
 		if ( $default_form_page_id ) {
 			$pages['registration'] = array(
@@ -169,6 +166,7 @@ class UR_REST_API {
 				'success'         => true,
 				'page_slug'       => $page_slug,
 				'default_form_id' => $default_form_page_id,
+				'is_pro' => $is_pro,
 			),
 			200
 		);
@@ -222,20 +220,6 @@ class UR_REST_API {
 				'title'    => __( 'Registration', 'user-registration' ),
 				'settings' => array(
 					array(
-						'title'   => __( 'Form Template', 'user-registration' ),
-						'desc'    => __( 'Choose form template to use.', 'user-registration' ),
-						'id'      => 'user_registration_form_template',
-						'type'    => 'radio',
-						'default' => 0,
-						'options' => array(
-							'default'      => __( 'Default', 'user-registration' ),
-							'bordered'     => __( 'Bordered', 'user-registration' ),
-							'flat'         => __( 'Flat', 'user-registration' ),
-							'rounded'      => __( 'Rounded', 'user-registration' ),
-							'rounded_edge' => __( 'Rounded Edge', 'user-registration' ),
-						),
-					),
-					array(
 						'title'   => __( 'Enable Strong Password', 'user-registration' ),
 						'desc'    => __( 'Make strong password compulsary.', 'user-registration' ),
 						'id'      => 'user_registration_form_setting_enable_strong_password',
@@ -262,47 +246,6 @@ class UR_REST_API {
 						'type'    => 'select',
 						'default' => 'subscriber',
 						'options' => $all_roles,
-					),
-				),
-			),
-			'login_settings'        => array(
-				'title'    => __( 'Login', 'user-registration' ),
-				'settings' => array(
-					array(
-						'title'   => __( 'Form Template', 'user-registration' ),
-						'desc'    => __( 'Choose the login form template.', 'user-registration' ),
-						'id'      => 'user_registration_login_options_form_template',
-						'type'    => 'radio',
-						'default' => 0,
-						'options' => array(
-							'default'      => __( 'Default', 'user-registration' ),
-							'bordered'     => __( 'Bordered', 'user-registration' ),
-							'flat'         => __( 'Flat', 'user-registration' ),
-							'rounded'      => __( 'Rounded', 'user-registration' ),
-							'rounded_edge' => __( 'Rounded Edge', 'user-registration' ),
-						),
-					),
-					array(
-						'title'   => __( 'Enable lost password', 'user-registration' ),
-						'desc'    => __( 'Check to enable/disable lost password.', 'user-registration' ),
-						'id'      => 'user_registration_login_options_lost_password',
-						'type'    => 'checkbox',
-						'default' => 'yes',
-					),
-					array(
-						'title'   => __( 'Enable remember me', 'user-registration' ),
-						'desc'    => __( 'Check to enable/disable remember me.', 'user-registration' ),
-						'id'      => 'user_registration_login_options_remember_me',
-						'type'    => 'checkbox',
-						'default' => 'yes',
-					),
-
-					array(
-						'title'   => __( 'Enable hide/show password', 'user-registration' ),
-						'desc'    => __( 'Check to enable hide/show password icon.', 'user-registration' ),
-						'id'      => 'user_registration_login_option_hide_show_password',
-						'type'    => 'checkbox',
-						'default' => 'no',
 					),
 				),
 			),

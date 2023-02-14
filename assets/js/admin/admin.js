@@ -262,7 +262,6 @@ jQuery(function ($) {
 			// Empty fields panels.
 			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-footer").hide();
-
 			// Show only the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").show();
 		}
@@ -278,7 +277,6 @@ jQuery(function ($) {
 			// Show field panels.
 			$(".ur-builder-wrapper-content").show();
 			$(".ur-builder-wrapper-footer").show();
-
 			// Hide the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").hide();
 		}
@@ -491,6 +489,26 @@ jQuery(function ($) {
 					".user-registration_page_user-registration-settings .notice"
 				).css("display", "block");
 				$(window).scrollTop($(".notice").position());
+			},
+		});
+	});
+
+	// Email Status
+	$(".user-registration-email-status-toggle").on("change", function (e) {
+		e.preventDefault();
+		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var id = $(this).find('input[type="checkbox"]').attr('id');
+		$.ajax({
+			url: user_registration_email_setting_status.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_email_setting_status",
+				status: status,
+				id : id,
+				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+			},
+			success: function (response) {
+
 			},
 		});
 	});

@@ -332,19 +332,6 @@ class UR_Admin_Assets {
 		if ( 'user-registration_page_user-registration-dashboard' === $screen_id ) {
 			wp_enqueue_script( 'chartjs' );
 		}
-		// Plugins page.
-		if ( in_array( $screen_id, array( 'plugins' ), true ) ) {
-			wp_register_script( 'ur-plugins', UR()->plugin_url() . '/assets/js/admin/plugins' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
-			wp_enqueue_script( 'ur-plugins' );
-			wp_localize_script(
-				'ur-plugins',
-				'ur_plugins_params',
-				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'deactivation_nonce' => wp_create_nonce( 'deactivation-notice' ),
-				)
-			);
-		}
 		// send test email.
 		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
@@ -353,6 +340,18 @@ class UR_Admin_Assets {
 				'user_registration_send_email',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
+				)
+			);
+		}
+
+		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
+		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
+			wp_localize_script(
+				'user-registration-admin',
+				'user_registration_email_setting_status',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'user_registration_email_setting_status_nonce' => wp_create_nonce( 'email_setting_status_nonce' ),
 				)
 			);
 		}

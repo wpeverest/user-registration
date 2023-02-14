@@ -59,6 +59,7 @@ class UR_Shortcode_My_Account {
 		global $wp, $post;
 		wp_enqueue_script( 'tooltipster' );
 		wp_enqueue_script( 'user-registration' );
+		wp_enqueue_script( 'ur-common' );
 
 		if ( ! is_user_logged_in() ) {
 
@@ -72,8 +73,10 @@ class UR_Shortcode_My_Account {
 			}
 
 			// After password reset, add confirmation message.
-			if ( ! empty( $_GET['password-reset'] ) ) {
+			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
+			if ( ! empty( $is_password_resetted ) ) {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
+				delete_transient( 'ur_password_resetted_flag' );
 			}
 
 			$render_default = apply_filters( 'user_registration_my_account_render_default', true, $atts );
@@ -246,6 +249,38 @@ class UR_Shortcode_My_Account {
 			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
+
+		ur_get_template(
+			'myaccount/form-edit-password.php',
+			array(
+				'user'                      => get_user_by( 'id', get_current_user_id() ),
+				'enable_strong_password'    => $enable_strong_password,
+				'minimum_password_strength' => $minimum_password_strength,
+			)
+		);
+	}
+
+	/**
+	 * Change Password page.
+	 *
+	 * @since 2.2.7
+	 */
+	public static function edit_password() {
+		$user_id                   = get_current_user_id();
+		$form_id                   = ur_get_form_id_by_userid( $user_id );
+		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+
+		wp_enqueue_script( 'ur-form-validator' );
+
+		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+			wp_dequeue_script( 'wc-password-strength-meter' );
+			wp_enqueue_script( 'ur-password-strength-meter' );
+		}
+
+		include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
+		$notices = ur_get_notices();
+		ur_print_notices();
 
 		ur_get_template(
 			'myaccount/form-edit-password.php',

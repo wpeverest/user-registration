@@ -2050,7 +2050,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 			case 'file':
-				$files = explode( ',', $value );
+				$files = is_array( $value ) ? $value : explode( ',', $value );
 
 				if ( is_array( $files ) && isset( $files[0] ) ) {
 					$attachment_ids = '';
@@ -2696,12 +2696,17 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				$field_value = isset( $countries[ $field_value ] ) ? $countries[ $field_value ] : '';
 				break;
 			case 'file':
-				$attachment_ids = explode( ',', $field_value );
+				$attachment_ids = is_array( $field_value ) ? $field_value : explode( ',', $field_value );
 				$links          = array();
 
 				foreach ( $attachment_ids as $attachment_id ) {
-					$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
-					array_push( $links, $attachment_url );
+					if ( is_numeric( $attachment_id ) ) {
+						$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
+						array_push( $links, $attachment_url );
+					} elseif ( ur_is_valid_url( $attachment_id ) ) {
+						$attachment_url = '<a href="' . $attachment_id . '">' . $attachment_id . '</a>';
+						array_push( $links, $attachment_url );
+					}
 				}
 
 				$field_value = implode( ', ', $links );
@@ -2951,6 +2956,28 @@ if ( ! function_exists( 'ur_get_json_file_contents' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_valid_url' ) ) {
+
+	/**
+	 * UR file get contents.
+	 *
+	 * @param mixed $url URL.
+	 */
+	function ur_is_valid_url( $url ) {
+		// Must start with http:// or https://.
+		if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+			return false;
+		}
+
+		// Must pass validation.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
 if ( ! function_exists( 'ur_file_get_contents' ) ) {
 
 	/**
@@ -2973,5 +3000,192 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 			}
 		}
 		return;
+	}
+}
+
+if ( ! function_exists( 'crypt_the_string' ) ) {
+	/**
+	 * Encrypt/Decrypt the provided string.
+	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
+	 *
+	 * @param  string $string String to encrypt/decrypt.
+	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
+	 * @return string Encrypted/Decrypted string.
+	 */
+	function crypt_the_string( $string, $action = 'e' ) {
+		$secret_key = 'ur_secret_key';
+		$secret_iv  = 'ur_secret_iv';
+
+		$output         = false;
+		$encrypt_method = 'AES-256-CBC';
+		$key            = hash( 'sha256', $secret_key );
+		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+		if ( 'e' == $action ) {
+			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+		} elseif ( 'd' == $action ) {
+			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+		}
+
+		return $output;
+	}
+}
+
+if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
+	/**
+	 * Clean up the tmp folder - remove all old files every day (filterable interval).
+	 */
+	function ur_clean_tmp_files() {
+		$files = glob( trailingslashit( ur_get_tmp_dir() ) . '*' );
+
+		if ( ! is_array( $files ) || empty( $files ) ) {
+			return;
+		}
+
+		$lifespan = (int) apply_filters( 'user_registration_clean_tmp_files_lifespan', DAY_IN_SECONDS );
+
+		foreach ( $files as $file ) {
+			if ( ! is_file( $file ) ) {
+				continue;
+			}
+
+			// In some cases filemtime() can return false, in that case - pretend this is a new file and do nothing.
+			$modified = (int) filemtime( $file );
+			if ( empty( $modified ) ) {
+				$modified = time();
+			}
+
+			if ( ( time() - $modified ) >= $lifespan ) {
+				@unlink( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
+	/**
+	 * Get tmp dir for files.
+	 *
+	 * @return string
+	 */
+	function ur_get_tmp_dir() {
+		$uploads  = wp_upload_dir();
+		$tmp_root = untrailingslashit( $uploads['basedir'] ) . '/user_registration_uploads/temp-uploads';
+
+		if ( ! file_exists( $tmp_root ) || ! wp_is_writable( $tmp_root ) ) {
+			wp_mkdir_p( $tmp_root );
+		}
+
+		$index = trailingslashit( $tmp_root ) . 'index.html';
+
+		if ( ! file_exists( $index ) ) {
+			file_put_contents( $index, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		}
+
+		return $tmp_root;
+	}
+}
+
+if ( ! function_exists( 'ur_get_user_roles' ) ) {
+	/**
+	 * Returns an array of all roles associated with the user.
+	 *
+	 * @param [int] $user_id User Id.
+	 *
+	 * @returns array
+	 */
+	function ur_get_user_roles( $user_id ) {
+		$roles = array();
+
+		if ( $user_id ) {
+			$user_meta = get_userdata( $user_id );
+			$roles     = isset( $user_meta->roles ) ? $user_meta->roles : array();
+		}
+
+		$user_roles = array_map( 'ucfirst', $roles );
+
+		return $user_roles;
+	}
+}
+
+if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
+	/**
+	 * Upload Profile Picture
+	 *
+	 * @param [array] $valid_form_data Valid Form Data.
+	 * @param [int]   $user_id User Id.
+	 */
+	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
+		$attachment_id = array();
+		$upload_dir    = wp_upload_dir();
+		$upload_path   = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
+
+		// Checks if the upload directory exists and create one if not.
+		if ( ! file_exists( $upload_path ) ) {
+			wp_mkdir_p( $upload_path );
+		}
+
+		$upload_file = $valid_form_data['profile_pic_url']->value;
+
+		if ( ! is_numeric( $upload_file ) ) {
+			$upload = maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) ) {
+				$upload_path = $upload_path . '/';
+				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
+				$file_path   = $upload_path . sanitize_file_name( $file_name );
+
+				$moved = rename( $upload['file_path'], $file_path );
+
+				if ( $moved ) {
+					$attachment_id = wp_insert_attachment(
+						array(
+							'guid'           => $file_path,
+							'post_mime_type' => $upload['file_extension'],
+							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+							'post_content'   => '',
+							'post_status'    => 'inherit',
+						),
+						$file_path
+					);
+
+					if ( ! is_wp_error( $attachment_id ) ) {
+						include_once ABSPATH . 'wp-admin/includes/image.php';
+
+						// Generate and save the attachment metas into the database.
+						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+					}
+				}
+			}
+		} else {
+			$attachment_id = $upload_file;
+		}
+		$attachment_id = ! empty( $attachment_id ) ? $attachment_id : '';
+		update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+	}
+}
+
+/**
+ * Check given string is valid url or not.
+ */
+if ( ! function_exists( 'ur_is_valid_url' ) ) {
+	/**
+	 * Checks if url is valid.
+	 *
+	 * @param [string] $url URL.
+	 * @return bool
+	 */
+	function ur_is_valid_url( $url ) {
+
+		// Must start with http:// or https://.
+		if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+			return false;
+		}
+
+		// Must pass validation.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }

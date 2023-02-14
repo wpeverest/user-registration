@@ -258,6 +258,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array( 'jquery' ),
 				'version' => '10.16.7',
 			),
+			'ur-common'                  => array(
+				'src'     => self::get_asset_url( 'assets/js/frontend/ur-common' . $suffix . '.js' ),
+				'deps'    => array( 'jquery' ),
+				'version' => UR_VERSION,
+			),
 		);
 		foreach ( $register_scripts as $name => $props ) {
 			self::register_script( $name, $props['src'], $props['deps'], $props['version'] );
@@ -311,6 +316,7 @@ class UR_Frontend_Scripts {
 
 		if ( is_ur_lost_password_page() ) {
 			self::enqueue_script( 'ur-lost-password' );
+			self::enqueue_script( 'ur-common' );
 		}
 
 		// CSS Styles.
