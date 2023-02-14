@@ -50,11 +50,9 @@ class UR_Frontend {
 
 		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
-				$value = isset( $_POST['profile_pic_url'] ) ?
-					esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) ) :
-					( isset( $_POST['profile-pic-url'] )
-						? esc_url_raw( wp_unslash( $_POST['profile-pic-url'] ) )
-						: '' );
+				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field(
+					wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field(
+						wp_unslash( $_POST['profile-pic-url'] ) ) : '' );
 				if ( ! is_array( $value ) && ! ur_is_valid_url( $value ) ) {
 					$valid_form_data['profile_pic_url']        = new stdClass();
 					$valid_form_data['profile_pic_url']->value = $value;
@@ -83,7 +81,7 @@ class UR_Frontend {
 				array();
 
 			if ( ! empty( $previous_attachment_id ) && ! empty( $removed_attachment_id ) && ! empty( $previous_attachment_id[0] ) ) {
-				if ( in_array( $previous_attachment_id[0], $removed_attachment_id, true ) ) {
+				if ( in_array( $previous_attachment_id[0], $removed_attachment_id ) ) {
 					unlink( get_attached_file( $previous_attachment_id[0] ) );
 					wp_delete_attachment( $previous_attachment_id[0], true );
 				}

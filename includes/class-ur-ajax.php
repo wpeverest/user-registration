@@ -406,9 +406,9 @@ class UR_AJAX {
 
 			foreach ( $valid_extension_type as $key => $value ) {
 				$image_extension   = explode( '/', $value );
-				$valid_ext[ $key ] = $image_extension[1];
+				$valid_ext[ $key ] = isset( $image_extension[1] ) ? $image_extension[1] : '';
 
-				if ( 'jpeg' === $image_extension[1] ) {
+				if ( 'jpeg' === $valid_ext[ $key ] ) {
 					$index               = count( $valid_extension_type );
 					$valid_ext[ $index ] = 'jpg';
 				}
