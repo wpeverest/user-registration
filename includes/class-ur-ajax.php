@@ -1,3 +1,4 @@
+Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * UserRegistration UR_AJAX
@@ -364,9 +365,9 @@ class UR_AJAX {
 
 			$profile_pic_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
 			$profile_pic_id = ! empty( $profile_pic_id ) ? $profile_pic_id[0] : '';
-			$response = array(
-				'message' => $message,
-        'profile_pic_id' => $profile_pic_id,
+			$response       = array(
+				'message'        => $message,
+				'profile_pic_id' => $profile_pic_id,
 			);
 
 			if ( $email_updated ) {
@@ -442,11 +443,11 @@ class UR_AJAX {
 
 			// valid extension for image.
 			$valid_extensions = 'image/jpeg,image/gif,image/png';
-			$form_id    = ur_get_form_id_by_userid( $user_id );
+			$form_id          = ur_get_form_id_by_userid( $user_id );
 
 			if ( class_exists( 'UserRegistrationAdvancedFields' ) ) {
-				$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
-				$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+				$field_data       = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+				$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			}
 
 			$valid_extension_type = explode( ',', $valid_extensions );

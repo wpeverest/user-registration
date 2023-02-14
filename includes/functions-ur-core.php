@@ -1,3 +1,4 @@
+Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * UserRegistration Functions.
@@ -2703,7 +2704,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 					if ( is_numeric( $attachment_id ) ) {
 						$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
 						array_push( $links, $attachment_url );
-					} else if ( ur_is_valid_url( $attachment_id ) ) {
+					} elseif ( ur_is_valid_url( $attachment_id ) ) {
 						$attachment_url = '<a href="' . $attachment_id . '">' . $attachment_id . '</a>';
 						array_push( $links, $attachment_url );
 					}
@@ -3083,7 +3084,7 @@ if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
 		}
 
 		return $tmp_root;
-}
+	}
 }
 
 if ( ! function_exists( 'ur_get_user_roles' ) ) {
