@@ -262,7 +262,6 @@ jQuery(function ($) {
 			// Empty fields panels.
 			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-footer").hide();
-
 			// Show only the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").show();
 		}
@@ -278,7 +277,6 @@ jQuery(function ($) {
 			// Show field panels.
 			$(".ur-builder-wrapper-content").show();
 			$(".ur-builder-wrapper-footer").show();
-
 			// Hide the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").hide();
 		}

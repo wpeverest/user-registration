@@ -60,7 +60,7 @@ class UR_Form_Handler {
 	 */
 	public static function save_profile_details() {
 
-		global $wp;
+		$profile_endpoint = get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' !== strtoupper( wp_unslash( sanitize_key( $_SERVER['REQUEST_METHOD'] ) ) ) ) {
 			return;
 		}
@@ -355,7 +355,7 @@ class UR_Form_Handler {
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
+			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		}
 	}
@@ -799,6 +799,7 @@ class UR_Form_Handler {
 					$ur_login_or_account_page = ur_get_page_permalink( 'login' );
 				}
 
+				set_transient( 'ur_password_resetted_flag', true, 60 );
 				wp_redirect( add_query_arg( 'password-reset', 'true', $ur_login_or_account_page ) );
 				exit;
 			}

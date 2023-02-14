@@ -76,7 +76,7 @@ function ur_get_page_id( $page ) {
 			$translations = pll_get_post_translations( $page );
 			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
 		}
-	} elseif (  $page > 0 && has_filter( 'wpml_current_language' ) ) {
+	} elseif ( $page > 0 && has_filter( 'wpml_current_language' ) ) {
 		$page = ur_get_wpml_page_language( $page );
 	}
 
@@ -93,9 +93,9 @@ function ur_get_wpml_page_language( $page_id ) {
 	$current_language = apply_filters( 'wpml_current_language', 'en' );
 	$element_prepared = $wpdb->prepare(
 		"SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE trid=%d AND element_type=%s AND language_code=%s",
-		array( $page_id, "post_page", $current_language )
+		array( $page_id, 'post_page', $current_language )
 	);
-	$element_id = $wpdb->get_var( $element_prepared );
+	$element_id       = $wpdb->get_var( $element_prepared ); //phpcs:ignore.
 	return $element_id > 0 ? $element_id : $page_id;
 }
 

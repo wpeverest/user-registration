@@ -78,6 +78,11 @@ jQuery(function ($) {
 
 								$this
 									.closest("#user-registration")
+									.find(".user-registration-message")
+									.remove();
+
+								$this
+									.closest("#user-registration")
 									.prepend(
 										'<ul class="user-registration-error">' +
 											res.data.message +

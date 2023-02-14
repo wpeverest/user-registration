@@ -306,7 +306,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 
 													// Remove files attachment id from user meta if file is deleted by admin.
 													if ( '' !== $field['value'] ) {
-														$attachment_ids = explode( ',', $field['value'] );
+														$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
 
 														foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
 															$attachment_url = get_attached_file( $attachment_id );
