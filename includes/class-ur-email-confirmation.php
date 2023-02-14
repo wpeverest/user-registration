@@ -307,33 +307,6 @@ class UR_Email_Confirmation {
 	}
 
 	/**
-	 * Encrypt/Decrypt the provided string.
-	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
-	 *
-	 * @param  string $string String to encrypt/decrypt.
-	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
-	 * @return string Encrypted/Decrypted string.
-	 */
-	public function crypt_the_string( $string, $action = 'e' ) {
-
-		$secret_key = 'ur_secret_key';
-		$secret_iv  = 'ur_secret_iv';
-
-		$output         = false;
-		$encrypt_method = 'AES-256-CBC';
-		$key            = hash( 'sha256', $secret_key );
-		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-
-		if ( 'e' == $action ) {
-			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' == $action ) {
-			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Generate email token for the user.
 	 *
 	 * @param  int $user_id User ID.
@@ -412,8 +385,8 @@ class UR_Email_Confirmation {
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			
-      $url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
+
+      		$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
 			$url = substr( $url, 0, strpos( $url, '?' ) );
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
