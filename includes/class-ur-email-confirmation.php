@@ -1,3 +1,4 @@
+Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * User Registration Email Confirmation.
@@ -184,7 +185,7 @@ class UR_Email_Confirmation {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output  = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
+			$output  = crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
 			$user    = get_user_by( 'id', $user_id );
@@ -223,7 +224,7 @@ class UR_Email_Confirmation {
 				unset( $ur_token[0] );
 				$token_string = join( '', $ur_token );
 			}
-			$output     = $this->crypt_the_string( $token_string, 'd' );
+			$output     = crypt_the_string( $token_string, 'd' );
 			$output     = explode( '_', $output );
 			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
@@ -307,33 +308,6 @@ class UR_Email_Confirmation {
 	}
 
 	/**
-	 * Encrypt/Decrypt the provided string.
-	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
-	 *
-	 * @param  string $string String to encrypt/decrypt.
-	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
-	 * @return string Encrypted/Decrypted string.
-	 */
-	public function crypt_the_string( $string, $action = 'e' ) {
-
-		$secret_key = 'ur_secret_key';
-		$secret_iv  = 'ur_secret_iv';
-
-		$output         = false;
-		$encrypt_method = 'AES-256-CBC';
-		$key            = hash( 'sha256', $secret_key );
-		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-
-		if ( 'e' == $action ) {
-			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' == $action ) {
-			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Generate email token for the user.
 	 *
 	 * @param  int $user_id User ID.
@@ -352,7 +326,7 @@ class UR_Email_Confirmation {
 			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
 		}
 
-		$token .= $this->crypt_the_string( $user_id . '_' . time(), 'e' );
+		$token .= crypt_the_string( $user_id . '_' . time(), 'e' );
 
 		return $token;
 
@@ -412,9 +386,10 @@ class UR_Email_Confirmation {
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			$url     = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
-			$url     = substr( $url, 0, strpos( $url, '?' ) );
-			$url     = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+
+			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
+			$url = substr( $url, 0, strpos( $url, '?' ) );
+			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $email_status ) {
 					/* translators: %s - Resend Verification Link. */
@@ -435,7 +410,7 @@ class UR_Email_Confirmation {
 	 * @return void
 	 */
 	public function my_simple_crypt( $string, $action ) {
-		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.4.0', 'UR_Email_Confirmation::crypt_the_string' );
+		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.4.0', 'crypt_the_string' );
 	}
 
 	/**

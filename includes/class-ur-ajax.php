@@ -1,3 +1,4 @@
+Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * UserRegistration UR_AJAX
@@ -249,26 +250,7 @@ class UR_AJAX {
 			}
 		}
 
-		$profile_picture_attachment_id = isset( $single_field['user_registration_profile_pic_url'] ) ? $single_field['user_registration_profile_pic_url'] : '';
-
-		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
-
-			if ( ! is_numeric( $profile_picture_attachment_id ) ) {
-				$profile_picture_attachment_id = attachment_url_to_postid( $profile_picture_attachment_id );
-			}
-
-			if ( '' === $profile_picture_attachment_id ) {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
-			} else {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', absint( $profile_picture_attachment_id ) );
-			}
-		}
-
 		$profile = user_registration_form_data( $user_id, $form_id );
-
-		if ( isset( $profile['user_registration_profile_pic_url'] ) ) {
-			unset( $profile['user_registration_profile_pic_url'] );
-		}
 
 		foreach ( $profile as $key => $field ) {
 
@@ -335,6 +317,8 @@ class UR_AJAX {
 			$pending_email                = '';
 			$user                         = wp_get_current_user();
 
+			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
 
@@ -378,8 +362,11 @@ class UR_AJAX {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			$response = array(
-				'message' => $message,
+			$profile_pic_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
+			$profile_pic_id = ! empty( $profile_pic_id ) ? $profile_pic_id[0] : '';
+			$response       = array(
+				'message'        => $message,
+				'profile_pic_id' => $profile_pic_id,
 			);
 
 			if ( $email_updated ) {
@@ -454,18 +441,25 @@ class UR_AJAX {
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
 			// valid extension for image.
-			$valid_extensions = 'image/jpeg,image/jpg,image/gif,image/png';
+			$valid_extensions = 'image/jpeg,image/gif,image/png';
+			$form_id          = ur_get_form_id_by_userid( $user_id );
 
-			$form_id    = ur_get_form_id_by_userid( $user_id );
-			$field_data = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+			if ( class_exists( 'UserRegistrationAdvancedFields' ) ) {
+				$field_data       = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
+				$valid_extensions = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
+			}
 
-			$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
 			$valid_extension_type = explode( ',', $valid_extensions );
 			$valid_ext            = array();
 
 			foreach ( $valid_extension_type as $key => $value ) {
 				$image_extension   = explode( '/', $value );
-				$valid_ext[ $key ] = $image_extension[1];
+				$valid_ext[ $key ] = isset( $image_extension[1] ) ? $image_extension[1] : '';
+
+				if ( 'jpeg' === $valid_ext[ $key ] ) {
+					$index               = count( $valid_extension_type );
+					$valid_ext[ $index ] = 'jpg';
+				}
 			}
 
 			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
@@ -480,69 +474,36 @@ class UR_AJAX {
 				);
 			}
 
-			$upload_dir  = wp_upload_dir();
-			$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
+			$upload_path = ur_get_tmp_dir();
 
-			// Checks if the upload directory exists and create one if not.
-			if ( ! file_exists( $upload_path ) ) {
-				wp_mkdir_p( $upload_path );
-			}
-
-			if ( ! is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
+			// Checks if the upload directory has the write premission.
+			if ( ! wp_is_writable( $upload_path ) ) {
 				wp_send_json_error(
 					array(
-
 						'message' => __( 'Upload path permission deny.', 'user-registration' ),
 					)
 				);
 
 			}
-
 			$upload_path = $upload_path . '/';
-			$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
-
-			$file_name = wp_unique_filename( $upload_path, $upload['name'] );
-
-			$file_path = $upload_path . sanitize_file_name( $file_name );
-
+			$file_name   = wp_unique_filename( $upload_path, $upload['name'] );
+			$file_path   = $upload_path . sanitize_file_name( $file_name );
 			if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
-
-				$attachment_id = wp_insert_attachment(
-					array(
-						'guid'           => $file_path,
-						'post_mime_type' => $file_ext,
-						'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
-						'post_content'   => '',
-						'post_status'    => 'inherit',
-					),
-					$file_path
+				$files = array(
+					'file_name'      => $file_name,
+					'file_path'      => $file_path,
+					'file_extension' => $file_extension,
 				);
 
-				if ( is_wp_error( $attachment_id ) ) {
+				$attachment_id = wp_rand();
 
-					wp_send_json_error(
-						array(
-
-							'message' => $attachment_id->get_error_message(),
-						)
-					);
-				}
-
-				include_once ABSPATH . 'wp-admin/includes/image.php';
-
-				// Generate and save the attachment metas into the database.
-				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
-
-				$url = wp_get_attachment_url( $attachment_id );
-
-				if ( empty( $url ) ) {
-					$url = home_url() . '/wp-includes/images/media/text.png';
-				}
-
+				ur_clean_tmp_files();
+				$url = home_url() . '/wp-content/uploads/user_registration_uploads/temp-uploads/' . sanitize_file_name( $file_name );
 				wp_send_json_success(
 					array(
-						'url'           => $url,
 						'attachment_id' => $attachment_id,
+						'upload_files'  => crypt_the_string( maybe_serialize( $files ), 'e' ),
+						'url'           => $url,
 					)
 				);
 			} else {
@@ -569,21 +530,6 @@ class UR_AJAX {
 						)
 					);
 					break;
-			}
-		} elseif ( empty( $_POST['profile-pic-url'] ) ) {
-			$upload_dir  = wp_upload_dir();
-			$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
-
-			// Check if profile already set?
-			if ( $profile_url ) {
-
-				// Then delete file and user meta.
-				$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
-
-				if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
-					@unlink( $profile_url );
-				}
-				delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
 			}
 		}
 	}

@@ -315,6 +315,7 @@ class UR_Emailer {
 			$settings                  = new UR_Settings_Successfully_Registered_Email();
 			$message                   = $settings->ur_get_successfully_registered_email();
 			$message                   = get_option( 'user_registration_successfully_registered_email', $message );
+
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
