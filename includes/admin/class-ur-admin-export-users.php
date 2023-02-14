@@ -61,7 +61,7 @@ class UR_Admin_Export_Users {
 			$all_fields                = (array) json_decode( $all_fields );
 			$all_fields                = array_keys( $all_fields );
 			$all_add_fields            = array( 'user_id', 'user_role', 'ur_user_status', 'date_created', 'date_created_gmt' );
-			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : $all_fields; //phpcs:ignore
+			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : $all_fields; //phpcs:ignore
 			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	$all_add_fields; //phpcs:ignore
 			$unchecked_fields          = array_diff( $all_fields, $checked_fields );
 			$export_format             = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : '';
