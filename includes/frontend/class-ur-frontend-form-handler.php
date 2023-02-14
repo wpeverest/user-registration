@@ -1,4 +1,3 @@
-Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * UserRegistration Admin.
