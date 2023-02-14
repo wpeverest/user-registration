@@ -3083,7 +3083,7 @@ if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
 		}
 
 		return $tmp_root;
-}
+	}
 }
 
 if ( ! function_exists( 'ur_get_user_roles' ) ) {
