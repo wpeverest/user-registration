@@ -3002,3 +3002,26 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 		return;
 	}
 }
+
+
+if ( ! function_exists( 'ur_get_user_roles' ) ) {
+	/**
+	 * Returns an array of all roles associated with the user.
+	 *
+	 * @param [int] $user_id User Id.
+	 *
+	 * @returns array
+	 */
+	function ur_get_user_roles( $user_id ) {
+		$roles = array();
+
+		if ( $user_id ) {
+			$user_meta = get_userdata( $user_id );
+			$roles     = isset( $user_meta->roles ) ? $user_meta->roles : array();
+		}
+
+		$user_roles = array_map( 'ucfirst', $roles );
+
+		return $user_roles;
+	}
+}

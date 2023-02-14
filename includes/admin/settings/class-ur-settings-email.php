@@ -206,9 +206,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$label     = $status ? __( 'Active', 'user-registration' ) : __( 'Inactive', 'user-registration' );
+				$label     = 'email_confirmation' === $email->id ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
 				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
-				$settings .= esc_html( $label );
+				$settings .= $label;
 				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';

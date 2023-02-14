@@ -65,7 +65,8 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
-			'cancel_email_change'    => false
+			'cancel_email_change'    => false,
+			'email_setting_status'   => true
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1472,7 +1473,25 @@ class UR_AJAX {
 				'message' => __( 'Changed email cancelled successfully.', 'user-registration' )
 			)
 		);
+  }
 
+	/**
+	 * Email setting status
+	 */
+	public static function email_setting_status() {
+
+		if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_key( $_POST['security'] ), 'email_setting_status_nonce' ) ) {
+			$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
+			$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
+			$value  = 'on' === $status ? 'yes' : 'no';
+			$key    = 'user_registration_enable_' . $id;
+			if ( update_option( $key, $value ) ) {
+				wp_send_json_success( 'Successfully Updated' );
+			} else {
+				wp_send_json_error( 'Update failed !' );
+			};
+
+		}
 	}
 }
 
