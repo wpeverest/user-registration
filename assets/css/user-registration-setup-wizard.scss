@@ -14,29 +14,103 @@
 
  body {
 	position: relative;
-   margin: 0;
-   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-	 "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-	 "Poppins", sans-serif;
-   font-size: 13px;
-   line-height: 1.8;
-   font-weight: 400;
-   color: #000;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
-   background-color: #E5E5E5;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		"Poppins", sans-serif;
+	font-size: 13px;
+	line-height: 1.8;
+	font-weight: 400;
+	color: #000;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	&.user-registration-welcome {
+		background-color: #ECEFF3;
+		height: 100vh;
+	 }
  }
 
 #user-registration-welcome {
-	.user-registration-welcome-card,
-	.user-registration-extensions-card,
-	.user-registration-support-card {
-		max-width: 760px;
-		border-radius: 4px;
-		margin: 3rem auto;
-		background: $white;
-		border: 1px solid $white;
-		box-shadow: 0 2px 10px transparentize($gray_base, 0.9);
+	padding-bottom: 24px;
+
+	@media (max-width: 768px) {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	> img {
+		position: relative;
+		top: 25px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-radius: 50%;
+		border: 1px solid $border-color;
+		width: 90px;
+		height: 90px;
+	}
+
+	> a {
+		> p {
+			margin: 0;
+			font-weight: 400;
+			font-size: 16px;
+			line-height: 150%;
+			color: $grey-300;
+			text-decoration: underline;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 7px;
+		}
+	}
+
+	.user-registration-welcome-card {
+		// max-width: 760px;
+		max-width: 857px;
+		border-radius: 15px;
+		margin: -20px auto 21px;
+		background: $grey-0;
+		border: 1px solid $border-color;
+		padding: 75px 48px 43px;
+
+		@media (max-width: 1600px) {
+			max-width: 650px;
+		}
+
+		@media (max-width: 768px) {
+			padding-left: 25px;
+			padding-right: 25px;
+		}
+	}
+
+	.user-registration-skip-btn {
+		text-align: center;
+
+		> a {
+			display: inline-block;
+			text-decoration: underline;
+
+			&:hover {
+				p {
+					svg {
+						transform: translateX(6px);
+					}
+				}
+			}
+
+			p {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 6px;
+				margin: 0;
+
+				svg {
+					transition: all .3s ease-in-out;
+				}
+			}
+		}
 	}
 
 	a.button {
@@ -46,11 +120,9 @@
 		align-items: center;
 		padding: 8px 16px;
 		margin: 0px 10px;
-
 		height: 44px;
 		left: 440px;
 		top: 726px;
-
 		border: 1px solid #475BB2;
 		border-radius: 2px;
 		box-sizing: border-box;
@@ -77,17 +149,13 @@
 		}
 	}
 
-	a.button:hover {
-		filter: brightness(0.85);
-	}
-
 	p {
-		margin-bottom: 1.5em;
-		line-height: 180%;
+		line-height: 150%;
 		font-size: 16px;
 		text-align: center;
-		color: #212121;
-		margin-top: 0.75em;
+		margin-top: 17px;
+		margin-bottom: 40px;
+		color: $grey-300;
 	}
 
 	.user-registration-welcome-card {
@@ -114,18 +182,33 @@
 			flex-direction: column;
 			align-items: center;
 
-			.user-registration-welcome-container__header {
+			&__header {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				padding: 0 1em;
+				max-width: 605px;
+
+				@media (max-width: 768px) {
+					padding-left: 0;
+					padding-right: 0;
+				}
 
 				h2 {
-					font-size: 24px;
-					line-height: 130%;
-					color: #475BB2;
+					font-size: 28px;
+					line-height: 120%;
+					color: $grey-500;
 					font-weight: 600;
-					margin-top: 1em;
+
+					@media (max-width: 1600px) {
+						font-size: 24px;
+					}
+				}
+
+				p {
+					@media (max-width: 1600px) {
+						font-size: 14px;
+					}
 				}
 
 				img {
@@ -135,34 +218,111 @@
 				}
 			}
 
+
+
 			.user-registration-welcome-video {
 				display: flex;
 				justify-content: center;
-				background: #FFFFFF;
-				border: 1px solid #DDE3FF;
+				background: $grey-0;
+				border: 1px solid $border-color;
 				box-sizing: border-box;
-				box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.05);
-				border-radius: 2px;
 				position: relative;
+				width: 760px;
+				max-width: 100%;
+				height: 412px;
+				border-radius: 9px;
 
-				a.welcome-video-play{
+				@media (max-width: 1600px) {
+					height: 230px;
+				}
+
+				a.welcome-video-play {
 					cursor: pointer;
 					align-items: center;
+					position: relative;
+					width: 100%;
+					height: 100%;
+
+					.welcome-video-container {
+						width: 100%;
+						height: 100%;
+
+						iframe {
+							width: 100%;
+							height: 100%;
+							border-radius: 9px;
+						}
+					}
 
 					.user-registration-welcome-video__button {
 						border: none;
 						cursor: pointer;
-						font-size: 24px;
-						height: 40px;
-						width: 54px;
-						border-radius: 12px;
-						padding: 8px 15px;
+						height: 70px;
+						width: 70px;
+						border-radius: 50%;
+						padding: 0;
 						position: absolute;
 						top: 50%;
 						left: 50%;
 						transform: translate(-50%, -50%);
-						color: $white;
-						background: $red;
+						color: $grey-0;
+						background: $primary_color;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						transition: all .25s ease-in-out;
+
+						&::before {
+							content: "";
+							animation-duration: 2s;
+							animation-iteration-count: infinite;
+							animation-timing-function: linear;
+							background-color: rgba(75,83,188,.471);
+							animation-name: pulseAnimate;
+							border-radius: 50%;
+							bottom: 0;
+							height: 100%;
+							left: 0;
+							position: absolute;
+							right: 0;
+							top: 0;
+							width: 100%;
+						}
+
+						&::after {
+							content: "";
+							animation-name: pulseAnimate;
+							border-radius: 50%;
+							bottom: 0;
+							height: 100%;
+							left: 0;
+							position: absolute;
+							right: 0;
+							top: 0;
+							width: 100%;
+							animation-delay: .3s;
+							animation-duration: 3s;
+							animation-iteration-count: infinite;
+							animation-timing-function: linear;
+							background-color: rgba(84,92,207,.47);
+						}
+
+						.dashicons-controls-play {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+
+							&::before {
+								font-size: 40px;
+								font-weight: 600;
+								margin-left: 10px;
+								width: auto;
+								height: auto;
+								position: relative;
+								z-index: 1;
+								margin-top: 2px;
+							}
+						}
 
 						svg {
 							height: 24px;
@@ -170,25 +330,80 @@
 						}
 
 						&:hover {
-							background-color: #d51319;
+							transform: translate(-50%,-50%) scale(1.1);
 						}
 					}
 
 					img {
 						display: block;
 						max-width: 100%;
-						border: 1px solid #DDE3FF;
-						width: 540px;
-						height: 300px;
+						opacity: 0;
+						border-radius: 9px;
 					}
+					@keyframes user-registration-welcome-video__button {
+						0% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+						50% {
+							box-shadow: none;
+						}
+						100% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+					}
+					@-webkit-keyframes user-registration-welcome-video__button {
+						0% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+						50% {
+							box-shadow: 0 0 0;
+						}
+						100% {
+							box-shadow: 0 0 0 15px #ced5f3;
+						}
+					}
+
+
+					// .user-registration-welcome-video__button {
+					// 	-webkit-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+					// 	-moz-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+					// 	-ms-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+					// 	-o-animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+					// 	animation: user-registration-welcome-video__button 2.0s normal infinite ease-in-out;
+					// }
 				}
 			}
 
-			.user-registration-welcome-container__action {
-				padding: 0 32px;
-				margin: 3rem 0;
-				display: flex;
-				justify-content: space-between;
+			&__action {
+				margin: 40px 0 0;
+
+				.button-primary {
+					padding: 20px 36px;
+					height: auto;
+					border-radius: 5px;
+					border: 1px solid $primary_color;
+					background: $primary_color;
+					margin-left: 0;
+					margin-right: 0;
+
+					&:hover {
+						background: #4153a2;
+					}
+
+					@media (max-width: 1600px) {
+						padding: 14px 26px;
+					}
+
+					h3 {
+						font-size: 18px;
+						line-height: 140%;
+						font-weight: 600;
+						color: $grey-0;
+						@media (max-width: 1600px) {
+							font-size: 16px;
+						}
+					}
+				}
 
 				.user-registration-welcome-container__action-card {
 					padding: 1em;
@@ -288,23 +503,27 @@
 }
 
 #user-registration-setup-wizard {
-	margin: 24px 200px;
+	margin: 10px 200px;
 	min-width: 980px;
 	border-radius: 4px;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	flex-wrap: wrap;
+	align-content: center;
 
 	.user-registration-setup-wizard {
 		&__header {
 			flex: 0 0 25%;
 			margin-bottom: 25px;
+			display: flex;
+			flex-direction: column;
+			gap: 70px;
 
 			&--logo {
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				margin-bottom: 100px;
 
 				h1 {
 					font-size: 24px;
@@ -313,7 +532,7 @@
 					margin-left: 20px;
 				}
 				img {
-					width: 50px;
+					width: 70px;
 				}
 			}
 
@@ -344,9 +563,9 @@
 						display: inline-block;
 						vertical-align: middle;
 						background-color: #E5E5E5;
-						width: 13px;
-						height: 13px;
-						border: solid 3px #BFBFBF;
+						width: 14px;
+						height: 14px;
+						border: solid 4px #BFBFBF;
 						border-radius: 50%;
 						position: absolute;
 						top: -6px;
@@ -356,7 +575,6 @@
 
 				.done,
 				.active {
-					background-color: #475BB2;
 
 					p.step-identifier {
 						border-color: #475BB2 ;
@@ -366,18 +584,43 @@
 						color: #475BB2;
 					}
 				}
+
+				.done {
+					background-color: #475BB2;
+				}
+
+				.active:not(#step-6) {
+					background: linear-gradient(to right, #475BB2 50%, #bfbfbf 50%);
+				}
+
+				.active {
+					background-color: #475BB2;
+
+					p.step-identifier {
+						border: 3px solid #475BB2 ;
+					}
+				}
 			}
 		}
 
 		&__body {
 			flex: 0 0 50%;
-			padding: 30px 48px;
+			padding: 32px 32px 46px 32px;
 			background-color: $white;
-			border-radius: 4px;
+			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;
+			width: 796px;
 
 			&--select {
 				flex: 1 0 60%;
+
+				input {
+					border: none;
+				}
+
+				span.css-1f1glkn {
+					height: 29px;
+				}
 			}
 
 			.chakra-checkbox__control {
@@ -397,8 +640,12 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
-			background-color: $white;
-			padding: 20px 40px;
+			align-items: flex-end;
+			background-color: #FAFAFA;
+			padding: 24px 32px;
+			border: 1px solid #E1E1E1;
+			border-radius: 0px 0px 13px 13px;
+			width: 796px;
 
 			&--left,
 			&--right {
@@ -416,5 +663,20 @@
 			}
 
 		}
+	}
+}
+
+
+// Play Button Animation
+@keyframes pulseAnimate {
+	0% {
+		transform: scale(1, 1);
+	}
+	50% {
+		transform: scale(1.8, 1.8);
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
 	}
 }
