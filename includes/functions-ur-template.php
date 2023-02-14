@@ -437,21 +437,22 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						add_query_arg(
 							array(
 								'cancel_email_change' => $user_id,
-								'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' )
+								'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
 							),
 							ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
 						)
 					);
 
 					if ( ! empty( $pending_email ) && time() <= $expiration ) {
-						/* translators: %s - Email Change Pending Message. */
 						$field .= sprintf(
+							/* translators: %s - Email Change Pending Message. */
 							'<div class="email-updated inline"><p>%s</p></div>',
-							/* translators: 1: Pending email message 2: Cancel Link */
 							sprintf(
-								__('There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>','user-registration' ),
-							$pending_email,
-							$cancel_url)
+								/* translators: 1: Pending email message 2: Cancel Link */
+								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+								$pending_email,
+								$cancel_url
+							)
 						);
 
 					} else {

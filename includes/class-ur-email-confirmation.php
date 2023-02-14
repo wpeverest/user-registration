@@ -243,7 +243,7 @@ class UR_Email_Confirmation {
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
-					$user    = get_user_by( 'id', $user_id );
+					$user        = get_user_by( 'id', $user_id );
 					$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 					$name_value  = ur_get_user_extra_fields( $user_id );
 						// Get selected email template id for specific form.
@@ -295,7 +295,7 @@ class UR_Email_Confirmation {
 		wp_update_user(
 			array(
 				'ID'         => $user_id,
-				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true )
+				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
 			)
 		);
 
