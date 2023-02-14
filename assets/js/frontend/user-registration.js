@@ -1326,6 +1326,59 @@
 																.message +
 															"</li>"
 													);
+													if (
+														undefined !==
+														response.data
+															.userEmailPendingMessage
+													) {
+														$(
+															".user-registration-info.user-email-change-update-notice"
+														).remove();
+														form.show_message(
+															$(
+																'<ul class=""/>'
+															).append(
+																"<li>" +
+																	response
+																		.data
+																		.userEmailUpdateMessage +
+																	"</li>"
+															),
+															"info user-email-change-update-notice",
+															$this,
+															"0"
+														);
+
+														if (
+															$(
+																"input#user_registration_user_email"
+															).next(
+																"div.email-updated"
+															).length
+														) {
+															$(
+																"input#user_registration_user_email"
+															)
+																.next(
+																	"div.email-updated"
+																)
+																.remove();
+														}
+														$(
+															response.data
+																.userEmailPendingMessage
+														).insertAfter(
+															$(
+																"input#user_registration_user_email"
+															)
+														);
+														$(
+															"input#user_registration_user_email"
+														).val(
+															response.data
+																.oldUserEmail
+														);
+													}
 												}
 												form.show_message(
 													message,
@@ -1398,7 +1451,7 @@
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
-											"user_registration_edit_profile_after_ajax_complete"
+											"user_registration_edit_profile_after_ajax_complete", [ajax_response, $this]
 										);
 										$this
 											.find(

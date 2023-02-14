@@ -1,3 +1,4 @@
+Warning: PHP Startup: Unable to load dynamic library 'php_imagick.dll' (tried: C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_imagick.dll (The specified module could not be found.), C:/Users/admi/AppData/Roaming/Local/lightning-services/php-7.4.30+3/bin/win64/ext\php_php_imagick.dll.dll (The specified module could not be found.)) in Unknown on line 0
 <?php
 /**
  * UserRegistration Admin.
@@ -57,7 +58,7 @@ class UR_Frontend_Form_Handler {
 
 		self::match_email( $form_field_data, $form_data );
 		self::add_hook( $form_field_data, $form_data );
-		$enable_auto_password_generation   = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' );
+		$enable_auto_password_generation = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' );
 
 		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
@@ -211,12 +212,12 @@ class UR_Frontend_Form_Handler {
 		foreach ( $form_data as $data ) {
 
 			if ( in_array( $data->field_name, $form_key_list ) ) {
-				$form_data_index                            = array_search( $data->field_name, $form_key_list );
-				$single_form_field                          = $form_field_data[ $form_data_index ];
-				$general_setting                            = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
-				$single_field_key                           = $single_form_field->field_key;
-				$single_field_label                         = isset( $general_setting->label ) ? $general_setting->label : '';
-				$data->extra_params                         = array(
+				$form_data_index    = array_search( $data->field_name, $form_key_list );
+				$single_form_field  = $form_field_data[ $form_data_index ];
+				$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+				$single_field_key   = $single_form_field->field_key;
+				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
 				);
@@ -329,7 +330,7 @@ class UR_Frontend_Form_Handler {
 					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
 				case 'file':
-					$form_data->value = is_array( $form_data->value ) ? sanitize_text_field ( implode(',', $form_data->value ) ) : sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
+					$form_data->value = is_array( $form_data->value ) ? sanitize_text_field( implode( ',', $form_data->value ) ) : sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
 					break;
 				case 'checkbox':
 					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';

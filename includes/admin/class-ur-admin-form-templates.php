@@ -37,7 +37,7 @@ class UR_Admin_Form_Templates {
 	public static function get_template_data() {
 		$template_data = get_transient( 'ur_template_section_list' );
 
-		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
+		$template_url = 'https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/';
 
 		if ( false === $template_data ) {
 
@@ -47,7 +47,7 @@ class UR_Admin_Form_Templates {
 				$content_json  = wp_remote_retrieve_body( $content );
 				$template_data = json_decode( $content_json );
 			} catch ( Exception $e ) {
-
+				$e->getMessage();
 			}
 
 			// Removing directory so the templates can be reinitialized.
@@ -77,6 +77,9 @@ class UR_Admin_Form_Templates {
 		return isset( $template_data->templates ) ? apply_filters( 'user_registration_template_section_data', $template_data->templates ) : self::get_default_template();
 	}
 
+	/**
+	 * Load the template view.
+	 */
 	public static function load_template_view() {
 		$templates       = array();
 		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
