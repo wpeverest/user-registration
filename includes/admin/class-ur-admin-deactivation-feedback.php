@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 				'ur-admin-deactivation-feedback',
 				ur()->plugin_url() . '/assets/js/admin/deactivation-feedback' . $suffix . '.js',
 				array(
-					'jquery'
+					'jquery',
 				),
 				UR_VERSION,
 				true
@@ -142,7 +142,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 				'reason_text'  => $reason_text,
 				'admin_email'  => get_bloginfo( 'admin_email' ),
 				'website_url'  => esc_url_raw( get_bloginfo( 'url' ) ),
-				'base_product' => is_plugin_active('user-registration-pro/user-registration.php') ? 'user-registration-pro/user-registration.php': 'user-registration/user-registration.php',
+				'base_product' => is_plugin_active( 'user-registration-pro/user-registration.php' ) ? 'user-registration-pro/user-registration.php' : 'user-registration/user-registration.php',
 			);
 
 			$this->send_api_request( $deactivation_data );
@@ -170,7 +170,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 					'httpversion' => '1.0',
 					'blocking'    => true,
 					'headers'     => $headers,
-					'body'        => array( 'deactivation_data' => $deactivation_data )
+					'body'        => array( 'deactivation_data' => $deactivation_data ),
 				)
 			);
 			return wp_remote_retrieve_body( $response );

@@ -33,20 +33,27 @@ $deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . UR
 			?>
 			<input type="hidden" name="action" value="ur_deactivate_feedback"/>
 
-			<div
-				class="ur-deactivate-feedback-popup-form-caption"><?php echo sprintf( esc_html__( 'Could you please share why you are deactivating %1$sUser Registration%2$s plugin?', 'user-registration' ), '<span>', '</span>' ); ?></div>
+			<div class="ur-deactivate-feedback-popup-form-caption">
+				<?php
+				/*
+				 * translators: %1$s HTML span tag.
+				 * translators: %2$s HTML span closing tag.
+				 */
+					echo sprintf( esc_html__( 'Could you please share why you are deactivating %1$sUser Registration%2$s plugin?', 'user-registration' ), '<span>', '</span>' );
+				?>
+			</div>
 			<div class="ur-deactivate-feedback-popup-form-body">
 				<?php foreach ( $deactivate_reasons as $reason_slug => $reason ) : ?>
 					<div class="ur-deactivate-feedback-popup-input-wrapper">
 						<input id="ur-deactivate-feedback-<?php echo esc_attr( $reason_slug ); ?>"
-							   class="ur-deactivate-feedback-input" type="radio" name="reason_slug"
-							   value="<?php echo esc_attr( $reason_slug ); ?>"/>
+							class="ur-deactivate-feedback-input" type="radio" name="reason_slug"
+							value="<?php echo esc_attr( $reason_slug ); ?>"/>
 						<label for="ur-deactivate-feedback-<?php echo esc_attr( $reason_slug ); ?>"
-							   class="ur-deactivate-feedback-label"><?php echo esc_html( $reason['title'] ); ?></label>
+							class="ur-deactivate-feedback-label"><?php echo esc_html( $reason['title'] ); ?></label>
 						<?php if ( ! empty( $reason['input_placeholder'] ) ) : ?>
 							<input class="ur-feedback-text" type="text"
-								   name="reason_<?php echo esc_attr( $reason_slug ); ?>"
-								   placeholder="<?php echo esc_attr( $reason['input_placeholder'] ); ?>"/>
+								name="reason_<?php echo esc_attr( $reason_slug ); ?>"
+								placeholder="<?php echo esc_attr( $reason['input_placeholder'] ); ?>"/>
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>
@@ -59,4 +66,3 @@ $deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . UR
 		</form>
 	</div>
 </div>
-
