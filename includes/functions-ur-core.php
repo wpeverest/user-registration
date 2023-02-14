@@ -3032,7 +3032,7 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 }
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
-    /**
+	/**
 	 * Clean up the tmp folder - remove all old files every day (filterable interval).
 	 */
 	function ur_clean_tmp_files() {
@@ -3063,7 +3063,7 @@ if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 }
 
 if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
-/**
+	/**
 	 * Get tmp dir for files.
 	 *
 	 * @return string
