@@ -50,9 +50,7 @@ class UR_Frontend {
 
 		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
-				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field(
-					wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field(
-						wp_unslash( $_POST['profile-pic-url'] ) ) : '' );
+				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '' );
 				if ( ! is_array( $value ) && ! ur_is_valid_url( $value ) ) {
 					$valid_form_data['profile_pic_url']        = new stdClass();
 					$valid_form_data['profile_pic_url']->value = $value;
