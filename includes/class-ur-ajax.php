@@ -65,6 +65,8 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
+			'cancel_email_change'    => false,
+			'email_setting_status'   => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -328,12 +330,26 @@ class UR_AJAX {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
+			$user_data                    = array();
+			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+			$email_updated                = false;
+			$pending_email                = '';
+			$user                         = wp_get_current_user();
 
 			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
 
 			foreach ( $profile as $key => $field ) {
 				$new_key = str_replace( 'user_registration_', '', $key );
+
+				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+					if ( $user ) {
+						if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
+							$email_updated = true;
+							$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
+						}
+						continue;
+					}
+				}
 
 				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
@@ -365,10 +381,41 @@ class UR_AJAX {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
+			$response = array(
+				'message' => $message,
+			);
+
+			if ( $email_updated ) {
+				UR_Form_Handler::send_confirmation_email( $user, $pending_email );
+				$response['oldUserEmail'] = $user->user_email;
+				/* translators: %s : user email */
+				$response['userEmailUpdateMessage'] = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+
+				$cancel_url = esc_url(
+					add_query_arg(
+						array(
+							'cancel_email_change' => $user_id,
+							'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
+						),
+						ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+					)
+				);
+
+				$response['userEmailPendingMessage'] = sprintf(
+					/* translators: %s - Email Change Pending Message. */
+					'<div class="email-updated inline"><p>%s</p></div>',
+					sprintf(
+						/* translators: 1: Pending email message 2: Cancel Link */
+						__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+						$pending_email,
+						$cancel_url
+					)
+				);
+
+			}
+
 			wp_send_json_success(
-				array(
-					'message' => $message,
-				)
+				$response
 			);
 
 		}
@@ -1405,6 +1452,49 @@ class UR_AJAX {
 				'error' => esc_html__( 'Something went wrong, please try again later', 'user-registration' ),
 			)
 		);
+	}
+
+	/**
+	 * Cancel a pending email change.
+	 *
+	 * @return void
+	 */
+	public static function cancel_email_change() {
+		check_ajax_referer( 'cancel_email_change_nonce', '_wpnonce' );
+
+		$user_id = isset( $_POST['cancel_email_change'] ) ? absint( wp_unslash( $_POST['cancel_email_change'] ) ) : false;
+
+		if ( ! $user_id ) {
+			wp_die( -1 );
+		}
+
+		// Remove the confirmation key, pending email and expiry date.
+		UR_Form_Handler::delete_pending_email_change( $user_id );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Changed email cancelled successfully.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Email setting status
+	 */
+	public static function email_setting_status() {
+
+		if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_key( $_POST['security'] ), 'email_setting_status_nonce' ) ) {
+			$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
+			$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
+			$value  = 'on' === $status ? 'yes' : 'no';
+			$key    = 'user_registration_enable_' . $id;
+			if ( update_option( $key, $value ) ) {
+				wp_send_json_success( 'Successfully Updated' );
+			} else {
+				wp_send_json_error( 'Update failed !' );
+			};
+
+		}
 	}
 }
 

@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="#ur-tab-registered-fields"
 										class="nav-tab active"><?php esc_html_e( 'Fields', 'user-registration' ); ?></a>
 									</li>
-									<li class="ur-no-pointer"><a href="#ur-tab-field-options" class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
+									<li><a href="#ur-tab-field-options" class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 									</li>
 
 									<?php
@@ -90,7 +90,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<?php do_action( 'user_registration_extra_fields' ); ?>
 									</div>
 									<div id="ur-tab-field-options" class="ur-tab-content">
-
 									</div>
 									<div id="ur-tab-field-settings" class="ur-tab-content">
 
