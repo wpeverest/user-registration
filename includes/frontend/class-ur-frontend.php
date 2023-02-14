@@ -38,19 +38,26 @@ class UR_Frontend {
 	 * Upload Files while edit profile saved.
 	 *
 	 * @param array $profile Profile Data.
-	 * @param int $user_id User ID.
-	 * @param int $form_id Form ID.
+	 * @param int   $user_id User ID.
+	 * @param int   $form_id Form ID.
 	 */
 	public function user_registration_before_save_profile_details( $profile, $user_id, $form_id ) {
-		$valid_form_data = array();
+
+		// phpcs:disable WordPress.Security.NonceVerification
+
+		$valid_form_data        = array();
 		$previous_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
 
 		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
-			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] )  ) {
-				$value = isset( $_POST['profile_pic_url'] ) ? $_POST['profile_pic_url'] : ( isset( $_POST['profile-pic-url'] ) ? $_POST['profile-pic-url'] : '' );
-				if( !is_array($value) && ! ur_is_valid_url( $value ) ) {
-					$valid_form_data[ 'profile_pic_url' ]        = new stdClass();
-					$valid_form_data[ 'profile_pic_url' ]->value = $value;
+			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
+				$value = isset( $_POST['profile_pic_url'] ) ?
+					esc_url_raw( wp_unslash( $_POST['profile_pic_url'] ) ) :
+					( isset( $_POST['profile-pic-url'] )
+						? esc_url_raw( wp_unslash( $_POST['profile-pic-url'] ) )
+						: '' );
+				if ( ! is_array( $value ) && ! ur_is_valid_url( $value ) ) {
+					$valid_form_data['profile_pic_url']        = new stdClass();
+					$valid_form_data['profile_pic_url']->value = $value;
 				}
 			}
 		} else {
@@ -58,10 +65,10 @@ class UR_Frontend {
 				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 				foreach ( $form_data as $data ) {
-					if( 'user_registration_profile_pic_url' == $data->field_name ){
-						if( !is_array($data->value) && ! ur_is_valid_url( $data->value ) ) {
-							$valid_form_data[ 'profile_pic_url' ]        = new stdClass();
-							$valid_form_data[ 'profile_pic_url' ]->value = isset( $data->value ) ? $data->value : '';
+					if ( 'user_registration_profile_pic_url' === $data->field_name ) {
+						if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
+							$valid_form_data['profile_pic_url']        = new stdClass();
+							$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
 						}
 					}
 				}
@@ -71,20 +78,24 @@ class UR_Frontend {
 			/**
 			 * Remove previous uploaded profile picture.
 			 */
-			$removed_attachment_id = isset( $_POST['ur_removed_profile_pic'] ) ? (array) json_decode( stripslashes( $_POST['ur_removed_profile_pic'] ), true ) : array();
+			$removed_attachment_id = isset( $_POST['ur_removed_profile_pic'] ) ?
+				(array) json_decode( sanitize_text_field( wp_unslash( $_POST['ur_removed_profile_pic'] ) ) ) :
+				array();
 
 			if ( ! empty( $previous_attachment_id ) && ! empty( $removed_attachment_id ) && ! empty( $previous_attachment_id[0] ) ) {
-				if ( in_array( $previous_attachment_id[0], $removed_attachment_id ) ) {
+				if ( in_array( $previous_attachment_id[0], $removed_attachment_id, true ) ) {
 					unlink( get_attached_file( $previous_attachment_id[0] ) );
 					wp_delete_attachment( $previous_attachment_id[0], true );
 				}
 			}
 			ur_upload_profile_pic( $valid_form_data, $user_id );
 		}
-		if ( isset( $profile['user_registration_profile_pic_url'] ) ){
+		if ( isset( $profile['user_registration_profile_pic_url'] ) ) {
 			unset( $profile['user_registration_profile_pic_url'] );
 		}
 		return $profile;
+
+		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
 		/**

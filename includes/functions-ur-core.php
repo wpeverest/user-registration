@@ -2050,7 +2050,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 			case 'file':
-				$files = is_array( $value) ? $value : explode( ',', $value );
+				$files = is_array( $value ) ? $value : explode( ',', $value );
 
 				if ( is_array( $files ) && isset( $files[0] ) ) {
 					$attachment_ids = '';
@@ -2977,7 +2977,7 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 }
 
 if ( ! function_exists( 'crypt_the_string' ) ) {
-/**
+	/**
 	 * Encrypt/Decrypt the provided string.
 	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
 	 *
@@ -3005,7 +3005,7 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 }
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
-    /**
+	/**
 	 * Clean up the tmp folder - remove all old files every day (filterable interval).
 	 */
 	function ur_clean_tmp_files() {
@@ -3036,7 +3036,7 @@ if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 }
 
 if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
-/**
+	/**
 	 * Get tmp dir for files.
 	 *
 	 * @return string
@@ -3068,27 +3068,27 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 	 */
 	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
 		$attachment_id = array();
-		$upload_dir   = wp_upload_dir();
-		$upload_path  = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
+		$upload_dir    = wp_upload_dir();
+		$upload_path   = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
 
 		// Checks if the upload directory exists and create one if not.
 		if ( ! file_exists( $upload_path ) ) {
 			wp_mkdir_p( $upload_path );
 		}
 
-		$upload_file = $valid_form_data["profile_pic_url"]->value;
+		$upload_file = $valid_form_data['profile_pic_url']->value;
 
 		if ( ! is_numeric( $upload_file ) ) {
 			$upload = maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
 			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) ) {
 				$upload_path = $upload_path . '/';
-				$file_name = wp_unique_filename( $upload_path, $upload['file_name'] );
-				$file_path = $upload_path . sanitize_file_name( $file_name );
+				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
+				$file_path   = $upload_path . sanitize_file_name( $file_name );
 
-				$moved = rename($upload['file_path'], $file_path);
+				$moved = rename( $upload['file_path'], $file_path );
 
 				if ( $moved ) {
-					$attachment_id= wp_insert_attachment(
+					$attachment_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
 							'post_mime_type' => $upload['file_extension'],
@@ -3105,7 +3105,6 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 						// Generate and save the attachment metas into the database.
 						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
 					}
-
 				}
 			}
 		} else {

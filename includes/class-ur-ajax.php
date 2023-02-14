@@ -248,12 +248,7 @@ class UR_AJAX {
 			}
 		}
 
-
-
-
-
 		$profile = user_registration_form_data( $user_id, $form_id );
-
 
 		foreach ( $profile as $key => $field ) {
 
@@ -351,12 +346,12 @@ class UR_AJAX {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
-			$profile_pic_id =  get_user_meta( $user_id, 'user_registration_profile_pic_url' );
-			$profile_pic_id = ! empty( $profile_pic_id ) ?  $profile_pic_id[0] : '';
+			$profile_pic_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
+			$profile_pic_id = ! empty( $profile_pic_id ) ? $profile_pic_id[0] : '';
 
 			wp_send_json_success(
 				array(
-					'message' => $message,
+					'message'        => $message,
 					'profile_pic_id' => $profile_pic_id,
 				)
 			);
@@ -412,9 +407,9 @@ class UR_AJAX {
 			foreach ( $valid_extension_type as $key => $value ) {
 				$image_extension   = explode( '/', $value );
 				$valid_ext[ $key ] = $image_extension[1];
-				
-				if ('jpeg' === $image_extension[1] ) {
-					$index = count( $valid_extension_type );
+
+				if ( 'jpeg' === $image_extension[1] ) {
+					$index               = count( $valid_extension_type );
 					$valid_ext[ $index ] = 'jpg';
 				}
 			}
@@ -433,36 +428,36 @@ class UR_AJAX {
 
 			$upload_path = ur_get_tmp_dir();
 
-		// Checks if the upload directory has the write premission.
-		if ( ! wp_is_writable( $upload_path ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Upload path permission deny.', 'user-registration-advanced-fields' ),
-				)
-			);
+			// Checks if the upload directory has the write premission.
+			if ( ! wp_is_writable( $upload_path ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Upload path permission deny.', 'user-registration' ),
+					)
+				);
 
-		}
-		$upload_path = $upload_path . '/';
-		$file_name   = wp_unique_filename( $upload_path, $upload['name'] );
-		$file_path   = $upload_path . sanitize_file_name( $file_name );
-		if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
+			}
+			$upload_path = $upload_path . '/';
+			$file_name   = wp_unique_filename( $upload_path, $upload['name'] );
+			$file_path   = $upload_path . sanitize_file_name( $file_name );
+			if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
 				$files = array(
-					"file_name" => $file_name,
-					"file_path" => $file_path,
-					"file_extension" => $file_extension
+					'file_name'      => $file_name,
+					'file_path'      => $file_path,
+					'file_extension' => $file_extension,
 				);
 
 				$attachment_id = wp_rand();
 
 				ur_clean_tmp_files();
-				$url =  home_url().'/wp-content/uploads/user_registration_uploads/temp-uploads/'. sanitize_file_name( $file_name );
+				$url = home_url() . '/wp-content/uploads/user_registration_uploads/temp-uploads/' . sanitize_file_name( $file_name );
 				wp_send_json_success(
 					array(
-						'attachment_id'       => $attachment_id,
-						'upload_files'        => crypt_the_string( maybe_serialize( $files ), 'e' ),
-						'url' => $url
-						)
-					);
+						'attachment_id' => $attachment_id,
+						'upload_files'  => crypt_the_string( maybe_serialize( $files ), 'e' ),
+						'url'           => $url,
+					)
+				);
 			} else {
 				wp_send_json_error(
 					array(
