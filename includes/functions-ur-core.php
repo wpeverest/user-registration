@@ -3063,8 +3063,8 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 	/**
 	 * Upload Profile Picture
 	 *
-	 * @param [type] $valid_form_data
-	 * @param [type] $user_id
+	 * @param [array] $valid_form_data Valid Form Data.
+	 * @param [int]   $user_id User Id.
 	 */
 	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
 		$attachment_id = array();
@@ -3119,6 +3119,12 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
  * Check given string is valid url or not.
  */
 if ( ! function_exists( 'ur_is_valid_url' ) ) {
+	/**
+	 * Checks if url is valid.
+	 *
+	 * @param [string] $url URL.
+	 * @return bool
+	 */
 	function ur_is_valid_url( $url ) {
 
 		// Must start with http:// or https://.
