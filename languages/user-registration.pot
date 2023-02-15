@@ -1832,7 +1832,7 @@ msgid "Allow Usage Tracking"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-misc.php:75
-msgid " Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpeverest.com/user-registration/docs/misc-settings/#2-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
+msgid " Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
