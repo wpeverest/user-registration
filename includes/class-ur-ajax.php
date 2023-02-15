@@ -65,7 +65,7 @@ class UR_AJAX {
 			'install_extension'      => false,
 			'create_form'            => true,
 			'cancel_email_change'    => false,
-			'email_setting_status'   => true,
+			'email_setting_status'   => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1408,19 +1408,24 @@ class UR_AJAX {
 	 * Email setting status
 	 */
 	public static function email_setting_status() {
-
-		if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_key( $_POST['security'] ), 'email_setting_status_nonce' ) ) {
-			$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
-			$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
-			$value  = 'on' === $status ? 'yes' : 'no';
-			$key    = 'user_registration_enable_' . $id;
-			if ( update_option( $key, $value ) ) {
-				wp_send_json_success( 'Successfully Updated' );
-			} else {
-				wp_send_json_error( 'Update failed !' );
-			};
-
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'email_setting_status_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			return;
 		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permision Denied' );
+			return;
+		}
+		$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
+		$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
+		$value  = 'on' === $status ? 'yes' : 'no';
+		$key    = 'user_registration_enable_' . $id;
+		if ( update_option( $key, $value ) ) {
+			wp_send_json_success( 'Successfully Updated' );
+		} else {
+			wp_send_json_error( 'Update failed !' );
+		};
 	}
 }
 
