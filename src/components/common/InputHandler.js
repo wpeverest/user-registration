@@ -200,7 +200,6 @@ function InputHandler({ setting, onBoardIconsURL }) {
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultValue={renderOptions()[renderOptions().default]}
-						placeholder="medium size"
 						variant="outline"
 					/>
 				);

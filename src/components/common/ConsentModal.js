@@ -21,7 +21,7 @@ const ConsentModal = (openPopup) => {
 	const closeModal = (type) => {
 		const newChangedValueRef = { ...settings };
 		newChangedValueRef["user_registration_allow_usage_tracking"] =
-			type === "allow" ? true : false;
+			type === "allow" ? "yes" : "no";
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
 			settings: newChangedValueRef,
