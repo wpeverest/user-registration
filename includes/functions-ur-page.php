@@ -230,8 +230,8 @@ function ur_nav_menu_items( $items ) {
 
 	foreach ( $items as $item ) {
 
-		if ( 'logout' === $item->post_name && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
-			 $item->url = wp_nonce_url( $item->url, 'user-logout' );
+		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}
 
