@@ -5,11 +5,12 @@
  * @package UserRegistration/Admin
  * @since       2.3.2
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
- ?>
-	<div id="user-registration-<?php echo esc_attr( $notice_type );?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type );?>">
+?>
+	<div id="user-registration-<?php echo esc_attr( $notice_type ); ?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>">
 		<div class="user-registration-notice-thumbnail">
 			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
 		</div>
@@ -17,12 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="user-registration-notice-header">
 				<h3><?php echo wp_kses_post( $notice_header ); ?></h3>
 				<?php
-					if ( 'allow_usage' !== $notice_type ) {
-				 ?>
+				if ( 'allow_usage' !== $notice_type ) {
+					?>
 					<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
-				<?php
-					}
-				 ?>
+					<?php
+				}
+				?>
 			</div>
 			<?php
 				promotional_notice_content( $notice_type );
