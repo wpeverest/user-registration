@@ -600,8 +600,8 @@ function promotional_notice_content( $notice_type ) {
 /**
  * Links for Promotional Notices.
  *
- * @param string $notice_type
- * @param string $notice_target_link
+ * @param string $notice_type Notice Type.
+ * @param string $notice_target_link Notice target link.
  */
 function promotional_notice_links( $notice_type, $notice_target_link = '#' ) {
 	if ( 'allow_usage' === $notice_type ) {

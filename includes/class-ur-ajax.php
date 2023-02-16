@@ -1188,7 +1188,7 @@ class UR_AJAX {
 
 		$addons        = array();
 		$template_data = UR_Admin_Form_Templates::get_template_data();
-		$template_data = is_array($template_data) ? $template_data: array();
+		$template_data = is_array( $template_data ) ? $template_data : array();
 		if ( ! empty( $template_data ) ) {
 			foreach ( $template_data as $template ) {
 

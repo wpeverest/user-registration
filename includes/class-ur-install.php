@@ -236,7 +236,7 @@ class UR_Install {
 		if ( empty( $installed_date ) ) {
 			update_option( 'user_registration_activated', current_time( 'Y-m-d' ) );
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
-		}else{
+		} else {
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
 		}
 	}
