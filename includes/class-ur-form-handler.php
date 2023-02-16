@@ -74,121 +74,6 @@ class UR_Form_Handler {
 		if ( $user_id <= 0 ) {
 			return;
 		}
-		if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-			$profile_picture_attachment_id = isset( $_POST['profile_pic_url'] ) ? absint( wp_unslash( $_POST['profile_pic_url'] ) ) : '';
-
-			if ( '' === $profile_picture_attachment_id ) {
-				update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
-			} else {
-					update_user_meta( $user_id, 'user_registration_profile_pic_url', $profile_picture_attachment_id );
-			}
-		} else {
-			if ( isset( $_FILES['profile-pic'] ) ) {
-
-				if ( isset( $_FILES['profile-pic'] ) && ! empty( $_FILES['profile-pic']['size'] ) ) {
-
-					$upload = $_FILES['profile-pic']; // phpcs:ignore
-
-					$upload_dir  = wp_upload_dir();
-					$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures' ); /*Get path of upload dir of WordPress*/
-
-					// Checks if the upload directory exists and create one if not.
-					if ( ! file_exists( $upload_path ) ) {
-						wp_mkdir_p( $upload_path );
-					}
-
-					if ( ! wp_is_writable( $upload_path ) ) {  /*Check if upload dir is writable*/
-						ur_add_notice( 'Upload path permission deny.', 'error' );
-					}
-
-					$upload_path = $upload_path . '/';
-					$file_ext    = strtolower( pathinfo( $upload['name'], PATHINFO_EXTENSION ) );
-
-					$file_name = wp_unique_filename( $upload_path, $upload['name'] );
-
-					$file_path = $upload_path . sanitize_file_name( $file_name );
-					// valid extension for image.
-					$valid_extensions     = 'image/jpeg,image/jpg,image/gif,image/png';
-					$form_id              = ur_get_form_id_by_userid( $user_id );
-					$field_data           = ur_get_field_data_by_field_name( $form_id, 'profile_pic_url' );
-					$valid_extensions     = isset( $field_data['advance_setting']->valid_file_type ) ? implode( ', ', $field_data['advance_setting']->valid_file_type ) : $valid_extensions;
-					$valid_extension_type = explode( ',', $valid_extensions );
-					$valid_ext            = array();
-
-					foreach ( $valid_extension_type as $key => $value ) {
-						$image_extension   = explode( '/', $value );
-						$valid_ext[ $key ] = $image_extension[1];
-					}
-
-					$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
-					$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
-
-					// Validates if the uploaded file has the acceptable extension.
-					if ( ! in_array( $file_extension, $valid_ext ) ) {
-						ur_add_notice( __( 'Invalid file type, please contact with site administrator.', 'user-registration' ), 'error' );
-					} else {
-						if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
-
-							$attachment_id = wp_insert_attachment(
-								array(
-									'guid'           => $file_path,
-									'post_mime_type' => $file_ext,
-									'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
-									'post_content'   => '',
-									'post_status'    => 'inherit',
-								),
-								$file_path
-							);
-
-							if ( is_wp_error( $attachment_id ) ) {
-
-								wp_send_json_error(
-									array(
-
-										'message' => $attachment_id->get_error_message(),
-									)
-								);
-							}
-
-							include_once ABSPATH . 'wp-admin/includes/image.php';
-
-							// Generate and save the attachment metas into the database.
-							wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
-
-							update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
-
-						} else {
-							ur_add_notice( 'File cannot be uploaded.', 'error' );
-						}
-					}
-				} elseif ( isset( $_FILES['profile-pic']['error'] ) && UPLOAD_ERR_NO_FILE !== $_FILES['profile-pic']['error'] ) {
-
-					switch ( isset( $_FILES['profile-pic']['error'] ) && $_FILES['profile-pic']['error'] ) {
-						case UPLOAD_ERR_INI_SIZE:
-							ur_add_notice( esc_html__( 'File size exceed, please check your file size.', 'user-registration' ), 'error' );
-							break;
-						default:
-							ur_add_notice( esc_html__( 'Something went wrong while uploading, please contact your site administrator.', 'user-registration' ), 'error' );
-							break;
-					}
-				} elseif ( empty( $_POST['profile-pic-url'] ) ) {
-					$upload_dir  = wp_upload_dir();
-					$profile_url = get_user_meta( $user_id, 'user_registration_profile_pic_url', true );
-
-					// Check if profile already set?
-					if ( $profile_url ) {
-
-						// Then delete file and user meta.
-						$profile_url = $upload_dir['basedir'] . explode( '/uploads', $profile_url )[1];
-
-						if ( ! empty( $profile_url ) && file_exists( $profile_url ) ) {
-							@unlink( $profile_url );
-						}
-						delete_user_meta( $user_id, 'user_registration_profile_pic_url' );
-					}
-				}
-			}
-		}
 
 		$form_id_array = get_user_meta( $user_id, 'ur_form_id' );
 		$form_id       = 0;
@@ -296,9 +181,28 @@ class UR_Form_Handler {
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
 			$user_data = array();
+
+			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
+			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+			$email_updated                = false;
+			$pending_email                = '';
+			$user                         = wp_get_current_user();
+
 			foreach ( $profile as $key => $field ) {
 				if ( isset( $field['field_key'] ) ) {
 					$new_key = str_replace( 'user_registration_', '', $key );
+
+					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+
+						if ( $user ) {
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) {
+								$email_updated = true;
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+							}
+							continue;
+						}
+					}
 
 					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
@@ -326,13 +230,80 @@ class UR_Form_Handler {
 				wp_update_user( $user_data );
 			}
 
-			ur_add_notice( apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) ) );
+			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+
+			if ( $email_updated ) {
+				self::send_confirmation_email( $user, $pending_email );
+				/* translators: user_email */
+				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+				ur_add_notice( $user_email_update_message, 'notice' );
+			}
+
+			ur_add_notice( $message );
 
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		}
+	}
+
+	/**
+	 * Send confirmation email.
+	 *
+	 * @param object $user User.
+	 * @param email  $new_email Email.
+	 * @return void
+	 */
+	public static function send_confirmation_email( $user, $new_email ) {
+		// Generate a confirmation key for the email change.
+		$confirm_key = wp_generate_password( 20, false );
+
+		// Save the confirmation key.
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+
+		// Send an email to the new address with confirmation link.
+		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$to           = $new_email;
+		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+		$message      = sprintf(
+		/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
+			__(
+				'Dear %1$s,<br /><br />
+		You recently requested to change your email address associated with your account to %2$s.<br /><br />
+		To confirm this change, please click on the following link:<br />
+		<a href="%3$s">%3$s</a><br /><br />
+		This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />
+		Best regards,<br />
+		%4$s',
+				'user-registration'
+			),
+			$user->display_name,
+			$new_email,
+			$confirm_link,
+			get_bloginfo( 'name' )
+		);
+		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
+		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
+		$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+		wp_mail( $to, $subject, $message, $headers );
+
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Delete a pending email change.
+	 *
+	 * @param integer $user_id User ID.
+	 * @return void
+	 */
+	public static function delete_pending_email_change( $user_id ) {
+		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
+		delete_user_meta( $user_id, 'user_registration_pending_email' );
+		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
 	}
 
 	/**

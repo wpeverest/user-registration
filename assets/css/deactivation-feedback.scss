@@ -1,0 +1,137 @@
+#ur-deactivate-feedback-popup-wrapper {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	z-index: 99999;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	display: none;
+	height: calc(100vh - 32px);
+
+	&.active {
+		display: block;
+	}
+
+	.ur-deactivate-feedback-popup-inner {
+		max-width: 600px;
+		background-color: #fff;
+		position: absolute;
+		border-radius: 3px;
+		box-shadow: 2px 8px 23px 3px rgba(0, 0, 0, 0.2);
+		overflow: hidden;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+		top: 50%;
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+
+		.ur-deactivate-feedback-popup-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1em;
+			border-bottom: 1px solid #cdd0d8;
+		}
+
+		.ur-deactivate-feedback-popup-header__logo-wrap {
+			display: flex;
+			align-items: center;
+
+			.ur-deactivate-feedback-popup-header__logo-icon {
+				margin-right: 16px;
+				padding-right: 16px;
+				border-right: 1px solid #cdd0d8;
+
+				svg {
+					display: block;
+					fill: #7e3bd0;
+					width: 24px;
+					height: 24px;
+				}
+			}
+
+			.ur-deactivate-feedback-popup-header-title {
+				font-size: 1.1em;
+				font-weight: 600;
+			}
+		}
+
+		.close-deactivate-feedback-popup {
+			cursor: pointer;
+		}
+
+		.ur-deactivate-feedback-popup-form-caption {
+			font-size: 1em;
+			margin-bottom: 10px;
+			font-weight: 600;
+		}
+
+		.ur-deactivate-feedback-form {
+			padding: 20px;
+			text-align: left;
+			font-size: 15px;
+			color: #495157;
+			line-height: 2;
+
+			input[type="text"] {
+				width: calc(100% - 20px);
+				outline: none;
+				max-width: 100%;
+				margin-left: 20px;
+				display: none;
+
+			}
+
+			input[type="radio"]:checked+label+input[type="text"] {
+				display: block;
+			}
+		}
+
+		.ur-deactivate-feedback-popup-form-footer {
+			padding: 8px 16px;
+			overflow: hidden;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 12px;
+			padding: 5px 0;
+
+			button.submit {
+				background-color: #475bb2;
+				color: white;
+				padding: 8px 16px;
+				border-radius: 4px;
+				border: none;
+				cursor: pointer;
+				float: right;
+			}
+
+			button.submit:hover {
+				background-color: #38488e;
+			}
+
+			a.skip {
+				color: #a4afb7;
+				background: none;
+				float: left;
+				width: auto;
+				border: none;
+				cursor: pointer;
+			}
+
+		}
+
+		.consent {
+			font-size: 12px;
+			color: #8f8f8f;
+			background: none;
+			width: auto;
+			border: none;
+		}
+	}
+}

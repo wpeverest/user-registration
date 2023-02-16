@@ -49,7 +49,7 @@ class UR_Shortcode_Login {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
 				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-
+				wp_enqueue_script( 'ur-common' );
 				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
 					wp_enqueue_script( 'user-registration' );
 				}

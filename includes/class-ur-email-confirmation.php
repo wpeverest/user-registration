@@ -29,6 +29,7 @@ class UR_Email_Confirmation {
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_email_status' ), 9, 3 );
 		add_action( 'template_redirect', array( $this, 'check_token_before_authenticate' ), 30, 2 );
 		add_action( 'wp_authenticate', array( $this, 'check_token_before_authenticate' ), 40, 2 );
+		add_action( 'template_redirect', array( $this, 'edit_email_confirmation_handler' ) );
 	}
 
 	/**
@@ -183,7 +184,7 @@ class UR_Email_Confirmation {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
 
-			$output = $this->crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
+			$output  = crypt_the_string( sanitize_text_field( wp_unslash( $_GET['ur_resend_id'] ) ), 'd' );
 			$output  = explode( '_', $output );
 			$user_id = absint( $output[0] );
 			$user    = get_user_by( 'id', $user_id );
@@ -222,7 +223,7 @@ class UR_Email_Confirmation {
 				unset( $ur_token[0] );
 				$token_string = join( '', $ur_token );
 			}
-			$output     = $this->crypt_the_string( $token_string, 'd' );
+			$output     = crypt_the_string( $token_string, 'd' );
 			$output     = explode( '_', $output );
 			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
@@ -242,7 +243,7 @@ class UR_Email_Confirmation {
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
-					$user    = get_user_by( 'id', $user_id );
+					$user        = get_user_by( 'id', $user_id );
 					$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 					$name_value  = ur_get_user_extra_fields( $user_id );
 						// Get selected email template id for specific form.
@@ -269,30 +270,40 @@ class UR_Email_Confirmation {
 	}
 
 	/**
-	 * Encrypt/Decrypt the provided string.
-	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
+	 * Handler for edit confirmation email.
 	 *
-	 * @param  string $string String to encrypt/decrypt.
-	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
-	 * @return string Encrypted/Decrypted string.
+	 * @return void
 	 */
-	public function crypt_the_string( $string, $action = 'e' ) {
+	public function edit_email_confirmation_handler() {
+		global $wp;
 
-		$secret_key = 'ur_secret_key';
-		$secret_iv  = 'ur_secret_iv';
-
-		$output         = false;
-		$encrypt_method = 'AES-256-CBC';
-		$key            = hash( 'sha256', $secret_key );
-		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-
-		if ( 'e' == $action ) {
-			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' == $action ) {
-			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+		if ( ! isset( $_GET['confirm_email'] ) || ! isset( $_GET['confirm_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
 		}
 
-		return $output;
+		// Verify the confirmation key.
+		$user_id     = absint( wp_unslash( $_GET['confirm_email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$confirm_key = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$stored_key  = get_user_meta( $user_id, 'user_registration_email_confirm_key', true );
+		$expiration  = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+
+		if ( time() > $expiration || $confirm_key !== $stored_key ) {
+			return;
+		}
+
+		// Update the user's email address to the new one.
+		wp_update_user(
+			array(
+				'ID'         => $user_id,
+				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
+			)
+		);
+
+		// Remove the confirmation key, pending email and expiry date.
+		UR_Form_Handler::delete_pending_email_change( $user_id );
+
+		wp_safe_redirect( home_url( add_query_arg( array(), $wp->request ) ) );
+		exit;
 	}
 
 	/**
@@ -303,18 +314,18 @@ class UR_Email_Confirmation {
 	 */
 	public function get_token( $user_id ) {
 
-		$length        = 50;
-		$token         = '';
+		$length         = 50;
+		$token          = '';
 		$code_alphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$code_alphabet .= 'abcdefghijklmnopqrstuvwxyz';
 		$code_alphabet .= '0123456789';
-		$max           = strlen( $code_alphabet );
+		$max            = strlen( $code_alphabet );
 
 		for ( $i = 0; $i < $length; $i++ ) {
 			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
 		}
 
-		$token .= $this->crypt_the_string( $user_id . '_' . time(), 'e' );
+		$token .= crypt_the_string( $user_id . '_' . time(), 'e' );
 
 		return $token;
 
@@ -329,7 +340,7 @@ class UR_Email_Confirmation {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = isset( $form_id ) ? $form_id : 0;
+		$form_id      = isset( $form_id ) ? $form_id : 0;
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
@@ -374,9 +385,10 @@ class UR_Email_Confirmation {
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+
 			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $website : 'http://' . $website;
 			$url = substr( $url, 0, strpos( $url, '?' ) );
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . $this->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $email_status ) {
 					/* translators: %s - Resend Verification Link. */
@@ -397,7 +409,7 @@ class UR_Email_Confirmation {
 	 * @return void
 	 */
 	public function my_simple_crypt( $string, $action ) {
-		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.4.0', 'UR_Email_Confirmation::crypt_the_string' );
+		ur_deprecated_function( 'UR_Email_Confirmation::my_simple_crypt', '1.4.0', 'crypt_the_string' );
 	}
 
 	/**
