@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				allow_usage_tracking: allow_usage_tracking,
 				_wpnonce: '<?php echo esc_js( wp_create_nonce( 'allow_usage_nonce' ) ); ?>'
 			} );
-			$( '.user-registration-allow_usage-notice' ).remove();
+			$( '#user-registration-allow_usage-notice' ).remove();
 		} );
 	} );
 </script>

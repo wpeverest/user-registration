@@ -562,12 +562,12 @@ function ur_check_activation_date( $days ) {
 function ur_check_updation_date( $days ) {
 
 	// Plugin Updation Time.
-	$activation_date = get_option( 'user_registration_updated_at' );
-	$days_to_validate      = strtotime( 'now' ) - $days * DAY_IN_SECONDS;
-	$days_to_validate      = date_i18n( 'Y-m-d', $days_to_validate );
+	$updated_date     = get_option( 'user_registration_updated_at' );
+	$days_to_validate = strtotime( 'now' ) - $days * DAY_IN_SECONDS;
+	$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
 
-	if ( ! empty( $activation_date ) ) {
-		if ( $activation_date < $days_to_validate ) {
+	if ( ! empty( $updated_date ) ) {
+		if ( $updated_date < $days_to_validate ) {
 			return true;
 		}
 	}
@@ -677,14 +677,14 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 		if ( $license_key ) {
 			echo wp_kses_post( sprintf("<br/><p>%s</p>",
 				__(
-					'Help us improve the plugin\'s features by sharing <a href="https://docs.wpeverest.com/user-registration/docs/misc-settings/#2-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+					'Help us improve the plugin\'s features by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 					'user-registration'
 				)
 			) );
 		} else {
 			echo wp_kses_post( sprintf("<br/><p>%s</p>",
 				__(
-					'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/misc-settings/#2-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+					'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 					'user-registration'
 				)
 			) );

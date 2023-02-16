@@ -191,7 +191,7 @@ class UR_Admin {
 		}
 
 		$notice_header      = __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' );
-		$notice_target_link = "https://wordpress.org/support/plugin/user-registration/reviews/#postform";
+		$notice_target_link = 'https://wordpress.org/support/plugin/user-registration/reviews/#postform';
 
 		include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
 	}
