@@ -180,7 +180,7 @@ class UR_Admin {
 	 */
 	public function review_notice() {
 
-		$notice_type = "review";
+		$notice_type = 'review';
 		$show_notice = $this->show_promotional_notice( $notice_type );
 		if ( ! $show_notice ) {
 			return;
@@ -190,7 +190,7 @@ class UR_Admin {
 			return;
 		}
 
-		$notice_header = __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' );
+		$notice_header      = __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' );
 		$notice_target_link = "https://wordpress.org/support/plugin/user-registration/reviews/#postform";
 
 		include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
@@ -246,7 +246,7 @@ class UR_Admin {
 			return false;
 		}
 
-		$allow_usage_tracking   = get_option( 'user_registration_allow_usage_tracking', null);
+		$allow_usage_tracking     = get_option( 'user_registration_allow_usage_tracking', null);
 		$allow_usage_notice_shown = get_option( 'user_registration_allow_usage_notice_shown', false );
 
 		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown) {
@@ -254,8 +254,8 @@ class UR_Admin {
 		}
 
 		if ( ur_check_updation_date( '1' ) === true ) {
-			$notice_type = "allow_usage";
-			$notice_header = __( 'Contribute to the enhancement', 'user-registration' );
+			$notice_type 		= 'allow_usage';
+			$notice_header      = __( 'Contribute to the enhancement', 'user-registration' );
 			$notice_target_link = '#';
 			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
 		} else {
@@ -271,7 +271,7 @@ class UR_Admin {
 	 */
 	public function survey_notice() {
 
-		$notice_type = "survey";
+		$notice_type = 'survey';
 		$show_notice = $this->show_promotional_notice( $notice_type );
 		if ( ! $show_notice ) {
 			return;
