@@ -145,7 +145,7 @@ class UR_Admin {
 		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
 
 		// Check to make sure we're on a User Registration admin page.
-		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
+		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages, true ) ) ) {
 			// Change the footer text.
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = wp_kses_post(
@@ -199,7 +199,7 @@ class UR_Admin {
 	/**
 	 * Check whether notice is showable or not.
 	 *
-	 * @param string $notice_type Notice Type
+	 * @param string $notice_type Notice Type.
 	 * @param string $days Number of days for temparary dismissed.
 	 * @return bool
 	 */
@@ -210,10 +210,10 @@ class UR_Admin {
 			return false;
 		}
 
-		$notice_dismissed             = get_option( 'user_registration_'.$notice_type.'_notice_dismissed', 'no' );
-		$notice_dismissed_temporarily = get_option( 'user_registration_'.$notice_type.'_notice_dismissed_temporarily', '' );
+		$notice_dismissed             = get_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'no' );
+		$notice_dismissed_temporarily = get_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 
-		if ( 'yes' == $notice_dismissed ) {
+		if ( 'yes' === $notice_dismissed ) {
 			return false;
 		}
 
@@ -237,7 +237,6 @@ class UR_Admin {
 	 * Allow Usage Notice
 	 *
 	 * @since  2.3.2
-	 * @return void
 	 */
 	public function allow_usage_notice() {
 
@@ -246,15 +245,15 @@ class UR_Admin {
 			return false;
 		}
 
-		$allow_usage_tracking     = get_option( 'user_registration_allow_usage_tracking', null);
+		$allow_usage_tracking     = get_option( 'user_registration_allow_usage_tracking', null );
 		$allow_usage_notice_shown = get_option( 'user_registration_allow_usage_notice_shown', false );
 
-		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown) {
+		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown ) {
 			return false;
 		}
 
 		if ( ur_check_updation_date( '1' ) === true ) {
-			$notice_type 		= 'allow_usage';
+			$notice_type        = 'allow_usage';
 			$notice_header      = __( 'Contribute to the enhancement', 'user-registration' );
 			$notice_target_link = '#';
 			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
@@ -281,8 +280,8 @@ class UR_Admin {
 		$license_key = trim( get_option( 'user-registration_license_key' ) );
 
 		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
-			$notice_header = __( 'User Registration Plugin Survey', 'user-registration' );
-			$notice_target_link = "https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu";
+			$notice_header      = __( 'User Registration Plugin Survey', 'user-registration' );
+			$notice_target_link = 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu';
 
 			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
 		} else {
@@ -380,12 +379,11 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action    = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 
 			$templates = UR_Admin_Form_Templates::get_template_data();
 
-			$templates = is_array($templates) ? $templates: array();
-
+			$templates = is_array( $templates ) ? $templates : array();
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
