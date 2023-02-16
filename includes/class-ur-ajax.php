@@ -65,6 +65,7 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
+			'allow_usage_dismiss'    => true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -74,6 +75,27 @@ class UR_AJAX {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
+	}
+
+	/**
+	 * Triggered when clicking the allow usage notice allow or deny buttons.
+	 */
+	public static function allow_usage_dismiss() {
+		check_ajax_referer( 'allow_usage_nonce', '_wpnonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1 );
+		}
+
+		$allow_usage_tracking = isset( $_POST['allow_usage_tracking'] ) ? sanitize_text_field( wp_unslash( $_POST['allow_usage_tracking'] ) ) : false;
+
+		update_option( 'user_registration_allow_usage_notice_shown', true );
+
+		if ( 'true' === $allow_usage_tracking ) {
+			update_option( 'user_registration_allow_usage_tracking', 'yes' );
+		}
+
+		wp_die();
 	}
 
 	/**

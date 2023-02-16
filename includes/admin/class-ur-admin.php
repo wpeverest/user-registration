@@ -27,6 +27,7 @@ class UR_Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_notices', array( $this, 'survey_notice' ) );
+		add_action( 'admin_notices', array( $this, 'allow_usage_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
@@ -229,6 +230,36 @@ class UR_Admin {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Allow Usage Notice
+	 *
+	 * @since  2.3.2
+	 * @return void
+	 */
+	public function allow_usage_notice() {
+
+		// Show only to Admins.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$allow_usage_tracking   = get_option( 'user_registration_allow_usage_tracking', null);
+		$allow_usage_notice_shown = get_option( 'user_registration_allow_usage_notice_shown', false );
+
+		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown) {
+			return false;
+		}
+
+		if ( ur_check_updation_date( '1' ) === true ) {
+			$notice_type = "allow_usage";
+			$notice_header = __( 'Contribute to the enhancement', 'user-registration' );
+			$notice_target_link = '#';
+			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+		} else {
+			return false;
+		}
 	}
 
 	/**
