@@ -284,10 +284,9 @@
 					URFormBuilder.show_message(validation_response.message);
 					return;
 				}
-				if ( typeof tinyMCE !== 'undefined' ) {
+				if (typeof tinyMCE !== "undefined") {
 					tinyMCE.triggerSave();
 				}
-
 
 				var form_data = URFormBuilder.get_form_data();
 				var form_row_ids = URFormBuilder.get_form_row_ids();
@@ -2633,7 +2632,7 @@
 				form.append(general_setting);
 				form.append(advance_setting);
 				$("#ur-tab-field-options").append(form);
-				$("#ur-tab-field-options").append(advance_setting);
+				// $("#ur-tab-field-options").append(advance_setting);
 				$("#ur-tab-field-options")
 					.find(".ur-advance-setting-block")
 					.show();

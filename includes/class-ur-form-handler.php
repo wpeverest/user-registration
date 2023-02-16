@@ -851,12 +851,14 @@ class UR_Form_Handler {
 			wp_remove_targeted_link_rel_filters();
 		}
 
-		$templates = ur_get_json_file_contents( 'assets/extensions-json/templates/all_templates.json' );
+		$templates = UR_Admin_Form_Templates::get_template_data();
+
+		$templates = is_array($templates) ? $templates: array();
 
 		$form_data = array();
 
 		if ( ! empty( $templates ) ) {
-			foreach ( $templates->templates as $template_data ) {
+			foreach ( $templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
 					$form_data                            = json_decode( base64_decode( $template_data->settings ), true );
 					$form_data['form_post']['post_title'] = $title;

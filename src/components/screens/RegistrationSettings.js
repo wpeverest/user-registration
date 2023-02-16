@@ -22,8 +22,10 @@ const RegistrationSettings = ({
 				sectionSettings.settings.map((setting, key) =>
 					setting.id ===
 						"user_registration_form_setting_minimum_password_strength" &&
-					settings.user_registration_form_setting_enable_strong_password ===
-						"no" ? (
+					("undefined" ===
+						typeof settings.user_registration_form_setting_enable_strong_password ||
+						settings.user_registration_form_setting_enable_strong_password ===
+							"no") ? (
 						""
 					) : (
 						<InputHandler
