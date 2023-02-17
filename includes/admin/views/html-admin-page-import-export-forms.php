@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 
 						<p>
-							<select name="formid[]" class="ur-input forms-list ur-select2-multiple" multiple>
+							<select name="formid[]" id="selected-export-forms" class="ur-input forms-list ur-select2-multiple" multiple>
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {
 									echo '<option value ="' . esc_attr( $form_id ) . '">' . esc_html( $form ) . '</option>';
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</select>
 						</p>
 
-						<input type="submit" class="button button-primary" name="user_registration_export_form" value="<?php esc_html_e( 'Export Forms', 'user-registration' ); ?>">
+						<input type="button" class="button button-primary ur_export_form_action_button" name="user_registration_export_form" value="<?php esc_html_e( 'Export Forms', 'user-registration' ); ?>">
 
 					</div>
 				</div><!-- .postbox -->
