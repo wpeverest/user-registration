@@ -27,6 +27,7 @@ class UR_Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		add_action( 'admin_notices', array( $this, 'review_notice' ) );
 		add_action( 'admin_notices', array( $this, 'survey_notice' ) );
+		add_action( 'admin_notices', array( $this, 'allow_usage_notice' ) );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
@@ -144,7 +145,7 @@ class UR_Admin {
 		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
 
 		// Check to make sure we're on a User Registration admin page.
-		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages ) ) ) {
+		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages, true ) ) ) {
 			// Change the footer text.
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = wp_kses_post(
@@ -179,72 +180,86 @@ class UR_Admin {
 	 */
 	public function review_notice() {
 
-		// Show only to Admins.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		$notice_type = 'review';
+		$show_notice = $this->show_promotional_notice( $notice_type );
+		if ( ! $show_notice ) {
 			return;
 		}
-
-		$notice_dismissed             = get_option( 'user_registration_review_notice_dismissed', 'no' );
-		$notice_dismissed_temporarily = get_option( 'user_registration_review_notice_dismissed_temporarily', '' );
-
-		if ( 'yes' == $notice_dismissed ) {
-			return;
-		}
-
 		// Return if activation date is less than 7 days.
 		if ( ur_check_activation_date( '7' ) === false ) {
 			return;
+		}
+
+		$notice_header      = __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' );
+		$notice_target_link = 'https://wordpress.org/support/plugin/user-registration/reviews/#postform';
+
+		include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+	}
+
+	/**
+	 * Check whether notice is showable or not.
+	 *
+	 * @param string $notice_type Notice Type.
+	 * @param string $days Number of days for temparary dismissed.
+	 * @return bool
+	 */
+	public function show_promotional_notice( $notice_type, $days = '1' ) {
+
+		// Show only to Admins.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$notice_dismissed             = get_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'no' );
+		$notice_dismissed_temporarily = get_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
+
+		if ( 'yes' === $notice_dismissed ) {
+			return false;
 		}
 
 		// Return if dismissed date is less than a day.
 		if ( '' !== $notice_dismissed_temporarily ) {
 
 			$days_to_validate = strtotime( $notice_dismissed_temporarily );
-			$days_to_validate = strtotime( '+1 day', $days_to_validate );
+			$days_to_validate = strtotime( '+' . $days . ' day', $days_to_validate );
 			$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
 
 			$current_date = date_i18n( 'Y-m-d' );
 
 			if ( $current_date < $days_to_validate ) {
-				return;
+				return false;
 			}
 		}
+		return true;
+	}
 
-		?>
-			<div id="user-registration-review-notice" class="notice notice-info user-registration-notice" data-purpose="review">
-				<div class="user-registration-notice-thumbnail">
-					<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
-				</div>
-				<div class="user-registration-notice-text">
-					<div class="user-registration-notice-header">
-						<h3><?php echo wp_kses_post( __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' ) ); ?></h3>
-						<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
-					</div>
-					<p><?php echo wp_kses_post( __( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ) ); ?> </p>
-					<p><?php echo wp_kses_post( __( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ) ); ?></p>
-					<p class="extra-pad">
-						<?php
-						echo wp_kses_post(
-							__(
-								'<strong>What benefit would you have?</strong> <br>
-				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration'
-							)
-						);
-						?>
-					</p>
-					<div class="user-registration-notice-links">
-						<ul class="user-registration-notice-ul">
-							<li><a class="button button-primary" href="https://wordpress.org/support/plugin/user-registration/reviews/#postform" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
-							<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
-							<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
-						</ul>
-						<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
-					</div>
-				</div>
-			</div>
-		<?php
+	/**
+	 * Allow Usage Notice
+	 *
+	 * @since  2.3.2
+	 */
+	public function allow_usage_notice() {
+
+		// Show only to Admins.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$allow_usage_tracking     = get_option( 'user_registration_allow_usage_tracking', null );
+		$allow_usage_notice_shown = get_option( 'user_registration_allow_usage_notice_shown', false );
+
+		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown ) {
+			return false;
+		}
+
+		if ( ur_check_updation_date( '1' ) === true ) {
+			$notice_type        = 'allow_usage';
+			$notice_header      = __( 'Contribute to the enhancement', 'user-registration' );
+			$notice_target_link = '#';
+			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -255,14 +270,9 @@ class UR_Admin {
 	 */
 	public function survey_notice() {
 
-		// Show only to Admins.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$notice_dismissed = get_option( 'user_registration_survey_notice_dismissed', 'no' );
-
-		if ( 'yes' == $notice_dismissed ) {
+		$notice_type = 'survey';
+		$show_notice = $this->show_promotional_notice( $notice_type );
+		if ( ! $show_notice ) {
 			return;
 		}
 
@@ -270,52 +280,10 @@ class UR_Admin {
 		$license_key = trim( get_option( 'user-registration_license_key' ) );
 
 		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
+			$notice_header      = __( 'User Registration Plugin Survey', 'user-registration' );
+			$notice_target_link = 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu';
 
-			?>
-				<div id="user-registration-survey-notice" class="notice notice-info user-registration-notice" data-purpose="survey">
-					<div class="user-registration-notice-thumbnail">
-						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
-					</div>
-					<div class="user-registration-notice-text">
-						<div class="user-registration-notice-header">
-							<h3><?php esc_html_e( 'User Registration Plugin Survey', 'user-registration' ); ?></h3></br>
-							<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
-						</div>
-							<p>
-							<?php
-							echo wp_kses_post(
-								__(
-									'<strong>Hey there!</strong> <br>
-								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-									'user-registration'
-								)
-							);
-							?>
-								</p>
-							<p class="extra-pad">
-							<?php
-							echo wp_kses_post(
-								__(
-									'<strong>What benefit would you have?</strong> <br>
-								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-									'user-registration'
-								)
-							);
-							?>
-							</p>
-
-						<div class="user-registration-notice-links">
-							<ul class="user-registration-notice-ul">
-								<li><a class="button button-primary" href=<?php echo esc_url( 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu' ); ?> target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-								<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
-								<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
-								<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
-							</ul>
-							<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
-						</div>
-					</div>
-				</div>
-			<?php
+			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
 		} else {
 			return;
 		}
@@ -411,12 +379,11 @@ class UR_Admin {
 	 */
 	public function template_actions() {
 		if ( isset( $_GET['page'], $_REQUEST['action'] ) && 'add-new-registration' === $_GET['page'] ) {
-			$action    = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 
 			$templates = UR_Admin_Form_Templates::get_template_data();
 
-			$templates = is_array($templates) ? $templates: array();
-
+			$templates = is_array( $templates ) ? $templates : array();
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {

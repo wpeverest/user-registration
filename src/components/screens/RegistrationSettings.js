@@ -16,7 +16,6 @@ const RegistrationSettings = ({
 	onBoardIconsURL,
 }) => {
 	const [{ settings }] = useStateValue();
-
 	return (
 		<Stack direction="column" spacing="8" mt={5}>
 			{sectionSettings &&

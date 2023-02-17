@@ -64,6 +64,7 @@ class UR_AJAX {
 			'template_licence_check' => false,
 			'install_extension'      => false,
 			'create_form'            => true,
+			'allow_usage_dismiss'    => false,
 			'cancel_email_change'    => false,
 			'email_setting_status'   => false,
 		);
@@ -75,6 +76,27 @@ class UR_AJAX {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
+	}
+
+	/**
+	 * Triggered when clicking the allow usage notice allow or deny buttons.
+	 */
+	public static function allow_usage_dismiss() {
+		check_ajax_referer( 'allow_usage_nonce', '_wpnonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1 );
+		}
+
+		$allow_usage_tracking = isset( $_POST['allow_usage_tracking'] ) ? sanitize_text_field( wp_unslash( $_POST['allow_usage_tracking'] ) ) : false;
+
+		update_option( 'user_registration_allow_usage_notice_shown', true );
+
+		if ( 'true' === $allow_usage_tracking ) {
+			update_option( 'user_registration_allow_usage_tracking', 'yes' );
+		}
+
+		wp_die();
 	}
 
 	/**
@@ -1097,7 +1119,7 @@ class UR_AJAX {
 		if ( ! empty( $_POST['dismissed'] ) ) {
 			if ( ! empty( $_POST['dismiss_forever'] ) && 'true' === $_POST['dismiss_forever'] ) {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
-				update_option( 'user_registration_review_notice_dismissed_temporarily', '' );
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 			} else {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
 			}
@@ -1166,7 +1188,7 @@ class UR_AJAX {
 
 		$addons        = array();
 		$template_data = UR_Admin_Form_Templates::get_template_data();
-		$template_data = is_array($template_data) ? $template_data: array();
+		$template_data = is_array( $template_data ) ? $template_data : array();
 		if ( ! empty( $template_data ) ) {
 			foreach ( $template_data as $template ) {
 

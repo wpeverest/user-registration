@@ -309,6 +309,18 @@
       ]
 	  },
 	  {
+      "title": "Two Factor Authentication",
+      "slug" : "user-registration-two-factor-authentication",
+      "name" : "User Registration Two Factor Authentication",
+      "image": "extensions-json/sections/images/two-factor-authentication.png",
+      "excerpt": "Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=two-factor-authentication",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
       "title": "Private Notes",
       "slug" : "user-registration-private-notes",
       "name" : "User Registration Private Notes",
