@@ -215,16 +215,16 @@
         },
         {
             "name": "antecedent/patchwork",
-            "version": "2.1.21",
+            "version": "2.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antecedent/patchwork.git",
-                "reference": "25c1fa0cd9a6e6d0d13863d8df8f050b6733f16d"
+                "reference": "e792b062c08260f1a4cc6f2ecdc09a0ee5c3455a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/25c1fa0cd9a6e6d0d13863d8df8f050b6733f16d",
-                "reference": "25c1fa0cd9a6e6d0d13863d8df8f050b6733f16d",
+                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/e792b062c08260f1a4cc6f2ecdc09a0ee5c3455a",
+                "reference": "e792b062c08260f1a4cc6f2ecdc09a0ee5c3455a",
                 "shasum": ""
             },
             "require": {
@@ -257,9 +257,9 @@
             ],
             "support": {
                 "issues": "https://github.com/antecedent/patchwork/issues",
-                "source": "https://github.com/antecedent/patchwork/tree/2.1.21"
+                "source": "https://github.com/antecedent/patchwork/tree/2.1.24"
             },
-            "time": "2022-02-07T07:28:34+00:00"
+            "time": "2023-02-18T17:07:53+00:00"
         },
         {
             "name": "clue/stdio-react",

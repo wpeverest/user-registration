@@ -279,7 +279,7 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.3.2    - 16/02/2023
+= 2.3.2    - 20/02/2023
 * Feature  - Shortcode for 'Change Password' Page.
 * Feature  - Email confirmation for email change on the edit profile page.
 * Refactor - Profile Picture save after profile update.
