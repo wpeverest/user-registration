@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "homepage": "https://wpeverest.com/wordpress-plugins/user-registration/",
   "repository": {
     "type": "git",
@@ -64,6 +64,7 @@
     "npm": ">=5.5.1"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^1.7.4",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",

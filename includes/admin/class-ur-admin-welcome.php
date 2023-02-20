@@ -110,7 +110,7 @@ class UR_Admin_Welcome {
 					<title>
 						<?php esc_html_e( 'User Registration - Setup Wizard', 'user-registration' ); ?>
 					</title>
-					<?php wp_print_head_scripts(); ?>
+					<?php wp_head(); ?>
 					<script>
 						// To play welcome video.
 						jQuery(document).on(
@@ -120,7 +120,7 @@ class UR_Admin_Welcome {
 								jQuery(this).find(".welcome-video-container").remove();
 
 								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/tMaG6pnfYg0?start=15&amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/ce7OCzXO7EM?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
 
 								event.preventDefault();
 
@@ -150,57 +150,35 @@ class UR_Admin_Welcome {
 				} else {
 					?>
 					<div id="user-registration-welcome" >
+						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
 						<div class="user-registration-welcome-card" >
 							<div class="user-registration-welcome-container">
+							<div class="user-registration-welcome-video">
+									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/onboarding-thumbnail.png' ); ?>" alt="" class="onboarding-video-thumb">
+									<a class="welcome-video-play">
+										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play">
+											<span class="dashicons dashicons-controls-play"></span>
+										</button>
+									</a>
+								</div>
 								<div class="user-registration-welcome-container__header">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-logo.png' ); ?>" alt="">
 									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
-								<div class="user-registration-welcome-video">
-									<a class="welcome-video-play">
-										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-feature.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
-										<button class="user-registration-welcome-video__button dashicons dashicons-controls-play"></button>
-									</a>
-								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
-											<h3><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
-									</a>
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration&onboarding-skipped=1' ) ); ?>" class="button button-secondary">
-											<h3><?php esc_html_e( 'Create a First Form', 'user-registration' ); ?></h3>
-									</a>
-									<a href="<?php echo esc_url_raw( admin_url() . '/admin.php?page=user-registration&end-setup-wizard=' . true ); ?>" class="button button-tertiary">
-											<h3><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?></h3>
+										<h3 style="font-size: 18px; margin: 0px;"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
 									</a>
 								</div>
 							</div>
 						</div>
-						<div class="user-registration-extensions-card" >
-							<div class="user-registration-extensions-container__header">
-								<h2><?php esc_html_e( 'Check Our Awesome Extensions', 'user-registration' ); ?></h2>
-							</div>
-							<div class="user-registration-extensions-container__body">
-								<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-extensions.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with User Registration', 'user-registration' ); ?>" class="user-registration-welcome-thumb">
-							</div>
-							<div class="user-registration-extensions-container__footer">
-								<a href=<?php echo esc_url( admin_url( 'admin.php' ) . '?page=user-registration-addons' ); ?> class="button button-secondary" target="blank">
-									<h3><?php esc_html_e( 'See All Extensions', 'user-registration' ); ?></h3>
-								</a>
-							</div>
-						</div>
-						<div class="user-registration-support-card" >
-							<div class="user-registration-support-container__header">
-								<h2><?php echo wp_kses_post( 'Feeling Lost? </br> Contact Our Support Team', 'user-registration' ); ?></h2>
-							</div>
-							<div class="user-registration-support-container__body">
-								<p>Feel free to get in touch with one of our sales representative if you have any queries related to our product.</p>
-							</div>
-							<div class="user-registration-support-container__footer">
-								<a href=<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?> class="button button-secondary" target="blank">
-									<h3><?php esc_html_e( 'Contact support', 'user-registration' ); ?></h3>
-								</a>
-							</div>
+
+						<div class="user-registration-skip-btn">
+							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration&end-setup-wizard=' . true ); ?>">
+								<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+								</svg></p>
+							</a>
 						</div>
 					</div>
 					<?php

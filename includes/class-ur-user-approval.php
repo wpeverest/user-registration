@@ -226,8 +226,7 @@ class UR_User_Approval {
 							$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
 						}
 						$url      = substr( $url, 0, strpos( $url, '?' ) );
-						$instance = new UR_Email_Confirmation();
-						$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+						$url      = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 						/* translators: %s - Resend Verification Link. */
 						$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
 						return new WP_Error( 'user_email_not_verified', $message );
@@ -251,8 +250,7 @@ class UR_User_Approval {
 			}
 
 			$url      = substr( $url, 0, strpos( $url, '?' ) );
-			$instance = new UR_Email_Confirmation();
-			$url      = wp_nonce_url( $url . '?ur_resend_id=' . $instance->crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url      = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $status['user_status'] ) {
 				/* translators: %s - Resend Verification Link. */

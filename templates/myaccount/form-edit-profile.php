@@ -41,23 +41,22 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 								$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
 								if ( is_numeric( $profile_picture_url ) ) {
-									$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-								$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
+
+								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
-											$edit_profile_valid_file_type = 'image/jpeg,image/jpg,image/gif,image/png';
 
 											if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
-												if ( ! empty( $single_item->advance_setting->valid_file_type ) ) {
-													$edit_profile_valid_file_type = implode( ', ', $single_item->advance_setting->valid_file_type );
-												}
-												$max_upload_size = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
+												$edit_profile_valid_file_type = isset( $single_item->advance_setting->valid_file_type ) && '' !== $single_item->advance_setting->valid_file_type ? implode( ', ', $single_item->advance_setting->valid_file_type ) : $edit_profile_valid_file_type;
+												$max_upload_size              = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
 											}
 										}
 									}
@@ -92,17 +91,10 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
 											<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
 											<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+
+											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
+											<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
 											<?php
-											if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
-												?>
-												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
-												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/jpg,image/gif,image/png" style="display:none" />
-												<?php
-											} else {
-												?>
-												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/jpg,image/gif,image/png" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" />
-												<?php
-											}
 										}
 										?>
 
@@ -306,7 +298,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 
 													// Remove files attachment id from user meta if file is deleted by admin.
 													if ( '' !== $field['value'] ) {
-														$attachment_ids = explode( ',', $field['value'] );
+														$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
 
 														foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
 															$attachment_url = get_attached_file( $attachment_id );
@@ -386,7 +378,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 												$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-												user_registration_form_field( $key, $field, $value );
+												$field = user_registration_form_field( $key, $field, $value );
 
 												/**
 												 * Embed the current country value to allow to remove it if it's not allowed.

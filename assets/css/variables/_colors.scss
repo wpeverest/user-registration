@@ -7,6 +7,19 @@
 $primary_color: #475bb2;
 $primary_dark: darken($primary_color, 10%); // #217dbb
 $primary_light: lighten($primary_color, 40%); // #e1f0fa
+$grey-0: #ffffff;
+$grey-15: #fdfdfd;
+$grey-25: #f4f4f4;
+$grey-50: #e9e9e9;
+$border-color: #e1e1e1;
+$grey-75: #bdbdbd;
+$grey-100: #bababa;
+$grey-200: #999999;
+$grey-300: #6b6b6b;
+$grey-400: #383838;
+$grey-500: #222222;
+$grey-800: #131313;
+
 
 // Alerts
 $green: #37b24d;
@@ -18,8 +31,8 @@ $black: #000;
 // Gray Shades
 $white: #ffffff;
 $gray_base: #2d3559;
-$color_gray-lighten:			#cdd0d8;
-$color_gray-more-lighten:		#e9ebf1;
+$color_gray-lighten: #cdd0d8;
+$color_gray-more-lighten: #e9ebf1;
 $color_gray_one: adjust-color(
 	$gray_base,
 	$saturation: -11%,

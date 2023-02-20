@@ -1,6 +1,57 @@
 {
   "products": [
     {
+      "title": "Advanced Fields",
+      "slug" : "user-registration-advanced-fields",
+      "name" : "User Registration-Advanced Fields",
+      "image": "extensions-json/sections/images/advanced-fields.png",
+      "excerpt": "Advanced Fields provides you with additional advanced fields like Section Title, Custom HTML, Phone, Time Picker and WYSIWYG Fields. These fields will allow you to create more complex registration forms with ease.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=advanced-fields",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "WooCommerce Integration",
+      "slug" : "user-registration-woocommerce",
+      "name" : "User Registration - WooCommerce",
+      "image": "extensions-json/sections/images/woo-extension.png",
+      "excerpt": "Integrates WooCommerce plugin with your user-registration and allows you to manage user billing, shipping, orders via user registration account page",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=woocommerce-integration",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "Customize My Account",
+      "slug" : "user-registration-customize-my-account",
+      "name" : "User Registration customize my account",
+      "image": "extensions-json/sections/images/customize-my-account.png",
+      "excerpt": "User Registration Customize My Account add-on allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=customize-my-account",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "Content Restriction",
+      "slug" : "user-registration-content-restriction",
+      "name" : "User Registration - Content Restriction",
+      "image": "extensions-json/sections/images/content-restriction.png",
+      "excerpt": "Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=content-restriction",
+	    "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+    },
+    {
       "title": "Style Customizer",
       "slug" : "user-registration-style-customizer",
       "name" : "User Registration Style Customizer",
@@ -8,6 +59,43 @@
       "excerpt": "Gone are the days when registration forms used to look dull and boring. Easily style your registration forms according to your needs by changing various design components such as Font size, Font color, background color, background image, Border, padding, margin, alignment and more.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=style-customizer",
       "plan" : [
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "File Upload",
+      "slug" : "user-registration-file-upload",
+      "name" : "User Registration - File Upload",
+      "image": "extensions-json/sections/images/file.png",
+      "excerpt": "File Upload addon for User Registration plugin allows you to create upload field in your registration form. You can use this field on your registration forms allowing your users to upload important files, documents, images and more.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=file-upload",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "Conditional Logic",
+      "slug" : "user-registration-conditional-logic",
+      "name" : "User Registration Conditional Logic",
+      "image": "extensions-json/sections/images/conditional-logic.png",
+      "excerpt": "Conditional Logic allows you to create more dynamic forms based on user input. You can now show or hide specific fields based on the users other input in the form. A field hide or show based on on multiple conditions fulfilled.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conditional-logic",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+    },
+    {
+      "title": "Field Visibility",
+      "slug" : "user-registration-field-visibility",
+      "name" : "User Registration Field Visibility",
+      "image": "extensions-json/sections/images/field-visibility.png",
+      "excerpt": "User Registration Field Visibility add-on allows user registration fields to be hidden in the frontend form or your account profile page as per your choice. Also, allows you to make a field read only in registration form or profile page or both.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=field-visibility",
+	    "plan" : [
         "plus",
         "professional"
       ]
@@ -25,14 +113,13 @@
       ]
     },
     {
-      "title": "File Upload",
-      "slug" : "user-registration-file-upload",
-      "name" : "User Registration - File Upload",
-      "image": "extensions-json/sections/images/file.png",
-      "excerpt": "File Upload addon for User Registration plugin allows you to create upload field in your registration form. You can use this field on your registration forms allowing your users to upload important files, documents, images and more.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=file-upload",
+      "title": "Profile Connect",
+      "slug" : "user-registration-profile-connect",
+      "name" : "User Registration Profile Connect",
+      "image": "extensions-json/sections/images/profile-connect.png",
+      "excerpt": "Connect your old users i.e users created via some other plugins, default WordPress registration form to user registration forms. Allows both individual as well as bulk connection of users to any particular form.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-connect",
       "plan" : [
-        "personal",
         "plus",
         "professional"
       ]
@@ -63,65 +150,38 @@
         "professional"
       ]
     },
-    {
-      "title": "WooCommerce Integration",
-      "slug" : "user-registration-woocommerce",
-      "name" : "User Registration - WooCommerce",
-      "image": "extensions-json/sections/images/woo-extension.png",
-      "excerpt": "Integrates WooCommerce plugin with your user-registration and allows you to manage user billing, shipping, orders via user registration account page",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=woocommerce-integration",
+	  {
+      "title": "Email Templates",
+      "slug" : "user-registration-email-templates",
+      "name" : "User Registration Email Templates",
+      "image": "extensions-json/sections/images/email-templates.png",
+      "excerpt": "Allows you to choose an email template or create a custom email template. It offers an easy-to-use customizer for you to change the look and feel of your User Registration emails.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/email-templates/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=email-templates",
       "plan" : [
-        "personal",
+        "plus",
+        "professional"
+      ]
+	  },
+    {
+      "title": "Invite Codes",
+      "slug" : "user-registration-invite-codes",
+      "name" : "User Registration Invite Codes",
+      "image": "extensions-json/sections/images/invite-codes.png",
+      "excerpt": " Allows you to restrict the registration on your site to users with invite Codes only. You can create a single or multiple invitation code, set expiry date, usage limit per invitation code and more.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=invite-codes",
+      "plan" : [
         "plus",
         "professional"
       ]
     },
     {
-      "title": "Content Restriction",
-      "slug" : "user-registration-content-restriction",
-      "name" : "User Registration - Content Restriction",
-      "image": "extensions-json/sections/images/content-restriction.png",
-      "excerpt": "Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=content-restriction",
+      "title": "Geolocation",
+	    "slug" : "user-registration-geolocation",
+	    "name" : "User Registration Geolocation",
+      "image": "extensions-json/sections/images/geolocation.png",
+      "excerpt": "Allows you to collect geo location data from users who registered on your site. Information like Country, City, Zip Code, Latitude/Longitude and location map for the user will accessible.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
 	    "plan" : [
-        "personal",
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Advanced Fields",
-      "slug" : "user-registration-advanced-fields",
-      "name" : "User Registration-Advanced Fields",
-      "image": "extensions-json/sections/images/advanced-fields.png",
-      "excerpt": "Advanced Fields provides you with additional advanced fields like Section Title, Custom HTML, Phone, Time Picker and WYSIWYG Fields. These fields will allow you to create more complex registration forms with ease.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/advanced-fields/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=advanced-fields",
-      "plan" : [
-        "personal",
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Conditional Logic",
-      "slug" : "user-registration-conditional-logic",
-      "name" : "User Registration Conditional Logic",
-      "image": "extensions-json/sections/images/conditional-logic.png",
-      "excerpt": "Conditional Logic allows you to create more dynamic forms based on user input. You can now show or hide specific fields based on the users other input in the form. A field hide or show based on on multiple conditions fulfilled.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conditional-logic",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Profile Connect",
-      "slug" : "user-registration-profile-connect",
-      "name" : "User Registration Profile Connect",
-      "image": "extensions-json/sections/images/profile-connect.png",
-      "excerpt": "Connect your old users i.e users created via some other plugins, default WordPress registration form to user registration forms. Allows both individual as well as bulk connection of users to any particular form.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/profile-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-connect",
-      "plan" : [
         "plus",
         "professional"
       ]
@@ -140,6 +200,30 @@
       ]
     },
     {
+      "title": "Import Users",
+      "slug" : "user-registration-import-users",
+      "name" : "User Registration Import Users",
+      "image": "extensions-json/sections/images/import-users.png",
+      "excerpt": "You can easily import users on your WordPress site. Just select the form to map user details, choose a user data file in CSV format, map the fields, and import your users.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/import-users/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=import-users",
+	    "plan" : [
+        "plus",
+        "professional"
+      ]
+    },
+	  {
+      "title": "Frontend Listing",
+      "slug" : "user-registration-frontend-listing",
+      "name" : "User Registration Frontend Listing",
+      "image": "extensions-json/sections/images/frontend-listing.png",
+      "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+    {
       "title": "PayPal Payment",
       "slug" : "user-registration-payments",
       "name" : "User Registration Payments",
@@ -151,6 +235,31 @@
         "professional"
       ]
     },
+    {
+      "title": "Zapier",
+      "slug" : "user-registration-zapier",
+      "name" : "User Registration Zapier",
+      "image": "extensions-json/sections/images/zapier.png",
+      "excerpt": "Connect your user registration forms with Zapier with over 1500 web applications and pass information. So, you can save your time by easily automating your work.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=zapier",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+    {
+      "title": "Two Factor Authentication",
+      "slug" : "user-registration-two-factor-authentication",
+      "name" : "User Registration Two Factor Authentication",
+      "image": "extensions-json/sections/images/two-factor-authentication.png",
+      "excerpt": "Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=two-factor-authentication",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+	  },
     {
       "title": "Stripe",
       "slug" : "user-registration-stripe",
@@ -164,17 +273,17 @@
       ]
     },
     {
-      "title": "Geolocation",
-	    "slug" : "user-registration-geolocation",
-	    "name" : "User Registration Geolocation",
-      "image": "extensions-json/sections/images/geolocation.png",
-      "excerpt": "Allows you to collect geo location data from users who registered on your site. Information like Country, City, Zip Code, Latitude/Longitude and location map for the user will accessible.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
-	    "plan" : [
+      "title": "MailerLite",
+      "slug" : "user-registration-mailerlite",
+      "name" : "User Registration MailerLite",
+      "image": "extensions-json/sections/images/mailerlite.png",
+      "excerpt": "Connect your MailerLite account with User Registration Form. Users filling up registration form can directly be added to your MailerLite subscriber list. You can then use those collected data for Email Marketing.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
+      "plan" : [
         "plus",
         "professional"
       ]
-    },
+	  },
     {
       "title": "LearnDash",
       "slug" : "user-registration-learndash",
@@ -187,108 +296,12 @@
         "professional"
       ]
     },
-    {
-      "title": "Customize My Account",
-      "slug" : "user-registration-customize-my-account",
-      "name" : "User Registration customize my account",
-      "image": "extensions-json/sections/images/customize-my-account.png",
-      "excerpt": "User Registration Customize My Account add-on allows you to create, edit and delete additional tabs on the account page along with custom content for that tab. Also supports drag and drop sorting of account tabs",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=customize-my-account",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Field Visibility",
-      "slug" : "user-registration-field-visibility",
-      "name" : "User Registration Field Visibility",
-      "image": "extensions-json/sections/images/field-visibility.png",
-      "excerpt": "User Registration Field Visibility add-on allows user registration fields to be hidden in the frontend form or your account profile page as per your choice. Also, allows you to make a field read only in registration form or profile page or both.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=field-visibility",
-	    "plan" : [
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Invite Codes",
-      "slug" : "user-registration-invite-codes",
-      "name" : "User Registration Invite Codes",
-      "image": "extensions-json/sections/images/invite-codes.png",
-      "excerpt": " Allows you to restrict the registration on your site to users with invite Codes only. You can create a single or multiple invitation code, set expiry date, usage limit per invitation code and more.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=invite-codes",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-    },
-    {
-      "title": "Import Users",
-      "slug" : "user-registration-import-users",
-      "name" : "User Registration Import Users",
-      "image": "extensions-json/sections/images/import-users.png",
-      "excerpt": "You can easily import users on your WordPress site. Just select the form to map user details, choose a user data file in CSV format, map the fields, and import your users.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/import-users/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=import-users",
-	    "plan" : [
-        "plus",
-        "professional"
-      ]
-    },
-	  {
-      "title": "Email Templates",
-      "slug" : "user-registration-email-templates",
-      "name" : "User Registration Email Templates",
-      "image": "extensions-json/sections/images/email-templates.png",
-      "excerpt": "Allows you to choose an email template or create a custom email template. It offers an easy-to-use customizer for you to change the look and feel of your User Registration emails.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/email-templates/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=email-templates",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-	  },
-    {
-      "title": "Zapier",
-      "slug" : "user-registration-zapier",
-      "name" : "User Registration Zapier",
-      "image": "extensions-json/sections/images/zapier.png",
-      "excerpt": "Connect your user registration forms with Zapier with over 1500 web applications and pass information. So, you can save your time by easily automating your work.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=zapier",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-	  },
-	  {
-      "title": "Frontend Listing",
-      "slug" : "user-registration-frontend-listing",
-      "name" : "User Registration Frontend Listing",
-      "image": "extensions-json/sections/images/frontend-listing.png",
-      "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-	  },
-	  {
-      "title": "MailerLite",
-      "slug" : "user-registration-mailerlite",
-      "name" : "User Registration MailerLite",
-      "image": "extensions-json/sections/images/mailerlite.png",
-      "excerpt": "Connect your MailerLite account with User Registration Form. Users filling up registration form can directly be added to your MailerLite subscriber list. You can then use those collected data for Email Marketing.",
-      "link": "https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
-      "plan" : [
-        "plus",
-        "professional"
-      ]
-	  },
 	  {
       "title": "ActiveCampaign",
       "slug" : "user-registration-activecampaign",
       "name" : "User Registration ActiveCampaign",
       "image": "extensions-json/sections/images/activecampaign.jpg",
-      "excerpt": "You can connect your ActiveCampaign account to your User Registration Forms using the ActiveCampaign add-on. Users who complete the User Registration form will be added to your ActiveCampaign subscriber list. You can then use the information collected for email marketing.",
+      "excerpt": "You can connect your ActiveCampaign account to your User Registration Forms using the ActiveCampaign add-on. Users who complete the User Registration form will be added to your ActiveCampaign subscriber list.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/activecampaign/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=activecampaign",
       "plan" : [
         "plus",
@@ -300,10 +313,33 @@
       "slug" : "user-registration-two-factor-authentication",
       "name" : "User Registration Two Factor Authentication",
       "image": "extensions-json/sections/images/two-factor-authentication.png",
-      "excerpt": "Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching. When you enable two-factor authentication for your logins, you must confirm your identity through an additional authentication step after entering your correct username and password.",
+      "excerpt": "Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.",
       "link": "https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=two-factor-authentication",
       "plan" : [
-        "personal",
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Private Notes",
+      "slug" : "user-registration-private-notes",
+      "name" : "User Registration Private Notes",
+      "image": "extensions-json/sections/images/private-notes.png",
+      "excerpt": "Private Note add-on allows admins to easily share important updates, personalized messages, and other relevant information with their users, while also providing a platform for users to ask questions and provide feedback.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Private Notes",
+      "slug" : "user-registration-private-notes",
+      "name" : "User Registration Private Notes",
+      "image": "extensions-json/sections/images/private-notes.png",
+      "excerpt": "Private Note add-on allows admins to easily share important updates, personalized messages, and other relevant information with their users, while also providing a platform for users to ask questions and provide feedback.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "plan" : [
         "plus",
         "professional"
       ]

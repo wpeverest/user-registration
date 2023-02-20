@@ -262,7 +262,6 @@ jQuery(function ($) {
 			// Empty fields panels.
 			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-footer").hide();
-
 			// Show only the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").show();
 		}
@@ -278,7 +277,6 @@ jQuery(function ($) {
 			// Show field panels.
 			$(".ur-builder-wrapper-content").show();
 			$(".ur-builder-wrapper-footer").show();
-
 			// Hide the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").hide();
 		}
@@ -494,6 +492,26 @@ jQuery(function ($) {
 			},
 		});
 	});
+
+	// Email Status
+	$(".user-registration-email-status-toggle").on("change", function (e) {
+		e.preventDefault();
+		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var id = $(this).find('input[type="checkbox"]').attr('id');
+		$.ajax({
+			url: user_registration_email_setting_status.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_email_setting_status",
+				status: status,
+				id : id,
+				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+			},
+			success: function (response) {
+
+			},
+		});
+	});
 });
 
 (function ($, user_registration_admin_data) {
@@ -553,8 +571,18 @@ jQuery(function ($) {
 				},
 			});
 		});
+
+		$(".ur_export_form_action_button").on("click", function () {
+			var formid = $('#selected-export-forms').val();
+			$(document).find('#message').remove();
+			if(formid.length === 0) {
+				message_string ='<div id="message" class="error inline ur-import_notice"><p><strong>' + user_registration_admin_data.export_error_message+ '</strong></p></div>';
+				$(".ur-export-users-page").prepend(message_string);
+			} else {
+				$('.ur_export_form_action_button').attr('type','submit');
+			}
 	});
-})(jQuery, window.user_registration_admin_data);
+})})(jQuery, window.user_registration_admin_data);
 
 /**
  * Set tooltips for specified elements.
