@@ -61,12 +61,17 @@ class UR_Admin_Export_Users {
 			$all_fields                = (array) json_decode( $all_fields );
 			$all_fields                = array_keys( $all_fields );
 			$all_add_fields            = array( 'user_id', 'user_role', 'ur_user_status', 'date_created', 'date_created_gmt' );
-			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : $all_fields; //phpcs:ignore
-			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	$all_add_fields; //phpcs:ignore
-			$unchecked_fields          = array_diff( $all_fields, $checked_fields );
-			$export_format             = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : '';
-			$from_date                 = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
-			$to_date                   = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
+			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
+			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	array(); //phpcs:ignore
+			if ( empty( $checked_fields ) && empty( $checked_additional_fields ) ) {
+				$checked_fields            = $all_fields;
+				$checked_additional_fields = $all_add_fields;
+			}
+
+			$unchecked_fields = array_diff( $all_fields, $checked_fields );
+			$export_format    = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : '';
+			$from_date        = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
+			$to_date          = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
 		} else {
 			$unchecked_fields = array();
 		}
