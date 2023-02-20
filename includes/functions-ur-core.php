@@ -2138,19 +2138,6 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			continue;
 		}
 
-		// Process for file upload.
-		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
-
-			$upload_data = array();
-			$file_data   = explode( ',', $form_data->value );
-
-			foreach ( $file_data as $key => $value ) {
-				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
-				array_push( $upload_data, $file );
-			}
-			$form_data->value = $upload_data;
-		}
-
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
 			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
 			$countries        = $country_class::get_instance()->get_country();
@@ -2706,10 +2693,13 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 					} elseif ( ur_is_valid_url( $attachment_id ) ) {
 						$attachment_url = '<a href="' . $attachment_id . '">' . $attachment_id . '</a>';
 						array_push( $links, $attachment_url );
+					} else {
+						array_push( $links, $attachment_id );
 					}
 				}
 
 				$field_value = implode( ', ', $links );
+
 				break;
 			case 'privacy_policy':
 				if ( '1' === $field_value ) {

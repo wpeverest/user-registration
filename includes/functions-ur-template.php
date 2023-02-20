@@ -429,7 +429,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 				}
 
-				if ( 'user_email' === $args['field_key'] ) {
+				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {
 					$user_id       = get_current_user_id();
 					$pending_email = get_user_meta( $user_id, 'user_registration_pending_email', true );
 					$expiration    = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
