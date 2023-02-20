@@ -55,6 +55,13 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				wp_kses_post( $icon ),
 				esc_html__( 'Add Registration Form', 'user-registration' )
 			);
+			$smart_tags_list = UR_Emailer::smart_tags_list();
+			printf( '<select id="select-smart-tags" class="button" style="color:#2271B1; border-color:#2271B1">', esc_attr( $editor_id ) );
+			printf( '<option value="">%s</option>', esc_html__( 'Add Smart Tags', 'user-registration' ) );
+			foreach ( $smart_tags_list as $key => $value ) {
+				printf( "<option class='ur-select-smart-tag' value = '%s'> %s</option>", esc_attr( $key ), esc_html( $value ) );
+			}
+			echo '</select>';
 
 			add_action( 'admin_footer', array( $this, 'shortcode_modal' ) );
 		}

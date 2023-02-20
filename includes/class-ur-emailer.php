@@ -571,7 +571,27 @@ class UR_Emailer {
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
-
+	/**
+	 * List of smart tags.
+	 *
+	 * @return array array of smart tags.
+	 */
+	public static function smart_tags_list() {
+		$smart_tags = array(
+			'{{user_id}}'     => __( 'User ID', 'user-registration' ),
+			'{{username}}'    => __( 'User Name', 'user-registration' ),
+			'{{email}}'       => __( 'Email', 'user-registration' ),
+			'{{email_token}}' => __( 'Email Token', 'user-registration' ),
+			'{{blog_info}}'   => __( 'Blog Info', 'user-registration' ),
+			'{{home_url}}'    => __( 'Home URL', 'user-registration' ),
+			'{{ur_login}}'    => __( 'UR Login', 'user-registration' ),
+			'{{key}}'         => __( 'Key', 'user-registration' ),
+			'{{all_fields}}'  => __( 'All Fields', 'user-registration' ),
+			'{{auto_pass}}'   => __( 'Auto Pass', 'user-registration' ),
+			'{{user_roles}}'  => __( 'User Roles', 'user-registration' ),
+		);
+		return $smart_tags;
+	}
 	/**
 	 * Parse Smart tags for emails.
 	 *
@@ -580,20 +600,11 @@ class UR_Emailer {
 	 * @param array  $name_value  Extra values.
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
-		$smart_tags = array(
-			'{{user_id}}',
-			'{{username}}',
-			'{{email}}',
-			'{{email_token}}',
-			'{{blog_info}}',
-			'{{home_url}}',
-			'{{ur_login}}',
-			'{{key}}',
-			'{{all_fields}}',
-			'{{auto_pass}}',
-			'{{user_roles}}',
-		);
 
+		$smart_tags_list = self::smart_tags_list();
+		foreach ( $smart_tags_list as $key => $value ) {
+			$smart_tags[] = $key;
+		}
 		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
 
 		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
