@@ -105,9 +105,9 @@ class UR_Form_Handler {
 					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
-							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) {
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
 								$email_updated = true;
-								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 							}
 							continue;
 						}
@@ -764,7 +764,7 @@ class UR_Form_Handler {
 
 		$templates = UR_Admin_Form_Templates::get_template_data();
 
-		$templates = is_array($templates) ? $templates: array();
+		$templates = is_array( $templates ) ? $templates : array();
 
 		$form_data = array();
 
