@@ -135,10 +135,10 @@ class UR_Frontend_Form_Handler {
 					wp_send_json_success( $success_params );
 				} else {
 
-					foreach( self::$valid_form_data as $field_key => $field_value ) {
+					foreach ( self::$valid_form_data as $field_key => $field_value ) {
 						if ( isset( $field_value->extra_params ) && isset( $field_value->extra_params['field_key'] ) ) {
-							if( 'file' ===  $field_value->extra_params['field_key'] ) {
-								$file_data = explode( ",", get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true ) );
+							if ( 'file' === $field_value->extra_params['field_key'] ) {
+								$file_data   = explode( ',', get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true ) );
 								$upload_data = array();
 
 								foreach ( $file_data as $key => $file_value ) {
@@ -146,16 +146,16 @@ class UR_Frontend_Form_Handler {
 									array_push( $upload_data, $file );
 								}
 
-								$field_value->value = $upload_data;
-								self::$valid_form_data[$field_key] = $field_value;
+								$field_value->value                  = $upload_data;
+								self::$valid_form_data[ $field_key ] = $field_value;
 							}
 
 							// Process for file upload.
 							if ( 'profile_picture' === $field_value->extra_params['field_key'] ) {
-								$profile_file_data = get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true );
-								$profile_file = wp_get_attachment_url( $profile_file_data );
-								$field_value->value = $profile_file;
-								self::$valid_form_data[$field_key] = $field_value;
+								$profile_file_data                   = get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true );
+								$profile_file                        = wp_get_attachment_url( $profile_file_data );
+								$field_value->value                  = $profile_file;
+								self::$valid_form_data[ $field_key ] = $field_value;
 							}
 						}
 					}
