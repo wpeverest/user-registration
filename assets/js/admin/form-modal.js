@@ -30,7 +30,7 @@
 		});
 
 		//Insert Smart Tag into TinyMCE
-		$(document).on('click', '.ur-select-smart-tag', function(event) {
+		$(document).on('change', '#select-smart-tags', function(event) {
 			event.preventDefault();
 			var smart_tag;
 			smart_tag = $(this).val();
