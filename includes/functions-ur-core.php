@@ -2758,8 +2758,12 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-			/* translators: %s - My account Link. */
-			$message = sprintf( __( 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="%s" style="text-decoration:none;">My Account Page</a> )', 'user-registration' ), $my_account_setting_link );
+
+			$message = sprintf(
+				/* translators: %1$s - My account Link. */
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpeverest.com/user-registration/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				$my_account_setting_link
+			);
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
