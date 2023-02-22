@@ -94,6 +94,8 @@ class UR_AJAX {
 
 		if ( 'true' === $allow_usage_tracking ) {
 			update_option( 'user_registration_allow_usage_tracking', 'yes' );
+		} elseif ( 'false' === $allow_usage_tracking ) {
+			update_option( 'user_registration_allow_usage_tracking', 'no' );
 		}
 
 		wp_die();
