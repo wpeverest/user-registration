@@ -49,24 +49,25 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'user_input_dropped'     => true,
-			'form_save_action'       => true,
-			'user_form_submit'       => true,
-			'update_profile_details' => true,
-			'profile_pic_upload'     => true,
-			'profile_pic_remove'     => true,
-			'ajax_login_submit'      => true,
-			'send_test_email'        => true,
-			'rated'                  => false,
-			'dashboard_widget'       => false,
-			'dismiss_notice'         => false,
-			'import_form_action'     => false,
-			'template_licence_check' => false,
-			'install_extension'      => false,
-			'create_form'            => true,
-			'allow_usage_dismiss'    => false,
-			'cancel_email_change'    => false,
-			'email_setting_status'   => false,
+			'user_input_dropped'        => true,
+			'form_save_action'          => true,
+			'user_form_submit'          => true,
+			'update_profile_details'    => true,
+			'profile_pic_upload'        => true,
+			'profile_pic_remove'        => true,
+			'ajax_login_submit'         => true,
+			'send_test_email'           => true,
+			'rated'                     => false,
+			'dashboard_widget'          => false,
+			'dismiss_notice'            => false,
+			'import_form_action'        => false,
+			'template_licence_check'    => false,
+			'install_extension'         => false,
+			'create_form'               => true,
+			'allow_usage_dismiss'       => false,
+			'cancel_email_change'       => false,
+			'email_setting_status'      => false,
+			'locked_form_fields_notice' => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1448,6 +1449,58 @@ class UR_AJAX {
 		} else {
 			wp_send_json_error( 'Update failed !' );
 		};
+	}
+	/**
+	 * Install or upgrade to premium.
+	 */
+	public static function locked_form_fields_notice() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'locked_form_fields_notice_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permision Denied' );
+			return;
+		}
+		$plan = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
+		$slug = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
+		$key  = ur_get_license_plan();
+		if ( false === $key ) {
+			echo "<div class='action-button'><a class='button' href='https://wpeverest.com/wordpress-plugins/user-registration/pricing/' target='_blank'>Upgrade Plan</a></div>";
+			wp_die();
+		}
+		$key = $key . ' plan';
+		$key = trim( $key );
+
+		if ( 'professional plan' === $key || 'plus plan' === $key ) {
+			$key = 'professional plan or plus plan';
+		}
+		if ( strtolower( $plan ) === $key ) {
+			if ( 'professional plan or plus plan' === $key ) {
+				$plan_list = array( 'plus', 'professional', 'personal' );
+			} else {
+				$plan_list = array( 'personal' );
+			}
+		} else {
+			if ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $key ) {
+				$plan_list = array( 'plus', 'professional', 'personal' );
+			} else {
+				$plan_list = array();
+			}
+		}
+		if ( $plan ) {
+			$addon = (object) array(
+				'title' => '',
+				'slug'  => $slug,
+				'name'  => '',
+				'plan'  => $plan_list,
+			);
+		}
+
+		echo do_action( 'user_registration_after_addons_description', $addon );
+		wp_die();
+
 	}
 }
 

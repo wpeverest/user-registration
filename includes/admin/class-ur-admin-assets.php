@@ -321,6 +321,16 @@ class UR_Admin_Assets {
 					'card_switch_disabled_text' => __( 'Disabled', 'user-registration' ),
 				)
 			);
+			wp_localize_script(
+				'user-registration-admin',
+				'user_registration_locked_form_fields_notice',
+				array(
+					'ajax_url'       => admin_url( 'admin-ajax.php' ),
+					'user_registration_locked_form_fields_notice_nonce' => wp_create_nonce( 'locked_form_fields_notice_nonce' ),
+					'lock_message'   => __( 'is a premium field', 'user-registration' ),
+					'unlock_message' => __( 'to unlock this field.', 'user-registration' ),
+				)
+			);
 		}
 
 		// Enqueue flatpickr on user profile screen.

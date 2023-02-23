@@ -52,30 +52,50 @@ jQuery(function ($) {
 		var label = $(this).text();
 		var title =
 			icon +
-			'<span class="user-registration-swal2-modal__title">' +
-			label +
-			" is a premium field.</span>";
+			'<span class="user-registration-swal2-modal__title"> ' +
+			label +" "+ user_registration_locked_form_fields_notice.lock_message
+			".</span>";
 		var plan = $(this).data("plan");
-		var message =
-			label +
-			" field is locked. Upgrade to <strong>" +
-			plan +
-			"</strong> to unlock this field.";
+		var slug = $(this).data("slug");
+		if(slug != '' && plan != '')
+		{
+			$.ajax({
+				url: user_registration_locked_form_fields_notice.ajax_url,
+				type:"POST",
+				data:{
+					action:"user_registration_locked_form_fields_notice",
+					slug:slug,
+					plan:plan,
+					security : user_registration_locked_form_fields_notice.user_registration_locked_form_fields_notice_nonce,
 
-		Swal.fire({
-			title: title,
-			html: message,
-			customClass:
-				"user-registration-swal2-modal user-registration-swal2-modal--centered",
-			showCloseButton: true,
-			confirmButtonText: "View Pricing",
-		}).then(function (result) {
-			if (result.value) {
-				var url =
-					"https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro";
-				window.open(url, "_blank");
+				},
+				success:function(response) {
+					var txt = $(response).find('a').text();
+					if( txt.trim() === 'Activate') {
+						var message ="<strong>Please "+txt+" addon </strong>"+user_registration_locked_form_fields_notice.unlock_message;
+					} else if(txt.trim() === 'Install Addon') {
+						var message ="<strong>Please "+txt+" </strong>"+user_registration_locked_form_fields_notice.unlock_message;
+					} else if(txt.trim() === 'Upgrade Plan') {
+						var message ="<strong> Please "+txt+" </strong> "+user_registration_locked_form_fields_notice.unlock_message;
+					}
+				message = message+'<br><br>'+response;
+				Swal.fire({
+					title: title,
+					html: message,
+					customClass:
+						"user-registration-swal2-modal user-registration-swal2-modal--centered",
+					showCloseButton: true,
+					showConfirmButton:false,
+				}).then(function (result) {
+					if (result.value) {
+						window.open(url, "_blank");
+					}
+				});
 			}
-		});
+			})
+
+		}
+
 	});
 
 	// Adjust builder width
