@@ -461,7 +461,6 @@ class UR_Form_Validation extends UR_Validation {
 			'user_email'     => array( 'is_email' ),
 			'email'          => array( 'is_email' ),
 			'user_url'       => array( 'is_url' ),
-			'date'           => array( 'is_date' ),
 			'privacy_policy' => array( 'is_boolean' ),
 			'number'         => array( 'is_numeric' ),
 		);

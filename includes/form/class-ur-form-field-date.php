@@ -71,8 +71,38 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
+		$field_label = $single_form_field->general_setting->label;
+
 		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
-		// Perform custom validation for the field here ...
+
+		if ( ! $is_enable_date_range ) {
+			add_filter(
+				'user_registration_field_validations',
+				function( $validations ) {
+					$validations['date'] = array( 'is_date' );
+					return $validations;
+				}
+			);
+		} else {
+			$value = $form_data->value;
+			$dates = explode( 'to', $value );
+			foreach ( $dates as $date ) {
+				$result = UR_Validation::is_date( trim( $date ) );
+
+				if ( is_wp_error( $result ) ) {
+					add_filter(
+						$filter_hook,
+						function ( $field_label ) {
+							return sprintf(
+								/* translators: %s Field Label */
+								__( 'Please select a valid date range for %s.', 'user-registration' ),
+								$field_label
+							);
+						}
+					);
+				}
+			}
+		}
 	}
 
 	/**
