@@ -1522,11 +1522,14 @@
 											.attr("disabled", "disabled");
 									}
 								}
+								var selected = "'selected'";
 
 								var label_node = selected_inputs
 									.find('select[data-field="required"]')
 									.find(
-										'option[selected="selected"][value="yes"]'
+										'option[selected="' +
+											selected +
+											'"][value="yes"]'
 									)
 									.closest(".ur-selected-item")
 									.find(".ur-label")
