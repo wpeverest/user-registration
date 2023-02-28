@@ -590,7 +590,7 @@ class UR_Emailer {
 			'{{auto_pass}}'   => __( 'Auto Pass', 'user-registration' ),
 			'{{user_roles}}'  => __( 'User Roles', 'user-registration' ),
 		);
-		return $smart_tags;
+		return apply_filters( 'user_registration_smart_tags_list', $smart_tags );
 	}
 	/**
 	 * Parse Smart tags for emails.
