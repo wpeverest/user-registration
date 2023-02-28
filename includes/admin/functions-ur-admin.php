@@ -631,18 +631,40 @@ if ( ! function_exists( 'review_notice_content' ) ) {
 	 */
 	function review_notice_content() {
 
-		echo wp_kses_post(
-			sprintf(
-				"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-				__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
-				__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
-				__(
-					'<strong>What benefit would you have?</strong> <br>
-				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-					'user-registration'
-				)
+		$form_users = get_users(
+			array(
+				'meta_key' => 'ur_form_id',
 			)
 		);
+		$total_registration = count( $form_users );
+
+		if ( 20 <= $total_registration ){
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( 'Congratulations you have reached 20 users from user registration plugin. ( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
+					__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+					__(
+						'<strong>What benefit would you have?</strong> <br>
+					Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+						'user-registration'
+					)
+				)
+			);
+		}else{
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
+					__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+					__(
+						'<strong>What benefit would you have?</strong> <br>
+					Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+						'user-registration'
+					)
+				)
+			);
+		}
 	}
 }
 
