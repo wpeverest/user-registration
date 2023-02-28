@@ -379,7 +379,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 								),
 								array(
 									'title'    => __( 'Allow Users to Login With', 'user-registration' ),
-									'desc'     => __( 'Allow users to login with Username, Email or any one out of both.', 'user-registration' ),
+									'desc'     => __( 'Allow users to login with Username, Email or both.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_login_options_with',
 									'default'  => 'default',
 									'type'     => 'select',
