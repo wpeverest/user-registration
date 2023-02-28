@@ -160,6 +160,42 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			return $addons_data;
 		}
 
+
+		public function get_global_settings() {
+
+			$global_settings = array();
+			$settings        = $this->setting_keys();
+			$send_all        = false;
+			$send_default    = false;
+
+			foreach ( $settings as $product => $product_settings ) {
+				foreach ( $product_settings as $setting_array ) {
+					$setting_key     = $setting_array[0];
+					$setting_default = $setting_array[1];
+					$value           = get_option( $setting_key, 'NOT_SET' );
+
+					// Set boolean values for certain settings.
+					if ( isset( $setting_array[2] ) && 'NOT_SET' !== $value && $setting_default !== $value ) {
+						$value = 1;
+					}
+
+					if ( 'NOT_SET' !== $value || $send_all ) {
+						$setting_content = array(
+							'value' => $value
+						);
+
+						if ( $send_default ) {
+							$setting_content['default'] = $setting_default;
+						}
+
+						$global_settings[ $product ][ $setting_key ] = $setting_content;
+					}
+				}
+			}
+
+			return $global_settings;
+		}
+
 		/**
 		 * Checks if usage is allowed.
 		 *
@@ -249,6 +285,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['locale']               = get_locale();
 			$data['timezone']             = $this->get_timezone_offset();
 			$data['base_product']         = $this->get_base_product();
+			$data['global_settings']      = $this->get_global_settings();
 
 			$this->send_request( self::REMOTE_URL, $data );
 		}
@@ -319,6 +356,98 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				)
 			);
 			return json_decode( wp_remote_retrieve_body( $response ), true );
+		}
+
+		/**
+		 * Returns non-sensitive setting keys.
+		 *
+		 * @return array
+		 */
+		private function setting_keys() {
+			return array(
+				'user-registration/user-registration.php' => array(
+					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
+					array( 'user_registration_login_option_hide_show_password', 'no' ),
+					array( 'user_registration_myaccount_page_id', '', true ),
+					array( 'user_registration_my_account_layout', 'horizontal' ),
+					array( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
+					array( 'user_registration_disable_profile_picture', 'no' ),
+					array( 'user_registration_disable_logout_confirmation', 'no' ),
+					array( 'user_registration_login_options_form_template', 'default' ),
+					array( 'user_registration_general_setting_login_options_with', 'default' ),
+					array( 'user_registration_login_title', 'no' ),
+					array( 'ur_login_ajax_submission', 'no' ),
+					array( 'user_registration_login_options_remember_me', 'yes' ),
+					array( 'user_registration_login_options_lost_password', 'yes' ),
+					array( 'user_registration_login_options_hide_labels', 'no' ),
+					array( 'user_registration_login_options_enable_recaptcha', 'no' ),
+					array( 'user_registration_general_setting_registration_url_options', '', true ),
+					array( 'user_registration_login_options_prevent_core_login', 'no' ),
+					array( 'user_registration_login_options_login_redirect_url', '', true ),
+					array( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					array( 'user_registration_general_setting_uninstall_option', 'no' ),
+					array( 'user_registration_allow_usage_tracking', 'no' )
+				),
+				'user-registration-pro/user-registration.php' => array(
+					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
+					array( 'user_registration_pro_general_setting_login_form', 'no' ),
+					array( 'user_registration_pro_general_setting_prevent_active_login', 'no' ),
+					array( 'user_registration_pro_general_setting_limited_login', '5' ),
+					array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', 'no' ),
+					array( 'user_registration_pro_general_post_submission_settings', '' ),
+					array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
+					array( 'user_registration_pro_role_based_redirection', 'no' )
+				),
+				'user-registration-content-restriction/user-registration-content-restriction.php' => array(
+					array( 'user_registration_content_restriction_enable', 'yes' ),
+					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' )
+				),
+				'user-registration-file-upload/user-registration-file-upload.php' => array(
+					array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
+					array( 'user_registration_file_upload_setting_max_file_size', '1024' )
+				),
+				'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
+					array( 'user_registration_pdf_template', 'default' ),
+					array( 'user_registration_pdf_logo_image', '', true ),
+					array( 'user_registration_pdf_setting_header', '' ),
+					array( 'user_registration_pdf_custom_header_text', '', true ),
+					array( 'user_registration_pdf_paper_size', '' ),
+					array( 'user_registration_pdf_orientation', 'portrait' ),
+					array( 'user_registration_pdf_font', '' ),
+					array( 'user_registration_pdf_font_size', '12' ),
+					array( 'user_registration_pdf_font_color', '#000000' ),
+					array( 'user_registration_pdf_background_color', '#ffffff' ),
+					array( 'user_registration_pdf_header_font_color', '#000000' ),
+					array( 'user_registration_pdf_header_background_color', '#ffffff' ),
+					array( 'user_registration_pdf_multiple_column', 'no' ),
+					array( 'user_registration_pdf_rtl', 'no' ),
+					array( 'user_registration_pdf_print_user_default_fields', 'no' ),
+					array( 'user_registration_pdf_hide_empty_fields', 'no' )
+				),
+				'user-registration-social-connect/user-registration-social-connect.php' => array(
+					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
+					array( 'user_registration_social_setting_enable_twitter_connect', '' ),
+					array( 'user_registration_social_setting_enable_google_connect', '' ),
+					array( 'user_registration_social_setting_enable_linkedin_connect', '' ),
+					array( 'user_registration_social_setting_enable_social_registration', 'no' ),
+					array( 'user_registration_social_setting_display_social_buttons_in_registration', 'no' ),
+					array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
+					array( 'user_registration_social_login_position', 'bottom' ),
+					array( 'user_registration_social_login_template', 'ursc_theme_4' )
+				),
+				'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
+					array( 'user_registration_tfa_enable_disable', 'no' ),
+					array( 'user_registration_tfa_roles', '["subscriber"]' ),
+					array( 'user_registration_tfa_otp_length', '6' ),
+					array( 'user_registration_tfa_otp_expiry_time', '10' ),
+					array( 'user_registration_tfa_otp_resend_limit', '3' ),
+					array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
+					array( 'user_registration_tfa_login_hold_period', '60' )
+				),
+				'user-registration-payments/user-registration-payments.php' => array(
+					array( 'user_registration_payment_currency', 'USD' )
+				)
+			);
 		}
 	}
 }
