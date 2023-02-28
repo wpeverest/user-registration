@@ -75,10 +75,6 @@ class UR_Setting_Country extends UR_Field_Settings {
 	 */
 	public function get_default_value_options() {
 
-		if ( ! isset( $this->field_data->advance_setting->selected_countries ) ) {
-			return array();
-		}
-
 		$selected_countries = $this->field_data->advance_setting->selected_countries;
 		$value              = UR_Form_Field_Country::get_instance()->get_country();
 

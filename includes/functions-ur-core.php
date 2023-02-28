@@ -836,8 +836,7 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-
-	if ( 'privacy_policy' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
