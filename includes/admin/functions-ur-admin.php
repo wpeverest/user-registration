@@ -638,7 +638,7 @@ if ( ! function_exists( 'review_notice_content' ) ) {
 		);
 		$total_registration = count( $form_users );
 
-		if ( 20 <= $total_registration ){
+		if ( 20 <= $total_registration ) {
 			echo wp_kses_post(
 				sprintf(
 					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
@@ -651,7 +651,7 @@ if ( ! function_exists( 'review_notice_content' ) ) {
 					)
 				)
 			);
-		}else{
+		} else {
 			echo wp_kses_post(
 				sprintf(
 					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
