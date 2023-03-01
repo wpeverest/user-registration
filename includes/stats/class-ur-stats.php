@@ -161,8 +161,12 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 
+		/**
+		 * Get non-sensitive settings.
+		 *
+		 * @return array
+		 */
 		public function get_global_settings() {
-
 			$global_settings = array();
 			$settings        = $this->setting_keys();
 			$send_all        = false;
@@ -181,7 +185,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 					if ( 'NOT_SET' !== $value || $send_all ) {
 						$setting_content = array(
-							'value' => $value
+							'value' => $value //phpcs:ignore
 						);
 
 						if ( $send_default ) {
@@ -386,7 +390,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_login_options_login_redirect_url', '', true ),
 					array( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 					array( 'user_registration_general_setting_uninstall_option', 'no' ),
-					array( 'user_registration_allow_usage_tracking', 'no' )
+					array( 'user_registration_allow_usage_tracking', 'no' ) //phpcs:ignore
 				),
 				'user-registration-pro/user-registration.php' => array(
 					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
@@ -396,15 +400,15 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', 'no' ),
 					array( 'user_registration_pro_general_post_submission_settings', '' ),
 					array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
-					array( 'user_registration_pro_role_based_redirection', 'no' )
+					array( 'user_registration_pro_role_based_redirection', 'no' ) //phpcs:ignore
 				),
 				'user-registration-content-restriction/user-registration-content-restriction.php' => array(
 					array( 'user_registration_content_restriction_enable', 'yes' ),
-					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' )
+					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
 				'user-registration-file-upload/user-registration-file-upload.php' => array(
 					array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
-					array( 'user_registration_file_upload_setting_max_file_size', '1024' )
+					array( 'user_registration_file_upload_setting_max_file_size', '1024' ) //phpcs:ignore
 				),
 				'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
 					array( 'user_registration_pdf_template', 'default' ),
@@ -422,7 +426,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pdf_multiple_column', 'no' ),
 					array( 'user_registration_pdf_rtl', 'no' ),
 					array( 'user_registration_pdf_print_user_default_fields', 'no' ),
-					array( 'user_registration_pdf_hide_empty_fields', 'no' )
+					array( 'user_registration_pdf_hide_empty_fields', 'no' ) //phpcs:ignore
 				),
 				'user-registration-social-connect/user-registration-social-connect.php' => array(
 					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
@@ -433,7 +437,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_social_setting_display_social_buttons_in_registration', 'no' ),
 					array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
 					array( 'user_registration_social_login_position', 'bottom' ),
-					array( 'user_registration_social_login_template', 'ursc_theme_4' )
+					array( 'user_registration_social_login_template', 'ursc_theme_4' ) //phpcs:ignore
 				),
 				'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
 					array( 'user_registration_tfa_enable_disable', 'no' ),
@@ -442,11 +446,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_tfa_otp_expiry_time', '10' ),
 					array( 'user_registration_tfa_otp_resend_limit', '3' ),
 					array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
-					array( 'user_registration_tfa_login_hold_period', '60' )
+					array( 'user_registration_tfa_login_hold_period', '60' ) //phpcs:ignore
 				),
 				'user-registration-payments/user-registration-payments.php' => array(
-					array( 'user_registration_payment_currency', 'USD' )
-				)
+					array( 'user_registration_payment_currency', 'USD' ) //phpcs:ignore
+				) //phpcs:ignore
 			);
 		}
 	}
