@@ -331,6 +331,11 @@ class UR_AJAX {
 
 		}// End foreach().
 
+		/**
+		 * Hook to perform validation of edit profile form.
+		 */
+		do_action( 'user_registration_validate_profile_update_ajax', $profile, $form_data, $form_id );
+
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
@@ -425,6 +430,14 @@ class UR_AJAX {
 				$response
 			);
 
+		} else {
+			$errors = ur_get_notices( 'error' );
+			ur_clear_notices();
+			wp_send_json_error(
+				array(
+					'message' => $errors,
+				)
+			);
 		}
 	}
 

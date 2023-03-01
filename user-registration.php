@@ -198,6 +198,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
 
+			// Validation classes.
+			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';
+			include_once UR_ABSPATH . 'includes/validation/class-ur-form-validation.php';
+
 			include_once UR_ABSPATH . 'includes/RestApi/class-ur-rest-api.php';
 
 			/**
