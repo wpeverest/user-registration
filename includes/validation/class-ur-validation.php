@@ -137,6 +137,38 @@ class UR_Validation {
 		}
 		return true;
 	}
+
+	/**
+	 * Validates if a value is an integer.
+	 *
+	 * @param [mixed] $value Value.
+	 * @return boolean or WP_Error
+	 */
+	public static function is_integer( $value ) {
+		if ( intval( $value ) != floatval( $value ) ) { //phpcs:ignore
+			return new WP_Error(
+				'user_registration_validation_non_integer',
+				'Please enter an integer value'
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validates if a value is not negative.
+	 *
+	 * @param [mixed] $value Value.
+	 * @return boolean or WP_Error.
+	 */
+	public static function is_non_negative( $value ) {
+		if ( ! self::is_numeric( $value ) || intval( $value ) < 0 ) {
+			return new WP_Error(
+				'user_registration_validation_negative_value',
+				'Please enter a non negative value'
+			);
+		}
+		return true;
+	}
 }
 
 new UR_Validation();
