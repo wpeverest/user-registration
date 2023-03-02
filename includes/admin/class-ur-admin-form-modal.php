@@ -115,7 +115,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 		 * @param int $editor_id  editor id.
 		 */
 		public function select_smart_tags( $editor_id ) {
-			$smart_tags_list = UR_Emailer::smart_tags_list();
+			$smart_tags_list = UR_Smart_Tags::smart_tags_list();
 			printf( '<select id="select-smart-tags" class="button" style="color:#2271B1; border-color:#2271B1">', esc_attr( $editor_id ) );
 			printf( '<option value="">%s</option>', esc_html__( 'Add Smart Tags', 'user-registration' ) );
 			foreach ( $smart_tags_list as $key => $value ) {
