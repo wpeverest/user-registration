@@ -311,7 +311,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, ['allowed_classes' => false] ) : $default; //phpcs:ignore Options doesnot support below php v7.0.
 					}
 
 					$choices = isset( $options ) ? $options : array();
@@ -542,7 +542,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value );
+					$default_value = unserialize( $value, ['allowed_classes' => false ] ); //phpcs:ignore options parameters does not support below php v7.0.
 				} else {
 					$default_value = $value;
 				}
