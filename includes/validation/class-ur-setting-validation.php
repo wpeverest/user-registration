@@ -70,6 +70,7 @@ class UR_Setting_Validation {
 
 		if ( ! is_null( $setting_type ) ) {
 			$setting_key = $option['id'];
+			$value       = $this->sanitize( $value, $setting_type );
 
 			$validations = $this->get_custom_validations( $setting_key );
 			if ( ! is_array( $validations ) ) {
@@ -160,9 +161,11 @@ class UR_Setting_Validation {
 		$this->error_messages = apply_filters(
 			'user_registration_setting_validation_messages',
 			array(
+				// phpcs:disable
 				'negative_value'   => esc_html__( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
 				'non_integer'      => esc_html__( 'Please enter an integer value for %s.', 'user-registration' ),
 				'non_numeric_data' => esc_html__( 'Please enter a numeric value for %s.', 'user-registration' ),
+				// phpcs:enable
 			)
 		);
 	}
@@ -189,6 +192,32 @@ class UR_Setting_Validation {
 			$message = sprintf( $message, $setting_label );
 			return $message;
 		}
+	}
+
+
+	/**
+	 * Sanitize setting values based on type.
+	 *
+	 * @param [mixed]  $value Setting Value.
+	 * @param [string] $setting_type Setting Type.
+	 * @return mixed
+	 */
+	private function sanitize( $value, $setting_type ) {
+		switch ( $setting_type ) {
+			case 'checkbox':
+				$value = ur_string_to_bool( $value );
+				$value = $value ? 1 : 0;
+				break;
+			case 'toggle':
+				$value = ur_string_to_bool( $value );
+				$value = $value ? 1 : 0;
+				break;
+			case 'number':
+				$value = ! empty( floatval( $value ) ) ? $value : 0;
+				break;
+		}
+
+		return $value;
 	}
 
 }
