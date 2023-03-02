@@ -1,3 +1,8 @@
+= 2.3.2.1  - 23/02/2023
+* Fix 	   - Consent notice is now dismissable.
+* Fix      - Form preview not working properly when astra theme activated.
+* Fix      - Error while submitting form with file upload field when OpenSSL extension disabled.
+
 = 2.3.2    - 20/02/2023
 * Feature  - Shortcode for 'Change Password' Page.
 * Feature  - Email confirmation for email change on the edit profile page.

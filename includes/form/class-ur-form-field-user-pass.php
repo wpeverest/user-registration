@@ -67,17 +67,7 @@ class UR_Form_Field_User_Pass extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
-		$password = isset( $form_data->value ) ? $form_data->value : '';
-
-		if ( empty( $password ) ) {
-			add_filter(
-				$filter_hook,
-				function ( $msg ) {
-					return __( 'Empty password.', 'user-registration' );
-				}
-			);
-		}
+		// Custom Field Validation here..
 	}
 
 	/**

@@ -42,13 +42,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$( document ).on( 'click', '.ur-allow-usage', function ( event ) {
 			event.preventDefault();
 			var allow_usage_tracking = true;
+			ajaxCall( allow_usage_tracking );
+		} );
+		$( document ).on( 'click', '.ur-deny-usage', function ( event ) {
+			event.preventDefault();
+			var allow_usage_tracking = false;
+			ajaxCall( allow_usage_tracking );
+		} );
 
+		function ajaxCall( allow_usage_tracking ) {
 			$.post( ajaxurl, {
 				action: 'user_registration_allow_usage_dismiss',
 				allow_usage_tracking: allow_usage_tracking,
 				_wpnonce: '<?php echo esc_js( wp_create_nonce( 'allow_usage_nonce' ) ); ?>'
 			} );
 			$( '#user-registration-allow_usage-notice' ).remove();
-		} );
+		}
 	} );
 </script>
