@@ -1468,7 +1468,7 @@ class UR_AJAX {
 		$key  = ur_get_license_plan();
 		if ( false === $key ) {
 			echo "<div class='action-button'><a class='button' href='https://wpeverest.com/wordpress-plugins/user-registration/pricing/' target='_blank'>Upgrade Plan</a></div>";
-			wp_die();
+			wp_send_json_success();
 		}
 		$key = $key . ' plan';
 		$key = trim( $key );
@@ -1498,8 +1498,8 @@ class UR_AJAX {
 			);
 		}
 
-		echo do_action( 'user_registration_after_addons_description', $addon );
-		wp_die();
+		do_action( 'user_registration_after_addons_description', $addon );
+		wp_send_json_success();
 
 	}
 }
