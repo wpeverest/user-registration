@@ -56,7 +56,7 @@ class UR_AJAX {
 			'profile_pic_upload'     => true,
 			'profile_pic_remove'     => true,
 			'ajax_login_submit'      => true,
-			'send_test_email'        => true,
+			'send_test_email'        => false,
 			'rated'                  => false,
 			'dashboard_widget'       => false,
 			'dismiss_notice'         => false,
@@ -724,6 +724,12 @@ class UR_AJAX {
 	 * @since 1.9.9
 	 */
 	public static function send_test_email() {
+		check_ajax_referer( 'test_email_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to send test email.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
 		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
 		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
