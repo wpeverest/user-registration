@@ -1498,7 +1498,7 @@ class UR_AJAX {
 			);
 		}
 
-		echo do_action( 'user_registration_after_addons_description', $addon );
+		do_action( 'user_registration_after_addons_description', $addon );
 		wp_die();
 
 	}
