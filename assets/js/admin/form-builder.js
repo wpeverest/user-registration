@@ -2820,7 +2820,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2850,7 +2849,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2906,7 +2904,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-min-date")
@@ -2955,7 +2952,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-max-date")
