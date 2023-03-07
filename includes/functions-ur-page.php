@@ -192,7 +192,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 
 	if (
 		 get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
-		'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
 
@@ -230,7 +230,7 @@ function ur_nav_menu_items( $items ) {
 
 	foreach ( $items as $item ) {
 
-		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}

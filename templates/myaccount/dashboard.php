@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 
-		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 
 			?>
 					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">

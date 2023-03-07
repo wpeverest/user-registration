@@ -48,7 +48,7 @@ class UR_Frontend {
 		$valid_form_data        = array();
 		$previous_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
 
-		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
 				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '' );
 				if ( ! is_array( $value ) && ! ur_is_valid_url( $value ) ) {
@@ -249,7 +249,7 @@ class UR_Frontend {
 			$page_id = $myaccount_page->ID;
 		}
 
-		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) && 1 <= absint( $matched ) ) {
+		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) && 1 <= absint( $matched ) ) {
 
 			// Redirect to core login reset password page on multisite.
 			if ( is_multisite() && ( 'lostpassword' === $action || 'resetpass' === $action ) ) {

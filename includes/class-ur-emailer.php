@@ -28,7 +28,7 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-		if ( 'yes' === get_option( 'user_registration_email_setting_disable_email' ) ) {
+		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
 		}
 
@@ -159,7 +159,7 @@ class UR_Emailer {
 		$username     = $user_data->user_login;
 		$single_field = array();
 
-		if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+		if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 
 			if ( isset( $_POST['form_data'] ) ) { //PHPCS:ignore
 				$form_data = json_decode( stripslashes( $_POST['form_data'] ) ); //PHPCS:ignore
@@ -295,7 +295,7 @@ class UR_Emailer {
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_awaiting_admin_approval_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_awaiting_admin_approval_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( -1 === intval( $status ) ) {
@@ -308,7 +308,7 @@ class UR_Emailer {
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_registration_denied_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) {
@@ -322,7 +322,7 @@ class UR_Emailer {
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_successfully_registered_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		}
@@ -379,7 +379,7 @@ class UR_Emailer {
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 		$header                    = self::parse_smart_tags( $header, $values, $name_value );
 
-		if ( 'yes' === get_option( 'user_registration_enable_admin_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
 			foreach ( $admin_email as $email ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
@@ -418,7 +418,7 @@ class UR_Emailer {
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_registration_pending_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_registration_pending_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		} elseif ( -1 === intval( $status ) ) {
@@ -431,7 +431,7 @@ class UR_Emailer {
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_registration_denied_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_registration_denied_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		} else {
@@ -444,7 +444,7 @@ class UR_Emailer {
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( 'yes' === get_option( 'user_registration_enable_registration_approved_email', 'yes' ) ) {
+			if ( ur_option_checked( 'user_registration_enable_registration_approved_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 			}
 		}
@@ -484,7 +484,7 @@ class UR_Emailer {
 		$message                   = self::parse_smart_tags( $message, $values );
 		$subject                   = self::parse_smart_tags( $subject, $values );
 
-		if ( 'yes' === get_option( 'user_registration_enable_reset_password_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_enable_reset_password_email', true ) ) {
 
 			// Get selected email template id for specific form.
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -535,7 +535,7 @@ class UR_Emailer {
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 		$header                    = self::parse_smart_tags( $header, $values, $name_value );
 
-		if ( 'yes' === get_option( 'user_registration_enable_profile_details_changed_email', 'yes' ) ) {
+		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
 			foreach ( $admin_email as $email ) {
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );

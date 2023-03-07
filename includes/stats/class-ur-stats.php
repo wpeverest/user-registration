@@ -166,7 +166,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @return boolean
 		 */
 		public function is_usage_allowed() {
-			return 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' );
+			return ur_option_checked( 'user_registration_allow_usage_tracking', false );
 		}
 
 		/**
