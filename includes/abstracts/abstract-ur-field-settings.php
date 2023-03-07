@@ -52,7 +52,18 @@ abstract class UR_Field_Settings {
 
 		foreach ( $fields as $field_key => $field ) {
 
-			$tooltip_html       = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$smart_tags   = '';
+			if ( 'default_value' === $field_key ) {
+				$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+				$smart_tags     .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+				$smart_tags     .= '<div class="ur-smart-tags-list" style="display: none">';
+				$smart_tags     .= '<div class="smart-tag-title ur-smart-tag-title">Smart Tags</div><ul class="ur-smart-tags">';
+				foreach ( $smart_tags_list as $key => $value ) {
+					$smart_tags .= "<li class='ur-select-smart-tag' data-key = '" . esc_attr( $key ) . "'> " . esc_html( $value ) . '</li>';
+				}
+				$smart_tags .= '</ul></div>';
+			}
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
 			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
@@ -68,6 +79,7 @@ abstract class UR_Field_Settings {
 					}
 
 					$this->fields_html .= ' />';
+					$this->fields_html .= $smart_tags;
 					break;
 
 				case 'select':
