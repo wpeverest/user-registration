@@ -356,7 +356,7 @@ jQuery(function ($) {
 									Swal.fire({
 										icon: "error",
 										title: "Oops...",
-										text: response.data
+										html: response.data
 											.captcha_setup_error_msg,
 									});
 								} else {

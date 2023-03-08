@@ -1256,7 +1256,11 @@ class UR_AJAX {
 		wp_send_json_error(
 			array(
 				'is_captcha_setup'        => false,
-				'captcha_setup_error_msg' => esc_html__( 'Please set up reCAPTCHA correctly first.', 'user-registration' ),
+				'captcha_setup_error_msg' => sprintf(
+					/* translators: %s - Integration tab url */
+					__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" >Add Now.</a>', 'user-registration' ),
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+				),
 			)
 		);
 
