@@ -1,4 +1,9 @@
 <?php
+/**
+ * UR_Setting_Country.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -8,16 +13,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  * UR_Setting_Country Class
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Country extends UR_Field_Settings {
 
 
+	/**
+	 * Class constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'country_advance_setting';
 	}
 
+	/**
+	 * Output.
+	 *
+	 * @param array $field_data field data.
+	 */
 	public function output( $field_data = array() ) {
 
 		$this->field_data = $field_data;
@@ -27,6 +38,9 @@ class UR_Setting_Country extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register fields.
+	 */
 	public function register_fields() {
 
 		$fields = array(
@@ -78,7 +92,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 		$selected_countries = $this->field_data->advance_setting->selected_countries;
 		$value              = UR_Form_Field_Country::get_instance()->get_country();
 
-		// Get only the selected countries
+		// Get only the selected countries.
 		if ( is_array( $selected_countries ) ) {
 			$value = array_intersect_key(
 				UR_Form_Field_Country::get_instance()->get_country(),
