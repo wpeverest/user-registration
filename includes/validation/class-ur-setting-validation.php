@@ -205,7 +205,8 @@ class UR_Setting_Validation {
 	private function sanitize( $value, $setting_type ) {
 		switch ( $setting_type ) {
 			case 'number':
-				$value = ! empty( floatval( $value ) ) ? $value : 0;
+				$floatval = floatval( $value );
+				$value = ! empty( $floatval ) ? $value : 0;
 				break;
 		}
 
