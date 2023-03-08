@@ -3014,15 +3014,16 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		$key            = hash( 'sha256', $secret_key );
 		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
 
-		if ( 'e' == $action ) {
+		if ( 'e' === $action ) {
 			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' == $action ) {
+		} elseif ( 'd' === $action ) {
 			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
 		}
 
 		return $output;
 	}
 }
+
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 	/**
