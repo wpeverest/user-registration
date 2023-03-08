@@ -204,14 +204,6 @@ class UR_Setting_Validation {
 	 */
 	private function sanitize( $value, $setting_type ) {
 		switch ( $setting_type ) {
-			case 'checkbox':
-				$value = ur_string_to_bool( $value );
-				$value = $value ? 1 : 0;
-				break;
-			case 'toggle':
-				$value = ur_string_to_bool( $value );
-				$value = $value ? 1 : 0;
-				break;
 			case 'number':
 				$value = ! empty( floatval( $value ) ) ? $value : 0;
 				break;
