@@ -49,6 +49,16 @@ jQuery(function ($) {
 			$('#ur-deactivate-feedback-popup-wrapper').on('click', '.close-deactivate-feedback-popup', function(){
 				$('#ur-deactivate-feedback-popup-wrapper').removeClass('active');
 			});
+
+			$('input.ur-deactivate-feedback-input').on( 'click', function() {
+				var $this = $(this);
+				var inputTextBox = $('input[name="reason_other"]');
+				if ( 'other' === $this.val() ) {
+					inputTextBox.attr('required', 'required')
+				} else {
+					inputTextBox.removeAttr('required');
+				}
+			} );
 		},
 		send_data: function (form) {
 			var reason_slug = form
