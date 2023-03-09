@@ -220,8 +220,13 @@
 								element.hasClass("ur-quantity")
 							) {
 								error.insertAfter(element.parent());
-							}else if ( "url" === element.attr("type") ) {
-								error.insertAfter( element.parent() );
+							} else if (
+								"text" === element.attr("type") &&
+								element.hasClass("ur-payment-price")
+							) {
+								error.insertAfter(element);
+							} else if ("url" === element.attr("type")) {
+								error.insertAfter(element.parent());
 							} else {
 								error.insertAfter(element.parent().parent());
 							}

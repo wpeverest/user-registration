@@ -71,21 +71,37 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
-		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
-		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
-		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
-		$value                = isset( $form_data->value ) ? $form_data->value : '';
-		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
-		$field_name       = isset( $single_form_field->general_setting->field_name ) ? $single_form_field->general_setting->field_name : '';
+		$field_label = $single_form_field->general_setting->label;
 
-		if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' == $required && empty( $value ) ) {
+		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
+
+		if ( ! $is_enable_date_range ) {
 			add_filter(
-				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					/* translators: %1$s - Field Label */
-					return sprintf( __( '%1$s is required.', 'user-registration' ), $field_label );
+				'user_registration_field_validations',
+				function( $validations ) {
+					$validations['date'] = array( 'is_date' );
+					return $validations;
 				}
 			);
+		} else {
+			$value = $form_data->value;
+			$dates = explode( 'to', $value );
+			foreach ( $dates as $date ) {
+				$result = UR_Validation::is_date( trim( $date ) );
+
+				if ( is_wp_error( $result ) ) {
+					add_filter(
+						$filter_hook,
+						function ( $field_label ) {
+							return sprintf(
+								/* translators: %s Field Label */
+								__( 'Please select a valid date range for %s.', 'user-registration' ),
+								$field_label
+							);
+						}
+					);
+				}
+			}
 		}
 	}
 

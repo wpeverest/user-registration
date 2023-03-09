@@ -3014,10 +3014,18 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		$key            = hash( 'sha256', $secret_key );
 		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
 
-		if ( 'e' === $action ) {
-			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' === $action ) {
-			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+		if ( 'e' == $action ) {
+			if ( function_exists( 'openssl_encrypt' ) ) {
+				$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+			}else{
+				$output = base64_encode( $string );
+			}
+		} elseif ( 'd' == $action ) {
+			if ( function_exists( 'openssl_decrypt' ) ) {
+				$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+			}else{
+				$output = base64_decode( $string );
+			}
 		}
 
 		return $output;

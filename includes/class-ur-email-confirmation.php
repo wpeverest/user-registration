@@ -299,6 +299,9 @@ class UR_Email_Confirmation {
 			)
 		);
 
+		// Trigger an action hook after the email address is updated.
+		do_action( 'user_registration_email_change_success', $user_id );
+
 		// Remove the confirmation key, pending email and expiry date.
 		UR_Form_Handler::delete_pending_email_change( $user_id );
 
