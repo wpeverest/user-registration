@@ -3017,13 +3017,13 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 
 		if ( 'e' == $action ) {
 			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-		} elseif ( 'd' == $action ) {
+		} elseif ( 'd' == $action ) { //phpcs:ignore
 			$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
 		}
 
 		return $output;
 	}
-}
+} //phpcs:ignore
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 	/**
