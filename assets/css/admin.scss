@@ -840,8 +840,7 @@
 	.ur-registered-item {
 		cursor: move;
 		padding: 4px;
-		color: $color_gray_two;
-		height: 110px;
+		color: $grey-300;
 		font-size: 12px;
 		border-radius: 4px;
 		margin: 0 8px 16px;
@@ -851,16 +850,18 @@
 		justify-content: center;
 		text-align: center;
 		width: calc(33.3333% - 16px);
-		background-color: $color_gray_five;
+		background: #fbfbfd;
+		border: 1px solid $blue-50;
+		height: 100px;
 
 		.ur-icon {
-			font-size: 32px;
-			margin-bottom: 4px;
+			font-size: 26px;
+			margin-bottom: $spacing_4px;
 		}
 
 		&:hover {
-			background-color: $primary_color;
-			color: $white;
+			color: $primary_color;
+			border-color: $primary_color;
 		}
 
 		&.ui-draggable-dragging {
@@ -869,14 +870,51 @@
 		}
 
 		&.ui-draggable-disabled {
-			color: $color_gray_three;
+			position: relative;
+			opacity: .5;
+
+			&::before {
+				content: "";
+				background-image: url("../images/icons/lock-icon.png");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 100%;
+				position: absolute;
+				width: 16px;
+				height: 16px;
+				// border-radius: 50%;
+				top: $spacing_8px;
+				right: $spacing_8px;
+			}
 
 			&.ur-upgradable-field {
 				cursor: pointer !important;
+				opacity: 1;
+				color: $grey-100;
+
+				&::before {
+					content: "";
+					background-image: url("../images/icons/ur-pro-icon.png");
+					background-repeat: no-repeat;
+					background-position: center;
+					background-size: 100%;
+					position: absolute;
+					border-radius: 2px;
+					width: 16px;
+					height: 16px;
+					top: $spacing_8px;
+					right: $spacing_8px;
+				}
+
+				&:hover {
+					color: $grey-100;
+				}
 			}
 
 			&:hover {
-				background: $color_gray_five;
+				color: $grey-300;
+				background: #fbfbfd;
+				border-color: $blue-50;
 				cursor: not-allowed;
 			}
 		}
@@ -913,15 +951,13 @@
 					border: 0;
 					flex: 1;
 					text-align: center;
+					border-top: 4px solid transparent;
+					transition: all .3s ease-in-out;
 
 					&.active {
 						margin-bottom: 0;
 						padding-bottom: 0;
-					}
-
-					&.ui-state-disabled {
-						opacity: 1;
-					}
+					}					
 
 					a {
 						float: none;
@@ -931,7 +967,7 @@
 						display: block;
 						color: $gray_base;
 						background-color: transparent;
-						padding: 12px 15px;
+						padding: $spacing_8px $spacing_16px $spacing_14px;
 						font-weight: 500;
 						cursor: pointer;
 
@@ -946,6 +982,54 @@
 							line-height: 24px;
 						}
 					}
+
+					&.ui-state-hover,
+					&.ui-state-active {
+						border-top: 4px solid $primary_color;
+					}
+
+					&.ui-state-disabled {
+						position: relative;
+						opacity: 1;
+						
+
+						&:hover {
+							&::before {
+								content: "";
+								position: absolute;
+								border-bottom: 15px solid #383838;
+								border-left: 12px solid transparent;
+								border-right: 12px solid transparent;
+								bottom: 0;
+								left: 50%;
+								transform: translateX(-50%);
+							}
+
+							&::after {
+								content: "You need to select a \A field in order to enable/ \A view this option";
+								white-space: pre;
+								text-align: left;
+								position: absolute;
+								width: 175px;
+								height: auto;
+								z-index: 9;
+								bottom: -80px;
+								left: 50%;
+								transform: translateX(-50%);
+								background: #383838;
+								color: #fff;
+								font-size: 14px;
+								line-height: 150%;
+								border-radius: $border_radius_5;
+								padding: $spacing_10px $spacing_12px;
+							}
+						}
+
+						a {
+							// cursor: not-allowed;
+							opacity: .25;
+						}
+					}
 				}
 			}
 
@@ -956,29 +1040,34 @@
 			}
 
 			.ur-tab-content {
-				padding: 16px;
+				padding: $spacing_32px $spacing_12px $spacing_12px;
 
 				.ur-search-fields {
 					display: flex;
 					align-items: center;
 					position: relative;
+					margin-bottom: 26px;
 
 					input.ur-type-text {
 						height: 40px;
-						padding: 8px 12px;
 						font-size: 14px;
-						background: $color_gray_five;
-						border-color: $color_gray_five;
-						border-radius: 4px;
+						background: transparent;
+						border-color: $grey-100;
+						border-radius: $border_radius_4;
+						padding: $spacing_10px $spacing_16px;
+						color: $grey-200;
 
 						&::placeholder {
-							color: $color_gray_three;
+							color: $grey-200;
 						}
 					}
 
 					svg {
 						position: absolute;
-						right: 12px;
+						right: 16px;
+						width: 18px;
+						height: 18px;
+						fill: $grey-200;
 					}
 				}
 
@@ -997,13 +1086,14 @@
 				}
 
 				h2 {
-					margin: 16px 0;
-					font-size: 1em;
+					margin: $spacing_16px 0 $spacing_14px;
+					font-size: 16px;
+					line-height: 150%;
 					font-weight: 500;
-					color: $gray_base;
+					color: $grey-400;
 
 					~ hr {
-						border-top: 1px solid $border_color;
+						border-top: 1px solid $border-color;
 					}
 				}
 
@@ -1011,7 +1101,8 @@
 					display: flex;
 					flex-wrap: wrap;
 					width: calc(100% + 16px);
-					margin-left: -8px;
+					margin-left: -$spacing_8px;
+					margin-top: $spacing_18px;
 
 					&:last-child {
 						margin-bottom: 0;
@@ -1022,23 +1113,39 @@
 
 		.ur-toggle-heading {
 			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-direction: row-reverse;			
 
 			&:before {
-				content: "\f142";
-				cursor: pointer;
-				display: block;
-				font: 400 20px/1 Dashicons;
-				line-height: 0.5 !important;
-				padding: 4px;
-				position: relative;
-				right: 0;
-				top: 0;
+				content: "";
+				background-image: url("../images/icons/ur-arrow-down.svg");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 100%;
 				float: right;
+				transform: rotate(180deg);
+				width: 18px;
+				height: 18px;
+				transition: all .3s ease-in-out;
+
+				// content: "\f142";
+				// cursor: pointer;
+				// display: block;
+				// font: 400 20px/1 Dashicons;
+				// line-height: 0.5 !important;
+				// padding: 4px;
+				// position: relative;
+				// right: 0;
+				// top: 0;
+				// float: right;
 			}
 
 			&.closed {
 				&:before {
-					content: "\f140";
+					// content: "\f140";
+					transform: rotate(0deg);
 				}
 			}
 		}
@@ -1109,7 +1216,7 @@
 		position: relative;
 		flex: 1;
 		height: calc(100vh - 89px);
-		background: lighten($color_gray_five, 3%);
+		background: #f1f4f8;
 		border-left: 1px solid $border_color;
 		overflow-y: auto;
 
@@ -1281,6 +1388,7 @@
 				border: 1px solid transparent;
 				border-radius: 4px;
 				transition: all 0.2s ease-in;
+				border-left: 0;
 
 				.ur-grid-list-item {
 					display: inline-block;
@@ -2641,5 +2749,104 @@ body {
 			text-decoration: none;
 		}
 	}
+}
+
+
+
+// ----------------------------------------- FORM BUILDER V2 CSS STARTS -----------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+
+#nav-menu-header {
 
 }
+
+.ur-registered-from {
+	.ur-registered-inputs {
+
+	}
+
+	.ur-builder-wrapper {
+		.ur-selected-inputs {
+			padding: $spacing_30px;
+			background: $canva-color;
+		}
+
+		.ur-builder {
+			&-header {
+				padding-top: $spacing_10px;
+				padding-bottom: $spacing_24px;
+				border-bottom: $border_width solid $border-color;
+				margin-bottom: $spacing_32px;
+
+				.user-registration-editable-title {
+					margin-top: 0 !important;
+					margin-bottom: 0 !important;
+
+					.user-registration-editable-title__input {
+						font-size: 22px;
+						line-height: 130%;
+						color: $grey-500;
+						padding: 0;
+						margin: 0;
+					}
+
+					.user-registration-editable-title__icon {
+						display: none;
+					}
+				}
+			}
+
+			&-wrapper-content {
+				background: $grey-0;
+				border-radius: $border_radius_13;
+				padding: $spacing_18px $spacing_32px;
+				border: $border_width solid $border-color;
+
+				.ur-single-row {
+					.ur-grid-lists {
+						.ur-grid-list-item {
+							padding: $spacing_20px;
+						}
+
+						.ur-selected-item {
+							padding: $spacing_10px $spacing_14px $spacing_14px;
+
+							&.ur-item-active {
+								// background: $blue-25;
+							}
+						}
+					}
+					&:hover {
+						.ur-grid-lists {
+							background: #fcfcfc;
+							border-radius: $border_radius_7 0 0 $border_radius_7;
+							border-color: #e7e7e7;
+							border-left: 0;
+
+							.ur-selected-item {
+								&:hover {
+									background: $blue-25;
+									border: $border_width dashed $primary_color;
+								}								
+							}
+
+							.ur-grid-list-item {
+								border-left: $border_width solid #e7e7e7;
+							}
+						}
+					}
+				}
+			}			
+		}
+	}
+}
+
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------- FORM BUILDER V2 CSS ENDS ------------------------------------------------------------------------
