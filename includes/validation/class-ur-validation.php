@@ -76,7 +76,7 @@ class UR_Validation {
 	 */
 	public static function is_url( $url ) {
 
-		$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+		$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
 
 		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url ) ) {
 			return new WP_Error(
