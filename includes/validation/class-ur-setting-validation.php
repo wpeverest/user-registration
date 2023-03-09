@@ -73,10 +73,13 @@ class UR_Setting_Validation {
 			$value       = $this->sanitize( $value, $setting_type );
 
 			$validations = $this->get_custom_validations( $setting_key );
+
 			if ( ! is_array( $validations ) ) {
 				$validations = $this->get_setting_validations( $setting_type );
-				$validations = apply_filters( 'user_registration_validate_' . $setting_type, $validations );
 			}
+
+			$validations = apply_filters( 'user_registration_validate_' . $setting_type, $validations, $option, $value );
+
 			foreach ( $validations as $validation ) {
 				if ( method_exists( 'UR_Validation', $validation ) ) {
 					$result = UR_Validation::$validation( $value );
@@ -195,6 +198,7 @@ class UR_Setting_Validation {
 		$message = isset( $messages[ $error_code ] ) ? $messages[ $error_code ] : '';
 
 		if ( empty( $message ) ) {
+			/* translators: %s: Field Label. */
 			$message = __( 'Please enter a valid value for %s.', 'user-registration' );
 		}
 
