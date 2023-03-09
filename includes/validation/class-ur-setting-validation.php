@@ -68,7 +68,7 @@ class UR_Setting_Validation {
 		$setting_label = isset( $option['title'] ) ? $option['title'] : '';
 		$setting_type  = isset( $option['type'] ) ? $option['type'] : null;
 
-		if ( ! is_null( $setting_type ) ) {
+		if ( ! is_null( $setting_type ) && ! empty( $value ) ) {
 			$setting_key = $option['id'];
 			$value       = $this->sanitize( $value, $setting_type );
 
@@ -129,8 +129,14 @@ class UR_Setting_Validation {
 	 * @return void
 	 */
 	public function set_custom_validations() {
-		$this->custom_validations = array(
-			'user_registration_integration_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
+		$this->custom_validations = apply_filters(
+			'user_registration_custom_validations_settings',
+			array(
+				'user_registration_integration_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
+				'user_registration_general_setting_registration_url_options' => array( 'is_url' ),
+				'user_registration_email_from_address' => array( 'is_email' ),
+				'user_registration_email_send_to'      => array( 'is_email' ),
+			)
 		);
 	}
 
@@ -162,9 +168,11 @@ class UR_Setting_Validation {
 			'user_registration_setting_validation_messages',
 			array(
 				// phpcs:disable
-				'negative_value'   => esc_html__( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
-				'non_integer'      => esc_html__( 'Please enter an integer value for %s.', 'user-registration' ),
-				'non_numeric_data' => esc_html__( 'Please enter a numeric value for %s.', 'user-registration' ),
+				'negative_value'   => __( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
+				'non_integer'      => __( 'Please enter an integer value for %s.', 'user-registration' ),
+				'non_numeric_data' => __( 'Please enter a numeric value for %s.', 'user-registration' ),
+				'invalid_url'      => __( 'Please enter a valid url for %s.', 'user-registration' ),
+				'invalid_email'    => __( 'Please enter a valid email for %s.', 'user-registration' )
 				// phpcs:enable
 			)
 		);
@@ -187,11 +195,11 @@ class UR_Setting_Validation {
 		$message = isset( $messages[ $error_code ] ) ? $messages[ $error_code ] : '';
 
 		if ( empty( $message ) ) {
-			return __( 'The specified setting value cannot be saved.', 'user-registration' );
-		} else {
-			$message = sprintf( $message, $setting_label );
-			return $message;
+			$message = __( 'Please enter a valid value for %s.', 'user-registration' );
 		}
+
+		$message = sprintf( $message, $setting_label );
+		return $message;
 	}
 
 
@@ -206,7 +214,7 @@ class UR_Setting_Validation {
 		switch ( $setting_type ) {
 			case 'number':
 				$floatval = floatval( $value );
-				$value = ! empty( $floatval ) ? $value : 0;
+				$value    = ! empty( $floatval ) ? $value : 0;
 				break;
 		}
 
