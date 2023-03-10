@@ -1626,7 +1626,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value );
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not supported below php v7.1.
 				$value = implode( ',', $value );
 			}
 
@@ -3017,13 +3017,13 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		if ( 'e' == $action ) {
 			if ( function_exists( 'openssl_encrypt' ) ) {
 				$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-			}else{
+			} else {
 				$output = base64_encode( $string );
 			}
 		} elseif ( 'd' == $action ) {
 			if ( function_exists( 'openssl_decrypt' ) ) {
 				$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-			}else{
+			} else {
 				$output = base64_decode( $string );
 			}
 		}
