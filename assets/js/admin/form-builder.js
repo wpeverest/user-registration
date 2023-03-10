@@ -1522,14 +1522,11 @@
 											.attr("disabled", "disabled");
 									}
 								}
-								var selected = "'selected'";
 
 								var label_node = selected_inputs
 									.find('select[data-field="required"]')
 									.find(
-										'option[selected="' +
-											selected +
-											'"][value="yes"]'
+										'option[selected="selected"][value="yes"]'
 									)
 									.closest(".ur-selected-item")
 									.find(".ur-label")
@@ -3564,7 +3561,6 @@
 			 */
 			trigger_general_setting_required: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
-
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
@@ -3572,7 +3568,9 @@
 							$label.attr("data-field") +
 							'"] option:selected'
 					)
-					.removeAttr("selected");
+					.attr("selected", false);
+
+				$label.find("option").attr("selected", false);
 
 				wrapper
 					.find(".ur-label")
@@ -3591,6 +3589,10 @@
 					.find(
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
+					.find('option[value="' + $label.val() + '"]')
+					.attr("selected", true);
+
+				$label
 					.find('option[value="' + $label.val() + '"]')
 					.attr("selected", true);
 			},
