@@ -148,7 +148,7 @@ class UR_Form_Validation extends UR_Validation {
 				$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 				$single_field_key   = $single_form_field->field_key;
 				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
-				$single_field_value = $data->value;
+				$single_field_value = isset( $data->value ) ? $data->value : '';
 				$data->extra_params = array(
 					'field_key' => $single_field_key,
 					'label'     => $single_field_label,
