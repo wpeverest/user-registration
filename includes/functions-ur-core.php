@@ -1627,7 +1627,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value );
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not supported below php v7.1.
 				$value = implode( ',', $value );
 			}
 
