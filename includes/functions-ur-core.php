@@ -2232,6 +2232,9 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'wysiwyg',
 									'billing_address_title',
 									'shipping_address_title',
+									'stripe_gateway',
+									'profile_picture',
+									'file',
 								);
 
 								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
