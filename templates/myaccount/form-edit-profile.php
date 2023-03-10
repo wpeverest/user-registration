@@ -263,9 +263,6 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 
 													$field['placeholder'] = $single_item->general_setting->placeholder;
 
-													if ( isset( $field['placeholder'] ) ) {
-														unset( $field['placeholder'] );
-													}
 												}
 
 												if ( 'radio' === $single_item->field_key ) {

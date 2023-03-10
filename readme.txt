@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.1.1
-Stable tag: 2.3.2
+Stable tag: 2.3.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,11 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.3.2.1  - 23/02/2023
+* Fix 	   - Consent notice is now dismissable.
+* Fix      - Form preview not working properly when astra theme activated.
+* Fix      - Error while submitting form with file upload field when OpenSSL extension disabled.
 
 = 2.3.2    - 20/02/2023
 * Feature  - Shortcode for 'Change Password' Page.
