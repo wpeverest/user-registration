@@ -793,6 +793,14 @@ class UR_Form_Validation extends UR_Validation {
 							$_POST[ $key ] = $user_data->data->user_email;
 						}
 						break;
+					case 'profile_picture':
+
+						if ( isset( $_POST[ 'profile_pic_url' ] ) ) {
+							$_POST[ $key ] = sanitize_text_field( $_POST[ 'profile_pic_url' ] );
+						} else {
+							$_POST[ $key ] = '';
+						}
+						break;
 
 					default:
 						$_POST[ $key ] = isset( $_POST[ $key ] ) ? ur_clean( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
