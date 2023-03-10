@@ -2674,7 +2674,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();
 				if ( ! isset( $countries[ $field_value ] ) ) {
-					$key = array_search( $field_value, $countries );
+					$key = array_search( $field_value, $countries, true );
 					if ( $key ) {
 						$field_value = $key;
 					}
@@ -3030,7 +3030,7 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 
 		return $output;
 	}
-}
+} //phpcs:ignore
 
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
@@ -3189,5 +3189,44 @@ if ( ! function_exists( 'ur_is_valid_url' ) ) {
 		}
 
 		return true;
+	}
+}
+
+
+if ( ! function_exists( 'ur_check_captch_keys' ) ) {
+	/**
+	 * Check the site key and secret key for the selected captcha type, are valid or not.
+	 *
+	 * @return bool
+	 */
+	function ur_check_captch_keys() {
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+		$site_key   = '';
+		$secret_key = '';
+
+		if ( 'v2' === $recaptcha_type ) {
+			if ( 'yes' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+			} else {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+			}
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+
+		if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			return true;
+		}
+
+		return false;
+
 	}
 }

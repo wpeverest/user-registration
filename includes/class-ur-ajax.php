@@ -62,6 +62,7 @@ class UR_AJAX {
 			'dismiss_notice'         => false,
 			'import_form_action'     => false,
 			'template_licence_check' => false,
+			'captcha_setup_check'    => false,
 			'install_extension'      => false,
 			'create_form'            => true,
 			'allow_usage_dismiss'    => false,
@@ -1257,6 +1258,33 @@ class UR_AJAX {
 				'activate' => $activated,
 			)
 		);
+	}
+
+	/**
+	 * Check for captcha setup.
+	 */
+	public static function captcha_setup_check() {
+		check_ajax_referer( 'user_registration_captcha_setup_check', 'security' );
+
+		if ( ur_check_captch_keys() ) {
+			wp_send_json_success(
+				array(
+					'is_captcha_setup' => true,
+				)
+			);
+		}
+
+		wp_send_json_error(
+			array(
+				'is_captcha_setup'        => false,
+				'captcha_setup_error_msg' => sprintf(
+					/* translators: %s - Integration tab url */
+					__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" >Add Now.</a>', 'user-registration' ),
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+				),
+			)
+		);
+
 	}
 
 	/**
