@@ -2669,6 +2669,8 @@
 						case "field_name":
 						case "max_files":
 						case "input_mask":
+						case "hidden_value":
+						case "custom_class":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_field_name(
 									$(this)

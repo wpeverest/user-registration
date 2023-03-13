@@ -722,6 +722,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'checkbox'              => __( 'Checkbox', 'user-registration' ),
 			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
 			'radio'                 => __( 'Radio', 'user-registration' ),
+			'hidden'                => __( 'Hidden', 'user-registration' ),
 		)
 	);
 }
@@ -808,6 +809,7 @@ function ur_get_general_settings( $id ) {
 			'radio',
 			'file',
 			'mailchimp',
+			'hidden',
 		)
 	);
 	$strip_id            = str_replace( 'user_registration_', '', $id );
@@ -1619,7 +1621,6 @@ function ur_get_user_extra_fields( $user_id ) {
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
 	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore
-
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
 			$value     = get_user_meta( $user_id, $field_key, true );
