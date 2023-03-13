@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-10T10:33:47+00:00\n"
+"POT-Creation-Date: 2023-03-13T08:50:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -4417,8 +4417,23 @@ msgid "Please choose a different country for %1$s."
 msgstr ""
 
 #. translators: %s Field Label
-#: includes/form/class-ur-form-field-date.php:98
+#: includes/form/class-ur-form-field-date.php:95
 msgid "Please select a valid date range for %s."
+msgstr ""
+
+#. translators: %s Field Label
+#: includes/form/class-ur-form-field-date.php:124
+msgid "Please select a valid date for %s."
+msgstr ""
+
+#. translators: %s Field Label
+#: includes/form/class-ur-form-field-date.php:164
+msgid "Please select a date after %1$s for %2$s."
+msgstr ""
+
+#. translators: %s Field Label
+#: includes/form/class-ur-form-field-date.php:193
+msgid "Please select a date before %1$s for %2$s."
 msgstr ""
 
 #: includes/form/class-ur-form-field-description.php:44
@@ -5143,32 +5158,32 @@ msgstr ""
 msgid "Required form field not found."
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:343
+#: includes/validation/class-ur-form-validation.php:345
 msgid "<strong>Confirm Email</strong> is required."
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:345
+#: includes/validation/class-ur-form-validation.php:347
 msgid "Email and confirm email not matched"
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:388
+#: includes/validation/class-ur-form-validation.php:390
 msgid "<strong>Confirm Password</strong> is required."
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:390
+#: includes/validation/class-ur-form-validation.php:392
 msgid "Password and confirm password not matched"
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:424
+#: includes/validation/class-ur-form-validation.php:426
 msgid "Password should not match with Username or Email address."
 msgstr ""
 
 #. translators: %s - Field Label
-#: includes/validation/class-ur-form-validation.php:449
+#: includes/validation/class-ur-form-validation.php:451
 msgid "<strong>%s</strong> is a required field."
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:864
+#: includes/validation/class-ur-form-validation.php:866
 msgid "Email already exists"
 msgstr ""
 

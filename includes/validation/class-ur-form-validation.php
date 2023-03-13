@@ -290,9 +290,11 @@ class UR_Form_Validation extends UR_Validation {
 				case 'mailerlite':
 				case 'select':
 				case 'country':
-				case 'file':
 				case 'date':
 					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
+					break;
+				case 'file':
+					$form_data->value = isset( $form_data->value ) ? $form_data->value : '';
 					break;
 				case 'checkbox':
 					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';
