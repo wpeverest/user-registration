@@ -73,6 +73,10 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		$value       = $form_data->value;
 		$field_label = $single_form_field->general_setting->label;
 
+		if ( empty( $value ) ) {
+			return;
+		}
+
 		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
 		$enabled_min_max      = isset( $single_form_field->advance_setting->enable_min_max ) ? 'true' === $single_form_field->advance_setting->enable_min_max : false;
 
