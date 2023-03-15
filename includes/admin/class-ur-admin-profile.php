@@ -115,6 +115,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							if ( 'data-date-format' === $name ) {
 								$date_format = $value;
 							}
+							if ( 'data-default-date' === $name ) {
+								continue;
+							}
 							if ( 'data-mode' === $name ) {
 								$date_mode = $value;
 							}
@@ -255,7 +258,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 														$value      = date_i18n( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date_i18n( $date_format, strtotime( trim( $date_range[1] ) ) );
 													}
 													?>
-									<input type="text" 
+									<input type="text"
 										   value="<?php echo esc_attr( $actual_value ); ?>"
 										   class="ur-flatpickr-field regular-text"
 										   data-id = '<?php echo esc_attr( $key ); ?>'
