@@ -279,7 +279,7 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.3.3    - 15/03/2023
+= 2.3.3    - 16/03/2023
 * Refactor - Backend validation for form data.
 * Enhance  - Global settings input validation.
 * Enhance  - Confirm password and confirm email field validation.
