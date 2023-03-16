@@ -167,12 +167,14 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$this->add_error( $result, $single_field_label );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$this->add_error( $result, $single_field_label );
+								break;
+							}
 						}
 					}
 				}
@@ -634,14 +636,16 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$error_code = $result->get_error_code();
-							$message    = $this->get_error_message( $error_code, $single_field_label );
-							ur_add_notice( $message, 'error' );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$error_code = $result->get_error_code();
+								$message    = $this->get_error_message( $error_code, $single_field_label );
+								ur_add_notice( $message, 'error' );
+								break;
+							}
 						}
 					}
 				}
@@ -840,14 +844,16 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$error_code = $result->get_error_code();
-							$message    = $this->get_error_message( $error_code, $single_field_label );
-							ur_add_notice( $message, 'error' );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$error_code = $result->get_error_code();
+								$message    = $this->get_error_message( $error_code, $single_field_label );
+								ur_add_notice( $message, 'error' );
+								break;
+							}
 						}
 					}
 				}
