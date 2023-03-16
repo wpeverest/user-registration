@@ -848,7 +848,7 @@
 														}
 
 														$this[0].reset();
-														if($(document).find('#profile_pic_url').length){
+														if($this.find('#profile_pic_url').length){
 															$('#profile_pic_url').val("");
 														}
 
