@@ -1,3 +1,6 @@
+= 2.3.3.1  - 17/03/2023
+* Fix      - Email confirmation email not sent to user.
+
 = 2.3.3    - 16/03/2023
 * Refactor - Backend validation for form data.
 * Enhance  - Global settings input validation.
