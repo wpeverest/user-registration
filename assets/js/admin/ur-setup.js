@@ -570,7 +570,7 @@ jQuery(function ($) {
 			event.preventDefault();
 
 			$target = $(event.target);
-
+			template = $target.data("template");
 			if (
 				$target.hasClass("disabled") ||
 				$target.hasClass("updating-message")
@@ -591,10 +591,10 @@ jQuery(function ($) {
 			) {
 				var data = {
 					action: "user_registration_template_licence_check",
-					plan: $this
+					plan: $target
 						.attr("data-licence-plan")
 						.replace("-lifetime", ""),
-					slug: $this.attr("data-template"),
+					slug: $target.attr("data-template"),
 					security: ur_setup_params.template_licence_check_nonce,
 				};
 
