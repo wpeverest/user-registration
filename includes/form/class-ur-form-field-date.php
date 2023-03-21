@@ -205,53 +205,6 @@ class UR_Form_Field_Date extends UR_Form_Field {
 
 
 	/**
-	 * Validate whether date is past the max date.
-	 *
-	 * @param [string] $date Date.
-	 * @param [string] $max_date Max Date.
-	 * @param [string] $filter_hook Filter Hook.
-	 * @param [string] $field_label Field Label.
-	 * @return void
-	 */
-	private function validate_max_date( $date, $max_date, $filter_hook, $field_label ) {
-		$date_timestamp     = strtotime( $date );
-		$max_date_timestamp = strtotime( $max_date );
-
-		if ( $date_timestamp > $max_date_timestamp ) {
-			add_filter(
-				$filter_hook,
-				function() use ( $field_label, $max_date ) {
-					return sprintf(
-						/* translators: %s Field Label */
-						__( 'Please select a date before %1$s for %2$s.', 'user-registration' ),
-						$max_date,
-						$field_label
-					);
-				}
-			);
-		} else {
-			$value = $form_data->value;
-			$dates = explode( 'to', $value );
-			foreach ( $dates as $date ) {
-				$result = UR_Validation::is_date( trim( $date ) );
-
-				if ( is_wp_error( $result ) ) {
-					add_filter(
-						$filter_hook,
-						function ( $field_label ) {
-							return sprintf(
-								/* translators: %s Field Label */
-								__( 'Please select a valid date range for %s.', 'user-registration' ),
-								$field_label
-							);
-						}
-					);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Checks for valid date
 	 *
 	 * @param string $date_string Date.
