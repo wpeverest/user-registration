@@ -213,7 +213,8 @@ class UR_Setting_Validation {
 				$value = $value ? 1 : 0;
 				break;
 			case 'number':
-				$value = ! empty( floatval( $value ) ) ? $value : 0;
+				$floatval = floatval( $value );
+				$value    = ! empty( $floatval ) ? $value : 0;
 				break;
 		}
 

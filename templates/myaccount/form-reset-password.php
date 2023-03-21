@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
