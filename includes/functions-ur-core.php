@@ -3205,8 +3205,15 @@ if ( ! function_exists( 'ur_option_checked' ) ) {
 			return false;
 		}
 
-		$option_checked = get_option( $option_name, $default );
+		$option_value = get_option( $option_name, $default );
 
-		return ur_string_to_bool( $option_checked );
+		// Handling Backward Compatibility.
+		if ( 'yes' === $option_value ) {
+			return true;
+		} elseif ( 'no' === $option_value ) {
+			return false;
+		}
+
+		return ur_string_to_bool( $option_value );
 	}
 }
