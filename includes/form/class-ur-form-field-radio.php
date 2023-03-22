@@ -78,7 +78,7 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 		$label   = $single_form_field->general_setting->label;
 		$options = $single_form_field->general_setting->options;
 
-		if ( ! empty( $value ) && ! in_array( $value, $options, true ) ) {
+		if ( ! in_array( $value, $options, true ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $label ) {
