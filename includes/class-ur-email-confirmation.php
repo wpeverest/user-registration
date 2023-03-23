@@ -227,6 +227,9 @@ class UR_Email_Confirmation {
 			$output     = explode( '_', $output );
 			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+			if ( empty( $user_token ) ) {
+				return;
+			}
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
