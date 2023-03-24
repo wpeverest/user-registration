@@ -469,7 +469,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
 									'desc'       => '',
 									'id'         => 'user_registration_login_options_prevent_core_login',
-									'type'       => 'checkbox',
+									'type'       => 'toggle',
 									'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
 									'css'        => 'min-width: 350px;',
 									'default'    => 'no',

@@ -718,6 +718,7 @@ class UR_Admin_Settings {
 								$settings .= '<span class="slider round"></span>';
 								$settings .= '</span>';
 								$settings .= '</div>';
+								$settings .= wp_kses_post( $desc_field );
 								$settings .= '</td>';
 								$settings .= '</tr>';
 								break;
