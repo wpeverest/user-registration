@@ -48,7 +48,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'desc'     => __( 'Enable this email sent to admin after successful user registration.', 'user-registration' ),
 									'id'       => 'user_registration_enable_admin_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
