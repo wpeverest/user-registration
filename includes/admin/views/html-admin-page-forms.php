@@ -23,10 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
 					</div>
 					<?php if ( ! empty( $form_data ) ) {
-                        ?>                        
+                        ?>
 						<span class="ur-form-title"><?php echo isset( $form_data->post_title ) ? esc_html( $form_data->post_title ) : ''; ?></span>
-						<span class="ur-editing-tag"><?php esc_html_e( "Now Editing", "user-registration" ); ?></span>                        
-						<?php                    
+						<span class="ur-editing-tag"><?php esc_html_e( "Now Editing", "user-registration" ); ?></span>
+						<?php
 						}
                     ?>
 					<div class="major-publishing-actions wp-clearfix">
@@ -107,17 +107,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 											</div>
 										</form>
 									</div>
-
-									<button id="collapse">
-										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-  											<path fill="#6B6B6B" d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
-										</svg>
-									</button>
-
 									<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
 								</div>
 							</nav>
 						</div>
+						<button id="ur-collapse" class="close">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+								<path fill="#6B6B6B" d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
+							</svg>
+						</button>
 						<?php
 						$builder_class = apply_filters( 'user_registration_builder_class', array() );
 						$builder_class = implode( ' ', $builder_class );

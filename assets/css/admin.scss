@@ -953,13 +953,13 @@
 							width: 18px;
 							height: 18px;
 						}
-	
+
 						&.active {
 							background: #fafafa;
 							color: $primary_color;
 							font-weight: $semi_bold;
 							position: relative;
-	
+
 							&::before {
 								content: "";
 								background: $primary_color;
@@ -1025,7 +1025,7 @@
 					&.active {
 						margin-bottom: 0;
 						padding-bottom: 0;
-					}					
+					}
 
 					a {
 						float: none;
@@ -1059,7 +1059,7 @@
 					&.ui-state-disabled {
 						position: relative;
 						opacity: 1;
-						
+
 
 						&:hover {
 							&::before {
@@ -1159,7 +1159,7 @@
 					font-size: 16px;
 					line-height: 150%;
 					font-weight: $medium;
-					color: $grey-400;					
+					color: $grey-400;
 
 					~ hr {
 						border-top: 1px solid $border-color;
@@ -1185,7 +1185,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			flex-direction: row-reverse;			
+			flex-direction: row-reverse;
 
 			&:before {
 				content: "";
@@ -1548,7 +1548,7 @@
 										background: #676f8a;
 										padding: $spacing_4px;
 										width: 24px;
-										height: 24px;										
+										height: 24px;
 										border-radius: 0 0 0 $border_radius_7;
 
 										&::before {
@@ -1577,14 +1577,14 @@
 											color: $grey-0;
 										}
 									}
-								
+
 							}
 
 							&:hover {
 								.ur-action-buttons {
 									display: block;
 									top: 0;
-									right: -3px;									
+									right: -3px;
 								}
 							}
 
@@ -3041,55 +3041,58 @@ body {
 					display: flex;
 					align-items: center;
 					color: $grey-300;
-				}				
+				}
+			}
+		}
+	}
+
+	button#ur-collapse {
+		width: 22px;
+		height: 41px;
+		background: $grey-0;
+		position: fixed;
+		bottom: $spacing_100px;
+		border-style: solid;
+		border-width: $border_width $border_width $border_width 0px;
+		border-color: $border-color;
+		border-radius: 0 $border_radius_3 $border_radius_3 0;
+		z-index: 1;
+		cursor: pointer;
+		transition: all .3s ease-in-out;
+
+		svg {
+			width: 12px;
+			height: 12px;
+			display: block;
+			position: relative;
+			left: -$spacing_2px;
+			transition: all .3s ease-in-out;
+		}
+
+		&:hover {
+			svg {
+				left: -$spacing_4px;
+			}
+		}
+
+		&.close {
+			left: 572px;
+		}
+
+		&.open {
+			width: 24px;
+			height: 44px;
+
+			svg {
+				transform: rotate(180deg);
+				left: -1px;
+				width: 14px;
+				height: 14px;
 			}
 
-			button#collapse {
-				width: 22px;
-				height: 41px;
-				background: $grey-0;
-				position: fixed;
-				bottom: $spacing_100px;
-				left: 572px;
-				border-style: solid;
-				border-width: $border_width $border_width $border_width 0px;
-				border-color: $border-color;
-				border-radius: 0 $border_radius_3 $border_radius_3 0;
-				z-index: 1;
-				cursor: pointer;
-				transition: all .3s ease-in-out;
-
+			&:hover {
 				svg {
-					width: 12px;
-					height: 12px;
-					display: block;
-					position: relative;
-					left: -$spacing_2px;
-					transition: all .3s ease-in-out;
-				}
-
-				&:hover {
-					svg {
-						left: -$spacing_4px;
-					}
-				}
-
-				&.open {
-					width: 24px;
-					height: 44px;
-
-					svg {
-						transform: rotate(180deg);
-						left: -1px;
-						width: 14px;
-						height: 14px;
-					}
-
-					&:hover {
-						svg {
-							left: 1px;
-						}
-					}
+					left: 1px;
 				}
 			}
 		}
@@ -3154,7 +3157,7 @@ body {
 									background: $blue-25;
 									border: $border_width dashed $primary_color;
 									border-radius: $border_radius_7;
-								}								
+								}
 							}
 
 							.ur-grid-list-item {
@@ -3163,7 +3166,7 @@ body {
 						}
 					}
 				}
-			}			
+			}
 		}
 
 		#ur-field-settings {
@@ -3265,7 +3268,7 @@ body {
 		left: $spacing_36px !important;
 	}
 
-	.ur-registered-from .ur-registered-inputs .ur-tab-contents button#collapse {
+	.ur-registered-from .ur-registered-inputs .ur-tab-contents button#ur-collapse {
 		left: 448px;
 	}
 }
