@@ -693,7 +693,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_key              = isset( $field->field_key ) ? ( $field->field_key ) : '';
 					$field_type             = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required               = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
-					$required               = 'yes' == $required ? true : false;
+					$required               = ur_string_to_bool( $required );
 					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
 					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();

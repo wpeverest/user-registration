@@ -1503,31 +1503,20 @@
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'select[data-field="required"]'
+												'input[data-field="required"]'
 											)
-											.val("yes")
 											.trigger("change");
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'select[data-field="required"]'
-											)
-											.find('option[value="yes"]')
-											.attr("selected", "selected");
-										field_node
-											.closest(".ur-selected-item")
-											.find(
-												'select[data-field="required"]'
+												'input[data-field="required"]'
 											)
 											.attr("disabled", "disabled");
 									}
 								}
 
 								var label_node = selected_inputs
-									.find('select[data-field="required"]')
-									.find(
-										'option[selected="selected"][value="yes"]'
-									)
+									.find('input[data-field="required"]')
 									.closest(".ur-selected-item")
 									.find(".ur-label")
 									.find("label");
@@ -3106,7 +3095,7 @@
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
 						.find("[data-field='required']")
-						.val() === "yes"
+						.is(":checked")
 				) {
 					wrapper
 						.find(".ur-label")
@@ -3560,13 +3549,9 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'select[data-field="' +
-							$label.attr("data-field") +
-							'"] option:selected'
+						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
-					.attr("selected", false);
-
-				$label.find("option").attr("selected", false);
+					.prop("checked", $label.is(":checked"));
 
 				wrapper
 					.find(".ur-label")
@@ -3574,23 +3559,13 @@
 					.find("span:contains(*)")
 					.remove();
 
-				if ($label.val() === "yes") {
+				console.log($label.is(":checked"));
+				if ($label.is(":checked")) {
 					wrapper
 						.find(".ur-label")
 						.find("label")
 						.append('<span style="color:red">*</span>');
 				}
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'select[data-field="' + $label.attr("data-field") + '"]'
-					)
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
-
-				$label
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.

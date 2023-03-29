@@ -442,7 +442,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
-			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
+			if ( isset( $form_field_data[ $key ]->general_setting->required ) && ur_string_to_bool( $form_field_data[ $key ]->general_setting->required ) ) {
 
 				// Check for the field visibility settings.
 				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
@@ -555,7 +555,7 @@ class UR_Form_Validation extends UR_Validation {
 			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
-			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' === $required ) {
+			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
 				return true;
 			}
 		}
@@ -626,12 +626,12 @@ class UR_Form_Validation extends UR_Validation {
 				$validations = $this->get_field_validations( $single_field_key );
 
 				$required = isset( $single_form_field->general_setting->required ) ?
-							'yes' === $single_form_field->general_setting->required :
+							$single_form_field->general_setting->required :
 							false;
 
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
-				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required ) {
+				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
 					array_unshift( $validations, 'required' );
 				}
 
@@ -829,7 +829,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = isset( $single_form_field->general_setting->required ) ? 'yes' === $single_form_field->general_setting->required : 0;
+				$required         = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 0;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				$disabled = false;
@@ -839,7 +839,7 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				if ( ! in_array( $key, $urcl_hide_fields, true ) && $required && ! $disabled ) {
+				if ( ! in_array( $key, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) && ! $disabled ) {
 					array_unshift( $validations, 'required' );
 				}
 
