@@ -2343,6 +2343,30 @@ body {
 }
 
 .ur-toggle-section {
+
+	&.ur-form-builder-toggle {
+		display: flex;
+		gap: 5px;
+		align-items: center;
+
+		input {
+			width: 30px;
+			height: 16px;
+		}
+
+		.slider {
+			width: 30px;
+			height: 16px;
+			border-radius: 99px;
+			padding: 8px;
+
+			&::before {
+				height: 12px !important;
+				width: 12px !important;
+			}
+		}
+	}
+
 	.user-registration-toggle-form {
 		position: relative;
 		display: inline-block;

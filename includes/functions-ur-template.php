@@ -351,7 +351,22 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
+			case 'toggle':
+				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$default           = ! empty( $value ) ? $value : $default_value;
+				$select_all        = isset( $args['select_all'] ) ? $args['select_all'] : '';
+				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+				$choice_limit_attr = '';
 
+				$field  = '<div class="ur-toggle-section ur-form-builder-toggle">';
+				$field .= '<span class="user-registration-toggle-form">';
+				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' />';
+				$field .= '<span class="slider round"></span>';
+				$field .= '</span>';
+				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
+				$field .= '</div>';
+				break;
 			case 'password':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
@@ -613,7 +628,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( ! empty( $field ) ) {
 
 			$field_html = '';
-			if ( $args['label'] && 'checkbox' != $args['type'] ) {
+			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
 					$args['label'],
 					array(

@@ -985,7 +985,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'checkbox',
+				'type'              => 'toggle',
 				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -1065,7 +1065,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Display success message either at the top or bottom after successful registration.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'checkbox',
+				'type'              => 'toggle',
 
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
 				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
