@@ -33,8 +33,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</span> -->
 				<!-- </div> -->
 			</header>
-			<div class="user-registration-settings-container">
+			<div class="user-registration-settings-container">				
 				<div class="user-registration-options-header">
+					<div class="user-registration-options-title">
+						<h3>General</h3>
+						<p class="submit">
+							<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
+								<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) ) ); ?>" />
+							<?php endif; ?>
+							<input type="hidden" name="subtab" id="last_tab" />
+							<?php wp_nonce_field( 'user-registration-settings' ); ?>
+						</p>
+					</div>
 					<?php
 					do_action( 'user_registration_sections_' . $current_tab );
 					?>

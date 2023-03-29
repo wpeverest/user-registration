@@ -84,8 +84,94 @@
 		display: flex;
 		flex-direction: column;
 		padding: $spacing_24px;
+		padding-top: 0;
+
+		.user-registration-options-header {
+			position: sticky;
+			position: -webkit-sticky;
+			top: $spacing_32px;
+			top: var(--wp-admin--admin-bar--height, $spacing_32px);
+			z-index: 1;
+			background: $grey-0;
+			padding-top: $spacing_24px;
+
+			.user-registration-options-title {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: $spacing_20px;
+
+				h3 {
+					margin: 0;
+					font-weight: $semi_bold;
+					font-size: 28px;
+					line-height: 120%;
+					color: $grey-800;
+				}
+
+				p.submit {
+					margin-top: 0;
+				}
+			}
+
+			ul {
+				display: flex;
+				align-items: center;
+				gap: $spacing_32px;
+				padding-bottom: $spacing_13px;
+				border-bottom: $border_width solid $border-color;				
+				width: 100%;
+				margin-top: $spacing_20px;
+
+				li {
+					a {
+						font-weight: $regular;
+						font-size: 15px;
+						line-height: 140%;
+						color: $grey-600;
+						padding: 0;
+						position: relative;
+						padding-bottom: $spacing_16px;
+						transition: all .3s ease-in-out;
+
+						&::before {
+							content: "";
+							background: $primary_color;
+							position: absolute;
+							width: 100%;
+							height: 3px;
+							border-radius: $border_radius_11;
+							bottom: 0;
+							left: 0;
+							opacity: 0;
+							transition: all .3s ease-in-out;
+						}
+
+						&:focus {
+							outline: none;
+							box-shadow: none;
+						}
+						
+						&.current {
+							font-weight: $semi_bold;
+						}
+
+						&:hover,
+						&.current {
+							color: $primary_color;
+
+							&::before {
+								opacity: 1;
+							}
+						}
+					}
+				}
+			}
+		}
 
 		.user-registration-options-container {
+			margin-top: $spacing_36px;
+
 			.user-registration-card {
 				padding: $spacing_16px $spacing_20px $spacing_22px;
 				background: #fafafc;
@@ -144,62 +230,10 @@
 		p.submit {
 			margin: $spacing_32px 0 0 0;
 			padding: 0;
-		}
 
-		.user-registration-options-header {
-			ul {
-				display: flex;
-				align-items: center;
-				gap: $spacing_32px;
-				padding-bottom: $spacing_13px;
-				border-bottom: $border_width solid $border-color;
-				margin-bottom: $spacing_36px;
-				width: 100%;
-
-				li {
-					a {
-						font-weight: $regular;
-						font-size: 15px;
-						line-height: 140%;
-						color: $grey-600;
-						padding: 0;
-						position: relative;
-						padding-bottom: $spacing_16px;
-						transition: all .3s ease-in-out;
-
-						&::before {
-							content: "";
-							background: $primary_color;
-							position: absolute;
-							width: 100%;
-							height: 3px;
-							border-radius: $border_radius_11;
-							bottom: 0;
-							left: 0;
-							opacity: 0;
-							transition: all .3s ease-in-out;
-						}
-
-						&:focus {
-							outline: none;
-							box-shadow: none;
-						}
-						
-						&.current {
-							font-weight: $semi_bold;
-						}
-
-						&:hover,
-						&.current {
-							color: $primary_color;
-
-							&::before {
-								opacity: 1;
-							}
-						}
-					}
-				}
+			.button-primary {
+				transition: all .3s ease-in-out;
 			}
-		}
+		}		
 	}
 }
