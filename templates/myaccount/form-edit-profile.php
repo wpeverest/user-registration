@@ -244,7 +244,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												}
 
 												if ( isset( $single_item->general_setting->hide_label ) ) {
-													if ( 'yes' === $single_item->general_setting->hide_label ) {
+													if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
 														unset( $field['label'] );
 													}
 												}

@@ -783,15 +783,11 @@ function ur_get_general_settings( $id ) {
 		),
 		'hide_label'  => array(
 			'setting_id'  => 'hide-label',
-			'type'        => 'select',
+			'type'        => 'toggle',
 			'label'       => __( 'Hide Label', 'user-registration' ),
 			'name'        => 'ur_general_setting[hide_label]',
 			'placeholder' => '',
 			'required'    => true,
-			'options'     => array(
-				'no'  => __( 'No', 'user-registration' ),
-				'yes' => __( 'Yes', 'user-registration' ),
-			),
 			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
 		),
 	);

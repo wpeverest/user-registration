@@ -1461,9 +1461,9 @@
 							 * Hides label of fields if hide label option is enabled.
 							 */
 							manage_label_hidden_fields: function () {
-								$('select[data-field="hide_label"]').each(
+								$('input[data-field="hide_label"]').each(
 									function () {
-										if ($(this).val() === "yes") {
+										if ($(this).is(":checked")) {
 											$(this)
 												.closest(".ur-selected-item")
 												.find(".ur-label")
@@ -3590,25 +3590,15 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'select[data-field="' +
-							$label.attr("data-field") +
-							'"] option:selected'
+						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
-					.removeAttr("selected");
+					.prop("checked", $label.is(":checked"));
 
-				if ("yes" === $label.val()) {
+				if ($label.is(":checked")) {
 					wrapper.find(".ur-label").find("label").hide();
 				} else {
 					wrapper.find(".ur-label").find("label").show();
 				}
-
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'select[data-field="' + $label.attr("data-field") + '"]'
-					)
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
 			},
 
 			/**

@@ -137,7 +137,7 @@ abstract class UR_Form_Field {
 		$form_data['field_key'] = $field_key;
 		$form_data['icon']      = $data['icon'];
 
-		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
+		if ( isset( $form_data['hide_label'] ) && ur_string_to_bool( $form_data['hide_label'] ) ) {
 			unset( $form_data['label'] );
 		}
 
