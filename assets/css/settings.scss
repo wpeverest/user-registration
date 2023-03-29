@@ -1,24 +1,205 @@
+@import "variables/variables";
+@import "mixins/mixins";
+
+
+// User Registration Global Settings CSS
+#wpcontent {
+	padding-left: 0;
+
+	.wrap {
+		margin: 0;
+		padding: $spacing_24px;
+
+		.user-registration-header {
+			margin: 0;
+		}
+	}
+}
+
 .user-registration-settings {
 	display: flex;
 	flex-direction: row;
-	gap: 50px;
+	background: $grey-0;
+	filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
 
-	header {
+	.user-registration-header {
 		flex: 0 0 25%;
+		padding: $spacing_24px 0 0;
+		background: #fafafc;
+		border-right: $border_width solid $border-color;
+		
 		.ur-nav-tab-wrapper {
 			display: flex;
 			flex-direction: column;
+			margin: 0;
+
+			.ur-nav__link {
+				font-weight: $regular;
+				font-size: 14px;
+				line-height: 150%;
+				color: $grey-400;
+				padding: $spacing_14px $spacing_16px $spacing_14px $spacing_22px;
+				background: transparent;
+				border: 0;
+				border-top: $border_width solid $border-color;
+				position: relative;
+
+				&:focus {
+					box-shadow: none;
+					outline: none;
+				}
+
+				&::before {
+					content: "";
+					background: $primary_color;
+					width: 4px;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
+					opacity: 0;
+					transition: all .3s ease-in-out;
+				}				
+
+				&:hover,
+				&.is-active {
+					background: $grey-0;
+					border-radius: 0;
+					color: $primary_color;
+
+					&::before {
+						opacity: 1;
+					}
+				}
+
+				&:last-child {
+					border-bottom: $border_width solid $border-color;
+				}
+			}
 		}
 	}
 
 	.user-registration-settings-container {
-		flex: 0 0 70%;
+		flex: auto;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		padding: $spacing_24px;
+
+		.user-registration-options-container {
+			.user-registration-card {
+				padding: $spacing_16px $spacing_20px $spacing_22px;
+				background: #fafafc;
+				border: $border_width solid #edeff7 !important;
+				border-radius: $border_radius_7;
+				margin-top: 0 !important;
+				margin-bottom: $spacing_24px;
+				max-width: 640px;
+				position: relative;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				&.pro-options {
+					opacity: .4;
+
+					&::after {
+						content: "+";
+						background-repeat: no-repeat;
+						background-size: 100%;
+						background-position: center;
+						position: absolute;
+						width: 24px;
+						height: 24px;
+						top: $spacing_16px;
+						right: $spacing_16px;
+					}
+				}
+
+				&__header {
+					margin-bottom: $spacing_24px;
+					padding: 0 0 $spacing_16px;
+					border-bottom: $border_width solid $grey-50 !important;
+				}
+
+				&__body {
+					padding-left: 0;
+					padding-right: 0;
+				}
+
+				p.ur-p-tag {
+					padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
+					background: $grey-0;
+					border-left: 3px solid #17a2b8;
+					font-weight: $regular;
+					color: $grey-300;
+					
+					strong {
+						font-weight: $semi_bold;
+					}
+				}
+			}
+		}
+
+		p.submit {
+			margin: $spacing_32px 0 0 0;
+			padding: 0;
+		}
 
 		.user-registration-options-header {
+			ul {
+				display: flex;
+				align-items: center;
+				gap: $spacing_32px;
+				padding-bottom: $spacing_13px;
+				border-bottom: $border_width solid $border-color;
+				margin-bottom: $spacing_36px;
+				width: 100%;
 
+				li {
+					a {
+						font-weight: $regular;
+						font-size: 15px;
+						line-height: 140%;
+						color: $grey-600;
+						padding: 0;
+						position: relative;
+						padding-bottom: $spacing_16px;
+						transition: all .3s ease-in-out;
+
+						&::before {
+							content: "";
+							background: $primary_color;
+							position: absolute;
+							width: 100%;
+							height: 3px;
+							border-radius: $border_radius_11;
+							bottom: 0;
+							left: 0;
+							opacity: 0;
+							transition: all .3s ease-in-out;
+						}
+
+						&:focus {
+							outline: none;
+							box-shadow: none;
+						}
+						
+						&.current {
+							font-weight: $semi_bold;
+						}
+
+						&:hover,
+						&.current {
+							color: $primary_color;
+
+							&::before {
+								opacity: 1;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
