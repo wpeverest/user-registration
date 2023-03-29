@@ -165,7 +165,6 @@ class UR_Admin_Welcome {
 									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
-
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
 										<h3 style="font-size: 18px; margin: 0px;"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>

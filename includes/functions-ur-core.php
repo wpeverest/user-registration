@@ -836,8 +836,7 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-
-	if ( 'privacy_policy' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
@@ -1627,7 +1626,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value );
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not supported below php v7.1.
 				$value = implode( ',', $value );
 			}
 
@@ -2233,6 +2232,9 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'wysiwyg',
 									'billing_address_title',
 									'shipping_address_title',
+									'stripe_gateway',
+									'profile_picture',
+									'file',
 								);
 
 								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
@@ -2570,13 +2572,14 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 	 * @since 1.5.0.
 	 */
 	function ur_profile_picture_migration_script() {
+
+		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
+
 			$users = get_users(
 				array(
 					'meta_key' => 'user_registration_profile_pic_url',
 				)
 			);
-
-		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
 
 			foreach ( $users as $user ) {
 				$user_registration_profile_pic_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
@@ -2675,7 +2678,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();
 				if ( ! isset( $countries[ $field_value ] ) ) {
-					$key = array_search( $field_value, $countries );
+					$key = array_search( $field_value, $countries, true );
 					if ( $key ) {
 						$field_value = $key;
 					}
@@ -2758,8 +2761,12 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-			/* translators: %s - My account Link. */
-			$message = sprintf( __( 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="%s" style="text-decoration:none;">My Account Page</a> )', 'user-registration' ), $my_account_setting_link );
+
+			$message = sprintf(
+				/* translators: %1$s - My account Link. */
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpeverest.com/user-registration/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				$my_account_setting_link
+			);
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
@@ -3014,20 +3021,21 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		if ( 'e' == $action ) {
 			if ( function_exists( 'openssl_encrypt' ) ) {
 				$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-			}else{
+			} else {
 				$output = base64_encode( $string );
 			}
 		} elseif ( 'd' == $action ) {
 			if ( function_exists( 'openssl_decrypt' ) ) {
 				$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-			}else{
+			} else {
 				$output = base64_decode( $string );
 			}
 		}
 
 		return $output;
 	}
-}
+} //phpcs:ignore
+
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 	/**
@@ -3185,5 +3193,44 @@ if ( ! function_exists( 'ur_is_valid_url' ) ) {
 		}
 
 		return true;
+	}
+}
+
+
+if ( ! function_exists( 'ur_check_captch_keys' ) ) {
+	/**
+	 * Check the site key and secret key for the selected captcha type, are valid or not.
+	 *
+	 * @return bool
+	 */
+	function ur_check_captch_keys() {
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+		$site_key   = '';
+		$secret_key = '';
+
+		if ( 'v2' === $recaptcha_type ) {
+			if ( 'yes' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+			} else {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+			}
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+
+		if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			return true;
+		}
+
+		return false;
+
 	}
 }

@@ -331,6 +331,18 @@
         "plus",
         "professional"
       ]
+	  },
+	  {
+      "title": "Private Notes",
+      "slug" : "user-registration-private-notes",
+      "name" : "User Registration Private Notes",
+      "image": "extensions-json/sections/images/private-notes.png",
+      "excerpt": "Private Note add-on allows admins to easily share important updates, personalized messages, and other relevant information with their users, while also providing a platform for users to ask questions and provide feedback.",
+      "link": "https://wpeverest.com/wordpress-plugins/user-registration/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
 	  }
   ]
 }

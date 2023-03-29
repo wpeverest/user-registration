@@ -26,6 +26,7 @@ function ur_template_redirect() {
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -311,7 +312,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
 					}
 
 					$choices = isset( $options ) ? $options : array();
@@ -557,7 +558,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value );
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not support below php v7.1.
 				} else {
 					$default_value = $value;
 				}

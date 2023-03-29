@@ -73,18 +73,19 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		$required             = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 'no';
-		$field_label          = isset( $form_data->label ) ? $form_data->label : '';
-		$value                = isset( $form_data->value ) ? $form_data->value : '';
-		$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
-		$field_name       = isset( $single_form_field->general_setting->field_name ) ? $single_form_field->general_setting->field_name : '';
 
-		if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' == $required && empty( $value ) ) {
+		$value   = isset( $form_data->value ) ? $form_data->value : '';
+		$label   = $single_form_field->general_setting->label;
+		$options = $single_form_field->general_setting->options;
+
+		if ( ! empty( $value ) && ! in_array( $value, $options, true ) ) {
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					/* translators: %1$s - Field Label */
-					return sprintf( __( '%1$s is required.', 'user-registration' ), $field_label );
+				function ( $msg ) use ( $label ) {
+					return sprintf(
+						'Please choose a valid option for %s',
+						"<strong>$label</strong>."
+					);
 				}
 			);
 		}

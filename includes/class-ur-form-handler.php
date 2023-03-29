@@ -84,98 +84,7 @@ class UR_Form_Handler {
 
 		$profile = user_registration_form_data( $user_id, $form_id );
 
-		foreach ( $profile as $key => $field ) {
-			if ( isset( $field['field_key'] ) ) {
-				if ( ! isset( $field['type'] ) ) {
-					$field['type'] = 'text';
-				}
-
-				// Get Value.
-				switch ( $field['type'] ) {
-					case 'checkbox':
-						if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
-							$_POST[ $key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
-						} else {
-							$_POST[ $key ] = (int) isset( $_POST[ $key ] );
-						}
-						break;
-
-					case 'wysiwyg':
-						if ( isset( $_POST[ $key ] ) ) {
-							$_POST[ $key ] = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
-						} else {
-							$_POST[ $key ] = '';
-						}
-						break;
-
-					case 'email':
-						if ( isset( $_POST[ $key ] ) ) {
-							$_POST[ $key ] = sanitize_email( wp_unslash( $_POST[ $key ] ) );
-						} else {
-							$user_data     = get_userdata( $user_id );
-							$_POST[ $key ] = $user_data->data->user_email;
-						}
-						break;
-
-					default:
-						$_POST[ $key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-						break;
-				}
-
-				// Hook to allow modification of value.
-				$_POST[ $key ] = apply_filters( 'user_registration_process_myaccount_field_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-				$disabled = false;
-				if ( isset( $field['custom_attributes'] ) && isset( $field['custom_attributes']['readonly'] ) && isset( $field['custom_attributes']['disabled'] ) ) {
-					if ( 'readonly' === $field['custom_attributes']['readonly'] || 'disabled' === $field['custom_attributes']['disabled'] ) {
-						$disabled = true;
-					}
-				}
-
-				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
-				$new_key          = str_replace( 'user_registration_', '', $key );
-				// Validation: Required fields.
-				if ( ! in_array( $new_key, $urcl_hide_fields, true ) && 'yes' == $field['required'] && empty( $_POST[ $key ] ) && ! $disabled ) {
-					/* translators: %s - Field Label */
-					ur_add_notice( sprintf( esc_html__( '%s is a required field.', 'user-registration' ), $field['label'] ), 'error' );
-				}
-
-				if ( 'email' === $field['type'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( wp_unslash( $_POST[ $key ] ) ), '', $field, $form_id );
-				}
-
-				if ( 'user_email' === $field['field_key'] ) {
-
-					// Check if email already exists before updating user details.
-					if ( email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) && email_exists( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) !== $user_id ) {
-						ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
-					}
-				}
-
-				if ( ! empty( $_POST[ $key ] ) ) {
-
-					// Validation rules.
-					if ( ! empty( $field['validate'] ) && is_array( $field['validate'] ) ) {
-						foreach ( $field['validate'] as $rule ) {
-							switch ( $rule ) {
-								case 'email':
-									$_POST[ $key ] = strtolower( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
-
-									if ( ! is_email( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) ) {
-										/* translators: %s - Field Label */
-										ur_add_notice( wp_kses_post( sprintf( __( '%s is not a valid email address.', 'user-registration' ), '<strong>' . $field['label'] . '</strong>' ), 'error' ) );
-									}
-
-									break;
-							}
-						}
-					}
-				}
-				// Action to add extra validation to edit profile fields.
-				do_action( 'user_registration_validate_' . $key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			}
-		}
+		do_action( 'user_registration_validate_profile_update_post', $profile, $form_id );
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
@@ -196,9 +105,9 @@ class UR_Form_Handler {
 					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
-							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) {
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
 								$email_updated = true;
-								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 							}
 							continue;
 						}
@@ -207,19 +116,21 @@ class UR_Form_Handler {
 					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
 						if ( 'display_name' === $new_key ) {
-							$user_data['display_name'] = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+							$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 						} else {
-							$user_data[ $new_key ] = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						}
 					} else {
 						$update_key = $key;
 
-						if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+						if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
 							$update_key = str_replace( 'user_', '', $new_key );
 						}
 						$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 						if ( 'disabled' !== $disabled ) {
-							update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							if ( isset( $_POST[ $key ] ) ) {
+								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							}
 						}
 					}
 				}
@@ -853,7 +764,7 @@ class UR_Form_Handler {
 
 		$templates = UR_Admin_Form_Templates::get_template_data();
 
-		$templates = is_array($templates) ? $templates: array();
+		$templates = is_array( $templates ) ? $templates : array();
 
 		$form_data = array();
 

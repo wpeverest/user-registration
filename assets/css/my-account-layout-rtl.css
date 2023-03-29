@@ -1,1 +1,105 @@
-#user-registration.vertical{display:flex;flex-wrap:wrap}#user-registration.vertical .user-registration-error,#user-registration.vertical .user-registration-message{float:none;width:100%}#user-registration.vertical .user-registration-MyAccount-navigation{background:#f0f1f5;width:25%}#user-registration.vertical .user-registration-MyAccount-navigation ul{flex-direction:column;flex-wrap:nowrap}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a{background:#dee0e9;border-color:#475bb2}#user-registration.vertical .user-registration-MyAccount-content{width:75%}#user-registration.vertical .user-registration-MyAccount-content .user-registration-profile-header{display:flex;flex-wrap:wrap;align-items:center;flex-direction:column}#user-registration.vertical .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container{margin:auto}#user-registration,#user-registration.horizontal{box-shadow:0 2px 20px rgba(45,53,89,.1)}#user-registration .user-registration-error,#user-registration .user-registration-info,#user-registration .user-registration-message,#user-registration.horizontal .user-registration-error,#user-registration.horizontal .user-registration-info,#user-registration.horizontal .user-registration-message{margin-bottom:0}#user-registration .user-registration-MyAccount-navigation,#user-registration.horizontal .user-registration-MyAccount-navigation{border-bottom:1px solid #dee0e9}#user-registration .user-registration-MyAccount-navigation ul,#user-registration.horizontal .user-registration-MyAccount-navigation ul{justify-content:center}#user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a,#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a{padding:15px 20px}#user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a,#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a{background-color:#dee0e9}#user-registration .ur-edit-profile,#user-registration .user-registration-MyAccount-content,#user-registration.horizontal .ur-edit-profile,#user-registration.horizontal .user-registration-MyAccount-content{text-align:center}#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container,#user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container,#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container{margin:0 auto;margin-bottom:15px}#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img,#user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img,#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img{width:100px;height:100px;object-fit:cover;border-radius:50%;margin:0 auto}#user-registration .ur-edit-profile .edit-password,#user-registration .ur-edit-profile .edit-profile,#user-registration .user-registration-MyAccount-content .edit-password,#user-registration .user-registration-MyAccount-content .edit-profile,#user-registration.horizontal .ur-edit-profile .edit-password,#user-registration.horizontal .ur-edit-profile .edit-profile,#user-registration.horizontal .user-registration-MyAccount-content .edit-password,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile{text-align:right}#user-registration .ur-edit-profile .edit-profile .user-registration-profile-header,#user-registration .ur-edit-profile .edit-profile h2,#user-registration .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,#user-registration .user-registration-MyAccount-content .edit-profile h2,#user-registration.horizontal .ur-edit-profile .edit-profile .user-registration-profile-header,#user-registration.horizontal .ur-edit-profile .edit-profile h2,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile h2{text-align:center}@media screen and (max-width:980px){#user-registration.vertical .user-registration-MyAccount-navigation{width:30%}#user-registration.vertical .user-registration-MyAccount-content{width:70%}}@media screen and (max-width:600px){#user-registration.vertical .user-registration-MyAccount-navigation{width:100%}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a{padding:15px 20px}#user-registration.vertical .user-registration-MyAccount-content{width:100%}#user-registration .user-registration-MyAccount-content{padding:15px}}
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+#user-registration.vertical {
+  display: flex;
+  flex-wrap: wrap; }
+  #user-registration.vertical .user-registration-error, #user-registration.vertical .user-registration-message {
+    float: none;
+    width: 100%; }
+  #user-registration.vertical .user-registration-MyAccount-navigation {
+    background: #f0f1f5;
+    width: 25%; }
+    #user-registration.vertical .user-registration-MyAccount-navigation ul {
+      flex-direction: column;
+      flex-wrap: nowrap; }
+      #user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+        background: #dee0e9;
+        border-color: #475bb2; }
+  #user-registration.vertical .user-registration-MyAccount-content {
+    width: 75%; }
+    #user-registration.vertical .user-registration-MyAccount-content .user-registration-profile-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      flex-direction: column; }
+      #user-registration.vertical .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container {
+        margin: auto; }
+
+#user-registration.horizontal, #user-registration {
+  box-shadow: 0 2px 20px rgba(45, 53, 89, 0.1); }
+  #user-registration.horizontal .user-registration-message,
+  #user-registration.horizontal .user-registration-error,
+  #user-registration.horizontal .user-registration-info, #user-registration .user-registration-message,
+  #user-registration .user-registration-error,
+  #user-registration .user-registration-info {
+    margin-bottom: 0; }
+  #user-registration.horizontal .user-registration-MyAccount-navigation, #user-registration .user-registration-MyAccount-navigation {
+    border-bottom: 1px solid #e1e1e1; }
+    #user-registration.horizontal .user-registration-MyAccount-navigation ul, #user-registration .user-registration-MyAccount-navigation ul {
+      justify-content: center; }
+      #user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a, #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
+        padding: 15px 20px; }
+      #user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a, #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+        background-color: #dee0e9; }
+  #user-registration.horizontal .user-registration-MyAccount-content,
+  #user-registration.horizontal .ur-edit-profile, #user-registration .user-registration-MyAccount-content,
+  #user-registration .ur-edit-profile {
+    text-align: center; }
+    #user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
+    #user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
+    #user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container {
+      margin: 0 auto;
+      margin-bottom: 15px; }
+      #user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
+      #user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
+      #user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: 0 auto; }
+    #user-registration.horizontal .user-registration-MyAccount-content .edit-profile,
+    #user-registration.horizontal .user-registration-MyAccount-content .edit-password,
+    #user-registration.horizontal .ur-edit-profile .edit-profile,
+    #user-registration.horizontal .ur-edit-profile .edit-password, #user-registration .user-registration-MyAccount-content .edit-profile,
+    #user-registration .user-registration-MyAccount-content .edit-password,
+    #user-registration .ur-edit-profile .edit-profile,
+    #user-registration .ur-edit-profile .edit-password {
+      text-align: right; }
+    #user-registration.horizontal .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,
+    #user-registration.horizontal .user-registration-MyAccount-content .edit-profile h2,
+    #user-registration.horizontal .ur-edit-profile .edit-profile .user-registration-profile-header,
+    #user-registration.horizontal .ur-edit-profile .edit-profile h2, #user-registration .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,
+    #user-registration .user-registration-MyAccount-content .edit-profile h2,
+    #user-registration .ur-edit-profile .edit-profile .user-registration-profile-header,
+    #user-registration .ur-edit-profile .edit-profile h2 {
+      text-align: center; }
+
+@media screen and (max-width: 980px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation {
+    width: 30%; }
+  #user-registration.vertical .user-registration-MyAccount-content {
+    width: 70%; } }
+
+@media screen and (max-width: 600px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation {
+    width: 100%; }
+    #user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
+      padding: 15px 20px; }
+  #user-registration.vertical .user-registration-MyAccount-content {
+    width: 100%; }
+  #user-registration .user-registration-MyAccount-content {
+    padding: 15px; } }

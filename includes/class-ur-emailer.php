@@ -258,6 +258,7 @@ class UR_Emailer {
 		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
+		$email_status = ! metadata_exists( 'user', $user_id, 'ur_confirm_email' ) ? true : $email_status;
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 		// Get User Status when admin approval after email confirmation login option enabled in form.
 		if ( 'admin_approval_after_email_confirmation' === $login_option ) {

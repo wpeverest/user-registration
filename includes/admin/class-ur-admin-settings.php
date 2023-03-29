@@ -876,7 +876,7 @@ class UR_Admin_Settings {
 				 */
 				$value = apply_filters( "user_registration_admin_settings_sanitize_option_$option_name", $value, $option, $raw_value );
 
-				if ( is_null( $value ) ) {
+				if ( is_null( $value ) || count( self::$errors ) > 0 ) {
 					continue;
 				}
 
