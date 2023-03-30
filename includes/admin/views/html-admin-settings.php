@@ -21,7 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 					<div class="ur-search-input ur-search--top-settings">
 						<input id="ur-search-settings" class="ur-type-text" type="text" placeholder="<?php esc_html_e( "Search Settings...", "user-registration" ); ?>" fdprocessedid="8fe27c">
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg>
+						<div class="user-registration-search-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg>
+						</div>
 					</div>
 					<div class="ur-search-input ur-search--top-toggle">
 						<label for="user_registration_hide_premium_features"><?php esc_html_e( "Hide Premium Features", "user-registration" ); ?></label>
@@ -45,15 +47,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</nav>
 				</div>
 			</header>
-			<div class="user-registration-settings-container">				
+			<div class="user-registration-settings-container">
 				<div class="user-registration-options-header">
-<<<<<<< HEAD
-					<div class="user-registration-options-title">
-						<h3>General</h3>
-=======
 					<div class="user-registration-options-header--top">
-						<h1><?php echo ucwords( str_replace( "_", " ", $current_tab ) ); ?></h1>
->>>>>>> f2b37c7484797ea4e92dcecf5b3236e572f36af2
+						<h3><?php echo ucwords( str_replace( "_", " ", $current_tab ) ); ?></h3>
 						<p class="submit">
 							<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
 								<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) ) ); ?>" />
@@ -62,17 +59,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php wp_nonce_field( 'user-registration-settings' ); ?>
 						</p>
 					</div>
-<<<<<<< HEAD
-					<?php
-					do_action( 'user_registration_sections_' . $current_tab );
-					?>
-=======
 					<div class="user-registration-options-header--bottom">
 						<?php
 						do_action( 'user_registration_sections_' . $current_tab );
 						?>
 					</div>
->>>>>>> f2b37c7484797ea4e92dcecf5b3236e572f36af2
 				</div>
 				<div class="user-registration-options-container">
 					<?php
