@@ -2349,16 +2349,21 @@ body {
 		gap: 5px;
 		align-items: center;
 
-		input {
-			width: 30px;
-			height: 16px;
+		input[type="checkbox"] {
+			width: 30px !important;
+			height: 16px !important;
+
+			&:focus {
+				outline: none;
+				box-shadow: none;
+			}
 		}
 
 		.slider {
-			width: 30px;
-			height: 16px;
+			width: 30px !important;
+			height: 16px !important;
 			border-radius: 99px;
-			padding: 8px;
+			padding: $spacing_8px;
 
 			&::before {
 				height: 12px !important;
@@ -2389,7 +2394,7 @@ body {
 			}
 
 			&:checked + .slider::before {
-				transform: translateX(16px);
+				transform: translateX(14px);
 			}
 		}
 
@@ -2413,8 +2418,8 @@ body {
 				content: "";
 				height: 16px;
 				width: 16px;
-				left: 4px;
-				bottom: 3px;
+				left: 2px;
+				bottom: 2px;
 				background-color: white;
 				transition: .4s;
 				border-radius: 100%;
