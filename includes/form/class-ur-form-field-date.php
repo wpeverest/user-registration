@@ -122,11 +122,11 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( is_wp_error( $result ) ) {
 			add_filter(
 				$filter_hook,
-				function ( $field_label ) {
+				function () use ( $field_label ) {
 					return sprintf(
 						/* translators: %s Field Label */
 						__( 'Please select a valid date for %s.', 'user-registration' ),
-						$field_label
+						"<strong>$field_label</strong>"
 					);
 				}
 			);

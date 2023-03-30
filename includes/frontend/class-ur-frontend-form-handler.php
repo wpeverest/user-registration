@@ -198,6 +198,16 @@ class UR_Frontend_Form_Handler {
 	}
 
 	/**
+	 * Sanitize form data
+	 *
+	 * @deprecated 2.3.4
+	 * @param  obj $form_data Form data.
+	 */
+	public static function get_sanitize_value( &$form_data ) {
+		ur_deprecated_function( 'UR_Frontend_Form_Handler::get_sanitize_value', '2.3.4', 'UR_Form_Validation::get_sanitize_value' );
+	}
+
+	/**
 	 * Update form data to usermeta table.
 	 *
 	 * @param  int   $user_id User ID.
