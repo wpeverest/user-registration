@@ -44,6 +44,23 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
 							'settings'  => array(
 								array(
+									'type'     => 'link',
+									'css'      => 'min-width:70px;',
+									'buttons'  => array(
+										array(
+											'title' => __( 'Preview', 'user-registration' ),
+											'href'  => add_query_arg(
+												array(
+													'ur_email_preview' => $this->id,
+												),
+												home_url()
+											),
+											'class'  => 'user_registration_email_preview',
+											'target' => '_blank',
+										),
+									),
+								),
+								array(
 									'title'    => __( 'Email Subject', 'user-registration' ),
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_email_confirmation_subject',

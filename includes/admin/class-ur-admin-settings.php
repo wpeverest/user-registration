@@ -335,6 +335,9 @@ class UR_Admin_Settings {
 						if ( ! isset( $value['placeholder'] ) ) {
 							$value['placeholder'] = '';
 						}
+						if ( ! isset( $value['target'] ) ) {
+							$value['target'] = '';
+						}
 
 						// Capitalize Setting Label.
 						$value['title'] = self::capitalize_title( $value['title'] );
@@ -627,7 +630,7 @@ class UR_Admin_Settings {
 									foreach ( $value['buttons'] as $button ) {
 										$settings .= '<a
 													href="' . esc_url( $button['href'] ) . '"
-													class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '">' . esc_html( $button['title'] ) . '</a>';
+													class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '" target="' . esc_attr( $button['target'] ) . '">' . esc_html( $button['title'] ) . '</a>';
 									}
 								}
 

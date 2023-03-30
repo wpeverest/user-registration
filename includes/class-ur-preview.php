@@ -44,6 +44,9 @@ class UR_Preview {
 				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter('astra_remove_entry_header_content', '__return_true'); // Need to remove in next version, If astra release the patches.
 
+			} elseif ( isset( $_GET['ur_email_preview'] ) ) {
+				add_filter( 'template_include', array( $this, 'handle_email_preview' ), PHP_INT_MAX );
+				add_filter('astra_remove_entry_header_content', '__return_true'); // Need to remove in next version, If astra release the patches.
 			}
 		}
 	}
@@ -195,6 +198,13 @@ class UR_Preview {
 		);
 		echo '</div>';
 		return ob_get_clean();
+	}
+
+	public function handle_email_preview() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+		ur_get_template( "email-preview.php" );
 	}
 }
 
