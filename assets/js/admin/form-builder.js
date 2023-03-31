@@ -2804,7 +2804,7 @@
 				);
 
 				$(".ur-settings-enable-min-max").on("change", function () {
-					if ("true" === $(this).val()) {
+					if ($(this).is(":checked")) {
 						$(
 							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date"
 						).show();
@@ -2891,10 +2891,9 @@
 							break;
 						case "min_date":
 							if (
-								"true" ===
 								$(".ur-item-active")
 									.find(".ur-settings-enable-min-max")
-									.val()
+									.is(":checked")
 							) {
 								$(this)
 									.addClass("flatpickr-field")
@@ -2939,10 +2938,9 @@
 							break;
 						case "max_date":
 							if (
-								"true" ===
 								$(".ur-item-active")
 									.find(".ur-settings-enable-min-max")
-									.val()
+									.is(":checked")
 							) {
 								$(this)
 									.addClass("flatpickr-field")

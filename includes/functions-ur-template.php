@@ -301,7 +301,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field_key         = isset( $args['field_key'] ) ? $args['field_key'] : '';
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default           = ! empty( $value ) ? $value : $default_value;
-				$select_all        = isset( $args['select_all'] ) ? $args['select_all'] : '';
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
 				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
@@ -324,7 +324,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$field .= '<ul ' . $choice_limit_attr . '>';
 
-					if ( 'yes' === $select_all ) {
+					if ( $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
 						$field .= '<label class="ur-checkbox-label">  ' . esc_html__( 'Select All', 'user-registration' ) . '</label></li>';
 					}
@@ -355,7 +355,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'toggle':
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default           = ! empty( $value ) ? $value : $default_value;
-				$select_all        = isset( $args['select_all'] ) ? $args['select_all'] : '';
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
 				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
@@ -735,12 +735,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
 								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
-								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
-								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? ur_string_to_bool( $field->advance_setting->set_current_date ) : '';
+								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? ur_string_to_bool( $field->advance_setting->enable_date_range ) : '';
 								$date_localization = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
-								if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
+								if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
 									$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
 									$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
 								}

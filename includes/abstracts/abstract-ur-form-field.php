@@ -194,7 +194,7 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
-		if ( isset( $data['advance_setting']->enable_min_max ) && 'true' === $data['advance_setting']->enable_min_max ) {
+		if ( isset( $data['advance_setting']->enable_min_max ) && ur_string_to_bool( $data['advance_setting']->enable_min_max ) ) {
 			if ( isset( $data['advance_setting']->min_date ) ) {
 				$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
 				$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
@@ -207,11 +207,11 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->set_current_date ) ) {
-			$form_data['custom_attributes']['data-default-date'] = $data['advance_setting']->set_current_date;
+			$form_data['custom_attributes']['data-default-date'] = ur_string_to_bool( $data['advance_setting']->set_current_date );
 		}
 
 		if ( isset( $data['advance_setting']->enable_date_range ) ) {
-			$form_data['custom_attributes']['data-mode'] = $data['advance_setting']->enable_date_range;
+			$form_data['custom_attributes']['data-mode'] = ur_string_to_bool( $data['advance_setting']->enable_date_range );
 		}
 
 		if ( isset( $data['advance_setting']->date_localization ) ) {
@@ -266,7 +266,7 @@ abstract class UR_Form_Field {
 
 			if ( 'multi_select2' === $field_key ) {
 				$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
-				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			}
 		}
 
@@ -285,7 +285,7 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'checkbox' === $field_key ) {
-			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options                 = array();
@@ -302,7 +302,7 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'multiple_choice' === $field_key ) {
-			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options                 = array();

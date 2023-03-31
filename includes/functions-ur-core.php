@@ -959,7 +959,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'label'       => __( 'Send User Approval Link in Email', 'user-registration' ),
 				'description' => '',
 				'id'          => 'user_registration_form_setting_enable_email_approval',
-				'type'        => 'checkbox',
+				'type'        => 'toggle',
 				'tip'         => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
 				'css'         => 'min-width: 350px;',
 				'default'     => ur_get_approval_default( $form_id ),
@@ -1156,7 +1156,7 @@ function ur_get_approval_default( $form_id ) {
 	} else {
 		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 	}
-	$value = ( 'yes' == $value || 1 == $value ) ? true : false;
+	$value = ur_string_to_bool( $value ) ? true : false;
 
 	return $value;
 }

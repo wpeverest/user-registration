@@ -338,7 +338,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 														$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
 													}
 													if ( isset( $advance_data['advance_setting']->select_all ) ) {
-														$field['select_all'] = $advance_data['advance_setting']->select_all;
+														$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
 													}
 												}
 
