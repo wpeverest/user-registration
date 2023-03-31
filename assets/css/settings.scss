@@ -3,8 +3,18 @@
 
 
 // User Registration Global Settings CSS
+body {
+	@media screen and (max-width: 782px) {
+		min-width: 600px;
+	}
+}
+
 #wpcontent {
 	padding-left: 0;
+
+	@media screen and (max-width: 782px) {
+		padding-left: 0 !important;
+	}
 
 	.wrap {
 		margin: 0;
@@ -127,6 +137,10 @@
 				border: 0;
 				border-top: $border_width solid $border-color;
 				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding-right: $spacing_14px;
 
 				&:focus {
 					box-shadow: none;
@@ -157,6 +171,15 @@
 					transition: all .3s ease-in-out;
 				}
 
+				svg {
+					width: 18px;
+					height: 18px;
+
+					path {
+						color: $grey-400;
+					}
+				}
+
 				&:hover,
 				&.is-active {
 					background: $grey-0;
@@ -166,13 +189,19 @@
 					&::before {
 						opacity: 1;
 					}
-				}
+
+					svg {
+						path {
+							stroke: $primary_color;
+						}
+					}
+				}				
 
 				&.is-active {
 					&::after {
 						opacity: 1;
-					}
-				}
+					}					
+				}				
 
 				&:last-child {
 					border-bottom: $border_width solid $border-color;
