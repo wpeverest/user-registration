@@ -3011,6 +3011,8 @@ body {
 
 .ur-registered-from {
 	.ur-registered-inputs {
+		position: relative;
+
 		.nav-tab-wrapper {
 
 		}
@@ -3073,59 +3075,58 @@ body {
 				}
 			}
 		}
-	}
 
-	button#ur-collapse {
-		width: 22px;
-		height: 41px;
-		background: $grey-0;
-		position: fixed;
-		bottom: $spacing_100px;
-		border-style: solid;
-		border-width: $border_width $border_width $border_width 0px;
-		border-color: $border-color;
-		border-radius: 0 $border_radius_3 $border_radius_3 0;
-		z-index: 1;
-		cursor: pointer;
-		transition: all .3s ease-in-out;
-
-		svg {
-			width: 12px;
-			height: 12px;
-			display: block;
-			position: relative;
-			left: -$spacing_2px;
+		button#ur-collapse {
+			width: 22px;
+			height: 41px;
+			background: $grey-0;
+			position: absolute;
+			bottom: $spacing_100px;
+			border-style: solid;
+			border-width: $border_width $border_width $border_width 0px;
+			border-color: $border-color;
+			border-radius: 0 $border_radius_3 $border_radius_3 0;
+			z-index: 1;
+			cursor: pointer;
 			transition: all .3s ease-in-out;
-		}
-
-		&:hover {
+			right: -$spacing_22px;
+	
 			svg {
-				left: -$spacing_4px;
+				width: 12px;
+				height: 12px;
+				display: block;
+				position: relative;
+				left: -$spacing_2px;
+				transition: all .3s ease-in-out;
 			}
-		}
-
-		&.close {
-			left: 572px;
-		}
-
-		&.open {
-			width: 24px;
-			height: 44px;
-
-			svg {
-				transform: rotate(180deg);
-				left: -1px;
-				width: 14px;
-				height: 14px;
-			}
-
+	
 			&:hover {
 				svg {
-					left: 1px;
+					left: -$spacing_4px;
 				}
 			}
-		}
+	
+			&.open {
+				width: 24px;
+				height: 44px;
+	
+				svg {
+					transform: rotate(180deg);
+					left: -1px;
+					width: 14px;
+					height: 14px;
+				}
+	
+				&:hover {
+					svg {
+						left: 1px;
+					}
+				}
+			}
+		} 
 	}
+
+	
 
 	.ur-builder-wrapper {
 		.ur-selected-inputs {
