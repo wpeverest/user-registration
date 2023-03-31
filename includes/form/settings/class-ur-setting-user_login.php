@@ -57,12 +57,8 @@ class UR_Setting_User_login extends UR_Field_Settings {
 				'data-id'     => $this->field_id . '_username_character',
 				'name'        => $this->field_id . '[username_character]',
 				'class'       => $this->default_class . ' ur-settings-character',
-				'type'        => 'select',
+				'type'        => 'toggle',
 				'required'    => false,
-				'options'     => array(
-				'no'  => __( 'No', 'user-registration' ),
-				'yes' => __( 'Yes', 'user-registration' ),
-			),
 				'default'     => 'yes',
 				'placeholder' =>'',
 				'tip'         => __( 'Check this option to validate the Username for Special Character', 'user-registration' ),

@@ -779,6 +779,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
 			'required'    => true,
+			'default'	  => "false",
 			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
 		),
 		'hide_label'  => array(
@@ -788,6 +789,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[hide_label]',
 			'placeholder' => '',
 			'required'    => true,
+			'default'	  => "false",
 			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
 		),
 	);
@@ -828,14 +830,14 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id || in_array( $strip_id, ur_get_required_fields() ) ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
 			'label'       => '',
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
-			'default'     => 'yes',
+			'default'     => true,
 			'required'    => true,
 		);
 	}

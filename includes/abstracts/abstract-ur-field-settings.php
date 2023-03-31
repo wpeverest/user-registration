@@ -54,9 +54,13 @@ abstract class UR_Field_Settings {
 
 			$tooltip_html       = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
-			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
-			$value = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+			if ( 'toggle' !== $field['type'] ) {
+				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
+				$value = $this->get_advance_setting_data( $field_key ) == ''  && isset( $field['default']) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+			} else {
+				$value = $this->get_advance_setting_data( $field_key ) === 1  && isset( $field['default']) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+			}
 
 			switch ( $field['type'] ) {
 
@@ -119,6 +123,17 @@ abstract class UR_Field_Settings {
 					}
 
 					$this->fields_html .= ' />';
+					break;
+				case 'toggle':
+
+					$this->fields_html .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
+					$this->fields_html .= '<label class="ur-label checkbox" for="ur-type-toggle">'. $field['label'] . $tooltip_html . '</label>';
+					$this->fields_html .= '<span class="user-registration-toggle-form">';
+					$checked = ur_string_to_bool( $value ) ? "checked" : "";
+					$this->fields_html .= '<input type="checkbox" data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '"  name="' . esc_attr( $field['name'] ) . '" ' . $checked . ' data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '">';
+					$this->fields_html .= '<span class="slider round"></span>';
+					$this->fields_html .= '</span>';
+					$this->fields_html .= '</div>';
 					break;
 				default:
 			}

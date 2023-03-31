@@ -210,7 +210,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
-		if ( true === $args['required'] ) {
+		if ( true === ur_string_to_bool( $args['required'] ) ) {
 			$args['class'][] = 'validate-required';
 			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {

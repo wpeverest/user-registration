@@ -840,7 +840,7 @@ class UR_Admin_Settings {
 
 					case 'checkbox':
 					case 'toggle':
-						$value = '1' === $raw_value || 'yes' === $raw_value ? 'yes' : 'no';
+						$value = ur_string_to_bool( $raw_value );
 						break;
 					case 'textarea':
 						$value = wp_kses_post( trim( $raw_value ) );

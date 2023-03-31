@@ -1105,6 +1105,7 @@ class UR_AJAX {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
 					if ( isset( $field->field_key ) ) {
+
 						if ( ! in_array( $field->field_key, $modifiying_keys ) ) {
 							continue;
 						}

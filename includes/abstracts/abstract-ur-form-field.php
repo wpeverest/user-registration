@@ -584,8 +584,9 @@ abstract class UR_Form_Field {
 					$general_setting_wrapper .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
 					$general_setting_wrapper .= '<label class="ur-label checkbox" for="ur-type-' . $setting_value['type'] . '">'. $setting_value['label'] . $tooltip_html . '</label>';
 					$general_setting_wrapper .= '<span class="user-registration-toggle-form">';
+					$value = $this->get_general_setting_data( $setting_key ) === 1  && isset( $setting_value['default']) ? $setting_value['default'] : $this->get_general_setting_data( $setting_key );
 					$checked = ur_string_to_bool( $this->get_general_setting_data( $setting_key ) ) ? "checked" : "";
-					$general_setting_wrapper .= '<input type="checkbox" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-checkbox"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $checked . ' ' . $disabled . '>';
+					$general_setting_wrapper .= '<input type="checkbox" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $checked . ' ' . $disabled . '>';
 					$general_setting_wrapper .= '<span class="slider round"></span>';
 					$general_setting_wrapper .= '</span>';
 					$general_setting_wrapper .= '</div>';

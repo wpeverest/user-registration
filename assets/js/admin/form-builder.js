@@ -1130,8 +1130,13 @@
 						// Check input type.
 						switch ($this_node.attr("type")) {
 							case "checkbox":
-								if ($this_node.is(":checked")) {
-									value = $this_node.val();
+								value = $this_node.is(":checked");
+
+								if (
+									$this_node.hasClass("ur-type-toggle") &&
+									!value
+								) {
+									value = "false";
 								}
 								break;
 
@@ -1139,6 +1144,7 @@
 								value = $this_node.val();
 								break;
 						}
+
 						break;
 					case "select":
 						value = $this_node.val();
@@ -1148,6 +1154,7 @@
 						break;
 					default:
 				}
+
 				return value;
 			},
 			/**
@@ -3559,7 +3566,6 @@
 					.find("span:contains(*)")
 					.remove();
 
-				console.log($label.is(":checked"));
 				if ($label.is(":checked")) {
 					wrapper
 						.find(".ur-label")
@@ -3612,9 +3618,17 @@
 				var hidden_node = wrapper
 					.find(".ur-advance-setting-block")
 					.find('[data-id="' + this_node_id + '"]');
+
 				switch (node_type) {
 					case "input":
-						hidden_node.val($this_node.val());
+						if ($this_node.attr("type") === "checkbox") {
+							hidden_node.prop(
+								"checked",
+								$this_node.is(":checked")
+							);
+						} else {
+							hidden_node.val($this_node.val());
+						}
 						break;
 					case "select":
 						hidden_node.find("option").prop("selected", false);
