@@ -115,7 +115,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<path fill="#6B6B6B" d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
 								</svg>
 							</button>
-						</div>						
+						</div>
 						<?php
 						$builder_class = apply_filters( 'user_registration_builder_class', array() );
 						$builder_class = implode( ' ', $builder_class );

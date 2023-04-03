@@ -198,12 +198,16 @@ jQuery(function ($) {
 						if (targetEl.classList.contains("collapsed")) {
 							targetEl.classList.remove("collapsed");
 							$(".ur-registered-inputs")
-								.not("button#ur-collapse")
+								.find("nav.ur-tabs")
 								.show();
+							$(".ur-registered-inputs").css("width", "412px");
 							window.ur_tab_scrollbar.update(); // Refresh the scrollbar
 						} else {
 							targetEl.classList.add("collapsed");
-							$(".ur-registered-inputs").hide();
+							$(".ur-registered-inputs").css("width", "0px");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.hide();
 						}
 					});
 				} else if ("undefined" !== typeof window.ur_tab_scrollbar) {
