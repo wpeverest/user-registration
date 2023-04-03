@@ -384,7 +384,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<li class="ur-radio-group-list--item  ' . $class . ( $value === trim( $option_index ) ? " active" : "" ) . '">';
 
 						$checked = '';
-						if ( ! empty( $value ) ) {
+
+						if ( '' !== $value ) {
 							$checked = checked( $value, trim( $option_index ), false );
 						}
 
@@ -399,7 +400,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								),
 								'span' => array(),
 							)
-							);
+						);
 
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
 						$field .= '</label>';

@@ -3962,8 +3962,16 @@
 						.find(".active")
 						.removeClass("active");
 					$(this)
+						.closest(".ur-radio-group-list")
+						.find(
+							"input[name='user_registration_form_setting_minimum_password_strength']"
+						)
+						.prop("checked", false);
+					$(this)
 						.closest(".ur-radio-group-list--item")
 						.addClass("active");
+
+					$(this).prop("checked", true);
 				});
 			});
 
