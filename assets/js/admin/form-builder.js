@@ -2983,60 +2983,185 @@
 							break;
 
 						case "enable_prepopulate":
-							if ("false" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.show();
+							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-parameter_name")
 									.hide();
 							}
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-parameter_name")
-									.toggle();
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
 
-								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-parameter_name")
-									.toggle();
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-parameter_name")
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-parameter_name")
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-parameter_name")
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-parameter_name")
+											.hide();
+									}
+								}
 							});
 							break;
 						case "autocomplete_address":
-							if ("no" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-address_style")
+									.show();
+							} else {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
 									.hide();
 							}
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-address_style")
-									.toggle();
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
 
-								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-address_style")
-									.toggle();
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-address_style")
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-address_style")
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-address_style")
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-address_style")
+											.hide();
+									}
+								}
 							});
 							break;
 						case "validate_unique":
-							if ("false" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-validation_message")
+									.show();
+							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-validation_message")
 									.hide();
 							}
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-validation_message")
-									.toggle();
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
 
-								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-validation_message")
-									.toggle();
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(
+												".ur-advance-validation_message"
+											)
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(
+												".ur-advance-validation_message"
+											)
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(
+												".ur-advance-validation_message"
+											)
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(
+												".ur-advance-validation_message"
+											)
+											.hide();
+									}
+								}
 							});
 							break;
 					}

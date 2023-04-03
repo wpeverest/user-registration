@@ -2270,8 +2270,14 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 
 			$checked = 'checked=checked';
 		}
+		$output .= '<div class="ur-toggle-section ur-form-builder-toggle">';
+		$output .= '<span class="user-registration-toggle-form">';
+		$output .= '<span class="slider round">';
 		$output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" ' . $checked . '>';
+		$output .= '</span>';
+		$output .= '</span>';
 		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
+		$output .= '</div>';
 		$output .= '</div>';
 
 		$output                .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
