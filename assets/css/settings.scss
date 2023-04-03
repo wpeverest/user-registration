@@ -304,6 +304,7 @@ body {
 		}
 
 		.user-registration-options-container {
+			// General Settings
 			.user-registration-card {
 				padding: $spacing_16px $spacing_20px $spacing_22px;
 				background: #fafafc;
@@ -354,6 +355,60 @@ body {
 					
 					strong {
 						font-weight: $semi_bold;
+					}
+				}
+			}
+
+			// Import/Export Settings
+			.ur-settings-section-header {
+				margin: 0;
+			}
+
+			.ur-export-users-page {
+				margin-top: 0;
+
+				.nav-tab-inside {
+					.postbox {
+						width: auto;
+						max-width: 640px;
+						padding: $spacing_16px $spacing_20px $spacing_22px;
+						background: #fafafc;
+						border: $border_width solid $blue-50;
+						border-radius: $border_radius_9 $border_radius_9 0 0;
+
+						.hndle {
+							font-weight: 600;
+							font-size: 16px;
+							line-height: 150%;
+							color: $grey-500;
+							margin: 0;
+							padding-bottom: $spacing_16px;
+							margin-bottom: $spacing_28px;
+							border-color: $grey-50;
+						}
+
+						.inside {
+							margin: 0;
+							padding: 0;
+
+							p {
+								margin: 0;
+								margin-bottom: $spacing_28px;
+
+								&.help {
+									margin-bottom: $spacing_12px;
+									font-weight: $regular;
+									font-size: 14px;
+									line-height: 150%;
+									color: $grey-400;
+								}
+
+								.forms-list {
+									height: 38px;
+									padding-left: $spacing_12px;
+								}
+							}
+						}
 					}
 				}
 			}
