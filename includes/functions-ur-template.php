@@ -368,6 +368,47 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
 				$field .= '</div>';
 				break;
+			case 'radio-group':
+				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$default           = ! empty( $value ) ? $value : $default_value;
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
+				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+
+				if ( ! empty( $args['options'] ) ) {
+
+					$field .= '<ul class="ur-radio-group-list">';
+					foreach ( $args['options'] as $option_index => $option_text ) {
+						$class = str_replace( " ", "-", strtolower( $option_text ) );
+
+						$field .= '<li class="ur-radio-group-list--item  ' . $class . ( $value === trim( $option_index ) ? " active" : "" ) . '">';
+
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+						$field .= wp_kses(
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+							);
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '</label>';
+
+						$field .= '</li>';
+					}
+					$field .= '</ul>';
+				}
+				break;
 			case 'password':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );

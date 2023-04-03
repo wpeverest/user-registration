@@ -3951,6 +3951,22 @@
 			}
 		});
 
+		$(document)
+			.find(
+				"input[name='user_registration_form_setting_minimum_password_strength']"
+			)
+			.each(function () {
+				$(this).on("click", function () {
+					$(this)
+						.closest(".ur-radio-group-list")
+						.find(".active")
+						.removeClass("active");
+					$(this)
+						.closest(".ur-radio-group-list--item")
+						.addClass("active");
+				});
+			});
+
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *

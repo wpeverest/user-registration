@@ -990,7 +990,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'radio-group',
 				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
