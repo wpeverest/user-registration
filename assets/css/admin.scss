@@ -2938,7 +2938,7 @@ body {
 				box-shadow: 0 1px 0 $blue-50;
 				font-size: 14px;
 				color: $grey-400;
-				border-radius: 3px;
+				border-radius: $border_radius_3;
 
 				&:has(span) {
 					width: 33px;
@@ -3217,7 +3217,8 @@ body {
 				}
 
 				.form-row {
-					width: 620px;
+					// width: 620px;
+					width: 100%;
 					max-width: 100%;
 					margin-bottom: $spacing_20px;
 
@@ -3232,6 +3233,7 @@ body {
 							font-size: 14px;
 							line-height: 150%;
 							font-weight: $regular;
+							margin-bottom: $spacing_6px;
 						}
 
 						.user-registration-help-tip {
@@ -3286,80 +3288,70 @@ body {
 
 					.ur-radio-group-list {
 						display: flex;
-    					gap: 20px;
+    					gap: $spacing_12px;
 
 						&--item {
-							width: 92px;
-							height: 37px;
-							border: 1px solid #6B6B6B;
-							border-radius: 5px;
-							text-align: center;
-							padding: 10px;
-							align-items: center;
-							display: flex;
-
-							&.very-weak {
-
-								 &.active {
-
-									label{
-										color: #F25656;
-									}
-
-									border-color: #F25656;
-									background-color: #FFF4F4;
-								}
-							}
-
-							&.weak {
-
-								&.active {
-
-									label{
-										color: #EE9936;
-									}
-
-									border-color: #EE9936;
-									background-color: #FFFAF5;
-								}
-							}
-
-							&.medium {
-
-								&.active {
-
-									label{
-										color: #FFC700;
-									}
-
-									border-color: #FFC700;
-									background-color: #FFFCF1;
-								}
-							}
-
-							&.strong {
-
-								&.active {
-
-									label{
-										color: #4CC741;
-									}
-
-									border-color: #4CC741;
-									background-color: #F5FFF4;
-								}
-							}
-
 							label {
 								font-size: 14px;
 								font-weight: 600;
-								color: #6B6B6B;
+								color: $grey-300;
+								margin-bottom: 0;
+								border: $border_width solid $grey-300;
+								border-radius: $border_radius_5;
+								text-align: center;
+								padding: $spacing_10px;
+								align-items: center;
+								display: flex;
+								transition: all .3s ease-in-out;
 
 								input {
 									display: none;
 								}
 							}
 
+							&.very-weak {
+								&:hover,
+								 &.active {
+									label {
+										color: #F25656;
+										border-color: #F25656;
+										background-color: #FFF4F4;
+									}									
+								}
+							}
+
+							&.weak {
+								&:hover,
+								&.active {
+									label {
+										color: #EE9936;
+										border-color: #EE9936;
+										background-color: #FFFAF5;
+									}									
+								}
+							}
+
+							&.medium {
+								&:hover,
+								&.active {
+									label {
+										color: #FFC700;
+										border-color: #FFC700;
+										background-color: #FFFCF1;
+									}									
+								}
+							}
+
+							&.strong {
+								&:hover,
+								&.active {
+									label {
+										color: #4CC741;
+										border-color: #4CC741;
+										background-color: #F5FFF4;
+									}
+								}
+							}
 						}
 					}
 				}
