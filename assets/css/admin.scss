@@ -921,6 +921,10 @@
 	.ur-registered-inputs {
 		width: 412px;
 
+		@media (max-width: 1199px) {
+			width: 360px;
+		}
+
 		.ur-tabs {
 			border: 0 none;
 			padding: 0;
@@ -2343,11 +2347,14 @@ body {
 }
 
 .ur-toggle-section {
-
 	&.ur-form-builder-toggle {
 		display: flex;
 		gap: 5px;
 		align-items: center;
+
+		.user-registration-toggle-form {
+			width: 36px;
+		}
 
 		input[type="checkbox"] {
 			width: 30px !important;
@@ -2782,6 +2789,53 @@ body {
 			width: 400px;
 			border-top: 6px solid #ff4f55;
 			border-radius: $spacing_10px;
+			padding: 0;
+
+			.swal2-header {
+				padding: $spacing_34px $spacing_40px 0 $spacing_40px;
+
+				.swal2-title {
+					margin-bottom: $spacing_4px;
+
+					i {
+						margin-bottom: $spacing_16px;
+					}
+				}
+			}
+
+			.swal2-actions {
+				margin-top: $spacing_24px;
+				background: #fcfcfc;
+				border-top: $border_width solid $border-color;
+				padding: $spacing_16px;
+				border-radius: 0 0 $border_radius_13 $border_radius_13;
+				justify-content: flex-start;
+				flex-direction: row-reverse;
+				gap: $spacing_12px;
+
+				button {
+					margin: 0;
+					transition: all .3s ease-in-out;
+
+					&.swal2-confirm {
+						background-color: #F75259 !important;
+						border: $border_width solid #F75259;
+						border-radius: $border_radius_3;
+						transition: all .3s ease-in-out;
+					}
+
+					&.swal2-cancel {
+						background: transparent;
+						border: $border_width solid $grey-200;
+						color: $grey-200;
+
+						&:hover {
+							border-color: $grey-500;
+							color: $grey-500;
+						}
+					}
+				}
+			}
 		}
 
 		.user-registration-recommend-addons {
@@ -3222,12 +3276,17 @@ body {
 					max-width: 100%;
 					margin-bottom: $spacing_20px;
 
+					&#user_registration_form_setting_minimum_password_strength_field {
+						margin-bottom: 0;
+					}
+
 					.ur-label {
 						font-size: 15px;
 						line-height: 140%;
 						color: $grey-400;
 						display: flex;
 						align-items: center;
+						width: max-content;
 
 						&.checkbox {
 							font-size: 14px;
@@ -3236,7 +3295,7 @@ body {
 							margin-bottom: $spacing_6px;
 						}
 
-						.user-registration-help-tip {
+						.user-registration-help-tip {							
 							&::after {
 								font-size: 18px;
 								line-height: unset;
