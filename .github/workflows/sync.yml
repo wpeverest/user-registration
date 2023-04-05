@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-758-enhancement/license-detail-section
     workflow_dispatch:
 jobs:
   sync:

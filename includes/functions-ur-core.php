@@ -2929,7 +2929,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 				}
 			}
 
-			return isset( $license_data->item_plan ) ? $license_data->item_plan : false;
+			return isset( $license_data ) ? $license_data : false;
 		}
 
 		return false;
