@@ -1167,6 +1167,7 @@
 
 					~ hr {
 						border-top: 1px solid $border-color;
+						margin: 0;
 					}
 				}
 
@@ -2352,10 +2353,6 @@ body {
 		gap: 5px;
 		align-items: center;
 
-		.user-registration-toggle-form {
-			width: 36px;
-		}
-
 		input[type="checkbox"] {
 			width: 30px !important;
 			height: 16px !important;
@@ -2382,8 +2379,8 @@ body {
 	.user-registration-toggle-form {
 		position: relative;
 		display: inline-block;
-		width: 40px;
-		height: 22px;
+		width: 36px;
+		height: 16px;
 
 		input {
 			position: relative;
@@ -3292,7 +3289,7 @@ body {
 							font-size: 14px;
 							line-height: 150%;
 							font-weight: $regular;
-							margin-bottom: $spacing_6px;
+							margin-bottom: 0;
 						}
 
 						.user-registration-help-tip {							
