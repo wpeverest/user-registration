@@ -1463,7 +1463,7 @@ function ur_get_user_login_option() {
 			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
 			'id'       => 'user_registration_email_setting_disable_email',
 			'default'  => 'no',
-			'type'     => 'checkbox',
+			'type'     => 'toggle',
 			'autoload' => false,
 		);
 	} else {

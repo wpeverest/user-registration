@@ -174,7 +174,6 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		}
 	}
 
-
 	/**
 	 * Validate whether date is past the max date.
 	 *

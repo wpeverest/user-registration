@@ -717,7 +717,9 @@ class UR_Admin_Settings {
 											' . esc_attr( checked( 'yes', $option_value, false ) ) . '>';
 								$settings .= '<span class="slider round"></span>';
 								$settings .= '</span>';
+								$settings .= wp_kses_post( $description );
 								$settings .= '</div>';
+								$settings .= wp_kses_post( $desc_field );
 								$settings .= '</td>';
 								$settings .= '</tr>';
 								break;
