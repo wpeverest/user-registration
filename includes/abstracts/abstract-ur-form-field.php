@@ -300,6 +300,10 @@ abstract class UR_Form_Field {
 
 			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
 		}
+		if ( 'single_item' === $field_key ) {
+			$form_data['enable_selling_price_single_item'] = isset( $data['advance_setting']->enable_selling_price_single_item ) ? $data['advance_setting']->enable_selling_price_single_item : '';
+			$form_data['selling_price']                    = isset( $data['advance_setting']->selling_price ) ? $data['advance_setting']->selling_price : '';
+		}
 
 		if ( 'multiple_choice' === $field_key ) {
 			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
@@ -312,6 +316,7 @@ abstract class UR_Form_Field {
 					$options[ $option->label ] = array(
 						'label' => $option->label,
 						'value' => $option->value,
+						'sell_value' => $option->sell_value,
 					);
 				}
 
@@ -516,6 +521,7 @@ abstract class UR_Form_Field {
 						foreach ( $options as $key => $option ) {
 							$label                    = is_array( $option ) ? $option['label'] : $option->label;
 							$value                    = is_array( $option ) ? $option['value'] : $option->value;
+							$sell_value               = is_array( $option ) ? $option['sell_value'] : $option->sell_value;
 							$currency                 = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies               = ur_payment_integration_get_currencies();
 							$currency                 = $currency . ' ' . $currencies[ $currency ]['symbol'];
@@ -535,6 +541,7 @@ abstract class UR_Form_Field {
 							}
 							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
 							$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " >';
+							$general_setting_wrapper .= '<div class="ur-selling-price"><span class="ur-selling-price-label">Selling Price</span><input value="' . esc_attr( $sell_value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-' . esc_attr( $setting_value['type'] ) . '-selling-price-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_selling_value" data-currency=" ' . esc_attr( $currency ) . ' " ></div>';
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
 							$general_setting_wrapper .= '</li>';
