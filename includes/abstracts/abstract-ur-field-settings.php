@@ -1,21 +1,46 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 /**
  * Abstract UR Field Setting Class
  *
  * @version  1.0.0
  * @package  UserRegistration/Abstracts
- * @category Abstract Class
- * @author   WPEverest
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Field_Settings Class
  */
 abstract class UR_Field_Settings {
 
+	/**
+	 * Field Id.
+	 *
+	 * @var string
+	 */
 	public $field_id;
+
+	/**
+	 * Html Wrapper for Form Fields
+	 *
+	 * @var string
+	 */
 	public $fields_html;
+
+	/**
+	 * Field Datas.
+	 *
+	 * @var array
+	 */
 	public $field_data    = array();
+
+	/**
+	 * Default class for advance settings.
+	 *
+	 * @var string
+	 */
 	public $default_class = 'ur_advance_setting';
 
 	/**
