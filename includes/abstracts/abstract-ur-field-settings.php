@@ -44,9 +44,9 @@ abstract class UR_Field_Settings {
 	public $default_class = 'ur_advance_setting';
 
 	/**
-	 * @param $key
+	 * Retrieves Advance Setting Data.
 	 *
-	 * @return string
+	 * @param string $key Field Option Key.
 	 */
 	public function get_advance_setting_data( $key ) {
 
@@ -58,7 +58,9 @@ abstract class UR_Field_Settings {
 	}
 
 	/**
-	 * @param array $field_data
+	 * Abstract function for output.
+	 *
+	 * @param array $field_data field Data.
 	 *
 	 * @return mixed
 	 */
@@ -69,7 +71,9 @@ abstract class UR_Field_Settings {
 
 
 	/**
-	 * @param $fields
+	 * Render Html for advanced settings field option.
+	 *
+	 * @param array $fields Fields data.
 	 */
 	public function render_html( $fields ) {
 
