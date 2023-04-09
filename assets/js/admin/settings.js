@@ -442,4 +442,63 @@
 			$(this).removeClass("open").addClass("close");
 		}
 	});
+
+	$(".ur-nav-premium").each(function () {
+		$(this).on("click", function (e) {
+			e.preventDefault();
+
+			var required = $(this).data("required"),
+				message = "",
+				label = "",
+				confirm_text = "";
+
+			if (required.plugin) {
+				label = user_registration_settings_params.install_plugin_label;
+				message =
+					user_registration_settings_params.install_plugin_message.replace(
+						"%plugin%",
+						"<strong>" + required.plugin + "</strong>"
+					);
+				confirm_text =
+					user_registration_settings_params.install_plugin_confirm_text;
+			} else if (required.plan) {
+				label = user_registration_settings_params.upgrade_plan_label;
+				message =
+					user_registration_settings_params.upgrade_plan_message.replace(
+						"%plan%",
+						"<strong>" + required.plan + "</strong>"
+					);
+				confirm_text =
+					user_registration_settings_params.upgrade_plan_confirm_text;
+			} else {
+				label = user_registration_settings_params.upgrade_to_pro_label;
+				message =
+					user_registration_settings_params.upgrade_to_pro_message;
+				confirm_text =
+					user_registration_settings_params.upgrade_to_pro_confirm_text;
+			}
+
+			var icon = '<i class="dashicons dashicons-lock"></i>';
+			var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">' +
+				label +
+				"</span>";
+
+			Swal.fire({
+				title: title,
+				html: message,
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--centered",
+				showCloseButton: true,
+				confirmButtonText: confirm_text,
+			}).then(function (result) {
+				if (result.value) {
+					var url =
+						"https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro";
+					window.open(url, "_blank");
+				}
+			});
+		});
+	});
 })(jQuery);

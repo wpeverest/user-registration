@@ -9,12 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+$collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account') !== false || strpos( $_GET['tab'], 'user-registration-invite-codes') !== false );
 ?>
 <div class="wrap user-registration">
 	<form method="<?php echo esc_attr( apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' ) ); ?>" id="mainform" action="" enctype="multipart/form-data">
 		<h1 class="screen-reader-text"><?php echo esc_html( $tabs[ $current_tab ] ); ?></h1>
 		<div class="user-registration-settings" >
-			<header class="user-registration-header">
+			<header class="user-registration-header <?php echo $collapse_by_default ? 'collapsed' : ''; ?>">
 				<div class="user-registration-header--top">
 					<div class="user-registration-header--top-logo">
 						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
@@ -42,10 +43,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 							?>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link ur-scroll-ui__item <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 								<span class="ur-nav__link-icon">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/' . $name . '.svg' ); ?>" alt="">
+									<?php echo file_get_contents( esc_url( UR()->plugin_url() . '/assets/images/settings-icons/' . $name . '.svg' ) ); ?>
 								</span>
 								<span class="ur-nav__link-label">
-									<?php echo esc_html( $label ); ?>
+									<p>
+										<?php echo esc_html( $label ); ?>
+									</p>
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 										<path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"/>
 									</svg>
@@ -55,7 +58,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 						do_action( 'user_registration_settings_tabs' );
 						?>
-						<button id="ur-settings-collapse" class="close nav-tab ur-nav__link ur-scroll-ui__item">
+						<button id="ur-settings-collapse" class="<?php echo $collapse_by_default ? 'open' : 'close'; ?> nav-tab ur-nav__link ur-scroll-ui__item">
 							<span class="ur-nav-icon">
 								<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/chevron-right-fill.svg' ); ?>" alt="">
 							</span>

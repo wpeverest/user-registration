@@ -148,6 +148,15 @@ class UR_Admin_Settings {
 			'user_registration_settings_params',
 			array(
 				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'upgrade_to_pro_label' => esc_html__( 'Upgrade to Pro', 'user-registration' ),
+				'upgrade_to_pro_message' => esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' ),
+				'upgrade_to_pro_confirm_text' => esc_html__( 'View Pricing', 'user-registration' ),
+				'upgrade_plan_label' => esc_html__( 'Upgrade your plan', 'user-registration' ),
+				'upgrade_plan_message' => esc_html__( 'You have been subscribed to %plan% plan. Please upgrade to higher plans to use this feature.', 'user-registration' ),
+				'upgrade_plan_confirm_text' => esc_html__( 'Upgrade Plan', 'user-registration' ),
+				'install_plugin_label' => esc_html__( 'Plugins not installed', 'user-registration' ),
+				'install_plugin_message' => esc_html__( 'Please install and activate %plugin% addon to use this feature.', 'user-registration' ),
+				'install_plugin_confirm_text' => esc_html__( 'Install and Activate', 'user-registration' ),
 			)
 		);
 

@@ -67,6 +67,10 @@ body {
 				.ur-nav__link-label {
 					display: none;
 				}
+
+				.ur-nav-icon {
+					transform: rotate(180deg);
+				}
 			}
 		}
 
@@ -161,7 +165,6 @@ body {
 
 			.ur-nav__link {
 				font-weight: $regular;
-				font-size: 14px;
 				line-height: 150%;
 				color: $grey-400;
 				padding: $spacing_14px $spacing_16px $spacing_14px $spacing_22px;
@@ -173,6 +176,19 @@ body {
 				align-items: center;
 				padding-right: $spacing_14px;
 				gap: 15px;
+
+				&.ur-nav-premium {
+
+					span.ur-nav__link-icon {
+						opacity: 0.5;
+					}
+
+					span.ur-nav__link-label {
+						> :not( svg ) {
+							opacity: 0.5;
+						}
+					}
+				}
 
 				&:focus {
 					box-shadow: none;
@@ -213,7 +229,7 @@ body {
 				}
 
 				&-icon {
-					img {
+					svg {
 						height: 24px;
 						width: 24px;
 					}
@@ -224,6 +240,15 @@ body {
 					justify-content: space-between;
 					flex-direction: row;
 					flex: 0 0 90%;
+					align-items: center;
+
+					> p {
+						font-size: 14px;
+					}
+
+					> svg {
+						margin-right: 15px;
+					}
 				}
 
 				&:hover,

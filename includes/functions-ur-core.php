@@ -3234,3 +3234,93 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 
 	}
 }
+
+if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
+
+	/**
+	 * Settings tab list to display as premium tabs.
+	 *
+	 * @since 3.0.0
+	 */
+	function ur_premium_settings_tab() {
+
+		$premium_tabs = array(
+			'woocommerce' => array(
+				'label' => esc_html__( 'WooCommerce', 'user-registration' ),
+				'plugin' => 'user-registration-woocommerce',
+				'plan' => array( 'personal', 'plus', 'professional' )
+			),
+			'content_restriction' => array(
+				'label' => esc_html__( 'Content Restriction', 'user-registration' ),
+				'plugin' => 'user-registration-content-restriction',
+				'plan' => array( 'personal', 'plus', 'professional' )
+			),
+			'file_upload' => array(
+				'label' => esc_html__( 'File Upload', 'user-registration' ),
+				'plugin' => 'user-registration-file-upload',
+				'plan' => array( 'personal', 'plus', 'professional' )
+			),
+			'user-registration-customize-my-account' => array(
+				'label' => esc_html__( 'Customize My Account', 'user-registration' ),
+				'plugin' => 'user-registration-customize-my-account',
+				'plan' => array( 'plus', 'professional' )
+			)
+		);
+
+		return apply_filters( 'user_registration_premium_settings_tab', $premium_tabs );
+	}
+}
+
+add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
+
+if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
+
+	/**
+	 * Method to display premium settings tabs.
+	 *
+	 * @since 3.0.0
+	 */
+	function ur_display_premium_settings_tab() {
+		$license_plan = ur_get_license_plan();
+		$premium_tabs = ur_premium_settings_tab();
+		$tabs_to_display = array();
+		$tab_html = '';
+
+		foreach( $premium_tabs as $tab => $detail ) {
+			if ( ! empty( $license_plan ) ) {
+				if ( ! in_array( $license_plan, $detail['plan'] ) ) {
+					$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'plan' => ucfirst( $license_plan ) ) ) );
+				} else {
+					if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+						$plugin_name = ucwords( str_replace( "-", " ", $detail['plugin'] ) );
+						$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'plugin' => $plugin_name ) ) );
+					}
+				}
+			} else {
+				$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'upgrade_to_pro' => true ) ) );
+			}
+		}
+
+		foreach( $premium_tabs as $tab => $detail ) {
+
+			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+				continue;
+			}
+
+			if ( isset( $tabs_to_display[$tab] ) ) {
+				$data_required = json_encode( $tabs_to_display[$tab] );
+				$tab_html .= '<button class="nav-tab ur-nav__link ur-scroll-ui__item ur-nav-premium" data-required="' . esc_attr( $data_required ) . '">';
+				$tab_html .= '<span class="ur-nav__link-icon">';
+				$tab_html .= file_get_contents( esc_url( UR()->plugin_url() . '/assets/images/settings-icons/' . $tab . '.svg' ) );
+				$tab_html .= '</span>';
+				$tab_html .= '<span class="ur-nav__link-label">';
+				$tab_html .= '<p>' . esc_html( $detail['label'] ) . '</p>';
+				$tab_html .= '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#5462FF" stroke="#5462FF"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" fill="white"/></svg>';
+				$tab_html .= '</span>';
+				$tab_html .= '</button>';
+			}
+		}
+
+		echo $tab_html;
+	}
+}
