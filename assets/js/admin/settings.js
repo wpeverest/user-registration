@@ -429,4 +429,17 @@
 				$(this).closest("label").addClass("selected");
 			});
 		});
+
+	// Handles collapse of side menu.
+	$("#ur-settings-collapse").on("click", function (e) {
+		e.preventDefault();
+
+		if ($(this).hasClass("close")) {
+			$(this).closest("header").addClass("collapsed");
+			$(this).removeClass("close").addClass("open");
+		} else {
+			$(this).closest("header").removeClass("collapsed");
+			$(this).removeClass("open").addClass("close");
+		}
+	});
 })(jQuery);

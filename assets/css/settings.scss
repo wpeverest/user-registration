@@ -38,6 +38,38 @@ body {
 		background: #fafafc;
 		border-right: $border_width solid $border-color;
 
+		&.collapsed {
+			max-width: 70px;
+
+			.user-registration-header--top {
+				&-logo {
+					img {
+						width: 40px;
+					}
+				}
+
+				.ur-search--top-settings {
+					input {
+						width: 10%;
+					}
+				}
+
+				.ur-search--top-toggle {
+					justify-content: center;
+
+					label {
+						display: none;
+					}
+				}
+			}
+
+			.user-registration-header--nav {
+				.ur-nav__link-label {
+					display: none;
+				}
+			}
+		}
+
 		&--top {
 			&-logo {
 				text-align: center;
@@ -139,8 +171,8 @@ body {
 				position: relative;
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
 				padding-right: $spacing_14px;
+				gap: 15px;
 
 				&:focus {
 					box-shadow: none;
@@ -178,6 +210,20 @@ body {
 					path {
 						color: $grey-400;
 					}
+				}
+
+				&-icon {
+					img {
+						height: 24px;
+						width: 24px;
+					}
+				}
+
+				&-label {
+					display: flex;
+					justify-content: space-between;
+					flex-direction: row;
+					flex: 0 0 90%;
 				}
 
 				&:hover,

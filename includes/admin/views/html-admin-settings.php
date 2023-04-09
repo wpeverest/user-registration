@@ -39,13 +39,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<nav class="nav-tab-wrapper ur-nav ur-nav--tab ur-nav-tab-wrapper ur-scroll-ui__items">
 						<?php
 						foreach ( $tabs as $name => $label ) {
-							echo '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ) . '" class="nav-tab ur-nav__link ur-scroll-ui__item ' . ( $current_tab === $name ? 'nav-tab-active is-active' : '' ) . '">' . esc_html( $label ) . '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-							<path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"/>
-						  </svg> </a>';
+							?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link ur-scroll-ui__item <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
+								<span class="ur-nav__link-icon">
+									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/' . $name . '.svg' ); ?>" alt="">
+								</span>
+								<span class="ur-nav__link-label">
+									<?php echo esc_html( $label ); ?>
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+										<path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"/>
+									</svg>
+								</span>
+							</a>
+						  <?php
 						}
-
-							do_action( 'user_registration_settings_tabs' );
+						do_action( 'user_registration_settings_tabs' );
 						?>
+						<button id="ur-settings-collapse" class="close nav-tab ur-nav__link ur-scroll-ui__item">
+							<span class="ur-nav-icon">
+								<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/chevron-right-fill.svg' ); ?>" alt="">
+							</span>
+							<span class="ur-nav__link-label">
+								<?php esc_html_e( 'Collapse Menu', 'user-registration' ); ?>
+							</span>
+						</button>
 					</nav>
 				</div>
 			</header>
