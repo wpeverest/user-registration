@@ -3289,6 +3289,10 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 		foreach( $premium_tabs as $tab => $detail ) {
 			if ( ! empty( $license_plan ) ) {
 				if ( ! in_array( $license_plan, $detail['plan'] ) ) {
+					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+						continue;
+					}
+
 					$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'plan' => ucfirst( $license_plan ) ) ) );
 				} else {
 					if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
@@ -3297,6 +3301,11 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					}
 				}
 			} else {
+
+				if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+					continue;
+				}
+
 				$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'upgrade_to_pro' => true ) ) );
 			}
 		}

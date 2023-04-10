@@ -72,7 +72,7 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 			<div class="user-registration-settings-container">
 				<div class="user-registration-options-header">
 					<div class="user-registration-options-header--top">
-						<h3><?php echo ucwords( str_replace( "_", " ", $current_tab ) ); ?></h3>
+						<h3><?php echo esc_html( $tabs[$current_tab] ); ?></h3>
 						<p class="submit">
 							<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
 								<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) ) ); ?>" />
