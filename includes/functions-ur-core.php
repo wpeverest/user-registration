@@ -3250,6 +3250,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	/**
 	 * Process the login form.
 	 *
+	 * @param string $nonce_value Nonce.
 	 * @throws Exception Login errors.
 	 */
 	function ur_process_login( $nonce_value ) {
@@ -3449,5 +3450,74 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				do_action( 'user_registration_login_failed' );
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_generate_onetime_token' ) ) {
+	/**
+	 * Generate a one-time token for the given user ID and action.
+	 *
+	 * @param int    $user_id The ID of the user for whom to generate the token.
+	 * @param string $action The action for which to generate the token.
+	 * @param int    $key_length The length of the random key to be generated. Defaults to 32.
+	 * @param int    $expiration_time The duration of the token's validity in minutes. Defaults to 60.
+	 * @return string The generated one-time token.
+	 */
+	function ur_generate_onetime_token( $user_id = 0, $action = '', $key_length = 32, $expiration_time = 60 ) {
+		$time = time();
+		$key  = wp_generate_password( $key_length, false );
+
+		// Concatenate the key, action, and current time to form the token string.
+		$string = $key . $action . $time;
+
+		// Generate the token hash.
+		$token = wp_hash( $string );
+
+		// Set the token expiration time in seconds.
+		$expiration = apply_filters( $action . '_onetime_token_expiration', $expiration_time * 60 );
+
+		// Set the user meta values for the token and expiration time.
+		update_user_meta( $user_id, $action . '_token' . $user_id, $token );
+		update_user_meta( $user_id, $action . '_token_expiration' . $user_id, $time + $expiration );
+
+		return $token;
+	}
+}
+
+if ( ! function_exists( 'ur_get_current_page_url' ) ) {
+	/**
+	 * Get the current page URL.
+	 *
+	 * @return string The URL of the current page.
+	 */
+	function ur_get_current_page_url() {
+		$page_url = '';
+
+		if ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ) {
+			$page_url .= 'https://';
+		} else {
+			$page_url .= 'http://';
+		}
+
+		if ( isset( $_SERVER['HTTP_HOST'] ) ) {
+			$page_url .= sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+		}
+
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			$page_url .= sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		}
+
+		return $page_url;
+	}
+}
+
+if ( ! function_exists( 'ur_is_passwordless_login_enabled' ) ) {
+	/**
+	 * Check whether the passwordless login is enabled or not.
+	 *
+	 * @return bool
+	 */
+	function ur_is_passwordless_login_enabled() {
+		return 'yes' === get_option( 'user_registration_pro_passwordless_login', 'no' );
 	}
 }

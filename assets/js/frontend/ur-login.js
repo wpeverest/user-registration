@@ -89,7 +89,31 @@ jQuery(function ($) {
 											"</ul>"
 									);
 							} else {
-								window.location.href = res.data.message;
+								if(res.data.status) {
+									$this
+									.closest("#user-registration")
+									.find(".user-registration-error")
+									.remove();
+
+									$this
+										.closest("#user-registration")
+										.find(".user-registration-message")
+										.remove();
+
+									$this
+										.closest("#user-registration")
+										.prepend(
+											'<ul class="user-registration-message">' +
+												res.data.message +
+												"</ul>"
+										);
+
+									$this
+									.closest("#user-registration")
+									.find('input#username').val("");
+								} else {
+									window.location.href = res.data.message;
+								}
 							}
 						},
 					});
