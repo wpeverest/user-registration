@@ -41,6 +41,11 @@ jQuery(function ($) {
 						"?action=user_registration_ajax_login_submit&security=" +
 						ur_login_params.ur_login_form_save_nonce;
 
+					if (window.location.href.indexOf("pl=true") > -1) {
+						// "pl=true" is present in the URL.
+						url += '&pl=true';
+					}
+
 					$this
 						.closest("form")
 						.find(".ur-submit-button")

@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-862-refactor-for-login-form-processing
+      - master
     workflow_dispatch:
 jobs:
   sync:
