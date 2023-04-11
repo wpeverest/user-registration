@@ -34,7 +34,7 @@ abstract class UR_Field_Settings {
 	 *
 	 * @var array
 	 */
-	public $field_data    = array();
+	public $field_data = array();
 
 	/**
 	 * Default class for advance settings.
@@ -89,7 +89,7 @@ abstract class UR_Field_Settings {
 
 			if ( 'toggle' !== $field['type'] ) {
 				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
-				$value = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+				$value              = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
 			} else {
 				$value = $this->get_advance_setting_data( $field_key ) === 1 && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
 			}
@@ -107,7 +107,7 @@ abstract class UR_Field_Settings {
 					break;
 
 				case 'select':
-					$is_multiple = isset( $field['multiple'] ) && true === $field['multiple'];
+					$is_multiple        = isset( $field['multiple'] ) && true === $field['multiple'];
 					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '" name="' . esc_attr( $field['name'] ) . esc_attr( $is_multiple ? '[]' : '' ) . '"';
 
 					if ( true == $field['required'] ) {
@@ -160,7 +160,7 @@ abstract class UR_Field_Settings {
 					$this->fields_html .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
 					$this->fields_html .= '<label class="ur-label checkbox" for="ur-type-toggle">' . $field['label'] . $tooltip_html . '</label>';
 					$this->fields_html .= '<span class="user-registration-toggle-form">';
-					$checked = ur_string_to_bool( $value ) ? 'checked' : '';
+					$checked            = ur_string_to_bool( $value ) ? 'checked' : '';
 					$this->fields_html .= '<input type="checkbox" data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '"  name="' . esc_attr( $field['name'] ) . '" ' . $checked . ' data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '">';
 					$this->fields_html .= '<span class="slider round"></span>';
 					$this->fields_html .= '</span>';

@@ -779,7 +779,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
 			'required'    => true,
-			'default'	  => "false",
+			'default'     => 'false',
 			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
 		),
 		'hide_label'  => array(
@@ -789,7 +789,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[hide_label]',
 			'placeholder' => '',
 			'required'    => true,
-			'default'	  => "false",
+			'default'     => 'false',
 			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
 		),
 	);

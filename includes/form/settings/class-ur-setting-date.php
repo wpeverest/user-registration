@@ -117,20 +117,20 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'label'    => __( 'Enable Date Range', 'user-registration' ),
 				'name'     => $this->field_id . '[enable_date_range]',
 				'class'    => $this->default_class . ' ur-settings-enable-date-range',
-				'default'  => "false",
+				'default'  => 'false',
 				'required' => false,
 				'tip'      => __( 'Enable date range feature.', 'user-registration' ),
 			),
 
-			'date_localization'    => array(
-				'type'        => 'select',
-				'data-id'     => $this->field_id . '_date_localization',
-				'label'       => __( 'Date Localization', 'user-registration' ),
-				'name'        => $this->field_id . '[date_localization]',
-				'class'       => $this->default_class . ' ur-settings-date_localization',
-				'default'     => 'en',
-				'required'    => false,
-				'options'     => array(
+			'date_localization' => array(
+				'type'     => 'select',
+				'data-id'  => $this->field_id . '_date_localization',
+				'label'    => __( 'Date Localization', 'user-registration' ),
+				'name'     => $this->field_id . '[date_localization]',
+				'class'    => $this->default_class . ' ur-settings-date_localization',
+				'default'  => 'en',
+				'required' => false,
+				'options'  => array(
 					'en'    => 'English',
 					'ar'    => 'Arabic',
 					'at'    => 'Austria',

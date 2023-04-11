@@ -800,9 +800,8 @@ class UR_Form_Validation extends UR_Validation {
 						}
 						break;
 					case 'profile_picture':
-
-						if ( isset( $_POST[ 'profile_pic_url' ] ) ) {
-							$_POST[ $key ] = sanitize_text_field( $_POST[ 'profile_pic_url' ] );
+						if ( isset( $_POST['profile_pic_url'] ) ) {
+							$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) );
 						} else {
 							$_POST[ $key ] = '';
 						}
