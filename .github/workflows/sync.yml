@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - ur/form-builder-v2
+      - master
     workflow_dispatch:
 jobs:
   sync:
