@@ -41,7 +41,7 @@ class UR_Autoloader {
 	/**
 	 * Take a class name and turn it into a file name.
 	 *
-	 * @param  string $class
+	 * @param  string $class Class.
 	 *
 	 * @return string
 	 */
@@ -52,7 +52,7 @@ class UR_Autoloader {
 	/**
 	 * Include a class file.
 	 *
-	 * @param  string $path
+	 * @param  string $path Path.
 	 *
 	 * @return bool successful or not
 	 */
@@ -69,7 +69,7 @@ class UR_Autoloader {
 	/**
 	 * Auto-load UR classes on demand to reduce memory consumption.
 	 *
-	 * @param string $class
+	 * @param string $class Class.
 	 */
 	public function autoload( $class ) {
 		$class = strtolower( $class );
