@@ -147,6 +147,8 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 			)
 		);
@@ -939,5 +941,82 @@ class UR_Admin_Settings {
 		}
 
 		return implode( ' ', $capitalized_words );
+	}
+
+	/**
+	 * Search GLobal Settings.
+	 */
+	public static function search_settings(){
+		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : '';
+		$search_url = '';
+		$found = false;
+
+		$settings = self::get_settings_pages();
+
+		if ( ! empty( $settings ) ) {
+
+			foreach ( $settings as $section ) {
+
+				if ( ! method_exists( $section, 'get_settings' ) ) {
+					continue;
+				}
+				$subsections = array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) );
+
+				if( !empty( $subsections) ){
+					foreach ( $subsections as $subsection ) {
+						$result = self::search_string_in_array($search_string, $section->get_settings( $subsection ));
+						if (!empty($result)) {
+							$search_url = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id . "&section=" .  $subsection . "#" . $result );
+							$found = true;
+							break;
+						}
+					}
+				}
+				if($found){
+					break;
+				}
+			}
+		}
+		if ( !empty( $search_url) ) {
+			wp_send_json_success(
+				array(
+					'search_url' => $search_url,
+				)
+			);
+		}else{
+			wp_send_json_error(
+				array(
+					'message' => __("No Search result found !", "user-registration"),
+				)
+			);
+		}
+
+	}
+
+	/**
+	 * Search String in Array.
+	 *
+	 * @param string $string_to_search String to Search.
+	 * @param array $array Search Array.
+	 */
+	public static function search_string_in_array( $string_to_search, $array ){
+		$result = false;
+		foreach ($array as $key => $value) {
+			if (is_array($value)) {
+				$result = self::search_string_in_array($string_to_search, $value );
+				if(!empty($result)){
+					if('true'===$result){
+						$result =  isset( $array["id"] ) ? $array["id"] : 'true';
+					}
+					break;
+				}
+			} else if (stripos($value, $string_to_search) !== false) {
+
+				$result =  isset( $array["id"] ) ? $array["id"] : 'true';
+				break;
+			}
+		}
+
+		return $result;
 	}
 }

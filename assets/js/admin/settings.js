@@ -429,4 +429,67 @@
 				$(this).closest("label").addClass("selected");
 			});
 		});
+
+	$(".user-registration #mainform").on("keyup keypress", function (e) {
+		var keyCode = e.keyCode || e.which;
+		if (keyCode === 13) {
+			e.preventDefault();
+			return false;
+		}
+	});
+
+	$(".user-registration #ur-search-settings").on("keypress", function (e) {
+		var keyCode = e.keyCode || e.which;
+		if (keyCode === 13) {
+			e.preventDefault();
+			var search_string = $(this).val();
+			var form_data = new FormData();
+			form_data.append("search_string", search_string);
+			form_data.append(
+				"action",
+				"user_registration_search_global_settings"
+			);
+			form_data.append(
+				"security",
+				user_registration_settings_params.user_registration_search_global_settings_nonce
+			);
+
+			$.ajax({
+				url: user_registration_settings_params.ajax_url,
+				dataType: "json", // what to expect back from the PHP script, if anything
+				cache: false,
+				contentType: false,
+				processData: false,
+				data: form_data,
+				type: "post",
+				beforeSend: function () {
+					var spinner =
+						'<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
+					$("#ur-search-settings")
+						.closest(".ur-search-input")
+						.append(spinner);
+				},
+				complete: function (response) {
+
+					$("#ur-search-settings")
+						.closest(".ur-search-input")
+						.find(".spinner")
+						.remove();
+
+					if (response.responseJSON.success === true) {
+						var search_url = response.responseJSON.data.search_url;
+						window.location.href = search_url;
+					} else {
+
+						Swal.fire({
+							icon: "error",
+							title: "Sorry !!",
+							text: response.responseJSON.data.message,
+						});
+					}
+					$("#ur-search-settings").val("");
+				},
+			});
+		}
+	});
 })(jQuery);

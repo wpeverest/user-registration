@@ -68,6 +68,7 @@ class UR_AJAX {
 			'allow_usage_dismiss'    => false,
 			'cancel_email_change'    => false,
 			'email_setting_status'   => false,
+			'search_global_settings' => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -77,6 +78,19 @@ class UR_AJAX {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
+	}
+
+	/**
+	 * Triggered when admin search for the global settings.
+	 */
+	public static function search_global_settings() {
+		check_ajax_referer( 'user_registration_search_global_settings', 'security' );
+
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1 );
+		}
+		UR_Admin_Settings::search_settings();
 	}
 
 	/**

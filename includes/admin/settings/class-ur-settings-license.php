@@ -19,6 +19,13 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 	class UR_Settings_License extends UR_Settings_Page {
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'license';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
