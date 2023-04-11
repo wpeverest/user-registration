@@ -590,7 +590,7 @@ class UR_AJAX {
 			);
 		}
 
-		ur_process_login();
+		ur_process_login( $nonce );
 	}
 	/**
 	 * Send test email.

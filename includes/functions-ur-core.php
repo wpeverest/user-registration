@@ -3252,7 +3252,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	 *
 	 * @throws Exception Login errors.
 	 */
-	function ur_process_login() {
+	function ur_process_login( $nonce_value ) {
 		try {
 			// Custom error messages.
 			$messages = array(
@@ -3283,9 +3283,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'remember'      => isset( $post['rememberme'] ),
 			);
 
-			$username         = isset( $post['username'] ) ? trim( sanitize_user( wp_unslash( $post['username'] ) ) ) : '';
-			$validation_error = new WP_Error();
-			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( wp_unslash( $post['password'] ) ) );
+			$username = isset( $post['username'] ) ? trim( sanitize_user( wp_unslash( $post['username'] ) ) ) : '';
 
 			if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
@@ -3321,6 +3319,11 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ) );
 				}
 			}
+
+			do_action( 'user_registration_login_process_before_username_validation', $post, $username, $nonce_value, $messages );
+
+			$validation_error = new WP_Error();
+			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( wp_unslash( $post['password'] ) ) );
 
 			if ( $validation_error->get_error_code() ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
@@ -3418,16 +3421,30 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				}
 			}
 		} catch ( Exception $e ) {
-			$message = $e->getMessage();
+			$status_code = $e->getCode();
+			$message     = $e->getMessage();
 
-			if ( ur_is_ajax_login_enabled() ) {
-				wp_send_json_error(
-					array(
-						'message' => $message,
-					)
-				);
+			if ( $status_code >= 200 && $status_code < 300 ) {
+				if ( ur_is_ajax_login_enabled() ) {
+					wp_send_json_success(
+						array(
+							'message' => $message,
+							'status'  => true
+						)
+					);
+				}
 
+				ur_add_notice( $message, 'success' );
 			} else {
+
+				if ( ur_is_ajax_login_enabled() ) {
+					wp_send_json_error(
+						array(
+							'message' => $message,
+						)
+					);
+				}
+
 				ur_add_notice( apply_filters( 'login_errors', $message ), 'error' );
 				do_action( 'user_registration_login_failed' );
 			}

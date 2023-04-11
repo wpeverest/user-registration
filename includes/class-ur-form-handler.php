@@ -317,7 +317,7 @@ class UR_Form_Handler {
 		$nonce_value = isset( $_POST['user-registration-login-nonce'] ) ? sanitize_key( $_POST['user-registration-login-nonce'] ) : $nonce_value;
 
 		if ( ! empty( $_POST['login'] ) && wp_verify_nonce( $nonce_value, 'user-registration-login' ) ) {
-			ur_process_login();
+			ur_process_login( $nonce_value );
 		}
 	}
 
