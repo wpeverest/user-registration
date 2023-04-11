@@ -98,6 +98,8 @@ class UR_Frontend_Form_Handler {
 				$userdata['user_login'] = $username;
 			}
 
+			$userdata = apply_filters( 'user_registration_before_insert_user', $userdata );
+
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
