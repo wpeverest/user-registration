@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-260-conditional-redirect-after-registration
     workflow_dispatch:
 jobs:
   sync:
