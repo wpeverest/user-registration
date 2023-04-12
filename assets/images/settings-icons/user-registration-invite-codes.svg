@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-  <path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" d="M4 7.666c-1.1 0-2 .804-2 1.786v10.714c0 .982.9 1.786 2 1.786h16c1.1 0 2-.804 2-1.786V9.452c0-.982-.9-1.786-2-1.786"/>
-  <path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" d="m22 9.572-10 7.62-10-7.62"/>
-  <path stroke="#383838" d="M4.531 1.952c0-.25.203-.452.453-.452h14.35c.25 0 .452.203.452.452V11a.452.452 0 0 1-.182.362l-7.331 5.476a.452.452 0 0 1-.544-.002L4.71 11.52a.452.452 0 0 1-.179-.36V1.951Z"/>
+  <path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M4 7.666c-1.1 0-2 .804-2 1.786v10.714c0 .982.9 1.786 2 1.786h16c1.1 0 2-.804 2-1.786V9.452c0-.982-.9-1.786-2-1.786"/>
+  <path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="m22 9.572-10 7.62-10-7.62"/>
+  <path stroke="#383838" stroke-width="1.25" d="M4.984 1.625h14.35c.18 0 .327.147.327.327V11c0 .103-.049.2-.132.262l-7.33 5.476a.327.327 0 0 1-.394-.001l-7.02-5.317a.327.327 0 0 1-.129-.26V1.951c0-.18.147-.327.328-.327Z"/>
   <circle cx="8.907" cy="7.907" r="1.19" fill="#383838"/>
   <circle cx="12.237" cy="7.907" r="1.19" fill="#383838"/>
   <circle cx="15.573" cy="7.907" r="1.19" fill="#383838"/>
