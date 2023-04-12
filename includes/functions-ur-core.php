@@ -1015,16 +1015,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_redirect_options',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
-				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
-			),
-			array(
-				'type'              => 'text',
 				'label'             => __( 'Submit Button Class', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -1107,6 +1097,49 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
 				'tip'               => __( 'Enter CSS class names for the Form Wrapper. Multiple class names should be separated with spaces.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect After Registration', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after_registration',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => apply_filters(
+					'user_registration_redirect_after_registration_options',
+					array(
+						'no-redirection' => __( 'No Redirection', 'user-registration' ),
+						'internal-page'  => __( 'Internal Page', 'user-registration' ),
+						'external-url'   => __( 'External URL', 'user-registration' ),
+					)
+				),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
+				'tip'               => __( 'Choose where to redirect the user after successful registration.', 'user-registration' ),
+				'custom_attributes' => array(),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Custom Page', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_page',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => ur_get_all_pages(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
+				'tip'               => __( 'Choose the custom page to redirect after registration', 'user-registration' ),
+				'custom_attributes' => array(),
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
+				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 			),
 		),
 	);
@@ -3232,5 +3265,24 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 
 		return false;
 
+	}
+}
+
+if ( ! function_exists( 'ur_get_all_pages' ) ) {
+	/**
+	 * Returns map of published pages as id->title format.
+	 *
+	 * @return array
+	 */
+	function ur_get_all_pages() {
+		$pages = get_pages();
+
+		$pages_array = array();
+
+		foreach ( $pages as $page ) {
+			$pages_array[ $page->ID ] = $page->post_title;
+		}
+
+		return $pages_array;
 	}
 }
