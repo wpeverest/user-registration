@@ -171,7 +171,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 			$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
 		}
 
-		return $redirect_url;
+		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
 	}
 }
 
@@ -651,6 +651,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 					$field .= '</ul>';
 				}
+				break;
+
+			case 'html':
+				$content = isset( $args['html_content'] ) ? $args['html_content'] : '';
+
+				$field .= $content;
 				break;
 		} // End switch().
 

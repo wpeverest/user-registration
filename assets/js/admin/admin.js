@@ -375,16 +375,16 @@ jQuery(function ($) {
 	var hide_show_redirection_options = function() {
 		var redirect_after_registration = $( '#user_registration_form_setting_redirect_after_registration' );
 		var selected_redirection_option = redirect_after_registration.find(':selected');
-		var custom_redirection_page = $('#user_registration_form_setting_redirect_page' ).closest( '.form-row' ).hide();
-		var redirect_url = $( '#user_registration_form_setting_redirect_options' ).closest( '.form-row' ).hide();
+		var custom_redirection_page = $('#user_registration_form_setting_redirect_page' ).closest( '.form-row' ).slideUp(800);
+		var redirect_url = $( '#user_registration_form_setting_redirect_options' ).closest( '.form-row' ).slideUp(800);
 
 		if ( selected_redirection_option.length ) {
 			switch (selected_redirection_option.val()) {
 				case 'internal-page':
-					custom_redirection_page.show();
+					custom_redirection_page.slideDown(800);
 					break;
 				case 'external-url':
-					redirect_url.show();
+					redirect_url.slideDown(800);
 					break;
 				default:
 					break;

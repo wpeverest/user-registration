@@ -456,7 +456,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		}
 	}
 
-	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
+	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id, $setting_data );
 
 	foreach ( $setting_fields as $field_data ) {
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
