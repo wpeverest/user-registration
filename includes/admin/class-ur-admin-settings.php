@@ -1001,8 +1001,13 @@ class UR_Admin_Settings {
 	 */
 	public static function search_string_in_array( $string_to_search, $array ){
 		$result = false;
+		if (is_object($array)) {
+			$array = (array) $array;
+		}
+
 		foreach ($array as $key => $value) {
-			if (is_array($value)) {
+			if (is_array($value) || is_object($value)) {
+				$value = (array) $value;
 				$result = self::search_string_in_array($string_to_search, $value );
 				if(!empty($result)){
 					if('true'===$result){
