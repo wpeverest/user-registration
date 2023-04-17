@@ -69,12 +69,12 @@ class UR_Admin_Export_Users {
 			}
 
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
-			$export_format    = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : '';
 			$from_date        = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
 			$to_date          = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
 		} else {
 			$unchecked_fields = array();
 		}
+		$export_format = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : 'csv';
 
 		$users = get_users(
 			array(
