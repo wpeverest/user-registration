@@ -147,7 +147,7 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'i18n_nav_warning'            => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 			)
 		);
 
@@ -161,7 +161,6 @@ class UR_Admin_Settings {
 		$flag = apply_filters( 'user_registration_settings_save_action', true );
 
 		if ( $flag ) {
-
 			// Save settings if data has been posted.
 			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				self::save();

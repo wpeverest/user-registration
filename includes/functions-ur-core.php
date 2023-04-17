@@ -3256,7 +3256,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 				'plan'   => array( 'personal', 'plus', 'professional' ),
 			),
 			'file_upload'                            => array(
-				'label'  => esc_html__( 'File Upload', 'user-registration' ),
+				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
 			),
@@ -3304,25 +3304,26 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
-
 				} else {
+					$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+					$action      = '';
+
 					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 						if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-							$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
-
-							/* translators: %s: Addon Name. */
-							$tooltip_html = sprintf( __( 'Please install %s addon to use this feature.', 'user-registration' ), $plugin_name );
-							$button       = '<a href="#" class="user-registration-settings-addon-install" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . esc_html__( 'Install Addon', 'user-registration' ) . '</a>';
-							array_push( $tabs_to_display, $tab );
+							$action = 'Activate';
+						} else {
+							continue;
 						}
 					} else {
-						$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
-
-						/* translators: %s: Addon Name. */
-						$tooltip_html = sprintf( __( 'Please Activate %s addon to use this feature.', 'user-registration' ), $plugin_name );
-						$button       = '<a href="#" class="user-registration-settings-addon-install" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . esc_html__( 'Activate Addon', 'user-registration' ) . '</a>';
-						array_push( $tabs_to_display, $tab );
+						$action = 'Install';
 					}
+
+					/* translators: %s: Addon Name. */
+					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, $plugin_name );
+
+					/* translators: %s: Action Name. */
+					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+					array_push( $tabs_to_display, $tab );
 				}
 			} else {
 

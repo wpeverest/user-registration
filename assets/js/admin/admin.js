@@ -364,10 +364,9 @@ jQuery(function ($) {
 	$(document.body)
 		.on("init_tooltips", function () {
 			ur_init_tooltips(".tips, .help_tip, .user-registration-help-tip");
-			ur_init_tooltips(
-				".ur-copy-shortcode, .ur-portal-tooltip",
-				{ keepAlive: false }
-			);
+			ur_init_tooltips(".ur-copy-shortcode, .ur-portal-tooltip", {
+				keepAlive: false,
+			});
 
 			// Add Tooltipster to parent element for widefat tables
 			$(".parent-tips").each(function () {
@@ -478,13 +477,17 @@ jQuery(function ($) {
 						'<div class="success notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				} else {
 					message_string =
 						'<div class="error notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				}
 				$(
 					".user-registration_page_user-registration-settings .notice"
@@ -498,19 +501,18 @@ jQuery(function ($) {
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
 		var status = $(this).find('input[type="checkbox"]:checked').val();
-		var id = $(this).find('input[type="checkbox"]').attr('id');
+		var id = $(this).find('input[type="checkbox"]').attr("id");
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,
 			type: "POST",
 			data: {
 				action: "user_registration_email_setting_status",
 				status: status,
-				id : id,
-				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+				id: id,
+				security:
+					user_registration_email_setting_status.user_registration_email_setting_status_nonce,
 			},
-			success: function (response) {
-
-			},
+			success: function (response) {},
 		});
 	});
 });
@@ -574,16 +576,20 @@ jQuery(function ($) {
 		});
 
 		$(".ur_export_form_action_button").on("click", function () {
-			var formid = $('#selected-export-forms').val();
-			$(document).find('#message').remove();
-			if(formid.length === 0) {
-				message_string ='<div id="message" class="error inline ur-import_notice"><p><strong>' + user_registration_admin_data.export_error_message+ '</strong></p></div>';
+			var formid = $("#selected-export-forms").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
 				$(".ur-export-users-page").prepend(message_string);
 			} else {
-				$('.ur_export_form_action_button').attr('type','submit');
+				$(".ur_export_form_action_button").attr("type", "submit");
 			}
+		});
 	});
-})})(jQuery, window.user_registration_admin_data);
+})(jQuery, window.user_registration_admin_data);
 
 /**
  * Set tooltips for specified elements.

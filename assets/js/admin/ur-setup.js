@@ -360,7 +360,7 @@ jQuery(function ($) {
 			// Settings addon install actions.
 			$(document).on(
 				"click",
-				".user-registration-settings-addon-install",
+				".user-registration-settings-addon-install, .user-registration-settings-addon-activate",
 				function (e) {
 					e.preventDefault();
 					ur_setup_actions.install_addon_from_settings($(this));
@@ -432,11 +432,14 @@ jQuery(function ($) {
 		},
 		install_addon_from_settings: function (node) {
 			wp.updates.maybeRequestFilesystemCredentials(event);
+			var button_text = this.$button_install;
+
+			if (node.hasClass("user-registration-settings-addon-install")) {
+				button_text = ur_setup_params.i18n_installing;
+			}
+
 			$(node)
-				.html(
-					ur_setup_actions.$button_install +
-						'<div class="ur-spinner"></div>'
-				)
+				.html(button_text + '<div class="ur-spinner"></div>')
 				.closest("button")
 				.prop("disabled", true);
 
@@ -460,24 +463,27 @@ jQuery(function ($) {
 					) {
 						Swal.fire({
 							customClass:
-								"user-registration-swal2-modal user-registration-swal2-modal--center",
+								"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
 							icon: "error",
 							title: response.errorMessage,
-							text: "Download Failed. Please download and activate addon manually",
+							text: ur_setup_params.download_failed,
 						});
 					} else {
-						console.log(wp.updates.queue.length);
 						if (0 === wp.updates.queue.length) {
 							Swal.fire({
 								customClass:
-									"user-registration-swal2-modal user-registration-swal2-modal--center",
+									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
 								icon: "success",
-								title: '<span class="user-registration-swal2-modal__title">Installation Successful</span>',
-								text: "Addons have been installed and Activated. You have to reload the page",
+								title:
+									'<span class="user-registration-swal2-modal__title">' +
+									ur_setup_params.download_successful_title +
+									"</span>",
+								text: ur_setup_params.download_successful_message,
 								allowOutsideClick: false,
-								confirmButtonText: "Save Changes and Reload",
+								confirmButtonText:
+									ur_setup_params.save_changes_text,
 								showCancelButton: true,
-								cancelButtonText: "Just Reload",
+								cancelButtonText: ur_setup_params.reload_text,
 								cancelButtonColor: "#DD6B55",
 							}).then(function (result) {
 								if (result.isConfirmed) {

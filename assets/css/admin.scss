@@ -2530,7 +2530,15 @@ body {
 
 		.swal2-popup {
 			width: 400px;
-			border-top: 6px solid #ff4f55;
+
+			&.user-registration-settings-swal2 {
+				width: auto;
+			}
+
+			&.swal2-icon-error {
+				border-top: 6px solid #ff4f55;
+			}
+
 			border-radius: 10px;
 		}
 
