@@ -848,6 +848,11 @@
 														}
 
 														$this[0].reset();
+														if($this.find('#profile_pic_url').length){
+															$('#profile_pic_url').val("");
+														}
+
+
 														jQuery(
 															"#billing_country"
 														).trigger("change");

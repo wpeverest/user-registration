@@ -481,6 +481,7 @@ jQuery(function ($) {
 			data: {
 				action: "user_registration_send_test_email",
 				email: email,
+				nonce: user_registration_send_email.test_email_nonce,
 			},
 			type: "post",
 			beforeSend: function () {

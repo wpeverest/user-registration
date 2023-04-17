@@ -350,7 +350,8 @@ class UR_Admin_Assets {
 				'user-registration-admin',
 				'user_registration_send_email',
 				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'ajax_url'         => admin_url( 'admin-ajax.php' ),
+					'test_email_nonce' => wp_create_nonce( 'test_email_nonce' ),
 				)
 			);
 		}

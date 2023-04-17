@@ -336,7 +336,44 @@ jQuery(function ($) {
 			this.$setup_form.on(
 				"click",
 				".ur-template-select",
-				this.template_select
+				function (event) {
+					if (-1 !== $(this).data("template").indexOf("recaptcha")) {
+						var data = {
+							action: "user_registration_captcha_setup_check",
+							security: ur_setup_params.captcha_setup_check_nonce,
+						};
+
+						$.post(
+							ur_setup_params.ajax_url,
+							data,
+							function (response) {
+								if (
+									!response.success ||
+									undefined ===
+										response.data.is_captcha_setup ||
+									!response.data.is_captcha_setup
+								) {
+									Swal.fire({
+										icon: "error",
+										title: "Oops...",
+										html: response.data
+											.captcha_setup_error_msg,
+									});
+								} else {
+									ur_setup_actions.template_select(event);
+								}
+							}
+						).fail(function (xhr) {
+							Swal.fire({
+								icon: "error",
+								title: "Oops...",
+								text: xhr.responseText,
+							});
+						});
+					} else {
+						ur_setup_actions.template_select(event);
+					}
+				}
 			);
 
 			// Prevent <ENTER> key for setup actions.
@@ -533,7 +570,7 @@ jQuery(function ($) {
 			event.preventDefault();
 
 			$target = $(event.target);
-
+			template = $target.data("template");
 			if (
 				$target.hasClass("disabled") ||
 				$target.hasClass("updating-message")
@@ -554,10 +591,10 @@ jQuery(function ($) {
 			) {
 				var data = {
 					action: "user_registration_template_licence_check",
-					plan: $this
+					plan: $target
 						.attr("data-licence-plan")
 						.replace("-lifetime", ""),
-					slug: $this.attr("data-template"),
+					slug: $target.attr("data-template"),
 					security: ur_setup_params.template_licence_check_nonce,
 				};
 
@@ -643,7 +680,7 @@ jQuery(function ($) {
 				showCloseButton: true,
 				allowOutsideClick: false,
 				confirmButtonText: button,
-				inputValidator: function(value) {
+				inputValidator: function (value) {
 					if (
 						$(".user-registration-template-install-addon").length >
 						0
