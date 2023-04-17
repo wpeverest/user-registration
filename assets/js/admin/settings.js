@@ -171,85 +171,85 @@
 	function handleReCaptchaHideShow(value) {
 		if (value == "v3") {
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else if (value == "hCaptcha") {
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else {
 			if (
@@ -261,49 +261,49 @@
 				$(
 					"#user_registration_integration_setting_recaptcha_site_key_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 			} else {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 			}
 
@@ -311,26 +311,26 @@
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 		}
 	}
@@ -444,61 +444,13 @@
 	});
 
 	$(".ur-nav-premium").each(function () {
-		$(this).on("click", function (e) {
-			e.preventDefault();
-
-			var required = $(this).data("required"),
-				message = "",
-				label = "",
-				confirm_text = "";
-
-			if (required.plugin) {
-				label = user_registration_settings_params.install_plugin_label;
-				message =
-					user_registration_settings_params.install_plugin_message.replace(
-						"%plugin%",
-						"<strong>" + required.plugin + "</strong>"
-					);
-				confirm_text =
-					user_registration_settings_params.install_plugin_confirm_text;
-			} else if (required.plan) {
-				label = user_registration_settings_params.upgrade_plan_label;
-				message =
-					user_registration_settings_params.upgrade_plan_message.replace(
-						"%plan%",
-						"<strong>" + required.plan + "</strong>"
-					);
-				confirm_text =
-					user_registration_settings_params.upgrade_plan_confirm_text;
-			} else {
-				label = user_registration_settings_params.upgrade_to_pro_label;
-				message =
-					user_registration_settings_params.upgrade_to_pro_message;
-				confirm_text =
-					user_registration_settings_params.upgrade_to_pro_confirm_text;
+		$(this).hover(
+			function (e) {
+				$(this).find(".ur-tooltip").show();
+			},
+			function (e) {
+				$(this).find(".ur-tooltip").hide();
 			}
-
-			var icon = '<i class="dashicons dashicons-lock"></i>';
-			var title =
-				icon +
-				'<span class="user-registration-swal2-modal__title">' +
-				label +
-				"</span>";
-
-			Swal.fire({
-				title: title,
-				html: message,
-				customClass:
-					"user-registration-swal2-modal user-registration-swal2-modal--centered",
-				showCloseButton: true,
-				confirmButtonText: confirm_text,
-			}).then(function (result) {
-				if (result.value) {
-					var url =
-						"https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro";
-					window.open(url, "_blank");
-				}
-			});
-		});
+		);
 	});
 })(jQuery);

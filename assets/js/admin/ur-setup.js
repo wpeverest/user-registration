@@ -90,6 +90,13 @@
 			wp.a11y.speak(__("Installation completed successfully."), "polite");
 
 			$document.trigger("wp-plugin-bulk-install-success", response);
+		} else if (
+			"user-registration_page_user-registration-settings" === pagenow
+		) {
+			wp.a11y.speak(__("Installation completed successfully."), "polite");
+
+			$document.trigger("wp-plugin-install-success", response);
+			$document.trigger("ur-plugin-install-success", response);
 		} else {
 			var $message = $(".plugin-card-" + response.slug).find(
 					".install-now"
@@ -214,6 +221,31 @@
 			wp.a11y.speak(errorMessage, "assertive");
 
 			$document.trigger("wp-plugin-bulk-install-error", response);
+		} else if (
+			"user-registration_page_user-registration-settings" === pagenow
+		) {
+			if (!wp.updates.isValidResponse(response, "install")) {
+				return;
+			}
+
+			if (
+				wp.updates.maybeHandleCredentialError(
+					response,
+					"install-plugin"
+				)
+			) {
+				return;
+			}
+
+			errorMessage = sprintf(
+				/* translators: %s: Error string for a failed installation. */
+				__("Installation failed: %s"),
+				response.errorMessage
+			);
+
+			wp.a11y.speak(errorMessage, "assertive");
+
+			$document.trigger("ur-plugin-install-error", response);
 		} else {
 			var $card = $(".plugin-card-" + response.slug),
 				$button = $card.find(".install-now"),
@@ -325,6 +357,16 @@ jQuery(function ($) {
 				this.install_addon
 			);
 
+			// Settings addon install actions.
+			$(document).on(
+				"click",
+				".user-registration-settings-addon-install",
+				function (e) {
+					e.preventDefault();
+					ur_setup_actions.install_addon_from_settings($(this));
+				}
+			);
+
 			$(document).on("click", ".upgrade-modal", this.message_upgrade);
 			$(document).on(
 				"click",
@@ -387,6 +429,72 @@ jQuery(function ($) {
 			setTimeout(function () {
 				$("#user-registration-setup-name").focus();
 			}, 100);
+		},
+		install_addon_from_settings: function (node) {
+			wp.updates.maybeRequestFilesystemCredentials(event);
+			$(node)
+				.html(
+					ur_setup_actions.$button_install +
+						'<div class="ur-spinner"></div>'
+				)
+				.closest("button")
+				.prop("disabled", true);
+
+			// Add it to the queue.
+			wp.updates.queue.push({
+				action: "user_registration_install_extension",
+				data: {
+					page: pagenow,
+					name: $(node).data("name"),
+					slug: $(node).data("slug"),
+				},
+			});
+
+			// Display bulk notification for install of plugin.
+			$(document).on(
+				"ur-plugin-install-success ur-plugin-install-error",
+				function (event, response) {
+					if (
+						typeof response.errorMessage !== "undefined" &&
+						response.errorMessage.length > 0
+					) {
+						Swal.fire({
+							customClass:
+								"user-registration-swal2-modal user-registration-swal2-modal--center",
+							icon: "error",
+							title: response.errorMessage,
+							text: "Download Failed. Please download and activate addon manually",
+						});
+					} else {
+						console.log(wp.updates.queue.length);
+						if (0 === wp.updates.queue.length) {
+							Swal.fire({
+								customClass:
+									"user-registration-swal2-modal user-registration-swal2-modal--center",
+								icon: "success",
+								title: '<span class="user-registration-swal2-modal__title">Installation Successful</span>',
+								text: "Addons have been installed and Activated. You have to reload the page",
+								allowOutsideClick: false,
+								confirmButtonText: "Save Changes and Reload",
+								showCancelButton: true,
+								cancelButtonText: "Just Reload",
+								cancelButtonColor: "#DD6B55",
+							}).then(function (result) {
+								if (result.isConfirmed) {
+									$(".user-registration-settings-container")
+										.find("input[name='save']")
+										.trigger("click");
+								} else {
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+			);
+
+			// Check the queue, now that the event handlers have been added.
+			wp.updates.queueChecker();
 		},
 		install_addon: function (event) {
 			var pluginsList = $(".plugins-list-table").find("#the-list tr"),

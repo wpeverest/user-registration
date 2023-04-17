@@ -141,22 +141,13 @@ class UR_Admin_Settings {
 
 		do_action( 'user_registration_settings_start' );
 
-		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris' ), UR_VERSION, true );
-
+		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+		wp_enqueue_script( 'ur-setup' );
 		wp_localize_script(
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'upgrade_to_pro_label' => esc_html__( 'Upgrade to Pro', 'user-registration' ),
-				'upgrade_to_pro_message' => esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' ),
-				'upgrade_to_pro_confirm_text' => esc_html__( 'View Pricing', 'user-registration' ),
-				'upgrade_plan_label' => esc_html__( 'Upgrade your plan', 'user-registration' ),
-				'upgrade_plan_message' => esc_html__( 'You have been subscribed to %plan% plan. Please upgrade to higher plans to use this feature.', 'user-registration' ),
-				'upgrade_plan_confirm_text' => esc_html__( 'Upgrade Plan', 'user-registration' ),
-				'install_plugin_label' => esc_html__( 'Plugins not installed', 'user-registration' ),
-				'install_plugin_message' => esc_html__( 'Please install and activate %plugin% addon to use this feature.', 'user-registration' ),
-				'install_plugin_confirm_text' => esc_html__( 'Install and Activate', 'user-registration' ),
+				'i18n_nav_warning'            => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 			)
 		);
 
@@ -438,8 +429,8 @@ class UR_Admin_Settings {
 								$settings .= '<div class="user-registration-global-settings">';
 								$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 								$settings .= '<div class="user-registration-global-settings--field">';
-								$multiple = '';
-								$type     = '';
+								$multiple  = '';
+								$type      = '';
 								if ( 'multiselect' == $value['type'] ) {
 									$type     = '[]';
 									$multiple = 'multiple="multiple"';
@@ -475,12 +466,12 @@ class UR_Admin_Settings {
 							// Radio inputs.
 							case 'radio':
 								$option_value = self::get_option( $value['id'], $value['default'] );
-								$settings .= '<div class="user-registration-global-settings">';
-								$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-								$settings .= '<div class="user-registration-global-settings--field">';
-								$settings .= '<fieldset>';
-								$settings .= wp_kses_post( $description );
-								$settings .= '<ul>';
+								$settings    .= '<div class="user-registration-global-settings">';
+								$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+								$settings    .= '<div class="user-registration-global-settings--field">';
+								$settings    .= '<fieldset>';
+								$settings    .= wp_kses_post( $description );
+								$settings    .= '<ul>';
 
 								foreach ( $value['options'] as $key => $val ) {
 									$settings .= '<li>';
@@ -543,7 +534,6 @@ class UR_Admin_Settings {
 										value="1"
 										' . esc_attr( checked( $option_value, 'yes', false ) ) . '
 										' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>';
-
 
 								$settings .= '</fieldset>';
 								$settings .= wp_kses_post( $description );

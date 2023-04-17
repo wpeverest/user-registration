@@ -3245,26 +3245,26 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'woocommerce' => array(
-				'label' => esc_html__( 'WooCommerce', 'user-registration' ),
+			'woocommerce'                            => array(
+				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 				'plugin' => 'user-registration-woocommerce',
-				'plan' => array( 'personal', 'plus', 'professional' )
+				'plan'   => array( 'personal', 'plus', 'professional' ),
 			),
-			'content_restriction' => array(
-				'label' => esc_html__( 'Content Restriction', 'user-registration' ),
+			'content_restriction'                    => array(
+				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
 				'plugin' => 'user-registration-content-restriction',
-				'plan' => array( 'personal', 'plus', 'professional' )
+				'plan'   => array( 'personal', 'plus', 'professional' ),
 			),
-			'file_upload' => array(
-				'label' => esc_html__( 'File Upload', 'user-registration' ),
+			'file_upload'                            => array(
+				'label'  => esc_html__( 'File Upload', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
-				'plan' => array( 'personal', 'plus', 'professional' )
+				'plan'   => array( 'personal', 'plus', 'professional' ),
 			),
 			'user-registration-customize-my-account' => array(
-				'label' => esc_html__( 'Customize My Account', 'user-registration' ),
+				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 				'plugin' => 'user-registration-customize-my-account',
-				'plan' => array( 'plus', 'professional' )
-			)
+				'plan'   => array( 'plus', 'professional' ),
+			),
 		);
 
 		return apply_filters( 'user_registration_premium_settings_tab', $premium_tabs );
@@ -3281,23 +3281,47 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 	 * @since 3.0.0
 	 */
 	function ur_display_premium_settings_tab() {
-		$license_plan = ur_get_license_plan();
-		$premium_tabs = ur_premium_settings_tab();
+		$license_plan    = ur_get_license_plan();
+		$premium_tabs    = ur_premium_settings_tab();
 		$tabs_to_display = array();
-		$tab_html = '';
+		$tab_html        = '';
 
-		foreach( $premium_tabs as $tab => $detail ) {
+		$license_plan = 'personal';
+		foreach ( $premium_tabs as $tab => $detail ) {
+			$tooltip_html = '';
+			$button       = '';
+			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+				continue;
+			}
+
 			if ( ! empty( $license_plan ) ) {
-				if ( ! in_array( $license_plan, $detail['plan'] ) ) {
+				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 						continue;
 					}
 
-					$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'plan' => ucfirst( $license_plan ) ) ) );
+					/* translators: %s: License Plan Name. */
+					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					array_push( $tabs_to_display, $tab );
+
 				} else {
-					if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-						$plugin_name = ucwords( str_replace( "-", " ", $detail['plugin'] ) );
-						$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'plugin' => $plugin_name ) ) );
+					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+							$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+
+							/* translators: %s: Addon Name. */
+							$tooltip_html = sprintf( __( 'Please install %s addon to use this feature.', 'user-registration' ), $plugin_name );
+							$button       = '<a href="#" class="user-registration-settings-addon-install" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . esc_html__( 'Install Addon', 'user-registration' ) . '</a>';
+							array_push( $tabs_to_display, $tab );
+						}
+					} else {
+						$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+
+						/* translators: %s: Addon Name. */
+						$tooltip_html = sprintf( __( 'Please Activate %s addon to use this feature.', 'user-registration' ), $plugin_name );
+						$button       = '<a href="#" class="user-registration-settings-addon-install" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . esc_html__( 'Activate Addon', 'user-registration' ) . '</a>';
+						array_push( $tabs_to_display, $tab );
 					}
 				}
 			} else {
@@ -3306,21 +3330,16 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					continue;
 				}
 
-				$tabs_to_display = array_merge( $tabs_to_display, array( $tab => array( 'upgrade_to_pro' => true ) ) );
-			}
-		}
-
-		foreach( $premium_tabs as $tab => $detail ) {
-
-			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-				continue;
+				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+				$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				array_push( $tabs_to_display, $tab );
 			}
 
-			if ( isset( $tabs_to_display[$tab] ) ) {
-				$data_required = json_encode( $tabs_to_display[$tab] );
-				$tab_html .= '<button class="nav-tab ur-nav__link ur-scroll-ui__item ur-nav-premium" data-required="' . esc_attr( $data_required ) . '">';
+			if ( in_array( $tab, $tabs_to_display, true ) ) {
+				$tab_html .= '<button class="nav-tab ur-nav__link ur-scroll-ui__item ur-nav-premium" disabled>';
+				$tab_html .= '<span class="ur-tooltip">' . esc_html( $tooltip_html ) . wp_kses_post( $button ) . '</span>';
 				$tab_html .= '<span class="ur-nav__link-icon">';
-				$tab_html .= file_get_contents( esc_url( UR()->plugin_url() . '/assets/images/settings-icons/' . $tab . '.svg' ) );
+				$tab_html .= ur_file_get_contents( '/assets/images/settings-icons/' . $tab . '.svg' );
 				$tab_html .= '</span>';
 				$tab_html .= '<span class="ur-nav__link-label">';
 				$tab_html .= '<p>' . esc_html( $detail['label'] ) . '</p>';
@@ -3330,6 +3349,6 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 			}
 		}
 
-		echo $tab_html;
+		echo $tab_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

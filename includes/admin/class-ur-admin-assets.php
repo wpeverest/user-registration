@@ -198,6 +198,32 @@ class UR_Admin_Assets {
 		wp_register_script( 'chartjs', UR()->plugin_url() . '/assets/js/chartjs/Chart.min.js', array( 'jquery' ), '3.2.1', false );
 		wp_register_script( 'sweetalert2', UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js', array( 'jquery' ), '10.16.7', false );
 		wp_register_script( 'ur-setup', UR()->plugin_url() . '/assets/js/admin/ur-setup' . $suffix . '.js', array( 'jquery', 'sweetalert2', 'updates', 'wp-i18n' ), UR_VERSION, false );
+
+		wp_localize_script(
+			'ur-setup',
+			'ur_setup_params',
+			array(
+				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+				'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
+				'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
+				'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),
+				'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
+				'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
+				'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
+				'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
+				'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
+				'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
+				'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
+				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
+				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
+				'i18n_form_ok'                 => esc_html__( 'Continue', 'user-registration' ),
+				'i18n_form_placeholder'        => esc_html__( 'Untitled Form', 'user-registration' ),
+				'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
+			)
+		);
+
 		wp_register_script( 'ur-form-templates', UR()->plugin_url() . '/assets/js/admin/form-templates' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery', UR_VERSION, false );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
