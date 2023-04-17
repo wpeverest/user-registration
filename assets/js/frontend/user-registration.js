@@ -422,6 +422,11 @@
 								.on("submit", function (event) {
 									event.preventDefault();
 
+									// Prevent the form submission if submit button is hidden or disabled.
+									if( $registration_form.find( "form.register button.ur-submit-button" ).is( ':hidden' ) || $registration_form.find( "form.register button.ur-submit-button" ).is(':disabled') ) {
+										return false;
+									}
+
 									var $this = $(this);
 
 									// Validator messages.
