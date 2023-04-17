@@ -28,9 +28,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
-			add_filter( 'user_registration_show_upgradetopro_page', array( $this, 'user_registration_pro_active_status' ), 10, 1 );
-			if ( apply_filters( 'user_registration_show_upgradetopro_page', true ) ) {
-				add_action( 'admin_menu', array( $this, 'upgradetopro_menu' ), 70 );
+			if ( ! ur_get_license_plan() ) {
+				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 70 );
 			}
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 80 );
@@ -456,17 +455,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			/**
 			 * Upgrade to pro menu items.
 			 */
-		public function upgradetopro_menu() {
+		public function user_registration_upgrade_to_pro_menu() {
 			add_submenu_page(
 				'user-registration',
 				esc_html__( 'Upgrade to Pro', 'user-registration' ),
 				sprintf( '<span style="color:yellow">%s</span>', esc_html__( 'Upgrade to Pro', 'user-registration' ) ),
-				'manage_user_registration',
-				'upgrade-to-pro',
-				array(
-					$this,
-					'upgradetopro_page',
-				)
+				'manage_options',
+				esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' ),
 			);
 		}
 
@@ -490,19 +485,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * User Registration pro active status.
-		 *
-		 * @param bool $status  active status.
-		 *
-		 * @return bool
-		 */
-		public function user_registration_pro_active_status( $status ) {
-			if ( is_plugin_active( 'user-registration-pro/user-registration-pro.php' ) ) {
-				$status = false;
-			}
-			return $status;
-		}
 
 		/**
 		 * Validate screen options on update.
@@ -574,14 +556,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function status_page() {
 			UR_Admin_Status::output();
-		}
-
-		/**
-		 * Init the upgrade to pro page.
-		 */
-		public function upgradetopro_page() {
-			$url = 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/';
-			header( sprintf( 'location:%s', esc_url_raw( $url ) ) );
 		}
 
 		/**
