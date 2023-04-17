@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-744-enhacement/export-users
+      - master
     workflow_dispatch:
 jobs:
   sync:
