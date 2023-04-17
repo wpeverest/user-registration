@@ -38,7 +38,7 @@ class UR_Smart_Tags {
 			'{{auto_pass}}'   => __( 'Auto Pass', 'user-registration' ),
 			'{{user_roles}}'  => __( 'User Roles', 'user-registration' ),
 		);
-		return apply_filters( 'user_registration_smart_tags_list', $smart_tags );
+		return apply_filters( 'user_registration_smart_tags', $smart_tags );
 	}
 	/**
 	 * Process and parse smart tags.
