@@ -3,6 +3,10 @@
 
 
 // User Registration Global Settings CSS
+* {
+	box-sizing: border-box;
+}
+
 body {
 	@media screen and (max-width: 782px) {
 		min-width: 600px;
@@ -282,6 +286,14 @@ body {
 						border-radius: 0;
 						color: $grey-400;
 
+						.ur-nav__link-icon {
+							svg {
+								path {
+									fill: $grey-400;
+								}
+							}
+						}
+
 						.ur-nav__link-label {
 							p {
 								color: $grey-400;
@@ -295,16 +307,7 @@ body {
 
 					span {
 						&.ur-nav__link-icon {
-							opacity: 0.5;
-
-							svg {
-								stroke: $grey-400;
-
-								circle,
-								path {
-									stroke: $grey-400;
-								}
-							}
+							opacity: 0.5;							
 						}
 
 						&.ur-nav__link-label {
@@ -485,16 +488,14 @@ body {
 		.user-registration-options-header {
 			position: sticky;
 			position: -webkit-sticky;
-			top: $spacing_32px;
 			top: var(--wp-admin--admin-bar--height, $spacing_32px);
-			z-index: 1;
+			z-index: 5;
 			background: $grey-0;
 			padding-top: $spacing_24px;
 
 			&--top {
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
 
 				h3 {
 					margin: 0;
@@ -505,6 +506,7 @@ body {
 				}
 
 				p.submit {
+					display: none;
 					margin-top: 0;
 				}
 			}
@@ -593,7 +595,7 @@ body {
 				border-radius: $border_radius_7;
 				margin-top: 0 !important;
 				margin-bottom: $spacing_24px;
-				max-width: 640px;
+				max-width: 680px;
 				position: relative;
 
 				&:last-child {
@@ -767,9 +769,23 @@ body {
 					.user-registration-global-settings {
 						display: flex;
 						justify-content: space-between;
-						// align-items: center;
 						align-items: baseline;
 						margin-bottom: $spacing_28px;
+
+						@media (max-width: 1199px) {
+							flex-direction: column;
+							gap: $spacing_10px;
+						}
+
+						&.urcr_content_restriction_enable {
+							display: block;
+
+							.user-registration-global-settings--field {
+								flex-direction: unset;
+								gap: $spacing_4px;
+								margin: $spacing_8px 0 $spacing_24px;
+							}
+						}
 
 						textarea {
 							border-color: $border-color;
@@ -811,6 +827,11 @@ body {
 							vertical-align: middle;
 							flex: 0 0 60%;
 
+							@media (max-width: 1199px) {
+								flex: auto;
+								width: 100%;
+							}
+
 							input[type='text'],
 							input[type='number'] {
 								width: 100%;
@@ -842,6 +863,10 @@ body {
 
 							span.select2-container {
 								width: 385px !important;
+
+								@media (max-width: 1199px) {
+									width: 100% !important;
+								}
 							}
 
 							.select2-selection {
@@ -942,12 +967,11 @@ body {
 				.nav-tab-inside {
 					.postbox {
 						width: 100%;
-						max-width: 640px;
+						max-width: 680px;
 						padding: $spacing_16px $spacing_20px $spacing_22px;
 						background: #fafafc;
 						border: $border_width solid $blue-50;
 						border-radius: $border_radius_9 $border_radius_9 0 0;
-						box-sizing: border-box;
 
 						.hndle {
 							font-weight: 600;
