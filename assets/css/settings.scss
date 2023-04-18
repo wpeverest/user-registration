@@ -9,6 +9,24 @@ body {
 	}
 }
 
+// ToolTip CSS
+.tooltipster-sidetip {
+	.tooltipster-box {
+		background-color: $grey-400 !important;
+	}
+
+	&.tooltipster-base {
+		.tooltipster-arrow {
+			.tooltipster-arrow-uncropped {
+				.tooltipster-arrow-border {
+					border-top-color: $grey-400 !important;
+					border-bottom-color: $grey-400 !important;
+				}
+			}
+		}
+	}
+}
+
 #wpcontent {
 	padding-left: 0;
 
@@ -306,33 +324,48 @@ body {
 						display: none;
 						flex-direction: column;
 						align-items: flex-end;
-						gap: 8px;
-						position:absolute;
-
-						/* vertically center */
-						left:10%;
-						// bottom:70%;
-						transform:translateY(-50%);
-
-						/* basic styles */
-						padding:10px;
-						border-radius:3px;
-						background:#383838;
-						color: #fff;
-						text-align:center;
-						transition:.3s opacity;
+						gap: $spacing_10px;
+						position: absolute;
+						padding: $spacing_10px $spacing_12px;
+						border-radius: $border_radius_4;
+						background: $grey-400;
+						color: $grey-0;
+						text-align: center;
+						transition: .3s opacity;
 						width: 200px;
 						white-space: pre-line;
+						text-align: left;
+						top: 50%;
+						right: -235px;
+						z-index: 1;
+						transform: translateY(-50%);
 
+						&::after {
+							content: "";
+							position: absolute;
+							border-right: 12px solid $grey-400;
+							border-top: 12px solid transparent;
+							border-bottom: 12px solid transparent;
+							top: 50%;
+							left: -$spacing_12px;
+							transform: translateY(-50%);
+						}
 
 						a {
 							text-decoration: none;
-							border: 1px solid;
-							padding: 4px 8px;
-							align-items: center;
-							background-color: #FFFFFF;
-							border-radius: 3px;
-							color: #475BB2;
+							border: $border_width solid $grey-0;
+							padding: $spacing_4px $spacing_10px;
+							background: $grey-0;
+							border-radius: $border_radius_2;
+							color: $primary_color;
+							font-weight: $semi_bold;
+							transition: all .3s ease-in-out;
+
+							&:hover {
+								background: $primary_color;
+								border-color: $primary_color;
+								color: $grey-0;
+							}
 						}
 					}
 
@@ -349,12 +382,9 @@ body {
 					svg {
 						height: 24px;
 						width: 24px;
-						stroke: $grey-400;
-						stroke-width: .5;
 
-						circle,
 						path {
-							stroke: #676767;
+							fill: $grey-400;
 						}
 					}
 				}
@@ -364,8 +394,7 @@ body {
 					.ur-nav__link-icon {
 						svg {
 							path {
-								// fill: $primary_color;
-								stroke: $primary_color;
+								fill: $primary_color;
 							}
 						}
 					}
@@ -540,6 +569,22 @@ body {
 		}
 
 		.user-registration-options-container {
+			// Success Message CSS
+			.notice-success {
+				padding: $spacing_12px $spacing_12px $spacing_12px $spacing_16px;
+				border: 0;
+				border-left: 3px solid $green;
+				margin: 0;
+				margin-bottom: $spacing_24px;
+				background: $greenLight;
+				box-shadow: none;
+
+				p {
+					margin: 0;
+					padding: 0;
+					color: $grey-300;
+				}
+			}
 			// General Settings
 			.user-registration-card {
 				padding: $spacing_16px $spacing_20px $spacing_22px;
@@ -581,6 +626,27 @@ body {
 					padding-left: 0;
 					padding-right: 0;
 
+					.ur-toggle-section {
+						.user-registration-toggle-form {
+							width: 32px;
+							height: 16px;
+
+							input[type="checkbox"] {
+								width: 32px;
+								height: 16px;
+							}
+
+							.slider {
+								&::before {
+									width: 12px;
+									height: 12px;
+									bottom: 2px;
+									left: 2px;
+								}
+							}
+						}
+					}
+
 					// Emails Settings
 					table {
 						&.form-table {
@@ -596,16 +662,17 @@ body {
 
 							thead {
 								th {
-									padding: 12px 16px;
+									padding: $spacing_12px $spacing_16px !important;
 									background: $primary_color;
 									color: $grey-0;
 									font-weight: $semi_bold;
-									font-size: 14px;
+									font-size: 16px;
 									line-height: 150%;
 									border: $border_width solid $border-color;
 									border-top: 0;
 									border-bottom: 0;
 									border-left: 0;
+									letter-spacing: 0.03px;
 
 									&:first-child {
 										width: 60%;
@@ -630,6 +697,9 @@ body {
 									}
 
 									.ur-email-settings-table {
+										padding: $spacing_12px $spacing_16px;
+										vertical-align: middle;
+
 										&:nth-child(2),
 										&:last-child {
 											text-align: center;
@@ -638,12 +708,38 @@ body {
 										a {
 											font-weight: $regular;
 											font-size: 14px;
-											line-height: 150%;
+											line-height: 120%;
 											color: $primary_color;
+
+											&.button {
+												border: 0;
+												background: transparent;
+												box-shadow: none;
+												color: $grey-300;
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												padding: 0;
+												width: 33px;
+												margin: 0 auto;										
+
+												span {
+													font-size: 18px;
+												}
+
+												&:hover {
+													border: $border_width solid $primary_color;
+													background: $blue-50;
+
+													span {
+														color: $primary_color;
+													}
+												}
+											}
 										}
 
 										> label {
-											padding: $spacing_5px $spacing_8px;
+											padding: $spacing_4px $spacing_8px;
 											background: #4CC741;
 											border-radius: 100px;
 											font-weight: $regular !important;
@@ -657,6 +753,11 @@ body {
 												border-radius: 0px;
 											}
 										}
+
+										.user-registration-help-tip {
+											margin-left: $spacing_6px;
+											color: $grey-100;
+										}
 									}
 								}
 							}
@@ -666,18 +767,25 @@ body {
 					.user-registration-global-settings {
 						display: flex;
 						justify-content: space-between;
-						align-items: center;
+						// align-items: center;
+						align-items: baseline;
 						margin-bottom: $spacing_28px;
+
+						textarea {
+							border-color: $border-color;
+							padding: $spacing_8px $spacing_10px;
+						}
+
+						input[type="text"],
+						input[type="email"],
+						select {
+							height: 38px;
+							border-color: $border-color;
+						}
 
 						&:last-child {
 							margin-bottom: 0;
-						}
-
-						&--field {
-							&:has(.description) {
-
-							}
-						}
+						}						
 
 						label {
 							position: relative;
@@ -800,22 +908,8 @@ body {
 
 							.ur-toggle-section {
 								.user-registration-toggle-form {
-									width: 32px;
-									height: 16px;
-
 									input[type="checkbox"] {
-										width: 32px;
-										height: 16px;
 										min-width: 100% !important;
-									}
-
-									.slider {
-										&::before {
-											width: 12px;
-											height: 12px;
-											bottom: 2px;
-											left: 2px;
-										}
 									}
 								}
 							}
@@ -847,12 +941,13 @@ body {
 
 				.nav-tab-inside {
 					.postbox {
-						width: auto;
+						width: 100%;
 						max-width: 640px;
 						padding: $spacing_16px $spacing_20px $spacing_22px;
 						background: #fafafc;
 						border: $border_width solid $blue-50;
 						border-radius: $border_radius_9 $border_radius_9 0 0;
+						box-sizing: border-box;
 
 						.hndle {
 							font-weight: 600;
@@ -882,8 +977,14 @@ body {
 								}
 
 								.forms-list {
+
+								}
+
+								.forms-list {
 									height: 38px;
 									padding-left: $spacing_12px;
+									border: $border_width solid $border-color;
+									border-radius: $border_radius_4;
 								}
 							}
 						}
