@@ -56,6 +56,7 @@ class UR_Admin_Export_Users {
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
 			return;
 		}
+		$checked_additional_fields = array();
 		if ( isset( $_POST['all_fields_dict'] ) ) {
 			$all_fields                = sanitize_text_field( wp_unslash( $_POST['all_fields_dict'] ) );
 			$all_fields                = (array) json_decode( $all_fields );
@@ -69,11 +70,11 @@ class UR_Admin_Export_Users {
 			}
 
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
-			$from_date        = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
-			$to_date          = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
 		} else {
 			$unchecked_fields = array();
 		}
+		$from_date     = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
+		$to_date       = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
 		$export_format = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : 'csv';
 
 		$users = get_users(
