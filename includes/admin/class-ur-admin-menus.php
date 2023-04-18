@@ -28,11 +28,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
-			if ( ! ur_get_license_plan() ) {
-				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 70 );
-			}
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
-				add_action( 'admin_menu', array( $this, 'addons_menu' ), 80 );
+				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
+			}
+			if ( ! ur_get_license_plan() ) {
+				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 80 );
 			}
 
 			// Set screens.
@@ -452,16 +452,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-			/**
-			 * Upgrade to pro menu items.
-			 */
+		/**
+		 * Upgrade to pro menu items.
+		 */
 		public function user_registration_upgrade_to_pro_menu() {
 			add_submenu_page(
 				'user-registration',
 				esc_html__( 'Upgrade to Pro', 'user-registration' ),
 				sprintf( '<span style="color:yellow">%s</span>', esc_html__( 'Upgrade to Pro', 'user-registration' ) ),
 				'manage_options',
-				esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' ),
+				esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' )
 			);
 		}
 
