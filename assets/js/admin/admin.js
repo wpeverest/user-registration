@@ -43,9 +43,9 @@ jQuery(function ($) {
 			$(".ur-fields-not-found").show();
 		}
 	});
-	
+
 	//Bind UI Actions for locked fields
-	$(document).on('click', '.ur-locked-field', function(e){
+	$(document).on('mousedown', '.ur-locked-field', function(e){
 		e.preventDefault();
 		var icon = '<i class="dashicons dashicons-lock"></i>';
 		var field_data = $(this).data('field-data');
