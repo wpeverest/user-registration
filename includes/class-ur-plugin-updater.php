@@ -379,7 +379,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							)
 						)
 					);
-					set_transient( 'ur_pro_license_plan', $license_data->api_key, WEEK_IN_SECONDS );
+					set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
 
 					return true;
 				}
