@@ -107,6 +107,7 @@ jQuery(function ($) {
 							"user-registration-swal2-modal user-registration-swal2-modal--centered",
 						showCloseButton: true,
 						showConfirmButton: false,
+						allowOutsideClick: false,
 					}).then(function (result) {
 						// Do Nothing.
 					});

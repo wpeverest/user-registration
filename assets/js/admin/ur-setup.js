@@ -69,34 +69,43 @@
 	 */
 	wp.updates.installExtensionSuccess = function (response) {
 		if ("user-registration_page_add-new-registration" === pagenow) {
-			var $pluginRow = $('tr[data-slug="' + response.slug + '"]')
-					.removeClass("install")
-					.addClass("installed"),
-				$updateMessage = $pluginRow.find(".plugin-status span");
+			if (
+				!$(document).find(".user-registration-form-template-wrapper")
+					.length
+			) {
+				wp.a11y.speak(
+					__("Installation completed successfully."),
+					"polite"
+				);
 
-			$updateMessage
-				.removeClass("updating-message install-now")
-				.addClass("updated-message active")
-				.attr(
-					"aria-label",
-					sprintf(
-						/* translators: %s: Plugin name and version. */
-						_x("%s installed!", "user-registration"),
-						response.pluginName
+				$document.trigger("wp-plugin-install-success", response);
+				$document.trigger("ur-plugin-install-success", response);
+			} else {
+				var $pluginRow = $('tr[data-slug="' + response.slug + '"]')
+						.removeClass("install")
+						.addClass("installed"),
+					$updateMessage = $pluginRow.find(".plugin-status span");
+
+				$updateMessage
+					.removeClass("updating-message install-now")
+					.addClass("updated-message active")
+					.attr(
+						"aria-label",
+						sprintf(
+							/* translators: %s: Plugin name and version. */
+							_x("%s installed!", "user-registration"),
+							response.pluginName
+						)
 					)
-				)
-				.text(_x("Installed!", "plugin"));
+					.text(_x("Installed!", "plugin"));
 
-			wp.a11y.speak(__("Installation completed successfully."), "polite");
+				wp.a11y.speak(
+					__("Installation completed successfully."),
+					"polite"
+				);
 
-			$document.trigger("wp-plugin-bulk-install-success", response);
-		} else if (
-			$(".user-registration__wrap").hasClass(".ur-form-container")
-		) {
-			wp.a11y.speak(__("Installation completed successfully."), "polite");
-
-			$document.trigger("wp-plugin-install-success", response);
-			$document.trigger("ur-plugin-install-success", response);
+				$document.trigger("wp-plugin-bulk-install-success", response);
+			}
 		} else {
 			var $message = $(".plugin-card-" + response.slug).find(
 					".install-now"
@@ -181,69 +190,74 @@
 	 * @param {string}  response.errorMessage The error that occurred.
 	 */
 	wp.updates.installExtensionError = function (response) {
-		if ($(".user-registration__wrap").hasClass("ur-form-container")) {
-			if (!wp.updates.isValidResponse(response, "install")) {
-				return;
-			}
-
+		if ("user-registration_page_add-new-registration" === pagenow) {
 			if (
-				wp.updates.maybeHandleCredentialError(
-					response,
-					"install-plugin"
-				)
+				!$(document).find(".user-registration-form-template-wrapper")
+					.length
 			) {
-				return;
-			}
+				if (!wp.updates.isValidResponse(response, "install")) {
+					return;
+				}
 
-			errorMessage = sprintf(
-				/* translators: %s: Error string for a failed installation. */
-				__("Installation failed: %s"),
-				response.errorMessage
-			);
-
-			wp.a11y.speak(errorMessage, "assertive");
-
-			$document.trigger("ur-plugin-install-error", response);
-		} else if ("user-registration_page_add-new-registration" === pagenow) {
-			var $pluginRow = $('tr[data-slug="' + response.slug + '"]'),
-				$updateMessage = $pluginRow.find(".plugin-status span"),
-				errorMessage;
-
-			if (!wp.updates.isValidResponse(response, "install")) {
-				return;
-			}
-
-			if (
-				wp.updates.maybeHandleCredentialError(
-					response,
-					"install-plugin"
-				)
-			) {
-				return;
-			}
-
-			errorMessage = sprintf(
-				/* translators: %s: Error string for a failed installation. */
-				__("Installation failed: %s"),
-				response.errorMessage
-			);
-
-			$updateMessage
-				.removeClass("updating-message")
-				.addClass("updated-message")
-				.attr(
-					"aria-label",
-					sprintf(
-						/* translators: %s: Plugin name and version. */
-						_x("%s installation failed", "user-registration"),
-						$updateMessage.closest("tr").data("name")
+				if (
+					wp.updates.maybeHandleCredentialError(
+						response,
+						"install-plugin"
 					)
-				)
-				.text(__("Installation Failed!"));
+				) {
+					return;
+				}
 
-			wp.a11y.speak(errorMessage, "assertive");
+				errorMessage = sprintf(
+					/* translators: %s: Error string for a failed installation. */
+					__("Installation failed: %s"),
+					response.errorMessage
+				);
 
-			$document.trigger("wp-plugin-bulk-install-error", response);
+				wp.a11y.speak(errorMessage, "assertive");
+
+				$document.trigger("ur-plugin-install-error", response);
+			} else {
+				var $pluginRow = $('tr[data-slug="' + response.slug + '"]'),
+					$updateMessage = $pluginRow.find(".plugin-status span"),
+					errorMessage;
+
+				if (!wp.updates.isValidResponse(response, "install")) {
+					return;
+				}
+
+				if (
+					wp.updates.maybeHandleCredentialError(
+						response,
+						"install-plugin"
+					)
+				) {
+					return;
+				}
+
+				errorMessage = sprintf(
+					/* translators: %s: Error string for a failed installation. */
+					__("Installation failed: %s"),
+					response.errorMessage
+				);
+
+				$updateMessage
+					.removeClass("updating-message")
+					.addClass("updated-message")
+					.attr(
+						"aria-label",
+						sprintf(
+							/* translators: %s: Plugin name and version. */
+							_x("%s installation failed", "user-registration"),
+							$updateMessage.closest("tr").data("name")
+						)
+					)
+					.text(__("Installation Failed!"));
+
+				wp.a11y.speak(errorMessage, "assertive");
+
+				$document.trigger("wp-plugin-bulk-install-error", response);
+			}
 		} else {
 			var $card = $(".plugin-card-" + response.slug),
 				$button = $card.find(".install-now"),
@@ -514,6 +528,7 @@ jQuery(function ($) {
 								customClass:
 									"user-registration-swal2-modal user-registration-swal2-modal--center",
 								icon: "success",
+								width: "auto",
 								title:
 									'<span class="user-registration-swal2-modal__title">' +
 									ur_setup_params.download_successful_title +
@@ -530,6 +545,7 @@ jQuery(function ($) {
 									$(".ur_save_form_action_button").trigger(
 										"click"
 									);
+									location.reload();
 								} else {
 									location.reload();
 								}
