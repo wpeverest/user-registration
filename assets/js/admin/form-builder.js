@@ -1597,6 +1597,12 @@
 										}
 									}
 								});
+
+								var locked = ul_node.find('.ur-locked-field');
+								$.each(locked, function() {
+									$this = $(this);
+									$this.draggable("disable");
+								})
 							},
 							/**
 							 * Populate the dropped node when a field is dragged from field container to form builder area.
