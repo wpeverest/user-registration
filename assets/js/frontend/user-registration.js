@@ -848,6 +848,11 @@
 														}
 
 														$this[0].reset();
+														if($this.find('#profile_pic_url').length){
+															$('#profile_pic_url').val("");
+														}
+
+
 														jQuery(
 															"#billing_country"
 														).trigger("change");
@@ -1160,6 +1165,15 @@
 									return false;
 								}
 
+								var profile_picture_error = $this
+									.find(
+										".user-registration-profile-picture-error"
+									)
+									.find(".user-registration-error").length;
+								if (1 === profile_picture_error) {
+									return false;
+								}
+
 								event.preventDefault();
 								$this
 									.find(".user-registration-submit-Button")
@@ -1199,6 +1213,11 @@
 									form_data: form_data,
 								};
 
+								$(document).trigger(
+									"user_registration_frontend_before_edit_profile_submit",
+									[data, $this]
+								);
+
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
@@ -1236,6 +1255,48 @@
 												response.success === true
 											) {
 												type = "message";
+												if (
+													typeof response.data
+														.profile_pic_id !==
+													"undefined"
+												) {
+													$this
+														.find(
+															".ur_removed_profile_pic"
+														)
+														.val("");
+
+													if (
+														$this.find(
+															".uraf-profile-picture-remove"
+														).length > 0
+													) {
+														$this
+															.find(
+																".uraf-profile-picture-remove"
+															)
+															.data(
+																"attachment-id",
+																response.data
+																	.profile_pic_id
+															);
+													}
+													if (
+														$this.find(
+															".profile-pic-remove"
+														).length > 0
+													) {
+														$this
+															.find(
+																".profile-pic-remove"
+															)
+															.data(
+																"attachment-id",
+																response.data
+																	.profile_pic_id
+															);
+													}
+												}
 											}
 
 											if (
@@ -1270,6 +1331,59 @@
 																.message +
 															"</li>"
 													);
+													if (
+														undefined !==
+														response.data
+															.userEmailPendingMessage
+													) {
+														$(
+															".user-registration-info.user-email-change-update-notice"
+														).remove();
+														form.show_message(
+															$(
+																'<ul class=""/>'
+															).append(
+																"<li>" +
+																	response
+																		.data
+																		.userEmailUpdateMessage +
+																	"</li>"
+															),
+															"info user-email-change-update-notice",
+															$this,
+															"0"
+														);
+
+														if (
+															$(
+																"input#user_registration_user_email"
+															).next(
+																"div.email-updated"
+															).length
+														) {
+															$(
+																"input#user_registration_user_email"
+															)
+																.next(
+																	"div.email-updated"
+																)
+																.remove();
+														}
+														$(
+															response.data
+																.userEmailPendingMessage
+														).insertAfter(
+															$(
+																"input#user_registration_user_email"
+															)
+														);
+														$(
+															"input#user_registration_user_email"
+														).val(
+															response.data
+																.oldUserEmail
+														);
+													}
 												}
 												form.show_message(
 													message,
@@ -1342,7 +1456,7 @@
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
-											"user_registration_edit_profile_after_ajax_complete"
+											"user_registration_edit_profile_after_ajax_complete", [ajax_response, $this]
 										);
 										$this
 											.find(
@@ -1638,70 +1752,3 @@ function ur_includes(arr, item) {
 	}
 	return false;
 }
-
-(function ($) {
-	$(document).on("click", ".password_preview", function (e) {
-		e.preventDefault();
-		var ursL10n = user_registration_params.ursL10n;
-
-		var current_task = $(this).hasClass("dashicons-hidden")
-			? "show"
-			: "hide";
-		var $password_field = $(this)
-			.closest(".user-registration-form-row")
-			.find('input[name="password"]');
-
-		// Hide/show password for user registration form
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".field-user_pass")
-				.find('input[name="user_pass"]');
-		}
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".field-user_confirm_password")
-				.find('input[name="user_confirm_password"]');
-		}
-
-		// Hide/show password for edit password form
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".user-registration-form-row")
-				.find('input[name="password_current"]');
-		}
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".user-registration-form-row")
-				.find('input[name="password_1"]');
-		}
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".user-registration-form-row")
-				.find('input[name="password_2"]');
-		}
-		if ($password_field.length === 0) {
-			$password_field = $(this)
-				.closest(".field-password")
-				.find(".input-password");
-		}
-
-		if ($password_field.length > 0) {
-			switch (current_task) {
-				case "show":
-					$password_field.attr("type", "text");
-					$(this)
-						.removeClass("dashicons-hidden")
-						.addClass("dashicons-visibility");
-					$(this).attr("title", ursL10n.hide_password_title);
-					break;
-				case "hide":
-					$password_field.attr("type", "password");
-					$(this)
-						.removeClass("dashicons-visibility")
-						.addClass("dashicons-hidden");
-					$(this).attr("title", ursL10n.show_password_title);
-					break;
-			}
-		}
-	});
-})(jQuery);

@@ -461,6 +461,7 @@ jQuery(function ($) {
 			data: {
 				action: "user_registration_send_test_email",
 				email: email,
+				nonce: user_registration_send_email.test_email_nonce,
 			},
 			type: "post",
 			beforeSend: function () {
@@ -489,6 +490,26 @@ jQuery(function ($) {
 					".user-registration_page_user-registration-settings .notice"
 				).css("display", "block");
 				$(window).scrollTop($(".notice").position());
+			},
+		});
+	});
+
+	// Email Status
+	$(".user-registration-email-status-toggle").on("change", function (e) {
+		e.preventDefault();
+		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var id = $(this).find('input[type="checkbox"]').attr('id');
+		$.ajax({
+			url: user_registration_email_setting_status.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_email_setting_status",
+				status: status,
+				id : id,
+				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+			},
+			success: function (response) {
+
 			},
 		});
 	});

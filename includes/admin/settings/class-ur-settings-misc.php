@@ -39,7 +39,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				''    => __( 'Advanced', 'user-registration' ),
+				'' => __( 'Advanced', 'user-registration' ),
 			);
 
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
@@ -66,9 +66,17 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_uninstall_option',
 									'type'     => 'checkbox',
-									'desc_tip' => 'All user registration forms, pages and users collected custom data will be deleted upon plugin uninstallation.',
+									'desc_tip' => 'All user registration forms, settings and users metadata will be deleted upon plugin uninstallation.',
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
+								),
+								array(
+									'title'   => __( 'Allow Usage Tracking', 'user-registration' ),
+									'desc'    => __( ' Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.', 'user-registration' ),
+									'id'      => 'user_registration_allow_usage_tracking',
+									'type'    => 'checkbox',
+									'css'     => 'min-width: 350px;',
+									'default' => 'no',
 								),
 							),
 						),

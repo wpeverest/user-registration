@@ -69,7 +69,9 @@ class UR_Form_Field_User_Confirm_Email extends UR_Form_Field {
 	 * @param [string] $filter_hook Hook.
 	 * @param [int]    $form_id Form id.
 	 */
-	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {}
+	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
+		// Custom Field Validation here..
+	}
 }
 
 return UR_Form_Field_User_Confirm_Email::get_instance();

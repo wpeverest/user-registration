@@ -37,7 +37,7 @@ class UR_Admin_Form_Templates {
 	public static function get_template_data() {
 		$template_data = get_transient( 'ur_template_section_list' );
 
-		$template_url = 'https://ur-form-templates-pack.s3.ap-south-1.amazonaws.com/';
+		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
 
 		if ( false === $template_data ) {
 
@@ -96,6 +96,7 @@ class UR_Admin_Form_Templates {
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
 				'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
 				'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
+				'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),
 				'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
 				'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
 				'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),

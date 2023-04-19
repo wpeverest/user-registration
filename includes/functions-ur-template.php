@@ -26,6 +26,7 @@ function ur_template_redirect() {
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -311,7 +312,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default ) : $default;
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
 					}
 
 					$choices = isset( $options ) ? $options : array();
@@ -422,10 +423,43 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
 					}
 				}
+
 				if ( empty( $extra_params ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
+				}
+
+				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {
+					$user_id       = get_current_user_id();
+					$pending_email = get_user_meta( $user_id, 'user_registration_pending_email', true );
+					$expiration    = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+					$cancel_url    = esc_url(
+						add_query_arg(
+							array(
+								'cancel_email_change' => $user_id,
+								'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
+							),
+							ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+						)
+					);
+
+					if ( ! empty( $pending_email ) && time() <= $expiration ) {
+						$field .= sprintf(
+							/* translators: %s - Email Change Pending Message. */
+							'<div class="email-updated inline"><p>%s</p></div>',
+							sprintf(
+								/* translators: 1: Pending email message 2: Cancel Link */
+								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+								$pending_email,
+								$cancel_url
+							)
+						);
+
+					} else {
+						// Remove the confirmation key, pending email and expiry date.
+						UR_Form_Handler::delete_pending_email_change( $user_id );
+					}
 				}
 
 				if ( ! is_admin() ) {
@@ -509,7 +543,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value );
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not support below php v7.1.
 				} else {
 					$default_value = $value;
 				}

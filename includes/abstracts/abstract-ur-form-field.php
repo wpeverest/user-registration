@@ -583,7 +583,7 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '<select data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $disabled . '>';
 
 						foreach ( $setting_value['options'] as $option_key => $option_value ) {
-							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? "selected='selected'" : '';
+							$selected                 = $this->get_general_setting_data( $setting_key ) == $option_key ? 'selected = selected' : '';
 							$general_setting_wrapper .= '<option ' . esc_attr( $selected ) . " value='" . esc_attr( $option_key ) . "'>" . esc_html( $option_value ) . '</option>';
 						}
 

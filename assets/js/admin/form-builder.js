@@ -22,15 +22,20 @@
 					'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
 					function () {
 						// Hide the form settings in fields panel.
-						$(".ur-selected-inputs").find("form#ur-field-settings").hide();
+						$(".ur-selected-inputs")
+							.find("form#ur-field-settings")
+							.hide();
 						//Show field panels
 						$(".ur-builder-wrapper-content").show();
 						$(".ur-builder-wrapper-footer").show();
-						if($('.ur-selected-item.ur-item-active').length == 0) {
+						if ($(".ur-selected-item.ur-item-active").length == 0) {
 							//Selecting first ur selected item
-							URFormBuilder.handle_selected_item($('.ur-selected-item:first'));
+							URFormBuilder.handle_selected_item(
+								$(".ur-selected-item:first")
+							);
 						}
-				});
+					}
+				);
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
 					URFormBuilder.handle_selected_item($(this));
@@ -195,7 +200,9 @@
 									.hide();
 							}
 						} else {
-							$(bulk_options_html).insertAfter($this.parent()).trigger('init_tooltips');
+							$(bulk_options_html)
+								.insertAfter($this.parent())
+								.trigger("init_tooltips");
 						}
 					}
 				);
@@ -277,6 +284,9 @@
 					URFormBuilder.show_message(validation_response.message);
 					return;
 				}
+				if (typeof tinyMCE !== "undefined") {
+					tinyMCE.triggerSave();
+				}
 
 				var form_data = URFormBuilder.get_form_data();
 				var form_row_ids = URFormBuilder.get_form_row_ids();
@@ -331,7 +341,19 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				// validation for unsupported currency by paypal.
+				if (
+					typeof data.data.ur_invalid_currency_status !==
+						"undefined" &&
+					data.data.ur_invalid_currency_status[0]
+						.validation_status === false
+				) {
+					URFormBuilder.show_message(
+						data.data.ur_invalid_currency_status[0]
+							.validation_message
+					);
+					return;
+				}
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
@@ -908,6 +930,7 @@
 						message +
 						'</p><span class="dashicons dashicons-no-alt ur-message-close"></span></div></div>';
 				} else {
+					$(".ur-error").remove();
 					message_string =
 						'<div class="ur-message"><div class="ur-error"><p><strong>' +
 						user_registration_form_builder_data.i18n_admin
@@ -924,7 +947,7 @@
 
 				setTimeout(function () {
 					URFormBuilder.removeMessage($message);
-				}, 2000);
+				}, 3000);
 			},
 			/**
 			 * Remove the validation message when calles.
@@ -2609,7 +2632,7 @@
 				form.append(general_setting);
 				form.append(advance_setting);
 				$("#ur-tab-field-options").append(form);
-				$('#ur-tab-field-options').append(advance_setting);
+				// $("#ur-tab-field-options").append(advance_setting);
 				$("#ur-tab-field-options")
 					.find(".ur-advance-setting-block")
 					.show();
@@ -2797,7 +2820,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2827,7 +2849,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2883,7 +2904,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-min-date")
@@ -2932,7 +2952,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-max-date")
@@ -3538,7 +3557,6 @@
 			 */
 			trigger_general_setting_required: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
-
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
@@ -3546,7 +3564,9 @@
 							$label.attr("data-field") +
 							'"] option:selected'
 					)
-					.removeAttr("selected");
+					.attr("selected", false);
+
+				$label.find("option").attr("selected", false);
 
 				wrapper
 					.find(".ur-label")
@@ -3565,6 +3585,10 @@
 					.find(
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
+					.find('option[value="' + $label.val() + '"]')
+					.attr("selected", true);
+
+				$label
 					.find('option[value="' + $label.val() + '"]')
 					.attr("selected", true);
 			},
@@ -3638,7 +3662,7 @@
 								.find(
 									'option[value="' + $this_node.val() + '"]'
 								)
-								.attr("selected", "selected");
+								.prop("selected", true);
 						}
 						break;
 					case "textarea":

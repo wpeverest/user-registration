@@ -836,8 +836,7 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-
-	if ( 'privacy_policy' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
@@ -1627,7 +1626,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value );
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not supported below php v7.1.
 				$value = implode( ',', $value );
 			}
 
@@ -2138,19 +2137,6 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			continue;
 		}
 
-		// Process for file upload.
-		if ( isset( $form_data->extra_params['field_key'] ) && 'file' === $form_data->extra_params['field_key'] ) {
-
-			$upload_data = array();
-			$file_data   = explode( ',', $form_data->value );
-
-			foreach ( $file_data as $key => $value ) {
-				$file = isset( $value ) ? wp_get_attachment_url( $value ) : '';
-				array_push( $upload_data, $file );
-			}
-			$form_data->value = $upload_data;
-		}
-
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
 			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
 			$countries        = $country_class::get_instance()->get_country();
@@ -2246,6 +2232,9 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'wysiwyg',
 									'billing_address_title',
 									'shipping_address_title',
+									'stripe_gateway',
+									'profile_picture',
+									'file',
 								);
 
 								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
@@ -2583,13 +2572,14 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 	 * @since 1.5.0.
 	 */
 	function ur_profile_picture_migration_script() {
+
+		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
+
 			$users = get_users(
 				array(
 					'meta_key' => 'user_registration_profile_pic_url',
 				)
 			);
-
-		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
 
 			foreach ( $users as $user ) {
 				$user_registration_profile_pic_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
@@ -2688,7 +2678,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();
 				if ( ! isset( $countries[ $field_value ] ) ) {
-					$key = array_search( $field_value, $countries );
+					$key = array_search( $field_value, $countries, true );
 					if ( $key ) {
 						$field_value = $key;
 					}
@@ -2703,13 +2693,16 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 					if ( is_numeric( $attachment_id ) ) {
 						$attachment_url = '<a href="' . wp_get_attachment_url( $attachment_id ) . '">' . basename( get_attached_file( $attachment_id ) ) . '</a>';
 						array_push( $links, $attachment_url );
-					} else if ( ur_is_valid_url( $attachment_id ) ) {
+					} elseif ( ur_is_valid_url( $attachment_id ) ) {
 						$attachment_url = '<a href="' . $attachment_id . '">' . $attachment_id . '</a>';
 						array_push( $links, $attachment_url );
+					} else {
+						array_push( $links, $attachment_id );
 					}
 				}
 
 				$field_value = implode( ', ', $links );
+
 				break;
 			case 'privacy_policy':
 				if ( '1' === $field_value ) {
@@ -2768,8 +2761,12 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-			/* translators: %s - My account Link. */
-			$message = sprintf( __( 'Please select My Account page in the <strong>User Registration -> Settings -> General -> My Account section </strong> ( <a href="%s" style="text-decoration:none;">My Account Page</a> )', 'user-registration' ), $my_account_setting_link );
+
+			$message = sprintf(
+				/* translators: %1$s - My account Link. */
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpeverest.com/user-registration/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				$my_account_setting_link
+			);
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
 		} else {
 			UR_Admin_Notices::remove_notice( 'select_my_account' );
@@ -3000,5 +2997,241 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 			}
 		}
 		return;
+	}
+}
+
+if ( ! function_exists( 'crypt_the_string' ) ) {
+	/**
+	 * Encrypt/Decrypt the provided string.
+	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
+	 *
+	 * @param  string $string String to encrypt/decrypt.
+	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
+	 * @return string Encrypted/Decrypted string.
+	 */
+	function crypt_the_string( $string, $action = 'e' ) {
+		$secret_key = 'ur_secret_key';
+		$secret_iv  = 'ur_secret_iv';
+
+		$output         = false;
+		$encrypt_method = 'AES-256-CBC';
+		$key            = hash( 'sha256', $secret_key );
+		$iv             = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+		if ( 'e' == $action ) {
+			if ( function_exists( 'openssl_encrypt' ) ) {
+				$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+			} else {
+				$output = base64_encode( $string );
+			}
+		} elseif ( 'd' == $action ) {
+			if ( function_exists( 'openssl_decrypt' ) ) {
+				$output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+			} else {
+				$output = base64_decode( $string );
+			}
+		}
+
+		return $output;
+	}
+} //phpcs:ignore
+
+
+if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
+	/**
+	 * Clean up the tmp folder - remove all old files every day (filterable interval).
+	 */
+	function ur_clean_tmp_files() {
+		$files = glob( trailingslashit( ur_get_tmp_dir() ) . '*' );
+
+		if ( ! is_array( $files ) || empty( $files ) ) {
+			return;
+		}
+
+		$lifespan = (int) apply_filters( 'user_registration_clean_tmp_files_lifespan', DAY_IN_SECONDS );
+
+		foreach ( $files as $file ) {
+			if ( ! is_file( $file ) ) {
+				continue;
+			}
+
+			// In some cases filemtime() can return false, in that case - pretend this is a new file and do nothing.
+			$modified = (int) filemtime( $file );
+			if ( empty( $modified ) ) {
+				$modified = time();
+			}
+
+			if ( ( time() - $modified ) >= $lifespan ) {
+				@unlink( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
+	/**
+	 * Get tmp dir for files.
+	 *
+	 * @return string
+	 */
+	function ur_get_tmp_dir() {
+		$uploads  = wp_upload_dir();
+		$tmp_root = untrailingslashit( $uploads['basedir'] ) . '/user_registration_uploads/temp-uploads';
+
+		if ( ! file_exists( $tmp_root ) || ! wp_is_writable( $tmp_root ) ) {
+			wp_mkdir_p( $tmp_root );
+		}
+
+		$index = trailingslashit( $tmp_root ) . 'index.html';
+
+		if ( ! file_exists( $index ) ) {
+			file_put_contents( $index, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		}
+
+		return $tmp_root;
+	}
+}
+
+if ( ! function_exists( 'ur_get_user_roles' ) ) {
+	/**
+	 * Returns an array of all roles associated with the user.
+	 *
+	 * @param [int] $user_id User Id.
+	 *
+	 * @returns array
+	 */
+	function ur_get_user_roles( $user_id ) {
+		$roles = array();
+
+		if ( $user_id ) {
+			$user_meta = get_userdata( $user_id );
+			$roles     = isset( $user_meta->roles ) ? $user_meta->roles : array();
+		}
+
+		$user_roles = array_map( 'ucfirst', $roles );
+
+		return $user_roles;
+	}
+}
+
+if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
+	/**
+	 * Upload Profile Picture
+	 *
+	 * @param [array] $valid_form_data Valid Form Data.
+	 * @param [int]   $user_id User Id.
+	 */
+	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
+		$attachment_id = array();
+		$upload_dir    = wp_upload_dir();
+		$upload_path   = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
+
+		// Checks if the upload directory exists and create one if not.
+		if ( ! file_exists( $upload_path ) ) {
+			wp_mkdir_p( $upload_path );
+		}
+
+		$upload_file = $valid_form_data['profile_pic_url']->value;
+
+		if ( ! is_numeric( $upload_file ) ) {
+			$upload = maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) ) {
+				$upload_path = $upload_path . '/';
+				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
+				$file_path   = $upload_path . sanitize_file_name( $file_name );
+				// Check the type of file. We'll use this as the 'post_mime_type'.
+				$filetype = wp_check_filetype( basename( $file_name ), null );
+				$moved = rename( $upload['file_path'], $file_path );
+
+				if ( $moved ) {
+					$attachment_id = wp_insert_attachment(
+						array(
+							'guid'           => $file_path,
+							'post_mime_type' => $filetype['type'],
+							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
+							'post_content'   => '',
+							'post_status'    => 'inherit',
+						),
+						$file_path
+					);
+
+					if ( ! is_wp_error( $attachment_id ) ) {
+						include_once ABSPATH . 'wp-admin/includes/image.php';
+
+						// Generate and save the attachment metas into the database.
+						wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
+					}
+				}
+			}
+		} else {
+			$attachment_id = $upload_file;
+		}
+		$attachment_id = ! empty( $attachment_id ) ? $attachment_id : '';
+		update_user_meta( $user_id, 'user_registration_profile_pic_url', $attachment_id );
+	}
+}
+
+/**
+ * Check given string is valid url or not.
+ */
+if ( ! function_exists( 'ur_is_valid_url' ) ) {
+	/**
+	 * Checks if url is valid.
+	 *
+	 * @param [string] $url URL.
+	 * @return bool
+	 */
+	function ur_is_valid_url( $url ) {
+
+		// Must start with http:// or https://.
+		if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+			return false;
+		}
+
+		// Must pass validation.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
+
+if ( ! function_exists( 'ur_check_captch_keys' ) ) {
+	/**
+	 * Check the site key and secret key for the selected captcha type, are valid or not.
+	 *
+	 * @return bool
+	 */
+	function ur_check_captch_keys() {
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+		$site_key   = '';
+		$secret_key = '';
+
+		if ( 'v2' === $recaptcha_type ) {
+			if ( 'yes' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+			} else {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+			}
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+
+		if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			return true;
+		}
+
+		return false;
+
 	}
 }
