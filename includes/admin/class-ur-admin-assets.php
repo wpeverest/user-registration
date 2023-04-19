@@ -302,9 +302,10 @@ class UR_Admin_Assets {
 				'user-registration-admin',
 				'user_registration_admin_data',
 				array(
-					'ajax_url'            => admin_url( 'admin-ajax.php' ),
-					'ur_import_form_save' => wp_create_nonce( 'ur_import_form_save_nonce' ),
-					'no_file_selected'    => esc_html__( 'No file selected.', 'user-registration' ),
+					'ajax_url'             => admin_url( 'admin-ajax.php' ),
+					'ur_import_form_save'  => wp_create_nonce( 'ur_import_form_save_nonce' ),
+					'no_file_selected'     => esc_html__( 'No file selected.', 'user-registration' ),
+					'export_error_message' => esc_html__( 'Please choose at least one form to export.', 'user-registration' ),
 				)
 			);
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
