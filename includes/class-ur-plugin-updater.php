@@ -635,7 +635,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
 								<?php echo esc_html( $license_key ) ? '<li><form method="post">' . wp_kses_post( $link ) . '</form></li>' : wp_kses_post( $link ); ?>
-								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php _e( 'I have a query', 'user-registration' ); ?></a></li>
+								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 							</ul>
 						</div>
 					</div>
