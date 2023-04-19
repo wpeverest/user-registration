@@ -1512,13 +1512,17 @@ class UR_AJAX {
 			wp_send_json_error( 'Permision Denied' );
 			return;
 		}
-		$plan = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
-		$slug = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
-		$key  = ur_get_license_plan();
+		$plan   = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
+		$slug   = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
+		$name   = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : null;
+		$key    = ur_get_license_plan();
+		$button = '';
+
 		if ( false === $key ) {
-			echo "<div class='action-button'><a class='button' href='https://wpeverest.com/wordpress-plugins/user-registration/pricing/' target='_blank'>Upgrade Plan</a></div>";
-			wp_send_json_success();
+			$button = "<div class='action-buttons'><a class='button upgrade-now' href='https://wpeverest.com/wordpress-plugins/user-registration/pricing/' target='_blank'>Upgrade Plan</a></div>";
+			wp_send_json_success( array( 'action_button' => $button ) );
 		}
+
 		$key = $key . ' plan';
 		$key = trim( $key );
 
@@ -1542,13 +1546,15 @@ class UR_AJAX {
 			$addon = (object) array(
 				'title' => '',
 				'slug'  => $slug,
-				'name'  => '',
+				'name'  => $name,
 				'plan'  => $plan_list,
 			);
 		}
 
+		ob_start();
 		do_action( 'user_registration_after_addons_description', $addon );
-		wp_send_json_success();
+		$button = ob_get_clean();
+		wp_send_json_success( array( 'action_button' => $button ) );
 
 	}
 }

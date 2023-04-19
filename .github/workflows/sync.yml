@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-756-enhancement/form-field-shows-upgrade-to-premium-notice-even-if-premium-plugin-activated
     workflow_dispatch:
 jobs:
   sync:

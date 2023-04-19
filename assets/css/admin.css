@@ -5222,8 +5222,8 @@
     transform: scale(0.9); } }
 
 /**
- * Styling begins
- */
+  * Styling begins
+  */
 .blockUI.blockOverlay::before {
   width: 16px;
   height: 16px;
@@ -5264,8 +5264,8 @@
     background-size: cover; }
 
 /**
-   * Toggle class.
-   */
+	* Toggle class.
+	*/
 .userregistration-forms-hidden {
   display: block; }
 
@@ -5331,8 +5331,8 @@
         text-align: center; }
 
 /**
- * Addons page
- **/
+  * Addons page
+  **/
 .ur_addons_wrap p.refresh {
   margin: 0 0 2em; }
 
@@ -5413,8 +5413,8 @@
   margin-top: 10px; }
 
 /**
- * Form Builder Styles
- **/
+  * Form Builder Styles
+  **/
 .user-registration_page_add-new-registration #wpfooter {
   display: none; }
 
@@ -5506,8 +5506,8 @@
       vertical-align: middle; }
 
 /**
-* Backbone modal dialog
-*/
+ * Backbone modal dialog
+ */
 .ur-backbone-modal * {
   box-sizing: border-box; }
 
@@ -5820,7 +5820,7 @@
             font-weight: 500;
             cursor: pointer; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -6379,8 +6379,8 @@
       flex: 1 0 27%; }
 
 /**
- * Tooltips
- */
+  * Tooltips
+  */
 .tips {
   cursor: help;
   text-decoration: none; }
@@ -6423,8 +6423,8 @@ img.tips {
   border-top-color: #4c5477 !important; }
 
 /**
- * Help Tip
- */
+  * Help Tip
+  */
 .user-registration-help-tip,
 .ur-portal-tooltip {
   color: #676d8a;
@@ -6475,12 +6475,12 @@ img.tips {
   background-color: #ffffff; }
 
 /**
- * Fullscreen Mode
- **/
+  * Fullscreen Mode
+  **/
 body {
   /**
-	 * User Registration Builder Loading
-	 **/ }
+	  * User Registration Builder Loading
+	  **/ }
   body.ur-full-screen-mode {
     margin-top: -32px; }
     body.ur-full-screen-mode #wpbody-content {
@@ -6934,6 +6934,17 @@ body {
   width: 400px;
   border-top: 6px solid #ff4f55;
   border-radius: 10px; }
+
+.user-registration .swal2-container .swal2-title {
+  line-height: 30px; }
+
+.user-registration .swal2-container .swal2-content .action-buttons a {
+  background-color: #475BB2;
+  border: none;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600; }
 
 .user-registration .swal2-container .user-registration-recommend-addons {
   margin-bottom: 20px;

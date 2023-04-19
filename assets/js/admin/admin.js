@@ -53,49 +53,66 @@ jQuery(function ($) {
 		var title =
 			icon +
 			'<span class="user-registration-swal2-modal__title"> ' +
-			label +" "+ user_registration_locked_form_fields_notice.lock_message
-			".</span>";
+			label +
+			" " +
+			user_registration_locked_form_fields_notice_params.lock_message;
+		(".</span>");
 		var plan = $(this).data("plan");
-		var slug = $(this).data("slug");
-		if(slug != '' && plan != '')
-		{
+		var name = $(this).data("name");
+		var slug = $(this).data("slug"),
+			$this = $(this);
+
+		if (slug != "" && plan != "") {
 			$.ajax({
-				url: user_registration_locked_form_fields_notice.ajax_url,
-				type:"POST",
-				data:{
-					action:"user_registration_locked_form_fields_notice",
-					slug:slug,
-					plan:plan,
-					security : user_registration_locked_form_fields_notice.user_registration_locked_form_fields_notice_nonce,
-
+				url: user_registration_locked_form_fields_notice_params.ajax_url,
+				type: "POST",
+				data: {
+					action: "user_registration_locked_form_fields_notice",
+					slug: slug,
+					plan: plan,
+					name: name,
+					security:
+						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
 				},
-				success:function(response) {
-					var txt = $(response).find('a').text();
-					if( txt.trim() === 'Activate') {
-						var message ="<strong>Please "+txt+" addon </strong>"+user_registration_locked_form_fields_notice.unlock_message;
-					} else if(txt.trim() === 'Install Addon') {
-						var message ="<strong>Please "+txt+" </strong>"+user_registration_locked_form_fields_notice.unlock_message;
-					} else if(txt.trim() === 'Upgrade Plan') {
-						var message ="<strong> Please "+txt+" </strong> "+user_registration_locked_form_fields_notice.unlock_message;
-					}
-				message = message+'<br><br>'+response;
-				Swal.fire({
-					title: title,
-					html: message,
-					customClass:
-						"user-registration-swal2-modal user-registration-swal2-modal--centered",
-					showCloseButton: true,
-					showConfirmButton:false,
-				}).then(function (result) {
-					if (result.value) {
-						window.open(url, "_blank");
-					}
-				});
-			}
-			})
+				success: function (response) {
+					var action_button = $(response.data.action_button).find(
+						"a"
+					);
 
+					if (action_button.hasClass("activate-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
+								"%plugin%",
+								name
+							);
+					} else if (action_button.hasClass("install-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.installation_required_message.replace(
+								"%plugin%",
+								name
+							);
+					} else {
+						var message =
+							user_registration_locked_form_fields_notice_params.unlock_message
+								.replace("%field%", $this.text())
+								.replace("%plan%", plan);
+					}
+
+					message =
+						message + "<br><br>" + response.data.action_button;
+					Swal.fire({
+						title: title,
+						html: message,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered",
+						showCloseButton: true,
+						showConfirmButton: false,
+					}).then(function (result) {
+						// Do Nothing.
+					});
+				},
+			});
 		}
-
 	});
 
 	// Adjust builder width
@@ -384,10 +401,9 @@ jQuery(function ($) {
 	$(document.body)
 		.on("init_tooltips", function () {
 			ur_init_tooltips(".tips, .help_tip, .user-registration-help-tip");
-			ur_init_tooltips(
-				".ur-copy-shortcode, .ur-portal-tooltip",
-				{ keepAlive: false }
-			);
+			ur_init_tooltips(".ur-copy-shortcode, .ur-portal-tooltip", {
+				keepAlive: false,
+			});
 
 			// Add Tooltipster to parent element for widefat tables
 			$(".parent-tips").each(function () {
@@ -518,19 +534,18 @@ jQuery(function ($) {
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
 		var status = $(this).find('input[type="checkbox"]:checked').val();
-		var id = $(this).find('input[type="checkbox"]').attr('id');
+		var id = $(this).find('input[type="checkbox"]').attr("id");
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,
 			type: "POST",
 			data: {
 				action: "user_registration_email_setting_status",
 				status: status,
-				id : id,
-				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+				id: id,
+				security:
+					user_registration_email_setting_status.user_registration_email_setting_status_nonce,
 			},
-			success: function (response) {
-
-			},
+			success: function (response) {},
 		});
 	});
 });
@@ -594,16 +609,20 @@ jQuery(function ($) {
 		});
 
 		$(".ur_export_form_action_button").on("click", function () {
-			var formid = $('#selected-export-forms').val();
-			$(document).find('#message').remove();
-			if(formid.length === 0) {
-				message_string ='<div id="message" class="error inline ur-import_notice"><p><strong>' + user_registration_admin_data.export_error_message+ '</strong></p></div>';
+			var formid = $("#selected-export-forms").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
 				$(".ur-export-users-page").prepend(message_string);
 			} else {
-				$('.ur_export_form_action_button').attr('type','submit');
+				$(".ur_export_form_action_button").attr("type", "submit");
 			}
+		});
 	});
-})})(jQuery, window.user_registration_admin_data);
+})(jQuery, window.user_registration_admin_data);
 
 /**
  * Set tooltips for specified elements.
