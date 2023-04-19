@@ -932,7 +932,12 @@
 
 			.ur-tab-contents {
 				.ur-tab-content {
-					padding: 0;
+					// padding: 0;
+					&#ur-tab-field-settings {
+						margin-top: -$spacing_32px;
+						margin-left: -$spacing_12px;
+						margin-right: -$spacing_12px;
+					}
 
 					.form-settings-tab {
 						margin-bottom: 0;
@@ -985,10 +990,6 @@
 					.ur-tab-content {
 						padding: $spacing_32px $spacing_12px $spacing_12px;
 					}
-				}
-
-				#ur-tab-field-options {
-					padding: $spacing_32px $spacing_12px $spacing_12px;
 				}
 			}
 
