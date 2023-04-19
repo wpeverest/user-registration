@@ -606,8 +606,19 @@ jQuery(function ($) {
 			} else {
 				$('.ur_export_form_action_button').attr('type','submit');
 			}
+		});
+		$(".ur_export_user_action_button").on("click", function () {
+			var formid = $('#selected-export-user-form').val();
+			$(document).find('#message').remove();
+			if(formid.length === 0) {
+				message_string ='<div id="message" class="error inline ur-import_notice"><p><strong>' + user_registration_admin_data.export_error_message+ '</strong></p></div>';
+				$(".ur-export-users-page").prepend(message_string);
+			} else {
+				$('.ur_export_user_action_button').attr('type','submit');
+			}
 	});
-})})(jQuery, window.user_registration_admin_data);
+	});
+})(jQuery, window.user_registration_admin_data);
 
 /**
  * Set tooltips for specified elements.
