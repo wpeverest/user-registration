@@ -2,8 +2,6 @@
 /**
  * Plugin Updater
  *
- * @author   WPEverest
- * @category Admin
  * @package  UserRegistration/Admin
  * @version  1.1.0
  */
