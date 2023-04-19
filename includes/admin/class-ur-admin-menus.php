@@ -56,7 +56,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_File',
 					'plan'        => 'Personal Plan',
 					'slug'        => 'file-upload',
-					'name'        => 'User Registration File Upload',
+					'name'        => __( 'User Registration File Upload', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_mailchimp',
@@ -65,7 +65,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_MailChimp',
 					'plan'        => 'Personal Plan',
 					'slug'        => 'mailchimp',
-					'name'        => 'User Registration – Mailchimp',
+					'name'        => __( 'User Registration – Mailchimp', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_invite_code',
@@ -74,7 +74,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_Form_Field_Invite_Code',
 					'plan'        => 'Professional Plan or Plus Plan',
 					'slug'        => 'invite-code',
-					'name'        => 'User Registration Invite Codes',
+					'name'        => __( 'User Registration Invite Codes', 'user-registration' ),
 				),
 			);
 
@@ -95,7 +95,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URAF_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'advanced-fields',
-					'name'                => 'User Registration Advanced Fields',
+					'name'                => __( 'User Registration Advanced Fields', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_section_title',
@@ -154,7 +154,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'woocommerce',
-					'name'                => 'User Registration WooCommerce',
+					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_billing_address_title',
@@ -228,7 +228,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'woocommerce',
-					'name'                => 'User Registration WooCommerce',
+					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_shipping_address_title',
@@ -287,7 +287,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'User_Registration_Payments_Admin',
 					'plan'                => 'Professional Plan or Plus Plan',
 					'slug'                => 'payments',
-					'name'                => 'User Registration Payments (PayPal)',
+					'name'                => __( 'User Registration Payments', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_single_item',
@@ -315,12 +315,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$fields       = $section['fields'];
 					$plan         = isset( $section['plan'] ) ? $section['plan'] : '';
 					$slug         = isset( $section['slug'] ) ? $section['slug'] : '';
+					$name         = isset( $section['name'] ) ? $section['name'] : '';
 					$fields_count = count( $fields );
 
 					// Set the same plan for all the section's fields.
 					for ( $i = 0; $i < $fields_count; $i++ ) {
 						$fields[ $i ]['plan'] = $plan;
 						$fields[ $i ]['slug'] = $slug;
+						$fields[ $i ]['name'] = $name;
 					}
 
 					echo '<h2 class="ur-toggle-heading">' . esc_html( $section['section_title'] ) . '</h2><hr/>';
