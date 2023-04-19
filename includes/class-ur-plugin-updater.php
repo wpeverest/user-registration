@@ -371,7 +371,15 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 					update_option( $this->plugin_slug . '_license_key', $this->api_key );
 					delete_option( $this->plugin_slug . '_errors' );
-					set_transient( 'ur_pro_license_plan', $this->api_key, WEEK_IN_SECONDS );
+
+					$license_data = json_decode(
+						UR_Updater_Key_API::check(
+							array(
+								'license' => $this->api_key,
+							)
+						)
+					);
+					set_transient( 'ur_pro_license_plan', $license_data->api_key, WEEK_IN_SECONDS );
 
 					return true;
 				}
