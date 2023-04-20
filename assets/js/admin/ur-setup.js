@@ -412,12 +412,15 @@ jQuery(function ($) {
 					showCancelButton: true,
 					cancelButtonText: ur_setup_params.reload_text,
 					cancelButtonColor: "#DD6B55",
+					preConfirm: function () {
+						window.location.replace(url);
+					},
 				}).then(function (result) {
 					if (result.isConfirmed) {
 						$(".ur_save_form_action_button").trigger("click");
-						window.location.replace(url);
+						location.reload();
 					} else {
-						window.location.replace(url);
+						location.reload();
 					}
 				});
 			});
