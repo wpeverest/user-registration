@@ -3139,14 +3139,15 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
-
+				// Check the type of file. We'll use this as the 'post_mime_type'.
+				$filetype = wp_check_filetype( basename( $file_name ), null );
 				$moved = rename( $upload['file_path'], $file_path );
 
 				if ( $moved ) {
 					$attachment_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
-							'post_mime_type' => $upload['file_extension'],
+							'post_mime_type' => $filetype['type'],
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
 							'post_content'   => '',
 							'post_status'    => 'inherit',

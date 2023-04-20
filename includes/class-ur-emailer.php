@@ -573,7 +573,6 @@ class UR_Emailer {
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
-
 	/**
 	 * Parse Smart tags for emails.
 	 *
@@ -582,95 +581,7 @@ class UR_Emailer {
 	 * @param array  $name_value  Extra values.
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
-		$smart_tags = array(
-			'{{user_id}}',
-			'{{username}}',
-			'{{email}}',
-			'{{email_token}}',
-			'{{blog_info}}',
-			'{{home_url}}',
-			'{{ur_login}}',
-			'{{key}}',
-			'{{all_fields}}',
-			'{{auto_pass}}',
-			'{{user_roles}}',
-		);
-
-		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
-
-		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
-		$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
-
-		if ( ! $ur_account_page_exists ) {
-			$ur_login_or_account_page = ur_get_page_permalink( 'login' );
-		}
-
-		$ur_login = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
-		$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
-
-		$default_values = array(
-			'username'       => '',
-			'user_id'        => get_current_user_id(),
-			'email'          => '',
-			'email_token'    => '',
-			'approval_token' => '',
-			'approval_link'  => '',
-			'admin_url'      => admin_url(),
-			'blog_info'      => get_bloginfo(),
-			'home_url'       => get_home_url(),
-			'ur_login'       => $ur_login,
-			'key'            => '',
-			'all_fields'     => '',
-			'auto_pass'      => '',
-		);
-
-		$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
-
-		if ( $user_pass ) {
-			$default_values['auto_pass'] = $user_pass;
-		}
-
-		$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
-
-		$values = wp_parse_args( $values, $default_values );
-
-		if ( ! empty( $values['user_id'] ) ) {
-			$values['user_roles'] = implode( ',', ur_get_user_roles( $values['user_id'] ) );
-		}
-
-		if ( ! empty( $values['email'] ) ) {
-			$user_data = self::user_data_smart_tags( $values['email'] );
-			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
-				$user_data = array_merge( $user_data, $name_value );
-			}
-
-			$values = array_merge( $values, $user_data );
-			array_walk(
-				$values,
-				function( &$value, $key ) {
-					if ( 'user_pass' === $key ) {
-						$value = esc_html__( 'Chosen Password', 'user-registration' );
-					}
-				}
-			);
-
-			$user_smart_tags = array_keys( $user_data );
-			array_walk(
-				$user_smart_tags,
-				function( &$value ) {
-					$value = '{{' . trim( $value, '{}' ) . '}}';
-				}
-			);
-			$smart_tags = array_merge( $smart_tags, $user_smart_tags );
-		}
-
-		foreach ( $values as $key => $value ) {
-			$value = ur_format_field_values( $key, $value );
-			if ( ! is_array( $value ) ) {
-				$content = str_replace( '{{' . $key . '}}', $value, $content );
-			}
-		}
-
+		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
 		return $content;
 	}
 
