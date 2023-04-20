@@ -73,7 +73,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'icon'        => 'ur-icon ur-icon-invite-codes',
 					'field_class' => 'UR_Form_Field_Invite_Code',
 					'plan'        => 'Professional Plan or Plus Plan',
-					'slug'        => 'invite-code',
+					'slug'        => 'invite-codes',
 					'name'        => __( 'User Registration Invite Codes', 'user-registration' ),
 				),
 			);

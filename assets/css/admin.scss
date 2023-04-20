@@ -2530,6 +2530,16 @@
 		 .swal2-popup {
 			 width: 400px;
 			 border-top: 6px solid #ff4f55;
+
+			 &.user-registration-upgradable-field {
+				border-top: 6px solid #72aee6;
+
+				&.swal2-icon-success {
+					border-top: 6px solid #a5dc86;
+				}
+
+			 }
+
 			 border-radius: 10px;
 		 }
 

@@ -48,15 +48,8 @@ jQuery(function ($) {
 	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
 		e.preventDefault();
 
-		var icon = '<i class="dashicons dashicons-lock"></i>';
-		var label = $(this).text();
-		var title =
-			icon +
-			'<span class="user-registration-swal2-modal__title"> ' +
-			label +
-			" " +
-			user_registration_locked_form_fields_notice_params.lock_message;
-		(".</span>");
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 		var plan = $(this).data("plan");
 		var name = $(this).data("name");
 		var slug = $(this).data("slug"),
@@ -78,33 +71,44 @@ jQuery(function ($) {
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
-
+					var title =
+						icon +
+						'<span class="user-registration-swal2-modal__title" > ';
 					if (action_button.hasClass("activate-now")) {
 						var message =
 							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
 								"%plugin%",
 								name
 							);
+						title +=
+							user_registration_locked_form_fields_notice_params.activation_required_title;
 					} else if (action_button.hasClass("install-now")) {
 						var message =
 							user_registration_locked_form_fields_notice_params.installation_required_message.replace(
 								"%plugin%",
 								name
 							);
+						title +=
+							user_registration_locked_form_fields_notice_params.installation_required_title;
 					} else {
 						var message =
 							user_registration_locked_form_fields_notice_params.unlock_message
 								.replace("%field%", $this.text())
 								.replace("%plan%", plan);
+						title +=
+							$this.text() +
+							" " +
+							user_registration_locked_form_fields_notice_params.lock_message;
 					}
 
+					title += "</span>";
 					message =
 						message + "<br><br>" + response.data.action_button;
 					Swal.fire({
 						title: title,
 						html: message,
 						customClass:
-							"user-registration-swal2-modal user-registration-swal2-modal--centered",
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgradable-field",
 						showCloseButton: true,
 						showConfirmButton: false,
 						allowOutsideClick: false,

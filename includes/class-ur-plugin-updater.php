@@ -398,7 +398,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					);
 
 					if ( ! empty( $license_data->item_name ) ) {
-						$license_data->item_plan = strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) );
+						$license_data->item_plan = trim( strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) ) );
 						set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
 					}
 

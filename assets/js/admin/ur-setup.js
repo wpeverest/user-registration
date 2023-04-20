@@ -526,7 +526,7 @@ jQuery(function ($) {
 						if (0 === wp.updates.queue.length) {
 							Swal.fire({
 								customClass:
-									"user-registration-swal2-modal user-registration-swal2-modal--center",
+									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-upgradable-field",
 								icon: "success",
 								width: "auto",
 								title:

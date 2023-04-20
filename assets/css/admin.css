@@ -6934,6 +6934,10 @@ body {
   width: 400px;
   border-top: 6px solid #ff4f55;
   border-radius: 10px; }
+  .user-registration .swal2-container .swal2-popup.user-registration-upgradable-field {
+    border-top: 6px solid #72aee6; }
+    .user-registration .swal2-container .swal2-popup.user-registration-upgradable-field.swal2-icon-success {
+      border-top: 6px solid #a5dc86; }
 
 .user-registration .swal2-container .swal2-title {
   line-height: 30px; }
