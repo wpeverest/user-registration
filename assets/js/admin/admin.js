@@ -44,6 +44,30 @@ jQuery(function ($) {
 		}
 	});
 
+	//Bind UI Actions for locked fields
+	$(document).on("mousedown", ".ur-locked-field", function (e) {
+		e.preventDefault();
+		var icon = '<i class="dashicons dashicons-lock"></i>';
+		var field_data = $(this).data("field-data");
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			field_data.title +
+			"</span>";
+		Swal.fire({
+			title: title,
+			html: field_data.message,
+			showCloseButton: true,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--center",
+			confirmButtonText: field_data.button_title,
+		}).then(function (result) {
+			if (result.value) {
+				var url = field_data.link;
+				window.open(url, "_blank");
+			}
+		});
+	});
 	// Bind UI Actions for upgradable fields
 	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
 		e.preventDefault();
@@ -624,6 +648,19 @@ jQuery(function ($) {
 				$(".ur-export-users-page").prepend(message_string);
 			} else {
 				$(".ur_export_form_action_button").attr("type", "submit");
+			}
+		});
+		$(".ur_export_user_action_button").on("click", function () {
+			var formid = $("#selected-export-user-form").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
+				$(".ur-export-users-page").prepend(message_string);
+			} else {
+				$(".ur_export_user_action_button").attr("type", "submit");
 			}
 		});
 	});
