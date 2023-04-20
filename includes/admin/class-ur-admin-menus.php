@@ -57,6 +57,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'icon'        => 'ur-icon ur-icon-file-upload',
 					'field_class' => 'UR_File',
 					'plan'        => 'Personal Plan',
+					'slug'        => 'file-upload',
+					'name'        => __( 'User Registration File Upload', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_mailchimp',
@@ -64,6 +66,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'icon'        => 'ur-icon ur-icon-mailchimp',
 					'field_class' => 'UR_MailChimp',
 					'plan'        => 'Personal Plan',
+					'slug'        => 'mailchimp',
+					'name'        => __( 'User Registration – Mailchimp', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_invite_code',
@@ -71,6 +75,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'icon'        => 'ur-icon ur-icon-invite-codes',
 					'field_class' => 'UR_Form_Field_Invite_Code',
 					'plan'        => 'Professional Plan or Plus Plan',
+					'slug'        => 'invite-codes',
+					'name'        => __( 'User Registration Invite Codes', 'user-registration' ),
 				),
 			);
 
@@ -90,6 +96,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'section_title'       => 'Advanced Fields',
 					'fields_parent_class' => 'URAF_Admin',
 					'plan'                => 'Personal Plan',
+					'slug'                => 'advanced-fields',
+					'name'                => __( 'User Registration Advanced Fields', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_section_title',
@@ -147,6 +155,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'section_title'       => 'WooCommerce Billing Address',
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
+					'slug'                => 'woocommerce',
+					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_billing_address_title',
@@ -219,6 +229,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'section_title'       => 'WooCommerce Shipping Address',
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
+					'slug'                => 'woocommerce',
+					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_shipping_address_title',
@@ -276,6 +288,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'section_title'       => 'Payment Fields',
 					'fields_parent_class' => 'User_Registration_Payments_Admin',
 					'plan'                => 'Professional Plan or Plus Plan',
+					'slug'                => 'payments',
+					'name'                => __( 'User Registration Payments', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_single_item',
@@ -302,11 +316,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				if ( ! class_exists( $class_to_check ) ) {
 					$fields       = $section['fields'];
 					$plan         = isset( $section['plan'] ) ? $section['plan'] : '';
+					$slug         = isset( $section['slug'] ) ? $section['slug'] : '';
+					$name         = isset( $section['name'] ) ? $section['name'] : '';
 					$fields_count = count( $fields );
 
 					// Set the same plan for all the section's fields.
 					for ( $i = 0; $i < $fields_count; $i++ ) {
 						$fields[ $i ]['plan'] = $plan;
+						$fields[ $i ]['slug'] = $slug;
+						$fields[ $i ]['name'] = $name;
 					}
 
 					echo '<h2 class="ur-toggle-heading">' . esc_html( $section['section_title'] ) . '</h2><hr/>';
@@ -338,8 +356,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$icon  = $args['icon'];
 			$label = $args['label'];
 			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
-
-			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-plan="' . esc_attr( $plan ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
+			$slug  = isset( $args['slug'] ) ? $args['slug'] : '';
+			$name  = isset( $args['name'] ) ? $args['name'] : '';
+			$slug  = 'user-registration-' . $slug;
+			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-name="' . esc_attr( $name ) . '" data-plan="' . esc_attr( $plan ) . '" data-slug ="' . esc_attr( $slug ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
 		}
 
 		/**
@@ -528,7 +548,37 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( isset( $_GET['onboarding-skipped'] ) ) {
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
-
+			wp_enqueue_script( 'ur-setup' );
+			wp_localize_script(
+				'ur-setup',
+				'ur_setup_params',
+				array(
+					'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+					'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
+					'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
+					'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),
+					'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
+					'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
+					'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
+					'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
+					'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
+					'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
+					'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+					'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
+					'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
+					'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
+					'i18n_form_ok'                 => esc_html__( 'Continue', 'user-registration' ),
+					'i18n_form_placeholder'        => esc_html__( 'Untitled Form', 'user-registration' ),
+					'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
+					'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
+					'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
+					'download_successful_message'  => esc_html__( 'Addons have been installed and Activated. You have to reload the page.', 'user-registration' ),
+					'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
+					'save_changes_warning'         => esc_html__( 'Save changes before activating the plugin', 'user-registration' ),
+					'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
+				)
+			);
 			if ( isset( $_GET['edit-registration'] ) ) {
 				// Forms view.
 				include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
