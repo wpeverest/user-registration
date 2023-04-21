@@ -47,7 +47,8 @@ jQuery(function ($) {
 	//Bind UI Actions for locked fields
 	$(document).on("mousedown", ".ur-locked-field", function (e) {
 		e.preventDefault();
-		var icon = '<i class="dashicons dashicons-lock"></i>';
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 		var field_data = $(this).data("field-data");
 		var title =
 			icon +
@@ -59,7 +60,7 @@ jQuery(function ($) {
 			html: field_data.message,
 			showCloseButton: true,
 			customClass:
-				"user-registration-swal2-modal user-registration-swal2-modal--center",
+				"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
 			confirmButtonText: field_data.button_title,
 		}).then(function (result) {
 			if (result.value) {
@@ -132,7 +133,7 @@ jQuery(function ($) {
 						title: title,
 						html: message,
 						customClass:
-							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgradable-field",
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
 						showCloseButton: true,
 						showConfirmButton: false,
 						allowOutsideClick: false,
