@@ -58,7 +58,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_File',
 					'plan'        => 'Personal Plan',
 					'slug'        => 'file-upload',
-					'name'        => __( 'User Registration File Upload', 'user-registration' ),
+					'name'        => __( 'User Registration - File Upload', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_mailchimp',
@@ -67,7 +67,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_MailChimp',
 					'plan'        => 'Personal Plan',
 					'slug'        => 'mailchimp',
-					'name'        => __( 'User Registration – Mailchimp', 'user-registration' ),
+					'name'        => __( 'User Registration - Mailchimp', 'user-registration' ),
 				),
 				array(
 					'id'          => 'user_registration_invite_code',
@@ -97,7 +97,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URAF_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'advanced-fields',
-					'name'                => __( 'User Registration Advanced Fields', 'user-registration' ),
+					'name'                => __( 'User Registration-Advanced Fields', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_section_title',
@@ -156,7 +156,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'woocommerce',
-					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
+					'name'                => __( 'User Registration - WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_billing_address_title',
@@ -230,7 +230,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'fields_parent_class' => 'URWC_Admin',
 					'plan'                => 'Personal Plan',
 					'slug'                => 'woocommerce',
-					'name'                => __( 'User Registration – WooCommerce', 'user-registration' ),
+					'name'                => __( 'User Registration - WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
 							'id'    => 'user_registration_shipping_address_title',
