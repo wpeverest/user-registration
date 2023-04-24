@@ -30,6 +30,7 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_privacy_tab' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 	}
 
@@ -604,7 +605,25 @@ class UR_Form_Handler {
 			}
 		}
 	}
+	/**
+	 * Handle the privacy tab form.
+	 */
+	public static function process_privacy_tab() {
 
+		if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'privacy_tab' ) ) {
+			return;
+		}
+		if ( isset( $_POST['ur_privacy_tab'] ) ) {
+
+			$profile_index = isset( $_POST['profile_index'] ) ? sanitize_text_field( wp_unslash( $_POST['profile_index'] ) ) : '';
+			$show_profile  = isset( $_POST['show_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['show_profile'] ) ) : '';
+
+			$user_id = get_current_user_id();
+			update_user_meta( $user_id, 'profile_noindex', $profile_index );
+			update_user_meta( $user_id, 'show_profile', $show_profile );
+			return;
+		}
+	}
 	/**
 	 * Handle Export Personal data confirmation request.
 	 */
