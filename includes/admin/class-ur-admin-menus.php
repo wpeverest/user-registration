@@ -78,18 +78,82 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'slug'        => 'invite-codes',
 					'name'        => __( 'User Registration Invite Codes', 'user-registration' ),
 				),
+				array(
+					'id'          => 'user_registration_learndash',
+					'label'       => 'LearnDash Course',
+					'icon'        => 'ur-icon ur-icon-course',
+					'field_class' => 'UR_Form_Field_Learndash_Course',
+					'plan'        => 'Professional Plan or Plus Plan',
+					'slug'        => 'learndash',
+					'name'        => __( 'User Registration LearnDash', 'user-registration' ),
+				),
 			);
 
+			if ( ! is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) && ! is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+				$fields = array_merge(
+					$fields,
+					array(
+						array(
+							'id'          => 'user_registration_stripe_gateway',
+							'label'       => 'Stripe Gateway',
+							'icon'        => 'ur-icon ur-icon-credit-card',
+							'field_class' => 'UR_Form_Field_Stripe_Gateway',
+							'plan'        => 'Professional Plan or Plus Plan',
+							'slug'        => array( 'payments', 'stripe' ),
+							'name'        => array( __( 'User Registration Payments', 'user-registration' ), __( 'User Registration Stripe', 'user-registration' ) ),
+						),
+					)
+				);
+			} else {
+				if ( ! is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) && is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+					$fields = array_merge(
+						$fields,
+						array(
+							array(
+								'id'          => 'user_registration_stripe_gateway',
+								'label'       => 'Stripe Gateway',
+								'icon'        => 'ur-icon ur-icon-credit-card',
+								'field_class' => 'UR_Form_Field_Stripe_Gateway',
+								'plan'        => 'Professional Plan or Plus Plan',
+								'slug'        => 'payments',
+								'name'        => __( 'User Registration Payments', 'user-registration' ),
+							),
+						)
+					);
+				} elseif ( is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) && ! is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+					$fields = array_merge(
+						$fields,
+						array(
+							array(
+								'id'          => 'user_registration_stripe_gateway',
+								'label'       => 'Stripe Gateway',
+								'icon'        => 'ur-icon ur-icon-credit-card',
+								'field_class' => 'UR_Form_Field_Stripe_Gateway',
+								'plan'        => 'Professional Plan or Plus Plan',
+								'slug'        => 'stripe',
+								'name'        => __( 'User Registration Stripe', 'user-registration' ),
+							),
+						)
+					);
+				}
+			}
+
 			foreach ( $fields as $field ) {
+				if ( 'user_registration_learndash' === $field['id'] ) {
+					if ( ! defined( 'LEARNDASH_VERSION' ) ) {
+						continue;
+					}
+				}
+
 				if ( ! class_exists( $field['field_class'] ) ) {
 					$this->render_upgradable_field( $field );
 				}
 			}
 		}
 
-		/**
-		 * Add Upgradable extra fields.
-		 */
+			/**
+			 * Add Upgradable extra fields.
+			 */
 		public function add_upgradable_extra_fields() {
 			$field_sections = array(
 				array(
@@ -297,14 +361,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'icon'  => 'ur-icon ur-icon-file-dollar',
 						),
 						array(
-							'id'    => 'user_registration_stripe_gateway',
-							'label' => 'Stripe Gateway',
-							'icon'  => 'ur-icon ur-icon-credit-card',
-						),
-						array(
 							'id'    => 'user_registration_multiple_choice',
 							'label' => 'Multiple Choice',
 							'icon'  => 'ur-icon ur-icon-multichoice',
+						),
+						array(
+							'id'    => 'user_registration_total',
+							'label' => 'Total',
+							'icon'  => 'ur-icon ur-icon-total',
+						),
+						array(
+							'id'    => 'user_registration_quantity',
+							'label' => 'Quantity',
+							'icon'  => 'ur-icon ur-icon-quantity',
 						),
 					),
 				),
@@ -335,39 +404,51 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 		}
 
-		/**
-		 * Render multiple upgradable fields.
-		 *
-		 * @param array $fields Field.
-		 */
+			/**
+			 * Render multiple upgradable fields.
+			 *
+			 * @param array $fields Field.
+			 */
 		public function render_upgradable_fields( $fields ) {
 			foreach ( $fields as $field ) {
 				$this->render_upgradable_field( $field );
 			}
 		}
 
-		/**
-		 * Render an upgradable field.
-		 *
-		 * @param array $args Args Data.
-		 */
+			/**
+			 * Render an upgradable field.
+			 *
+			 * @param array $args Args Data.
+			 */
 		public function render_upgradable_field( $args ) {
 			$id    = $args['id'];
 			$icon  = $args['icon'];
 			$label = $args['label'];
 			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
-			$slug  = isset( $args['slug'] ) ? $args['slug'] : '';
-			$name  = isset( $args['name'] ) ? $args['name'] : '';
-			$slug  = 'user-registration-' . $slug;
+			$name  = isset( $args['name'] ) ? ( is_array( $args['name'] ) ? implode( ', and ', $args['name'] ) : $args['name'] ) : '';
+
+			if ( isset( $args['slug'] ) ) {
+				if ( is_array( $args['slug'] ) ) {
+					$new_args_slug = array();
+
+					foreach ( $args['slug'] as $args_slug ) {
+						array_push( $new_args_slug, 'user-registration-' . $args_slug );
+					}
+
+					$slug = implode( ' ', $new_args_slug );
+				} else {
+					$slug = 'user-registration-' . $args['slug'];
+				}
+			}
 			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-name="' . esc_attr( $name ) . '" data-plan="' . esc_attr( $plan ) . '" data-slug ="' . esc_attr( $slug ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
 		}
 
-		/**
-		 * Returns a base64 URL for the SVG for use in the menu.
-		 *
-		 * @param  bool $base64 Whether or not to return base64-encoded SVG.
-		 * @return string
-		 */
+			/**
+			 * Returns a base64 URL for the SVG for use in the menu.
+			 *
+			 * @param  bool $base64 Whether or not to return base64-encoded SVG.
+			 * @return string
+			 */
 		private function get_icon_svg( $base64 = true ) {
 			$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#82878c" d="M27.58 4a27.9 27.9 0 0 0-5.17 4 27 27 0 0 0-4.09 5.08 33.06 33.06 0 0 1 2 4.65A23.78 23.78 0 0 1 24 12.15V18a8 8 0 0 1-5.89 7.72l-.21.05a27 27 0 0 0-1.9-8.16A27.9 27.9 0 0 0 9.59 8a27.9 27.9 0 0 0-5.17-4L4 3.77V18a12 12 0 0 0 9.93 11.82h.14a11.72 11.72 0 0 0 3.86 0h.14A12 12 0 0 0 28 18V3.77zM8 18v-5.85a23.86 23.86 0 0 1 5.89 13.57A8 8 0 0 1 8 18zm8-16a3 3 0 1 0 3 3 3 3 0 0 0-3-3z"/></svg>';
 
@@ -378,32 +459,32 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			return $svg;
 		}
 
-		/**
-		 * Add menu items.
-		 */
+			/**
+			 * Add menu items.
+			 */
 		public function admin_menu() {
 
-				$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
-				add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
-				add_submenu_page(
-					'user-registration',
-					__( 'All Forms', 'user-registration' ),
-					__( 'All Forms', 'user-registration' ),
-					'manage_user_registration',
-					'user-registration',
-					array(
-						$this,
-						'registration_page',
-					)
-				);
+			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
+			add_submenu_page(
+				'user-registration',
+				__( 'All Forms', 'user-registration' ),
+				__( 'All Forms', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration',
+				array(
+					$this,
+					'registration_page',
+				)
+			);
 		}
 
-		/**
-		 * Loads screen options into memory.
-		 */
+			/**
+			 * Loads screen options into memory.
+			 */
 		public function registration_page_init() {
-				global $registration_table_list;
+			global $registration_table_list;
 
 			if ( ! isset( $_GET['add-new-registration'] ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
 				$registration_table_list = new UR_Admin_Registrations_Table_List();
@@ -421,9 +502,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 		}
 
-		/**
-		 * Add settings menu item.
-		 */
+			/**
+			 * Add settings menu item.
+			 */
 		public function settings_menu() {
 			add_submenu_page(
 				'user-registration',
@@ -438,9 +519,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * Add status menu item.
-		 */
+			/**
+			 * Add status menu item.
+			 */
 		public function status_menu() {
 			add_submenu_page(
 				'user-registration',
@@ -455,9 +536,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * Add new registration menu items.
-		 */
+			/**
+			 * Add new registration menu items.
+			 */
 		public function add_registration_menu() {
 			add_submenu_page(
 				'user-registration',
@@ -472,9 +553,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * Upgrade to pro menu items.
-		 */
+			/**
+			 * Upgrade to pro menu items.
+			 */
 		public function user_registration_upgrade_to_pro_menu() {
 			add_submenu_page(
 				'user-registration',
@@ -488,9 +569,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * Addons menu item.
-		 */
+			/**
+			 * Addons menu item.
+			 */
 		public function addons_menu() {
 			add_submenu_page(
 				'user-registration',
@@ -505,14 +586,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-
-		/**
-		 * Validate screen options on update.
-		 *
-		 * @param mixed $status Status.
-		 * @param mixed $option Option.
-		 * @param mixed $value Value.
-		 */
+			/**
+			 * Validate screen options on update.
+			 *
+			 * @param mixed $status Status.
+			 * @param mixed $option Option.
+			 * @param mixed $value Value.
+			 */
 		public function set_screen_option( $status, $option, $value ) {
 			if ( in_array( $option, array( 'user_registration_per_page' ), true ) ) {
 				return $value;
@@ -521,17 +601,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			return $status;
 		}
 
-		/**
-		 * Init the settings page.
-		 */
+			/**
+			 * Init the settings page.
+			 */
 		public function registration_page() {
 			global $registration_table_list;
 			$registration_table_list->display_page();
 		}
 
-		/**
-		 * Init the add registration page.
-		 */
+			/**
+			 * Init the add registration page.
+			 */
 		public function add_registration_page() {
 			$form_id   = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0; //phpcs:ignore WordPress.Security.NonceVerification
 			$form_data = ( $form_id ) ? UR()->form->get_form( $form_id ) : array();
@@ -593,33 +673,32 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			include_once dirname( __FILE__ ) . '/views/html-admin-page-forms.php';
 		}
 
-
-		/**
-		 * Init the settings page.
-		 */
+			/**
+			 * Init the settings page.
+			 */
 		public function settings_page() {
 			UR_Admin_Settings::output();
 		}
 
-		/**
-		 * Init the status page.
-		 */
+			/**
+			 * Init the status page.
+			 */
 		public function status_page() {
 			UR_Admin_Status::output();
 		}
 
-		/**
-		 * Init the addons page.
-		 */
+			/**
+			 * Init the addons page.
+			 */
 		public function addons_page() {
 			UR_Admin_Addons::output();
 		}
 
-		/**
-		 * Add custom nav meta box.
-		 *
-		 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
-		 */
+			/**
+			 * Add custom nav meta box.
+			 *
+			 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
+			 */
 		public function add_nav_menu_meta_boxes() {
 			add_meta_box(
 				'user_registration_endpoints_nav_link',
@@ -634,9 +713,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 		}
 
-		/**
-		 * Output menu links.
-		 */
+			/**
+			 * Output menu links.
+			 */
 		public function nav_menu_links() {
 			// Get items from account menu.
 			$endpoints = ur_get_account_menu_items();
@@ -655,10 +734,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			<div id="posttype-user-registration-endpoints" class="posttypediv">
 				<div id="tabs-panel-user-registration-endpoints" class="tabs-panel tabs-panel-active">
 					<ul id="user-registration-endpoints-checklist" class="categorychecklist form-no-clear">
-						<?php
-						$i = - 1;
-						foreach ( $endpoints as $key => $value ) :
-							?>
+			<?php
+			$i = - 1;
+			foreach ( $endpoints as $key => $value ) :
+				?>
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
@@ -676,10 +755,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 								<input type="hidden" class="menu-item-classes"
 									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
 							</li>
-							<?php
-							$i --;
+						<?php
+						$i --;
 						endforeach;
-						?>
+			?>
 					</ul>
 				</div>
 				<p class="button-controls">
@@ -741,14 +820,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			?>
 			<div class="ur-builder-header">
 				<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
-				<?php
-				$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
-				?>
+			<?php
+			$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
+			?>
 					<input name="ur-form-name" id="ur-form-name" type="text" class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
 					<span id="ur-form-name-edit-button" class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
-					<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
+				<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
 				</div>
 			</div>
 				<?php

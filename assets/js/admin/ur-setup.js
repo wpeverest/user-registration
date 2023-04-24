@@ -394,6 +394,7 @@ jQuery(function ($) {
 
 			$(document).on("click", ".activate-now", function (e) {
 				e.preventDefault();
+				var $this = $(this);
 
 				if (
 					!$(this).closest(
@@ -403,6 +404,18 @@ jQuery(function ($) {
 					return;
 				}
 
+				if ($(this).hasClass("form")) {
+					$this.append('<div class="ur-spinner is-active"></div>');
+
+					$.ajax({
+						type: "POST",
+						url: $(this).closest("form").attr("action"),
+						data: $(this).closest("form").serialize(), // serializes the form's elements.
+						success: function () {
+							$this.find(".ur-spinner").remove();
+						},
+					});
+				}
 				var url = $(this).attr("href");
 				Swal.fire({
 					customClass:
@@ -419,14 +432,27 @@ jQuery(function ($) {
 					cancelButtonText: ur_setup_params.reload_text,
 					cancelButtonColor: "#DD6B55",
 					preConfirm: function () {
-						window.location.replace(url);
+						if (!$this.hasClass("form")) {
+							window.location.replace(url);
+						}
 					},
 				}).then(function (result) {
 					if (result.isConfirmed) {
 						$(".ur_save_form_action_button").trigger("click");
-						location.reload();
+
+						if (
+							url.indexOf("mailchimp") < 1 ||
+							url.indexOf("file-upload") < 1
+						) {
+							location.reload();
+						}
 					} else {
-						location.reload();
+						if (
+							url.indexOf("mailchimp") < 1 ||
+							url.indexOf("file-upload") < 1
+						) {
+							location.reload();
+						}
 					}
 				});
 			});
@@ -506,15 +532,32 @@ jQuery(function ($) {
 				.closest("button")
 				.prop("disabled", true);
 
-			// Add it to the queue.
-			wp.updates.queue.push({
-				action: "user_registration_install_extension",
-				data: {
-					page: pagenow,
-					name: $(node).data("name"),
-					slug: $(node).data("slug"),
-				},
-			});
+			if ($(node).data("name").indexOf(", and")) {
+				var addon_name = $(node).data("name").split(", and"),
+					addon_slug = $(node).data("slug").split(" ");
+
+				$.each(addon_name, function (key, name) {
+					// Add it to the queue.
+					wp.updates.queue.push({
+						action: "user_registration_install_extension",
+						data: {
+							page: pagenow,
+							name: name,
+							slug: addon_slug[key],
+						},
+					});
+				});
+			} else {
+				// Add it to the queue.
+				wp.updates.queue.push({
+					action: "user_registration_install_extension",
+					data: {
+						page: pagenow,
+						name: $(node).data("name"),
+						slug: $(node).data("slug"),
+					},
+				});
+			}
 
 			// Display bulk notification for install of plugin.
 			$(document).on(

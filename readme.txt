@@ -279,9 +279,11 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
-= 2.3.4    - 25/04/2023
+= 2.3.4    - 26/04/2023
 * Feature  - Smart tag selector in email content.
+* Feature  - Smart tag selector in default value of fields.
 * Enhance  - Lock field if integration not setup.
+* Tweak    - Add hook to handle required fields.
 * Tweak    - Add filter hook before inserting user.
 * Tweak    - Add filter hook to remember autologin users.
 * Tweak    - Enable description message changed for reset password email.
