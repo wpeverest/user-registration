@@ -432,7 +432,7 @@ jQuery(function ($) {
 					denyButtonText: ur_setup_params.reload_text,
 					denyButtonColor: "#DD6B55",
 					didOpen: function () {
-						const confirmButton = Swal.getConfirmButton(),
+						var confirmButton = Swal.getConfirmButton(),
 							confirmButtonText = confirmButton.textContent,
 							actions = Swal.getActions();
 
@@ -449,7 +449,7 @@ jQuery(function ($) {
 							xhr.send();
 						}
 
-						setTimeout(() => {
+						setTimeout(function () {
 							Swal.update({
 								title:
 									'<span class="user-registration-swal2-modal__title">' +

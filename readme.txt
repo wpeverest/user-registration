@@ -289,6 +289,7 @@ Yes, the plugin has a shortcode for the login form.
 * Tweak    - Enable description message changed for reset password email.
 * Tweak    - Form field upgrade to premium notices according to license plan.
 * Fix      - Validation error when radio field empty.
+* Fix      - Polylang My Account Page Translation issue.
 * Fix      - Deprecated get_sanitize-value causing issues.
 * Fix      - Date field error when using dd/mm/yyyy format.
 * Fix      - Profile picture not recognized by media library.

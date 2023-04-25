@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-24T06:16:38+00:00\n"
+"POT-Creation-Date: 2023-04-25T06:40:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -206,7 +206,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:285
 #: includes/admin/class-ur-admin-menus.php:545
 #: includes/admin/class-ur-admin-menus.php:546
-#: includes/admin/class-ur-admin-menus.php:939
+#: includes/admin/class-ur-admin-menus.php:940
 #: includes/admin/class-ur-admin-registrations-table-list.php:162
 msgid "Add New"
 msgstr ""
@@ -663,93 +663,97 @@ msgid "Activating"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:647
-msgid "Install & Activate"
+msgid "Please wait until the plugin is being activated"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:648
-msgid "Installing"
+msgid "Install & Activate"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:649
+msgid "Installing"
+msgstr ""
+
+#: includes/admin/class-ur-admin-menus.php:650
 msgid "OK"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:651
+#: includes/admin/class-ur-admin-menus.php:652
 #: includes/admin/views/html-admin-page-addons.php:60
 msgid "Upgrade Plan"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:652
+#: includes/admin/class-ur-admin-menus.php:653
 msgid "This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:653
+#: includes/admin/class-ur-admin-menus.php:654
 msgid "is a Premium Template"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:654
+#: includes/admin/class-ur-admin-menus.php:655
 msgid "Continue"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:655
+#: includes/admin/class-ur-admin-menus.php:656
 msgid "Untitled Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:656
+#: includes/admin/class-ur-admin-menus.php:657
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:657
+#: includes/admin/class-ur-admin-menus.php:658
 msgid "Download Failed. Please download and activate addon manually."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:658
+#: includes/admin/class-ur-admin-menus.php:659
 msgid "Installation Successful."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:659
+#: includes/admin/class-ur-admin-menus.php:660
 msgid "Addons have been installed and Activated. You have to reload the page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:660
+#: includes/admin/class-ur-admin-menus.php:661
 msgid "Save Changes and Reload"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:661
+#: includes/admin/class-ur-admin-menus.php:662
 msgid "Save changes before activating the plugin"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:662
+#: includes/admin/class-ur-admin-menus.php:663
 msgid "Just Reload"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:705
+#: includes/admin/class-ur-admin-menus.php:706
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:729
+#: includes/admin/class-ur-admin-menus.php:730
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:767
+#: includes/admin/class-ur-admin-menus.php:768
 msgid "Select all"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:771
+#: includes/admin/class-ur-admin-menus.php:772
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:824
+#: includes/admin/class-ur-admin-menus.php:825
 #: includes/admin/views/html-admin-page-forms.php:121
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:928
+#: includes/admin/class-ur-admin-menus.php:929
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:954
+#: includes/admin/class-ur-admin-menus.php:955
 msgid "Empty form data"
 msgstr ""
 

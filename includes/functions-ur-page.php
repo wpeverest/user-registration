@@ -138,8 +138,22 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 	 * @return string
 	 */
 	function ur_get_my_account_url() {
-		$page_id   = absint( get_option( 'user_registration_myaccount_page_id', 'unset' ) );
-		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
+		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+
+
+
+		if ( $my_account_page_id > 0 && function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+			if ( ! empty( $current_language ) ) {
+				$translations = pll_get_post_translations( $my_account_page_id );
+				$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
+			}
+		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+			$page = ur_get_wpml_page_language( $my_account_page_id );
+		}
+
+
+		$permalink = 0 < $page ? get_permalink( $page ) :  ( 0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '') ;
 
 		if ( $permalink ) {
 			return $permalink;
