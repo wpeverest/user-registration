@@ -424,17 +424,43 @@ jQuery(function ($) {
 					width: "auto",
 					title:
 						'<span class="user-registration-swal2-modal__title">' +
-						ur_setup_params.save_changes_warning +
+						ur_setup_params.i18n_activating_text +
 						"</span>",
 					allowOutsideClick: false,
 					confirmButtonText: ur_setup_params.save_changes_text,
-					showCancelButton: true,
-					cancelButtonText: ur_setup_params.reload_text,
-					cancelButtonColor: "#DD6B55",
-					preConfirm: function () {
+					showDenyButton: true,
+					denyButtonText: ur_setup_params.reload_text,
+					denyButtonColor: "#DD6B55",
+					didOpen: function () {
+						const confirmButton = Swal.getConfirmButton(),
+							confirmButtonText = confirmButton.textContent,
+							actions = Swal.getActions();
+
+						$(actions).find(".swal2-deny").hide();
+						confirmButton.disabled = true;
+						confirmButton.innerHTML =
+							ur_setup_params.i18n_activating +
+							'<div class="ur-spinner is-active"></div>';
+
 						if (!$this.hasClass("form")) {
-							window.location.replace(url);
+							// Send AJAX request to redirect URL
+							var xhr = new XMLHttpRequest();
+							xhr.open("POST", url, true);
+							xhr.send();
 						}
+
+						setTimeout(() => {
+							Swal.update({
+								title:
+									'<span class="user-registration-swal2-modal__title">' +
+									ur_setup_params.save_changes_warning +
+									"</span>",
+							});
+							confirmButton.textContent = confirmButtonText;
+							confirmButton.disabled = false;
+							$(actions).find(".swal2-deny").show();
+							clearTimeout();
+						}, 3000);
 					},
 				}).then(function (result) {
 					if (result.isConfirmed) {
@@ -446,7 +472,7 @@ jQuery(function ($) {
 						) {
 							location.reload();
 						}
-					} else {
+					} else if (result.isDenied) {
 						if (
 							url.indexOf("mailchimp") < 1 ||
 							url.indexOf("file-upload") < 1

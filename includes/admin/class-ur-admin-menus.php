@@ -644,6 +644,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
 					'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
 					'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
+					'i18n_activating_text'         => esc_html__( 'Please wait until the plugin is being activated', 'user-registration' ),
 					'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
 					'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
 					'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
