@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.1.1
-Stable tag: 2.3.3.1
+Tested up to: 6.2
+Stable tag: 2.3.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,23 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.3.4    - 26/04/2023
+* Feature  - Smart tag selector in email content.
+* Feature  - Smart tag selector in default value of fields.
+* Tweak    - Add hook to handle required fields.
+* Tweak    - Add filter hook before inserting user.
+* Tweak    - Add filter hook to remember autologin users.
+* Tweak    - Enable description message changed for reset password email.
+* Tweak    - Form field upgrade to premium notices according to license plan.
+* Fix      - Validation error when radio field empty.
+* Fix      - Polylang My Account Page Translation issue.
+* Fix      - Deprecated get_sanitize-value causing issues.
+* Fix      - Date field error when using dd/mm/yyyy format.
+* Fix      - Profile picture not recognized by media library.
+* Fix      - Advance Settings custom class not working on edit-profile.
+* Fix 	   - Token mismatch error and wrong password message appearing at same time.
+* Fix      - Incorrect default date displayed in date field while editing user in admin side.
 
 = 2.3.3.1    - 17/03/2023
 * Fix        - Email confirmation email not sent to user.

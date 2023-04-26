@@ -2,7 +2,13 @@
 	var $document = $(document);
 	(__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf);
 
-	// $(".user-registration__wrap.ur-form-container").remove();
+	if (
+		$(".user-registration").find(".user-registration-form-template-wrapper")
+			.length
+	) {
+		$(".user-registration__wrap.ur-form-container").remove();
+	}
+
 	/**
 	 * Sends an Ajax request to the server to install a extension.
 	 *
@@ -388,6 +394,7 @@ jQuery(function ($) {
 
 			$(document).on("click", ".activate-now", function (e) {
 				e.preventDefault();
+				var $this = $(this);
 
 				if (
 					!$(this).closest(
@@ -397,6 +404,18 @@ jQuery(function ($) {
 					return;
 				}
 
+				if ($(this).hasClass("form")) {
+					$this.append('<div class="ur-spinner is-active"></div>');
+
+					$.ajax({
+						type: "POST",
+						url: $(this).closest("form").attr("action"),
+						data: $(this).closest("form").serialize(), // serializes the form's elements.
+						success: function () {
+							$this.find(".ur-spinner").remove();
+						},
+					});
+				}
 				var url = $(this).attr("href");
 				Swal.fire({
 					customClass:
@@ -405,22 +424,61 @@ jQuery(function ($) {
 					width: "auto",
 					title:
 						'<span class="user-registration-swal2-modal__title">' +
-						ur_setup_params.save_changes_warning +
+						ur_setup_params.i18n_activating_text +
 						"</span>",
 					allowOutsideClick: false,
 					confirmButtonText: ur_setup_params.save_changes_text,
-					showCancelButton: true,
-					cancelButtonText: ur_setup_params.reload_text,
-					cancelButtonColor: "#DD6B55",
-					preConfirm: function () {
-						window.location.replace(url);
+					showDenyButton: true,
+					denyButtonText: ur_setup_params.reload_text,
+					denyButtonColor: "#DD6B55",
+					didOpen: function () {
+						var confirmButton = Swal.getConfirmButton(),
+							confirmButtonText = confirmButton.textContent,
+							actions = Swal.getActions();
+
+						$(actions).find(".swal2-deny").hide();
+						confirmButton.disabled = true;
+						confirmButton.innerHTML =
+							ur_setup_params.i18n_activating +
+							'<div class="ur-spinner is-active"></div>';
+
+						if (!$this.hasClass("form")) {
+							// Send AJAX request to redirect URL
+							var xhr = new XMLHttpRequest();
+							xhr.open("POST", url, true);
+							xhr.send();
+						}
+
+						setTimeout(function () {
+							Swal.update({
+								title:
+									'<span class="user-registration-swal2-modal__title">' +
+									ur_setup_params.save_changes_warning +
+									"</span>",
+							});
+							confirmButton.textContent = confirmButtonText;
+							confirmButton.disabled = false;
+							$(actions).find(".swal2-deny").show();
+							clearTimeout();
+						}, 3000);
 					},
 				}).then(function (result) {
 					if (result.isConfirmed) {
 						$(".ur_save_form_action_button").trigger("click");
-						location.reload();
-					} else {
-						location.reload();
+
+						if (
+							url.indexOf("mailchimp") < 1 ||
+							url.indexOf("file-upload") < 1
+						) {
+							location.reload();
+						}
+					} else if (result.isDenied) {
+						if (
+							url.indexOf("mailchimp") < 1 ||
+							url.indexOf("file-upload") < 1
+						) {
+							location.reload();
+						}
 					}
 				});
 			});
@@ -500,15 +558,32 @@ jQuery(function ($) {
 				.closest("button")
 				.prop("disabled", true);
 
-			// Add it to the queue.
-			wp.updates.queue.push({
-				action: "user_registration_install_extension",
-				data: {
-					page: pagenow,
-					name: $(node).data("name"),
-					slug: $(node).data("slug"),
-				},
-			});
+			if ($(node).data("name").indexOf(", and")) {
+				var addon_name = $(node).data("name").split(", and"),
+					addon_slug = $(node).data("slug").split(" ");
+
+				$.each(addon_name, function (key, name) {
+					// Add it to the queue.
+					wp.updates.queue.push({
+						action: "user_registration_install_extension",
+						data: {
+							page: pagenow,
+							name: name,
+							slug: addon_slug[key],
+						},
+					});
+				});
+			} else {
+				// Add it to the queue.
+				wp.updates.queue.push({
+					action: "user_registration_install_extension",
+					data: {
+						page: pagenow,
+						name: $(node).data("name"),
+						slug: $(node).data("slug"),
+					},
+				});
+			}
 
 			// Display bulk notification for install of plugin.
 			$(document).on(
@@ -529,7 +604,7 @@ jQuery(function ($) {
 						if (0 === wp.updates.queue.length) {
 							Swal.fire({
 								customClass:
-									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-upgradable-field",
+									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
 								icon: "success",
 								width: "auto",
 								title:

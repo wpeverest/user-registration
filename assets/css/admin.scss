@@ -15,8 +15,8 @@
 
  // Components
  @import "components/badge", "components/button", "components/card",
- "components/list-group", "components/modal", "components/nav",
- "components/scroll-ui";
+	 "components/list-group", "components/modal", "components/nav",
+	 "components/scroll-ui";
 
  @import "border";
  @import "spacing";
@@ -32,15 +32,14 @@
  @import "animation";
 
  /**
-  * Styling begins
-  */
+   * Styling begins
+   */
  .blockUI.blockOverlay {
 	 @include loader();
  }
 
  .toplevel_page_user-registration,
  .user-registration_page_user-registration-frontend-list {
-
 	 // Design customize for shortcode in list table
 	 .shortcode {
 		 .widefat {
@@ -71,8 +70,8 @@
  }
 
  /**
-	* Toggle class.
-	*/
+	 * Toggle class.
+	 */
  .userregistration-forms-hidden {
 	 display: block;
  }
@@ -83,7 +82,6 @@
 
  .user-registration {
 	 &__wrap {
-
 		 *,
 		 ::before,
 		 ::after {
@@ -155,10 +153,10 @@
 			 display: flex;
 			 flex: 2;
 			 column-gap: 8px;
-			 color: #3498DB;
+			 color: #3498db;
 
 			 span {
-				 border: 1px solid #3498DB;
+				 border: 1px solid #3498db;
 				 background-color: #3498db13;
 				 padding: 5px 15px;
 				 border-radius: 2px;
@@ -179,10 +177,9 @@
  }
 
  /**
-  * Addons page
-  **/
+   * Addons page
+   **/
  .ur_addons_wrap {
-
 	 p.refresh {
 		 margin: 0 0 2em;
 	 }
@@ -218,14 +215,13 @@
 			 }
 		 }
 
-
 		 .plugin-card-right {
 			 display: flex;
 			 flex-direction: column;
 			 align-items: flex-start;
 			 padding: 20px;
-			 background-color: #FCFCFF;
-			 border: 1px solid #B7C4FF;
+			 background-color: #fcfcff;
+			 border: 1px solid #b7c4ff;
 			 min-height: 130px;
 
 			 .plugin-desc {
@@ -246,7 +242,7 @@
 
 					 .install-now:hover {
 						 border-radius: 2px;
-						 background-color: #475BB2;
+						 background-color: #475bb2;
 						 color: #fff;
 					 }
 
@@ -283,7 +279,6 @@
 	 @media screen and (max-width: 782px) {
 		 .plugin-card {
 			 .plugin-card-bottom {
-
 				 .action-buttons {
 					 .button.updating-message {
 						 &::before,
@@ -317,8 +312,8 @@
  }
 
  /**
-  * Form Builder Styles
-  **/
+   * Form Builder Styles
+   **/
  .user-registration_page_add-new-registration {
 	 #wpfooter {
 		 display: none; //Hide WP footer on form builder page
@@ -457,8 +452,8 @@
  }
 
  /**
- * Backbone modal dialog
- */
+  * Backbone modal dialog
+  */
  .ur-backbone-modal {
 	 * {
 		 box-sizing: border-box;
@@ -755,9 +750,9 @@
 							 padding: 8px 16px;
 
 							 &.selected {
-								 border-color: #475BB2;
+								 border-color: #475bb2;
 								 background-color: #475bb230;
-								 color: #475BB2;
+								 color: #475bb2;
 								 font-weight: 600;
 							 }
 
@@ -809,7 +804,6 @@
 		 }
 
 		 input {
-
 			 &[type="radio"],
 			 &[type="checkbox"] {
 				 opacity: 1;
@@ -937,7 +931,7 @@
 
 						 &:focus {
 							 box-shadow: 0 0 0 0px transparent,
-							 0 0 0px 0px transparent;
+								 0 0 0px 0px transparent;
 						 }
 
 						 &.active {
@@ -1332,7 +1326,8 @@
 						 }
 
 						 &.ui-sortable-helper {
-							 box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
+							 box-shadow: 0 0 10px 5px
+								 transparentize($gray_base, 0.9);
 						 }
 
 						 &.ui-sortable-placeholder {
@@ -1720,8 +1715,8 @@
  }
 
  /**
-  * Tooltips
-  */
+   * Tooltips
+   */
 
  .tips {
 	 cursor: help;
@@ -1767,7 +1762,7 @@
 		 }
 
 		 .tooltipster-content a {
-			 color: #9EF01A !important;
+			 color: #9ef01a !important;
 		 }
 	 }
 
@@ -1782,8 +1777,8 @@
  }
 
  /**
-  * Help Tip
-  */
+   * Help Tip
+   */
  .user-registration-help-tip,
  .ur-portal-tooltip {
 	 color: $color_gray_two;
@@ -1826,8 +1821,8 @@
  }
 
  /**
-  * Fullscreen Mode
-  **/
+   * Fullscreen Mode
+   **/
  body {
 	 &.ur-full-screen-mode {
 		 margin-top: -32px;
@@ -1883,8 +1878,8 @@
 	 }
 
 	 /**
-	  * User Registration Builder Loading
-	  **/
+	   * User Registration Builder Loading
+	   **/
 	 .ur-circle-loading {
 		 position: relative;
 		 width: 100px !important;
@@ -1988,12 +1983,14 @@
 			 &.entered {
 				 display: block;
 				 height: 50px;
-				 animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
+				 animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1
+					 normal both open-message;
 			 }
 
 			 &.exiting {
 				 display: block;
-				 animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
+				 animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both
+					 close-message;
 			 }
 
 			 &:first-child {
@@ -2135,11 +2132,11 @@
 			 width: 40px;
 
 			 &:checked + .slider {
-				 background-color: #475BB2;
+				 background-color: #475bb2;
 			 }
 
 			 &:focus + .slider {
-				 box-shadow: 0 0 1px #2196F3;
+				 box-shadow: 0 0 1px #2196f3;
 			 }
 
 			 &:checked + .slider::before {
@@ -2151,8 +2148,8 @@
 			 position: absolute;
 			 cursor: pointer;
 			 inset: 0;
-			 background-color: #DFE1EA;
-			 transition: .4s;
+			 background-color: #dfe1ea;
+			 transition: 0.4s;
 
 			 &.round {
 				 border-radius: 30px;
@@ -2170,7 +2167,7 @@
 				 left: 4px;
 				 bottom: 3px;
 				 background-color: white;
-				 transition: .4s;
+				 transition: 0.4s;
 				 border-radius: 100%;
 			 }
 		 }
@@ -2208,7 +2205,8 @@
 		 }
 	 }
 
-	 .page-title-action, .page-title-action:active {
+	 .page-title-action,
+	 .page-title-action:active {
 		 top: 0;
 		 margin-left: 16px;
 	 }
@@ -2338,7 +2336,6 @@
 					 z-index: 1;
 
 					 .user-registration-btn {
-
 						 &:last-child {
 							 margin-left: 8px;
 						 }
@@ -2373,7 +2370,7 @@
 
 			 &:hover {
 				 .user-registration-screenshot::after {
-					 content: '';
+					 content: "";
 					 display: block;
 					 background: transparentize($gray-base, 0.5);
 					 position: absolute;
@@ -2442,7 +2439,7 @@
 					 .ur-button::after {
 						 position: absolute;
 						 top: 0;
-						 content: '';
+						 content: "";
 					 }
 
 					 .ur-button::before {
@@ -2505,20 +2502,17 @@
  .user-registration-form-template-wrapper {
 	 .user-registration-form-template {
 		 &[data-filter-template="free"] {
-
 			 .user-registration-template-wrap[data-plan="premium"] {
 				 display: none;
 			 }
 		 }
 		 &[data-filter-template="premium"] {
-
 			 .user-registration-template-wrap[data-plan="free"] {
 				 display: none;
 			 }
 		 }
 	 }
  }
-
 
  .user-registration {
 	 .swal2-container {
@@ -2531,26 +2525,29 @@
 			 width: 400px;
 			 border-top: 6px solid #ff4f55;
 
-			 &.user-registration-upgradable-field {
-				border-top: 6px solid #72aee6;
+			 &.user-registration-locked-field {
+				 border-top: 6px solid #72aee6;
 
-				&.swal2-icon-success {
-					border-top: 6px solid #a5dc86;
-				}
+				 &.swal2-icon-success {
+					 border-top: 6px solid #a5dc86;
+				 }
 
+				 &.swal2-icon-warning {
+					 border-top: 6px solid #facea8;
+				 }
 			 }
 
 			 border-radius: 10px;
 		 }
 
 		 .swal2-title {
-			line-height: 30px;
+			 line-height: 30px;
 		 }
 
 		 .swal2-content {
 			 .action-buttons {
 				 a {
-					 background-color: #475BB2;
+					 background-color: #475bb2;
 					 border: none;
 					 text-decoration: none;
 					 color: white;
@@ -2621,11 +2618,12 @@
 								 opacity: 1;
 								 width: 34%;
 								 height: 50%;
-								 content: '';
+								 content: "";
 								 transform-origin: left top;
 								 border-top: 2px solid $color_gray-lighten;
 								 border-right: 2px solid $color_gray-lighten;
-								 transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+								 transform: scaleX(-1) rotate(135deg)
+									 translate(-58%, -40%);
 							 }
 						 }
 
@@ -2667,5 +2665,70 @@
 			 text-decoration: none;
 		 }
 	 }
+ }
 
+ a.button.ur-smart-tags-list-button {
+	 top: 29px;
+	 right: 0;
+	 width: 30px;
+	 min-height: 30px;
+	 color: #494d50;
+	 position: absolute;
+	 background: #fff;
+	 border: 1px solid #cdd0d8;
+	 border-radius: 4px;
+	 box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1);
+ }
+
+ .ur-advance-setting.ur-advance-default_value {
+	 position: relative;
+	 margin-bottom: 15px;
+
+	 & input.ur_advance_setting.ur-settings-default-value {
+		 width: calc(100% - 40px) !important;
+		 min-height: 27px;
+	 }
+
+	 & a.button.ur-smart-tags-list-button {
+		 top: 29px;
+		 right: 0;
+		 width: 30px;
+		 min-height: 30px;
+		 color: #494d50;
+		 position: absolute;
+		 background: #fff;
+		 border: 1px solid #cdd0d8;
+		 border-radius: 4px;
+		 box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1);
+	 }
+
+	 & .ur-smart-tags-list-button .dashicons-editor-code::before {
+		 left: 0;
+		 right: 0;
+		 margin: 0 auto;
+		 line-height: 28px;
+		 position: absolute;
+	 }
+
+	 & .ur-smart-tags-list {
+		 right: 0;
+		 z-index: 1;
+		 max-height: 123px;
+		 margin-top: -1px;
+		 width: 230px;
+		 overflow-y: auto;
+		 position: absolute;
+		 background: #fff;
+		 border-radius: 4px;
+		 border: 1px solid #cdd0d8;
+		 box-shadow: 1px 3px 20px 0 rgba(35, 40, 45, 0.2);
+		 & .ur-smart-tag-title {
+			 font-weight: 600;
+			 background: #f6f7f9;
+			 border-bottom: 1px solid #cdd0d8;
+		 }
+		 & li {
+			 padding: 7px 10px;
+		 }
+	 }
  }

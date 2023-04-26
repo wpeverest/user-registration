@@ -162,7 +162,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				if ( $this->is_field_required( $single_form_field ) ) {
+				if ( $this->is_field_required( $single_form_field, $form_data ) ) {
 					array_unshift( $validations, 'required' );
 				}
 
@@ -548,7 +548,9 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [object] $field Field object.
 	 * @return boolean
 	 */
-	public function is_field_required( $field ) {
+	public function is_field_required( $field, $form_data = array() ) {
+
+		$is_required = false;
 
 		if ( ! empty( $field ) ) {
 			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : 'no';
@@ -556,11 +558,11 @@ class UR_Form_Validation extends UR_Validation {
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
 			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' === $required ) {
-				return true;
+				$is_required = true;
 			}
 		}
 
-		return false;
+		return apply_filters( 'user_registration_is_field_required', $is_required, $field, $form_data );
 	}
 
 
