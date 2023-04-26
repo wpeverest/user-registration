@@ -99,7 +99,13 @@ jQuery(function ($) {
 					var title =
 						icon +
 						'<span class="user-registration-swal2-modal__title" > ';
-					if (action_button.hasClass("activate-now")) {
+
+					if (action_button.hasClass("activate-license-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.license_activation_required_message;
+						title +=
+							user_registration_locked_form_fields_notice_params.license_activation_required_title;
+					} else if (action_button.hasClass("activate-now")) {
 						var message =
 							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
 								"%plugin%",

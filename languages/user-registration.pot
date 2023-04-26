@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-26T02:42:24+00:00\n"
+"POT-Creation-Date: 2023-04-26T06:40:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -36,7 +36,6 @@ msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:650
 #: src/components/App.js:61
-#: chunks/main.js:50346
 msgid "General Settings"
 msgstr ""
 
@@ -255,169 +254,177 @@ msgid "%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock thi
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:333
-msgid "Addon Activation Required"
+msgid "License Activation Required"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:334
-msgid "Please activate <strong>%plugin%</strong> addon to use this field."
+msgid "Please activate your <strong>User Registration License</strong> to use this field"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:335
-msgid "Addon Installation Required"
+msgid "Addon Activation Required"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:336
+msgid "Please activate <strong>%plugin%</strong> addon to use this field."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:337
+msgid "Addon Installation Required"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:338
 msgid "Please install <strong>%plugin%</strong> addon to use this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:406
+#: includes/admin/class-ur-admin-assets.php:408
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:406
+#: includes/admin/class-ur-admin-assets.php:408
 #: includes/admin/class-ur-admin-registrations-table-list.php:107
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:428
+#: includes/admin/class-ur-admin-assets.php:430
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:429
+#: includes/admin/class-ur-admin-assets.php:431
 #: includes/admin/class-ur-admin-form-modal.php:100
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:430
+#: includes/admin/class-ur-admin-assets.php:432
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:431
+#: includes/admin/class-ur-admin-assets.php:433
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:432
+#: includes/admin/class-ur-admin-assets.php:434
 msgctxt "user-registration admin"
 msgid "Payment"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:433
+#: includes/admin/class-ur-admin-assets.php:435
 msgctxt "user-registration admin"
 msgid "Stripe Gateway"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:434
+#: includes/admin/class-ur-admin-assets.php:436
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this row?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:435
+#: includes/admin/class-ur-admin-assets.php:437
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this field?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:436
+#: includes/admin/class-ur-admin-assets.php:438
 msgctxt "user registration admin"
 msgid "At least one row is required to create a registration form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:437
+#: includes/admin/class-ur-admin-assets.php:439
 msgctxt "user registration admin"
 msgid "Cannot delete row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:438
+#: includes/admin/class-ur-admin-assets.php:440
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:439
+#: includes/admin/class-ur-admin-assets.php:441
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:440
+#: includes/admin/class-ur-admin-assets.php:442
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:441
+#: includes/admin/class-ur-admin-assets.php:443
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:442
+#: includes/admin/class-ur-admin-assets.php:444
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:443
-msgid "Confirm Deletion"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:444
-msgctxt "user registration admin"
-msgid "At least one field needs to be selected."
-msgstr ""
-
 #: includes/admin/class-ur-admin-assets.php:445
-msgctxt "user registration admin"
-msgid "Empty form name."
+msgid "Confirm Deletion"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:446
 msgctxt "user registration admin"
-msgid "Previous save action on going."
+msgid "At least one field needs to be selected."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:447
 msgctxt "user registration admin"
-msgid "Duplicate field name."
+msgid "Empty form name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:448
 msgctxt "user registration admin"
-msgid "Empty field label."
+msgid "Previous save action on going."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:449
 msgctxt "user registration admin"
-msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
+msgid "Duplicate field name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:450
 msgctxt "user registration admin"
-msgid "Multiple field key "
+msgid "Empty field label."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:451
 msgctxt "user registration admin"
-msgid "field is required."
+msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:452
 msgctxt "user registration admin"
-msgid "Drag your first form item here."
+msgid "Multiple field key "
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:453
 msgctxt "user registration admin"
-msgid "Please select at least one country."
+msgid "field is required."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:454
 msgctxt "user registration admin"
-msgid "input size must be greater than zero."
+msgid "Drag your first form item here."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:455
 msgctxt "user registration admin"
-msgid "input of min value must be less than max value."
+msgid "Please select at least one country."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:456
+msgctxt "user registration admin"
+msgid "input size must be greater than zero."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:457
+msgctxt "user registration admin"
+msgid "input of min value must be less than max value."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:458
 msgctxt "user registration admin"
 msgid "input of max upload size must less than "
 msgstr ""
@@ -681,6 +688,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:652
 #: includes/admin/views/html-admin-page-addons.php:60
+#: includes/class-ur-ajax.php:1527
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -1055,7 +1063,6 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:360
 #: includes/RestApi/class-ur-rest-api.php:192
 #: src/components/App.js:60
-#: chunks/main.js:50345
 msgid "General"
 msgstr ""
 
@@ -1251,7 +1258,6 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:101
 #: src/components/screens/InstallPage.js:86
-#: chunks/main.js:38369
 msgid "My Account Page"
 msgstr ""
 
@@ -1929,6 +1935,7 @@ msgid "Your license has already been activated. Enjoy using <strong>User Registr
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:150
+#: includes/class-ur-ajax.php:1524
 msgid "Activate License"
 msgstr ""
 
@@ -3250,7 +3257,6 @@ msgstr ""
 #: includes/class-ur-post-types.php:49
 #: includes/RestApi/class-ur-rest-api.php:220
 #: src/components/App.js:71
-#: chunks/main.js:50356
 msgid "Registration"
 msgstr ""
 
@@ -5255,7 +5261,6 @@ msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:253
 #: src/components/App.js:82
-#: chunks/main.js:50367
 msgid "My Account"
 msgstr ""
 
@@ -5550,154 +5555,122 @@ msgstr ""
 
 #: src/components/App.js:49
 #: src/components/App.js:50
-#: chunks/main.js:50334
-#: chunks/main.js:50335
 msgid "Install Pages"
 msgstr ""
 
 #: src/components/App.js:51
-#: chunks/main.js:50336
 msgid "The following pages will be installed automatically."
 msgstr ""
 
 #: src/components/App.js:62
-#: chunks/main.js:50347
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:72
-#: chunks/main.js:50357
 msgid "Registration Settings"
 msgstr ""
 
 #: src/components/App.js:73
-#: chunks/main.js:50358
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:83
-#: chunks/main.js:50368
 msgid "My Account Settings"
 msgstr ""
 
 #: src/components/App.js:84
-#: chunks/main.js:50369
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:93
-#: chunks/main.js:50378
 msgid "Final Step"
 msgstr ""
 
 #: src/components/App.js:354
-#: chunks/main.js:50639
 msgid "Edit Default Form"
 msgstr ""
 
 #: src/components/App.js:366
-#: chunks/main.js:50651
 msgid "Back"
 msgstr ""
 
 #: src/components/App.js:384
-#: chunks/main.js:50669
 msgid "Create New Form"
 msgstr ""
 
 #: src/components/App.js:403
-#: chunks/main.js:50688
 msgid "Skip this step"
 msgstr ""
 
 #: src/components/App.js:416
-#: chunks/main.js:50701
 msgid "Install & Proceed"
 msgstr ""
 
 #: src/components/App.js:434
-#: chunks/main.js:50719
 msgid "Next"
 msgstr ""
 
 #: src/components/App.js:474
-#: chunks/main.js:50759
 msgid "Go to dashboard"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:85
-#: chunks/main.js:38368
 msgid "Registration Page"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:97
-#: chunks/main.js:38380
 msgid "Installing..."
 msgstr ""
 
 #: src/components/screens/InstallPage.js:114
 #: src/components/screens/InstallPage.js:150
-#: chunks/main.js:38397
-#: chunks/main.js:38433
 msgid "Installed"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:137
-#: chunks/main.js:38420
 msgid "Default Registration Form"
 msgstr ""
 
 #: src/components/screens/LastPage.js:38
-#: chunks/main.js:50050
 msgid "Congratulations, You’re all set! 🎉"
 msgstr ""
 
 #: src/components/screens/LastPage.js:55
-#: chunks/main.js:50067
 msgid "Our Popular Addons"
 msgstr ""
 
 #: src/components/screens/LastPage.js:86
-#: chunks/main.js:50098
 msgid "Advanced Fields"
 msgstr ""
 
 #: src/components/screens/LastPage.js:93
-#: chunks/main.js:50105
 msgid "Advanced Fields provides you with additional advanced fields like Section Title, Custom HTML, Phone, Time Picker and WYSIWYG Fields."
 msgstr ""
 
 #: src/components/screens/LastPage.js:128
-#: chunks/main.js:50140
 msgid "WooCommerce"
 msgstr ""
 
 #: src/components/screens/LastPage.js:135
-#: chunks/main.js:50147
 msgid "Integrates WooCommerce plugin with your user-registration and allows you to manage user billing, shipping, orders via user registration account page"
 msgstr ""
 
 #: src/components/screens/LastPage.js:171
-#: chunks/main.js:50183
 msgid "Content Restriction"
 msgstr ""
 
 #: src/components/screens/LastPage.js:178
-#: chunks/main.js:50190
 msgid "Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles."
 msgstr ""
 
 #: src/components/screens/LastPage.js:213
-#: chunks/main.js:50225
 msgid "Customize My Account"
 msgstr ""
 
 #: src/components/screens/LastPage.js:223
-#: chunks/main.js:50235
 msgid "User Registration Customize My Account add-on allows you to create, edit and delete additional\ttabs on the account page along with custom content for that tab. Also supports drag and\tdrop sorting of account tabs"
 msgstr ""
 
 #: src/components/screens/LastPage.js:251
-#: chunks/main.js:50263
 msgid "View All Addons"
 msgstr ""

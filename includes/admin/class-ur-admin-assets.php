@@ -325,15 +325,17 @@ class UR_Admin_Assets {
 				'user-registration-admin',
 				'user_registration_locked_form_fields_notice_params',
 				array(
-					'ajax_url'                      => admin_url( 'admin-ajax.php' ),
+					'ajax_url'                            => admin_url( 'admin-ajax.php' ),
 					'user_registration_locked_form_fields_notice_nonce' => wp_create_nonce( 'locked_form_fields_notice_nonce' ),
-					'lock_message'                  => __( 'is a premium field', 'user-registration' ),
+					'lock_message'                        => __( 'is a premium field', 'user-registration' ),
 					/* translators: %field%: Field Label %plan%: License Plan. */
-					'unlock_message'                => __( '%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field.', 'user-registration' ),
-					'activation_required_title'     => __( 'Addon Activation Required', 'user-registration' ),
-					'activation_required_message'   => __( 'Please activate <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
-					'installation_required_title'   => __( 'Addon Installation Required', 'user-registration' ),
-					'installation_required_message' => __( 'Please install <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
+					'unlock_message'                      => __( '%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field.', 'user-registration' ),
+					'license_activation_required_title'   => __( 'License Activation Required', 'user-registration' ),
+					'license_activation_required_message' => __( 'Please activate your <strong>User Registration License</strong> to use this field', 'user-registration' ),
+					'activation_required_title'           => __( 'Addon Activation Required', 'user-registration' ),
+					'activation_required_message'         => __( 'Please activate <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
+					'installation_required_title'         => __( 'Addon Installation Required', 'user-registration' ),
+					'installation_required_message'       => __( 'Please install <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
 
 				)
 			);
