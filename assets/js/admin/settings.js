@@ -453,4 +453,22 @@
 			}
 		);
 	});
+
+	/**
+	 * Open collapsed menu on search input clicked.
+	 */
+	$(".ur-search-input").on("click", function () {
+		if (
+			$(this).closest(".user-registration-header").hasClass("collapsed")
+		) {
+			$(this)
+				.closest(".user-registration-header")
+				.removeClass("collapsed");
+			$(this)
+				.closest(".user-registration-header")
+				.find("#ur-settings-collapse")
+				.addClass("close");
+			$(this).find("#ur-search-settings").focus();
+		}
+	});
 })(jQuery);

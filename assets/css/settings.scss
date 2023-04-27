@@ -307,7 +307,7 @@ body {
 
 					span {
 						&.ur-nav__link-icon {
-							opacity: 0.5;							
+							opacity: 0.5;
 						}
 
 						&.ur-nav__link-label {
@@ -518,10 +518,8 @@ body {
 					display: flex;
 					align-items: center;
 					gap: $spacing_32px;
-					padding-bottom: $spacing_13px;
 					border-bottom: $border_width solid $border-color;
 					width: 100%;
-					margin: 0 0 $spacing_36px;
 
 					li {
 						a {
@@ -723,7 +721,7 @@ body {
 												justify-content: center;
 												padding: 0;
 												width: 33px;
-												margin: 0 auto;										
+												margin: 0 auto;
 
 												span {
 													font-size: 18px;
@@ -801,7 +799,7 @@ body {
 
 						&:last-child {
 							margin-bottom: 0;
-						}						
+						}
 
 						label {
 							position: relative;

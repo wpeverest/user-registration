@@ -3337,7 +3337,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 			}
 
 			if ( in_array( $tab, $tabs_to_display, true ) ) {
-				$tab_html .= '<button class="nav-tab ur-nav__link ur-scroll-ui__item ur-nav-premium" disabled>';
+				$tab_html .= '<button class="nav-tab ur-nav__link ur-nav-premium" disabled>';
 				$tab_html .= '<span class="ur-tooltip">' . esc_html( $tooltip_html ) . wp_kses_post( $button ) . '</span>';
 				$tab_html .= '<span class="ur-nav__link-icon">';
 				$tab_html .= ur_file_get_contents( '/assets/images/settings-icons/' . $tab . '.svg' );

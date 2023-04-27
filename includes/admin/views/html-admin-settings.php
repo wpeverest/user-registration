@@ -26,7 +26,7 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 							<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg>
 						</div>
 					</div>
-					<div class="ur-search-input ur-search--top-toggle">
+					<!-- <div class="ur-search-input ur-search--top-toggle">
 						<label for="user_registration_hide_premium_features"><?php esc_html_e( 'Hide Premium Features', 'user-registration' ); ?></label>
 						<div class="ur-toggle-section">
 							<span class="user-registration-toggle-form">
@@ -34,14 +34,14 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 								<span class="slider round"></span>
 							</span>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="user-registration-header--nav">
-					<nav class="nav-tab-wrapper ur-nav ur-nav--tab ur-nav-tab-wrapper ur-scroll-ui__items">
+					<nav class="nav-tab-wrapper ur-nav ur-nav--tab ur-nav-tab-wrapper">
 						<?php
 						foreach ( $tabs as $name => $label ) {
 							?>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link ur-scroll-ui__item <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 								<span class="ur-nav__link-icon">
 									<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); ?>
 								</span>
@@ -58,7 +58,7 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 						}
 						do_action( 'user_registration_settings_tabs' );
 						?>
-						<button id="ur-settings-collapse" class="<?php echo $collapse_by_default ? 'open' : 'close'; ?> nav-tab ur-nav__link ur-scroll-ui__item">
+						<button id="ur-settings-collapse" class="<?php echo $collapse_by_default ? 'open' : 'close'; ?> nav-tab ur-nav__link">
 							<span class="ur-nav-icon">
 								<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/chevron-right-fill.svg' ); ?>" alt="">
 							</span>
@@ -81,10 +81,18 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 							<?php wp_nonce_field( 'user-registration-settings' ); ?>
 						</p>
 					</div>
-					<div class="user-registration-options-header--bottom">
-						<?php
-						do_action( 'user_registration_sections_' . $current_tab );
-						?>
+					<div class="user-registration-options-header--bottom" >
+						<div class="ur-scroll-ui">
+							<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--backward is-disabled">
+								<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-left-alt2"></i>
+							</div>
+							<?php
+							do_action( 'user_registration_sections_' . $current_tab );
+							?>
+							<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
+								<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="user-registration-options-container">
