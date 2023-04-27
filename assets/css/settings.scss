@@ -936,6 +936,43 @@ body {
 									}
 								}
 							}
+
+							.ur-radio-group-list {
+								display: flex;
+								gap: 20px;
+
+								&--item {
+									max-width: 120px;
+									height: auto;
+									border: 1px solid #E9E9E9;
+									border-radius: 5px;
+									text-align: center;
+									padding: 6px;
+									align-items: center;
+									display: flex;
+
+									&.active {
+										label{
+											color: #475BB2;
+											opacity: 1;
+										}
+
+										border-color: #475BB2;
+									}
+
+									label {
+										font-size: 12px;
+										font-weight: 600;
+										color: #383838;
+										opacity: 0.5;
+
+										input {
+											display: none;
+										}
+									}
+
+								}
+							}
 						}
 					}
 				}

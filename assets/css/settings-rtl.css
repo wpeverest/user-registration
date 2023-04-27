@@ -614,6 +614,30 @@
                   left: 8px; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-toggle-section .user-registration-toggle-form input[type="checkbox"] {
               min-width: 100% !important; }
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list {
+              display: flex;
+              gap: 20px; }
+              .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item {
+                max-width: 120px;
+                height: auto;
+                border: 1px solid #E9E9E9;
+                border-radius: 5px;
+                text-align: center;
+                padding: 6px;
+                align-items: center;
+                display: flex; }
+                .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active {
+                  border-color: #475BB2; }
+                  .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active label {
+                    color: #475BB2;
+                    opacity: 1; }
+                .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item label {
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: #383838;
+                  opacity: 0.5; }
+                  .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item label input {
+                    display: none; }
       .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card p.ur-p-tag {
         margin: -6px 0 24px;
         padding: 10px 16px 10px 12px;

@@ -696,6 +696,54 @@ class UR_Admin_Settings {
 								$settings .= '</div>';
 								$settings .= '</div>';
 								break;
+							case 'radio-group':
+								$option_value = self::get_option( $value['id'], $value['default'] );
+								$options      = isset( $value['options'] ) ? $value['options'] : array(); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+
+								if ( ! empty( $options ) ) {
+									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field">';
+
+									$settings .= '<ul class="ur-radio-group-list">';
+									foreach ( $options as $option_index => $option_text ) {
+										$class     = str_replace( ' ', '-', strtolower( $option_text ) );
+										$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
+
+										$checked = '';
+
+										if ( '' !== $option_value ) {
+											$checked = checked( $option_value, trim( $option_index ), false );
+										}
+
+										$settings .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+										if ( isset( $value['radio-group-images'] ) ) {
+											$settings .= '<img src="' . $value['radio-group-images'][ $option_index ] . '" />';
+										}
+
+										$settings .= wp_kses(
+											trim( $option_text ),
+											array(
+												'a'    => array(
+													'href' => array(),
+													'title' => array(),
+												),
+												'span' => array(),
+											)
+										);
+
+										$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ) . '" id="' . esc_attr( $value['id'] ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+										$settings .= '</label>';
+
+										$settings .= '</li>';
+									}
+									$settings .= '</ul>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+
+								}
+								break;
 							// Default: run an action.
 							default:
 								$settings = apply_filters( 'user_registration_admin_field_' . $value['type'], $settings, $value );

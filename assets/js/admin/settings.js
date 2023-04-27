@@ -471,4 +471,23 @@
 			$(this).find("#ur-search-settings").focus();
 		}
 	});
+
+	$(document)
+		.find(".user-registration-global-settings--field")
+		.find(".ur-radio-group-list--item")
+		.each(function () {
+			$(this).on("click", function () {
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.find("input")
+					.prop("checked", false);
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.removeClass("active");
+				$(this).addClass("active");
+				$(this).find("input").prop("checked", true);
+			});
+		});
 })(jQuery);
