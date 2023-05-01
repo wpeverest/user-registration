@@ -4013,6 +4013,10 @@
 			input_value = $(this).val();
 			update_input(input_value);
 		})
+		$(document.body).on('change', '.ur-general-setting.ur-general-setting-hidden-value input', function(){
+			input_value = $(this).val();
+			update_input(input_value);
+		})
 		/**
 		 * For update the default value.
 		 */
@@ -4023,8 +4027,13 @@
 			target_input = $(ur_toggle_content).find('input[data-id=text_advance_setting_default_value]');
 			target_textarea = $(ur_toggle_content).find('input[data-id=textarea_advance_setting_default_value]');
 
+			target_input_hidden_field = $(active_field).find('.ur-general-setting-block');
+			ur_toggle_hidden_content = target_input_hidden_field.find('.ur-general-setting.ur-general-setting-hidden-value');
+			target_hidden_input = $(ur_toggle_hidden_content).find('input[data-field="hidden_value"]');
+
 			target_input.val(input_value);
 			target_textarea.val(input_value);
+			target_hidden_input.val(input_value);
 		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
