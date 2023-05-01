@@ -147,6 +147,10 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 			$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
 
 			switch ( $redirect_option ) {
+				case 'no-redirection':
+					$redirect_url = '';
+					break;
+
 				case 'internal-page':
 					$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
 
