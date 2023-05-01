@@ -1,27 +1,52 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 /**
  * Abstract UR Field Setting Class
  *
  * @version  1.0.0
  * @package  UserRegistration/Abstracts
- * @category Abstract Class
- * @author   WPEverest
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+/**
+ * UR_Form_Field_Setting Class.
  */
 abstract class UR_Field_Settings {
 
+	/**
+	 * Field id for this object.
+	 *
+	 * @since 1.0.0
+	 * @var int
+	 */
 	public $field_id;
+
+	/**
+	 * Fields html.
+	 *
+	 * @var string
+	 */
 	public $fields_html;
-	public $field_data    = array();
+
+	/**
+	 * Field Data.
+	 *
+	 * @var array
+	 */
+	public $field_data = array();
+
+	/**
+	 * Default Class.
+	 *
+	 * @var string
+	 */
 	public $default_class = 'ur_advance_setting';
 
 	/**
-	 * @param $key
+	 * Get Advance setting data.
 	 *
-	 * @return string
+	 * @param string $key Atrribute of fields.
 	 */
 	public function get_advance_setting_data( $key ) {
 
@@ -33,18 +58,23 @@ abstract class UR_Field_Settings {
 	}
 
 	/**
-	 * @param array $field_data
+	 * Output.
 	 *
-	 * @return mixed
+	 * @param array $field_data field data.
 	 */
 	abstract public function output( $field_data = array() );
 
 
+	/**
+	 * Register fields.
+	 */
 	abstract public function register_fields();
 
 
 	/**
-	 * @param $fields
+	 * Render html.
+	 *
+	 * @param array $fields list of fieds.
 	 */
 	public function render_html( $fields ) {
 
@@ -52,7 +82,18 @@ abstract class UR_Field_Settings {
 
 		foreach ( $fields as $field_key => $field ) {
 
-			$tooltip_html       = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$smart_tags   = '';
+			if ( 'default_value' === $field_key ) {
+				$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+				$smart_tags     .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+				$smart_tags     .= '<div class="ur-smart-tags-list" style="display: none">';
+				$smart_tags     .= '<div class="smart-tag-title ur-smart-tag-title">Smart Tags</div><ul class="ur-smart-tags">';
+				foreach ( $smart_tags_list as $key => $value ) {
+					$smart_tags .= "<li class='ur-select-smart-tag' data-key = '" . esc_attr( $key ) . "'> " . esc_html( $value ) . '</li>';
+				}
+				$smart_tags .= '</ul></div>';
+			}
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
 			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
@@ -68,11 +109,12 @@ abstract class UR_Field_Settings {
 					}
 
 					$this->fields_html .= ' />';
+					$this->fields_html .= $smart_tags;
 					break;
 
 				case 'select':
-					$is_multiple = isset( $field['multiple'] ) && true === $field['multiple'];
-					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '" name="' . esc_attr( $field['name'] ) .  esc_attr( $is_multiple ? '[]' : '' ) . '"';
+					$is_multiple        = isset( $field['multiple'] ) && true === $field['multiple'];
+					$this->fields_html .= '<select data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '" data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '" name="' . esc_attr( $field['name'] ) . esc_attr( $is_multiple ? '[]' : '' ) . '"';
 
 					if ( true == $field['required'] ) {
 						$this->fields_html .= ' required ';

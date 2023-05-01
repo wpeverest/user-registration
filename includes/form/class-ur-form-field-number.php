@@ -73,7 +73,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 		$label = $single_form_field->general_setting->label;
 		$value = isset( $form_data->value ) ? $form_data->value : '';
 
-		if ( isset( $single_form_field->advance_setting->max ) ) {
+		if ( isset( $single_form_field->advance_setting->max ) && '' !== $single_form_field->advance_setting->max ) {
 			$max_value = $single_form_field->advance_setting->max;
 			if ( floatval( $value ) > floatval( $max_value ) ) {
 				add_filter(
@@ -89,7 +89,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 			}
 		}
 
-		if ( isset( $single_form_field->advance_setting->min ) ) {
+		if ( isset( $single_form_field->advance_setting->min ) && '' !== $single_form_field->advance_setting->min ) {
 			$min_value = $single_form_field->advance_setting->min;
 			if ( floatval( $value ) < floatval( $min_value ) ) {
 				add_filter(
