@@ -162,17 +162,19 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				if ( $this->is_field_required( $single_form_field ) ) {
+				if ( $this->is_field_required( $single_form_field, $form_data ) ) {
 					array_unshift( $validations, 'required' );
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$this->add_error( $result, $single_field_label );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$this->add_error( $result, $single_field_label );
+								break;
+							}
 						}
 					}
 				}
@@ -254,7 +256,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param  obj $form_data Form data.
 	 * @return object
 	 */
-	public function get_sanitize_value( &$form_data ) {
+	public static function get_sanitize_value( &$form_data ) {
 
 		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
 		$fields    = ur_get_registered_form_fields();
@@ -290,9 +292,11 @@ class UR_Form_Validation extends UR_Validation {
 				case 'mailerlite':
 				case 'select':
 				case 'country':
-				case 'file':
 				case 'date':
 					$form_data->value = sanitize_text_field( isset( $form_data->value ) ? $form_data->value : '' );
+					break;
+				case 'file':
+					$form_data->value = isset( $form_data->value ) ? $form_data->value : '';
 					break;
 				case 'checkbox':
 					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';
@@ -544,7 +548,9 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [object] $field Field object.
 	 * @return boolean
 	 */
-	public function is_field_required( $field ) {
+	public function is_field_required( $field, $form_data = array() ) {
+
+		$is_required = false;
 
 		if ( ! empty( $field ) ) {
 			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : 'no';
@@ -552,11 +558,11 @@ class UR_Form_Validation extends UR_Validation {
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
 			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' === $required ) {
-				return true;
+				$is_required = true;
 			}
 		}
 
-		return false;
+		return apply_filters( 'user_registration_is_field_required', $is_required, $field, $form_data );
 	}
 
 
@@ -632,14 +638,16 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$error_code = $result->get_error_code();
-							$message    = $this->get_error_message( $error_code, $single_field_label );
-							ur_add_notice( $message, 'error' );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$error_code = $result->get_error_code();
+								$message    = $this->get_error_message( $error_code, $single_field_label );
+								ur_add_notice( $message, 'error' );
+								break;
+							}
 						}
 					}
 				}
@@ -838,14 +846,16 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if ( ! empty( $validations ) ) {
-					foreach ( $validations as $validation ) {
-						$result = self::$validation( $single_field_value );
+					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+						foreach ( $validations as $validation ) {
+							$result = self::$validation( $single_field_value );
 
-						if ( is_wp_error( $result ) ) {
-							$error_code = $result->get_error_code();
-							$message    = $this->get_error_message( $error_code, $single_field_label );
-							ur_add_notice( $message, 'error' );
-							break;
+							if ( is_wp_error( $result ) ) {
+								$error_code = $result->get_error_code();
+								$message    = $this->get_error_message( $error_code, $single_field_label );
+								ur_add_notice( $message, 'error' );
+								break;
+							}
 						}
 					}
 				}

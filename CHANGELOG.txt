@@ -1,3 +1,42 @@
+= 2.3.4    - 26/04/2023
+* Feature  - Smart tag selector in email content.
+* Feature  - Smart tag selector in default value of fields.
+* Tweak    - Add hook to handle required fields.
+* Tweak    - Add filter hook before inserting user.
+* Tweak    - Add filter hook to remember autologin users.
+* Tweak    - Enable description message changed for reset password email.
+* Tweak    - Form field upgrade to premium notices according to license plan.
+* Fix      - Validation error when radio field empty.
+* Fix      - Polylang My Account Page Translation issue.
+* Fix      - Deprecated get_sanitize-value causing issues.
+* Fix      - Date field error when using dd/mm/yyyy format.
+* Fix      - Profile picture not recognized by media library.
+* Fix      - Advance Settings custom class not working on edit-profile.
+* Fix 	   - Token mismatch error and wrong password message appearing at same time.
+* Fix      - Incorrect default date displayed in date field while editing user in admin side.
+
+= 2.3.3.1  - 17/03/2023
+* Fix      - Email confirmation email not sent to user.
+
+= 2.3.3    - 16/03/2023
+* Refactor - Backend validation for form data.
+* Enhance  - Global settings input validation.
+* Enhance  - Confirm password and confirm email field validation.
+* Tweak    - Add Docs link in My Account select notice.
+* Tweak    - Add action hook added for email address change confirmation success.
+* Fix      - Required icon not displaying properly.
+* Fix      - Default value for country field not working.
+* Fix      - Strip Unwanted fields from conditional rules.
+* Fix      - Profile picture required issue in edit profile.
+* Fix      - Year not displayed on min max date field option.
+* Fix      - First item being selected by default in edit profile.
+* Fix      - Single item field error message displaying in wrong place.
+* Fix      - reCAPTCHA registration form template don't create reCAPTCHA.
+* Fix      - Role based redirect after logout not working for custom template.
+* Fix      - Email not send to user when login option set except email confirmation.
+* Fix      - Security issue send test email by non privileged user.
+* Fix      - Security issue PHP Object injection with unserialize PHP core function.
+
 = 2.3.2.1  - 23/02/2023
 * Fix 	   - Consent notice is now dismissable.
 * Fix      - Form preview not working properly when astra theme activated.

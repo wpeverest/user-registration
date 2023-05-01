@@ -73,7 +73,22 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		// Perform custom validation for the field here ...
+
+		$value   = isset( $form_data->value ) ? $form_data->value : '';
+		$label   = $single_form_field->general_setting->label;
+		$options = $single_form_field->general_setting->options;
+
+		if ( ! empty( $value ) && ! in_array( $value, $options, true ) ) {
+			add_filter(
+				$filter_hook,
+				function ( $msg ) use ( $label ) {
+					return sprintf(
+						'Please choose a valid option for %s',
+						"<strong>$label</strong>."
+					);
+				}
+			);
+		}
 	}
 }
 

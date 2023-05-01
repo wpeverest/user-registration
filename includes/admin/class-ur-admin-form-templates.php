@@ -88,32 +88,6 @@ class UR_Admin_Form_Templates {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_script( 'ur-setup' );
-		wp_localize_script(
-			'ur-setup',
-			'ur_setup_params',
-			array(
-				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
-				'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
-				'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
-				'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),
-				'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
-				'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
-				'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
-				'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
-				'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
-				'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
-				'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
-				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
-				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
-				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
-				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
-				'i18n_form_ok'                 => esc_html__( 'Continue', 'user-registration' ),
-				'i18n_form_placeholder'        => esc_html__( 'Untitled Form', 'user-registration' ),
-				'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
-			)
-		);
-
 		wp_enqueue_script( 'ur-form-templates' );
 		wp_localize_script(
 			'ur-form-templates',
