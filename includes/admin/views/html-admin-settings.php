@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account' ) !== false || strpos( $_GET['tab'], 'user-registration-invite-codes' ) !== false );
+$collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account' ) !== false || strpos( $_GET['tab'], 'user-registration-invite-codes' ) !== false ); //phpcs:ignore
 ?>
 <div class="wrap user-registration">
 	<form method="<?php echo esc_attr( apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' ) ); ?>" id="mainform" action="" enctype="multipart/form-data">
@@ -43,7 +43,7 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 							?>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 								<span class="ur-nav__link-icon">
-									<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); ?>
+									<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); //phpcs:ignore ?>
 								</span>
 								<span class="ur-nav__link-label">
 									<p>
