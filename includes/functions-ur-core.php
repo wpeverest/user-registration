@@ -3283,7 +3283,8 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 	 * @since 3.0.0
 	 */
 	function ur_display_premium_settings_tab() {
-		$license_plan    = ur_get_license_plan();
+		$license_data    = ur_get_license_plan();
+		$license_plan    = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 		$premium_tabs    = ur_premium_settings_tab();
 		$tabs_to_display = array();
 		$tab_html        = '';
