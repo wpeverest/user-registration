@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - ur/global-settings-v2
     workflow_dispatch:
 jobs:
   sync:

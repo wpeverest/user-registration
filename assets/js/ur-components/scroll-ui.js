@@ -79,6 +79,10 @@ jQuery(function ($) {
 				isRightOverflow = scrollWidth - scrollLeft - width > 0,
 				isOverflowing = scrollWidth > width;
 
+			if (scrollItems.find("li").length <= visibleItems) {
+				return;
+			}
+
 			if (isOverflowing) {
 				if (isLeftOverflow && isRightOverflow) {
 					$(".ur-scroll-ui__scroll-nav--backward").removeClass(
