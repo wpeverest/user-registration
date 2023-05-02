@@ -108,7 +108,19 @@ function ur_get_wpml_page_language( $page_id ) {
  */
 function ur_get_page_permalink( $page ) {
 	$page_id   = ur_get_page_id( $page );
-	$permalink = 0 < $page_id ? get_permalink( $page_id ) : get_home_url();
+	$page = $page_id;
+
+	if ( $page_id > 0 && function_exists( 'pll_current_language' ) ) {
+		$current_language = pll_current_language();
+		if ( ! empty( $current_language ) ) {
+			$translations = pll_get_post_translations( $page_id );
+			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
+		}
+	} elseif ( $page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+		$page = ur_get_wpml_page_language( $page_id );
+	}
+
+	$permalink = 0 < $page ? get_permalink( $page ) :  ( 0 < $page_id ? get_permalink( $page_id ) : get_home_url()) ;
 
 	return apply_filters( 'user_registration_get_' . $page . '_page_permalink', $permalink );
 }
@@ -120,8 +132,20 @@ if ( ! function_exists( 'ur_get_login_url' ) ) {
 	 * @return string Complete Login Page address.
 	 */
 	function ur_get_login_url() {
-		$page_id   = absint( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
-		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
+		$my_account_page_id   = absint( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
+
+		if ( $my_account_page_id > 0 && function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+			if ( ! empty( $current_language ) ) {
+				$translations = pll_get_post_translations( $my_account_page_id );
+				$my_account_page_id         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
+			}
+		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
+		}
+
+		$permalink =  0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
+
 		return $permalink;
 	}
 }
@@ -138,8 +162,19 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 	 * @return string
 	 */
 	function ur_get_my_account_url() {
-		$page_id   = absint( get_option( 'user_registration_myaccount_page_id', 'unset' ) );
-		$permalink = 0 < $page_id ? get_permalink( $page_id ) : '';
+		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+
+		if ( $my_account_page_id > 0 && function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+			if ( ! empty( $current_language ) ) {
+				$translations = pll_get_post_translations( $my_account_page_id );
+				$my_account_page_id         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
+			}
+		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
+		}
+
+		$permalink =  0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
 
 		if ( $permalink ) {
 			return $permalink;
@@ -156,6 +191,24 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 		}
 
 		return wp_login_url();
+	}
+}
+
+if ( ! function_exists( 'ur_get_current_language' ) ) {
+	/**
+	 * Returns the Current Language Code.
+	 *
+	 * @return string Current Language Code.
+	 */
+	function ur_get_current_language() {
+		$current_language = get_bloginfo("language");
+
+		if ( function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+		} elseif ( has_filter( 'wpml_current_language' ) ) {
+			$current_language = apply_filters( 'wpml_current_language', $current_language );
+		}
+		return $current_language;
 	}
 }
 

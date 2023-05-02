@@ -2128,7 +2128,8 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 	// Generate $data_html string to replace for {{all_fields}} smart tag.
 	foreach ( $valid_form_data as $field_meta => $form_data ) {
-		if ( 'user_confirm_password' === $field_meta ) {
+
+		if ( 'user_confirm_password' === $field_meta || 'user_pass' === $field_meta || preg_match( '/password_/', $field_meta ) ) {
 			continue;
 		}
 
@@ -3139,14 +3140,15 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
-
-				$moved = rename( $upload['file_path'], $file_path );
+				// Check the type of file. We'll use this as the 'post_mime_type'.
+				$filetype = wp_check_filetype( basename( $file_name ), null );
+				$moved    = rename( $upload['file_path'], $file_path );
 
 				if ( $moved ) {
 					$attachment_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
-							'post_mime_type' => $upload['file_extension'],
+							'post_mime_type' => $filetype['type'],
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
 							'post_content'   => '',
 							'post_status'    => 'inherit',

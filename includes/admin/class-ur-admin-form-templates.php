@@ -88,7 +88,6 @@ class UR_Admin_Form_Templates {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_script( 'ur-setup' );
 		wp_enqueue_script( 'ur-form-templates' );
 		wp_localize_script(
 			'ur-form-templates',
