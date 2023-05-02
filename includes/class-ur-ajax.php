@@ -869,7 +869,7 @@ class UR_AJAX {
 						throw  new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
-							__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" >Add Now.</a>', 'user-registration' ),
+							__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" target="_blank">Add Now.</a>', 'user-registration' ),
 							esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
 					}
 				}
