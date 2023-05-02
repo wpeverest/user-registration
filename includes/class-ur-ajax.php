@@ -864,12 +864,13 @@ class UR_AJAX {
 
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
-				foreach ( $_POST['data']['form_setting_data'] as $setting_data ) {
+				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
 					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && '1' === $setting_data['value'] && ! ur_check_captch_keys() ) {
 						throw  new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
-							__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" target="_blank">Add Now.</a>', 'user-registration' ),
+								'%s<a href="%s" target="_blank">Add Now</a>',
+								esc_html__( "Seems like you haven't added the CAPTCHA Keys.", 'user-registration' ),
 							esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
 					}
 				}

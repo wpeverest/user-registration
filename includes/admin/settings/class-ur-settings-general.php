@@ -659,14 +659,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
-				$settings = $this->get_login_options_settings();
+				$settings        = $this->get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
 
 				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys() ) {
 					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
 						/* translators: %s - Integration tab url */
-						__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" target="_blank">Add Now.</a>', 'user-registration' ),
-						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) .'</strong></p></div>';
+						'%s<a href="%s" target="_blank">Add Now.</a>',
+						esc_html__( "Seems like you haven't added the CAPTCHA Keys. ", 'user-registration' ),
+						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+					) . '</strong></p></div>';
 				}
 			} else {
 				$settings = array();
