@@ -3289,7 +3289,6 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 		$tabs_to_display = array();
 		$tab_html        = '';
 
-		$license_plan = 'personal';
 		foreach ( $premium_tabs as $tab => $detail ) {
 			$tooltip_html = '';
 			$button       = '';
