@@ -2680,11 +2680,11 @@
 	 box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1);
  }
 
- .ur-advance-setting.ur-advance-default_value {
+ .ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value {
 	 position: relative;
 	 margin-bottom: 15px;
 
-	 & input.ur_advance_setting.ur-settings-default-value {
+	 & input.ur_advance_setting.ur-settings-default-value, & input.ur-general-setting-field {
 		 width: calc(100% - 40px) !important;
 		 min-height: 27px;
 	 }
