@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 2.3.4\n"
+"Project-Id-Version: User Registration 2.3.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-26T08:36:50+00:00\n"
+"POT-Creation-Date: 2023-05-03T08:46:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -112,7 +112,7 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/class-ur-admin-addons.php:118
-#: includes/admin/class-ur-admin.php:390
+#: includes/admin/class-ur-admin.php:415
 msgid "Could not verify nonce"
 msgstr ""
 
@@ -688,7 +688,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:652
 #: includes/admin/views/html-admin-page-addons.php:60
-#: includes/class-ur-ajax.php:1527
+#: includes/class-ur-ajax.php:1542
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin-user-list-manager.php:214
-#: includes/admin/class-ur-admin.php:333
+#: includes/admin/class-ur-admin.php:358
 msgid "User"
 msgid_plural "Users"
 msgstr[0] ""
@@ -1011,37 +1011,37 @@ msgstr ""
 msgid "Skip to Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:50
+#: includes/admin/class-ur-admin.php:51
 msgid "UR My Account Page"
 msgstr ""
 
 #. translators: 1: User Registration 2:: five stars
-#: includes/admin/class-ur-admin.php:154
+#: includes/admin/class-ur-admin.php:155
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:156
+#: includes/admin/class-ur-admin.php:157
 msgid "Thank You!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:168
+#: includes/admin/class-ur-admin.php:169
 msgid "Thank you for using User Registration."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:193
+#: includes/admin/class-ur-admin.php:194
 msgid "HAKUNA <strong>MATATA!</strong>"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:257
+#: includes/admin/class-ur-admin.php:258
 msgid "Contribute to the enhancement"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:283
+#: includes/admin/class-ur-admin.php:308
 msgid "User Registration Plugin Survey"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin.php:333
+#: includes/admin/class-ur-admin.php:358
 msgid "%1$d new %2$s registered."
 msgstr ""
 
@@ -1516,8 +1516,8 @@ msgid "Enter the error message in form submission on recaptcha."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:337
-#: includes/class-ur-ajax.php:180
-#: includes/class-ur-ajax.php:655
+#: includes/class-ur-ajax.php:181
+#: includes/class-ur-ajax.php:656
 #: includes/class-ur-form-handler.php:378
 #: includes/class-ur-form-handler.php:518
 #: includes/class-ur-frontend-scripts.php:386
@@ -1705,7 +1705,7 @@ msgstr ""
 #. translators: %s - Username
 #. translators: %s - Lost password URL
 #: includes/admin/settings/class-ur-settings-general.php:537
-#: includes/class-ur-ajax.php:702
+#: includes/class-ur-ajax.php:703
 #: includes/functions-ur-account.php:55
 #: includes/functions-ur-account.php:58
 msgid "Lost Your Password?"
@@ -1792,6 +1792,10 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:633
 msgid "Show this message when an account is denied."
+msgstr ""
+
+#: includes/admin/settings/class-ur-settings-general.php:669
+msgid "Seems like you haven't added the CAPTCHA Keys. "
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-import-export.php:27
@@ -1935,7 +1939,7 @@ msgid "Your license has already been activated. Enjoy using <strong>User Registr
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:150
-#: includes/class-ur-ajax.php:1524
+#: includes/class-ur-ajax.php:1539
 msgid "Activate License"
 msgstr ""
 
@@ -2616,6 +2620,14 @@ msgstr ""
 msgid "%1$s Please enter your license key%2$s in the plugin list below to get updates for <strong>%3$s</strong> Add-Ons."
 msgstr ""
 
+#: includes/admin/views/html-notice-php-deprecation.php:16
+msgid "Warning!"
+msgstr ""
+
+#: includes/admin/views/html-notice-php-deprecation.php:28
+msgid "Learn More"
+msgstr ""
+
 #. translators: 1 General Settings, 2: Link to anyone can register settings
 #: includes/admin/views/html-notice-registration.php:21
 msgid "To allow users to register for your website via User registration, you must first enable user registration. Go to %1$sSettings > General%2$s tab, and under Membership make sure to check <strong>Anyone can register</strong>."
@@ -2650,121 +2662,121 @@ msgstr ""
 msgid "Taking a while? Click here to run it now."
 msgstr ""
 
-#: includes/class-ur-ajax.php:118
+#: includes/class-ur-ajax.php:119
 msgid "You are already logged in."
 msgstr ""
 
-#: includes/class-ur-ajax.php:126
-#: includes/class-ur-ajax.php:189
-#: includes/class-ur-ajax.php:246
-#: includes/class-ur-ajax.php:463
-#: includes/class-ur-ajax.php:599
-#: includes/class-ur-ajax.php:1165
+#: includes/class-ur-ajax.php:127
+#: includes/class-ur-ajax.php:190
+#: includes/class-ur-ajax.php:247
+#: includes/class-ur-ajax.php:464
+#: includes/class-ur-ajax.php:600
+#: includes/class-ur-ajax.php:1180
 msgid "Nonce error, please reload."
 msgstr ""
 
-#: includes/class-ur-ajax.php:161
-#: includes/class-ur-ajax.php:636
+#: includes/class-ur-ajax.php:162
+#: includes/class-ur-ajax.php:637
 #: includes/class-ur-form-handler.php:368
 #: includes/class-ur-form-handler.php:506
 msgid "Error on hCaptcha. Contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:172
-#: includes/class-ur-ajax.php:647
+#: includes/class-ur-ajax.php:173
+#: includes/class-ur-ajax.php:648
 #: includes/class-ur-form-handler.php:374
 #: includes/class-ur-form-handler.php:513
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:201
+#: includes/class-ur-ajax.php:202
 #: includes/class-ur-shortcodes.php:205
 msgid "Only administrators can add new users."
 msgstr ""
 
 #. translators: %s - Link to logout.
 #. translators: 1: Link and username of user 2: Logout url
-#: includes/class-ur-ajax.php:220
+#: includes/class-ur-ajax.php:221
 #: includes/class-ur-shortcodes.php:220
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
 #. translators: %s - Link to logout.
 #. translators: 1: Link and username of user 2: Logout url
-#: includes/class-ur-ajax.php:220
+#: includes/class-ur-ajax.php:221
 #: includes/class-ur-shortcodes.php:220
 msgid "Log out of this account."
 msgstr ""
 
 #. translators: %s - Link to logout.
 #. translators: 1: Link and username of user 2: Logout url
-#: includes/class-ur-ajax.php:220
+#: includes/class-ur-ajax.php:221
 #: includes/class-ur-shortcodes.php:220
 #: includes/functions-ur-account.php:123
 msgid "Logout"
 msgstr ""
 
-#: includes/class-ur-ajax.php:318
+#: includes/class-ur-ajax.php:319
 #: includes/form/class-ur-form-field-user-email.php:77
 msgid "Email already exists."
 msgstr ""
 
-#: includes/class-ur-ajax.php:392
+#: includes/class-ur-ajax.php:393
 #: includes/class-ur-form-handler.php:144
 msgid "User profile updated successfully."
 msgstr ""
 
 #. translators: %s : user email
 #. translators: user_email
-#: includes/class-ur-ajax.php:406
+#: includes/class-ur-ajax.php:407
 #: includes/class-ur-form-handler.php:149
 msgid "Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email."
 msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
 #. translators: 1: Pending email message 2: Cancel Link
-#: includes/class-ur-ajax.php:423
+#: includes/class-ur-ajax.php:424
 #: includes/functions-ur-template.php:453
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
-#: includes/class-ur-ajax.php:510
+#: includes/class-ur-ajax.php:511
 msgid "Invalid file type, please contact with site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:521
+#: includes/class-ur-ajax.php:522
 msgid "Upload path permission deny."
 msgstr ""
 
-#: includes/class-ur-ajax.php:550
+#: includes/class-ur-ajax.php:551
 msgid "File cannot be uploaded."
 msgstr ""
 
-#: includes/class-ur-ajax.php:560
+#: includes/class-ur-ajax.php:561
 msgid "File size exceed, please check your file size."
 msgstr ""
 
-#: includes/class-ur-ajax.php:567
+#: includes/class-ur-ajax.php:568
 msgid "Something went wrong while uploading, please contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:581
+#: includes/class-ur-ajax.php:582
 #: includes/class-ur-form-handler.php:319
 msgid "Username is required."
 msgstr ""
 
-#: includes/class-ur-ajax.php:584
-#: includes/class-ur-ajax.php:695
+#: includes/class-ur-ajax.php:585
+#: includes/class-ur-ajax.php:696
 #: includes/class-ur-form-handler.php:322
 #: includes/class-ur-form-handler.php:397
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/class-ur-ajax.php:679
-#: includes/class-ur-ajax.php:682
-#: includes/class-ur-ajax.php:688
-#: includes/class-ur-ajax.php:691
-#: includes/class-ur-ajax.php:698
+#: includes/class-ur-ajax.php:680
+#: includes/class-ur-ajax.php:683
+#: includes/class-ur-ajax.php:689
+#: includes/class-ur-ajax.php:692
+#: includes/class-ur-ajax.php:699
 #: includes/class-ur-form-handler.php:432
 #: includes/class-ur-form-handler.php:435
 #: includes/class-ur-form-handler.php:441
@@ -2779,7 +2791,7 @@ msgstr ""
 #. translators: %s - Redirect URL.
 #. translators: %s - Username
 #. translators: %s - Lost password URL
-#: includes/class-ur-ajax.php:702
+#: includes/class-ur-ajax.php:703
 #: includes/class-ur-email-confirmation.php:402
 #: includes/class-ur-form-handler.php:368
 #: includes/class-ur-form-handler.php:374
@@ -2800,89 +2812,93 @@ msgstr ""
 
 #. translators: 1 User login, 2: lost password url
 #. translators: %s - Username
-#: includes/class-ur-ajax.php:702
+#: includes/class-ur-ajax.php:703
 #: includes/functions-ur-account.php:55
 msgid "The password you entered for username %1$1s is incorrect. %2$2s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:732
+#: includes/class-ur-ajax.php:733
 msgid "You do not have permission to send test email."
 msgstr ""
 
 #. translators: %s - WP mail from name
-#: includes/class-ur-ajax.php:739
+#: includes/class-ur-ajax.php:740
 msgid "Test email from %s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:753
+#: includes/class-ur-ajax.php:754
 msgid "Test email was sent successfully! Please check your inbox to make sure it is delivered."
 msgstr ""
 
-#: includes/class-ur-ajax.php:755
+#: includes/class-ur-ajax.php:756
 msgid "Test email was unsuccessful! Something went wrong."
 msgstr ""
 
-#: includes/class-ur-ajax.php:828
-#: includes/class-ur-ajax.php:834
+#: includes/class-ur-ajax.php:829
+#: includes/class-ur-ajax.php:835
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:851
+#: includes/class-ur-ajax.php:852
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-ajax.php:862
+#: includes/class-ur-ajax.php:863
 msgid "Could not save form, "
 msgstr ""
 
-#: includes/class-ur-ajax.php:1175
+#: includes/class-ur-ajax.php:874
+msgid "Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click"
+msgstr ""
+
+#: includes/class-ur-ajax.php:1190
 msgid "File cannot be removed"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1188
+#: includes/class-ur-ajax.php:1203
 msgid "User profile picture removed successfully"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1207
+#: includes/class-ur-ajax.php:1222
 msgid "No Plan specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1225
+#: includes/class-ur-ajax.php:1240
 msgid "This form template requires the following addons."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1227
+#: includes/class-ur-ajax.php:1242
 msgid "Required Addons"
 msgstr ""
 
 #. translators: %s - Integration tab url
-#: includes/class-ur-ajax.php:1283
+#: includes/class-ur-ajax.php:1298
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1308
+#: includes/class-ur-ajax.php:1323
 msgid "No plugin specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1322
+#: includes/class-ur-ajax.php:1337
 #: includes/functions-ur-core.php:2443
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1386
+#: includes/class-ur-ajax.php:1401
 #: includes/functions-ur-core.php:2523
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1428
+#: includes/class-ur-ajax.php:1443
 msgid "Blank Form"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1450
+#: includes/class-ur-ajax.php:1465
 msgid "Something went wrong, please try again later"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1474
+#: includes/class-ur-ajax.php:1489
 msgid "Changed email cancelled successfully."
 msgstr ""
 

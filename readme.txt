@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.2
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,12 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 2.3.5    - 03/05/2023
+* Refactor - Make get_sanitize_value function static.
+* Tweak    - PHP deprecation notice for sites below PHP 7.2.
+* Fix      - Form being saved when captcha is enabled but keys are missing.
+* Fix      - Settings being saved when captcha is enabled in login options but keys are missing.
 
 = 2.3.4    - 26/04/2023
 * Feature  - Smart tag selector in email content.
