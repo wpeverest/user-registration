@@ -185,7 +185,7 @@ class UR_Form_Validation extends UR_Validation {
 				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
 				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
 
-				$this->valid_form_data[ $data->field_name ] = $this->get_sanitize_value( $data );
+				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 
 				/**
 				 * Hook to custom validate form field.
