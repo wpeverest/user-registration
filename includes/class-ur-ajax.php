@@ -869,8 +869,8 @@ class UR_AJAX {
 						throw  new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
-								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click %s to add them and save your form.', 'user-registration' ),
-								'<a href="%s" class="ur-captcha-error" target="_blank">here</a>',
+								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
+								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
 								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
 					}
 				}
