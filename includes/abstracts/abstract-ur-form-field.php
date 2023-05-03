@@ -440,7 +440,10 @@ abstract class UR_Form_Field {
 			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . ( isset( $setting_value['add_bulk_options'] ) ? $setting_value['add_bulk_options'] : '' ) . '</label>';
 			$sub_string_key           = substr( $this->id, strlen( 'user_registration_' ), 5 );
 			$strip_prefix             = substr( $this->id, 18 );
-
+			$smart_tags               = '';
+			if ( 'hidden_value' === $setting_key ) {
+				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
+			}
 			switch ( $setting_value['type'] ) {
 				case 'text':
 					$extra_attribute          = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
@@ -627,7 +630,7 @@ abstract class UR_Form_Field {
 				default:
 					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
-
+			$general_setting_wrapper .= $smart_tags;
 			$general_setting_wrapper .= '</div>';
 			$general_setting_html    .= $general_setting_wrapper;
 

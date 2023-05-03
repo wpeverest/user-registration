@@ -17,6 +17,7 @@ class UR_Smart_Tags {
 	 */
 	public function __construct() {
 		add_filter( 'user_registration_process_smart_tags', array( $this, 'process' ), 10, 3 );
+		add_filter( 'ur_smart_tags_list_in_general', array( $this, 'select_smart_tags_in_general' ), 10, 1 );
 	}
 
 	/**
@@ -177,6 +178,23 @@ class UR_Smart_Tags {
 			}
 		}
 		return $content;
+	}
+
+	/**
+	 * Smart tag list button in general setting and advanced settin of field.
+	 *
+	 * @param string $smart_tags list of smart tags.
+	 */
+	public function select_smart_tags_in_general( $smart_tags ) {
+		$smart_tags_list = self::smart_tags_list();
+		$smart_tags     .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+		$smart_tags     .= '<div class="ur-smart-tags-list" style="display: none">';
+		$smart_tags     .= '<div class="smart-tag-title ur-smart-tag-title">Smart Tags</div><ul class="ur-smart-tags">';
+		foreach ( $smart_tags_list as $key => $value ) {
+			$smart_tags .= "<li class='ur-select-smart-tag' data-key = '" . esc_attr( $key ) . "'> " . esc_html( $value ) . '</li>';
+		}
+		$smart_tags .= '</ul></div>';
+		return $smart_tags;
 	}
 }
 
