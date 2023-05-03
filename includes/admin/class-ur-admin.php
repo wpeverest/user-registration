@@ -268,7 +268,7 @@ class UR_Admin {
 	 * Add PHP Deprecation notice.
 	 */
 	public function php_deprecation_notice() {
-		$php_version  = phpversion();
+		$php_version  = explode( '-', PHP_VERSION )[0];
 		$base_version = '7.2';
 
 		if ( version_compare( $php_version, $base_version, '<' ) ) {

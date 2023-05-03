@@ -14,18 +14,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="notice notice-warning is-dismissible" id="user-registration-php-deprecation-notice">
 	<p>
 		<strong><?php esc_html_e( 'Warning!', 'user-registration' ); ?></strong>
-		<?php _e( "Your website is running on an outdated version of PHP ( $php_version ) that will not be supported by <strong>User Registration</strong> plugin in future updates.", 'user-registration' ); //phpcs:ignore ?>
+		<?php _e( "Your website is running on an outdated version of PHP ( v$php_version ) that might not be supported by <strong>User Registration</strong> plugin in future updates.", 'user-registration' ); //phpcs:ignore ?>
 		</br>
 		<?php
 		echo esc_html__( //phpcs:ignore
 			sprintf( //phpcs:ignore
-				'Please update to latest PHP version ( >= %s ) to ensure compatibility and security.',
+				'Please update to atleast PHP v%s to ensure compatibility and security.',
 				$base_version
 			),
 			'user-registration'
 		);
 		?>
-		<a href="#"><?php esc_html_e( 'Learn More', 'user-registration' ); ?> </a>
+		<a href="https://docs.wpeverest.com/user-registration/docs/php-version-lesser-than-7-2-is-not-supported/" target="_blank"><?php esc_html_e( 'Learn More', 'user-registration' ); ?> </a>
 	</p>
 </div>
 
