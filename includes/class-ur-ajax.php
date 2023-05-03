@@ -69,6 +69,7 @@ class UR_AJAX {
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
 			'locked_form_fields_notice' => false,
+			'php_notice_dismiss'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1562,6 +1563,22 @@ class UR_AJAX {
 		$button = ob_get_clean();
 		wp_send_json_success( array( 'action_button' => $button ) );
 
+	}
+
+
+	/**
+	 * Handle PHP Deprecated notice dismiss action.
+	 *
+	 * @return bool
+	 */
+	public static function php_notice_dismiss() {
+		$current_date = gmdate( 'Y-m-d' );
+		$prompt_count = get_option( 'user_registration_php_deprecated_notice_prompt_count', 0 );
+
+		update_option( 'user_registration_php_deprecated_notice_last_prompt_date', $current_date );
+		update_option( 'user_registration_php_deprecated_notice_prompt_count', ++$prompt_count );
+
+		return false;
 	}
 }
 
