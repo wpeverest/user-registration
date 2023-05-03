@@ -863,6 +863,20 @@ class UR_AJAX {
 				throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
 
+			// check captcha configuration before form save action.
+			if ( isset( $_POST['data']['form_setting_data'] ) ) {
+				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
+					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && '1' === $setting_data['value'] && ! ur_check_captch_keys() ) {
+						throw  new Exception(
+							sprintf(
+							/* translators: %s - Integration tab url */
+								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
+								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
+								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
+					}
+				}
+			}
+
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
