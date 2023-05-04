@@ -577,149 +577,22 @@ class UR_AJAX {
 	 * Login from Using Ajax
 	 */
 	public static function ajax_login_submit() {
-		// Custom error messages.
-		$messages = array(
-			'empty_username'   => get_option( 'user_registration_message_username_required', __( 'Username is required.', 'user-registration' ) ),
-			'empty_password'   => get_option( 'user_registration_message_empty_password', null ),
-			'invalid_username' => get_option( 'user_registration_message_invalid_username', null ),
-			'unknown_email'    => get_option( 'user_registration_message_unknown_email', __( 'A user could not be found with this email address.', 'user-registration' ) ),
-			'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
-			'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
-		);
 
 		check_ajax_referer( 'ur_login_form_save_nonce', 'security' );
 
 		$nonce = isset( $_REQUEST['security'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['security'] ) ) : false;
+		$flag  = wp_verify_nonce( $nonce, 'ur_login_form_save_nonce' );
 
-		$flag = wp_verify_nonce( $nonce, 'ur_login_form_save_nonce' );
-
-		if ( true != $flag || is_wp_error( $flag ) ) {
+		if ( false === $flag || is_wp_error( $flag ) ) {
 
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+					'message' => esc_html__( 'Nonce error, please reload.', 'user-registration' ),
 				)
 			);
 		}
 
-		$info                  = array();
-		$info['user_login']    = sanitize_user( isset( $_POST['username'] ) ? wp_unslash( sanitize_text_field( $_POST['username'] ) ) : '' ); //phpcs:ignore
-		$info['user_password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; //phpcs:ignore
-		$info['remember']      = isset( $_POST['rememberme'] );
-		$captcha_response      = isset( $_POST['CaptchaResponse'] ) ? $_POST['CaptchaResponse'] : ''; //phpcs:ignore
-		$recaptcha_enabled     = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
-		$recaptcha_type        = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-		$invisible_recaptcha   = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
-
-		if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
-			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
-			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-		} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
-			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
-			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
-		} elseif ( 'v3' === $recaptcha_type ) {
-			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
-			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
-		} elseif ( 'hCaptcha' === $recaptcha_type ) {
-			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
-			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
-		}
-
-		if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $site_key ) && ! empty( $secret_key ) ) {
-			if ( ! empty( $captcha_response ) ) {
-				if ( 'hCaptcha' === $recaptcha_type ) {
-					$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
-
-					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
-						wp_send_json_error(
-							array(
-								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
-							)
-						);
-					}
-				} else {
-					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
-
-					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score <= get_option( 'user_registration_integration_setting_recaptcha_threshold_score_v3', apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) ) {
-						wp_send_json_error(
-							array(
-								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
-							)
-						);
-					}
-				}
-			} else {
-				wp_send_json_error(
-					array(
-						'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
-					)
-				);
-			}
-		}
-
-		// To check the specific login.
-		if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data          = get_user_by( 'email', $info['user_login'] );
-			$info['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $info['user_login'] );
-		} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-			$user_data          = get_user_by( 'login', $info['user_login'] );
-			$info['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $info['user_login'] );
-		} else {
-			$info['user_login'] = $info['user_login'];
-		}
-
-		// perform the table login.
-		$user = wp_signon( $info );
-
-		if ( is_wp_error( $user ) ) {
-
-			// set the custom error message.
-			if ( ! empty( $user->errors['empty_username'] ) && ! empty( $messages['empty_username'] ) ) {
-				$user->errors['empty_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_username'] );
-			}
-			if ( ! empty( $user->errors['empty_password'] ) && ! empty( $messages['empty_password'] ) ) {
-				$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
-			}
-			if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
-				$user->errors['invalid_username'][0] = $messages['invalid_username'];
-			}
-			if ( ! empty( $user->errors['pending_approval'] ) && ! empty( $messages['pending_approval'] ) ) {
-				$user->errors['pending_approval'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['pending_approval'] );
-			}
-			if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
-				$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
-			}
-			if ( ! empty( $user->errors['invalid_email'] ) ) {
-				if ( empty( $messages['unknown_email'] ) ) {
-					$messages['unknown_email'] = __( 'A user could not be found with this email address.', 'user-registration' );
-				}
-
-				$user->errors['invalid_email'][0] = apply_filters( 'user_registration_invalid_email_error_message', sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['unknown_email'] ) );
-			}
-			if ( ! empty( $user->errors['incorrect_password'] ) ) {
-				/* translators: 1 User login, 2: lost password url */
-				$user->errors['incorrect_password'][0] = apply_filters( 'user_registration_incorrect_password_error_message', sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), $info['user_login'], "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ) );
-			}
-			$message = $user->get_error_message();
-			wp_send_json_error( array( 'message' => $message ) );
-		} else {
-			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
-				$redirect = admin_url();
-			} else {
-				if ( ! empty( $_POST['redirect'] ) ) {
-					$redirect = wp_unslash( esc_url_raw( $_POST['redirect'] ) ); //phpcs:ignore
-				} elseif ( wp_get_raw_referer() ) {
-					$redirect = wp_get_raw_referer();
-				} else {
-					$redirect = get_home_url();
-				}
-			}
-			$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
-			wp_send_json_success( array( 'message' => $redirect ) );
-		}
-		wp_send_json( $user );
+		ur_process_login( $nonce );
 	}
 	/**
 	 * Send test email.
