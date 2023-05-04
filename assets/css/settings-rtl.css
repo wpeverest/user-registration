@@ -641,6 +641,13 @@
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button-customize-login, .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-image-uploader {
               max-width: 40%;
               text-align: center; }
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field #select-smart-tags {
+              color: #2271B1;
+              border-color: #2271B1;
+              height: 30px;
+              text-align: center;
+              line-height: 18px;
+              width: 30%; }
       .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card p.ur-p-tag {
         margin: -6px 0 24px;
         padding: 10px 16px 10px 12px;
