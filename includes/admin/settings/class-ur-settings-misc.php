@@ -68,7 +68,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'type'     => 'toggle',
 									'desc_tip' => 'All user registration forms, settings and users metadata will be deleted upon plugin uninstallation.',
 									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
+									'default'  => 'false',
 								),
 								array(
 									'title'   => __( 'Allow Usage Tracking', 'user-registration' ),
