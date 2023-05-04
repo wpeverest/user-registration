@@ -171,85 +171,85 @@
 	function handleReCaptchaHideShow(value) {
 		if (value == "v3") {
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else if (value == "hCaptcha") {
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else {
 			if (
@@ -261,49 +261,49 @@
 				$(
 					"#user_registration_integration_setting_recaptcha_site_key_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 			} else {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 			}
 
@@ -311,26 +311,26 @@
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 		}
 	}
@@ -492,4 +492,64 @@
 			});
 		}
 	});
+	// Handles collapse of side menu.
+	$("#ur-settings-collapse").on("click", function (e) {
+		e.preventDefault();
+
+		if ($(this).hasClass("close")) {
+			$(this).closest("header").addClass("collapsed");
+			$(this).removeClass("close").addClass("open");
+		} else {
+			$(this).closest("header").removeClass("collapsed");
+			$(this).removeClass("open").addClass("close");
+		}
+	});
+
+	$(".ur-nav-premium").each(function () {
+		$(this).hover(
+			function (e) {
+				$(this).find(".ur-tooltip").show();
+			},
+			function (e) {
+				$(this).find(".ur-tooltip").hide();
+			}
+		);
+	});
+
+	/**
+	 * Open collapsed menu on search input clicked.
+	 */
+	$(".ur-search-input").on("click", function () {
+		if (
+			$(this).closest(".user-registration-header").hasClass("collapsed")
+		) {
+			$(this)
+				.closest(".user-registration-header")
+				.removeClass("collapsed");
+			$(this)
+				.closest(".user-registration-header")
+				.find("#ur-settings-collapse")
+				.addClass("close");
+			$(this).find("#ur-search-settings").focus();
+		}
+	});
+
+	$(document)
+		.find(".user-registration-global-settings--field")
+		.find(".ur-radio-group-list--item")
+		.each(function () {
+			$(this).on("click", function () {
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.find("input")
+					.prop("checked", false);
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.removeClass("active");
+				$(this).addClass("active");
+				$(this).find("input").prop("checked", true);
+			});
+		});
 })(jQuery);

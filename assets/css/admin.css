@@ -1026,8 +1026,8 @@
         position: absolute;
         transition: 0.1s transform ease; }
     .user-registration-switch input[type="checkbox"]:checked {
-      background: #37b24d;
-      border-color: #37b24d; }
+      background: #4CC741;
+      border-color: #4CC741; }
       .user-registration-switch input[type="checkbox"]:checked::after {
         transform: translateX(10px); }
   .user-registration-switch label {
@@ -1142,11 +1142,11 @@
     background: #cbced9;
     color: #676d8a; }
   .user-registration-badge.user-registration-badge--success {
-    background: #37b24d;
+    background: #4CC741;
     color: #ffffff; }
   .user-registration-badge.user-registration-badge--success-subtle {
-    background: #b4e8bd;
-    color: #2b8b3c; }
+    background: #cef0cb;
+    color: #3aa530; }
   .user-registration-badge.user-registration-badge--danger {
     background: #ff4f55;
     color: #ffffff; }
@@ -1599,14 +1599,18 @@
 .ur-scroll-ui {
   position: relative;
   overflow-x: auto;
-  overflow-y: hidden; }
+  overflow-y: hidden;
+  display: flex;
+  margin: 0 0 36px;
+  gap: 20px; }
   .ur-scroll-ui__items {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    scroll-behavior: smooth; }
+    scroll-behavior: smooth;
+    width: 100%; }
     .ur-scroll-ui__items::-webkit-scrollbar {
       display: none; }
   .ur-scroll-ui__item {
@@ -1616,17 +1620,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    padding: 8px; }
+    padding-bottom: 13px; }
     .ur-scroll-ui__scroll-nav--backward {
       left: 0; }
     .ur-scroll-ui__scroll-nav--forward {
       right: 0; }
     .ur-scroll-ui__scroll-nav__icon {
       color: #333;
-      cursor: pointer; }
+      cursor: pointer;
+      margin-bottom: 5px; }
   .ur-scroll-ui .is-disabled {
     display: none; }
 
@@ -5222,8 +5224,8 @@
     transform: scale(0.9); } }
 
 /**
- * Styling begins
- */
+   * Styling begins
+   */
 .blockUI.blockOverlay::before {
   width: 16px;
   height: 16px;
@@ -5264,8 +5266,8 @@
     background-size: cover; }
 
 /**
-   * Toggle class.
-   */
+	 * Toggle class.
+	 */
 .userregistration-forms-hidden {
   display: block; }
 
@@ -5316,9 +5318,9 @@
       display: flex;
       flex: 2;
       column-gap: 8px;
-      color: #3498DB; }
+      color: #3498db; }
       .jconfirm-content-pane .ur-shortcut-keyword .ur-key span {
-        border: 1px solid #3498DB;
+        border: 1px solid #3498db;
         background-color: #3498db13;
         padding: 5px 15px;
         border-radius: 2px; }
@@ -5331,8 +5333,8 @@
         text-align: center; }
 
 /**
- * Addons page
- **/
+   * Addons page
+   **/
 .ur_addons_wrap p.refresh {
   margin: 0 0 2em; }
 
@@ -5362,8 +5364,8 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
-    background-color: #FCFCFF;
-    border: 1px solid #B7C4FF;
+    background-color: #fcfcff;
+    border: 1px solid #b7c4ff;
     min-height: 130px; }
     .ur_addons_wrap .plugin-card .plugin-card-right .plugin-desc {
       overflow: hidden;
@@ -5379,7 +5381,7 @@
         margin-left: 10px; }
         .ur_addons_wrap .plugin-card .plugin-card-right .plugin-card-buttons .action-buttons .install-now:hover {
           border-radius: 2px;
-          background-color: #475BB2;
+          background-color: #475bb2;
           color: #fff; }
         .ur_addons_wrap .plugin-card .plugin-card-right .plugin-card-buttons .action-buttons .upgrade-now {
           background: #475bb2 !important;
@@ -5413,8 +5415,8 @@
   margin-top: 10px; }
 
 /**
- * Form Builder Styles
- **/
+   * Form Builder Styles
+   **/
 .user-registration_page_add-new-registration #wpfooter {
   display: none; }
 
@@ -5506,8 +5508,8 @@
       vertical-align: middle; }
 
 /**
-* Backbone modal dialog
-*/
+  * Backbone modal dialog
+  */
 .ur-backbone-modal * {
   box-sizing: border-box; }
 
@@ -5705,9 +5707,9 @@
       border-radius: 2px;
       padding: 8px 16px; }
       .user-registration table.form-table .radio-image td ul li label.selected {
-        border-color: #475BB2;
+        border-color: #475bb2;
         background-color: #475bb230;
-        color: #475BB2;
+        color: #475bb2;
         font-weight: 600; }
       .user-registration table.form-table .radio-image td ul li label input {
         display: none; }
@@ -6379,8 +6381,8 @@
       flex: 1 0 27%; }
 
 /**
- * Tooltips
- */
+   * Tooltips
+   */
 .tips {
   cursor: help;
   text-decoration: none; }
@@ -6416,15 +6418,15 @@ img.tips {
   .tooltipster-base .tooltipster-box .tooltipster-content {
     padding: 2px 0; }
   .tooltipster-base .tooltipster-box .tooltipster-content a {
-    color: #9EF01A !important; }
+    color: #9ef01a !important; }
 
 .tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
   border-bottom-color: #4c5477 !important;
   border-top-color: #4c5477 !important; }
 
 /**
- * Help Tip
- */
+   * Help Tip
+   */
 .user-registration-help-tip,
 .ur-portal-tooltip {
   color: #676d8a;
@@ -6475,12 +6477,12 @@ img.tips {
   background-color: #ffffff; }
 
 /**
- * Fullscreen Mode
- **/
+   * Fullscreen Mode
+   **/
 body {
   /**
-	 * User Registration Builder Loading
-	 **/ }
+	   * User Registration Builder Loading
+	   **/ }
   body.ur-full-screen-mode {
     margin-top: -32px; }
     body.ur-full-screen-mode #wpbody-content {
@@ -6561,10 +6563,10 @@ body {
             display: inline-block;
             vertical-align: middle; }
       body .ur-builder-message-container .ur-message .ur-success {
-        border-color: #37b24d; }
+        border-color: #4CC741; }
         body .ur-builder-message-container .ur-message .ur-success p::before {
           content: "\f12a";
-          color: #37b24d; }
+          color: #4CC741; }
       body .ur-builder-message-container .ur-message .ur-error {
         border-color: #ff4f55; }
         body .ur-builder-message-container .ur-message .ur-error p::before {
@@ -6664,17 +6666,17 @@ body {
     height: 22px;
     width: 40px; }
     .ur-toggle-section .user-registration-toggle-form input:checked + .slider {
-      background-color: #475BB2; }
+      background-color: #475bb2; }
     .ur-toggle-section .user-registration-toggle-form input:focus + .slider {
-      box-shadow: 0 0 1px #2196F3; }
+      box-shadow: 0 0 1px #2196f3; }
     .ur-toggle-section .user-registration-toggle-form input:checked + .slider::before {
       transform: translateX(16px); }
   .ur-toggle-section .user-registration-toggle-form .slider {
     position: absolute;
     cursor: pointer;
     inset: 0;
-    background-color: #DFE1EA;
-    transition: .4s; }
+    background-color: #dfe1ea;
+    transition: 0.4s; }
     .ur-toggle-section .user-registration-toggle-form .slider.round {
       border-radius: 30px; }
     .ur-toggle-section .user-registration-toggle-form .slider.round::before {
@@ -6687,7 +6689,7 @@ body {
       left: 4px;
       bottom: 3px;
       background-color: white;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 100%; }
 
 .user-registration-setup {
@@ -6710,7 +6712,8 @@ body {
       display: flex; }
   .user-registration-setup a:focus {
     box-shadow: none; }
-  .user-registration-setup .page-title-action, .user-registration-setup .page-title-action:active {
+  .user-registration-setup .page-title-action,
+  .user-registration-setup .page-title-action:active {
     top: 0;
     margin-left: 16px; }
   .user-registration-setup .user-registration-setup-header {
@@ -6825,7 +6828,7 @@ body {
           .user-registration-setup .ur-setup-templates .ur-template .user-registration-form-id-container .user-registration-template-name:hover {
             color: #475bb2; }
       .user-registration-setup .ur-setup-templates .ur-template:hover .user-registration-screenshot::after {
-        content: '';
+        content: "";
         display: block;
         background: rgba(45, 53, 89, 0.5);
         position: absolute;
@@ -6879,7 +6882,7 @@ body {
         .user-registration-setup .ur-setup-templates .ur-template .ur-template-overlay.loading .ur-button::after {
           position: absolute;
           top: 0;
-          content: ''; }
+          content: ""; }
         .user-registration-setup .ur-setup-templates .ur-template .ur-template-overlay.loading .ur-button::before {
           left: -1.5em;
           -webkit-animation-delay: -0.32s;
@@ -6932,8 +6935,28 @@ body {
 
 .user-registration .swal2-container .swal2-popup {
   width: 400px;
-  border-top: 6px solid #ff4f55;
   border-radius: 10px; }
+  .user-registration .swal2-container .swal2-popup.user-registration-settings-swal2 {
+    width: auto; }
+  .user-registration .swal2-container .swal2-popup.swal2-icon-error {
+    border-top: 6px solid #ff4f55; }
+  .user-registration .swal2-container .swal2-popup.user-registration-locked-field {
+    border-top: 6px solid #72aee6; }
+    .user-registration .swal2-container .swal2-popup.user-registration-locked-field.swal2-icon-success {
+      border-top: 6px solid #a5dc86; }
+    .user-registration .swal2-container .swal2-popup.user-registration-locked-field.swal2-icon-warning {
+      border-top: 6px solid #facea8; }
+
+.user-registration .swal2-container .swal2-title {
+  line-height: 30px; }
+
+.user-registration .swal2-container .swal2-content .action-buttons a {
+  background-color: #475bb2;
+  border: none;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600; }
 
 .user-registration .swal2-container .user-registration-recommend-addons {
   margin-bottom: 20px;
@@ -6977,7 +7000,7 @@ body {
           opacity: 1;
           width: 34%;
           height: 50%;
-          content: '';
+          content: "";
           transform-origin: left top;
           border-top: 2px solid #cdd0d8;
           border-right: 2px solid #cdd0d8;
@@ -6986,14 +7009,14 @@ body {
           border-color: #cdd0d8; }
           .user-registration .swal2-container .user-registration-recommend-addons .plugins-list-table .plugin-status span.activate-now.updating-message {
             border-color: #cdd0d8;
-            border-left-color: #37b24d; }
+            border-left-color: #4CC741; }
         .user-registration .swal2-container .user-registration-recommend-addons .plugins-list-table .plugin-status span.active {
-          border-color: #37b24d; }
+          border-color: #4CC741; }
           .user-registration .swal2-container .user-registration-recommend-addons .plugins-list-table .plugin-status span.active::after {
-            border-top: 2px solid #37b24d;
-            border-right: 2px solid #37b24d; }
+            border-top: 2px solid #4CC741;
+            border-right: 2px solid #4CC741; }
         .user-registration .swal2-container .user-registration-recommend-addons .plugins-list-table .plugin-status span.updating-message {
-          border-left-color: #37b24d;
+          border-left-color: #4CC741;
           animation: spin 0.75s linear infinite; }
           .user-registration .swal2-container .user-registration-recommend-addons .plugins-list-table .plugin-status span.updating-message::after {
             content: none; }
@@ -7003,3 +7026,57 @@ body {
   margin-top: 20px;
   color: #ffffff;
   text-decoration: none; }
+
+a.button.ur-smart-tags-list-button {
+  top: 29px;
+  right: 0;
+  width: 30px;
+  min-height: 30px;
+  color: #494d50;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #cdd0d8;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1); }
+
+.ur-advance-setting.ur-advance-default_value {
+  position: relative;
+  margin-bottom: 15px; }
+  .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-default-value {
+    width: calc(100% - 40px) !important;
+    min-height: 27px; }
+  .ur-advance-setting.ur-advance-default_value a.button.ur-smart-tags-list-button {
+    top: 29px;
+    right: 0;
+    width: 30px;
+    min-height: 30px;
+    color: #494d50;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #cdd0d8;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1); }
+  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list-button .dashicons-editor-code::before {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    line-height: 28px;
+    position: absolute; }
+  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list {
+    right: 0;
+    z-index: 1;
+    max-height: 123px;
+    margin-top: -1px;
+    width: 230px;
+    overflow-y: auto;
+    position: absolute;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #cdd0d8;
+    box-shadow: 1px 3px 20px 0 rgba(35, 40, 45, 0.2); }
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list .ur-smart-tag-title {
+      font-weight: 600;
+      background: #f6f7f9;
+      border-bottom: 1px solid #cdd0d8; }
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list li {
+      padding: 7px 10px; }

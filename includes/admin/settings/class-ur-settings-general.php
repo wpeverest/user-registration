@@ -115,17 +115,20 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Layout', 'user-registration' ),
-									'desc'     => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
-									'id'       => 'user_registration_my_account_layout',
-									'default'  => 'horizontal',
-									'type'     => 'select',
-									'class'    => 'ur-enhanced-select',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-									'options'  => array(
+									'title'              => __( 'Layout', 'user-registration' ),
+									'desc'               => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
+									'id'                 => 'user_registration_my_account_layout',
+									'default'            => 'horizontal',
+									'type'               => 'radio-group',
+									'css'                => 'min-width: 350px;',
+									'desc_tip'           => true,
+									'options'            => array(
 										'horizontal' => __( 'Horizontal', 'user-registration' ),
 										'vertical'   => __( 'Vertical', 'user-registration' ),
+									),
+									'radio-group-images' => array(
+										'horizontal' => UR()->plugin_url() . '/assets/images/onboard-icons/horizontal.png',
+										'vertical'   => UR()->plugin_url() . '/assets/images/onboard-icons/vertical.png',
 									),
 								),
 								array(
