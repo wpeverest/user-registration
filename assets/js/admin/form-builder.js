@@ -311,6 +311,8 @@
 
 				var conditional_roles_settings_data =
 					URFormBuilder.get_form_conditional_role_data();
+				var conditional_submit_settings_data =
+					URFormBuilder.get_form_conditional_submit_data();
 				var email_content_override_settings_data =
 					URFormBuilder.get_form_email_content_override_data();
 
@@ -331,6 +333,8 @@
 						form_setting_data: form_setting_data,
 						conditional_roles_settings_data:
 							conditional_roles_settings_data,
+						conditional_submit_settings_data:
+							conditional_submit_settings_data,
 						email_content_override_settings_data:
 							email_content_override_settings_data,
 						multipart_page_setting: multipart_page_setting,
@@ -1251,6 +1255,80 @@
 						conditions: all_field_data,
 						or_conditions: or_field_data,
 					};
+					form_data.push(all_fields);
+				});
+				return form_data;
+			},
+			/**
+			 * Get all the conditions data for conditional logic settings for submit button.
+			 */
+			get_form_conditional_submit_data: function () {
+				var form_data = [];
+				var single_row = $(".urcl-submit-logic-wrap");
+
+				$.each(single_row, function () {
+					var grid_list_item = $(this).find(".urcl-submit-field");
+					var all_field_data = [];
+					var or_field_data = [];
+					var action = "";
+					$.each(grid_list_item, function () {
+						$field_key = $(this).attr("name").split("[");
+
+						if (
+							"user_registration_form_conditional_submit" ===
+							$field_key[0]
+						) {
+							action = $(this).val();
+							grid_list_item.splice($(this), 1);
+						}
+					});
+
+					var conditional_group = $(this).find(
+						".urcl-conditional-group"
+					);
+					$.each(conditional_group, function () {
+						var inner_conditions = [];
+						var grid_list_item = $(this).find(
+							".urcl-submit-field"
+						);
+						$.each(grid_list_item, function () {
+							var conditions = {
+								field_key: $(this).attr("name"),
+								field_value: $(this).val(),
+							};
+							inner_conditions.push(conditions);
+						});
+						all_field_data.push(inner_conditions);
+					});
+
+					var or_groups = $(this).find(".urcl-or-groups");
+					$.each(or_groups, function () {
+						var conditional_or_group = $(this).find(
+							".urcl-conditional-or-group"
+						);
+						var or_data = [];
+						$.each(conditional_or_group, function () {
+							var inner_or_conditions = [];
+							var or_list_item = $(this).find(
+								".urcl-submit-field"
+							);
+							$.each(or_list_item, function () {
+								var or_conditions = {
+									field_key: $(this).attr("name"),
+									field_value: $(this).val(),
+								};
+								inner_or_conditions.push(or_conditions);
+							});
+							or_data.push(inner_or_conditions);
+						});
+						or_field_data.push(or_data);
+					});
+					var all_fields = {
+						action: action,
+						conditions: all_field_data,
+						or_conditions: or_field_data,
+					};
+
 					form_data.push(all_fields);
 				});
 				return form_data;
