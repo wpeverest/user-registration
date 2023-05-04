@@ -5820,7 +5820,7 @@
             font-weight: 500;
             cursor: pointer; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7034,13 +7034,13 @@ a.button.ur-smart-tags-list-button {
   border-radius: 4px;
   box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1); }
 
-.ur-advance-setting.ur-advance-default_value {
+.ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value {
   position: relative;
   margin-bottom: 15px; }
-  .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-default-value {
+  .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-default-value, .ur-advance-setting.ur-advance-default_value input.ur-general-setting-field, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-default-value, .ur-general-setting.ur-general-setting-hidden-value input.ur-general-setting-field {
     width: calc(100% - 40px) !important;
     min-height: 27px; }
-  .ur-advance-setting.ur-advance-default_value a.button.ur-smart-tags-list-button {
+  .ur-advance-setting.ur-advance-default_value a.button.ur-smart-tags-list-button, .ur-general-setting.ur-general-setting-hidden-value a.button.ur-smart-tags-list-button {
     top: 29px;
     left: 0;
     width: 30px;
@@ -7051,13 +7051,13 @@ a.button.ur-smart-tags-list-button {
     border: 1px solid #cdd0d8;
     border-radius: 4px;
     box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1); }
-  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list-button .dashicons-editor-code::before {
+  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list-button .dashicons-editor-code::before, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list-button .dashicons-editor-code::before {
     right: 0;
     left: 0;
     margin: 0 auto;
     line-height: 28px;
     position: absolute; }
-  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list {
+  .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list {
     left: 0;
     z-index: 1;
     max-height: 123px;
@@ -7069,9 +7069,14 @@ a.button.ur-smart-tags-list-button {
     border-radius: 4px;
     border: 1px solid #cdd0d8;
     box-shadow: -1px 3px 20px 0 rgba(35, 40, 45, 0.2); }
-    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list .ur-smart-tag-title {
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list .ur-smart-tag-title, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list .ur-smart-tag-title {
       font-weight: 600;
       background: #f6f7f9;
-      border-bottom: 1px solid #cdd0d8; }
-    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list li {
-      padding: 7px 10px; }
+      border-bottom: 1px solid #cdd0d8;
+      font-size: 12px;
+      padding: 10px; }
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list li, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list li {
+      padding: 4px 10px;
+      font-size: 12px; }
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list:hover, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list:hover {
+      cursor: pointer; }

@@ -213,6 +213,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'label' => 'Custom URL',
 							'icon'  => 'ur-icon ur-icon-website',
 						),
+						array(
+							'id'    => 'user_registration_hidden',
+							'label' => 'Hidden',
+							'icon'  => 'ur-icon ur-icon-hidden',
+						),
 					),
 				),
 				array(

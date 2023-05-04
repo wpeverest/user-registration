@@ -722,6 +722,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'checkbox'              => __( 'Checkbox', 'user-registration' ),
 			'privacy_policy'        => __( 'Privacy Policy', 'user-registration' ),
 			'radio'                 => __( 'Radio', 'user-registration' ),
+			'hidden'                => __( 'Hidden', 'user-registration' ),
 		)
 	);
 }
@@ -808,6 +809,7 @@ function ur_get_general_settings( $id ) {
 			'radio',
 			'file',
 			'mailchimp',
+			'hidden',
 		)
 	);
 	$strip_id            = str_replace( 'user_registration_', '', $id );
@@ -1619,7 +1621,6 @@ function ur_get_user_extra_fields( $user_id ) {
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
 	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore
-
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
 			$value     = get_user_meta( $user_id, $field_key, true );
@@ -3521,5 +3522,26 @@ if ( ! function_exists( 'ur_is_passwordless_login_enabled' ) ) {
 	 */
 	function ur_is_passwordless_login_enabled() {
 		return 'yes' === get_option( 'user_registration_pro_passwordless_login', 'no' );
+	}
+}
+
+if ( ! function_exists( 'ur_get_ip_address' ) ) {
+
+	/**
+	 * Get current user IP Address.
+	 *
+	 * @return string
+	 */
+	function ur_get_ip_address() {
+		if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) { // WPCS: input var ok, CSRF ok.
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );  // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
+			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+			// Make sure we always only send through the first IP in the list which should always be the client IP.
+			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+		}
+		return '';
 	}
 }
