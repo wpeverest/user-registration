@@ -5820,7 +5820,7 @@
             font-weight: 500;
             cursor: pointer; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7072,6 +7072,11 @@ a.button.ur-smart-tags-list-button {
     .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list .ur-smart-tag-title, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list .ur-smart-tag-title {
       font-weight: 600;
       background: #f6f7f9;
-      border-bottom: 1px solid #cdd0d8; }
+      border-bottom: 1px solid #cdd0d8;
+      font-size: 12px;
+      padding: 10px; }
     .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list li, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list li {
-      padding: 7px 10px; }
+      padding: 4px 10px;
+      font-size: 12px; }
+    .ur-advance-setting.ur-advance-default_value .ur-smart-tags-list:hover, .ur-general-setting.ur-general-setting-hidden-value .ur-smart-tags-list:hover {
+      cursor: pointer; }

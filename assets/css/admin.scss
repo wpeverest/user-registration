@@ -2722,13 +2722,22 @@
 		 border-radius: 4px;
 		 border: 1px solid #cdd0d8;
 		 box-shadow: 1px 3px 20px 0 rgba(35, 40, 45, 0.2);
+
 		 & .ur-smart-tag-title {
 			 font-weight: 600;
 			 background: #f6f7f9;
 			 border-bottom: 1px solid #cdd0d8;
+			 font-size: 12px;
+			 padding: 10px;
 		 }
+
 		 & li {
-			 padding: 7px 10px;
+			 padding: 4px 10px;
+			 font-size: 12px;
+		 }
+
+		 &:hover {
+			cursor: pointer;
 		 }
 	 }
  }
