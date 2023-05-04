@@ -84,13 +84,13 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
-			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
+			$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 		} else {
 			$this->match_password( $form_field_data, $form_data );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 			$this->validate_password_data( $form_field_data, $form_data );
-			$user_pass = wp_slash( $this->valid_form_data['user_pass']->value );
+			$user_pass = $this->valid_form_data['user_pass']->value;
 		}
 
 		// Modify UR_Frontend_Form_Handler::$response_array variable.
