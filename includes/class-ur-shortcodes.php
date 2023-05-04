@@ -247,7 +247,12 @@ class UR_Shortcodes {
 	private static function render_form( $form_id ) {
 		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 		$form_json_data  = wp_json_encode( $form_data_array );
-		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, array(), array() );
+
+		$values = array(
+			'form_id' => $form_id,
+		);
+
+		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
 		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
 

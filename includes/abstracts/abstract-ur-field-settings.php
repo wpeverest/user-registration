@@ -87,6 +87,7 @@ abstract class UR_Field_Settings {
 			if ( 'default_value' === $field_key ) {
 				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
 			}
+
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
 			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
