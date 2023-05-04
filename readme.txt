@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.2
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -279,6 +279,13 @@ Yes, the plugin has a shortcode for the login form.
 
 == Changelog ==
 
+= 2.3.5    - 04/05/2023
+* Refactor - Make get_sanitize_value function static.
+* Tweak    - PHP deprecation notice for sites below PHP 7.2.
+* Fix      - Password not matched when apostrophes used.
+* Fix      - Form being saved when captcha is enabled but keys are missing.
+* Fix      - Settings being saved when captcha is enabled in login options but keys are missing.
+
 = 2.3.4    - 26/04/2023
 * Feature  - Smart tag selector in email content.
 * Feature  - Smart tag selector in default value of fields.
@@ -375,13 +382,13 @@ Yes, the plugin has a shortcode for the login form.
 * Fix      - Errors and warnings in the browser console.​
 * Fix      - Show Password icon for Extra Password field.​
 * Fix      - Smart tag for country field in email content.
-* Fix      – My Account endpoint translation issue in WPML.​
+* Fix      - My Account endpoint translation issue in WPML.​
 * Fix      - Gutenberg compatibility issue with my account.
 * Fix      - User export issue when form name has special characters.​
 * Fix      - User export issue while checkbox or multi-select2 exists.​
 * Fix      - Form not submitting issue while captcha keys are not set.​
 * Fix      - Form submitting when error message exists for file upload.
-* Fix      – Special Character in Password Field caused invalid password while login.​
+* Fix      - Special Character in Password Field caused invalid password while login.​
 * Fix      - 'Special Character Validation in Username' and 'Unknown Email' messages not customized properly.​
 
 = 2.2.6    - 01/12/2022
