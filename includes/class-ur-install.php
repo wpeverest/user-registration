@@ -50,6 +50,9 @@ class UR_Install {
 			'ur_update_162_db_version',
 			'ur_update_162_meta_key',
 		),
+		'3.0.0'   => array(
+			'ur_update_300_option_migrate',
+		),
 	);
 
 	/**

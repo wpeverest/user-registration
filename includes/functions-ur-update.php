@@ -318,3 +318,29 @@ function ur_update_162_meta_key() {
 	// Delete Redirect options form general setting as previous version refered to do so.
 	delete_option( 'user_registration_general_setting_redirect_options' );
 }
+
+/**
+ * Set Redirect after Registration option in form settings.
+ *
+ * @return void
+ */
+function ur_update_300_option_migrate() {
+
+	$selected_roles_pages = get_option( 'ur_pro_settings_redirection_after_registration', array() );
+
+	// Get all posts with user_registration post type.
+	$posts = get_posts( 'post_type=user_registration' );
+
+	foreach ( $posts as $post ) {
+
+		$redirect_url = ur_get_single_post_meta( $post->ID, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) );
+
+		if ( ! empty( $redirect_url ) ) {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'external-url' );
+		}
+
+		if ( ! empty( $selected_roles_pages ) ) {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'role-based-redirection' );
+		};
+	}
+}
