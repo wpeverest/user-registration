@@ -56,16 +56,26 @@ class UR_Admin_Export_Users {
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
 			return;
 		}
+		$checked_additional_fields = array();
 		if ( isset( $_POST['all_fields_dict'] ) ) {
-			$all_fields = sanitize_text_field( wp_unslash( $_POST['all_fields_dict'] ) );
-			$all_fields = (array) json_decode( $all_fields );
-			$all_fields = array_keys( $all_fields );
+			$all_fields                = sanitize_text_field( wp_unslash( $_POST['all_fields_dict'] ) );
+			$all_fields                = (array) json_decode( $all_fields );
+			$all_fields                = array_keys( $all_fields );
+			$all_add_fields            = array( 'user_id', 'user_role', 'ur_user_status', 'date_created', 'date_created_gmt' );
+			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
+			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	array(); //phpcs:ignore
+			if ( empty( $checked_fields ) && empty( $checked_additional_fields ) ) {
+				$checked_fields            = $all_fields;
+				$checked_additional_fields = $all_add_fields;
+			}
 
-			$checked_fields = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
 		} else {
 			$unchecked_fields = array();
 		}
+		$from_date     = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
+		$to_date       = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
+		$export_format = isset( $_POST['export_format'] ) ? sanitize_text_field( wp_unslash( $_POST['export_format'] ) ) : 'csv';
 
 		$users = get_users(
 			array(
@@ -78,41 +88,51 @@ class UR_Admin_Export_Users {
 			return;
 		}
 
-		$columns = $this->generate_columns( $form_id, $unchecked_fields );
-		$rows    = $this->generate_rows( $users, $form_id, $unchecked_fields );
-
+		$columns   = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
+		$rows      = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
 		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
 		$form_name = str_replace( '&#8211;', '-', $form_name );
 		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
-		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
 		if ( ob_get_contents() ) {
 			ob_clean();
 		}
+		if ( 'csv' === $export_format ) {
+			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
+			// Force download.
+			header( 'Content-Type: application/force-download' );
+			header( 'Content-Type: application/octet-stream' );
+			header( 'Content-Type: application/download' );
 
-		// Force download.
-		header( 'Content-Type: application/force-download' );
-		header( 'Content-Type: application/octet-stream' );
-		header( 'Content-Type: application/download' );
+			// Disposition / Encoding on response body.
+			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
+			header( 'Content-Transfer-Encoding: binary' );
 
-		// Disposition / Encoding on response body.
-		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
-		header( 'Content-Transfer-Encoding: binary' );
+			$handle = fopen( 'php://output', 'w' );
 
-		$handle = fopen( 'php://output', 'w' );
+			// Handle UTF-8 chars conversion for CSV.
+			fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
-		// Handle UTF-8 chars conversion for CSV.
-		fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
+			// Put the column headers.
+			fputcsv( $handle, array_values( $columns ) );
 
-		// Put the column headers.
-		fputcsv( $handle, array_values( $columns ) );
+			// Put the row values.
+			foreach ( $rows as $row ) {
+				fputcsv( $handle, $row );
+			}
 
-		// Put the row values.
-		foreach ( $rows as $row ) {
-			fputcsv( $handle, $row );
+			fclose( $handle );
+		} elseif ( 'json' === $export_format ) {
+			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
+			// Force download.
+			header( 'Content-Type: application/force-download' );
+
+			// Disposition / Encoding on response body.
+			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
+			header( 'Content-type: application/json' );
+			echo wp_json_encode( $rows );
+
 		}
-
-		fclose( $handle );
 
 		exit;
 	}
@@ -122,26 +142,29 @@ class UR_Admin_Export_Users {
 	 *
 	 * @param int   $form_id  Form ID.
 	 * @param array $unchecked_fields Unchecked Fields.
+	 * @param array $checked_additional_fields Checked Fields.
 	 * @return array    $columns  CSV Export Columns.
 	 */
-	public function generate_columns( $form_id, $unchecked_fields = array() ) {
+	public function generate_columns( $form_id, $unchecked_fields = array(), $checked_additional_fields = array() ) {
 
-		// Default Columns.
-		$default_columns = apply_filters(
-			'user_registration_csv_export_default_columns',
-			array(
-				'user_role'        => __( 'User Role', 'user-registration' ),
-				'ur_user_status'   => __( 'User Status', 'user-registration' ),
-				'date_created'     => __( 'User Registered', 'user-registration' ),
-				'date_created_gmt' => __( 'User Registered GMT', 'user-registration' ),
-			)
-		);
-
-		// User ID Column.
-		$user_id_column = array(
-			'user_id' => __( 'User ID', 'user-registration' ),
-		);
-
+		// Checked additional fields.
+		$checked_additional_field_columns = array();
+		$user_id_column                   = array();
+		foreach ( $checked_additional_fields as $key => $value ) {
+			if ( 'user_id' === $value ) {
+				$user_id_column = array(
+					'user_id' => __( 'User ID', 'user-registration' ),
+				);
+			} elseif ( 'user_role' === $value ) {
+				$checked_additional_field_columns['user_role'] = __( 'User Role', 'user-registration' );
+			} elseif ( 'ur_user_status' === $value ) {
+				$checked_additional_field_columns['ur_user_status'] = __( 'User Status', 'user-registration' );
+			} elseif ( 'date_created' === $value ) {
+				$checked_additional_field_columns['date_created'] = __( 'User Registered', 'user-registration' );
+			} elseif ( 'date_created_gmt' === $value ) {
+				$checked_additional_field_columns['date_created_gmt'] = __( 'User Registered GMT', 'user-registration' );
+			}
+		}
 		// Filter for excluding File Upload Field.
 		add_filter( 'user_registration_meta_key_label', array( __CLASS__, 'exclude_field_key' ), 10, 3 );
 		$columns = ur_get_meta_key_label( $form_id );
@@ -165,20 +188,22 @@ class UR_Admin_Export_Users {
 		}
 
 		$columns = array_merge( $user_id_column, $columns );
-		$columns = array_merge( $columns, $default_columns );
-
+		$columns = array_merge( $columns, $checked_additional_field_columns );
 		return apply_filters( 'user_registration_csv_export_columns', $columns );
 	}
 
 	/**
 	 * Generate rows for CSV export
 	 *
-	 * @param obj   $users   Users Data.
-	 * @param int   $form_id Form ID.
-	 * @param array $unchecked_fields Unchecked Fields.
+	 * @param obj    $users   Users Data.
+	 * @param int    $form_id Form ID.
+	 * @param array  $unchecked_fields Unchecked Fields.
+	 * @param array  $checked_additional_fields Checked Fields.
+	 * @param string $from_date From date.
+	 * @param string $to_date To date.
 	 * @return array    $rows    CSV export rows.
 	 */
-	public function generate_rows( $users, $form_id, $unchecked_fields = array() ) {
+	public function generate_rows( $users, $form_id, $unchecked_fields = array(), $checked_additional_fields = array(), $from_date = '', $to_date = '' ) {
 
 		$rows = array();
 
@@ -196,8 +221,7 @@ class UR_Admin_Export_Users {
 			if ( $user_form_id !== $form_id ) {
 				continue;
 			}
-
-			$user_id_row    = array( 'user_id' => $user->data->ID );
+			$user_id_row    = array();
 			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
 
 			$columns = $this->generate_columns( $form_id, $unchecked_fields );
@@ -219,7 +243,7 @@ class UR_Admin_Export_Users {
 								if ( $file_path ) {
 									$file_link .= esc_url( $file_path ) . ' ; ';
 								}
-							} else if ( ur_is_valid_url( $attachment_id ) ) {
+							} elseif ( ur_is_valid_url( $attachment_id ) ) {
 								$file_link .= esc_url( $attachment_id ) . ' ; ';
 							}
 						}
@@ -258,25 +282,35 @@ class UR_Admin_Export_Users {
 			$user_extra_row = array_merge( $user_extra_row, $user_table_data_row );
 			$user_extra_row = array_merge( $user_extra_row, $user_meta_data_row );
 
-			// Get user default row.
-			$user_default_row = array(
-				'user_role'        => is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles,
-				'ur_user_status'   => is_array( $status ) ? implode( ',', $status ) : $status,
-				'date_created'     => $user->data->user_registered,
-				'date_created_gmt' => get_gmt_from_date( $user->data->user_registered ),
-			);
-
-			$user_row = array_merge( $user_id_row, $user_extra_row );
-			$user_row = array_merge( $user_row, $user_default_row );
-
-			/**
-			 * Reorder rows according to the values in column.
-			 *
-			 * @see https://stackoverflow.com/a/44774818/9520912
-			 */
-			$user_row = array_merge( array_fill_keys( array_keys( $this->generate_columns( $form_id, $unchecked_fields ) ), '' ), $user_row );
-
-			$rows[] = $user_row;
+			// Get user additional ckecked row.
+			$user_additional_checked_row = array();
+			foreach ( $checked_additional_fields as $key => $value ) {
+				if ( 'user_id' === $value ) {
+					$user_id_row = array( 'user_id' => $user->data->ID );
+				} elseif ( 'user_role' === $value ) {
+					$user_additional_checked_row['user_role'] = is_array( $user->roles ) ? implode( ',', $user->roles ) : $user->roles;
+				} elseif ( 'ur_user_status' === $value ) {
+					$user_additional_checked_row['ur_user_status'] = is_array( $status ) ? implode( ',', $status ) : $status;
+				} elseif ( 'date_created' === $value ) {
+					$user_additional_checked_row['date_created'] = $user->data->user_registered;
+				} elseif ( 'date_created_gmt' === $value ) {
+					$user_additional_checked_row['date_created_gmt'] = get_gmt_from_date( $user->data->user_registered );
+				}
+			}
+			$user_registered_date = get_gmt_from_date( $user->data->user_registered );
+			$from_date            = '' !== $from_date ? $from_date : '';
+			$to_date              = '' !== $to_date ? $to_date : gmdate( 'Y-m-d' );
+			if ( gmdate( 'Y-m-d', strtotime( $user_registered_date ) ) >= gmdate( 'Y-m-d', strtotime( $from_date ) ) && gmdate( 'Y-m-d', strtotime( $user_registered_date ) ) <= gmdate( 'Y-m-d', strtotime( $to_date ) ) ) {
+				$user_row = array_merge( $user_id_row, $user_extra_row );
+				$user_row = array_merge( $user_row, $user_additional_checked_row );
+				/**
+				 * Reorder rows according to the values in column.
+				 *
+				 * @see https://stackoverflow.com/a/44774818/9520912
+				 */
+				$user_row = array_merge( array_fill_keys( array_keys( $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields ) ), '' ), $user_row );
+				$rows[]   = $user_row;
+			}
 		}
 
 		return apply_filters( 'user_registration_csv_export_rows', $rows, $users );

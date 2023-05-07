@@ -98,6 +98,8 @@ class UR_Frontend_Form_Handler {
 				$userdata['user_login'] = $username;
 			}
 
+			$userdata = apply_filters( 'user_registration_before_insert_user', $userdata );
+
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
@@ -122,7 +124,8 @@ class UR_Frontend_Form_Handler {
 
 					if ( 'auto_login' === $login_option ) {
 						wp_clear_auth_cookie();
-						wp_set_auth_cookie( $user_id );
+						$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+						wp_set_auth_cookie( $user_id, $remember );
 						$success_params['auto_login'] = true;
 					}
 				}
@@ -195,16 +198,6 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 		return ( $form_field_data_array );
-	}
-
-	/**
-	 * Sanitize form data
-	 *
-	 * @deprecated 2.3.4
-	 * @param  obj $form_data Form data.
-	 */
-	public static function get_sanitize_value( &$form_data ) {
-		ur_deprecated_function( 'UR_Frontend_Form_Handler::get_sanitize_value', '2.3.4', 'UR_Form_Validation::get_sanitize_value' );
 	}
 
 	/**

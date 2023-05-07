@@ -50,7 +50,7 @@ if ( 'Bordered' === $form_template ) {
 
 $custom_class = apply_filters( 'user_registration_form_custom_class', $custom_class, $form_id );
 
-include_once UR()->plugin_path() . '/includes/functions-ur-notice.php';
+require_once UR()->plugin_path() . '/includes/functions-ur-notice.php';
 $notices = apply_filters( 'user_registration_before_registration_form_notice', ur_print_notices() );
 echo esc_html( $notices );
 /**
@@ -137,10 +137,12 @@ do_action( 'user_registration_before_registration_form', $form_id );
 						<?php
 						do_action( 'user_registration_before_form_buttons', $form_id );
 
-						$submit_btn_class = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
+						$submit_btn_class          = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
+						$condition_submit_settings = maybe_unserialize( get_post_meta( $form_id, 'user_registration_submit_condition', true ) );
+
 						$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 						?>
-						<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>">
+						<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" conditional_rules="<?php echo ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
 							<span></span>
 							<?php
 							$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
@@ -158,7 +160,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 						<h2><?php echo esc_html__( 'Form not found, form id :' . $form_id, 'user-registration' ); //phpcs:ignore ?></h2>
 					<?php
 			}
-			$enable_field_icon   = ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon' );
+			$enable_field_icon = ur_get_single_post_meta( $form_id, 'user_registration_enable_field_icon' );
 			?>
 
 			<div style="clear:both"></div>

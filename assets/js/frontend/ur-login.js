@@ -41,6 +41,11 @@ jQuery(function ($) {
 						"?action=user_registration_ajax_login_submit&security=" +
 						ur_login_params.ur_login_form_save_nonce;
 
+					if (window.location.href.indexOf("pl=true") > -1) {
+						// "pl=true" is present in the URL.
+						url += '&pl=true';
+					}
+
 					$this
 						.closest("form")
 						.find(".ur-submit-button")
@@ -89,7 +94,31 @@ jQuery(function ($) {
 											"</ul>"
 									);
 							} else {
-								window.location.href = res.data.message;
+								if(res.data.status) {
+									$this
+									.closest("#user-registration")
+									.find(".user-registration-error")
+									.remove();
+
+									$this
+										.closest("#user-registration")
+										.find(".user-registration-message")
+										.remove();
+
+									$this
+										.closest("#user-registration")
+										.prepend(
+											'<ul class="user-registration-message">' +
+												res.data.message +
+												"</ul>"
+										);
+
+									$this
+									.closest("#user-registration")
+									.find('input#username').val("");
+								} else {
+									window.location.href = res.data.message;
+								}
 							}
 						},
 					});

@@ -9,7 +9,7 @@
 			$( document.body ).removeClass( 'modal-open' );
 		};
 		// Open modal when media button is clicked
-		$(document).on('click', '.ur-insert-form-button', function(event) {			
+		$(document).on('click', '.ur-insert-form-button', function(event) {
 			event.preventDefault();
 			$('#ur-modal-backdrop, #ur-modal-wrap').css('display','block');
 			$( document.body ).addClass( 'modal-open' );
@@ -28,6 +28,17 @@
 			wp.media.editor.insert(shortcode);
 			urModalClose();
 		});
-		
+
+		//Insert Smart Tag into TinyMCE
+		$(document).on('change', '#select-smart-tags', function(event) {
+			event.preventDefault();
+			var smart_tag;
+			smart_tag = $(this).val();
+			wp.media.editor.insert(smart_tag);
+			urModalClose();
+			$("#select-smart-tags").val($("#select-smart-tags option:first").val());
+		});
+
 	});
+
 }(jQuery));

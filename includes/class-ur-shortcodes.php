@@ -246,6 +246,14 @@ class UR_Shortcodes {
 	 */
 	private static function render_form( $form_id ) {
 		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+		$form_json_data  = wp_json_encode( $form_data_array );
+
+		$values = array(
+			'form_id' => $form_id,
+		);
+
+		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
+		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
 
 		if ( ! empty( $form_data_array ) ) {
@@ -281,8 +289,7 @@ class UR_Shortcodes {
 
 		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
-
-		$form_data_array = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
+		$form_data_array   = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 
 		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
 

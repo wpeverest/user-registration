@@ -662,8 +662,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '</ul>';
 				}
 				break;
-		} // End switch().
-
+			case 'hidden':
+				$hidden_value = isset( $args['hidden_value'] ) ? $args['hidden_value'] : '';
+				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';
+				$field       .= '<input type="hidden" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden ur-frontend-field ' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '"/>';
+				break;
+		}
+		// End switch().
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
 		}
@@ -671,7 +676,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		if ( ! empty( $field ) ) {
 
 			$field_html = '';
-			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] ) {
+			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
 					$args['label'],
 					array(

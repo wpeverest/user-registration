@@ -270,6 +270,7 @@ class UR_Emailer {
 			'email'       => $email,
 			'all_fields'  => $data_html,
 			'email_token' => $email_token,
+			'form_id'     => $form_id,
 		);
 
 		if ( '0' === $email_status ) {
@@ -312,10 +313,10 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) {
-			$subject                   = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
-			$settings                  = new UR_Settings_Successfully_Registered_Email();
-			$message                   = $settings->ur_get_successfully_registered_email();
-			$message                   = get_option( 'user_registration_successfully_registered_email', $message );
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
+			$settings = new UR_Settings_Successfully_Registered_Email();
+			$message  = $settings->ur_get_successfully_registered_email();
+			$message  = get_option( 'user_registration_successfully_registered_email', $message );
 
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
@@ -364,6 +365,7 @@ class UR_Emailer {
 			'email'      => $user_email,
 			'all_fields' => $data_html,
 			'user_id'    => $user_id,
+			'form_id'    => $form_id,
 		);
 
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
@@ -403,6 +405,7 @@ class UR_Emailer {
 		$values = array(
 			'username' => $username,
 			'email'    => $email,
+			'form_id'  => $form_id,
 		);
 
 		// Get selected email template id for specific form.
@@ -463,6 +466,8 @@ class UR_Emailer {
 		$user     = get_user_by( 'login', $user_login );
 		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
 		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$user_id  = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id  = ur_get_form_id_by_userid( $user_id );
 
 		if ( empty( $email ) || empty( $username ) ) {
 			return false;
@@ -473,12 +478,12 @@ class UR_Emailer {
 		$message  = $settings->ur_get_reset_password_email();
 		$message  = get_option( 'user_registration_reset_password_email', $message );
 
-		$values  = array(
+		$values = array(
 			'username' => $username,
 			'email'    => $email,
 			'key'      => $key,
+			'form_id'  => $form_id,
 		);
-		$form_id = ur_get_form_id_by_userid( $user->ID );
 
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message                   = self::parse_smart_tags( $message, $values );
@@ -522,14 +527,15 @@ class UR_Emailer {
 		$settings = new UR_Settings_Profile_Details_Changed_Email();
 		$message  = $settings->ur_get_profile_details_changed_email();
 		$message  = get_option( 'user_registration_profile_details_changed_email', $message );
+		$form_id  = ur_get_form_id_by_userid( $user_id );
 
 		$values = array(
 			'username'   => $username,
 			'email'      => $user_email,
 			'all_fields' => $data_html,
+			'form_id'    => $form_id,
 		);
 
-		$form_id                   = ur_get_form_id_by_userid( $user_id );
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message                   = self::parse_smart_tags( $message, $values, $name_value );
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
@@ -573,7 +579,6 @@ class UR_Emailer {
 
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
-
 	/**
 	 * Parse Smart tags for emails.
 	 *
@@ -582,95 +587,7 @@ class UR_Emailer {
 	 * @param array  $name_value  Extra values.
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
-		$smart_tags = array(
-			'{{user_id}}',
-			'{{username}}',
-			'{{email}}',
-			'{{email_token}}',
-			'{{blog_info}}',
-			'{{home_url}}',
-			'{{ur_login}}',
-			'{{key}}',
-			'{{all_fields}}',
-			'{{auto_pass}}',
-			'{{user_roles}}',
-		);
-
-		$smart_tags = apply_filters( 'user_registration_smart_tags', $smart_tags );
-
-		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
-		$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
-
-		if ( ! $ur_account_page_exists ) {
-			$ur_login_or_account_page = ur_get_page_permalink( 'login' );
-		}
-
-		$ur_login = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
-		$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
-
-		$default_values = array(
-			'username'       => '',
-			'user_id'        => get_current_user_id(),
-			'email'          => '',
-			'email_token'    => '',
-			'approval_token' => '',
-			'approval_link'  => '',
-			'admin_url'      => admin_url(),
-			'blog_info'      => get_bloginfo(),
-			'home_url'       => get_home_url(),
-			'ur_login'       => $ur_login,
-			'key'            => '',
-			'all_fields'     => '',
-			'auto_pass'      => '',
-		);
-
-		$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
-
-		if ( $user_pass ) {
-			$default_values['auto_pass'] = $user_pass;
-		}
-
-		$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
-
-		$values = wp_parse_args( $values, $default_values );
-
-		if ( ! empty( $values['user_id'] ) ) {
-			$values['user_roles'] = implode( ',', ur_get_user_roles( $values['user_id'] ) );
-		}
-
-		if ( ! empty( $values['email'] ) ) {
-			$user_data = self::user_data_smart_tags( $values['email'] );
-			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
-				$user_data = array_merge( $user_data, $name_value );
-			}
-
-			$values = array_merge( $values, $user_data );
-			array_walk(
-				$values,
-				function( &$value, $key ) {
-					if ( 'user_pass' === $key ) {
-						$value = esc_html__( 'Chosen Password', 'user-registration' );
-					}
-				}
-			);
-
-			$user_smart_tags = array_keys( $user_data );
-			array_walk(
-				$user_smart_tags,
-				function( &$value ) {
-					$value = '{{' . trim( $value, '{}' ) . '}}';
-				}
-			);
-			$smart_tags = array_merge( $smart_tags, $user_smart_tags );
-		}
-
-		foreach ( $values as $key => $value ) {
-			$value = ur_format_field_values( $key, $value );
-			if ( ! is_array( $value ) ) {
-				$content = str_replace( '{{' . $key . '}}', $value, $content );
-			}
-		}
-
+		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
 		return $content;
 	}
 
