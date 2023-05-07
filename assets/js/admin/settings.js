@@ -438,11 +438,12 @@
 		}
 	});
 
-	$(".user-registration #ur-search-settings").on("keypress", function (e) {
-		var keyCode = e.keyCode || e.which;
-		if (keyCode === 13) {
-			e.preventDefault();
-			var search_string = $(this).val();
+	// Set up the autocomplete feature
+	$('.user-registration #ur-search-settings').autocomplete({
+
+		source: function(request, response) {
+		  // Make an AJAX call to the PHP script with the search query as data
+		  var search_string = request.term;
 			var form_data = new FormData();
 			form_data.append("search_string", search_string);
 			form_data.append(
@@ -462,36 +463,29 @@
 				processData: false,
 				data: form_data,
 				type: "post",
-				beforeSend: function () {
-					var spinner =
-						'<span class="spinner is-active" style="float: left;margin-top: 6px;"></span>';
-					$("#ur-search-settings")
-						.closest(".ur-search-input")
-						.append(spinner);
-				},
-				complete: function (response) {
-
-					$("#ur-search-settings")
-						.closest(".ur-search-input")
-						.find(".spinner")
-						.remove();
-
-					if (response.responseJSON.success === true) {
-						var search_url = response.responseJSON.data.search_url;
-						window.location.href = search_url;
-					} else {
-
-						Swal.fire({
-							icon: "error",
-							title: "Sorry !!",
-							text: response.responseJSON.data.message,
-						});
+				complete: function (responsed) {
+					if (responsed.responseJSON.success === true) {
+						var results = responsed.responseJSON.data.results;
+						response( results );
 					}
-					$("#ur-search-settings").val("");
 				},
 			});
+		},
+		minLength: 3, // Minimum characters required to trigger autocomplete
+		focus: function( event, ui ) {
+			$(".ui-autocomplete > li").attr("title", ui.item.desc);
+		},
+		select: function(event, ui) {
+		  // Update the input field value with the selected value
+		  $('.user-registration #ur-search-settings').val(ui.item.label);
+		  // Redirect the user to the selected URL
+		  window.location.href = ui.item.value;
+		  return false; // Prevent the default behavior of the widget
 		}
-	});
+	  });
+
+
+
 	// Handles collapse of side menu.
 	$("#ur-settings-collapse").on("click", function (e) {
 		e.preventDefault();
@@ -533,6 +527,41 @@
 			$(this).find("#ur-search-settings").focus();
 		}
 	});
+
+	if (
+		typeof getUrlVars()["searched_option"] != "undefined" ||
+		  getUrlVars()["searched_option"] != null ){
+
+			var $searched_id = $("#" + getUrlVars()["searched_option"]);
+			var wrapper_div = $searched_id.closest(".user-registration-global-settings");
+			wrapper_div.addClass("ur-searched-settings-focus");
+
+			var offset = $(".ur-searched-settings-focus").parent().offset().top;
+			  window.scrollTo({
+				top: offset,
+				behavior: "smooth"
+			  });
+
+
+		  }
+	/**
+     * Get Query String.
+     *
+     * @returns
+     */
+	function getUrlVars() {
+		var vars = [],
+		  hash;
+		var hashes = window.location.href
+		  .slice(window.location.href.indexOf("?") + 1)
+		  .split("&");
+		for (var i = 0; i < hashes.length; i++) {
+		  hash = hashes[i].split("=");
+		  vars.push(hash[0]);
+		  vars[hash[0]] = hash[1];
+		}
+		return vars;
+	  }
 
 	$(document)
 		.find(".user-registration-global-settings--field")

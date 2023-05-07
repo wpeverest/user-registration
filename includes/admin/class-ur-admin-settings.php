@@ -971,6 +971,10 @@ class UR_Admin_Settings {
 		$search_url = '';
 		$found = false;
 
+		// Create an array of results to return as JSON
+		$autocomplete_results = array();
+		$index = 0;
+
 		$settings = self::get_settings_pages();
 
 		if ( ! empty( $settings ) ) {
@@ -984,23 +988,46 @@ class UR_Admin_Settings {
 
 				if( !empty( $subsections) ){
 					foreach ( $subsections as $subsection ) {
-						$result = self::search_string_in_array($search_string, $section->get_settings( $subsection ));
-						if (!empty($result)) {
-							$search_url = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id . "&section=" .  $subsection . "#" . $result );
-							$found = true;
-							break;
+						switch ($subsection) {
+							case 'login-options':
+								$subsection_array = $section->get_login_options_settings();
+								break;
+							case 'frontend-messages':
+								$subsection_array = $section->get_frontend_messages_settings();
+								break;
+							default:
+								$subsection_array = $section->get_settings( $subsection );
+								break;
+						}
+						if( is_array($subsection_array) && !empty($subsection_array)){
+							$flattenedArray = self::flattenArray( $subsection_array );
+							$result = self::search_string_in_array( $search_string, $flattenedArray );
+							if (!empty($result)) {
+								foreach ($result as $key => $value) {
+									$match = array_search($value['title'], array_column($autocomplete_results, 'label'), true);
+									if ($match === false) {
+										$autocomplete_results[$index]['label'] =  $value['title'];
+										$autocomplete_results[$index]['desc'] =  isset( $value['desc_tip'] ) ? $value['desc_tip'] : ( isset($value['desc']) ? $value['desc'] : '' );
+										if(!empty($subsection)){
+											$autocomplete_results[$index]['value'] = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id . "&section=" .  $subsection . "&searched_option=" . $value['id'] );
+										}else{
+											$autocomplete_results[$index]['value'] = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id  . "&searched_option=" . $value['id'] );
+										}
+										$index++;
+									}
+								}
+								continue;
+							}
+
 						}
 					}
 				}
-				if($found){
-					break;
-				}
 			}
 		}
-		if ( !empty( $search_url) ) {
+		if ( !empty( $autocomplete_results) ) {
 			wp_send_json_success(
 				array(
-					'search_url' => $search_url,
+					'results' => $autocomplete_results,
 				)
 			);
 		}else{
@@ -1020,28 +1047,60 @@ class UR_Admin_Settings {
 	 * @param array $array Search Array.
 	 */
 	public static function search_string_in_array( $string_to_search, $array ){
-		$result = false;
+		$result = array();
 		if (is_object($array)) {
 			$array = (array) $array;
 		}
+		$index = 0;
 
 		foreach ($array as $key => $value) {
-			if (is_array($value) || is_object($value)) {
-				$value = (array) $value;
-				$result = self::search_string_in_array($string_to_search, $value );
-				if(!empty($result)){
-					if('true'===$result){
-						$result =  isset( $array["id"] ) ? $array["id"] : 'true';
-					}
-					break;
-				}
-			} else if (stripos($value, $string_to_search) !== false) {
 
-				$result =  isset( $array["id"] ) ? $array["id"] : 'true';
-				break;
+			if ( is_array( $value ) ) {
+
+				foreach ($value as $text) {
+					if( !is_array( $text)){
+						if (stripos($text, $string_to_search) !== false) {
+
+							$result[$index]["id"] =  isset( $value["id"] ) ? $value["id"] : 'true';
+							$result[$index]["title"] =  isset( $value["title"] ) ? $value["title"] : 'true';
+							$index++;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Return Non Nested Array from Nested Settings Array
+	 *
+	 * @param array $nested_array Nested Settings Array.
+	 *
+	 * @return array
+	 */
+	public static function flattenArray($nested_array) {
+
+		$settings_array = array();  // create an empty array to store the list of settings
+		if( isset($nested_array['sections'] )){
+			// loop through each section in the array
+			foreach ($nested_array['sections'] as $section) {
+
+				if( isset($section['settings'] )){
+					// loop through each setting in the section and add it to the $settings_array
+					foreach ($section['settings'] as $setting) {
+						$settings_array[] = $setting;
+					}
+				}else{
+					$inner_settings = self::flattenArray($section);
+					if(!empty($inner_settings)){
+						$settings_array[] = $inner_settings;
+					}
+				}
 			}
 		}
 
-		return $result;
-	}
+		return $settings_array;
+	  }
 }
