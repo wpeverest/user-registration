@@ -1522,15 +1522,27 @@
 									}
 								}
 
-								var label_node = selected_inputs
-									.find('input[data-field="required"]')
-									.closest(".ur-selected-item")
-									.find(".ur-label")
-									.find("label");
-								label_node.find("span:contains('*')").remove();
-								label_node.append(
-									'<span style="color:red">*</span>'
-								);
+								selected_inputs
+									.find(".ur-selected-item")
+									.each(function () {
+										if (
+											$(this)
+												.find(
+													'input[data-field="required"]'
+												)
+												.is(":checked")
+										) {
+											var label_node = $(this)
+												.find(".ur-label")
+												.find("label");
+											label_node
+												.find("span:contains('*')")
+												.remove();
+											label_node.append(
+												'<span style="color:red">*</span>'
+											);
+										}
+									});
 							},
 							/**
 							 * Structure for empty grid.

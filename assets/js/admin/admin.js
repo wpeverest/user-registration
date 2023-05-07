@@ -24,15 +24,17 @@ jQuery(function ($) {
 			var search_result_fields_count = $(this).find(
 				".ur-registered-item.ur-searched-item"
 			).length;
-			var hr = $(this).prev("hr");
-			var heading = $(this).prev("hr").prev(".ur-toggle-heading");
+			var hr = $(this).prev("hr"),
+				heading = $(this).prev("hr").prev(".ur-toggle-heading");
 
 			if (0 === search_result_fields_count) {
 				hr.hide();
 				heading.hide();
+				$(this).hide();
 			} else {
 				hr.show();
 				heading.show();
+				$(this).show();
 			}
 		});
 

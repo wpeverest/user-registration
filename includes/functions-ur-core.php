@@ -1061,7 +1061,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'toggle',
 
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
-				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable &nbsp; %1$s %2$s Captcha %3$s &nbsp; Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
