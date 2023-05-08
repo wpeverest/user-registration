@@ -30,6 +30,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
+					<?php do_action( 'user_registration_before_profile_detail_title' ); ?>
 					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
 					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
