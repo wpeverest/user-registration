@@ -984,21 +984,32 @@ class UR_Admin_Settings {
 				if ( ! method_exists( $section, 'get_settings' ) ) {
 					continue;
 				}
-				$subsections = array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) );
+				$subsections = array_values( array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) ) );
+
 
 				if( !empty( $subsections) ){
+
 					foreach ( $subsections as $subsection ) {
-						switch ($subsection) {
-							case 'login-options':
-								$subsection_array = $section->get_login_options_settings();
-								break;
-							case 'frontend-messages':
-								$subsection_array = $section->get_frontend_messages_settings();
-								break;
-							default:
+						if("user-registration-invite-codes" === $section->id ) {
+							if ("" !== $subsection ){
+
 								$subsection_array = $section->get_settings( $subsection );
-								break;
+
+							}
+						}else{
+							switch ($subsection) {
+								case 'login-options':
+									$subsection_array = $section->get_login_options_settings();
+									break;
+								case 'frontend-messages':
+									$subsection_array = $section->get_frontend_messages_settings();
+									break;
+								default:
+									$subsection_array = $section->get_settings( $subsection );
+									break;
+							}
 						}
+
 						if( is_array($subsection_array) && !empty($subsection_array)){
 							$flattenedArray = self::flattenArray( $subsection_array );
 							$result = self::search_string_in_array( $search_string, $flattenedArray );
@@ -1007,7 +1018,7 @@ class UR_Admin_Settings {
 									$match = array_search($value['title'], array_column($autocomplete_results, 'label'), true);
 									if ($match === false) {
 										$autocomplete_results[$index]['label'] =  $value['title'];
-										$autocomplete_results[$index]['desc'] =  isset( $value['desc_tip'] ) ? $value['desc_tip'] : ( isset($value['desc']) ? $value['desc'] : '' );
+										$autocomplete_results[$index]['desc'] =  $value['desc'];
 										if(!empty($subsection)){
 											$autocomplete_results[$index]['value'] = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id . "&section=" .  $subsection . "&searched_option=" . $value['id'] );
 										}else{
@@ -1024,6 +1035,7 @@ class UR_Admin_Settings {
 				}
 			}
 		}
+
 		if ( !empty( $autocomplete_results) ) {
 			wp_send_json_success(
 				array(
@@ -1031,9 +1043,13 @@ class UR_Admin_Settings {
 				)
 			);
 		}else{
-			wp_send_json_error(
+			$autocomplete_results[$index]['label'] =  __("No Search result found !", "user-registration");
+			$autocomplete_results[$index]['desc']  = '';
+			$autocomplete_results[$index]['value'] = 'no_result_found';
+
+			wp_send_json_success(
 				array(
-					'message' => __("No Search result found !", "user-registration"),
+					'results' => $autocomplete_results,
 				)
 			);
 		}
@@ -1063,6 +1079,9 @@ class UR_Admin_Settings {
 
 							$result[$index]["id"] =  isset( $value["id"] ) ? $value["id"] : 'true';
 							$result[$index]["title"] =  isset( $value["title"] ) ? $value["title"] : 'true';
+							$desc_tip =  isset($value['desc_tip']) && true !== $value['desc_tip'] ? $value['desc_tip'] : '';
+							$desc =  isset($value['desc']) && true !== $value['desc']  ? $value['desc'] : '';
+							$result[$index]["desc"] =  !empty( $desc_tip ) ? $desc_tip : $desc;
 							$index++;
 							break;
 						}

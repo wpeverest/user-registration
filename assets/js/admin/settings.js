@@ -439,11 +439,10 @@
 	});
 
 	// Set up the autocomplete feature
-	$('.user-registration #ur-search-settings').autocomplete({
-
-		source: function(request, response) {
-		  // Make an AJAX call to the PHP script with the search query as data
-		  var search_string = request.term;
+	$(".user-registration #ur-search-settings").autocomplete({
+		source: function (request, response) {
+			// Make an AJAX call to the PHP script with the search query as data
+			var search_string = request.term;
 			var form_data = new FormData();
 			form_data.append("search_string", search_string);
 			form_data.append(
@@ -466,25 +465,26 @@
 				complete: function (responsed) {
 					if (responsed.responseJSON.success === true) {
 						var results = responsed.responseJSON.data.results;
-						response( results );
+						response(results);
 					}
 				},
 			});
 		},
 		minLength: 3, // Minimum characters required to trigger autocomplete
-		focus: function( event, ui ) {
+		focus: function (event, ui) {
 			$(".ui-autocomplete > li").attr("title", ui.item.desc);
 		},
-		select: function(event, ui) {
-		  // Update the input field value with the selected value
-		  $('.user-registration #ur-search-settings').val(ui.item.label);
-		  // Redirect the user to the selected URL
-		  window.location.href = ui.item.value;
-		  return false; // Prevent the default behavior of the widget
-		}
-	  });
+		select: function (event, ui) {
+			// Update the input field value with the selected value
 
-
+			if ("no_result_found" !== ui.item.value) {
+				$(".user-registration #ur-search-settings").val(ui.item.label);
+				// Redirect the user to the selected URL
+				window.location.href = ui.item.value;
+			}
+			return false; // Prevent the default behavior of the widget
+		},
+	});
 
 	// Handles collapse of side menu.
 	$("#ur-settings-collapse").on("click", function (e) {
@@ -530,38 +530,42 @@
 
 	if (
 		typeof getUrlVars()["searched_option"] != "undefined" ||
-		  getUrlVars()["searched_option"] != null ){
+		getUrlVars()["searched_option"] != null
+	) {
+		var $searched_id = $("#" + getUrlVars()["searched_option"]);
+		var wrapper_div = $searched_id.closest(
+			".user-registration-global-settings"
+		);
+		wrapper_div.addClass("ur-searched-settings-focus");
 
-			var $searched_id = $("#" + getUrlVars()["searched_option"]);
-			var wrapper_div = $searched_id.closest(".user-registration-global-settings");
-			wrapper_div.addClass("ur-searched-settings-focus");
+		var offset = $(".ur-searched-settings-focus").parent().offset().top;
+		window.scrollTo({
+			top: offset,
+			behavior: "smooth",
+		});
 
-			var offset = $(".ur-searched-settings-focus").parent().offset().top;
-			  window.scrollTo({
-				top: offset,
-				behavior: "smooth"
-			  });
-
-
-		  }
+		setTimeout(function () {
+			wrapper_div.removeClass("ur-searched-settings-focus");
+		}, 3000);
+	}
 	/**
-     * Get Query String.
-     *
-     * @returns
-     */
+	 * Get Query String.
+	 *
+	 * @returns
+	 */
 	function getUrlVars() {
 		var vars = [],
-		  hash;
+			hash;
 		var hashes = window.location.href
-		  .slice(window.location.href.indexOf("?") + 1)
-		  .split("&");
+			.slice(window.location.href.indexOf("?") + 1)
+			.split("&");
 		for (var i = 0; i < hashes.length; i++) {
-		  hash = hashes[i].split("=");
-		  vars.push(hash[0]);
-		  vars[hash[0]] = hash[1];
+			hash = hashes[i].split("=");
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
 		}
 		return vars;
-	  }
+	}
 
 	$(document)
 		.find(".user-registration-global-settings--field")
