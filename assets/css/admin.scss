@@ -2804,23 +2804,22 @@ body {
 		}
 
 		 .swal2-popup {
-			 width: 400px;
-			 border-top: 6px solid #ff4f55;
-
-			 &.user-registration-locked-field {
-				 border-top: 6px solid #72aee6;
-
-				 &.swal2-icon-success {
-					 border-top: 6px solid #a5dc86;
-				 }
-
-				 &.swal2-icon-warning {
-					 border-top: 6px solid #facea8;
-				 }
-			 }
-
+			width: 400px;
+			border-top: 6px solid #ff4f55;
 			border-radius: $spacing_10px;
 			padding: 0;
+
+			&.user-registration-locked-field {
+				border-top: 6px solid #72aee6;
+
+				&.swal2-icon-success {
+					border-top: 6px solid #a5dc86;
+				}
+
+			 	&.swal2-icon-warning {
+					border-top: 6px solid #facea8;
+			 	}
+			}
 
 			.swal2-header {
 				padding: $spacing_34px $spacing_40px 0 $spacing_40px;
@@ -2856,6 +2855,36 @@ body {
 				justify-content: flex-start;
 				flex-direction: row-reverse;
 				gap: $spacing_12px;
+			}
+
+			&.user-registration-locked-field {
+				.swal2-header {
+					padding-bottom: $spacing_4px;
+					
+					.swal2-close {
+						box-shadow: none;
+					}
+				}
+
+				.swal2-content {
+					padding-left: 0;
+					padding-right: 0;
+
+					.swal2-html-container {
+						padding-left: $spacing_20px;
+						padding-right: $spacing_20px;
+
+						.action-buttons {
+							margin-left: -$spacing_20px;
+							margin-right: -$spacing_20px;
+							border-radius: 0 0 $border_radius_10 $border_radius_10;
+							padding: $spacing_16px;
+							text-align: right;
+							background: #fcfcfc;
+							border-top: $border_width solid $border-color;
+						}
+					}
+				}
 			}
 		 }
 
