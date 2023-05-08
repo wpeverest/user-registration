@@ -2886,6 +2886,18 @@ body {
 					}
 				}
 			}
+
+			.swal2-actions {
+				button {
+					&:focus {
+						box-shadow: none;
+					}
+
+					&:focus-visible {
+						outline: none;
+					}
+				}
+			}
 		 }
 
 		.user-registration-recommend-addons {
@@ -3233,17 +3245,13 @@ body {
 				}
 
 				input {
-					padding: $spacing_8px $spacing_14px;
-					height: 38px;
+					padding: $spacing_18px $spacing_12px;
 					background: $grey-0;
 					border: $border_width solid $border-color;
 					border-radius: $border_radius_4;
-					width: 100%;
 					font-weight: $regular;
 					font-size: 14px;
 					line-height: 150%;
-					display: flex;
-					align-items: center;
 					color: $grey-300;
 				}
 			}
