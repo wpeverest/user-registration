@@ -19,6 +19,13 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 	class UR_Settings_Integration extends UR_Settings_Page {
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'integration';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {

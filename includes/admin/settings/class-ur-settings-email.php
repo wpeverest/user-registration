@@ -26,6 +26,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public $emails = array();
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'email';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {

@@ -569,6 +569,12 @@ body {
 		}
 
 		.user-registration-options-container {
+
+			.ur-searched-settings-focus {
+				border: 2px solid #475bb2;
+				border-radius: 5px;
+				padding: 10px;
+			}
 			// Success Message CSS
 			.notice-success {
 				padding: $spacing_12px $spacing_12px $spacing_12px $spacing_16px;
