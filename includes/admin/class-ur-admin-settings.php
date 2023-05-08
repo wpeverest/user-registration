@@ -147,7 +147,7 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'ajax_url'         => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 			)
@@ -966,38 +966,46 @@ class UR_Admin_Settings {
 	/**
 	 * Search GLobal Settings.
 	 */
-	public static function search_settings(){
+	public static function search_settings() {
 		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : '';
-		$search_url = '';
-		$found = false;
+		$search_url    = '';
+		$found         = false;
 
 		// Create an array of results to return as JSON
 		$autocomplete_results = array();
-		$index = 0;
+		$index                = 0;
 
 		$settings = self::get_settings_pages();
 
 		if ( ! empty( $settings ) ) {
 
-			foreach ( $settings as $section ) {
-
-				if ( ! method_exists( $section, 'get_settings' ) ) {
+			foreach ( $settings as $key => $section ) {
+				if ( is_bool( $section ) || ! method_exists( $section, 'get_settings' ) ) {
+					unset( $settings[ $key ] );
 					continue;
 				}
+				$reflection = new ReflectionProperty( get_class( $section ), 'id' );
+
+				if ( ! $reflection->isPublic() ) {
+					unset( $settings[ $key ] );
+					continue;
+				}
+			}
+
+			foreach ( $settings as $section ) {
+
 				$subsections = array_values( array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) ) );
 
-
-				if( !empty( $subsections) ){
+				if ( ! empty( $subsections ) ) {
 
 					foreach ( $subsections as $subsection ) {
-						if("user-registration-invite-codes" === $section->id ) {
-							if ("" !== $subsection ){
 
+						if ( 'user-registration-invite-codes' === $section->id ) {
+							if ( '' !== $subsection ) {
 								$subsection_array = $section->get_settings( $subsection );
-
 							}
-						}else{
-							switch ($subsection) {
+						} else {
+							switch ( $subsection ) {
 								case 'login-options':
 									$subsection_array = $section->get_login_options_settings();
 									break;
@@ -1010,42 +1018,41 @@ class UR_Admin_Settings {
 							}
 						}
 
-						if( is_array($subsection_array) && !empty($subsection_array)){
+						if ( is_array( $subsection_array ) && ! empty( $subsection_array ) ) {
 							$flattenedArray = self::flattenArray( $subsection_array );
-							$result = self::search_string_in_array( $search_string, $flattenedArray );
-							if (!empty($result)) {
-								foreach ($result as $key => $value) {
-									$match = array_search($value['title'], array_column($autocomplete_results, 'label'), true);
-									if ($match === false) {
-										$autocomplete_results[$index]['label'] =  $value['title'];
-										$autocomplete_results[$index]['desc'] =  $value['desc'];
-										if(!empty($subsection)){
-											$autocomplete_results[$index]['value'] = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id . "&section=" .  $subsection . "&searched_option=" . $value['id'] );
-										}else{
-											$autocomplete_results[$index]['value'] = admin_url( "admin.php?page=user-registration-settings&tab=" .  $section->id  . "&searched_option=" . $value['id'] );
+							$result         = self::search_string_in_array( $search_string, $flattenedArray );
+							if ( ! empty( $result ) ) {
+								foreach ( $result as $key => $value ) {
+									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true );
+									if ( $match === false ) {
+										$autocomplete_results[ $index ]['label'] = $value['title'];
+										$autocomplete_results[ $index ]['desc']  = $value['desc'];
+										if ( ! empty( $subsection ) ) {
+											$autocomplete_results[ $index ]['value'] = admin_url( 'admin.php?page=user-registration-settings&tab=' . $section->id . '&section=' . $subsection . '&searched_option=' . $value['id'] );
+										} else {
+											$autocomplete_results[ $index ]['value'] = admin_url( 'admin.php?page=user-registration-settings&tab=' . $section->id . '&searched_option=' . $value['id'] );
 										}
 										$index++;
 									}
 								}
 								continue;
 							}
-
 						}
 					}
 				}
 			}
 		}
 
-		if ( !empty( $autocomplete_results) ) {
+		if ( ! empty( $autocomplete_results ) ) {
 			wp_send_json_success(
 				array(
 					'results' => $autocomplete_results,
 				)
 			);
-		}else{
-			$autocomplete_results[$index]['label'] =  __("No Search result found !", "user-registration");
-			$autocomplete_results[$index]['desc']  = '';
-			$autocomplete_results[$index]['value'] = 'no_result_found';
+		} else {
+			$autocomplete_results[ $index ]['label'] = __( 'No Search result found !', 'user-registration' );
+			$autocomplete_results[ $index ]['desc']  = '';
+			$autocomplete_results[ $index ]['value'] = 'no_result_found';
 
 			wp_send_json_success(
 				array(
@@ -1060,28 +1067,28 @@ class UR_Admin_Settings {
 	 * Search String in Array.
 	 *
 	 * @param string $string_to_search String to Search.
-	 * @param array $array Search Array.
+	 * @param array  $array Search Array.
 	 */
-	public static function search_string_in_array( $string_to_search, $array ){
+	public static function search_string_in_array( $string_to_search, $array ) {
 		$result = array();
-		if (is_object($array)) {
+		if ( is_object( $array ) ) {
 			$array = (array) $array;
 		}
 		$index = 0;
 
-		foreach ($array as $key => $value) {
+		foreach ( $array as $key => $value ) {
 
 			if ( is_array( $value ) ) {
 
-				foreach ($value as $text) {
-					if( !is_array( $text)){
-						if (stripos($text, $string_to_search) !== false) {
+				foreach ( $value as $text ) {
+					if ( ! is_array( $text ) ) {
+						if ( stripos( $text, $string_to_search ) !== false ) {
 
-							$result[$index]["id"] =  isset( $value["id"] ) ? $value["id"] : 'true';
-							$result[$index]["title"] =  isset( $value["title"] ) ? $value["title"] : 'true';
-							$desc_tip =  isset($value['desc_tip']) && true !== $value['desc_tip'] ? $value['desc_tip'] : '';
-							$desc =  isset($value['desc']) && true !== $value['desc']  ? $value['desc'] : '';
-							$result[$index]["desc"] =  !empty( $desc_tip ) ? $desc_tip : $desc;
+							$result[ $index ]['id']    = isset( $value['id'] ) ? $value['id'] : 'true';
+							$result[ $index ]['title'] = isset( $value['title'] ) ? $value['title'] : 'true';
+							$desc_tip                  = isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ? $value['desc_tip'] : '';
+							$desc                      = isset( $value['desc'] ) && true !== $value['desc'] ? $value['desc'] : '';
+							$result[ $index ]['desc']  = ! empty( $desc_tip ) ? $desc_tip : $desc;
 							$index++;
 							break;
 						}
@@ -1099,21 +1106,21 @@ class UR_Admin_Settings {
 	 *
 	 * @return array
 	 */
-	public static function flattenArray($nested_array) {
+	public static function flattenArray( $nested_array ) {
 
 		$settings_array = array();  // create an empty array to store the list of settings
-		if( isset($nested_array['sections'] )){
+		if ( isset( $nested_array['sections'] ) ) {
 			// loop through each section in the array
-			foreach ($nested_array['sections'] as $section) {
+			foreach ( $nested_array['sections'] as $section ) {
 
-				if( isset($section['settings'] )){
+				if ( isset( $section['settings'] ) ) {
 					// loop through each setting in the section and add it to the $settings_array
-					foreach ($section['settings'] as $setting) {
+					foreach ( $section['settings'] as $setting ) {
 						$settings_array[] = $setting;
 					}
-				}else{
-					$inner_settings = self::flattenArray($section);
-					if(!empty($inner_settings)){
+				} else {
+					$inner_settings = self::flattenArray( $section );
+					if ( ! empty( $inner_settings ) ) {
 						$settings_array[] = $inner_settings;
 					}
 				}
@@ -1121,5 +1128,5 @@ class UR_Admin_Settings {
 		}
 
 		return $settings_array;
-	  }
+	}
 }
