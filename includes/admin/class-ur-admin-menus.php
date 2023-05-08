@@ -215,8 +215,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						),
 						array(
 							'id'    => 'user_registration_hidden',
-							'label' => 'Hidden',
-							'icon'  => 'ur-icon ur-icon-hidden',
+							'label' => 'Hidden Field',
+							'icon'  => 'ur-icon ur-icon-hidden-field',
 						),
 					),
 				),
