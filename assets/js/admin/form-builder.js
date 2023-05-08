@@ -359,7 +359,7 @@
 				}
 
 				// Profile Completeness validation.
-				if( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ) ) {
+				if( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).length != 0 ) {
 					var sanitized_percent = parseFloat( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).val().replace(/[^\d\.]/g, '').replace(/\.(([^\.]*)\.)*/g, '.$2') );
 
 					if( sanitized_percent <= 0 ) {
