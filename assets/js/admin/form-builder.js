@@ -311,6 +311,8 @@
 
 				var conditional_roles_settings_data =
 					URFormBuilder.get_form_conditional_role_data();
+				var conditional_submit_settings_data =
+					URFormBuilder.get_form_conditional_submit_data();
 				var email_content_override_settings_data =
 					URFormBuilder.get_form_email_content_override_data();
 
@@ -331,6 +333,8 @@
 						form_setting_data: form_setting_data,
 						conditional_roles_settings_data:
 							conditional_roles_settings_data,
+						conditional_submit_settings_data:
+							conditional_submit_settings_data,
 						email_content_override_settings_data:
 							email_content_override_settings_data,
 						multipart_page_setting: multipart_page_setting,
@@ -945,9 +949,16 @@
 					$message.addClass("entered");
 				}, 50);
 
-				setTimeout(function () {
-					URFormBuilder.removeMessage($message);
-				}, 3000);
+				if ($(".ur-error").find(".ur-captcha-error").length == 1) {
+					$(".ur-error").css("width", "490px");
+					setTimeout(function () {
+						URFormBuilder.removeMessage($message);
+					}, 5000);
+				} else {
+					setTimeout(function () {
+						URFormBuilder.removeMessage($message);
+					}, 3000);
+				}
 			},
 			/**
 			 * Remove the validation message when calles.
@@ -1256,6 +1267,77 @@
 				return form_data;
 			},
 			/**
+			 * Get all the conditions data for conditional logic settings for submit button.
+			 */
+			get_form_conditional_submit_data: function () {
+				var form_data = [];
+				var single_row = $(".urcl-submit-logic-wrap");
+
+				$.each(single_row, function () {
+					var grid_list_item = $(this).find(".urcl-submit-field");
+					var all_field_data = [];
+					var or_field_data = [];
+					var action = "";
+					$.each(grid_list_item, function () {
+						$field_key = $(this).attr("name").split("[");
+
+						if (
+							"user_registration_form_conditional_submit" ===
+							$field_key[0]
+						) {
+							action = $(this).val();
+							grid_list_item.splice($(this), 1);
+						}
+					});
+
+					var conditional_group = $(this).find(
+						".urcl-conditional-group"
+					);
+					$.each(conditional_group, function () {
+						var inner_conditions = [];
+						var grid_list_item = $(this).find(".urcl-submit-field");
+						$.each(grid_list_item, function () {
+							var conditions = {
+								field_key: $(this).attr("name"),
+								field_value: $(this).val(),
+							};
+							inner_conditions.push(conditions);
+						});
+						all_field_data.push(inner_conditions);
+					});
+
+					var or_groups = $(this).find(".urcl-or-groups");
+					$.each(or_groups, function () {
+						var conditional_or_group = $(this).find(
+							".urcl-conditional-or-group"
+						);
+						var or_data = [];
+						$.each(conditional_or_group, function () {
+							var inner_or_conditions = [];
+							var or_list_item =
+								$(this).find(".urcl-submit-field");
+							$.each(or_list_item, function () {
+								var or_conditions = {
+									field_key: $(this).attr("name"),
+									field_value: $(this).val(),
+								};
+								inner_or_conditions.push(or_conditions);
+							});
+							or_data.push(inner_or_conditions);
+						});
+						or_field_data.push(or_data);
+					});
+					var all_fields = {
+						action: action,
+						conditions: all_field_data,
+						or_conditions: or_field_data,
+					};
+
+					form_data.push(all_fields);
+				});
+				return form_data;
+			},
+			/**
 			 * Get all the overrided email contents saved by the user.
 			 */
 			get_form_email_content_override_data: function () {
@@ -1522,15 +1604,27 @@
 									}
 								}
 
-								var label_node = selected_inputs
-									.find('input[data-field="required"]')
-									.closest(".ur-selected-item")
-									.find(".ur-label")
-									.find("label");
-								label_node.find("span:contains('*')").remove();
-								label_node.append(
-									'<span style="color:red">*</span>'
-								);
+								selected_inputs
+									.find(".ur-selected-item")
+									.each(function () {
+										if (
+											$(this)
+												.find(
+													'input[data-field="required"]'
+												)
+												.is(":checked")
+										) {
+											var label_node = $(this)
+												.find(".ur-label")
+												.find("label");
+											label_node
+												.find("span:contains('*')")
+												.remove();
+											label_node.append(
+												'<span style="color:red">*</span>'
+											);
+										}
+									});
 							},
 							/**
 							 * Structure for empty grid.
@@ -1592,6 +1686,12 @@
 											$this.draggable("enable");
 										}
 									}
+								});
+
+								var locked = ul_node.find(".ur-locked-field");
+								$.each(locked, function () {
+									$this = $(this);
+									$this.draggable("disable");
 								});
 							},
 							/**
@@ -2665,6 +2765,8 @@
 						case "field_name":
 						case "max_files":
 						case "input_mask":
+						case "hidden_value":
+						case "custom_class":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_field_name(
 									$(this)
@@ -4100,6 +4202,89 @@
 				});
 			});
 
+		$(document).on("click", function () {
+			if ($(document).find(".ur-smart-tags-list").is(":visible")) {
+				$(".ur-smart-tags-list").hide();
+			}
+		});
+
+		$(".ur-smart-tags-list").hide();
+
+		$(document.body).on(
+			"click",
+			".ur-smart-tags-list-button",
+			function (e) {
+				e.stopPropagation();
+				$(".ur-smart-tags-list").hide();
+				$(this).parent().find(".ur-smart-tags-list").toggle("show");
+			}
+		);
+
+		$(document.body).on("click", ".ur-select-smart-tag", function (event) {
+			event.preventDefault();
+			var smart_tag;
+			input_value = $(this)
+				.parent()
+				.parent()
+				.parent()
+				.find("input")
+				.val();
+			smart_tag = $(this).data("key");
+			input_value += smart_tag;
+			update_input(input_value);
+
+			$(this).parent().parent().parent().find("input").val(input_value);
+			$(document.body).find(".ur-smart-tags-list").hide();
+		});
+
+		$(document.body).on(
+			"change",
+			".ur_advance_setting.ur-settings-default-value",
+			function () {
+				input_value = $(this).val();
+				update_input(input_value);
+			}
+		);
+		$(document.body).on(
+			"change",
+			".ur-general-setting.ur-general-setting-hidden-value input",
+			function () {
+				input_value = $(this).val();
+				update_input(input_value);
+			}
+		);
+		/**
+		 * For update the default value.
+		 */
+		function update_input(input_value) {
+			active_field = $(".ur-item-active");
+			target_input_field = $(active_field).find(
+				".user-registration-field-option-group.ur-advance-setting-block"
+			);
+			ur_toggle_content = target_input_field.find(
+				".ur-advance-setting.ur-advance-default_value"
+			);
+			target_input = $(ur_toggle_content).find(
+				"input[data-id=text_advance_setting_default_value]"
+			);
+			target_textarea = $(ur_toggle_content).find(
+				"input[data-id=textarea_advance_setting_default_value]"
+			);
+
+			target_input_hidden_field = $(active_field).find(
+				".ur-general-setting-block"
+			);
+			ur_toggle_hidden_content = target_input_hidden_field.find(
+				".ur-general-setting.ur-general-setting-hidden-value"
+			);
+			target_hidden_input = $(ur_toggle_hidden_content).find(
+				'input[data-field="hidden_value"]'
+			);
+
+			target_input.val(input_value);
+			target_textarea.val(input_value);
+			target_hidden_input.val(input_value);
+		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *

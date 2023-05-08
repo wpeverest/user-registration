@@ -24,15 +24,17 @@ jQuery(function ($) {
 			var search_result_fields_count = $(this).find(
 				".ur-registered-item.ur-searched-item"
 			).length;
-			var hr = $(this).prev("hr");
-			var heading = $(this).prev("hr").prev(".ur-toggle-heading");
+			var hr = $(this).prev("hr"),
+				heading = $(this).prev("hr").prev(".ur-toggle-heading");
 
 			if (0 === search_result_fields_count) {
 				hr.hide();
 				heading.hide();
+				$(this).hide();
 			} else {
 				hr.show();
 				heading.show();
+				$(this).show();
 			}
 		});
 
@@ -44,38 +46,111 @@ jQuery(function ($) {
 		}
 	});
 
+	//Bind UI Actions for locked fields
+	$(document).on("mousedown", ".ur-locked-field", function (e) {
+		e.preventDefault();
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+		var field_data = $(this).data("field-data");
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			field_data.title +
+			"</span>";
+		Swal.fire({
+			title: title,
+			html: field_data.message,
+			showCloseButton: true,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
+			confirmButtonText: field_data.button_title,
+		}).then(function (result) {
+			if (result.value) {
+				var url = field_data.link;
+				window.open(url, "_blank");
+			}
+		});
+	});
 	// Bind UI Actions for upgradable fields
 	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
 		e.preventDefault();
 
-		var icon = '<i class="dashicons dashicons-lock"></i>';
-		var label = $(this).text();
-		var title =
-			icon +
-			'<span class="user-registration-swal2-modal__title">' +
-			label +
-			" is a premium field.</span>";
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 		var plan = $(this).data("plan");
-		var message =
-			label +
-			" field is locked. Upgrade to <strong>" +
-			plan +
-			"</strong> to unlock this field.";
+		var name = $(this).data("name");
+		var slug = $(this).data("slug"),
+			$this = $(this);
 
-		Swal.fire({
-			title: title,
-			html: message,
-			customClass:
-				"user-registration-swal2-modal user-registration-swal2-modal--centered",
-			showCloseButton: true,
-			confirmButtonText: "View Pricing",
-		}).then(function (result) {
-			if (result.value) {
-				var url =
-					"https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro";
-				window.open(url, "_blank");
-			}
-		});
+		if (slug != "" && plan != "") {
+			$.ajax({
+				url: user_registration_locked_form_fields_notice_params.ajax_url,
+				type: "POST",
+				data: {
+					action: "user_registration_locked_form_fields_notice",
+					slug: slug,
+					plan: plan,
+					name: name,
+					security:
+						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
+				},
+				success: function (response) {
+					var action_button = $(response.data.action_button).find(
+						"a"
+					);
+					var title =
+						icon +
+						'<span class="user-registration-swal2-modal__title" > ';
+
+					if (action_button.hasClass("activate-license-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.license_activation_required_message;
+						title +=
+							user_registration_locked_form_fields_notice_params.license_activation_required_title;
+					} else if (action_button.hasClass("activate-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.activation_required_title;
+					} else if (action_button.hasClass("install-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.installation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.installation_required_title;
+					} else {
+						var message =
+							user_registration_locked_form_fields_notice_params.unlock_message
+								.replace("%field%", $this.text())
+								.replace("%plan%", plan);
+						title +=
+							$this.text() +
+							" " +
+							user_registration_locked_form_fields_notice_params.lock_message;
+					}
+
+					title += "</span>";
+					message =
+						message + "<br><br>" + response.data.action_button;
+					Swal.fire({
+						title: title,
+						html: message,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+						showCloseButton: true,
+						showConfirmButton: false,
+						allowOutsideClick: false,
+					}).then(function (result) {
+						// Do Nothing.
+					});
+				},
+			});
+		}
 	});
 
 	// Adjust builder width
@@ -615,6 +690,19 @@ jQuery(function ($) {
 				$(".ur_export_form_action_button").attr("type", "submit");
 			}
 		});
+		$(".ur_export_user_action_button").on("click", function () {
+			var formid = $("#selected-export-user-form").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
+				$(".ur-export-users-page").prepend(message_string);
+			} else {
+				$(".ur_export_user_action_button").attr("type", "submit");
+			}
+		});
 	});
 })(jQuery, window.user_registration_admin_data);
 
@@ -674,7 +762,7 @@ function ur_confirmation(message, options) {
 		options.title;
 	Swal.fire({
 		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+			"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-trashed",
 		title: title,
 		text: message,
 		showCancelButton:

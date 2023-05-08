@@ -16,9 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class UR_Field_Settings {
 
 	/**
-	 * Field Id.
+	 * Field id for this object.
 	 *
-	 * @var string
+	 * @since 1.0.0
+	 * @var int
 	 */
 	public $field_id;
 
@@ -62,7 +63,7 @@ abstract class UR_Field_Settings {
 	 *
 	 * @param array $field_data field Data.
 	 *
-	 * @return mixed
+	 * @param array $field_data field data.
 	 */
 	abstract public function output( $field_data = array() );
 
@@ -84,7 +85,12 @@ abstract class UR_Field_Settings {
 
 		foreach ( $fields as $field_key => $field ) {
 
-			$tooltip_html       = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+			$smart_tags   = '';
+			if ( 'default_value' === $field_key ) {
+				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
+			}
+
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
 
 			if ( 'toggle' !== $field['type'] ) {
@@ -104,6 +110,7 @@ abstract class UR_Field_Settings {
 					}
 
 					$this->fields_html .= ' />';
+					$this->fields_html .= $smart_tags;
 					break;
 
 				case 'select':

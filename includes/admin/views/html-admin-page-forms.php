@@ -84,8 +84,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</div>
 										<div class="ur-fields-not-found" hidden>
 											<img src="<?php echo esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/not-found.png' ); ?>" />
-											<h3 class="ur-fields-not-found-title">Whoops!</h3>
-											<span>There is not any field that you were searching for.</span>
+											<h3 class="ur-fields-not-found-title"><?php esc_html_e( 'Whoops!', 'user-registration' ); ?></h3>
+											<span><?php esc_html_e( 'There is not any field that you were searching for.', 'user-registration' ); ?></span>
 										</div>
 										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>

@@ -84,13 +84,13 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
-			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
+			$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 		} else {
 			$this->match_password( $form_field_data, $form_data );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 			$this->validate_password_data( $form_field_data, $form_data );
-			$user_pass = wp_slash( $this->valid_form_data['user_pass']->value );
+			$user_pass = $this->valid_form_data['user_pass']->value;
 		}
 
 		// Modify UR_Frontend_Form_Handler::$response_array variable.
@@ -162,7 +162,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				if ( $this->is_field_required( $single_form_field ) ) {
+				if ( $this->is_field_required( $single_form_field, $form_data ) ) {
 					array_unshift( $validations, 'required' );
 				}
 
@@ -185,7 +185,7 @@ class UR_Form_Validation extends UR_Validation {
 				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
 				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
 
-				$this->valid_form_data[ $data->field_name ] = $this->get_sanitize_value( $data );
+				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 
 				/**
 				 * Hook to custom validate form field.
@@ -256,7 +256,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param  obj $form_data Form data.
 	 * @return object
 	 */
-	public function get_sanitize_value( &$form_data ) {
+	public static function get_sanitize_value( &$form_data ) {
 
 		$field_key = isset( $form_data->extra_params['field_key'] ) ? $form_data->extra_params['field_key'] : '';
 		$fields    = ur_get_registered_form_fields();
@@ -548,7 +548,9 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [object] $field Field object.
 	 * @return boolean
 	 */
-	public function is_field_required( $field ) {
+	public function is_field_required( $field, $form_data = array() ) {
+
+		$is_required = false;
 
 		if ( ! empty( $field ) ) {
 			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : 'no';
@@ -560,7 +562,7 @@ class UR_Form_Validation extends UR_Validation {
 			}
 		}
 
-		return false;
+		return apply_filters( 'user_registration_is_field_required', $is_required, $field, $form_data );
 	}
 
 

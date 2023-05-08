@@ -115,6 +115,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							if ( 'data-date-format' === $name ) {
 								$date_format = $value;
 							}
+							if ( 'data-default-date' === $name ) {
+								continue;
+							}
 							if ( 'data-mode' === $name ) {
 								$date_mode = $value;
 							}
