@@ -98,6 +98,13 @@ jQuery(function ($) {
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
+
+					if (!action_button.length) {
+						action_button = $(response.data.action_button).find(
+							"form"
+						);
+					}
+
 					var title =
 						icon +
 						'<span class="user-registration-swal2-modal__title" > ';
