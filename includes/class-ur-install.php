@@ -53,6 +53,9 @@ class UR_Install {
 		'3.0.0'   => array(
 			'ur_update_300_option_migrate',
 		),
+		'4.0.0'   => array(
+			'ur_pro_update_400_option_migrate',
+		),
 	);
 
 	/**

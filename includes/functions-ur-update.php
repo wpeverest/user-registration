@@ -326,8 +326,6 @@ function ur_update_162_meta_key() {
  */
 function ur_update_300_option_migrate() {
 
-	$selected_roles_pages = get_option( 'ur_pro_settings_redirection_after_registration', array() );
-
 	// Get all posts with user_registration post type.
 	$posts = get_posts( 'post_type=user_registration' );
 
@@ -338,9 +336,5 @@ function ur_update_300_option_migrate() {
 		if ( ! empty( $redirect_url ) ) {
 			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'external-url' );
 		}
-
-		if ( ! empty( $selected_roles_pages ) ) {
-			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'role-based-redirection' );
-		};
 	}
 }
