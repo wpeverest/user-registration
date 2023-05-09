@@ -385,17 +385,20 @@
       border-radius: 5px;
       padding: 10px; }
     .user-registration-settings .user-registration-settings-container .user-registration-options-container .notice-success {
+      max-width: 680px;
       padding: 12px 12px 12px 16px;
       border: 0;
       border-left: 3px solid #4CC741;
       margin: 0;
       margin-bottom: 24px;
-      background: #F5FFF4;
+      background: #f6fff5;
       box-shadow: none; }
       .user-registration-settings .user-registration-settings-container .user-registration-options-container .notice-success p {
         margin: 0;
         padding: 0;
         color: #6b6b6b; }
+        .user-registration-settings .user-registration-settings-container .user-registration-options-container .notice-success p strong {
+          font-weight: 400; }
     .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card {
       padding: 16px 20px 22px;
       background: #fafafc;
@@ -405,6 +408,9 @@
       margin-bottom: 24px;
       max-width: 680px;
       position: relative; }
+      @media (min-width: 1440px) {
+        .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card {
+          max-width: 900px; } }
       .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card:last-child {
         margin-bottom: 0; }
       .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card.pro-options {
@@ -574,10 +580,7 @@
               .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:hover {
                 color: #383838; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container {
-              width: 385px !important; }
-              @media (max-width: 1199px) {
-                .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container {
-                  width: 100% !important; } }
+              width: 100% !important; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection {
               padding-left: 0;
               padding-right: 0; }
@@ -644,7 +647,10 @@
                   opacity: 0.5; }
                   .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item label input {
                     display: none; }
-            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button-customize-login, .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-image-uploader {
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button-customize-login {
+              max-width: 50%;
+              text-align: center; }
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-image-uploader {
               max-width: 40%;
               text-align: center; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field #select-smart-tags {

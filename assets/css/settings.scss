@@ -993,7 +993,12 @@ body {
 								}
 							}
 
-							.button-customize-login, .ur-image-uploader {
+							.button-customize-login {
+								max-width: 50%;
+								text-align: center;
+							}
+
+							.ur-image-uploader {
 								max-width: 40%;
 								text-align: center;
 							}
