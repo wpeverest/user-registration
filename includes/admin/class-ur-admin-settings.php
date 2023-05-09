@@ -385,7 +385,6 @@ class UR_Admin_Settings {
 								$settings    .= '<div class="user-registration-global-settings">';
 								$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 								$settings    .= '<div class="user-registration-global-settings--field">';
-								$settings    .= '<span class="colorpickpreview" style="background: ' . esc_attr( $option_value ) . '"></span>';
 								$settings    .= '<input
 										name="' . esc_attr( $value['id'] ) . '"
 										id="' . esc_attr( $value['id'] ) . '"

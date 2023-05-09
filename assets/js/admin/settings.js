@@ -51,7 +51,10 @@
 		})
 		.on("click", function () {
 			$(".iris-picker").hide();
-			$(this).closest("td").find(".iris-picker").show();
+			$(this)
+				.closest(".user-registration-global-settings--field")
+				.find("> .iris-picker")
+				.show();
 		});
 
 	$("body").on("click", function () {
