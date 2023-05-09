@@ -208,6 +208,9 @@ jQuery(function ($) {
 		}
 	);
 
+	$("#ur-form-name").on("change", function () {
+		$(".ur-form-title").text($(this).val());
+	});
 	// In case the user goes out of focus from title edit state.
 	$(document)
 		.not($(".user-registration-editable-title"))

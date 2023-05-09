@@ -3151,7 +3151,7 @@
 							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-parameter_name")
+									.find(".ur-advance-address_style")
 									.hide();
 							}
 
