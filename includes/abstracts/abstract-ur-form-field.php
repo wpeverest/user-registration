@@ -648,7 +648,6 @@ abstract class UR_Form_Field {
 				default:
 					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
-			$general_setting_wrapper .= $smart_tags;
 			$general_setting_wrapper .= '</div>';
 			$general_setting_html    .= $general_setting_wrapper;
 
