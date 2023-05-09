@@ -263,7 +263,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		$tooltip_html = '';
 
-		if ( isset( $args['tooltip'] ) && 'yes' === $args['tooltip'] ) {
+		if ( isset( $args['tooltip'] ) && ur_string_to_bool( $args['tooltip'] ) ) {
 			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
 		} elseif ( isset( $args['tip'] ) ) {
 			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
