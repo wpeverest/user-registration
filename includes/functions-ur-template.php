@@ -354,7 +354,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 			case 'toggle':
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
-				$default           = ! empty( $value ) ? $value : $default_value;
+				$value             = ! empty( $value ) ? $value : $default_value;
 				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
 				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
@@ -362,7 +362,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$field  = '<div class="ur-toggle-section ur-form-builder-toggle">';
 				$field .= '<span class="user-registration-toggle-form">';
-				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' />';
+				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . ur_string_to_bool( $value ) . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( ur_string_to_bool( $value ), 1, false ) . ' />';
 				$field .= '<span class="slider round"></span>';
 				$field .= '</span>';
 				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
