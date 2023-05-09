@@ -611,6 +611,10 @@ body {
 				max-width: 680px;
 				position: relative;
 
+				@media (min-width: 1440px) {
+					max-width: 900px;
+				}
+
 				&:last-child {
 					margin-bottom: 0;
 				}
@@ -875,11 +879,11 @@ body {
 							}
 
 							span.select2-container {
-								width: 385px !important;
+								width: 100% !important;
 
-								@media (max-width: 1199px) {
-									width: 100% !important;
-								}
+								// @media (max-width: 1199px) {
+								// 	width: 100% !important;
+								// }
 							}
 
 							.select2-selection {
