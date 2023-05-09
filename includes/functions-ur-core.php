@@ -3198,6 +3198,32 @@ if ( ! function_exists( 'ur_is_valid_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_option_checked' ) ) {
+	/**
+	 * Returns whether a setting checkbox or toggle is enabled.
+	 *
+	 * @param string $option_name Option Name.
+	 * @param string $default Default Value.
+	 * @return boolean
+	 */
+	function ur_option_checked( $option_name = '', $default = '' ) {
+
+		if ( empty( $option_name ) ) {
+			return false;
+		}
+
+		$option_value = get_option( $option_name, $default );
+
+		// Handling Backward Compatibility.
+		if ( 'yes' === $option_value ) {
+			return true;
+		} elseif ( 'no' === $option_value ) {
+			return false;
+		}
+
+		return ur_string_to_bool( $option_value );
+	}
+}
 
 if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 	/**

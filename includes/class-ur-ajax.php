@@ -87,7 +87,6 @@ class UR_AJAX {
 	public static function search_global_settings() {
 		check_ajax_referer( 'user_registration_search_global_settings', 'security' );
 
-
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( -1 );
 		}
@@ -718,7 +717,7 @@ class UR_AJAX {
 			$message = $user->get_error_message();
 			wp_send_json_error( array( 'message' => $message ) );
 		} else {
-			if ( in_array( 'administrator', $user->roles ) && 'yes' === get_option( 'user_registration_login_options_prevent_core_login', 'no' ) ) {
+			if ( in_array( 'administrator', $user->roles ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) ) {
 				$redirect = admin_url();
 			} else {
 				if ( ! empty( $_POST['redirect'] ) ) {

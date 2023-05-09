@@ -46,13 +46,13 @@ $placeholders = array(
 	'username' => get_option( 'user_registration_placeholder_username_or_email', '' ),
 	'password' => get_option( 'user_registration_placeholder_password', '' ),
 );
-$hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
+$hide_labels  = ur_option_checked( 'user_registration_login_options_hide_labels', false );
 
 $enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
 
-$enable_field_icon = 'yes' === get_option( 'user_registration_pro_general_setting_login_form', 'no' );
+$enable_field_icon = ur_option_checked( 'user_registration_pro_general_setting_login_form', false );
 
-$login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
+$login_title = ur_option_checked( 'user_registration_login_title', false );
 
 ?>
 
@@ -86,7 +86,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<?php } ?>
 						</span>
 					</p>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) ? ' hide_show_password' : ''; ?>">
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
 						if ( ! $hide_labels ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
@@ -97,7 +97,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo $enable_field_icon ? 'padding-left: 32px !important' : ''; ?>" />
 
 						<?php
-						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 							?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
 						</span>

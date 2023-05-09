@@ -107,8 +107,8 @@ function ur_get_wpml_page_language( $page_id ) {
  * @return string
  */
 function ur_get_page_permalink( $page ) {
-	$page_id   = ur_get_page_id( $page );
-	$page = $page_id;
+	$page_id = ur_get_page_id( $page );
+	$page    = $page_id;
 
 	if ( $page_id > 0 && function_exists( 'pll_current_language' ) ) {
 		$current_language = pll_current_language();
@@ -120,7 +120,7 @@ function ur_get_page_permalink( $page ) {
 		$page = ur_get_wpml_page_language( $page_id );
 	}
 
-	$permalink = 0 < $page ? get_permalink( $page ) :  ( 0 < $page_id ? get_permalink( $page_id ) : get_home_url()) ;
+	$permalink = 0 < $page ? get_permalink( $page ) : ( 0 < $page_id ? get_permalink( $page_id ) : get_home_url() );
 
 	return apply_filters( 'user_registration_get_' . $page . '_page_permalink', $permalink );
 }
@@ -132,19 +132,19 @@ if ( ! function_exists( 'ur_get_login_url' ) ) {
 	 * @return string Complete Login Page address.
 	 */
 	function ur_get_login_url() {
-		$my_account_page_id   = absint( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
+		$my_account_page_id = absint( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
 
 		if ( $my_account_page_id > 0 && function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
 			if ( ! empty( $current_language ) ) {
-				$translations = pll_get_post_translations( $my_account_page_id );
-				$my_account_page_id         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
+				$translations       = pll_get_post_translations( $my_account_page_id );
+				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
 		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
-		$permalink =  0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
+		$permalink = 0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
 
 		return $permalink;
 	}
@@ -167,14 +167,14 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 		if ( $my_account_page_id > 0 && function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
 			if ( ! empty( $current_language ) ) {
-				$translations = pll_get_post_translations( $my_account_page_id );
-				$my_account_page_id         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
+				$translations       = pll_get_post_translations( $my_account_page_id );
+				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
 		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
-		$permalink =  0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
+		$permalink = 0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
 
 		if ( $permalink ) {
 			return $permalink;
@@ -201,7 +201,7 @@ if ( ! function_exists( 'ur_get_current_language' ) ) {
 	 * @return string Current Language Code.
 	 */
 	function ur_get_current_language() {
-		$current_language = get_bloginfo("language");
+		$current_language = get_bloginfo( 'language' );
 
 		if ( function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
@@ -245,7 +245,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 
 	if (
 		 get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
-		'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
 
@@ -283,7 +283,7 @@ function ur_nav_menu_items( $items ) {
 
 	foreach ( $items as $item ) {
 
-		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && 'yes' === get_option( 'user_registration_disable_logout_confirmation', 'no' ) ) {
+		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}

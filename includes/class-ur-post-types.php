@@ -5,8 +5,6 @@
  * @class    UR_Post_Types
  * @version  1.0.0
  * @package  UserRegistration/Admin
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -86,7 +84,7 @@ class UR_Post_Types {
 	 * @since 1.2.0
 	 */
 	public static function maybe_flush_rewrite_rules() {
-		if ( 'yes' === get_option( 'user_registration_queue_flush_rewrite_rules' ) ) {
+		if ( ur_option_checked( 'user_registration_queue_flush_rewrite_rules' ) ) {
 			update_option( 'user_registration_queue_flush_rewrite_rules', 'no' );
 			self::flush_rewrite_rules();
 		}
