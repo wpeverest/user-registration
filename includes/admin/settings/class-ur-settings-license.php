@@ -19,13 +19,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 	class UR_Settings_License extends UR_Settings_Page {
 
 		/**
-		 * Setting Id.
-		 *
-		 * @var string
-		 */
-		public $id = 'license';
-
-		/**
 		 * Constructor.
 		 */
 		public function __construct() {
@@ -33,13 +26,14 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			$this->id    = 'license';
 			$this->label = __( 'License', 'user-registration' );
 
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 999 );
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_filter( 'show_user_registration_setting_message', array( $this, 'filter_notice' ) );
 
 			if ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] ) { // phpcs:ignore
 				add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
+				add_filter( 'user_registration_admin_field_license_options', array( $this, 'license_options_settings' ), 10, 2 );
 			}
 		}
 
@@ -68,7 +62,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 				array(
 					'title'    => '',
 					'sections' => array(
-						'license_options' => array(
+						'license_options_settings' => array(
 							'title'    => __( 'License Activation', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below inorder to use our premium addons smoothly.', 'user-registration' ),
@@ -90,7 +84,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 
 			// Replace license input box and display deactivate license button when license is activated.
 			if ( get_option( 'user-registration_license_key' ) ) {
-				$settings['sections']['license_options']['settings'] = array(
+				$settings['sections']['license_options_settings']['settings'] = array(
 					array(
 						'title'    => __( 'Deactivate License', 'user-registration' ),
 						'desc'     => '',
@@ -106,9 +100,13 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 							),
 						),
 					),
+					array(
+						'type' => 'license_options',
+						'id'   => 'user_registration_license_section_settings',
+					),
 				);
 
-				$settings['sections']['license_options']['desc'] = __( 'Your license has already been activated. Enjoy using <strong>User Registration</strong>.', 'user-registration' );
+				$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" target="_blank">', '</a>' );
 
 				// Hide save changes button from settings when license is activated.
 				$GLOBALS['hide_save_button'] = true;
@@ -129,7 +127,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			} else {
 				$settings = array();
 			}
-
 			UR_Admin_Settings::output_fields( $settings );
 		}
 
@@ -155,6 +152,34 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 		 */
 		public function user_registration_license_setting_label() {
 			return esc_html__( 'Activate License', 'user-registration' );
+		}
+
+		/**
+		 * License Expiry Settings.
+		 *
+		 * @param string $settings Settings.
+		 * @param mixed  $value Value.
+		 */
+		public function license_options_settings( $settings, $value ) {
+			$license_data     = ur_get_license_plan();
+			$license_date_str = ! empty( $license_data->expires ) ? $license_data->expires : '';
+			if ( 'lifetime' === $license_date_str || '' === $license_date_str ) {
+				$license_date_formatted = $license_date_str;
+			} else {
+				$license_date_obj       = new DateTime( $license_date_str );
+				$license_date_formatted = $license_date_obj->format( 'jS F Y h:i A' );
+			}
+			$settings .= '<div class="user-registration-global-settings">';
+			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Plan', 'user-registration' ) . '</label>';
+			$settings .= '<div class="user-registration-global-settings--field">';
+			$settings .= ! empty( $license_data->item_name ) ? $license_data->item_name : '';
+			$settings .= '</div></div>';
+			$settings .= '<div class="user-registration-global-settings">';
+			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Plan', 'user-registration' ) . '</label>';
+			$settings .= '<div class="user-registration-global-settings--field">';
+			$settings .= $license_date_formatted;
+			$settings .= '</div></div>';
+			return $settings;
 		}
 
 	}
