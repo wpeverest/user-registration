@@ -36,9 +36,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
 		if ( is_numeric( $profile_picture_url ) ) {
-			$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+			$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 		}
-			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+			$image = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 
 		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 

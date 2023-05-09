@@ -3203,6 +3203,7 @@ if ( ! function_exists( 'ur_option_checked' ) ) {
 	 * Returns whether a setting checkbox or toggle is enabled.
 	 *
 	 * @param string $option_name Option Name.
+	 * @param string $default Default Value.
 	 * @return boolean
 	 */
 	function ur_option_checked( $option_name = '', $default = '' ) {

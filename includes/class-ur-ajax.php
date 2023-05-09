@@ -87,7 +87,6 @@ class UR_AJAX {
 	public static function search_global_settings() {
 		check_ajax_referer( 'user_registration_search_global_settings', 'security' );
 
-
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( -1 );
 		}
