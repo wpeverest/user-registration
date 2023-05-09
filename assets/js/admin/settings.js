@@ -4,14 +4,35 @@
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
 			if ("specific" === $(this).val()) {
-				$(this).closest("tr").next("tr").hide();
-				$(this).closest("tr").next().next("tr").show();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.show();
 			} else if ("all_except" === $(this).val()) {
-				$(this).closest("tr").next("tr").show();
-				$(this).closest("tr").next().next("tr").hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.show();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.hide();
 			} else {
-				$(this).closest("tr").next("tr").hide();
-				$(this).closest("tr").next().next("tr").hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.hide();
 			}
 		})
 		.trigger("change");
@@ -104,66 +125,72 @@
 		function () {
 			if ($(this).is(":checked")) {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 			} else {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 			}
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.show();
 		}
 	);
