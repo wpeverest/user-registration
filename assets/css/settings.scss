@@ -581,6 +581,7 @@ body {
 			}
 			// Success Message CSS
 			.notice-success {
+				max-width: 680px;
 				padding: $spacing_12px $spacing_12px $spacing_12px $spacing_16px;
 				border: 0;
 				border-left: 3px solid $green;
@@ -593,6 +594,10 @@ body {
 					margin: 0;
 					padding: 0;
 					color: $grey-300;
+
+					strong {
+						font-weight: $regular;
+					}
 				}
 			}
 			// General Settings
