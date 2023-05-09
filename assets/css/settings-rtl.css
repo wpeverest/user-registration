@@ -129,6 +129,8 @@
         .user-registration-settings .user-registration-header--top .ur-search--top-settings input::placeholder {
           color: #bababa;
           font-weight: 400; }
+        .user-registration-settings .user-registration-header--top .ur-search--top-settings input.ui-autocomplete-loading {
+          background-position: 5% center; }
       .user-registration-settings .user-registration-header--top .ur-search--top-settings .user-registration-search-icon {
         position: absolute;
         top: 11px;
@@ -250,7 +252,7 @@
             text-align: right;
             top: 50%;
             left: -214px;
-            z-index: 1;
+            z-index: 10;
             transform: translateY(-50%); }
             .user-registration-settings .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium .ur-tooltip::after {
               content: "";
@@ -381,7 +383,7 @@
     .user-registration-settings .user-registration-settings-container .user-registration-options-container .ur-searched-settings-focus {
       border: 2px solid #475bb2;
       border-radius: 5px;
-      padding: 2px; }
+      padding: 10px; }
     .user-registration-settings .user-registration-settings-container .user-registration-options-container .notice-success {
       padding: 12px 16px 12px 12px;
       border: 0;
@@ -703,3 +705,14 @@
       padding: 0; }
       .user-registration-settings .user-registration-settings-container p.submit .button-primary {
         transition: all .3s ease-in-out; }
+
+.user-registration-ui-autocomplete {
+  font-size: 12px !important; }
+  .user-registration-ui-autocomplete .ui-menu-item {
+    padding: 0px !important; }
+    .user-registration-ui-autocomplete .ui-menu-item .ui-menu-item-wrapper {
+      padding: 10px;
+      color: black; }
+      .user-registration-ui-autocomplete .ui-menu-item .ui-menu-item-wrapper.ui-state-active {
+        color: white;
+        background: #0073aa; }

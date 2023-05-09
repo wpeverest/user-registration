@@ -150,6 +150,10 @@ body {
 						color: $grey-100;
 						font-weight: $regular;
 					}
+
+					&.ui-autocomplete-loading {
+						background-position: 95% center;
+					}
 				}
 
 				.user-registration-search-icon {
@@ -340,7 +344,7 @@ body {
 						text-align: left;
 						top: 50%;
 						right: -214px;
-						z-index: 1;
+						z-index: 10;
 						transform: translateY(-50%);
 
 						&::after {
@@ -1081,4 +1085,23 @@ body {
 			}
 		}
 	}
+}
+
+.user-registration-ui-autocomplete {
+	font-size: 12px !important;
+
+	.ui-menu-item {
+		padding: 0px !important;
+
+		.ui-menu-item-wrapper {
+			padding: 10px;
+			color: black;
+
+			&.ui-state-active {
+				color: white;
+				background: #0073aa;
+			}
+		}
+	}
+
 }

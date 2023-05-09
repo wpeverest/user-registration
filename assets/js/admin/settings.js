@@ -453,6 +453,7 @@
 				"security",
 				user_registration_settings_params.user_registration_search_global_settings_nonce
 			);
+			$(".user-registration-search-icon").hide();
 
 			$.ajax({
 				url: user_registration_settings_params.ajax_url,
@@ -467,16 +468,24 @@
 						var results = responsed.responseJSON.data.results;
 						response(results);
 					}
+					$(".user-registration-search-icon").show();
 				},
 			});
 		},
+		classes: {
+			"ui-autocomplete": "user-registration-ui-autocomplete",
+		},
 		minLength: 3, // Minimum characters required to trigger autocomplete
 		focus: function (event, ui) {
-			$(".ui-autocomplete > li").attr("title", ui.item.desc);
+			$(".user-registration-ui-autocomplete > li").attr(
+				"title",
+				ui.item.desc
+			);
+			$("#ur-search-settings").val(ui.item.label);
+			return false;
 		},
 		select: function (event, ui) {
 			// Update the input field value with the selected value
-
 			if ("no_result_found" !== ui.item.value) {
 				$(".user-registration #ur-search-settings").val(ui.item.label);
 				// Redirect the user to the selected URL
@@ -540,13 +549,12 @@
 
 		var offset = $(".ur-searched-settings-focus").parent().offset().top;
 		window.scrollTo({
-			top: offset,
+			top: offset - 200,
 			behavior: "smooth",
 		});
-
 		setTimeout(function () {
 			wrapper_div.removeClass("ur-searched-settings-focus");
-		}, 3000);
+		}, 2000);
 	}
 	/**
 	 * Get Query String.
