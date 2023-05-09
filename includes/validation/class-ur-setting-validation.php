@@ -68,15 +68,18 @@ class UR_Setting_Validation {
 		$setting_label = isset( $option['title'] ) ? $option['title'] : '';
 		$setting_type  = isset( $option['type'] ) ? $option['type'] : null;
 
-		if ( ! is_null( $setting_type ) ) {
+		if ( ! is_null( $setting_type ) && ! empty( $value ) ) {
 			$setting_key = $option['id'];
 			$value       = $this->sanitize( $value, $setting_type );
 
 			$validations = $this->get_custom_validations( $setting_key );
+
 			if ( ! is_array( $validations ) ) {
 				$validations = $this->get_setting_validations( $setting_type );
-				$validations = apply_filters( 'user_registration_validate_' . $setting_type, $validations );
 			}
+
+			$validations = apply_filters( 'user_registration_validate_' . $setting_type, $validations, $option, $value );
+
 			foreach ( $validations as $validation ) {
 				if ( method_exists( 'UR_Validation', $validation ) ) {
 					$result = UR_Validation::$validation( $value );
@@ -129,8 +132,14 @@ class UR_Setting_Validation {
 	 * @return void
 	 */
 	public function set_custom_validations() {
-		$this->custom_validations = array(
-			'user_registration_integration_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
+		$this->custom_validations = apply_filters(
+			'user_registration_custom_validations_settings',
+			array(
+				'user_registration_integration_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
+				'user_registration_general_setting_registration_url_options' => array( 'is_url' ),
+				'user_registration_email_from_address' => array( 'is_email' ),
+				'user_registration_email_send_to'      => array( 'is_email' ),
+			)
 		);
 	}
 
@@ -162,9 +171,11 @@ class UR_Setting_Validation {
 			'user_registration_setting_validation_messages',
 			array(
 				// phpcs:disable
-				'negative_value'   => esc_html__( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
-				'non_integer'      => esc_html__( 'Please enter an integer value for %s.', 'user-registration' ),
-				'non_numeric_data' => esc_html__( 'Please enter a numeric value for %s.', 'user-registration' ),
+				'negative_value'   => __( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
+				'non_integer'      => __( 'Please enter an integer value for %s.', 'user-registration' ),
+				'non_numeric_data' => __( 'Please enter a numeric value for %s.', 'user-registration' ),
+				'invalid_url'      => __( 'Please enter a valid url for %s.', 'user-registration' ),
+				'invalid_email'    => __( 'Please enter a valid email for %s.', 'user-registration' )
 				// phpcs:enable
 			)
 		);
@@ -187,11 +198,12 @@ class UR_Setting_Validation {
 		$message = isset( $messages[ $error_code ] ) ? $messages[ $error_code ] : '';
 
 		if ( empty( $message ) ) {
-			return __( 'The specified setting value cannot be saved.', 'user-registration' );
-		} else {
-			$message = sprintf( $message, $setting_label );
-			return $message;
+			/* translators: %s: Field Label. */
+			$message = __( 'Please enter a valid value for %s.', 'user-registration' );
 		}
+
+		$message = sprintf( $message, $setting_label );
+		return $message;
 	}
 
 
@@ -204,14 +216,6 @@ class UR_Setting_Validation {
 	 */
 	private function sanitize( $value, $setting_type ) {
 		switch ( $setting_type ) {
-			case 'checkbox':
-				$value = ur_string_to_bool( $value );
-				$value = $value ? 1 : 0;
-				break;
-			case 'toggle':
-				$value = ur_string_to_bool( $value );
-				$value = $value ? 1 : 0;
-				break;
 			case 'number':
 				$floatval = floatval( $value );
 				$value    = ! empty( $floatval ) ? $value : 0;

@@ -836,8 +836,7 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-
-	if ( 'privacy_policy' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
@@ -1464,7 +1463,7 @@ function ur_get_user_login_option() {
 			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
 			'id'       => 'user_registration_email_setting_disable_email',
 			'default'  => 'no',
-			'type'     => 'checkbox',
+			'type'     => 'toggle',
 			'autoload' => false,
 		);
 	} else {
@@ -1627,7 +1626,7 @@ function ur_get_user_extra_fields( $user_id ) {
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value );
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not supported below php v7.1.
 				$value = implode( ',', $value );
 			}
 
@@ -2129,7 +2128,8 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 	// Generate $data_html string to replace for {{all_fields}} smart tag.
 	foreach ( $valid_form_data as $field_meta => $form_data ) {
-		if ( 'user_confirm_password' === $field_meta ) {
+
+		if ( 'user_confirm_password' === $field_meta || 'user_pass' === $field_meta || preg_match( '/password_/', $field_meta ) ) {
 			continue;
 		}
 
@@ -2233,6 +2233,9 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'wysiwyg',
 									'billing_address_title',
 									'shipping_address_title',
+									'stripe_gateway',
+									'profile_picture',
+									'file',
 								);
 
 								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
@@ -2570,13 +2573,14 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 	 * @since 1.5.0.
 	 */
 	function ur_profile_picture_migration_script() {
+
+		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
+
 			$users = get_users(
 				array(
 					'meta_key' => 'user_registration_profile_pic_url',
 				)
 			);
-
-		if ( ! get_option( 'ur_profile_picture_migrated', false ) ) {
 
 			foreach ( $users as $user ) {
 				$user_registration_profile_pic_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
@@ -2675,7 +2679,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();
 				if ( ! isset( $countries[ $field_value ] ) ) {
-					$key = array_search( $field_value, $countries );
+					$key = array_search( $field_value, $countries, true );
 					if ( $key ) {
 						$field_value = $key;
 					}
@@ -2926,7 +2930,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 				}
 			}
 
-			return isset( $license_data->item_plan ) ? $license_data->item_plan : false;
+			return isset( $license_data ) ? $license_data : false;
 		}
 
 		return false;
@@ -3031,7 +3035,8 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 
 		return $output;
 	}
-}
+} //phpcs:ignore
+
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 	/**
@@ -3135,14 +3140,15 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
-
-				$moved = rename( $upload['file_path'], $file_path );
+				// Check the type of file. We'll use this as the 'post_mime_type'.
+				$filetype = wp_check_filetype( basename( $file_name ), null );
+				$moved    = rename( $upload['file_path'], $file_path );
 
 				if ( $moved ) {
 					$attachment_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
-							'post_mime_type' => $upload['file_extension'],
+							'post_mime_type' => $filetype['type'],
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', sanitize_file_name( $file_name ) ),
 							'post_content'   => '',
 							'post_status'    => 'inherit',
@@ -3215,5 +3221,162 @@ if ( ! function_exists( 'ur_option_checked' ) ) {
 		}
 
 		return ur_string_to_bool( $option_value );
+	}
+}
+
+if ( ! function_exists( 'ur_check_captch_keys' ) ) {
+	/**
+	 * Check the site key and secret key for the selected captcha type, are valid or not.
+	 *
+	 * @return bool
+	 */
+	function ur_check_captch_keys() {
+		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+
+		$site_key   = '';
+		$secret_key = '';
+
+		if ( 'v2' === $recaptcha_type ) {
+			if ( 'yes' === $invisible_recaptcha ) {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+			} else {
+				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+			}
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+		}
+
+		if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			return true;
+		}
+
+		return false;
+
+	}
+}
+
+if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
+
+	/**
+	 * Settings tab list to display as premium tabs.
+	 *
+	 * @since 3.0.0
+	 */
+	function ur_premium_settings_tab() {
+
+		$premium_tabs = array(
+			'woocommerce'                            => array(
+				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
+				'plugin' => 'user-registration-woocommerce',
+				'plan'   => array( 'personal', 'plus', 'professional' ),
+			),
+			'content_restriction'                    => array(
+				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
+				'plugin' => 'user-registration-content-restriction',
+				'plan'   => array( 'personal', 'plus', 'professional' ),
+			),
+			'file_upload'                            => array(
+				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
+				'plugin' => 'user-registration-file-upload',
+				'plan'   => array( 'personal', 'plus', 'professional' ),
+			),
+			'user-registration-customize-my-account' => array(
+				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
+				'plugin' => 'user-registration-customize-my-account',
+				'plan'   => array( 'plus', 'professional' ),
+			),
+		);
+
+		return apply_filters( 'user_registration_premium_settings_tab', $premium_tabs );
+	}
+}
+
+add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
+
+if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
+
+	/**
+	 * Method to display premium settings tabs.
+	 *
+	 * @since 3.0.0
+	 */
+	function ur_display_premium_settings_tab() {
+		$license_data    = ur_get_license_plan();
+		$license_plan    = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+		$premium_tabs    = ur_premium_settings_tab();
+		$tabs_to_display = array();
+		$tab_html        = '';
+
+		foreach ( $premium_tabs as $tab => $detail ) {
+			$tooltip_html = '';
+			$button       = '';
+			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+				continue;
+			}
+
+			if ( ! empty( $license_plan ) ) {
+				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
+					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+						continue;
+					}
+
+					/* translators: %s: License Plan Name. */
+					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					array_push( $tabs_to_display, $tab );
+				} else {
+					$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+					$action      = '';
+
+					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+							$action = 'Activate';
+						} else {
+							continue;
+						}
+					} else {
+						$action = 'Install';
+					}
+
+					/* translators: %s: Addon Name. */
+					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, $plugin_name );
+
+					/* translators: %s: Action Name. */
+					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+					array_push( $tabs_to_display, $tab );
+				}
+			} else {
+
+				if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+					continue;
+				}
+
+				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+				$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				array_push( $tabs_to_display, $tab );
+			}
+
+			if ( in_array( $tab, $tabs_to_display, true ) ) {
+				$tab_html .= '<button class="nav-tab ur-nav__link ur-nav-premium" disabled>';
+				$tab_html .= '<span class="ur-tooltip">' . esc_html( $tooltip_html ) . wp_kses_post( $button ) . '</span>';
+				$tab_html .= '<span class="ur-nav__link-icon">';
+				$tab_html .= ur_file_get_contents( '/assets/images/settings-icons/' . $tab . '.svg' );
+				$tab_html .= '</span>';
+				$tab_html .= '<span class="ur-nav__link-label">';
+				$tab_html .= '<p>' . esc_html( $detail['label'] ) . '</p>';
+				$tab_html .= '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#5462FF" stroke="#5462FF"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" fill="white"/></svg>';
+				$tab_html .= '</span>';
+				$tab_html .= '</button>';
+			}
+		}
+
+		echo $tab_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

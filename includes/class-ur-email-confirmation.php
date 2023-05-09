@@ -228,6 +228,10 @@ class UR_Email_Confirmation {
 			$user_id    = absint( $output[0] );
 			$user_token = get_user_meta( $user_id, 'ur_confirm_email_token', true );
 
+			if ( empty( $user_token ) ) {
+				return;
+			}
+
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			// Check if the token matches the token value stored in db.
@@ -298,6 +302,9 @@ class UR_Email_Confirmation {
 				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
 			)
 		);
+
+		// Trigger an action hook after the email address is updated.
+		do_action( 'user_registration_email_change_success', $user_id );
 
 		// Remove the confirmation key, pending email and expiry date.
 		UR_Form_Handler::delete_pending_email_change( $user_id );

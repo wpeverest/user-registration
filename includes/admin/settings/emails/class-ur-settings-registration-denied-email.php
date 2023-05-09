@@ -49,7 +49,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 									'desc'     => __( 'Enable this email sent to the user notifying the registration is denied by the admin.', 'user-registration' ),
 									'id'       => 'user_registration_enable_registration_denied_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(

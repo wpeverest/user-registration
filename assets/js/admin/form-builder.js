@@ -1597,6 +1597,12 @@
 										}
 									}
 								});
+
+								var locked = ul_node.find('.ur-locked-field');
+								$.each(locked, function() {
+									$this = $(this);
+									$this.draggable("disable");
+								})
 							},
 							/**
 							 * Populate the dropped node when a field is dragged from field container to form builder area.
@@ -2820,7 +2826,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2850,7 +2855,6 @@
 							.addClass("flatpickr-field")
 							.flatpickr({
 								disableMobile: true,
-								static: true,
 								onChange: function (
 									selectedDates,
 									dateStr,
@@ -2906,7 +2910,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-min-date")
@@ -2955,7 +2958,6 @@
 									.addClass("flatpickr-field")
 									.flatpickr({
 										disableMobile: true,
-										static: true,
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-max-date")
@@ -3561,7 +3563,6 @@
 			 */
 			trigger_general_setting_required: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
-
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
@@ -3569,7 +3570,9 @@
 							$label.attr("data-field") +
 							'"] option:selected'
 					)
-					.removeAttr("selected");
+					.attr("selected", false);
+
+				$label.find("option").attr("selected", false);
 
 				wrapper
 					.find(".ur-label")
@@ -3588,6 +3591,10 @@
 					.find(
 						'select[data-field="' + $label.attr("data-field") + '"]'
 					)
+					.find('option[value="' + $label.val() + '"]')
+					.attr("selected", true);
+
+				$label
 					.find('option[value="' + $label.val() + '"]')
 					.attr("selected", true);
 			},
@@ -3973,6 +3980,50 @@
 			}
 		});
 
+		$(document).on("click", function () {
+			if($(document).find('.ur-smart-tags-list').is(':visible')) {
+
+				$('.ur-smart-tags-list').hide();
+			}
+		});
+
+		$('.ur-smart-tags-list').hide();
+
+		$(document.body).on('click', '.ur-smart-tags-list-button', function (e) {
+			e.stopPropagation();
+			$('.ur-smart-tags-list').hide();
+			$( this ).parent().find('.ur-smart-tags-list').toggle('show');
+		});
+
+		$(document.body).on('click', '.ur-select-smart-tag', function(event) {
+			event.preventDefault();
+			var smart_tag;
+			input_value =$(this).parent().parent().parent().find('input').val();
+			smart_tag = $(this).data('key');
+			input_value += smart_tag;
+			update_input(input_value);
+
+			$(this).parent().parent().parent().find('input').val(input_value);
+			$(document.body).find('.ur-smart-tags-list').hide();
+		});
+
+		$(document.body).on('change', '.ur_advance_setting.ur-settings-default-value', function(){
+			input_value = $(this).val();
+			update_input(input_value);
+		})
+		/**
+		 * For update the default value.
+		 */
+		function update_input(input_value){
+			active_field = $('.ur-item-active');
+			target_input_field = $(active_field).find('.user-registration-field-option-group.ur-advance-setting-block');
+			ur_toggle_content = target_input_field.find('.ur-advance-setting.ur-advance-default_value');
+			target_input = $(ur_toggle_content).find('input[data-id=text_advance_setting_default_value]');
+			target_textarea = $(ur_toggle_content).find('input[data-id=textarea_advance_setting_default_value]');
+
+			target_input.val(input_value);
+			target_textarea.val(input_value);
+		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *
