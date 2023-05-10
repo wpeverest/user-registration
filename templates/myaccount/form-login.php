@@ -54,7 +54,7 @@ $enable_field_icon = ur_option_checked( 'user_registration_pro_general_setting_l
 
 $login_title = ur_option_checked( 'user_registration_login_title', false );
 
-$is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || 'true' !== $_GET['pl']; // phpcs:ignore WordPress.Security.NonceVerification
+$is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || ! ur_string_to_bool( $_GET['pl'] ); // phpcs:ignore WordPress.Security.NonceVerification
 
 ?>
 

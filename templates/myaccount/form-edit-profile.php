@@ -220,8 +220,8 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
 													$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
 
-													if ( 'true' === $advance_data['advance_setting']->enable_prefix_postfix ) {
-														if ( 'true' === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
+													if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
+														if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
 															$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
 															$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
 														} else {
@@ -231,7 +231,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													}
 
 													// to hide the range as payment slider in edit profile.
-													if ( 'true' === $field['enable_payment_slider'] ) {
+													if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
 														continue;
 													}
 												}
