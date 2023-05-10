@@ -593,13 +593,17 @@ jQuery(function ($) {
 						'<div class="success notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				} else {
 					message_string =
 						'<div class="error notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				}
 				$(
 					".user-registration_page_user-registration-settings .notice"

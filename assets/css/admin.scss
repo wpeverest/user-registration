@@ -6,12 +6,12 @@
 /**
  * Imports
  */
- @import "variables/variables";
- @import "mixins/mixins";
- @import "display";
- @import "fonts";
- @import "tables";
- @import "forms";
+@import "variables/variables";
+@import "mixins/mixins";
+@import "display";
+@import "fonts";
+@import "tables";
+@import "forms";
 
  // Components
  @import "components/badge", "components/button", "components/card",
@@ -2804,8 +2804,16 @@ body {
 		}
 
 		 .swal2-popup {
-			width: 400px;
-			border-top: 6px solid #ff4f55;
+			 width: 400px;
+
+			&.user-registration-settings-swal2 {
+				width: auto;
+			}
+
+			&.swal2-icon-error {
+				 border-top: 6px solid #ff4f55;
+			}
+
 			border-radius: $spacing_10px;
 			padding: 0;
 
@@ -2860,7 +2868,7 @@ body {
 			&.user-registration-locked-field {
 				.swal2-header {
 					padding-bottom: $spacing_4px;
-					
+
 					.swal2-close {
 						box-shadow: none;
 					}

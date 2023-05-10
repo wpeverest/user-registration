@@ -22,7 +22,7 @@ class UR_Form_Handler {
 	public static function init() {
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
 
-		if ( 'no' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
 		}
 

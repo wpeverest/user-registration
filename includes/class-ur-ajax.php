@@ -69,6 +69,7 @@ class UR_AJAX {
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
 			'locked_form_fields_notice' => false,
+			'search_global_settings'    => false,
 			'php_notice_dismiss'        => false,
 		);
 
@@ -79,6 +80,18 @@ class UR_AJAX {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
+	}
+
+	/**
+	 * Triggered when admin search for the global settings.
+	 */
+	public static function search_global_settings() {
+		check_ajax_referer( 'user_registration_search_global_settings', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1 );
+		}
+		UR_Admin_Settings::search_settings();
 	}
 
 	/**
@@ -1364,13 +1377,13 @@ class UR_AJAX {
 			wp_send_json_error( 'Permision Denied' );
 			return;
 		}
-		$plan   = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
-		$slug   = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
-		$name   = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : null;
-		$key    = ur_get_license_plan();
-		$button = '';
+		$plan         = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
+		$slug         = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
+		$name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : null;
+		$license_data = ur_get_license_plan();
+		$button       = '';
 
-		if ( false === $key ) {
+		if ( false === $license_data ) {
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				$button = '<div class="action-buttons"><a class="button activate-license-now" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank">' . esc_html__( 'Activate License', 'user-registration' ) . '</a></div>';
@@ -1380,21 +1393,22 @@ class UR_AJAX {
 				wp_send_json_success( array( 'action_button' => $button ) );
 			}
 		}
+		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 
-		$key = $key . ' plan';
-		$key = trim( $key );
+		$license_plan = $license_plan . ' plan';
+		$license_plan = trim( $license_plan );
 
-		if ( 'professional plan' === $key || 'plus plan' === $key ) {
-			$key = 'professional plan or plus plan';
+		if ( 'professional plan' === $license_plan || 'plus plan' === $license_plan ) {
+			$license_plan = 'professional plan or plus plan';
 		}
-		if ( strtolower( $plan ) === $key ) {
-			if ( 'professional plan or plus plan' === $key ) {
+		if ( strtolower( $plan ) === $license_plan ) {
+			if ( 'professional plan or plus plan' === $license_plan ) {
 				$plan_list = array( 'plus', 'professional', 'personal' );
 			} else {
 				$plan_list = array( 'personal' );
 			}
 		} else {
-			if ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $key ) {
+			if ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $license_plan ) {
 				$plan_list = array( 'plus', 'professional', 'personal' );
 			} else {
 				$plan_list = array();

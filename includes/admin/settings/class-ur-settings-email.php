@@ -26,6 +26,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public $emails = array();
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'email';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
@@ -79,7 +86,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
 									'id'       => 'user_registration_email_setting_disable_email',
 									'default'  => 'no',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(

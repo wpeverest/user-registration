@@ -32,7 +32,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 				<div class="user-registration-profile-fields">
 					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
-					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+					if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 						?>
 						<div class="user-registration-profile-header">
 							<div class="user-registration-img-container" style="width:100%">
@@ -402,7 +402,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 					?>
 					<p>
 						<?php
-						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+						if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							?>
 							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 							<?php
