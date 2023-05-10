@@ -454,8 +454,8 @@ class UR_Admin_Assets {
 			'i18n_input_size'                        => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
 			'i18n_min_max_input'                     => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
 			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ), // phpcs:ignore
-			'i18n_pc_profile_completion_error'       => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user registration admin' ),
-			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user registration admin' ),
+			'i18n_pc_profile_completion_error'       => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user-registration' ),
+			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
 		);
 
 		return $i18n;
