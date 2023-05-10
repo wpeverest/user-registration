@@ -211,7 +211,7 @@ function ur_string_to_array( $string, $delimiter = ',' ) {
  * @return bool
  */
 function ur_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === $string || 1 === $string || 'true' === $string || '1' === $string );
+	return is_bool( $string ) ? $string : ( 'yes' === $string || 'on' === $string || 1 === $string || 'true' === $string || '1' === $string );
 }
 
 /**
@@ -775,28 +775,22 @@ function ur_get_general_settings( $id ) {
 		),
 		'required'    => array(
 			'setting_id'  => 'required',
-			'type'        => 'select',
+			'type'        => 'toggle',
 			'label'       => __( 'Required', 'user-registration' ),
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
 			'required'    => true,
-			'options'     => array(
-				'no'  => __( 'No', 'user-registration' ),
-				'yes' => __( 'Yes', 'user-registration' ),
-			),
+			'default'     => 'false',
 			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
 		),
 		'hide_label'  => array(
 			'setting_id'  => 'hide-label',
-			'type'        => 'select',
+			'type'        => 'toggle',
 			'label'       => __( 'Hide Label', 'user-registration' ),
 			'name'        => 'ur_general_setting[hide_label]',
 			'placeholder' => '',
 			'required'    => true,
-			'options'     => array(
-				'no'  => __( 'No', 'user-registration' ),
-				'yes' => __( 'Yes', 'user-registration' ),
-			),
+			'default'     => 'false',
 			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
 		),
 	);
@@ -838,14 +832,14 @@ function ur_get_general_settings( $id ) {
 
 		$general_settings = ur_insert_after_helper( $general_settings, $settings, 'field_name' );
 	}
-	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id ) {
+	if ( 'privacy_policy' === $strip_id || 'user_confirm_email' === $strip_id || 'user_confirm_password' === $strip_id || in_array( $strip_id, ur_get_required_fields() ) ) {
 		$general_settings['required'] = array(
 			'setting_id'  => '',
 			'type'        => 'hidden',
 			'label'       => '',
 			'name'        => 'ur_general_setting[required]',
 			'placeholder' => '',
-			'default'     => 'yes',
+			'default'     => true,
 			'required'    => true,
 		);
 	}
@@ -967,7 +961,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'label'       => __( 'Send User Approval Link in Email', 'user-registration' ),
 				'description' => '',
 				'id'          => 'user_registration_form_setting_enable_email_approval',
-				'type'        => 'checkbox',
+				'type'        => 'toggle',
 				'tip'         => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
 				'css'         => 'min-width: 350px;',
 				'default'     => ur_get_approval_default( $form_id ),
@@ -986,7 +980,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'checkbox',
+				'type'              => 'toggle',
 				'label'             => __( 'Enable Strong Password', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -998,7 +992,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'select',
+				'type'              => 'radio-group',
 				'label'             => __( 'Minimum Password Strength', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -1066,10 +1060,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Display success message either at the top or bottom after successful registration.', 'user-registration' ),
 			),
 			array(
-				'type'              => 'checkbox',
+				'type'              => 'toggle',
 
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
-				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable &nbsp; %1$s %2$s Captcha %3$s &nbsp; Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -1164,7 +1158,7 @@ function ur_get_approval_default( $form_id ) {
 	} else {
 		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 	}
-	$value = ( 'yes' == $value || 1 == $value ) ? true : false;
+	$value = ur_string_to_bool( $value ) ? true : false;
 
 	return $value;
 }
@@ -2278,8 +2272,14 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 
 			$checked = 'checked=checked';
 		}
+		$output .= '<div class="ur-toggle-section ur-form-builder-toggle">';
+		$output .= '<span class="user-registration-toggle-form">';
 		$output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" ' . $checked . '>';
+		$output .= '<span class="slider round">';
+		$output .= '</span>';
+		$output .= '</span>';
 		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
+		$output .= '</div>';
 		$output .= '</div>';
 
 		$output                .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
