@@ -247,7 +247,12 @@ class UR_Shortcodes {
 	private static function render_form( $form_id ) {
 		$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 		$form_json_data  = wp_json_encode( $form_data_array );
-		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, array(), array() );
+
+		$values = array(
+			'form_id' => $form_id,
+		);
+
+		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
 		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
 
@@ -261,7 +266,7 @@ class UR_Shortcodes {
 		}
 
 		$is_field_exists           = false;
-		$enable_strong_password    = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' );
+		$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 		// Enqueue script.
@@ -278,11 +283,11 @@ class UR_Shortcodes {
 			wp_enqueue_script( 'flatpickr' );
 		}
 
-		if ( 'yes' === $enable_strong_password || '1' === $enable_strong_password ) {
+		if ( $enable_strong_password ) {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
-		$recaptcha_enabled = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
+		$recaptcha_enabled = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
 		$form_data_array   = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 

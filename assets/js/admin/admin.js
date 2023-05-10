@@ -24,15 +24,17 @@ jQuery(function ($) {
 			var search_result_fields_count = $(this).find(
 				".ur-registered-item.ur-searched-item"
 			).length;
-			var hr = $(this).prev("hr");
-			var heading = $(this).prev("hr").prev(".ur-toggle-heading");
+			var hr = $(this).prev("hr"),
+				heading = $(this).prev("hr").prev(".ur-toggle-heading");
 
 			if (0 === search_result_fields_count) {
 				hr.hide();
 				heading.hide();
+				$(this).hide();
 			} else {
 				hr.show();
 				heading.show();
+				$(this).show();
 			}
 		});
 
@@ -96,6 +98,13 @@ jQuery(function ($) {
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
+
+					if (!action_button.length) {
+						action_button = $(response.data.action_button).find(
+							"form"
+						);
+					}
+
 					var title =
 						icon +
 						'<span class="user-registration-swal2-modal__title" > ';
@@ -199,6 +208,9 @@ jQuery(function ($) {
 		}
 	);
 
+	$("#ur-form-name").on("change", function () {
+		$(".ur-form-title").text($(this).val());
+	});
 	// In case the user goes out of focus from title edit state.
 	$(document)
 		.not($(".user-registration-editable-title"))
@@ -252,6 +264,37 @@ jQuery(function ($) {
 							suppressScrollX: true,
 						}
 					);
+
+					var collapseBtn = document.querySelector("#ur-collapse");
+
+					collapseBtn.addEventListener("click", function () {
+						if (collapseBtn.classList.contains("open")) {
+							$(collapseBtn).removeClass("open");
+							$(collapseBtn).addClass("close");
+						} else {
+							$(collapseBtn).addClass("open");
+							$(collapseBtn).removeClass("close");
+						}
+
+						var targetEl = document.querySelector(
+							".ur-registered-inputs"
+						);
+
+						if (targetEl.classList.contains("collapsed")) {
+							targetEl.classList.remove("collapsed");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.show();
+							$(".ur-registered-inputs").css("width", "412px");
+							window.ur_tab_scrollbar.update(); // Refresh the scrollbar
+						} else {
+							targetEl.classList.add("collapsed");
+							$(".ur-registered-inputs").css("width", "0px");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.hide();
+						}
+					});
 				} else if ("undefined" !== typeof window.ur_tab_scrollbar) {
 					window.ur_tab_scrollbar.update();
 					tab_content.scrollTop(0);
@@ -366,7 +409,7 @@ jQuery(function ($) {
 	);
 	var enable_strong_password = strong_password_field.is(":checked");
 
-	if ("yes" === enable_strong_password || true === enable_strong_password) {
+	if (enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
@@ -423,10 +466,7 @@ jQuery(function ($) {
 	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
-		if (
-			"yes" === enable_strong_password ||
-			true === enable_strong_password
-		) {
+		if (enable_strong_password) {
 			minimum_password_strength_wrapper_field.show("slow");
 		} else {
 			minimum_password_strength_wrapper_field.hide("slow");
@@ -550,13 +590,17 @@ jQuery(function ($) {
 						'<div class="success notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				} else {
 					message_string =
 						'<div class="error notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				}
 				$(
 					".user-registration_page_user-registration-settings .notice"
@@ -729,7 +773,7 @@ function ur_confirmation(message, options) {
 		options.title;
 	Swal.fire({
 		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+			"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-trashed",
 		title: title,
 		text: message,
 		showCancelButton:

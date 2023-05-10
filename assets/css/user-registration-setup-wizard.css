@@ -77,7 +77,7 @@ body {
       padding-right: 15px; } }
   #user-registration-welcome > img {
     border-radius: 50%;
-    border: 1px solid #dee0e9;
+    border: 1px solid #e1e1e1;
     width: 84px;
     height: 84px; }
   #user-registration-welcome > a > p {
@@ -96,7 +96,7 @@ body {
     border-radius: 15px;
     margin: 16px auto 21px;
     background: #ffffff;
-    border: 1px solid #dee0e9;
+    border: 1px solid #e1e1e1;
     padding: 42px 42px 36px; }
     @media (max-width: 1600px) {
       #user-registration-welcome .user-registration-welcome-card {
@@ -198,7 +198,7 @@ body {
     #user-registration-welcome .user-registration-welcome-card .user-registration-welcome-container .user-registration-welcome-video {
       display: flex;
       justify-content: center;
-      border: 1px solid #dee0e9;
+      border: 1px solid #e1e1e1;
       box-sizing: border-box;
       position: relative;
       width: 760px;

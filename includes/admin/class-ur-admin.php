@@ -191,7 +191,7 @@ class UR_Admin {
 			return;
 		}
 
-		$notice_header      = __( 'HAKUNA <strong>MATATA!</strong>', 'user-registration' );
+		$notice_header      = __( 'Bravo! 💪 Well done.', 'user-registration' );
 		$notice_target_link = 'https://wordpress.org/support/plugin/user-registration/reviews/#postform';
 
 		include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
@@ -211,10 +211,10 @@ class UR_Admin {
 			return false;
 		}
 
-		$notice_dismissed             = get_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'no' );
+		$notice_dismissed             = ur_option_checked( 'user_registration_' . $notice_type . '_notice_dismissed', false );
 		$notice_dismissed_temporarily = get_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 
-		if ( 'yes' === $notice_dismissed ) {
+		if ( $notice_dismissed ) {
 			return false;
 		}
 
@@ -393,7 +393,7 @@ class UR_Admin {
 		}
 
 		// If plugin is running for first time, redirect to onboard page.
-		if ( '1' === get_option( 'user_registration_first_time_activation_flag' ) ) {
+		if ( ur_option_checked( 'user_registration_first_time_activation_flag' ) ) {
 			wp_safe_redirect( admin_url( 'index.php?page=user-registration-welcome' ) );
 			exit;
 		}

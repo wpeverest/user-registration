@@ -35,14 +35,14 @@ class UR_Preview {
 				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 				add_action( 'template_redirect', array( $this, 'handle_preview' ) );
-				add_filter('astra_remove_entry_header_content', '__return_true'); // Need to remove in next version, If astra release the patches.
+				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 
 			} elseif ( isset( $_GET['ur_login_preview'] ) ) {
 				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 				add_action( 'template_redirect', array( $this, 'handle_login_preview' ) );
 				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
-				add_filter('astra_remove_entry_header_content', '__return_true'); // Need to remove in next version, If astra release the patches.
+				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 
 			}
 		}
@@ -181,7 +181,7 @@ class UR_Preview {
 		remove_filter( 'the_content', array( $this, 'form_preview_content' ) );
 
 		wp_enqueue_script( 'ur-my-account' );
-		$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+		$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 		$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
 		ob_start();

@@ -251,6 +251,9 @@
 .ur-icon-quantity::before {
   content: ""; }
 
+.ur-icon-hidden-field::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,
@@ -358,13 +361,13 @@
 .ur-form-container .button-tertiary {
   background: #ffffff;
   color: #2d3559;
-  border: 1px solid #dee0e9; }
+  border: 1px solid #e1e1e1; }
   .user-registration .button-tertiary:hover, .user-registration .button-tertiary:active, .user-registration .button-tertiary:focus,
   .ur-form-container .button-tertiary:hover,
   .ur-form-container .button-tertiary:active,
   .ur-form-container .button-tertiary:focus {
     background: #f0f1f5;
-    border-color: #dee0e9; }
+    border-color: #e1e1e1; }
 
 .user-registration .button-danger,
 .ur-form-container .button-danger {
@@ -472,7 +475,7 @@
   .user-registration-modal .user-registration-modal__header {
     display: flex;
     padding: 16px;
-    border-bottom: 1px solid #dee0e9; }
+    border-bottom: 1px solid #e1e1e1; }
     .user-registration-modal .user-registration-modal__header .user-registration-modal__title {
       font-size: 20px;
       line-height: 1.4;
@@ -514,7 +517,7 @@
       border: none; }
   .user-registration-modal .user-registration-modal__footer {
     padding: 16px;
-    border-top: 1px solid #dee0e9; }
+    border-top: 1px solid #e1e1e1; }
     .user-registration-modal .user-registration-modal__footer * {
       margin: 4px; }
 
@@ -731,7 +734,7 @@
 
 .ur-frontend-form {
   margin-bottom: 30px;
-  border: 1px solid #dee0e9;
+  border: 1px solid #e1e1e1;
   padding: 20px;
   box-sizing: border-box; }
   .ur-frontend-form.login {
@@ -818,7 +821,7 @@
         margin-bottom: 0px; }
       .ur-frontend-form .ur-form-row .ur-form-grid .StripeElement {
         padding: 4px 8px;
-        border: 1px solid #dee0e9; }
+        border: 1px solid #e1e1e1; }
         .ur-frontend-form .ur-form-row .ur-form-grid .StripeElement .__PrivateStripeElement iframe {
           position: absolute;
           top: 50%;
@@ -950,7 +953,7 @@
   .ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-prev,
   .ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-next {
     background: #f0f1f5;
-    border: 1px solid #dee0e9;
+    border: 1px solid #e1e1e1;
     color: #676d8a;
     border-radius: 0; }
     .ur-frontend-form.ur-frontend-form--bordered form input[type="submit"]:hover,
