@@ -273,7 +273,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['enable_conditional_logic'] ) && true === $args['enable_conditional_logic'] ) {
 			$cl_map  = isset( $args['cl_map'] ) ? $args['cl_map'] : '';
-			$cl_html = sprintf( 'data-conditional-logic-enabled="yes" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
+			$cl_html = sprintf( 'data-conditional-logic-enabled="1" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
 		}
 
 		$field           = '';
@@ -741,7 +741,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$field_type             = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
 					$required               = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
 					$required               = ur_string_to_bool( $required );
-					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ( '1' === $field->advance_setting->enable_conditional_logic || 'on' === $field->advance_setting->enable_conditional_logic ) ? true : false;
+					$enable_cl              = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
 					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;

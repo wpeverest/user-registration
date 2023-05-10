@@ -367,7 +367,7 @@ class UR_Frontend_Scripts {
 					'recaptcha_type'                    => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'   => get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
+					'ajax_submission_on_edit_profile'   => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
 					'message_required_fields'           => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
 					'message_email_fields'              => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
 					'message_url_fields'                => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
@@ -410,7 +410,7 @@ class UR_Frontend_Scripts {
 				return array(
 					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
-					'ajax_submission_on_ur_login' => get_option( 'ur_login_ajax_submission', 'no' ),
+					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
 					'recaptcha_type'              => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
 				);
 					break;

@@ -161,10 +161,10 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												// Migrate the conditional logic to logic_map schema.
 												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 
-												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ( '1' === $single_item->advance_setting->enable_conditional_logic || 'on' === $single_item->advance_setting->enable_conditional_logic ) ? 'yes' : 'no';
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_item->advance_setting->enable_conditional_logic );
 												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
 
-												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+												if ( $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
 													$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}

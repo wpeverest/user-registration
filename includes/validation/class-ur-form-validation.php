@@ -80,9 +80,9 @@ class UR_Form_Validation extends UR_Validation {
 		// Triger validation method for user fields. Useful for custom fields validation.
 		$this->add_hook( $form_field_data, $form_data );
 
-		$enable_auto_password_generation = ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' );
+		$enable_auto_password_generation = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' ) );
 
-		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
+		if ( $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
 			$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
@@ -202,13 +202,9 @@ class UR_Form_Validation extends UR_Validation {
 				}
 
 				if (
-					isset( $single_form_field->advance_setting->enable_conditional_logic ) &&
-					(
-						'on' === $single_form_field->advance_setting->enable_conditional_logic ||
-						'yes' === $single_form_field->advance_setting->enable_conditional_logic
-					)
+					isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
 				) {
-					$single_form_field->advance_setting->enable_conditional_logic = '1';
+					$single_form_field->advance_setting->enable_conditional_logic = ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic );
 				}
 
 				do_action( $hook, $single_form_field, $data, $filter_hook, $this->form_id );
@@ -553,7 +549,7 @@ class UR_Form_Validation extends UR_Validation {
 		$is_required = false;
 
 		if ( ! empty( $field ) ) {
-			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : 'no';
+			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : false;
 			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 

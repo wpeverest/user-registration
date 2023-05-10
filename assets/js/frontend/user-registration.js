@@ -423,7 +423,18 @@
 									event.preventDefault();
 
 									// Prevent the form submission if submit button is hidden or disabled.
-									if( $registration_form.find( "form.register button.ur-submit-button" ).is( ':hidden' ) || $registration_form.find( "form.register button.ur-submit-button" ).is(':disabled') ) {
+									if (
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.is(":hidden") ||
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.is(":disabled")
+									) {
 										return false;
 									}
 
@@ -853,10 +864,15 @@
 														}
 
 														$this[0].reset();
-														if($this.find('#profile_pic_url').length){
-															$('#profile_pic_url').val("");
+														if (
+															$this.find(
+																"#profile_pic_url"
+															).length
+														) {
+															$(
+																"#profile_pic_url"
+															).val("");
 														}
-
 
 														jQuery(
 															"#billing_country"
@@ -1461,7 +1477,8 @@
 
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
-											"user_registration_edit_profile_after_ajax_complete", [ajax_response, $this]
+											"user_registration_edit_profile_after_ajax_complete",
+											[ajax_response, $this]
 										);
 										$this
 											.find(
@@ -1496,8 +1513,7 @@
 					$(".ur-frontend-form")
 						.find("form.edit-profile")
 						.hasClass("user-registration-EditProfileForm") &&
-					"yes" ===
-						user_registration_params.ajax_submission_on_edit_profile
+					user_registration_params.ajax_submission_on_edit_profile
 				) {
 					$(
 						"form.user-registration-EditProfileForm"
@@ -1594,10 +1610,7 @@
 							.closest("form")
 							.attr("data-enable-strength-password");
 
-						if (
-							"yes" === enable_strength_password ||
-							"1" === enable_strength_password
-						) {
+						if (enable_strength_password) {
 							var wrapper = $this.closest("form");
 							var minimum_password_strength = wrapper.attr(
 								"data-minimum-password-strength"

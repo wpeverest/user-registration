@@ -329,14 +329,14 @@ class UR_Form_Handler {
 
 			$hcaptca_response    = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : $hcaptca_response;
-			$recaptcha_enabled   = apply_filters( 'user_registration_lost_password_options_enable_recaptcha', 'no' );
+			$recaptcha_enabled   = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 			$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-			$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+			$invisible_recaptcha = ur_option_checked( 'user_registration_integration_setting_invisible_recaptcha_v2', false );
 
-			if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
+			if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-			} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
+			} elseif ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 			} elseif ( 'v3' === $recaptcha_type ) {
@@ -347,7 +347,7 @@ class UR_Form_Handler {
 				$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
 			}
 
-			if ( 'yes' === $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 				if ( ! empty( $recaptcha_value ) ) {
 					if ( 'hCaptcha' === $recaptcha_type ) {
 						$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );

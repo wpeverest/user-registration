@@ -224,7 +224,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											   id="<?php echo esc_attr( $key ); ?>" value="1"
 											   class="<?php echo esc_attr( $field['class'] ); ?>"
 																 <?php
-																	if ( '1' == $value ) {
+																	if ( ur_string_to_bool( $value ) ) {
 																		echo 'checked="checked"';
 																	}
 																	?>

@@ -378,8 +378,7 @@
 									.i18n_form_successfully_saved;
 
 							if (
-								user_registration_form_builder_data.is_edit_form !==
-								"1"
+								!user_registration_form_builder_data.is_edit_form
 							) {
 								var title = "Form successfully created.";
 								message_body =
@@ -1413,8 +1412,7 @@
 							},
 							single_row: function () {
 								if (
-									user_registration_form_builder_data.is_edit_form !==
-									"1"
+									!user_registration_form_builder_data.is_edit_form
 								) {
 									var single_row = $(
 										"<div class='ur-single-row'/ data-row-id=\"0\">"

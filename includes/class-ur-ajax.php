@@ -108,10 +108,10 @@ class UR_AJAX {
 
 		update_option( 'user_registration_allow_usage_notice_shown', true );
 
-		if ( 'true' === $allow_usage_tracking ) {
-			update_option( 'user_registration_allow_usage_tracking', 'yes' );
-		} elseif ( 'false' === $allow_usage_tracking ) {
-			update_option( 'user_registration_allow_usage_tracking', 'no' );
+		if ( ur_string_to_bool( $allow_usage_tracking ) ) {
+			update_option( 'user_registration_allow_usage_tracking', true );
+		} else {
+			update_option( 'user_registration_allow_usage_tracking', false );
 		}
 
 		wp_die();
@@ -144,16 +144,16 @@ class UR_AJAX {
 
 		$form_id             = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$nonce               = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
-     $captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
+     	$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
-		$recaptcha_enabled   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', 'no' );
+		$recaptcha_enabled   = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_type      = get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
-		$invisible_recaptcha = get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+		$invisible_recaptcha = ur_option_checked( 'user_registration_integration_setting_invisible_recaptcha_v2', false );
 
-		if ( 'v2' === $recaptcha_type && 'no' === $invisible_recaptcha ) {
+		if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key' );
 			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
-		} elseif ( 'v2' === $recaptcha_type && 'yes' === $invisible_recaptcha ) {
+		} elseif ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
 			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
 			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
 		} elseif ( 'v3' === $recaptcha_type ) {
@@ -163,7 +163,7 @@ class UR_AJAX {
 			$site_key   = get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
 			$secret_key = get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
 		}
-		if ( ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) && ! empty( $site_key ) && ! empty( $secret_key ) ) {
+		if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
 					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
@@ -733,7 +733,7 @@ class UR_AJAX {
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
-					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && '1' === $setting_data['value'] && ! ur_check_captch_keys() ) {
+					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys() ) {
 						throw  new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
@@ -1011,7 +1011,7 @@ class UR_AJAX {
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
 			if ( ! empty( $_POST['dismiss_forever'] ) && 'true' === $_POST['dismiss_forever'] ) {
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', 'yes' );
+				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 			} else {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
@@ -1356,7 +1356,7 @@ class UR_AJAX {
 		}
 		$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : null;
 		$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
-		$value  = 'on' === $status ? 'yes' : 'no';
+		$value  = ur_string_to_bool( $status );
 		$key    = 'user_registration_enable_' . $id;
 		if ( update_option( $key, $value ) ) {
 			wp_send_json_success( 'Successfully Updated' );

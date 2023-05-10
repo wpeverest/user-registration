@@ -265,9 +265,9 @@ jQuery(function ($) {
 						}
 					);
 
-					const collapseBtn = document.querySelector("#ur-collapse");
+					var collapseBtn = document.querySelector("#ur-collapse");
 
-					collapseBtn.addEventListener("click", () => {
+					collapseBtn.addEventListener("click", function () {
 						if (collapseBtn.classList.contains("open")) {
 							$(collapseBtn).removeClass("open");
 							$(collapseBtn).addClass("close");
@@ -276,7 +276,7 @@ jQuery(function ($) {
 							$(collapseBtn).removeClass("close");
 						}
 
-						const targetEl = document.querySelector(
+						var targetEl = document.querySelector(
 							".ur-registered-inputs"
 						);
 
@@ -409,7 +409,7 @@ jQuery(function ($) {
 	);
 	var enable_strong_password = strong_password_field.is(":checked");
 
-	if ("yes" === enable_strong_password || true === enable_strong_password) {
+	if (enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
@@ -466,10 +466,7 @@ jQuery(function ($) {
 	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
-		if (
-			"yes" === enable_strong_password ||
-			true === enable_strong_password
-		) {
+		if (enable_strong_password) {
 			minimum_password_strength_wrapper_field.show("slow");
 		} else {
 			minimum_password_strength_wrapper_field.hide("slow");

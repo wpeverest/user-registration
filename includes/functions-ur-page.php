@@ -180,9 +180,9 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 			return $permalink;
 		}
 
-		$prevent_core_login = get_option( 'user_registration_login_options_prevent_core_login', 'no' );
+		$prevent_core_login = ur_option_checked( 'user_registration_login_options_prevent_core_login', false );
 
-		if ( 'yes' === $prevent_core_login ) {
+		if ( $prevent_core_login ) {
 			$login_redirect_page_id = get_option( 'user_registration_login_options_login_redirect_url', 'unset' );
 
 			if ( 0 < $login_redirect_page_id ) {
