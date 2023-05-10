@@ -244,7 +244,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												}
 
 												if ( isset( $single_item->general_setting->hide_label ) ) {
-													if ( 'yes' === $single_item->general_setting->hide_label ) {
+													if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
 														unset( $field['label'] );
 													}
 												}
@@ -314,7 +314,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 
 												if ( isset( $advance_data['general_setting']->required ) ) {
 													if ( in_array( $single_item->field_key, ur_get_required_fields() )
-													|| 'yes' === $advance_data['general_setting']->required ) {
+													|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 														$field['required']                      = true;
 														$field['custom_attributes']['required'] = 'required';
 													}
@@ -338,7 +338,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 														$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
 													}
 													if ( isset( $advance_data['advance_setting']->select_all ) ) {
-														$field['select_all'] = $advance_data['advance_setting']->select_all;
+														$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
 													}
 												}
 

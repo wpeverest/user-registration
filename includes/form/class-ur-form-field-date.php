@@ -77,8 +77,8 @@ class UR_Form_Field_Date extends UR_Form_Field {
 			return;
 		}
 
-		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? $single_form_field->advance_setting->enable_date_range : '';
-		$enabled_min_max      = isset( $single_form_field->advance_setting->enable_min_max ) ? 'true' === $single_form_field->advance_setting->enable_min_max : false;
+		$is_enable_date_range = isset( $single_form_field->advance_setting->enable_date_range ) ? ur_string_to_bool( $single_form_field->advance_setting->enable_date_range ) : '';
+		$enabled_min_max      = isset( $single_form_field->advance_setting->enable_min_max ) ? ur_string_to_bool( $single_form_field->advance_setting->enable_min_max ) : false;
 
 		if ( $enabled_min_max ) {
 			$min_date = isset( $single_form_field->advance_setting->min_date ) ? $single_form_field->advance_setting->min_date : '';

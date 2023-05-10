@@ -84,13 +84,13 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( 'yes' === $enable_auto_password_generation || '1' === $enable_auto_password_generation ) {
 			do_action( 'user_registration_auto_generate_password', $form_id );
-			$user_pass = wp_slash( apply_filters( 'user_registration_auto_generated_password', 'user_pass' ) );
+			$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 		} else {
 			$this->match_password( $form_field_data, $form_data );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 			$this->validate_password_data( $form_field_data, $form_data );
-			$user_pass = wp_slash( $this->valid_form_data['user_pass']->value );
+			$user_pass = $this->valid_form_data['user_pass']->value;
 		}
 
 		// Modify UR_Frontend_Form_Handler::$response_array variable.
@@ -185,7 +185,7 @@ class UR_Form_Validation extends UR_Validation {
 				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
 				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
 
-				$this->valid_form_data[ $data->field_name ] = $this->get_sanitize_value( $data );
+				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 
 				/**
 				 * Hook to custom validate form field.
@@ -442,7 +442,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 
-			if ( isset( $form_field_data[ $key ]->general_setting->required ) && 'yes' === $form_field_data[ $key ]->general_setting->required ) {
+			if ( isset( $form_field_data[ $key ]->general_setting->required ) && ur_string_to_bool( $form_field_data[ $key ]->general_setting->required ) ) {
 
 				// Check for the field visibility settings.
 				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
@@ -557,8 +557,8 @@ class UR_Form_Validation extends UR_Validation {
 			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
-			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && 'yes' === $required ) {
-				$is_required = true;
+			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
+				return true;
 			}
 		}
 
@@ -628,12 +628,12 @@ class UR_Form_Validation extends UR_Validation {
 				$validations = $this->get_field_validations( $single_field_key );
 
 				$required = isset( $single_form_field->general_setting->required ) ?
-							'yes' === $single_form_field->general_setting->required :
+							$single_form_field->general_setting->required :
 							false;
 
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
-				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && $required ) {
+				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
 					array_unshift( $validations, 'required' );
 				}
 
@@ -802,9 +802,8 @@ class UR_Form_Validation extends UR_Validation {
 						}
 						break;
 					case 'profile_picture':
-
-						if ( isset( $_POST[ 'profile_pic_url' ] ) ) {
-							$_POST[ $key ] = sanitize_text_field( $_POST[ 'profile_pic_url' ] );
+						if ( isset( $_POST['profile_pic_url'] ) ) {
+							$_POST[ $key ] = sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) );
 						} else {
 							$_POST[ $key ] = '';
 						}
@@ -831,7 +830,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required         = isset( $single_form_field->general_setting->required ) ? 'yes' === $single_form_field->general_setting->required : 0;
+				$required         = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : 0;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				$disabled = false;
@@ -841,7 +840,7 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				if ( ! in_array( $key, $urcl_hide_fields, true ) && $required && ! $disabled ) {
+				if ( ! in_array( $key, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) && ! $disabled ) {
 					array_unshift( $validations, 'required' );
 				}
 

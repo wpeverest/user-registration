@@ -24,15 +24,17 @@ jQuery(function ($) {
 			var search_result_fields_count = $(this).find(
 				".ur-registered-item.ur-searched-item"
 			).length;
-			var hr = $(this).prev("hr");
-			var heading = $(this).prev("hr").prev(".ur-toggle-heading");
+			var hr = $(this).prev("hr"),
+				heading = $(this).prev("hr").prev(".ur-toggle-heading");
 
 			if (0 === search_result_fields_count) {
 				hr.hide();
 				heading.hide();
+				$(this).hide();
 			} else {
 				hr.show();
 				heading.show();
+				$(this).show();
 			}
 		});
 
@@ -96,6 +98,13 @@ jQuery(function ($) {
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
+
+					if (!action_button.length) {
+						action_button = $(response.data.action_button).find(
+							"form"
+						);
+					}
+
 					var title =
 						icon +
 						'<span class="user-registration-swal2-modal__title" > ';
@@ -199,6 +208,9 @@ jQuery(function ($) {
 		}
 	);
 
+	$("#ur-form-name").on("change", function () {
+		$(".ur-form-title").text($(this).val());
+	});
 	// In case the user goes out of focus from title edit state.
 	$(document)
 		.not($(".user-registration-editable-title"))
@@ -252,6 +264,37 @@ jQuery(function ($) {
 							suppressScrollX: true,
 						}
 					);
+
+					const collapseBtn = document.querySelector("#ur-collapse");
+
+					collapseBtn.addEventListener("click", () => {
+						if (collapseBtn.classList.contains("open")) {
+							$(collapseBtn).removeClass("open");
+							$(collapseBtn).addClass("close");
+						} else {
+							$(collapseBtn).addClass("open");
+							$(collapseBtn).removeClass("close");
+						}
+
+						const targetEl = document.querySelector(
+							".ur-registered-inputs"
+						);
+
+						if (targetEl.classList.contains("collapsed")) {
+							targetEl.classList.remove("collapsed");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.show();
+							$(".ur-registered-inputs").css("width", "412px");
+							window.ur_tab_scrollbar.update(); // Refresh the scrollbar
+						} else {
+							targetEl.classList.add("collapsed");
+							$(".ur-registered-inputs").css("width", "0px");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.hide();
+						}
+					});
 				} else if ("undefined" !== typeof window.ur_tab_scrollbar) {
 					window.ur_tab_scrollbar.update();
 					tab_content.scrollTop(0);
@@ -733,7 +776,7 @@ function ur_confirmation(message, options) {
 		options.title;
 	Swal.fire({
 		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+			"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-trashed",
 		title: title,
 		text: message,
 		showCancelButton:
