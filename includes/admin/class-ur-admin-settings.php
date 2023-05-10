@@ -688,7 +688,7 @@ class UR_Admin_Settings {
 											class="' . esc_attr( $value['class'] ) . '"
 											value="1"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '
-											' . esc_attr( checked( 'yes', $option_value, false ) ) . '>';
+											' . esc_attr( checked( true, ur_string_to_bool( $option_value ), false ) ) . '>';
 								$settings .= '<span class="slider round"></span>';
 								$settings .= '</span>';
 								$settings .= '</div>';
