@@ -1144,6 +1144,14 @@
 								value = $this_node.is(":checked");
 
 								if (
+									$this_node.hasClass(
+										"ur-type-checkbox-value"
+									)
+								) {
+									value = $this_node.val();
+								}
+
+								if (
 									$this_node.hasClass("ur-type-toggle") &&
 									!value
 								) {
