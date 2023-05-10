@@ -1677,6 +1677,17 @@
 			input {
 				margin-right: 8px;
 			}
+			.ur-multiple-choice {
+				.ur-regular-price,.ur-selling-price {
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+					gap: 8px;
+					padding: 4px;
+					input {
+						width: 100%;
+					}
+				}
+			}
 		}
 
 		.ui-sortable-handle {
