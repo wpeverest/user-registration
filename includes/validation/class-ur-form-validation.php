@@ -836,7 +836,8 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				if ( ! in_array( $key, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) && ! $disabled ) {
+
+				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) && ! $disabled ) {
 					array_unshift( $validations, 'required' );
 				}
 
