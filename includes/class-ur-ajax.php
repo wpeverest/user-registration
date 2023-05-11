@@ -1359,10 +1359,10 @@ class UR_AJAX {
 		$value  = ur_string_to_bool( $status );
 		$key    = 'user_registration_enable_' . $id;
 
-		$option = get_option($key, 'NO_OPTION');
-		if($option==='NO_OPTION'){
-			$status = add_option($key, $value);
-		}else{
+		$option = get_option( $key, 'NO_OPTION' );
+		if ( $option === 'NO_OPTION' ) {
+			$status = add_option( $key, $value );
+		} else {
 
 			$status = update_option( $key, $value );
 		}
