@@ -175,7 +175,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			$settings .= ! empty( $license_data->item_name ) ? $license_data->item_name : '';
 			$settings .= '</div></div>';
 			$settings .= '<div class="user-registration-global-settings">';
-			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Plan', 'user-registration' ) . '</label>';
+			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Expiry Date', 'user-registration' ) . '</label>';
 			$settings .= '<div class="user-registration-global-settings--field">';
 			$settings .= $license_date_formatted;
 			$settings .= '</div></div>';
