@@ -475,7 +475,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $args['autocomplete_address'] ) && ur_string_to_bool( $args['autocomplete_address'] ) ) {
 					$attr .= 'data-autocomplete-address="' . ur_string_to_bool( $args['autocomplete_address'] ) . '"';
 					$attr .= 'data-address-style="' . $args['address_style'] . '"';
-					$attr .= 'data-current-location="' . get_option( 'user_registration_google_map_current_location', '' ) . '"';
+					$attr .= 'data-current-location="' . ur_option_checked( 'user_registration_google_map_current_location', false ) . '"';
 					if ( 'map' == $args['address_style'] ) {
 						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
 					}

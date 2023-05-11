@@ -3258,21 +3258,25 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 				'plugin' => 'user-registration-woocommerce',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 			),
 			'content_restriction'                    => array(
 				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
 				'plugin' => 'user-registration-content-restriction',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - Content Restriction', 'user-registration' ),
 			),
 			'file_upload'                            => array(
 				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
 			),
 			'user-registration-customize-my-account' => array(
 				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 				'plugin' => 'user-registration-customize-my-account',
 				'plan'   => array( 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
 			),
 		);
 
@@ -3314,7 +3318,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
-					$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+					$plugin_name = $detail['name'];
 					$action      = '';
 
 					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
@@ -3328,7 +3332,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					}
 
 					/* translators: %s: Addon Name. */
-					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, $plugin_name );
+					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
 					/* translators: %s: Action Name. */
 					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
