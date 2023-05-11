@@ -17,7 +17,10 @@ global $wpdb;
  * wp-config.php. This is to prevent data loss when deleting the plugin from the backend
  * and to ensure only the site owner can perform this action.
  */
-if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || ur_option_checked( 'user_registration_general_setting_uninstall_option' ) ) {
+
+$uninstall_option = get_option( 'user_registration_general_setting_uninstall_option', false );
+
+if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' == $uninstall_option || true == $uninstall_option  ) {
 	include_once dirname( __FILE__ ) . '/includes/class-ur-install.php';
 
 	// Roles + caps.
