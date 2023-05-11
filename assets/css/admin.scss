@@ -1823,6 +1823,10 @@
 	.ur-general-setting,
 	.ur-advance-setting {
 		margin: $spacing_16px 0;
+
+		.select2-search--inline {
+			display: none;
+		}
 	}
 
 	.ur-advance-setting-block {
