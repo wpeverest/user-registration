@@ -613,7 +613,7 @@ jQuery(function ($) {
 	// Email Status
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
-		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var status = $(this).find('input[type="checkbox"]').is(":checked");
 		var id = $(this).find('input[type="checkbox"]').attr("id");
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,

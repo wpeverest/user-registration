@@ -1358,6 +1358,7 @@ class UR_AJAX {
 		$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
 		$value  = ur_string_to_bool( $status );
 		$key    = 'user_registration_enable_' . $id;
+
 		if ( update_option( $key, $value ) ) {
 			wp_send_json_success( 'Successfully Updated' );
 		} else {
