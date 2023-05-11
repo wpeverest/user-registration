@@ -293,6 +293,13 @@ class UR_AJAX {
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
+			// Unset hidden field value.
+			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] ) {
+				$key = array_search( $field, $profile, true );
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox':
