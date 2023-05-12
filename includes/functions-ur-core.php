@@ -3249,7 +3249,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	/**
 	 * Settings tab list to display as premium tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	function ur_premium_settings_tab() {
 
@@ -3291,7 +3291,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 	/**
 	 * Method to display premium settings tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	function ur_display_premium_settings_tab() {
 		$license_data    = ur_get_license_plan();
@@ -3384,6 +3384,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	 *
 	 * @param string $nonce_value Nonce.
 	 * @throws Exception Login errors.
+	 *
+	 * @since 3.0
 	 */
 	function ur_process_login( $nonce_value ) {
 		try {
