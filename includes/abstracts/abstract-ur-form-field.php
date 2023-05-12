@@ -183,6 +183,10 @@ abstract class UR_Form_Field {
 			$form_data['valid_file_type'] = $data['advance_setting']->valid_file_type;
 		}
 
+		if ( isset( $data['advance_setting']->enable_crop_picture ) ) {
+			$form_data['enable_crop_picture'] = $data['advance_setting']->enable_crop_picture;
+		}
+
 		$form_data['input_class'] = array( 'ur-frontend-field ' );
 
 		if ( isset( $data['advance_setting']->custom_class ) ) {
