@@ -19,6 +19,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 	class UR_Settings_General extends UR_Settings_Page {
 
 		/**
+		 * Setting Id.
+		 *
+		 * @var string
+		 */
+		public $id = 'general';
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
@@ -85,7 +92,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Hide/Show Password', 'user-registration' ),
 									'desc'     => __( 'Check this option to enable hide/show password icon beside the password field in both registration and login form.', 'user-registration' ),
 									'id'       => 'user_registration_login_option_hide_show_password',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -108,24 +115,27 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Layout', 'user-registration' ),
-									'desc'     => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
-									'id'       => 'user_registration_my_account_layout',
-									'default'  => 'horizontal',
-									'type'     => 'select',
-									'class'    => 'ur-enhanced-select',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-									'options'  => array(
+									'title'              => __( 'Layout', 'user-registration' ),
+									'desc'               => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
+									'id'                 => 'user_registration_my_account_layout',
+									'default'            => 'horizontal',
+									'type'               => 'radio-group',
+									'css'                => 'min-width: 350px;',
+									'desc_tip'           => true,
+									'options'            => array(
 										'horizontal' => __( 'Horizontal', 'user-registration' ),
 										'vertical'   => __( 'Vertical', 'user-registration' ),
+									),
+									'radio-group-images' => array(
+										'horizontal' => UR()->plugin_url() . '/assets/images/onboard-icons/horizontal.png',
+										'vertical'   => UR()->plugin_url() . '/assets/images/onboard-icons/vertical.png',
 									),
 								),
 								array(
 									'title'    => __( 'Ajax Submission on Edit Profile', 'user-registration' ),
 									'desc'     => __( 'Check to enable ajax form submission on edit profile i.e. saves profile details on save button click without reloading the page.', 'user-registration' ),
 									'id'       => 'user_registration_ajax_form_submission_on_edit_profile',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -134,7 +144,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Disable Profile Picture', 'user-registration' ),
 									'desc'     => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
 									'id'       => 'user_registration_disable_profile_picture',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -143,7 +153,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
 									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
 									'id'       => 'user_registration_disable_logout_confirmation',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -392,7 +402,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Login Title', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'user_registration_login_title',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -401,7 +411,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'ur_login_ajax_submission',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -410,7 +420,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Remember Me', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'user_registration_login_options_remember_me',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'yes',
@@ -420,7 +430,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Lost Password', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'user_registration_login_options_lost_password',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'yes',
@@ -430,7 +440,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Hide Field Labels', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'user_registration_login_options_hide_labels',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -440,7 +450,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'    => __( 'Enable Captcha', 'user-registration' ),
 									'desc'     => '',
 									'id'       => 'user_registration_login_options_enable_recaptcha',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=integration" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
@@ -469,7 +479,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
 									'desc'       => '',
 									'id'         => 'user_registration_login_options_prevent_core_login',
-									'type'       => 'checkbox',
+									'type'       => 'toggle',
 									'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
 									'css'        => 'min-width: 350px;',
 									'default'    => 'no',
@@ -659,7 +669,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'login-options' === $current_section ) {
-				$settings = $this->get_login_options_settings();
+				$settings        = $this->get_login_options_settings();
+				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
+
+				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys() ) {
+					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
+						/* translators: %s - Integration tab url */
+						'%s<a href="%s" target="_blank">Add Now.</a>',
+						esc_html__( "Seems like you haven't added the CAPTCHA Keys. ", 'user-registration' ),
+						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+					) . '</strong></p></div>';
+				}
 			} else {
 				$settings = array();
 			}

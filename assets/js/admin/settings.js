@@ -4,14 +4,35 @@
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
 			if ("specific" === $(this).val()) {
-				$(this).closest("tr").next("tr").hide();
-				$(this).closest("tr").next().next("tr").show();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.show();
 			} else if ("all_except" === $(this).val()) {
-				$(this).closest("tr").next("tr").show();
-				$(this).closest("tr").next().next("tr").hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.show();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.hide();
 			} else {
-				$(this).closest("tr").next("tr").hide();
-				$(this).closest("tr").next().next("tr").hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next(".user-registration-global-settings")
+					.hide();
+				$(this)
+					.closest(".user-registration-global-settings")
+					.next()
+					.next(".user-registration-global-settings")
+					.hide();
 			}
 		})
 		.trigger("change");
@@ -30,7 +51,10 @@
 		})
 		.on("click", function () {
 			$(".iris-picker").hide();
-			$(this).closest("td").find(".iris-picker").show();
+			$(this)
+				.closest(".user-registration-global-settings--field")
+				.find("> .iris-picker")
+				.show();
 		});
 
 	$("body").on("click", function () {
@@ -104,66 +128,72 @@
 		function () {
 			if ($(this).is(":checked")) {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 			} else {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 			}
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
+
 				.show();
 		}
 	);
@@ -171,85 +201,85 @@
 	function handleReCaptchaHideShow(value) {
 		if (value == "v3") {
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else if (value == "hCaptcha") {
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_key"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 		} else {
 			if (
@@ -261,49 +291,49 @@
 				$(
 					"#user_registration_integration_setting_recaptcha_site_key_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret_v3"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 			} else {
 				$("#user_registration_integration_setting_recaptcha_site_key")
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.show();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_key"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 				$(
 					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
 				)
-					.closest("tr")
+					.closest(".user-registration-global-settings")
 					.hide();
 			}
 
@@ -311,26 +341,26 @@
 			$(
 				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$(
 				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
 			)
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_key_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_integration_setting_invisible_recaptcha_v2")
-				.closest("tr")
+				.closest(".user-registration-global-settings")
 				.show();
 		}
 	}
@@ -427,6 +457,170 @@
 			$option_selector.on("click", function () {
 				$(this).closest("ul").find("label").removeClass("selected");
 				$(this).closest("label").addClass("selected");
+			});
+		});
+
+	$(".user-registration #mainform").on("keyup keypress", function (e) {
+		var keyCode = e.keyCode || e.which;
+		if (keyCode === 13) {
+			e.preventDefault();
+			return false;
+		}
+	});
+
+	// Set up the autocomplete feature
+	$(".user-registration #ur-search-settings").autocomplete({
+		source: function (request, response) {
+			// Make an AJAX call to the PHP script with the search query as data
+			var search_string = request.term;
+			var form_data = new FormData();
+			form_data.append("search_string", search_string);
+			form_data.append(
+				"action",
+				"user_registration_search_global_settings"
+			);
+			form_data.append(
+				"security",
+				user_registration_settings_params.user_registration_search_global_settings_nonce
+			);
+			$(".user-registration-search-icon").hide();
+
+			$.ajax({
+				url: user_registration_settings_params.ajax_url,
+				dataType: "json", // what to expect back from the PHP script, if anything
+				cache: false,
+				contentType: false,
+				processData: false,
+				data: form_data,
+				type: "post",
+				complete: function (responsed) {
+					if (responsed.responseJSON.success === true) {
+						var results = responsed.responseJSON.data.results;
+						response(results);
+					}
+					$(".user-registration-search-icon").show();
+				},
+			});
+		},
+		classes: {
+			"ui-autocomplete": "user-registration-ui-autocomplete",
+		},
+		minLength: 3, // Minimum characters required to trigger autocomplete
+		focus: function (event, ui) {
+			$(".user-registration-ui-autocomplete > li").attr(
+				"title",
+				ui.item.desc
+			);
+			$("#ur-search-settings").val(ui.item.label);
+			return false;
+		},
+		select: function (event, ui) {
+			// Update the input field value with the selected value
+			if ("no_result_found" !== ui.item.value) {
+				$(".user-registration #ur-search-settings").val(ui.item.label);
+				// Redirect the user to the selected URL
+				window.location.href = ui.item.value;
+			}
+			return false; // Prevent the default behavior of the widget
+		},
+	});
+
+	// Handles collapse of side menu.
+	$("#ur-settings-collapse").on("click", function (e) {
+		e.preventDefault();
+
+		if ($(this).hasClass("close")) {
+			$(this).closest("header").addClass("collapsed");
+			$(this).removeClass("close").addClass("open");
+		} else {
+			$(this).closest("header").removeClass("collapsed");
+			$(this).removeClass("open").addClass("close");
+		}
+	});
+
+	$(".ur-nav-premium").each(function () {
+		$(this).hover(
+			function (e) {
+				$(this).find(".ur-tooltip").show();
+			},
+			function (e) {
+				$(this).find(".ur-tooltip").hide();
+			}
+		);
+	});
+
+	/**
+	 * Open collapsed menu on search input clicked.
+	 */
+	$(".ur-search-input").on("click", function () {
+		if (
+			$(this).closest(".user-registration-header").hasClass("collapsed")
+		) {
+			$(this)
+				.closest(".user-registration-header")
+				.removeClass("collapsed");
+			$(this)
+				.closest(".user-registration-header")
+				.find("#ur-settings-collapse")
+				.addClass("close");
+			$(this).find("#ur-search-settings").focus();
+		}
+	});
+
+	if (
+		typeof getUrlVars()["searched_option"] != "undefined" ||
+		getUrlVars()["searched_option"] != null
+	) {
+		var $searched_id = $("#" + getUrlVars()["searched_option"]);
+		var wrapper_div = $searched_id.closest(
+			".user-registration-global-settings"
+		);
+		wrapper_div.addClass("ur-searched-settings-focus");
+
+		var offset = $(".ur-searched-settings-focus").parent().offset().top;
+		window.scrollTo({
+			top: offset - 200,
+			behavior: "smooth",
+		});
+		setTimeout(function () {
+			wrapper_div.removeClass("ur-searched-settings-focus");
+		}, 2000);
+	}
+	/**
+	 * Get Query String.
+	 *
+	 * @returns
+	 */
+	function getUrlVars() {
+		var vars = [],
+			hash;
+		var hashes = window.location.href
+			.slice(window.location.href.indexOf("?") + 1)
+			.split("&");
+		for (var i = 0; i < hashes.length; i++) {
+			hash = hashes[i].split("=");
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+
+	$(document)
+		.find(".user-registration-global-settings--field")
+		.find(".ur-radio-group-list--item")
+		.each(function () {
+			$(this).on("click", function () {
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.find("input")
+					.prop("checked", false);
+				$(this)
+					.closest(".ur-radio-group-list")
+					.find(".active")
+					.removeClass("active");
+				$(this).addClass("active");
+				$(this).find("input").prop("checked", true);
 			});
 		});
 })(jQuery);

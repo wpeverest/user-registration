@@ -5,43 +5,83 @@ jQuery(function ($) {
 		.show();
 
 	if ($(".ur-scroll-ui__items").length !== 0) {
-		var scrollBackward,
-			scrollForward,
-			scrollItems,
-			scrollItem,
-			scrollWidth,
-			scrollPos;
-		scrollBackward = $(".ur-scroll-ui__scroll-nav--backward");
-		scrollForward = $(".ur-scroll-ui__scroll-nav--forward");
-		scrollItems = $(".ur-scroll-ui__items");
-		scrollItem = $(".ur-scroll-ui__item");
+		var scrollBackward = $(".ur-scroll-ui__scroll-nav--backward"),
+			scrollForward = $(".ur-scroll-ui__scroll-nav--forward"),
+			scrollItems = $(".ur-scroll-ui__items"),
+			scrollItem = $(".ur-scroll-ui__item"),
+			container = $(".ur-scroll-ui__scroll-nav")
+				.not(".ur-scroll-ui__scroll-nav--backward ")
+				.not(".ur-scroll-ui__scroll-nav--forward"),
+			currentWidth = $(window).width();
 
+		var scrollItems = $(".ur-scroll-ui__items");
+		var items = scrollItems.find("li");
+		var itemWidth = Math.max.apply(
+			Math,
+			items
+				.map(function () {
+					return $(this).outerWidth(true);
+				})
+				.get()
+		); /* include margins */
+		var visibleItems =
+			currentWidth >= 1200
+				? 6
+				: currentWidth >= 992
+				? 5
+				: currentWidth >= 768
+				? 4
+				: currentWidth >= 576
+				? 3
+				: 2; /* adjust to desired number of visible items */
+		var containerWidth = itemWidth * visibleItems;
+
+		/* set container width and scrollItems position */
+		container.width(containerWidth);
+		scrollItems.css("position", "relative");
+
+		/* add arrow click handlers */
 		scrollBackward.on("click", function () {
-			scrollWidth = scrollItems.width() - 60;
-			scrollPos = scrollItems.scrollLeft() - scrollWidth;
-			scrollItems.animate({ scrollLeft: scrollPos }, "slow");
+			scrollItems.animate({ scrollLeft: "-=" + containerWidth }, "fast");
 		});
 
 		scrollForward.on("click", function () {
-			scrollWidth = scrollItems.width() - 60;
-			scrollPos = scrollItems.scrollLeft() + scrollWidth;
-			scrollItems.animate({ scrollLeft: scrollPos }, "slow");
+			scrollItems.animate({ scrollLeft: "+=" + containerWidth }, "fast");
 		});
 
+		// Scroll to Active scrollItems
+		document.getElementsByClassName(
+			"ur-scroll-ui__items"
+		)[0].scrollLeft = 0;
+
+		// Implement scroll to the active scrollItems effect only for the scrollItems items starting from the seventh position.
+		for (var i = visibleItems; i < scrollItem.length; i++) {
+			if (scrollItem[i].classList.contains("current")) {
+				document.getElementsByClassName(
+					"ur-scroll-ui__items"
+				)[0].scrollLeft = scrollItem[i].offsetLeft;
+				break;
+			}
+		}
+
 		// ScrollHandel visibility while window resizing.
-		$(window).on("resize", handleMenuScroller);
+		$(window).on("resize", handlescrollItemsScroller);
 		// ScrollHandel visibility while scrolling mouse.
-		scrollItems.on("scroll", handleMenuScroller);
+		scrollItems.on("scroll", handlescrollItemsScroller);
 
-		handleMenuScroller();
+		handlescrollItemsScroller();
 
-		function handleMenuScroller() {
+		function handlescrollItemsScroller() {
 			var scrollLeft = scrollItems.scrollLeft(),
 				width = scrollItems.width(),
 				scrollWidth = scrollItems.get(0).scrollWidth,
 				isLeftOverflow = scrollLeft > 0,
 				isRightOverflow = scrollWidth - scrollLeft - width > 0,
 				isOverflowing = scrollWidth > width;
+
+			if (scrollItems.find("li").length <= visibleItems) {
+				return;
+			}
 
 			if (isOverflowing) {
 				if (isLeftOverflow && isRightOverflow) {
@@ -71,21 +111,6 @@ jQuery(function ($) {
 					"is-disabled"
 				);
 				$(".ur-scroll-ui__scroll-nav--forward").addClass("is-disabled");
-			}
-		}
-
-		// Scroll to Active Menu
-		document.getElementsByClassName(
-			"ur-scroll-ui__items"
-		)[0].scrollLeft = 0;
-
-		// Implement scroll to the active menu effect only for the menu items starting from the seventh position.
-		for (var i = 6; i < scrollItem.length; i++) {
-			if (scrollItem[i].classList.contains("is-active")) {
-				document.getElementsByClassName(
-					"ur-scroll-ui__items"
-				)[0].scrollLeft = scrollItem[i].offsetLeft;
-				break;
 			}
 		}
 	}

@@ -68,7 +68,7 @@ class UR_Cron {
 	 * @since 2.3.2
 	 */
 	private function usage_cron() {
-		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' ) ) {
+		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && ur_option_checked( 'user_registration_allow_usage_tracking', false ) ) {
 			wp_schedule_event( time(), 'biweekly', 'user_registration_usage_stats_scheduled_events' );
 		}
 	}

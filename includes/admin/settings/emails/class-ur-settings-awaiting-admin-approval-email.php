@@ -49,7 +49,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'desc'     => __( 'Enable this email sent to user notifying the registration is awaiting admin approval.', 'user-registration' ),
 									'id'       => 'user_registration_enable_awaiting_admin_approval_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(
