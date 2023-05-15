@@ -1664,27 +1664,75 @@
 		li {
 			display: flex;
 			align-items: center;
+			gap: $spacing_8px;
 
 			.editor-block-mover__control-drag-handle {
-				margin-right: 8px;
 				cursor: grab;
 
 				svg {
 					fill: $color_gray_two;
 				}
 			}
-
-			input {
-				margin-right: 8px;
-			}
+			
 			.ur-multiple-choice {
 				.ur-regular-price,.ur-selling-price {
 					display: grid;
 					grid-template-columns: 1fr 1fr;
-					gap: 8px;
-					padding: 4px;
+					gap: $spacing_8px;
+					padding: $spacing_4px;
 					input {
 						width: 100%;
+					}
+				}
+			}
+
+			.ur-regular-price,
+			.ur-selling-price {
+				position: relative;				
+
+				span {
+					position: absolute;
+					top: 0;
+					background: $border-color;
+					padding: $spacing_6px $spacing_8px;
+					color: $grey-400;
+					border-radius: $border_radius_3;
+					top: -60px;
+					font-size: 13px;
+					opacity: 0;
+					transition: all .3s ease-in-out;
+
+					&::after {
+						border: 8px solid transparent;
+						border-top-color: $border-color;
+						content: "";
+						height: 0;
+						left: 50%;
+						transform: translateX(-50%);
+						position: absolute;
+						top: 100%;
+						width: 0;
+					}
+				}
+
+				&:hover {
+					span {
+						opacity: 1;
+					}
+				}
+			}
+
+			.ur-choice-buttons {
+				display: flex;
+				flex-direction: column;
+				gap: $spacing_8px;
+
+				a {
+					min-width: 32px;
+					width: 32px;
+
+					&.add {
+						margin-right: 0;
 					}
 				}
 			}
