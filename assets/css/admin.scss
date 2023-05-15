@@ -2071,6 +2071,24 @@ img.tips {
 			}
 		}
 	}
+
+	&.ur-selling-price-tooltip {
+		.tooltipster-box {
+			background-color: rgb(244,73,73) !important;
+			border: rgb(244,73,73);
+		}
+		.tooltipster-arrow {
+			.tooltipster-arrow-uncropped {
+				.tooltipster-arrow-border {
+					border-top-color: rgb(244,73,73) !important;
+					border-bottom-color: rgb(244,73,73) !important;
+				}
+				.tooltipster-arrow-background {
+					border-top-color: rgb(244,73,73) !important;
+				}
+			}
+		}
+	}
 }
 
  /**

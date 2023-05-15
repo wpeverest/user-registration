@@ -6622,6 +6622,17 @@ img.tips {
   border-top-color: #383838 !important;
   border-bottom-color: #383838 !important; }
 
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-box {
+  background-color: #f44949 !important;
+  border: #f44949; }
+
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
+  border-top-color: #f44949 !important;
+  border-bottom-color: #f44949 !important; }
+
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-background {
+  border-top-color: #f44949 !important; }
+
 /**
    * Help Tip
    */

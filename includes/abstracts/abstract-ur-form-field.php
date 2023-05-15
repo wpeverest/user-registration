@@ -301,7 +301,7 @@ abstract class UR_Form_Field {
 			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
 		}
 		if ( 'single_item' === $field_key ) {
-			$form_data['enable_selling_price_single_item'] = isset( $data['advance_setting']->enable_selling_price_single_item ) ? $data['advance_setting']->enable_selling_price_single_item : '';
+			$form_data['enable_selling_price_single_item'] = isset( $data['advance_setting']->enable_selling_price_single_item ) ? ur_string_to_bool( $data['advance_setting']->enable_selling_price_single_item ) : '';
 			$form_data['selling_price']                    = isset( $data['advance_setting']->selling_price ) ? $data['advance_setting']->selling_price : '';
 		}
 
@@ -314,8 +314,8 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option->label ] = array(
-						'label' => $option->label,
-						'value' => $option->value,
+						'label'      => $option->label,
+						'value'      => $option->value,
 						'sell_value' => $option->sell_value,
 					);
 				}

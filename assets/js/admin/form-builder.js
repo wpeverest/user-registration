@@ -2883,7 +2883,7 @@
 							});
 							break;
 						case "selling_price":
-							if ("no" === $this_obj.val()) {
+							if (!$this_obj.is(":checked")) {
 								$(this)
 									.closest(".ur-general-setting-block")
 									.find(".ur-selling-price")
@@ -3304,7 +3304,7 @@
 							});
 							break;
 						case "enable_selling_price_single_item":
-							if ("false" === $this_node.val()) {
+							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-selling_price")
@@ -3801,26 +3801,13 @@
 			 */
 			trigger_general_setting_selling_price: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'select[data-field="' +
-							$label.attr("data-field") +
-							'"] option:selected'
-					)
-					.attr("selected", false);
-				$label.find("option").attr("selected", false);
 
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'select[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
-				$label
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
+					.prop("checked", $label.is(":checked"));
 			},
 			/**
 			 * Reflects changes in descriptions field of field settings into selected field in form builder area.
