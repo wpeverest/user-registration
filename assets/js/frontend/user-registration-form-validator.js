@@ -28,7 +28,7 @@
 			// Prevent invalid key input in number fields.
 			$("[type='number']").keypress(function (event) {
 				var keyCode = event.keyCode;
-				if ( keyCode < 48 || keyCode > 57 ) {
+				if (keyCode < 48 || keyCode > 57) {
 					event.preventDefault();
 				}
 			});
@@ -265,8 +265,7 @@
 						if (
 							$(form).hasClass("register") ||
 							($(form).hasClass("edit-profile") &&
-								"yes" ===
-									user_registration_params.ajax_submission_on_edit_profile)
+								user_registration_params.ajax_submission_on_edit_profile)
 						) {
 							return false;
 						}
@@ -366,10 +365,11 @@
 					required: true,
 					equalTo: "#" + form_id + " #user_email",
 				};
-				messages.user_confirm_email ={
+				messages.user_confirm_email = {
 					required: user_registration_params.message_required_fields,
-					equalTo: user_registration_params.message_confirm_email_fields,
-				}
+					equalTo:
+						user_registration_params.message_confirm_email_fields,
+				};
 			}
 
 			if (this_node.hasClass("edit-password")) {
@@ -396,8 +396,9 @@
 				};
 				messages.user_confirm_password = {
 					required: user_registration_params.message_required_fields,
-					equalTo: user_registration_params.message_confirm_password_fields,
-				}
+					equalTo:
+						user_registration_params.message_confirm_password_fields,
+				};
 			}
 
 			/**

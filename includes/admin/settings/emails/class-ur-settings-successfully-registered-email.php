@@ -49,7 +49,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 									'desc'     => __( 'Enable this email sent to the user after successful user registration.', 'user-registration' ),
 									'id'       => 'user_registration_enable_successfully_registered_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 								array(

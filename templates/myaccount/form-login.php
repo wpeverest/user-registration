@@ -46,13 +46,15 @@ $placeholders = array(
 	'username' => get_option( 'user_registration_placeholder_username_or_email', '' ),
 	'password' => get_option( 'user_registration_placeholder_password', '' ),
 );
-$hide_labels  = 'yes' === get_option( 'user_registration_login_options_hide_labels', 'no' );
+$hide_labels  = ur_option_checked( 'user_registration_login_options_hide_labels', false );
 
-$enable_ajax = 'yes' === get_option( 'ur_login_ajax_submission', 'no' );
+$enable_ajax = ur_option_checked( 'ur_login_ajax_submission', false );
 
-$enable_field_icon = 'yes' === get_option( 'user_registration_pro_general_setting_login_form', 'no' );
+$enable_field_icon = ur_option_checked( 'user_registration_pro_general_setting_login_form', false );
 
-$login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
+$login_title = ur_option_checked( 'user_registration_login_title', false );
+
+$is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || ! ur_string_to_bool( $_GET['pl'] ); // phpcs:ignore WordPress.Security.NonceVerification
 
 ?>
 
@@ -86,7 +88,8 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<?php } ?>
 						</span>
 					</p>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) ? ' hide_show_password' : ''; ?>">
+					<?php if ( $is_passwordless_enabled ) : ?>
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
 						if ( ! $hide_labels ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
@@ -97,7 +100,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo $enable_field_icon ? 'padding-left: 32px !important' : ''; ?>" />
 
 						<?php
-						if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 							?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
 						</span>
@@ -109,7 +112,7 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						<?php } ?>
 						</span>
 					</p>
-
+					<?php endif; ?>
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
 						echo '<div id="ur-recaptcha-node"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -130,32 +133,32 @@ $login_title = 'yes' === get_option( 'user_registration_login_title', 'no' );
 						</div>
 						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
 						<?php
-							$remember_me_enabled = get_option( 'user_registration_login_options_remember_me', 'yes' );
+							$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
 
-						if ( 'yes' === $remember_me_enabled ) {
+						if ( $remember_me_enabled && $is_passwordless_enabled ) {
 							?>
 								<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 									<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
 								</label>
-								<?php
+							<?php
 						}
 						?>
 					</p>
 
 					<?php
-						$lost_password_enabled = get_option( 'user_registration_login_options_lost_password', 'yes' );
+						$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
 
-					if ( 'yes' === $lost_password_enabled ) {
+					if ( $lost_password_enabled && $is_passwordless_enabled ) {
 						?>
 								<p class="user-registration-LostPassword lost_password">
 									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
 								</p>
-							<?php
+						<?php
 					}
 					?>
 
 					<?php
-					$users_can_register = get_option( 'users_can_register', 'yes' );
+					$users_can_register = ur_option_checked( 'users_can_register', true );
 
 					if ( $users_can_register ) {
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );

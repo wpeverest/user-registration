@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 	<div id="user-registration-<?php echo esc_attr( $notice_type ); ?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>">
 		<div class="user-registration-notice-thumbnail">
-			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.png' ); ?>" alt="">
+			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.gif' ); ?>" alt="">
 		</div>
 		<div class="user-registration-notice-text">
 			<div class="user-registration-notice-header">

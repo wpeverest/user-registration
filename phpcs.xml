@@ -2,25 +2,12 @@
 <ruleset name="WordPress Coding Standards">
 	<description>User Registration dev PHP_CodeSniffer ruleset.</description>
 
-	<file>.</file>
 	<!-- Exclude paths -->
 	<exclude-pattern>includes/libraries/</exclude-pattern>
 	<exclude-pattern>includes/functions-ur-deprecated.php</exclude-pattern>
 	<exclude-pattern>includes/abstracts/legacy/</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
-
-	<!-- Show progress, show the error codes for each message (source). -->
-	<arg value="ps" />
-
-	<!-- Check up to 8 files simultaneously. -->
-	<arg name="parallel" value="8" />
-
-	<!-- Strip the filepaths in reports down to the relevant bit. -->
-	<arg name="basepath" value="./" />
-
-	<!-- Check for specific valid file extensions. -->
-	<arg name="extensions" value="php" />
 
 	<!-- Configs -->
 	<config name="minimum_supported_wp_version" value="4.7" />

@@ -24,6 +24,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 		public function __construct() {
 
 			add_action( 'media_buttons', array( $this, 'media_button' ), 15 );
+			add_action( 'ur_smart_tags_list', array( $this, 'select_smart_tags' ), 15, 1 );
 		}
 
 		/**
@@ -41,6 +42,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 
 			// Remove Add User Registration Form button from wp-editor in customize my account settings page.
 			if ( isset( $_GET['tab'] ) && 'user-registration-customize-my-account' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				do_action( 'ur_smart_tags_list', $editor_id );
 				return;
 			}
 
@@ -55,7 +57,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				wp_kses_post( $icon ),
 				esc_html__( 'Add Registration Form', 'user-registration' )
 			);
-
+			do_action( 'ur_smart_tags_list', $editor_id );
 			add_action( 'admin_footer', array( $this, 'shortcode_modal' ) );
 		}
 
@@ -106,6 +108,20 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 						</form>
 					</div>
 			<?php
+		}
+		/**
+		 * Smart tag list button
+		 *
+		 * @param int $editor_id  editor id.
+		 */
+		public function select_smart_tags( $editor_id ) {
+			$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+			printf( '<select id="select-smart-tags" class="button" style="color:#2271B1; border-color:#2271B1">', esc_attr( $editor_id ) );
+			printf( '<option value="">%s</option>', esc_html__( 'Add Smart Tags', 'user-registration' ) );
+			foreach ( $smart_tags_list as $key => $value ) {
+				printf( "<option class='ur-select-smart-tag' value = '%s'> %s</option>", esc_attr( $key ), esc_html( $value ) );
+			}
+			echo '</select>';
 		}
 	}
 

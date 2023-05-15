@@ -22,22 +22,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="ur-brand-logo ur-px-2">
 						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
 					</div>
+					<?php
+					if ( ! empty( $form_data ) ) {
+						?>
+						<span class="ur-form-title"><?php echo isset( $form_data->post_title ) ? esc_html( $form_data->post_title ) : ''; ?></span>
+						<span class="ur-editing-tag"><?php esc_html_e( 'Now Editing', 'user-registration' ); ?></span>
+						<?php
+					}
+					?>
 					<div class="major-publishing-actions wp-clearfix">
 						<div class="publishing-action">
 							<?php
 							if ( ! empty( $form_data ) ) {
-
 								?>
-									<input type="text" onfocus="this.select();" readonly="readonly"
-										value='[user_registration_form id=<?php echo '"' . esc_attr( $form_id ) . '"'; ?>]'
-										class=" code" size="35">
+								<input type="text" onfocus="this.select();" readonly="readonly"
+									value='[user_registration_form id=<?php echo '"' . esc_attr( $form_id ) . '"'; ?>]'
+									class=" code" size="35">
 
-									<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
-										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
-											<path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/>
-										</svg>
-									</button>
-
+								<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+										<path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/>
+									</svg>
+								</button>
 								<?php
 							}
 							?>
@@ -78,8 +84,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</div>
 										<div class="ur-fields-not-found" hidden>
 											<img src="<?php echo esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/not-found.png' ); ?>" />
-											<h3 class="ur-fields-not-found-title">Whoops!</h3>
-											<span>There is not any field that you were searching for.</span>
+											<h3 class="ur-fields-not-found-title"><?php esc_html_e( 'Whoops!', 'user-registration' ); ?></h3>
+											<span><?php esc_html_e( 'There is not any field that you were searching for.', 'user-registration' ); ?></span>
 										</div>
 										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
@@ -100,10 +106,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 											</div>
 										</form>
 									</div>
-
 									<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
 								</div>
 							</nav>
+							<button id="ur-collapse" class="close">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<path fill="#6B6B6B" d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
+								</svg>
+							</button>
 						</div>
 						<?php
 						$builder_class = apply_filters( 'user_registration_builder_class', array() );
