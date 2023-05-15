@@ -1663,15 +1663,19 @@
 	.ur-options-list {
 		li {
 			display: flex;
-			align-items: center;
-			gap: $spacing_8px;
+			align-items: center;			
 
 			.editor-block-mover__control-drag-handle {
+				margin-right: $spacing_8px;
 				cursor: grab;
 
 				svg {
 					fill: $color_gray_two;
 				}
+			}
+
+			input {
+				margin-right: $spacing_8px;
 			}
 			
 			.ur-multiple-choice {
@@ -1686,54 +1690,56 @@
 				}
 			}
 
-			.ur-regular-price,
-			.ur-selling-price {
-				position: relative;				
-
-				span {
-					position: absolute;
-					top: 0;
-					background: $border-color;
-					padding: $spacing_6px $spacing_8px;
-					color: $grey-400;
-					border-radius: $border_radius_3;
-					top: -60px;
-					font-size: 13px;
-					opacity: 0;
-					transition: all .3s ease-in-out;
-
-					&::after {
-						border: 8px solid transparent;
-						border-top-color: $border-color;
-						content: "";
-						height: 0;
-						left: 50%;
-						transform: translateX(-50%);
-						position: absolute;
-						top: 100%;
-						width: 0;
-					}
-				}
-
-				&:hover {
-					span {
-						opacity: 1;
-					}
-				}
-			}
-
-			.ur-choice-buttons {
-				display: flex;
-				flex-direction: column;
+			&.ur-multiple-choice {
 				gap: $spacing_8px;
 
-				a {
-					min-width: 32px;
-					width: 32px;
+				input {
+					margin-right: 0;
+				}
 
-					&.add {
-						margin-right: 0;
+				> input[type="text"] {
+					width: 80%;
+				}
+				.ur-regular-price,
+				.ur-selling-price {
+					position: relative;				
+	
+					span {
+						position: absolute;
+						top: 0;
+						background: #e7e7e7;
+						padding: $spacing_6px $spacing_8px;
+						color: $grey-400;
+						border-radius: $border_radius_3;
+						top: -60px;
+						font-size: 13px;
+						opacity: 0;
+						visibility: hidden;
+						transition: all .3s ease-in-out;
+	
+						&::after {
+							content: "";
+							border: 8px solid transparent;
+							border-top-color: #e7e7e7;
+							height: 0;
+							left: 50%;
+							transform: translateX(-50%);
+							position: absolute;
+							top: 100%;
+							width: 0;
+						}
 					}
+	
+					&:hover {
+						span {
+							visibility: visible;
+							opacity: 1;
+						}
+					}
+				}
+
+				.add {
+					margin-right: 0;
 				}
 			}
 		}
