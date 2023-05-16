@@ -4018,6 +4018,8 @@
 				) {
 					URFormBuilder.render_multiple_choice($this);
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'add', $wrapper}] );
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -4060,6 +4062,8 @@
 						URFormBuilder.render_multiple_choice($any_siblings);
 					}
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'remove', $wrapper}] );
 			},
 		};
 
