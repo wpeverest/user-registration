@@ -32,7 +32,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 				<div class="user-registration-profile-fields">
 					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
-					if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+					if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 						?>
 						<div class="user-registration-profile-header">
 							<div class="user-registration-img-container" style="width:100%">
@@ -161,10 +161,10 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												// Migrate the conditional logic to logic_map schema.
 												$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
 
-												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ( '1' === $single_item->advance_setting->enable_conditional_logic || 'on' === $single_item->advance_setting->enable_conditional_logic ) ? 'yes' : 'no';
+												$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_item->advance_setting->enable_conditional_logic );
 												$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
 
-												if ( 'yes' === $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+												if ( $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
 													$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
 													$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 												}
@@ -220,8 +220,8 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
 													$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
 
-													if ( 'true' === $advance_data['advance_setting']->enable_prefix_postfix ) {
-														if ( 'true' === $advance_data['advance_setting']->enable_text_prefix_postfix ) {
+													if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
+														if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
 															$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
 															$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
 														} else {
@@ -231,7 +231,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													}
 
 													// to hide the range as payment slider in edit profile.
-													if ( 'true' === $field['enable_payment_slider'] ) {
+													if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
 														continue;
 													}
 												}
@@ -244,7 +244,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												}
 
 												if ( isset( $single_item->general_setting->hide_label ) ) {
-													if ( 'yes' === $single_item->general_setting->hide_label ) {
+													if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
 														unset( $field['label'] );
 													}
 												}
@@ -314,7 +314,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 
 												if ( isset( $advance_data['general_setting']->required ) ) {
 													if ( in_array( $single_item->field_key, ur_get_required_fields() )
-													|| 'yes' === $advance_data['general_setting']->required ) {
+													|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 														$field['required']                      = true;
 														$field['custom_attributes']['required'] = 'required';
 													}
@@ -338,7 +338,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 														$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
 													}
 													if ( isset( $advance_data['advance_setting']->select_all ) ) {
-														$field['select_all'] = $advance_data['advance_setting']->select_all;
+														$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
 													}
 												}
 
@@ -402,7 +402,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 					?>
 					<p>
 						<?php
-						if ( 'yes' === get_option( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ) ) {
+						if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							?>
 							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 							<?php

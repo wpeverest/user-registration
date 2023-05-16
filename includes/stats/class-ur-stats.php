@@ -206,7 +206,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @return boolean
 		 */
 		public function is_usage_allowed() {
-			return 'yes' === get_option( 'user_registration_allow_usage_tracking', 'no' );
+			return ur_option_checked( 'user_registration_allow_usage_tracking', false );
 		}
 
 		/**
@@ -230,7 +230,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @return mixed
 		 */
 		public function run_on_save( $old_value, $value, $option ) {
-			if ( $value !== $old_value && 'yes' === $value && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
+			if ( $value !== $old_value && $value && ( false === get_option( self::LAST_RUN_STAMP ) ) ) {
 				$this->process();
 			}
 			return $value;
@@ -371,39 +371,39 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			return array(
 				'user-registration/user-registration.php' => array(
 					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
-					array( 'user_registration_login_option_hide_show_password', 'no' ),
+					array( 'user_registration_login_option_hide_show_password', false ),
 					array( 'user_registration_myaccount_page_id', '', true ),
 					array( 'user_registration_my_account_layout', 'horizontal' ),
-					array( 'user_registration_ajax_form_submission_on_edit_profile', 'no' ),
-					array( 'user_registration_disable_profile_picture', 'no' ),
-					array( 'user_registration_disable_logout_confirmation', 'no' ),
+					array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+					array( 'user_registration_disable_profile_picture', false ),
+					array( 'user_registration_disable_logout_confirmation', false ),
 					array( 'user_registration_login_options_form_template', 'default' ),
 					array( 'user_registration_general_setting_login_options_with', 'default' ),
-					array( 'user_registration_login_title', 'no' ),
-					array( 'ur_login_ajax_submission', 'no' ),
-					array( 'user_registration_login_options_remember_me', 'yes' ),
-					array( 'user_registration_login_options_lost_password', 'yes' ),
-					array( 'user_registration_login_options_hide_labels', 'no' ),
-					array( 'user_registration_login_options_enable_recaptcha', 'no' ),
+					array( 'user_registration_login_title', false ),
+					array( 'ur_login_ajax_submission', false ),
+					array( 'user_registration_login_options_remember_me', true ),
+					array( 'user_registration_login_options_lost_password', true ),
+					array( 'user_registration_login_options_hide_labels', false ),
+					array( 'user_registration_login_options_enable_recaptcha', false ),
 					array( 'user_registration_general_setting_registration_url_options', '', true ),
-					array( 'user_registration_login_options_prevent_core_login', 'no' ),
+					array( 'user_registration_login_options_prevent_core_login', false ),
 					array( 'user_registration_login_options_login_redirect_url', '', true ),
 					array( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
-					array( 'user_registration_general_setting_uninstall_option', 'no' ),
-					array( 'user_registration_allow_usage_tracking', 'no' ) //phpcs:ignore
+					array( 'user_registration_general_setting_uninstall_option', false ),
+					array( 'user_registration_allow_usage_tracking', false ) //phpcs:ignore
 				),
 				'user-registration-pro/user-registration.php' => array(
 					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
-					array( 'user_registration_pro_general_setting_login_form', 'no' ),
-					array( 'user_registration_pro_general_setting_prevent_active_login', 'no' ),
+					array( 'user_registration_pro_general_setting_login_form', false ),
+					array( 'user_registration_pro_general_setting_prevent_active_login', false ),
 					array( 'user_registration_pro_general_setting_limited_login', '5' ),
-					array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', 'no' ),
+					array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', false ),
 					array( 'user_registration_pro_general_post_submission_settings', '' ),
 					array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
-					array( 'user_registration_pro_role_based_redirection', 'no' ) //phpcs:ignore
+					array( 'user_registration_pro_role_based_redirection', false ) //phpcs:ignore
 				),
 				'user-registration-content-restriction/user-registration-content-restriction.php' => array(
-					array( 'user_registration_content_restriction_enable', 'yes' ),
+					array( 'user_registration_content_restriction_enable', true ),
 					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
 				'user-registration-file-upload/user-registration-file-upload.php' => array(
@@ -423,24 +423,24 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pdf_background_color', '#ffffff' ),
 					array( 'user_registration_pdf_header_font_color', '#000000' ),
 					array( 'user_registration_pdf_header_background_color', '#ffffff' ),
-					array( 'user_registration_pdf_multiple_column', 'no' ),
-					array( 'user_registration_pdf_rtl', 'no' ),
-					array( 'user_registration_pdf_print_user_default_fields', 'no' ),
-					array( 'user_registration_pdf_hide_empty_fields', 'no' ) //phpcs:ignore
+					array( 'user_registration_pdf_multiple_column', false ),
+					array( 'user_registration_pdf_rtl', false ),
+					array( 'user_registration_pdf_print_user_default_fields', false ),
+					array( 'user_registration_pdf_hide_empty_fields', false ) //phpcs:ignore
 				),
 				'user-registration-social-connect/user-registration-social-connect.php' => array(
 					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
 					array( 'user_registration_social_setting_enable_twitter_connect', '' ),
 					array( 'user_registration_social_setting_enable_google_connect', '' ),
 					array( 'user_registration_social_setting_enable_linkedin_connect', '' ),
-					array( 'user_registration_social_setting_enable_social_registration', 'no' ),
-					array( 'user_registration_social_setting_display_social_buttons_in_registration', 'no' ),
+					array( 'user_registration_social_setting_enable_social_registration', false ),
+					array( 'user_registration_social_setting_display_social_buttons_in_registration', false ),
 					array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
 					array( 'user_registration_social_login_position', 'bottom' ),
 					array( 'user_registration_social_login_template', 'ursc_theme_4' ) //phpcs:ignore
 				),
 				'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
-					array( 'user_registration_tfa_enable_disable', 'no' ),
+					array( 'user_registration_tfa_enable_disable', false ),
 					array( 'user_registration_tfa_roles', '["subscriber"]' ),
 					array( 'user_registration_tfa_otp_length', '6' ),
 					array( 'user_registration_tfa_otp_expiry_time', '10' ),

@@ -55,8 +55,8 @@
  * User Registration Mixins
  */
 /**
- * Styling begins
- */
+  * Styling begins
+  */
 .ur_plugin_upgrade_notice {
   font-weight: normal;
   color: #fff;
@@ -74,8 +74,8 @@
     vertical-align: top; }
 
 /**
- * Plugin Updater.
- */
+  * Plugin Updater.
+  */
 .user-registration-updater-licensed th, .user-registration-updater-licensed td {
   box-shadow: none !important; }
 
@@ -114,8 +114,8 @@
     border: 1px solid #a0aad9; }
 
 /**
- * Progressbar styles
- **/
+  * Progressbar styles
+  **/
 .user-registration-progress {
   display: flex;
   height: 1rem;
@@ -134,5 +134,8 @@
     background-color: #475bb2;
     transition: width .6s ease; }
 
-#toplevel_page_user-registration ul li:last-child a {
+#toplevel_page_user-registration ul li a[href*="user-registration-addons"] {
   color: #9EF01A !important; }
+
+#toplevel_page_user-registration ul li a[href*="ur-upgrade-to-pro"] {
+  color: #FF8C39 !important; }
