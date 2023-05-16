@@ -139,6 +139,7 @@ class UR_Install {
 		self::update_ur_version();
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
+		self::maybe_run_migrations();
 
 		$path = WP_CONTENT_DIR . '/uploads/user_registration_uploads/profile-pictures';
 
@@ -238,6 +239,60 @@ class UR_Install {
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
 		} else {
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
+		}
+	}
+
+
+	/**
+	 * Run Migrations.
+	 *
+	 * @throws Exception If callable function not defined.
+	 *
+	 * @return void
+	 */
+	private static function maybe_run_migrations() {
+
+		include_once 'functions-ur-update.php';
+
+		$current_migration_version = get_option( 'user_registration_migration_version', null );
+
+		// Migrations for User Registration ( Free ).
+		$migration_updates = array(
+			'3.0.0' => array(
+				'ur_update_300_option_migrate',
+			),
+		);
+
+		if ( defined( 'UR_PRO_ACTIVE' ) ) {
+			// Migrations for User Registration ( Pro ).
+			$migration_updates = array(
+				'4.0.0' => array(
+					'ur_pro_update_400_option_migrate',
+				),
+			);
+
+			$current_migration_version = ! is_null( $current_migration_version ) ? $current_migration_version : '3.2.4';
+		}
+
+		$current_migration_version = ! is_null( $current_migration_version ) ? $current_migration_version : '2.3.4';
+
+		foreach ( $migration_updates as $version => $update_callbacks ) {
+			if ( version_compare( $current_migration_version, $version, '<' ) ) {
+				foreach ( $update_callbacks as $update_callback ) {
+					try {
+						if ( function_exists( $update_callback ) ) {
+							if ( is_callable( $update_callback ) ) {
+								call_user_func( $update_callback );
+							}
+						} else {
+							throw new Exception( 'Migration function ' . $update_callback . '() not found.' );
+						}
+					} catch ( Exception $e ) {
+						ur_get_logger()->debug( $e->getMessage() );
+					}
+				}
+				update_option( 'user_registration_migration_version', $version );
+			}
 		}
 	}
 

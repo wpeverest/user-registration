@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $frontend       = UR_Frontend::instance();
 $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
-$redirect_url   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_options', '' );
+$redirect_url   = ur_get_form_redirect_url( $form_id );
 $template_class = '';
 
 if ( 'Bordered' === $form_template ) {
