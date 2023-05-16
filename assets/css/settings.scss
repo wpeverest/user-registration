@@ -753,8 +753,28 @@ body {
 				&__header {
 					margin-bottom: $spacing_24px;
 					padding: 0 0 $spacing_16px;
-					border-bottom: $border_width solid $grey-50 !important;
 					position: relative;
+
+					// Integration Settings
+					&.integration-header-info {
+						padding: $spacing_16px 0 !important;
+						border: 0;
+						margin-bottom: 0;
+						cursor: pointer;
+
+						&.active {
+							border-bottom: 1px solid #dee0e9;
+							padding-bottom: $spacing_18px;
+
+							.integration-action {
+								border-color: $primary_color;
+								svg {
+									stroke: $primary_color;
+									transform: rotate(-180deg);
+								}
+							}
+						}
+					}
 				}
 
 				// Integration Settings
