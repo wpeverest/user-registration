@@ -367,3 +367,23 @@ function ur_update_2331_options() {
 	delete_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
 
 }
+
+/**
+ * Set Redirect after Registration option in form settings.
+ *
+ * @return void
+ */
+function ur_update_300_option_migrate() {
+
+	// Get all posts with user_registration post type.
+	$posts = get_posts( 'post_type=user_registration' );
+
+	foreach ( $posts as $post ) {
+
+		$redirect_url = ur_get_single_post_meta( $post->ID, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) );
+
+		if ( ! empty( $redirect_url ) ) {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'external-url' );
+		}
+	}
+}
