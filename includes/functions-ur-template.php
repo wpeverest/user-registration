@@ -138,9 +138,10 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 	 */
 	function ur_get_form_redirect_url( $form_id = 0, $redirect_url = '', $maybe_translate = true ) {
 
-		$login_option = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
+		$login_option      = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
+		$paypal_is_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', true ) );
 
-		if ( ! in_array( $login_option, array( 'payment', 'auto_login' ), true ) ) {
+		if ( 'auto_login' !== $login_option && ! $paypal_is_enabled ) {
 
 			if ( empty( $redirect_url ) ) {
 				// Getting redirect options from global settings for backward compatibility.
