@@ -318,3 +318,52 @@ function ur_update_162_meta_key() {
 	// Delete Redirect options form general setting as previous version refered to do so.
 	delete_option( 'user_registration_general_setting_redirect_options' );
 }
+
+
+/**
+ * Change Integration to Captcha Option names.
+ *
+ * @since 2.4.0
+ *
+ * @return void.
+ */
+function ur_update_2331_options() {
+
+	$recaptcha_type      			= get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' );
+	$invisible_recaptcha 			= get_option( 'user_registration_integration_setting_invisible_recaptcha_v2', 'no' );
+	$recaptcha_invisible_site_key   = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+	$recaptcha_invisible_secret_key = get_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+	$recaptcha_site_key   			= get_option( 'user_registration_integration_setting_recaptcha_site_key' );
+	$recaptcha_secret_key 			= get_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+	$recaptcha_site_key_v3   		= get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+	$recaptcha_site_secret_v3 		= get_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+	$recaptcha_threshold_score_v3 	= get_option( 'user_registration_integration_setting_recaptcha_threshold_score_v3' );
+	$site_key_hcaptcha   			= get_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+	$site_secret_hcaptcha 			= get_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+
+
+	update_option( 'user_registration_captcha_setting_recaptcha_version', $recaptcha_type );
+	update_option( 'user_registration_captcha_setting_invisible_recaptcha_v2', $invisible_recaptcha );
+	update_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key', $recaptcha_invisible_site_key );
+	update_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret', $recaptcha_invisible_secret_key );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_key', $recaptcha_site_key );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_secret', $recaptcha_secret_key );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_key_v3', $recaptcha_site_key_v3 );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3', $recaptcha_site_secret_v3 );
+	update_option( 'user_registration_captcha_setting_recaptcha_threshold_score_v3', $recaptcha_threshold_score_v3 );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha', $site_key_hcaptcha );
+	update_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' ,$site_secret_hcaptcha);
+
+	delete_option( 'user_registration_integration_setting_recaptcha_version' );
+	delete_option( 'user_registration_integration_setting_invisible_recaptcha_v2' );
+	delete_option( 'user_registration_integration_setting_recaptcha_invisible_site_key' );
+	delete_option( 'user_registration_integration_setting_recaptcha_invisible_site_secret' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_key' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_secret' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_secret_v3' );
+	delete_option( 'user_registration_integration_setting_recaptcha_threshold_score_v3' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_key_hcaptcha' );
+	delete_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
+
+}

@@ -48,7 +48,7 @@ class UR_Admin_Settings {
 			include_once dirname( __FILE__ ) . '/settings/class-ur-settings-page.php';
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
-			$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-captcha.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-misc.php';

@@ -259,12 +259,11 @@ class UR_Install {
 		$updates            = self::$db_updates;
 		$current_db_version = get_option( 'user_registration_db_version' );
 
-		$db_needs_update = array( '1.2.2', '1.2.3', '1.2.4' );
+		$db_needs_update = array( '2.3.3' );
 
 		if ( in_array( $current_db_version, $db_needs_update ) ) {
-			$updates['1.2.5'] = array(
-				'ur_update_125_usermeta',
-				'ur_update_125_db_version',
+			$updates['2.3.3.1'] = array(
+				'ur_update_2331_options',
 			);
 		}
 		return $updates;
