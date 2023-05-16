@@ -137,42 +137,48 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 	 * @return string
 	 */
 	function ur_get_form_redirect_url( $form_id = 0, $redirect_url = '', $maybe_translate = true ) {
-		if ( empty( $redirect_url ) ) {
-			// Getting redirect options from global settings for backward compatibility.
-			$redirect_url = get_option( 'user_registration_general_setting_redirect_options', $redirect_url );
-		}
 
-		if ( ! empty( $form_id ) ) {
+		$login_option = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
 
-			$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+		if ( ! in_array( $login_option, array( 'payment', 'auto_login' ), true ) ) {
 
-			switch ( $redirect_option ) {
-				case 'no-redirection':
-					$redirect_url = '';
-					break;
-
-				case 'internal-page':
-					$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
-
-					if ( ! empty( $selected_page ) ) {
-						$page_url     = get_permalink( $selected_page );
-						$redirect_url = $page_url;
-					}
-
-					break;
-
-				case 'external-url':
-					$external_url = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
-					$redirect_url = $external_url;
-
-					break;
-
-				default:
+			if ( empty( $redirect_url ) ) {
+				// Getting redirect options from global settings for backward compatibility.
+				$redirect_url = get_option( 'user_registration_general_setting_redirect_options', $redirect_url );
 			}
-		}
 
-		if ( $maybe_translate ) {
-			$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+			if ( ! empty( $form_id ) ) {
+
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+
+				switch ( $redirect_option ) {
+					case 'no-redirection':
+						$redirect_url = '';
+						break;
+
+					case 'internal-page':
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
+
+						if ( ! empty( $selected_page ) ) {
+							$page_url     = get_permalink( $selected_page );
+							$redirect_url = $page_url;
+						}
+
+						break;
+
+					case 'external-url':
+						$external_url = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+						$redirect_url = $external_url;
+
+						break;
+
+					default:
+				}
+			}
+
+			if ( $maybe_translate ) {
+				$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+			}
 		}
 
 		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
