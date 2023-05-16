@@ -778,6 +778,8 @@ class UR_Admin_Settings {
 									break;
 							}// End switch case.
 						}
+					} elseif ( is_string( $section['settings'] ) ) {
+						$settings .= $section['settings'];
 					}
 					$settings .= ' </div > ';
 					$settings .= ' </div > ';
