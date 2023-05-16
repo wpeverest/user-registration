@@ -5902,7 +5902,7 @@
             font-weight: 500;
             cursor: pointer; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -6507,6 +6507,52 @@
         fill: #676d8a; }
     .ur-registered-from .ur-options-list li input {
       margin-left: 8px; }
+    .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-regular-price, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-selling-price {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 4px; }
+      .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-regular-price input, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-selling-price input {
+        width: 100%; }
+    .ur-registered-from .ur-options-list li.ur-multiple-choice {
+      gap: 8px; }
+      .ur-registered-from .ur-options-list li.ur-multiple-choice input {
+        margin-left: 0; }
+      .ur-registered-from .ur-options-list li.ur-multiple-choice > input[type="text"] {
+        width: 80%; }
+      .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price,
+      .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price {
+        position: relative; }
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price span,
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span {
+          position: absolute;
+          top: 0;
+          background: #e7e7e7;
+          padding: 6px 8px;
+          color: #383838;
+          border-radius: 3px;
+          top: -60px;
+          font-size: 13px;
+          opacity: 0;
+          visibility: hidden;
+          transition: all .3s ease-in-out; }
+          .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price span::after,
+          .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span::after {
+            content: "";
+            border: 8px solid transparent;
+            border-top-color: #e7e7e7;
+            height: 0;
+            right: 50%;
+            transform: translateX(50%);
+            position: absolute;
+            top: 100%;
+            width: 0; }
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price:hover span,
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price:hover span {
+          visibility: visible;
+          opacity: 1; }
+      .ur-registered-from .ur-options-list li.ur-multiple-choice .add {
+        margin-left: 0; }
   .ur-registered-from .ur-options-list .ui-sortable-handle {
     padding: 5px;
     border-radius: 3px;
@@ -6575,6 +6621,17 @@ img.tips {
 .tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
   border-top-color: #383838 !important;
   border-bottom-color: #383838 !important; }
+
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-box {
+  background-color: #f44949 !important;
+  border: #f44949; }
+
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
+  border-top-color: #f44949 !important;
+  border-bottom-color: #f44949 !important; }
+
+.tooltipster-base.ur-selling-price-tooltip .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-background {
+  border-top-color: #f44949 !important; }
 
 /**
    * Help Tip
@@ -7520,7 +7577,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(-45deg, transparent 50%, gray 50%), linear-gradient(-135deg, gray 50%, transparent 50%);
       background-position: calc(100% - (100% - 15px)) calc(1em + 2px), calc(100% - (100% - 10px)) calc(1em + 2px), calc(100% - (100% - 2.5em)) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;
