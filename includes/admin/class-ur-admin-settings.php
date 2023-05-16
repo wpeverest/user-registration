@@ -1143,6 +1143,10 @@ class UR_Admin_Settings {
 			foreach ( $nested_array['sections'] as $section ) {
 
 				if ( isset( $section['settings'] ) ) {
+
+					if ( ! is_array( $section['settings'] ) || ! is_object( $section['settings'] ) ) {
+						continue;
+					}
 					// loop through each setting in the section and add it to the $settings_array
 					foreach ( $section['settings'] as $setting ) {
 						$settings_array[] = $setting;
