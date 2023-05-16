@@ -322,6 +322,8 @@
 				).serializeArray();
 				/** End Multistep form code. */
 
+				var profile_completeness__custom_percentage = $( "#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select" ).serializeArray();
+
 				var data = {
 					action: "user_registration_form_save_action",
 					security: user_registration_form_builder_data.ur_form_save,
@@ -338,6 +340,7 @@
 						email_content_override_settings_data:
 							email_content_override_settings_data,
 						multipart_page_setting: multipart_page_setting,
+						profile_completeness__custom_percentage: profile_completeness__custom_percentage,
 					},
 				};
 
@@ -358,6 +361,30 @@
 					);
 					return;
 				}
+
+				// Profile Completeness validation.
+				if( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).length != 0 ) {
+					var sanitized_percent = parseFloat( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).val().replace(/[^\d\.]/g, '').replace(/\.(([^\.]*)\.)*/g, '.$2') );
+
+					if( sanitized_percent <= 0 ) {
+						URFormBuilder.show_message( user_registration_form_builder_data.i18n_admin.i18n_pc_profile_completion_error );
+						return;
+					}
+
+					var sum = 0;
+
+					$.each(profile_completeness__custom_percentage, function(index, field) {
+						if (field.name == 'user_registration_profile_completeness_custom_percentage_field[]' && field.value !== '') {
+							sum += parseFloat(profile_completeness__custom_percentage[index+1].value);
+						}
+					});
+
+					if( sum > sanitized_percent ) {
+						URFormBuilder.show_message( user_registration_form_builder_data.i18n_admin.i18n_pc_custom_percentage_filed_error );
+						return;
+					}
+                }
+
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
@@ -1782,8 +1809,24 @@
 											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
 										).selectWoo();
 
+										var $template = $(template);
+
+										// Get fieldKey from data-field-key attribute.
+										var fieldKey = $template.find('.ur-field').data('field-key');
+
+										// Get field name.
+										var fieldName = $template.find( '.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]' ).val();
+
+										// Get label text from label tag, excluding any span tags
+										var label = $template.find('.ur-label label').contents().filter(function() {
+											return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+										}).text().trim();
+
+										// Get the visibility of the field.
+										var visibleTo = $template.find('select.ur_advance_setting.ur-settings-field-visibility[name="' + fieldKey + '_advance_setting[field_visibility]"]').val();
+
 										$(document.body).trigger(
-											"ur_new_field_created"
+											"ur_new_field_created",  [{fieldKey, fieldName, label, visibleTo}]
 										);
 									},
 								});
@@ -2290,6 +2333,17 @@
 											ele = $this,
 											$ele = $(this);
 
+											// Get fieldKey from data-field-key attribute.
+											var fieldKey = $ele.closest(".ur-selected-item").find('.ur-field').data('field-key');
+
+											// Get field name.
+											var fieldName = $ele.closest(".ur-selected-item").find( '.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]' ).val();
+
+											// Get label text from label tag, excluding any span tags
+											var label = $ele.closest(".ur-selected-item").find('.ur-label label').contents().filter(function() {
+												return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+											}).text().trim();
+
 										ur_confirmation(
 											user_registration_form_builder_data
 												.i18n_admin
@@ -2332,7 +2386,7 @@
 													).remove();
 
 													$(document.body).trigger(
-														"ur_field_removed"
+														"ur_field_removed", [{fieldName, fieldKey, label}]
 													);
 
 													// To prevent click on whole item.
@@ -3989,6 +4043,9 @@
 				cloning_element
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
+				cloning_element.
+					find( 'select[data-field="options"]' ).
+					val( '' );
 
 				$this.parent("li").after(cloning_element);
 				$wrapper

@@ -441,6 +441,8 @@ class UR_AJAX {
 				);
 			}
 
+			$response = apply_filters( 'user_registration_profile_update_response', $response );
+
 			wp_send_json_success(
 				$response
 			);
