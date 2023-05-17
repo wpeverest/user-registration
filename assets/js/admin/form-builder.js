@@ -1081,6 +1081,11 @@
 								var value = $(element)
 									.find("input.ur-type-checkbox-money-input")
 									.val();
+								var sell_value = $(element)
+									.find(
+										"input.ur-checkbox-selling-price-input"
+									)
+									.val();
 								if (
 									array_value.every(function (each_value) {
 										return each_value.label !== label;
@@ -1090,6 +1095,7 @@
 										array_value.push({
 											label: label,
 											value: value,
+											sell_value: sell_value,
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -2930,6 +2936,31 @@
 								);
 							});
 							break;
+						case "selling_price":
+							if (!$this_obj.is(":checked")) {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.hide();
+							}
+
+							$this_obj.on("change", function () {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+							});
+							$this_obj.on("change", function () {
+								URFormBuilder.trigger_general_setting_selling_price(
+									$(this)
+								);
+							});
+							break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -3326,6 +3357,25 @@
 								}
 							});
 							break;
+						case "enable_selling_price_single_item":
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-selling_price")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-selling_price")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-selling_price")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
@@ -3682,12 +3732,16 @@
 					var value = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.val();
+					var sell_value = $(element)
+						.find("input.ur-checkbox-selling-price-input")
+						.val();
 					var currency = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.attr("data-currency");
 
 					label = label.trim();
 					value = value.trim();
+					sell_value = sell_value.trim();
 					currency = currency.trim();
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
@@ -3701,6 +3755,7 @@
 						array_value.push({
 							label: label,
 							value: value,
+							sell_value: sell_value,
 							currency: currency,
 							checkbox: checkbox,
 						});
@@ -3792,6 +3847,21 @@
 					.closest("li")
 					.find('[data-field="default_value"]')
 					.val($label.val());
+			},
+			/**
+			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label enable selling price field of fields from field settings.
+			 */
+			trigger_general_setting_selling_price: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="' + $label.attr("data-field") + '"]'
+					)
+					.prop("checked", $label.is(":checked"));
 			},
 			/**
 			 * Reflects changes in descriptions field of field settings into selected field in form builder area.
@@ -4075,6 +4145,8 @@
 				) {
 					URFormBuilder.render_multiple_choice($this);
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'add', $wrapper}] );
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -4117,6 +4189,8 @@
 						URFormBuilder.render_multiple_choice($any_siblings);
 					}
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'remove', $wrapper}] );
 			},
 		};
 
