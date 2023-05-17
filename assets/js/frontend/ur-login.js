@@ -52,16 +52,25 @@ jQuery(function ($) {
 						.siblings("span")
 						.addClass("ur-front-spinner");
 
+					var data = {
+						username: username,
+						password: password,
+						CaptchaResponse: CaptchaResponse,
+						redirect: redirect_url,
+					};
+
+					if ( $this
+						.closest("form")
+						.find('input[name="rememberme"]')
+						.is(':checked')
+					) {
+						data.rememberme = rememberme;
+					}
+
 					$.ajax({
 						type: "POST",
 						url: url,
-						data: {
-							username: username,
-							password: password,
-							rememberme: rememberme,
-							CaptchaResponse: CaptchaResponse,
-							redirect: redirect_url,
-						},
+						data: data,
 						success: function (res) {
 							$this
 								.closest("form")

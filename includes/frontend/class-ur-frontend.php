@@ -48,6 +48,12 @@ class UR_Frontend {
 		$valid_form_data        = array();
 		$previous_attachment_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
 
+		$disable_profile_pic = ur_option_checked( 'user_registration_disable_profile_picture', false );
+
+		if ( $disable_profile_pic ) {
+			return $profile;
+		}
+
 		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			if ( isset( $_POST['profile_pic_url'] ) || isset( $_POST['profile-pic-url'] ) ) {
 				$value = isset( $_POST['profile_pic_url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) ) : ( isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '' );

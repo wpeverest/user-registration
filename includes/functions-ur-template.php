@@ -116,15 +116,73 @@ function ur_registration_template_redirect() {
 		if ( $matched ) {
 			preg_match_all( '!\d+!', $form_id, $form_id );
 
-			$redirect_url = ur_get_single_post_meta( $form_id[0][0], 'user_registration_form_setting_redirect_options', '' );
+			$redirect_url = ur_get_form_redirect_url( $form_id[0][0] );
 			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
-			$redirect_url = ur_string_translation( $form_id[0][0], 'user_registration_form_setting_redirect_options', $redirect_url );
 
 			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
 				wp_redirect( $redirect_url ); //PHPCS:ignore;
 				exit();
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
+	/**
+	 * Returns redirect url setup in form settings.
+	 *
+	 * @param integer $form_id Form Id.
+	 * @param string  $redirect_url Fallback Url.
+	 * @param boolean $maybe_translate Whether to translate url.
+	 * @return string
+	 */
+	function ur_get_form_redirect_url( $form_id = 0, $redirect_url = '', $maybe_translate = true ) {
+
+		$login_option      = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
+		$paypal_is_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', true ) );
+
+		if ( 'auto_login' !== $login_option && ! $paypal_is_enabled ) {
+
+			if ( empty( $redirect_url ) ) {
+				// Getting redirect options from global settings for backward compatibility.
+				$redirect_url = get_option( 'user_registration_general_setting_redirect_options', $redirect_url );
+			}
+
+			if ( ! empty( $form_id ) ) {
+
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+
+				switch ( $redirect_option ) {
+					case 'no-redirection':
+						$redirect_url = '';
+						break;
+
+					case 'internal-page':
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
+
+						if ( ! empty( $selected_page ) ) {
+							$page_url     = get_permalink( $selected_page );
+							$redirect_url = $page_url;
+						}
+
+						break;
+
+					case 'external-url':
+						$external_url = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+						$redirect_url = $external_url;
+
+						break;
+
+					default:
+				}
+			}
+
+			if ( $maybe_translate ) {
+				$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
+			}
+		}
+
+		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
 	}
 }
 
@@ -475,7 +533,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $args['autocomplete_address'] ) && ur_string_to_bool( $args['autocomplete_address'] ) ) {
 					$attr .= 'data-autocomplete-address="' . ur_string_to_bool( $args['autocomplete_address'] ) . '"';
 					$attr .= 'data-address-style="' . $args['address_style'] . '"';
-					$attr .= 'data-current-location="' . get_option( 'user_registration_google_map_current_location', '' ) . '"';
+					$attr .= 'data-current-location="' . ur_option_checked( 'user_registration_google_map_current_location', false ) . '"';
 					if ( 'map' == $args['address_style'] ) {
 						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
 					}
@@ -662,6 +720,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '</ul>';
 				}
 				break;
+
+			case 'html':
+				$content = isset( $args['html_content'] ) ? $args['html_content'] : '';
+
+				$field .= $content;
+				break;
+
 			case 'hidden':
 				$hidden_value = isset( $args['hidden_value'] ) ? $args['hidden_value'] : '';
 				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';

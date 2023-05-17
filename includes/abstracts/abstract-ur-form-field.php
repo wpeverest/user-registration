@@ -300,6 +300,10 @@ abstract class UR_Form_Field {
 
 			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
 		}
+		if ( 'single_item' === $field_key ) {
+			$form_data['enable_selling_price_single_item'] = isset( $data['advance_setting']->enable_selling_price_single_item ) ? ur_string_to_bool( $data['advance_setting']->enable_selling_price_single_item ) : '';
+			$form_data['selling_price']                    = isset( $data['advance_setting']->selling_price ) ? $data['advance_setting']->selling_price : '';
+		}
 
 		if ( 'multiple_choice' === $field_key ) {
 			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
@@ -310,8 +314,9 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option->label ] = array(
-						'label' => $option->label,
-						'value' => $option->value,
+						'label'      => $option->label,
+						'value'      => $option->value,
+						'sell_value' => $option->sell_value,
 					);
 				}
 
@@ -445,6 +450,11 @@ abstract class UR_Form_Field {
 			$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
 			$strip_prefix   = substr( $this->id, 18 );
 
+			$smart_tags = '';
+			if ( 'hidden_value' === $setting_key ) {
+				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
+			}
+
 			switch ( $setting_value['type'] ) {
 				case 'text':
 					$extra_attribute          = in_array( $strip_prefix, ur_get_fields_without_prefix() ) && 'field_name' == $setting_key ? "disabled='disabled'" : '';
@@ -520,10 +530,11 @@ abstract class UR_Form_Field {
 						foreach ( $options as $key => $option ) {
 							$label                    = is_array( $option ) ? $option['label'] : $option->label;
 							$value                    = is_array( $option ) ? $option['value'] : $option->value;
+							$sell_value               = ( is_array( $option ) && isset( $option['sell_value'] ) ) ? $option['sell_value'] : ( ( is_object( $option ) && isset( $option->sell_value ) ) ? $option->sell_value : null );
 							$currency                 = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies               = ur_payment_integration_get_currencies();
 							$currency                 = $currency . ' ' . $currencies[ $currency ]['symbol'];
-							$general_setting_wrapper .= '<li>';
+							$general_setting_wrapper .= '<li class="ur-multiple-choice">';
 							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 							</div>';
@@ -538,9 +549,10 @@ abstract class UR_Form_Field {
 								$general_setting_wrapper .= '/>';
 							}
 							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " >';
+							$general_setting_wrapper .= '<div class="ur-regular-price"><span>Regular Price</span><input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " ></div>';
+							$general_setting_wrapper .= '<div class="ur-selling-price"><span>Selling Price</span><input value="' . esc_attr( $sell_value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-' . esc_attr( $setting_value['type'] ) . '-selling-price-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_selling_value" data-currency=" ' . esc_attr( $currency ) . ' " placeholder="0.00"></div>';
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
-							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
 							$general_setting_wrapper .= '</li>';
 						}
 					} else {
@@ -648,6 +660,8 @@ abstract class UR_Form_Field {
 				default:
 					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
+
+			$general_setting_wrapper .= $smart_tags;
 			$general_setting_wrapper .= '</div>';
 			$general_setting_html    .= $general_setting_wrapper;
 

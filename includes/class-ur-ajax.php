@@ -293,6 +293,13 @@ class UR_AJAX {
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
+			// Unset hidden field value.
+			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] ) {
+				$key = array_search( $field, $profile, true );
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
 			// Get Value.
 			switch ( $field['type'] ) {
 				case 'checkbox':
@@ -433,6 +440,8 @@ class UR_AJAX {
 					)
 				);
 			}
+
+			$response = apply_filters( 'user_registration_profile_update_response', $response );
 
 			wp_send_json_success(
 				$response
@@ -1358,7 +1367,15 @@ class UR_AJAX {
 		$id     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
 		$value  = ur_string_to_bool( $status );
 		$key    = 'user_registration_enable_' . $id;
-		if ( update_option( $key, $value ) ) {
+
+		$option = get_option( $key, 'NO_OPTION' );
+		if ( $option === 'NO_OPTION' ) {
+			$status = add_option( $key, $value );
+		} else {
+
+			$status = update_option( $key, $value );
+		}
+		if ( $status ) {
 			wp_send_json_success( 'Successfully Updated' );
 		} else {
 			wp_send_json_error( 'Update failed !' );

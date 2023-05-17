@@ -647,7 +647,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	/**
 	 * Success notice on PRO installation.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 */
 	public function user_registration_extension_download_success_notice() {
 		$notice_html = __( 'User Registration Pro has been installed successfully.', 'user-registration' );

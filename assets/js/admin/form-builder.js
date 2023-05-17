@@ -322,6 +322,8 @@
 				).serializeArray();
 				/** End Multistep form code. */
 
+				var profile_completeness__custom_percentage = $( "#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select" ).serializeArray();
+
 				var data = {
 					action: "user_registration_form_save_action",
 					security: user_registration_form_builder_data.ur_form_save,
@@ -338,6 +340,7 @@
 						email_content_override_settings_data:
 							email_content_override_settings_data,
 						multipart_page_setting: multipart_page_setting,
+						profile_completeness__custom_percentage: profile_completeness__custom_percentage,
 					},
 				};
 
@@ -358,6 +361,30 @@
 					);
 					return;
 				}
+
+				// Profile Completeness validation.
+				if( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).length != 0 ) {
+					var sanitized_percent = parseFloat( $( '#user_registration_profile_completeness_completion_percentage', $( document ) ).val().replace(/[^\d\.]/g, '').replace(/\.(([^\.]*)\.)*/g, '.$2') );
+
+					if( sanitized_percent <= 0 ) {
+						URFormBuilder.show_message( user_registration_form_builder_data.i18n_admin.i18n_pc_profile_completion_error );
+						return;
+					}
+
+					var sum = 0;
+
+					$.each(profile_completeness__custom_percentage, function(index, field) {
+						if (field.name == 'user_registration_profile_completeness_custom_percentage_field[]' && field.value !== '') {
+							sum += parseFloat(profile_completeness__custom_percentage[index+1].value);
+						}
+					});
+
+					if( sum > sanitized_percent ) {
+						URFormBuilder.show_message( user_registration_form_builder_data.i18n_admin.i18n_pc_custom_percentage_filed_error );
+						return;
+					}
+                }
+
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
@@ -1054,6 +1081,11 @@
 								var value = $(element)
 									.find("input.ur-type-checkbox-money-input")
 									.val();
+								var sell_value = $(element)
+									.find(
+										"input.ur-checkbox-selling-price-input"
+									)
+									.val();
 								if (
 									array_value.every(function (each_value) {
 										return each_value.label !== label;
@@ -1063,6 +1095,7 @@
 										array_value.push({
 											label: label,
 											value: value,
+											sell_value: sell_value,
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -1782,8 +1815,24 @@
 											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
 										).selectWoo();
 
+										var $template = $(template);
+
+										// Get fieldKey from data-field-key attribute.
+										var fieldKey = $template.find('.ur-field').data('field-key');
+
+										// Get field name.
+										var fieldName = $template.find( '.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]' ).val();
+
+										// Get label text from label tag, excluding any span tags
+										var label = $template.find('.ur-label label').contents().filter(function() {
+											return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+										}).text().trim();
+
+										// Get the visibility of the field.
+										var visibleTo = $template.find('select.ur_advance_setting.ur-settings-field-visibility[name="' + fieldKey + '_advance_setting[field_visibility]"]').val();
+
 										$(document.body).trigger(
-											"ur_new_field_created"
+											"ur_new_field_created",  [{fieldKey, fieldName, label, visibleTo}]
 										);
 									},
 								});
@@ -2290,6 +2339,17 @@
 											ele = $this,
 											$ele = $(this);
 
+											// Get fieldKey from data-field-key attribute.
+											var fieldKey = $ele.closest(".ur-selected-item").find('.ur-field').data('field-key');
+
+											// Get field name.
+											var fieldName = $ele.closest(".ur-selected-item").find( '.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]' ).val();
+
+											// Get label text from label tag, excluding any span tags
+											var label = $ele.closest(".ur-selected-item").find('.ur-label label').contents().filter(function() {
+												return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+											}).text().trim();
+
 										ur_confirmation(
 											user_registration_form_builder_data
 												.i18n_admin
@@ -2332,7 +2392,7 @@
 													).remove();
 
 													$(document.body).trigger(
-														"ur_field_removed"
+														"ur_field_removed", [{fieldName, fieldKey, label}]
 													);
 
 													// To prevent click on whole item.
@@ -2876,6 +2936,31 @@
 								);
 							});
 							break;
+						case "selling_price":
+							if (!$this_obj.is(":checked")) {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.hide();
+							}
+
+							$this_obj.on("change", function () {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+							});
+							$this_obj.on("change", function () {
+								URFormBuilder.trigger_general_setting_selling_price(
+									$(this)
+								);
+							});
+							break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -3272,6 +3357,25 @@
 								}
 							});
 							break;
+						case "enable_selling_price_single_item":
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-selling_price")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-selling_price")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-advance-selling_price")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
@@ -3628,12 +3732,16 @@
 					var value = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.val();
+					var sell_value = $(element)
+						.find("input.ur-checkbox-selling-price-input")
+						.val();
 					var currency = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.attr("data-currency");
 
 					label = label.trim();
 					value = value.trim();
+					sell_value = sell_value.trim();
 					currency = currency.trim();
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
@@ -3647,6 +3755,7 @@
 						array_value.push({
 							label: label,
 							value: value,
+							sell_value: sell_value,
 							currency: currency,
 							checkbox: checkbox,
 						});
@@ -3738,6 +3847,21 @@
 					.closest("li")
 					.find('[data-field="default_value"]')
 					.val($label.val());
+			},
+			/**
+			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label enable selling price field of fields from field settings.
+			 */
+			trigger_general_setting_selling_price: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="' + $label.attr("data-field") + '"]'
+					)
+					.prop("checked", $label.is(":checked"));
 			},
 			/**
 			 * Reflects changes in descriptions field of field settings into selected field in form builder area.
@@ -3989,6 +4113,9 @@
 				cloning_element
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
+				cloning_element.
+					find( 'select[data-field="options"]' ).
+					val( '' );
 
 				$this.parent("li").after(cloning_element);
 				$wrapper
@@ -4018,6 +4145,8 @@
 				) {
 					URFormBuilder.render_multiple_choice($this);
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'add', $wrapper}] );
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -4060,6 +4189,8 @@
 						URFormBuilder.render_multiple_choice($any_siblings);
 					}
 				}
+
+				$(document.body).trigger( 'ur_field_option_changed', [{action: 'remove', $wrapper}] );
 			},
 		};
 

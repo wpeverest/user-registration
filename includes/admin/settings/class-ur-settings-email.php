@@ -206,7 +206,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$emails = $this->get_emails();
 			foreach ( $emails as $email ) {
-				$status    = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
+				$status = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
+
 				$settings .= '<tr><td class="ur-email-settings-table">';
 				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
 												'">' . esc_html( $email->title ) . '</a>';

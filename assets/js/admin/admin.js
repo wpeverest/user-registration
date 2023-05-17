@@ -473,6 +473,38 @@ jQuery(function ($) {
 		}
 	});
 
+
+
+	$(document).ready( function() {
+		hide_show_redirection_options();
+
+		$( '#user_registration_form_setting_redirect_after_registration' ).on( 'change', hide_show_redirection_options );
+	});
+
+
+	/**
+	 * Hide or Show Redirection settings.
+	 */
+	var hide_show_redirection_options = function() {
+		var redirect_after_registration = $( '#user_registration_form_setting_redirect_after_registration' );
+		var selected_redirection_option = redirect_after_registration.find(':selected');
+		var custom_redirection_page = $('#user_registration_form_setting_redirect_page' ).closest( '.form-row' ).slideUp(800);
+		var redirect_url = $( '#user_registration_form_setting_redirect_options' ).closest( '.form-row' ).slideUp(800);
+
+		if ( selected_redirection_option.length ) {
+			switch (selected_redirection_option.val()) {
+				case 'internal-page':
+					custom_redirection_page.slideDown(800);
+					break;
+				case 'external-url':
+					redirect_url.slideDown(800);
+					break;
+				default:
+					break;
+			}
+		}
+	};
+
 	// Tooltips
 	$(document.body)
 		.on("init_tooltips", function () {
@@ -613,7 +645,7 @@ jQuery(function ($) {
 	// Email Status
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
-		var status = $(this).find('input[type="checkbox"]:checked').val();
+		var status = $(this).find('input[type="checkbox"]').is(":checked");
 		var id = $(this).find('input[type="checkbox"]').attr("id");
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,

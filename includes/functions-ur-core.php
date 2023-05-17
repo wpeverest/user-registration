@@ -1011,16 +1011,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_redirect_options',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
-				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
-			),
-			array(
-				'type'              => 'text',
 				'label'             => __( 'Submit Button Class', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -1103,6 +1093,49 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
 				'tip'               => __( 'Enter CSS class names for the Form Wrapper. Multiple class names should be separated with spaces.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect After Registration', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after_registration',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => apply_filters(
+					'user_registration_redirect_after_registration_options',
+					array(
+						'no-redirection' => __( 'No Redirection', 'user-registration' ),
+						'internal-page'  => __( 'Internal Page', 'user-registration' ),
+						'external-url'   => __( 'External URL', 'user-registration' ),
+					)
+				),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
+				'tip'               => __( 'Choose where to redirect the user after successful registration.', 'user-registration' ),
+				'custom_attributes' => array(),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Custom Page', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_page',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => ur_get_all_pages(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
+				'tip'               => __( 'Choose the custom page to redirect after registration', 'user-registration' ),
+				'custom_attributes' => array(),
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
+				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 			),
 		),
 	);
@@ -3244,12 +3277,13 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 	}
 }
 
+
 if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 
 	/**
 	 * Settings tab list to display as premium tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	function ur_premium_settings_tab() {
 
@@ -3258,21 +3292,25 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 				'plugin' => 'user-registration-woocommerce',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 			),
 			'content_restriction'                    => array(
 				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
 				'plugin' => 'user-registration-content-restriction',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - Content Restriction', 'user-registration' ),
 			),
 			'file_upload'                            => array(
 				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
 				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
 			),
 			'user-registration-customize-my-account' => array(
 				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 				'plugin' => 'user-registration-customize-my-account',
 				'plan'   => array( 'plus', 'professional' ),
+				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
 			),
 		);
 
@@ -3287,7 +3325,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 	/**
 	 * Method to display premium settings tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	function ur_display_premium_settings_tab() {
 		$license_data    = ur_get_license_plan();
@@ -3314,7 +3352,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
-					$plugin_name = ucwords( str_replace( '-', ' ', $detail['plugin'] ) );
+					$plugin_name = $detail['name'];
 					$action      = '';
 
 					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
@@ -3328,7 +3366,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 					}
 
 					/* translators: %s: Addon Name. */
-					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, $plugin_name );
+					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
 					/* translators: %s: Action Name. */
 					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
@@ -3380,6 +3418,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	 *
 	 * @param string $nonce_value Nonce.
 	 * @throws Exception Login errors.
+	 *
+	 * @since 3.0
 	 */
 	function ur_process_login( $nonce_value ) {
 		try {
@@ -3668,5 +3708,24 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
 		}
 		return '';
+	}
+}
+
+if ( ! function_exists( 'ur_get_all_pages' ) ) {
+	/**
+	 * Returns map of published pages as id->title format.
+	 *
+	 * @return array
+	 */
+	function ur_get_all_pages() {
+		$pages = get_pages();
+
+		$pages_array = array();
+
+		foreach ( $pages as $page ) {
+			$pages_array[ $page->ID ] = $page->post_title;
+		}
+
+		return $pages_array;
 	}
 }
