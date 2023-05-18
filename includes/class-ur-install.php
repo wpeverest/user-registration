@@ -258,16 +258,16 @@ class UR_Install {
 
 		// Migrations for User Registration ( Free ).
 		$migration_updates = array(
-			'3.0.0' => array(
-				'ur_update_300_option_migrate',
+			'3.0' => array(
+				'ur_update_30_option_migrate',
 			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) ) {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
-				'4.0.0' => array(
-					'ur_pro_update_400_option_migrate',
+				'4.0' => array(
+					'ur_pro_update_40_option_migrate',
 				),
 			);
 

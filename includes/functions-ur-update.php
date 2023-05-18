@@ -324,7 +324,7 @@ function ur_update_162_meta_key() {
  *
  * @return void
  */
-function ur_update_300_option_migrate() {
+function ur_update_30_option_migrate() {
 
 	// Get all posts with user_registration post type.
 	$posts = get_posts( 'post_type=user_registration' );
