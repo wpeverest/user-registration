@@ -48,9 +48,9 @@ class UR_Shortcode_Login {
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
 			} else {
-				$recaptcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha', 'no' );
+				$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 				wp_enqueue_script( 'ur-common' );
-				if ( 'yes' == $recaptcha_enabled || '1' == $recaptcha_enabled ) {
+				if ( $recaptcha_enabled ) {
 					wp_enqueue_script( 'user-registration' );
 				}
 				$recaptcha_node = ur_get_recaptcha_node( 'login', $recaptcha_enabled );

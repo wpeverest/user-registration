@@ -80,7 +80,7 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 
 		if ( ! empty( $single_form_field->advance_setting->choice_limit ) ) {
 
-			$checked_count = is_array( $value ) ? count( $value ) : count( json_decode( $value ) );
+			$checked_count = is_array( $value ) ? count( $value ) : ( ( json_decode( $value ) && ! is_null( $value ) ) ? count( json_decode( $value ) ) : 0 );
 			$limit         = $single_form_field->advance_setting->choice_limit;
 
 			if ( $checked_count > $limit ) {

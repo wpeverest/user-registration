@@ -116,7 +116,7 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
 					}
-				} elseif ( '1' === ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', 'no' ) ) {
+				} elseif ( ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', false ) ) ) {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
@@ -163,6 +163,7 @@ class UR_Frontend_Form_Handler {
 						}
 					}
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
+					$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
 					wp_send_json_success( $success_params );
 				}
 			}

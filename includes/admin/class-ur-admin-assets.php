@@ -42,6 +42,7 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
+		wp_register_style( 'user-registration-settings', UR()->plugin_url() . '/assets/css/settings.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', UR()->plugin_url() . '/assets/css/jquery-ui/jq-smoothness.css', array(), $jquery_version );
 		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.6.9' );
 		wp_register_style( 'perfect-scrollbar', UR()->plugin_url() . '/assets/css/perfect-scrollbar/perfect-scrollbar.css', array(), '1.5.0' );
@@ -71,6 +72,11 @@ class UR_Admin_Assets {
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'user-registration-admin' );
+
+			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
+				wp_enqueue_style( 'user-registration-settings' );
+			}
+
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_style( 'perfect-scrollbar' );
@@ -192,6 +198,37 @@ class UR_Admin_Assets {
 		wp_register_script( 'chartjs', UR()->plugin_url() . '/assets/js/chartjs/Chart.min.js', array( 'jquery' ), '3.2.1', false );
 		wp_register_script( 'sweetalert2', UR()->plugin_url() . '/assets/js/sweetalert2/sweetalert2.min.js', array( 'jquery' ), '10.16.7', false );
 		wp_register_script( 'ur-setup', UR()->plugin_url() . '/assets/js/admin/ur-setup' . $suffix . '.js', array( 'jquery', 'sweetalert2', 'updates', 'wp-i18n' ), UR_VERSION, false );
+
+		wp_localize_script(
+			'ur-setup',
+			'ur_setup_params',
+			array(
+				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+				'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
+				'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
+				'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),
+				'i18n_form_name'               => esc_html__( 'Give it a name.', 'user-registration' ),
+				'i18n_form_error_name'         => esc_html__( 'You must provide a Form name', 'user-registration' ),
+				'i18n_install_only'            => esc_html__( 'Activate Plugins', 'user-registration' ),
+				'i18n_activating'              => esc_html__( 'Activating', 'user-registration' ),
+				'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
+				'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
+				'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
+				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
+				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
+				'i18n_form_ok'                 => esc_html__( 'Continue', 'user-registration' ),
+				'i18n_form_placeholder'        => esc_html__( 'Untitled Form', 'user-registration' ),
+				'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
+				'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
+				'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
+				'download_successful_message'  => esc_html__( 'Addons have been installed and Activated. You have to reload the page.', 'user-registration' ),
+				'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
+				'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
+			)
+		);
+
 		wp_register_script( 'ur-form-templates', UR()->plugin_url() . '/assets/js/admin/form-templates' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery', UR_VERSION, false );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
@@ -456,6 +493,8 @@ class UR_Admin_Assets {
 			'i18n_input_size'                        => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
 			'i18n_min_max_input'                     => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
 			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ), // phpcs:ignore
+			'i18n_pc_profile_completion_error'       => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user-registration' ),
+			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
 		);
 
 		return $i18n;

@@ -179,7 +179,7 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && 'true' === $_GET['ur_resend_token'] ) {
+		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( $_GET['ur_resend_token'] ) ) {
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_key( $_REQUEST['_wpnonce'] ) ), 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
@@ -361,7 +361,7 @@ class UR_Email_Confirmation {
 			}
 
 			// update user status when login using social connect.
-			$is_social_login_option_enabled = 'yes' === get_option( 'user_registration_social_setting_enable_login_options', 'no' );
+			$is_social_login_option_enabled = ur_option_checked( 'user_registration_social_setting_enable_login_options', false );
 
 			if ( ! $is_social_login_option_enabled && get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				update_user_meta( $user_id, 'ur_confirm_email', 1 );
