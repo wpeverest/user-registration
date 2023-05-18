@@ -258,16 +258,17 @@ class UR_Install {
 
 		// Migrations for User Registration ( Free ).
 		$migration_updates = array(
-			'3.0.0' => array(
-				'ur_update_300_option_migrate',
+			'3.0' => array(
+				'ur_update_30_option_migrate',
 			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) ) {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
-				'4.0.0' => array(
-					'ur_pro_update_400_option_migrate',
+				'4.0' => array(
+					'ur_update_30_option_migrate',
+					'ur_pro_update_40_option_migrate',
 				),
 			);
 
@@ -314,11 +315,12 @@ class UR_Install {
 		$updates            = self::$db_updates;
 		$current_db_version = get_option( 'user_registration_db_version' );
 
-		$db_needs_update = array( '2.3.3' );
+		$db_needs_update = array( '1.2.2', '1.2.3', '1.2.4' );
 
 		if ( in_array( $current_db_version, $db_needs_update ) ) {
-			$updates['2.3.3.1'] = array(
-				'ur_update_2331_options',
+			$updates['1.2.5'] = array(
+				'ur_update_125_usermeta',
+				'ur_update_125_db_version',
 			);
 		}
 		return $updates;
