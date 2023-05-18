@@ -267,6 +267,7 @@ class UR_Install {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
 				'4.0' => array(
+					'ur_update_30_option_migrate',
 					'ur_pro_update_40_option_migrate',
 				),
 			);

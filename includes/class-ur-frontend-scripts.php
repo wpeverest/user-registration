@@ -176,7 +176,7 @@ class UR_Frontend_Scripts {
 	 */
 	private static function register_scripts() {
 		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$recaptcha_site_key_v3 = get_option( 'user_registration_integration_setting_recaptcha_site_key_v3' );
+		$recaptcha_site_key_v3 = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
 		$register_scripts      = array(
 			'ur-inputmask'               => array(
 				'src'     => self::get_asset_url( 'assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
@@ -364,7 +364,7 @@ class UR_Frontend_Scripts {
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
 					'form_required_fields'              => ur_get_required_fields(),
 					'login_option'                      => get_option( 'user_registration_general_setting_login_options' ),
-					'recaptcha_type'                    => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					'recaptcha_type'                    => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
 					'ajax_submission_on_edit_profile'   => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
@@ -411,7 +411,7 @@ class UR_Frontend_Scripts {
 					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
-					'recaptcha_type'              => get_option( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					'recaptcha_type'              => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 				);
 					break;
 		}

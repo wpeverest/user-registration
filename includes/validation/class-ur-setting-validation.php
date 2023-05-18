@@ -135,7 +135,7 @@ class UR_Setting_Validation {
 		$this->custom_validations = apply_filters(
 			'user_registration_custom_validations_settings',
 			array(
-				'user_registration_integration_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
+				'user_registration_captcha_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
 				'user_registration_general_setting_registration_url_options' => array( 'is_url' ),
 				'user_registration_email_from_address' => array( 'is_email' ),
 				'user_registration_email_send_to'      => array( 'is_email' ),
