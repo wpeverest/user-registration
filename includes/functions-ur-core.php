@@ -3408,7 +3408,7 @@ if ( ! function_exists( 'ur_is_ajax_login_enabled' ) ) {
 	 * @return bool
 	 */
 	function ur_is_ajax_login_enabled() {
-		return ur_option_checked( 'ur_login_ajax_submission', true );
+		return ur_option_checked( 'ur_login_ajax_submission', false );
 	}
 }
 
