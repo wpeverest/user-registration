@@ -2104,7 +2104,7 @@
 															icon: "success",
 															title: "Successfully deleted!",
 															customClass:
-																"user-registration-swal2-modal user-registration-swal2-modal--center",
+																"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-swal2-no-button",
 															showConfirmButton: false,
 															timer: 1000,
 														});

@@ -2227,7 +2227,7 @@ body {
 		top: $spacing_32px;
 		left: 0;
 		right: 0;
-		max-width: 400px;
+		max-width: 430px;
 		margin: 0 auto;
 		z-index: 9999;
 
@@ -2302,6 +2302,22 @@ body {
 				 height: 50px;
 				 animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1
 					 normal both open-message;
+
+					 .ur-error {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						padding: $spacing_16px;
+
+						p {
+							margin: 0;
+						}
+
+						.ur-message-close {
+							position: unset;
+							transform: unset;
+						}
+					 }
 			 }
 
 			 &.exiting {
@@ -2916,7 +2932,7 @@ body {
 			 	&.swal2-icon-warning {
 					border-top: 6px solid #facea8;
 			 	}
-			}
+			}			
 
 			.swal2-header {
 				padding: $spacing_34px $spacing_40px 0 $spacing_40px;
@@ -2933,6 +2949,12 @@ body {
 					box-shadow: none;
 					top: $spacing_2px;
 				}
+			}
+
+			&.user-registration-swal2-no-button {
+				.swal2-header {
+					padding-bottom: $spacing_34px;
+				}	
 			}
 
 			.swal2-content {
