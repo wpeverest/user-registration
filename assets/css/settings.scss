@@ -516,7 +516,7 @@ body {
 			}
 
 			&--bottom {
-				margin-top: $spacing_40px;
+				margin-top: $spacing_32px;
 
 				ul {
 					display: flex;
@@ -655,6 +655,12 @@ body {
 					margin-bottom: $spacing_24px;
 					padding: 0 0 $spacing_16px;
 					border-bottom: $border_width solid $grey-50 !important;
+				}
+
+				&__title {
+					display: flex;
+					align-items: center;
+					gap: $spacing_6px;
 				}
 
 				&__body {
