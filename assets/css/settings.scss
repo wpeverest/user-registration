@@ -1084,7 +1084,8 @@ body {
 						padding: $spacing_16px $spacing_20px $spacing_22px;
 						background: #fafafc;
 						border: $border_width solid $blue-50;
-						border-radius: $border_radius_9 $border_radius_9 0 0;
+						border-radius: $border_radius_9;
+						box-shadow: none;
 
 						.hndle {
 							font-weight: 600;
@@ -1177,21 +1178,20 @@ body {
 	}
 }
 
-.user-registration {
-	.select2-results {
-		.select2-results__option {
-			&--highlighted[data-selected] {
-				background: #475bb2;
-			}			
 
-			.wrap {
-				margin-top: 0;
+.select2-results {
+	.select2-results__option {
+		&--highlighted[data-selected] {
+			background: #475bb2;
+		}			
 
-				&::before {
-					font-size: 16px;
-					padding-right: $spacing_8px;
-				}
+		.wrap {
+			margin-top: 0;
+
+			&::before {
+				font-size: 16px;
+				padding-right: $spacing_8px;
 			}
 		}
-	}	
+	}
 }
