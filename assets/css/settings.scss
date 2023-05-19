@@ -1174,6 +1174,10 @@ body {
 .user-registration {
 	.select2-results {
 		.select2-results__option {
+			&--highlighted[data-selected] {
+				background: #475bb2;
+			}			
+
 			.wrap {
 				margin-top: 0;
 
