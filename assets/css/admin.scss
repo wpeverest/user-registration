@@ -429,10 +429,10 @@
 				&.code {
 					width: 280px;
 					height: 33px;
-					padding: 0 6px;
+					padding: 0 $spacing_6px;
 					margin: 0;
-					border-color: $border_color;
-					background-color: $color_gray_five;
+					border-color: $grey-50;
+					background: $blue-25;
 					border-radius: 3px 0 0 3px;
 				}
 			}
@@ -441,6 +441,8 @@
 		 #copy-shortcode {
 			 margin-left: -5px;
 			 border-radius: 0 4px 4px 0;
+			 background: $blue-50 !important;
+			 border-color: $grey-50 !important;
 
 			 svg {
 				 fill: $white;
@@ -2600,14 +2602,14 @@ body {
 
 					 &.active {
 						 .user-registration-tab-nav-link {
-							 color: #7e3bd0;
-							 border-color: #7e3bd0;
+							 color: $primary_color;
+							 border-color: $primary_color;
 						 }
 					 }
 
 					.user-registration-tab-nav-link {
 						font-weight: $semi_bold;
-						padding: $spacing_16px $spacing_8px;
+						padding: $spacing_18px $spacing_8px  $spacing_16px;
 						color: #494d50;
 						text-decoration: none;
 						border-bottom: 2px solid transparent;
@@ -2926,9 +2928,22 @@ body {
 						margin-bottom: $spacing_16px;
 					}
 				}
+
+				.swal2-close {
+					box-shadow: none;
+					top: $spacing_2px;
+				}
 			}
 
 			.swal2-content {
+				.swal2-validation-message {
+					margin-left: 0;
+					margin-right: 0;
+					border-left: 3px solid #f27474;
+					justify-content: flex-start;
+					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
+				}
+
 				.action-buttons {
 					a {
 						background-color: #475bb2;
@@ -2950,6 +2965,15 @@ body {
 				justify-content: flex-start;
 				flex-direction: row-reverse;
 				gap: $spacing_12px;
+
+				.swal2-confirm {
+					background: #475BB2;
+					transition: all .3s ease-in-out;
+
+					&:hover {
+						background: #4b68ec;
+					}
+				}
 			}
 
 			&.user-registration-locked-field {
@@ -3548,23 +3572,6 @@ body {
 							5px 5px,
 							1px 1.5em;
 						background-repeat: no-repeat;
-
-						// &:focus {
-						// 	background-image:
-						// 		linear-gradient(45deg, $primary_color 50%, transparent 50%),
-						// 		linear-gradient(135deg, transparent 50%, $primary_color 50%);
-						// 	background-position:
-						// 		calc(100% - 10px) 1em,
-						// 		calc(100% - 15px) 1em,
-						// 		calc(100% - 2.5em) 0.5em;
-						// 	background-size:
-						// 		5px 5px,
-						// 		5px 5px,
-						// 		1px 1.5em;
-						// 	background-repeat: no-repeat;
-						// 	border-color: $primary_color;
-						// 	outline: 0;
-						// }
 					}
 
 					.ur-radio-group-list {
