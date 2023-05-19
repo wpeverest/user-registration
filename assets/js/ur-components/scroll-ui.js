@@ -36,8 +36,13 @@ jQuery(function ($) {
 				: 2; /* adjust to desired number of visible items */
 		var containerWidth = itemWidth * visibleItems;
 
-		/* set container width and scrollItems position */
-		container.width(containerWidth);
+		if (currentWidth <= 992) {
+			/* set container width and scrollItems position */
+			container.width(containerWidth);
+		} else {
+			container.width("100%");
+		}
+
 		scrollItems.css("position", "relative");
 
 		/* add arrow click handlers */
