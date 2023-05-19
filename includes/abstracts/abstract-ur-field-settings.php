@@ -52,7 +52,7 @@ abstract class UR_Field_Settings {
 	public function get_advance_setting_data( $key ) {
 
 		if ( isset( $this->field_data->advance_setting->$key ) ) {
-			return $this->field_data->advance_setting->$key;
+			return ur_string_to_bool( $this->field_data->advance_setting->$key );
 		}
 
 		return '';
@@ -97,7 +97,7 @@ abstract class UR_Field_Settings {
 				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 				$value              = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
 			} else {
-				$value = $this->get_advance_setting_data( $field_key ) === 1 && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+				$value = ( '' === $this->get_advance_setting_data( $field_key ) && isset( $field['default'] ) ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
 			}
 
 			switch ( $field['type'] ) {
