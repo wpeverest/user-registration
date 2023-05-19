@@ -677,7 +677,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 						/* translators: %s - Integration tab url */
 						'%s<a href="%s" target="_blank">Add Now.</a>',
 						esc_html__( "Seems like you haven't added the CAPTCHA Keys. ", 'user-registration' ),
-						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 					) . '</strong></p></div>';
 				}
 			} else {

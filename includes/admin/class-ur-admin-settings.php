@@ -300,7 +300,7 @@ class UR_Admin_Settings {
 						$settings .= '<span class="integration-status">';
 						$settings .= '</span>';
 						$settings .= '<figure class="logo">';
-						$settings .= '<img src="'.  UR()->plugin_url() .  '/assets/images/settings-icons/'. $section['id'] .'.png" alt="'.$section['title'].'">';
+						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
 						$settings .= '</figure>';
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( $section['title'] );
@@ -319,7 +319,7 @@ class UR_Admin_Settings {
 						}
 					}
 
-					if( is_array($section['settings']) || is_object($section['settings'])) {
+					if ( is_array( $section['settings'] ) || is_object( $section['settings'] ) ) {
 						foreach ( $section['settings'] as $key => $value ) {
 
 							if ( ! isset( $value['type'] ) ) {
@@ -982,6 +982,8 @@ class UR_Admin_Settings {
 					}
 
 					$word = implode( '/', $capitalized_terms );
+				} elseif ( strpos( $word, 'CAPTCHA' ) ) {
+					$word = $word;
 				} else {
 					$word = ucfirst( $word );
 				}
