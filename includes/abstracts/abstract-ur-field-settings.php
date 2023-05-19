@@ -97,7 +97,17 @@ abstract class UR_Field_Settings {
 				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 				$value              = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
 			} else {
-				$value = ( '' === $this->get_advance_setting_data( $field_key ) && isset( $field['default'] ) ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+				if ( isset( $this->field_data->advance_setting->$field_key ) ) {
+					if ( empty( $this->field_data->advance_setting->$field_key ) ) {
+						$value = false;
+					} else {
+						$value = ur_string_to_bool( $this->field_data->advance_setting->$field_key );
+					}
+				} else {
+					if ( isset( $field['default'] ) ) {
+						$value = ur_string_to_bool( $field['default'] );
+					}
+				}
 			}
 
 			switch ( $field['type'] ) {

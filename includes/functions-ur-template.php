@@ -591,7 +591,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
 					$date_format  = $args['custom_attributes']['data-date-format'];
 					$default_date = isset( $args['custom_attributes']['data-default-date'] ) ? $args['custom_attributes']['data-default-date'] : '';
-					if ( empty( $value ) && 'today' === $default_date ) {
+					if ( empty( $value ) && ur_string_to_bool( $default_date ) ) {
 						$value        = date_i18n( $date_format );
 						$actual_value = date_i18n( $date_format );
 					} else {

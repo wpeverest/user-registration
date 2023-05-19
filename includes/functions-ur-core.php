@@ -211,7 +211,7 @@ function ur_string_to_array( $string, $delimiter = ',' ) {
  * @return bool
  */
 function ur_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === $string || 'on' === $string || 1 === $string || 'true' === $string || '1' === $string );
+	return is_bool( $string ) ? $string : ( 'yes' === $string || 'on' === $string || 1 === $string || 'true' === $string || '1' === $string || 'today' === $string || 'range' === $string );
 }
 
 /**
