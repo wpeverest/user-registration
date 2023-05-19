@@ -130,9 +130,7 @@
 				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.hide();
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_secret"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_secret")
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
@@ -149,9 +147,7 @@
 				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.show();
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_secret"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_secret")
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
@@ -165,15 +161,11 @@
 					.closest(".user-registration-global-settings")
 					.hide();
 			}
-			$(
-				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
-			)
+			$("#user_registration_captcha_setting_recaptcha_threshold_score_v3")
 				.closest(".user-registration-global-settings")
 
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
-			)
+			$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
 				.closest(".user-registration-global-settings")
 
 				.hide();
@@ -212,9 +204,7 @@
 			$("#user_registration_captcha_setting_recaptcha_site_secret")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
-			)
+			$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
@@ -222,17 +212,13 @@
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
-			)
+			$("#user_registration_captcha_setting_recaptcha_threshold_score_v3")
 				.closest(".user-registration-global-settings")
 				.show();
 			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_invisible_site_key"
-			)
+			$("#user_registration_captcha_setting_recaptcha_invisible_site_key")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
@@ -241,9 +227,7 @@
 				.closest(".user-registration-global-settings")
 				.hide();
 		} else if (value == "hCaptcha") {
-			$(
-				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
-			)
+			$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
 				.closest(".user-registration-global-settings")
 				.show();
 			$(
@@ -263,9 +247,7 @@
 			$("#user_registration_captcha_setting_recaptcha_site_secret")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_invisible_site_key"
-			)
+			$("#user_registration_captcha_setting_recaptcha_invisible_site_key")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
@@ -273,9 +255,7 @@
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
-			)
+			$("#user_registration_captcha_setting_recaptcha_threshold_score_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
@@ -288,22 +268,16 @@
 					"input#user_registration_captcha_setting_invisible_recaptcha_v2"
 				).is(":checked")
 			) {
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_key_v3"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 					.closest(".user-registration-global-settings")
 					.hide();
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_secret_v3"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
 					.closest(".user-registration-global-settings")
 					.hide();
 				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.hide();
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_secret"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_secret")
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
@@ -320,9 +294,7 @@
 				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.show();
-				$(
-					"#user_registration_captcha_setting_recaptcha_site_secret"
-				)
+				$("#user_registration_captcha_setting_recaptcha_site_secret")
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
@@ -338,14 +310,10 @@
 			}
 
 			// Common Hide for V2
-			$(
-				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
-			)
+			$("#user_registration_captcha_setting_recaptcha_threshold_score_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$(
-				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
-			)
+			$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
@@ -577,7 +545,7 @@
 		);
 		wrapper_div.addClass("ur-searched-settings-focus");
 
-		var offset = $(".ur-searched-settings-focus").parent().offset().top;
+		var offset = $(".ur-searched-settings-focus").offset().top;
 		window.scrollTo({
 			top: offset - 200,
 			behavior: "smooth",
