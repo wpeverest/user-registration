@@ -107,7 +107,7 @@
 	// reCaptcha version selection
 	var recaptcha_input_value = $(".user-registration")
 		.find(
-			'input[name="user_registration_integration_setting_recaptcha_version"]:checked'
+			'input[name="user_registration_captcha_setting_recaptcha_version"]:checked'
 		)
 		.val();
 	if (recaptcha_input_value != undefined) {
@@ -116,7 +116,7 @@
 
 	$(".user-registration").on(
 		"change",
-		'input[name="user_registration_integration_setting_recaptcha_version"]',
+		'input[name="user_registration_captcha_setting_recaptcha_version"]',
 		function () {
 			handleReCaptchaHideShow($(this).val());
 		}
@@ -124,74 +124,74 @@
 
 	$(".user-registration").on(
 		"change",
-		"input#user_registration_integration_setting_invisible_recaptcha_v2",
+		"input#user_registration_captcha_setting_invisible_recaptcha_v2",
 		function () {
 			if ($(this).is(":checked")) {
-				$("#user_registration_integration_setting_recaptcha_site_key")
+				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_site_secret"
+					"#user_registration_captcha_setting_recaptcha_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 			} else {
-				$("#user_registration_integration_setting_recaptcha_site_key")
+				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_site_secret"
+					"#user_registration_captcha_setting_recaptcha_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 			}
 			$(
-				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
 			)
 				.closest(".user-registration-global-settings")
 
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_secret_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 				.closest(".user-registration-global-settings")
 
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
 				.closest(".user-registration-global-settings")
 
 				.hide();
-			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
 				.closest(".user-registration-global-settings")
 
 				.show();
@@ -200,138 +200,138 @@
 
 	function handleReCaptchaHideShow(value) {
 		if (value == "v3") {
-			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 				.closest(".user-registration-global-settings")
 				.show();
-			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
 				.closest(".user-registration-global-settings")
 				.show();
-			$("#user_registration_integration_setting_recaptcha_site_key")
+			$("#user_registration_captcha_setting_recaptcha_site_key")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_secret")
+			$("#user_registration_captcha_setting_recaptcha_site_secret")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_secret_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
 			)
 				.closest(".user-registration-global-settings")
 				.show();
-			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 		} else if (value == "hCaptcha") {
 			$(
-				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.show();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_secret_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.show();
-			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_key")
+			$("#user_registration_captcha_setting_recaptcha_site_key")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_secret")
+			$("#user_registration_captcha_setting_recaptcha_site_secret")
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_invisible_site_key"
+				"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+				"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
 				.closest(".user-registration-global-settings")
 				.hide();
 		} else {
 			if (
 				value == "v2" &&
 				$(
-					"input#user_registration_integration_setting_invisible_recaptcha_v2"
+					"input#user_registration_captcha_setting_invisible_recaptcha_v2"
 				).is(":checked")
 			) {
 				$(
-					"#user_registration_integration_setting_recaptcha_site_key_v3"
+					"#user_registration_captcha_setting_recaptcha_site_key_v3"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_site_secret_v3"
+					"#user_registration_captcha_setting_recaptcha_site_secret_v3"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
-				$("#user_registration_integration_setting_recaptcha_site_key")
+				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_site_secret"
+					"#user_registration_captcha_setting_recaptcha_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 			} else {
-				$("#user_registration_integration_setting_recaptcha_site_key")
+				$("#user_registration_captcha_setting_recaptcha_site_key")
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_site_secret"
+					"#user_registration_captcha_setting_recaptcha_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.show();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_key"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_key"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
-					"#user_registration_integration_setting_recaptcha_invisible_site_secret"
+					"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 				)
 					.closest(".user-registration-global-settings")
 					.hide();
@@ -339,27 +339,27 @@
 
 			// Common Hide for V2
 			$(
-				"#user_registration_integration_setting_recaptcha_threshold_score_v3"
+				"#user_registration_captcha_setting_recaptcha_threshold_score_v3"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_key_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_key_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$(
-				"#user_registration_integration_setting_recaptcha_site_secret_hcaptcha"
+				"#user_registration_captcha_setting_recaptcha_site_secret_hcaptcha"
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_key_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_recaptcha_site_secret_v3")
+			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
-			$("#user_registration_integration_setting_invisible_recaptcha_v2")
+			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
 				.closest(".user-registration-global-settings")
 				.show();
 		}

@@ -388,7 +388,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_general_setting_registration_url_options', '', true ),
 					array( 'user_registration_login_options_prevent_core_login', false ),
 					array( 'user_registration_login_options_login_redirect_url', '', true ),
-					array( 'user_registration_integration_setting_recaptcha_version', 'v2' ),
+					array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 					array( 'user_registration_general_setting_uninstall_option', false ),
 					array( 'user_registration_allow_usage_tracking', false ) //phpcs:ignore
 				),
