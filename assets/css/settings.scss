@@ -13,7 +13,7 @@ body {
 	}
 }
 
-// ToolTip CSS
+// ToolTip CSSs
 .tooltipster-sidetip {
 	.tooltipster-box {
 		background-color: $grey-400 !important;
@@ -1381,25 +1381,35 @@ body {
 
 							p {
 								margin: 0;
-								margin-bottom: $spacing_28px;
-
-								&.help {
-									margin-bottom: $spacing_12px;
-									font-weight: $regular;
-									font-size: 14px;
-									line-height: 150%;
-									color: $grey-400;
-								}
-
-								.forms-list {
-
-								}
+								margin-bottom: $spacing_12px;
+								font-weight: $regular;
+								font-size: 14px;
+								line-height: 150%;
+								color: $grey-400;
 
 								.forms-list {
 									height: 38px;
 									padding-left: $spacing_12px;
 									border: $border_width solid $border-color;
 									border-radius: $border_radius_4;
+								}
+							}
+
+							.ur-export-custom-fields {
+								.ur-form-fields-container,
+								.ur-form-additional-fields-container,
+								select[name="export_format"] {
+									margin-bottom: $spacing_16px;
+								}
+
+								select[name="export_format"] {
+									border-color: #dee0e9;
+									height: 38px;
+								}
+
+								input[name="date_range"] {
+									width: 100%;
+									padding: $spacing_4px $spacing_10px;
 								}
 							}
 						}
@@ -1435,5 +1445,63 @@ body {
 			}
 		}
 	}
+}
 
+.user-registration {
+	.select2-container {
+		.selection {
+			.select2-selection--single {
+				height: 38px;
+
+				.select2-selection__arrow {
+					top: $spacing_4px;
+				}
+			}
+		}
+	}
+}
+
+.select2-results {
+	.select2-results__option {
+		&--highlighted[data-selected] {
+			background: #475bb2;
+		}
+
+		.wrap {
+			margin-top: 0;
+
+			&::before {
+				font-size: 16px;
+				padding-right: $spacing_8px;
+			}
+		}
+	}
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+	color: rgba(57, 57, 57, 0.35);
+}
+
+.user-registration {
+	select {
+		background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%);
+		background-position:
+			calc(100% - 15px) calc(1em + 2px),
+			calc(100% - 10px) calc(1em + 2px),
+			calc(100% - 2.5em) 0.5em;
+		background-size:
+			5px 5px,
+			5px 5px,
+			1px 1.5em;
+		background-repeat: no-repeat;
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			border: $border_width solid $primary_color !important;
+		}
+	}
 }
