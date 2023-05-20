@@ -422,17 +422,18 @@ jQuery(function ($) {
 	$(document).ready(function () {
 		var strength_info = "";
 		var password_hint = "";
-		var password_strength_value = "";
 
-		if (password_strength_option.is(":checked")) {
-			password_strength_value = password_strength_option.val();
-		}
-
-		show_password_strength_info(password_strength_value);
+		password_strength_option.each(function () {
+			if ($(this).is(":checked")) {
+				var password_strength_value = $(this).val();
+				show_password_strength_info(password_strength_value);
+			}
+		});
 
 		$(password_strength_option).on("change", function () {
-			password_hint =
-				minimum_password_strength_wrapper_field.find("span");
+			password_hint = minimum_password_strength_wrapper_field
+				.find("span")
+				.not(".user-registration-help-tip");
 			var $strength = "";
 
 			if ($(this).is(":checked")) {

@@ -1563,10 +1563,9 @@
 								date_selector.data("date-format")
 							);
 
-							field.attr(
-								"data-mode",
-								1 === date_selector.data("mode") ? "range" : ""
-							);
+							if (date_selector.data("mode")) {
+								field.attr("data-mode", "range");
+							}
 							field.attr(
 								"data-locale",
 								date_selector.data("locale")

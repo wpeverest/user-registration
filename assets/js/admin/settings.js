@@ -547,7 +547,7 @@
 
 		var offset = $(".ur-searched-settings-focus").offset().top;
 		window.scrollTo({
-			top: offset - 200,
+			top: offset - 300,
 			behavior: "smooth",
 		});
 		setTimeout(function () {
