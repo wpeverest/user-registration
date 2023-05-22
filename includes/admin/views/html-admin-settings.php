@@ -13,7 +13,7 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 ?>
 <div class="wrap user-registration">
 	<form method="<?php echo esc_attr( apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' ) ); ?>" id="mainform" action="" enctype="multipart/form-data">
-		<h1 class="screen-reader-text"><?php echo esc_html( $tabs[ $current_tab ] ); ?></h1>
+	<h1 class="screen-reader-text"><?php echo isset( $tabs[ $current_tab ] ) ? esc_html( $tabs[ $current_tab ] ) : ''; ?></h1>
 		<div class="user-registration-settings" >
 			<header class="user-registration-header <?php echo $collapse_by_default ? 'collapsed' : ''; ?>">
 				<div class="user-registration-header--top">
@@ -72,7 +72,19 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
 			<div class="user-registration-settings-container">
 				<div class="user-registration-options-header">
 					<div class="user-registration-options-header--top">
+					<?php if ( isset( $tabs[ $current_tab ] ) ) { ?>
 						<h3><?php echo esc_html( $tabs[ $current_tab ] ); ?></h3>
+						<?php
+					} else {
+						$redirect_url = home_url( '/wp-admin/admin.php?page=user-registration-settings&tab=general' );
+						?>
+						<script>
+						var redirect = '<?php echo esc_url_raw( $redirect_url ); ?>';
+						window.location.href = redirect;
+						</script>
+						<?php
+					}
+					?>
 						<p class="submit">
 							<?php if ( ! isset( $GLOBALS['hide_save_button'] ) ) : ?>
 								<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) ) ); ?>" />
