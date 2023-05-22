@@ -1316,6 +1316,11 @@ body {
 								text-align: center;
 							}
 
+							.ur-image-remover {
+								max-width: 40%;
+								text-align: center;
+							}
+
 							.user_registration-deactivate-license-key {
 								width: 25%;
 								text-align: center;
@@ -1505,3 +1510,22 @@ body {
 		}
 	}
 }
+
+// Radio Image Setting
+.user-registration-global-settings.radio-image {
+	ul {
+	  display: flex;
+	  flex-direction: row;
+	}
+
+	li {
+	  display: flex;
+	  align-items: center;
+	  margin-bottom: 10px;
+	}
+
+	input[type="radio"] + img {
+	  cursor: pointer;
+	}
+
+  }
