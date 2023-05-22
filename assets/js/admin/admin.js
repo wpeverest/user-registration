@@ -629,7 +629,8 @@ jQuery(function ($) {
 			},
 			type: "post",
 			beforeSend: function () {
-				var spinner = '<span class="ur-spinner is-active"></span>';
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
 				$(".user_registration_send_email_test").append(spinner);
 			},
 			complete: function (response) {
