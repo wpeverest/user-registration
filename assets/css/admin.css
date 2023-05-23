@@ -1604,7 +1604,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  margin: 0 0 36px;
   gap: 20px; }
   .ur-scroll-ui__items {
     display: flex;
@@ -5499,12 +5498,14 @@
       height: 33px;
       padding: 0 6px;
       margin: 0;
-      border-color: #e1e1e1;
-      background-color: #f0f1f5;
+      border-color: #e9e9e9;
+      background: #f8f8fa;
       border-radius: 3px 0 0 3px; }
   .user-registration_page_add-new-registration .major-publishing-actions #copy-shortcode {
     margin-left: -5px;
-    border-radius: 0 4px 4px 0; }
+    border-radius: 0 4px 4px 0;
+    background: #edeff7 !important;
+    border-color: #e9e9e9 !important; }
     .user-registration_page_add-new-registration .major-publishing-actions #copy-shortcode svg {
       fill: #ffffff;
       margin-bottom: 5px;
@@ -5902,7 +5903,7 @@
             font-weight: 500;
             cursor: pointer; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -6738,7 +6739,7 @@ body {
     top: 32px;
     left: 0;
     right: 0;
-    max-width: 400px;
+    max-width: 430px;
     margin: 0 auto;
     z-index: 9999; }
     body .ur-builder-message-container .ur-message {
@@ -6792,6 +6793,16 @@ body {
         display: block;
         height: 50px;
         animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message; }
+        body .ur-builder-message-container .ur-message.entered .ur-error {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px; }
+          body .ur-builder-message-container .ur-message.entered .ur-error p {
+            margin: 0; }
+          body .ur-builder-message-container .ur-message.entered .ur-error .ur-message-close {
+            position: unset;
+            transform: unset; }
       body .ur-builder-message-container .ur-message.exiting {
         display: block;
         animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message; }
@@ -6978,11 +6989,11 @@ body {
           display: inline-flex;
           margin: 0 8px 0 0; }
           .user-registration-setup .user-registration-setup-header .user-registration-tab ul .user-registration-tab-nav.active .user-registration-tab-nav-link {
-            color: #7e3bd0;
-            border-color: #7e3bd0; }
+            color: #475bb2;
+            border-color: #475bb2; }
           .user-registration-setup .user-registration-setup-header .user-registration-tab ul .user-registration-tab-nav .user-registration-tab-nav-link {
             font-weight: 600;
-            padding: 16px 8px;
+            padding: 18px 8px 16px;
             color: #494d50;
             text-decoration: none;
             border-bottom: 2px solid transparent; }
@@ -7195,6 +7206,17 @@ body {
       margin-bottom: 4px; }
       .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title i {
         margin-bottom: 16px; }
+    .user-registration .swal2-container .swal2-popup .swal2-header .swal2-close {
+      box-shadow: none;
+      top: 2px; }
+  .user-registration .swal2-container .swal2-popup.user-registration-swal2-no-button .swal2-header {
+    padding-bottom: 34px; }
+  .user-registration .swal2-container .swal2-popup .swal2-content .swal2-validation-message {
+    margin-left: 0;
+    margin-right: 0;
+    border-left: 3px solid #f27474;
+    justify-content: flex-start;
+    padding: 12px 6px 12px 6px; }
   .user-registration .swal2-container .swal2-popup .swal2-content .action-buttons a {
     background-color: #475bb2;
     border: none;
@@ -7211,6 +7233,11 @@ body {
     justify-content: flex-start;
     flex-direction: row-reverse;
     gap: 12px; }
+    .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm {
+      background: #475BB2;
+      transition: all .3s ease-in-out; }
+      .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm:hover {
+        background: #4b68ec; }
   .user-registration .swal2-container .swal2-popup.user-registration-locked-field .swal2-header {
     padding-bottom: 4px; }
     .user-registration .swal2-container .swal2-popup.user-registration-locked-field .swal2-header .swal2-close {
@@ -7577,7 +7604,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;

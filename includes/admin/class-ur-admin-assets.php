@@ -223,7 +223,7 @@ class UR_Admin_Assets {
 				'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
 				'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
 				'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
-				'download_successful_message'  => esc_html__( 'Addons have been installed and Activated. You have to reload the page.', 'user-registration' ),
+				'download_successful_message'  => esc_html__( 'Addons have been Installed and Activated. You have to reload the page.', 'user-registration' ),
 				'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
 				'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
 			)

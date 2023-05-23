@@ -278,10 +278,6 @@ class UR_Shortcode_My_Account {
 			wp_enqueue_script( 'ur-password-strength-meter' );
 		}
 
-		include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
-		$notices = ur_get_notices();
-		ur_print_notices();
-
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(

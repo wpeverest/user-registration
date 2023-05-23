@@ -748,7 +748,7 @@ class UR_AJAX {
 							/* translators: %s - Integration tab url */
 								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
-								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
+								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
 				}
 			}
@@ -1156,7 +1156,7 @@ class UR_AJAX {
 				'captcha_setup_error_msg' => sprintf(
 						/* translators: %s - Integration tab url */
 					__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" >Add Now.</a>', 'user-registration' ),
-					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 				),
 			)
 		);

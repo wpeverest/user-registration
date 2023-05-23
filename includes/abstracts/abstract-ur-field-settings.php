@@ -52,7 +52,7 @@ abstract class UR_Field_Settings {
 	public function get_advance_setting_data( $key ) {
 
 		if ( isset( $this->field_data->advance_setting->$key ) ) {
-			return ur_string_to_bool( $this->field_data->advance_setting->$key );
+			return $this->field_data->advance_setting->$key;
 		}
 
 		return '';

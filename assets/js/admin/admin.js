@@ -415,22 +415,31 @@ jQuery(function ($) {
 		minimum_password_strength_wrapper_field.hide();
 	}
 	var password_strength_option = minimum_password_strength_wrapper_field.find(
-		"#user_registration_form_setting_minimum_password_strength"
+		"[data-id='user_registration_form_setting_minimum_password_strength']"
 	);
 
 	// show password strength info.
 	$(document).ready(function () {
 		var strength_info = "";
 		var password_hint = "";
-		var password_strength_value = password_strength_option
-			.find(":selected")
-			.val();
-		show_password_strength_info(password_strength_value);
+
+		password_strength_option.each(function () {
+			if ($(this).is(":checked")) {
+				var password_strength_value = $(this).val();
+				show_password_strength_info(password_strength_value);
+			}
+		});
 
 		$(password_strength_option).on("change", function () {
-			password_hint =
-				minimum_password_strength_wrapper_field.find("span");
-			$strength = $(this).find(":selected").val();
+			password_hint = minimum_password_strength_wrapper_field
+				.find("span")
+				.not(".user-registration-help-tip");
+			var $strength = "";
+
+			if ($(this).is(":checked")) {
+				$strength = $(this).val();
+			}
+
 			password_hint.remove();
 			show_password_strength_info($strength);
 		});
@@ -458,7 +467,9 @@ jQuery(function ($) {
 					break;
 			}
 			minimum_password_strength_wrapper_field.append(
-				"<span class='description'>" + strength_info + "</span>"
+				"<span class='description' style='margin-bottom: 20px'>" +
+					strength_info +
+					"</span>"
 			);
 		}
 	});
@@ -473,30 +484,39 @@ jQuery(function ($) {
 		}
 	});
 
-
-
-	$(document).ready( function() {
+	$(document).ready(function () {
 		hide_show_redirection_options();
 
-		$( '#user_registration_form_setting_redirect_after_registration' ).on( 'change', hide_show_redirection_options );
+		$("#user_registration_form_setting_redirect_after_registration").on(
+			"change",
+			hide_show_redirection_options
+		);
 	});
-
 
 	/**
 	 * Hide or Show Redirection settings.
 	 */
-	var hide_show_redirection_options = function() {
-		var redirect_after_registration = $( '#user_registration_form_setting_redirect_after_registration' );
-		var selected_redirection_option = redirect_after_registration.find(':selected');
-		var custom_redirection_page = $('#user_registration_form_setting_redirect_page' ).closest( '.form-row' ).slideUp(800);
-		var redirect_url = $( '#user_registration_form_setting_redirect_options' ).closest( '.form-row' ).slideUp(800);
+	var hide_show_redirection_options = function () {
+		var redirect_after_registration = $(
+			"#user_registration_form_setting_redirect_after_registration"
+		);
+		var selected_redirection_option =
+			redirect_after_registration.find(":selected");
+		var custom_redirection_page = $(
+			"#user_registration_form_setting_redirect_page"
+		)
+			.closest(".form-row")
+			.slideUp(800);
+		var redirect_url = $("#user_registration_form_setting_redirect_options")
+			.closest(".form-row")
+			.slideUp(800);
 
-		if ( selected_redirection_option.length ) {
+		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
-				case 'internal-page':
+				case "internal-page":
 					custom_redirection_page.slideDown(800);
 					break;
-				case 'external-url':
+				case "external-url":
 					redirect_url.slideDown(800);
 					break;
 				default:
@@ -609,7 +629,8 @@ jQuery(function ($) {
 			},
 			type: "post",
 			beforeSend: function () {
-				var spinner = '<span class="ur-spinner is-active"></span>';
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
 				$(".user_registration_send_email_test").append(spinner);
 			},
 			complete: function (response) {
