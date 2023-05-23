@@ -1716,6 +1716,10 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
  * @return mixed
  */
 function ur_is_json( $str ) {
+	if ( ! is_string( $str ) ) {
+		return false;
+	}
+
 	$json = json_decode( $str );
 	return $json && $str !== $json;
 }
@@ -2309,7 +2313,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
+		$output .= '<label>' . esc_html__( 'Use conditional logicsss', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
