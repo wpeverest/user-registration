@@ -116,6 +116,9 @@ class UR_Smart_Tags {
 				}
 			);
 			$smart_tags = $user_smart_tags;
+
+			$values = apply_filters( 'user_registration_smart_tag_values', $values );
+
 			foreach ( $values as $key => $value ) {
 				$value = ur_format_field_values( $key, $value );
 				if ( ! is_array( $value ) ) {
