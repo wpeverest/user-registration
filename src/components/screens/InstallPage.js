@@ -93,7 +93,7 @@ const InstallPage = () => {
 					</Checkbox>
 					{page.status === "installing" ? (
 						<Flex align="center">
-							<Text fontSize="12px" color="#6B6B6B">
+							<Text fontSize="12px" color="#475BB2">
 								{__("Installing...", "user-registration")}
 							</Text>
 							<CircularProgress
@@ -110,7 +110,7 @@ const InstallPage = () => {
 						</Flex>
 					) : (
 						page.status === "installed" && (
-							<Text fontSize="12px" color="#6B6B6B">
+							<Text fontSize="12px" color="#475BB2">
 								{__("Installed", "user-registration")}
 							</Text>
 						)
@@ -146,7 +146,7 @@ const InstallPage = () => {
 						)}
 					</Checkbox>
 					<Flex align="center">
-						<Text fontSize="12px" color="#6B6B6B">
+						<Text fontSize="12px" color="#475BB2">
 							{__("Installed", "user-registration")}
 						</Text>
 					</Flex>

@@ -183,6 +183,11 @@ class UR_Admin_Import_Export_Forms {
 										if ( 'user_registration_form_setting_default_user_role' === $meta_key ) {
 											$meta_value = array_key_exists( $meta_value, $all_roles ) ? $meta_value : 'subscriber';
 										}
+
+										if ( is_serialized( $meta_value ) ) {
+											$meta_value = maybe_unserialize( $meta_value );
+										}
+
 										add_post_meta( $post_id, $meta_key, $meta_value );
 									}
 								}

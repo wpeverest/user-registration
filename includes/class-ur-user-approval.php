@@ -148,7 +148,7 @@ class UR_User_Approval {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
 			// update user status when login using social connect.
-			$is_social_login_option_enabled = 'yes' === get_option( 'user_registration_social_setting_enable_login_options', 'no' );
+			$is_social_login_option_enabled = ur_option_checked( 'user_registration_social_setting_enable_login_options', false );
 
 			if ( ! $is_social_login_option_enabled && get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
 				$status = UR_Admin_User_Manager::APPROVED;
@@ -225,8 +225,8 @@ class UR_User_Approval {
 						} else {
 							$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
 						}
-						$url      = substr( $url, 0, strpos( $url, '?' ) );
-						$url      = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+						$url = substr( $url, 0, strpos( $url, '?' ) );
+						$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 						/* translators: %s - Resend Verification Link. */
 						$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
 						return new WP_Error( 'user_email_not_verified', $message );
@@ -249,8 +249,8 @@ class UR_User_Approval {
 				$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
 			}
 
-			$url      = substr( $url, 0, strpos( $url, '?' ) );
-			$url      = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url = substr( $url, 0, strpos( $url, '?' ) );
+			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $status['user_status'] ) {
 				/* translators: %s - Resend Verification Link. */
@@ -270,7 +270,7 @@ class UR_User_Approval {
 				$instance     = new User_Registration_Payments_Process();
 				$redirect_url = $instance->generate_redirect_url( $user_id );
 				/* translators: %s - Redirect URL. */
-				$message      = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}

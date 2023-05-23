@@ -61,15 +61,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'        => __( 'User Registration - File Upload', 'user-registration' ),
 				),
 				array(
-					'id'          => 'user_registration_mailchimp',
-					'label'       => 'MailChimp',
-					'icon'        => 'ur-icon ur-icon-mailchimp',
-					'field_class' => 'UR_MailChimp',
-					'plan'        => 'Personal Plan',
-					'slug'        => 'mailchimp',
-					'name'        => __( 'User Registration - Mailchimp', 'user-registration' ),
-				),
-				array(
 					'id'          => 'user_registration_invite_code',
 					'label'       => 'Invitation Code',
 					'icon'        => 'ur-icon ur-icon-invite-codes',
@@ -212,6 +203,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'id'    => 'user_registration_custom_url',
 							'label' => 'Custom URL',
 							'icon'  => 'ur-icon ur-icon-website',
+						),
+						array(
+							'id'    => 'user_registration_hidden',
+							'label' => 'Hidden Field',
+							'icon'  => 'ur-icon ur-icon-hidden-field',
 						),
 					),
 				),

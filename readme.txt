@@ -1,10 +1,10 @@
 === User Registration - Custom Registration Form, Login Form And User Profile For WordPress ===
 Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
-Requires at least: 4.0
-Requires PHP: 5.3
-Tested up to: 6.2
-Stable tag: 2.3.5
+Requires at least: 5.2
+Requires PHP: 7.2
+Tested up to: 6.2.2
+Stable tag: 3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,24 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0      - 31/05/2023
+* Refactor - Form Builder Design.
+* Refactor - Global Settings Design.
+* Refactor - Login process.
+* Feature  - Search global settings.
+* Enhance  - Redirection after registration.
+* Enhance  - Changed checkbox and yes/no select option to toggle.
+* Enhance  - New smart tags added in email content and default value of fields.
+* Dev 	   - Compatibility for hidden field.
+* Dev      - Compatibility for Discounted Price.
+* Dev      - Compatibility for Profile Completeness addon.
+* Dev 	   - Compatibility for conditionally hide/show submit button.
+* Dev      - Compatibility for disable cropping in profile picture field.
+* Tweak    - Display info about form status.
+* Fix      - Remember me not working for ajax login.
+* Fix      - Validation error when conditionally hide fields.
+* Fix      - Email confirmation email not being sent when all emails were disabled.
 
 = 2.3.5    - 04/05/2023
 * Refactor - Make get_sanitize_value function static.

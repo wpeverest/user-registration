@@ -112,6 +112,13 @@
 
 				$document.trigger("wp-plugin-bulk-install-success", response);
 			}
+		} else if (
+			"user-registration_page_user-registration-settings" === pagenow
+		) {
+			wp.a11y.speak(__("Installation completed successfully."), "polite");
+
+			$document.trigger("wp-plugin-install-success", response);
+			$document.trigger("ur-plugin-install-success", response);
 		} else {
 			var $message = $(".plugin-card-" + response.slug).find(
 					".install-now"
@@ -219,7 +226,6 @@
 					__("Installation failed: %s"),
 					response.errorMessage
 				);
-
 				wp.a11y.speak(errorMessage, "assertive");
 
 				$document.trigger("ur-plugin-install-error", response);
@@ -264,6 +270,31 @@
 
 				$document.trigger("wp-plugin-bulk-install-error", response);
 			}
+		} else if (
+			"user-registration_page_user-registration-settings" === pagenow
+		) {
+			if (!wp.updates.isValidResponse(response, "install")) {
+				return;
+			}
+
+			if (
+				wp.updates.maybeHandleCredentialError(
+					response,
+					"install-plugin"
+				)
+			) {
+				return;
+			}
+
+			errorMessage = sprintf(
+				/* translators: %s: Error string for a failed installation. */
+				__("Installation failed: %s"),
+				response.errorMessage
+			);
+
+			wp.a11y.speak(errorMessage, "assertive");
+
+			$document.trigger("ur-plugin-install-error", response);
 		} else {
 			var $card = $(".plugin-card-" + response.slug),
 				$button = $card.find(".install-now"),
@@ -373,6 +404,16 @@ jQuery(function ($) {
 				"click",
 				".user-registration-template-install-addon",
 				this.install_addon
+			);
+
+			// Settings addon install actions.
+			$(document).on(
+				"click",
+				".user-registration-settings-addon-install, .user-registration-settings-addon-activate",
+				function (e) {
+					e.preventDefault();
+					ur_setup_actions.install_addon_from_settings($(this));
+				}
 			);
 
 			$(document).on(
@@ -545,6 +586,88 @@ jQuery(function ($) {
 			setTimeout(function () {
 				$("#user-registration-setup-name").focus();
 			}, 100);
+		},
+		install_addon_from_settings: function (node) {
+			wp.updates.maybeRequestFilesystemCredentials(event);
+			var button_text = this.$button_install;
+
+			if (node.hasClass("user-registration-settings-addon-install")) {
+				button_text = ur_setup_params.i18n_installing;
+			}
+
+			$(node)
+				.html(button_text + '<div class="ur-spinner"></div>')
+				.closest("button")
+				.prop("disabled", true);
+
+			// Add it to the queue.
+			wp.updates.queue.push({
+				action: "user_registration_install_extension",
+				data: {
+					page: pagenow,
+					name: $(node).data("name"),
+					slug: $(node).data("slug"),
+				},
+			});
+
+			// Display bulk notification for install of plugin.
+			$(document).on(
+				"ur-plugin-install-success ur-plugin-install-error",
+				function (event, response) {
+					if (
+						typeof response.errorMessage !== "undefined" &&
+						response.errorMessage.length > 0
+					) {
+						Swal.fire({
+							customClass:
+								"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
+							icon: "error",
+							title: response.errorMessage,
+							text: ur_setup_params.download_failed,
+						});
+					} else {
+						if (0 === wp.updates.queue.length) {
+							Swal.fire({
+								customClass:
+									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
+								icon: "success",
+								title:
+									'<span class="user-registration-swal2-modal__title">' +
+									ur_setup_params.download_successful_title +
+									"</span>",
+								text: $(node).hasClass(
+									"user-registration-settings-addon-activate"
+								)
+									? ur_setup_params.download_successful_message.replace(
+											" installed and",
+											""
+									  )
+									: ur_setup_params.download_successful_message.replace(
+											" Activated",
+											""
+									  ),
+								allowOutsideClick: false,
+								confirmButtonText:
+									ur_setup_params.save_changes_text,
+								showCancelButton: true,
+								cancelButtonText: ur_setup_params.reload_text,
+								cancelButtonColor: "#DD6B55",
+							}).then(function (result) {
+								if (result.isConfirmed) {
+									$(".user-registration-settings-container")
+										.find("input[name='save']")
+										.trigger("click");
+								} else {
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+			);
+
+			// Check the queue, now that the event handlers have been added.
+			wp.updates.queueChecker();
 		},
 		install_addon_from_builder: function (node) {
 			wp.updates.maybeRequestFilesystemCredentials(event);

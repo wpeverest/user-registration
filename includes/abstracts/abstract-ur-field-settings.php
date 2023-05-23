@@ -9,8 +9,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
 /**
- * UR_Form_Field_Setting Class.
+ * UR_Field_Settings Class
  */
 abstract class UR_Field_Settings {
 
@@ -23,30 +24,30 @@ abstract class UR_Field_Settings {
 	public $field_id;
 
 	/**
-	 * Fields html.
+	 * Html Wrapper for Form Fields
 	 *
 	 * @var string
 	 */
 	public $fields_html;
 
 	/**
-	 * Field Data.
+	 * Field Datas.
 	 *
 	 * @var array
 	 */
 	public $field_data = array();
 
 	/**
-	 * Default Class.
+	 * Default class for advance settings.
 	 *
 	 * @var string
 	 */
 	public $default_class = 'ur_advance_setting';
 
 	/**
-	 * Get Advance setting data.
+	 * Retrieves Advance Setting Data.
 	 *
-	 * @param string $key Atrribute of fields.
+	 * @param string $key Field Option Key.
 	 */
 	public function get_advance_setting_data( $key ) {
 
@@ -58,7 +59,9 @@ abstract class UR_Field_Settings {
 	}
 
 	/**
-	 * Output.
+	 * Abstract function for output.
+	 *
+	 * @param array $field_data field Data.
 	 *
 	 * @param array $field_data field data.
 	 */
@@ -66,15 +69,15 @@ abstract class UR_Field_Settings {
 
 
 	/**
-	 * Register fields.
+	 * Register Fields.
 	 */
 	abstract public function register_fields();
 
 
 	/**
-	 * Render html.
+	 * Render Html for advanced settings field option.
 	 *
-	 * @param array $fields list of fieds.
+	 * @param array $fields Fields data.
 	 */
 	public function render_html( $fields ) {
 
@@ -85,19 +88,27 @@ abstract class UR_Field_Settings {
 			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
 			$smart_tags   = '';
 			if ( 'default_value' === $field_key ) {
-				$smart_tags_list = UR_Smart_Tags::smart_tags_list();
-				$smart_tags     .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
-				$smart_tags     .= '<div class="ur-smart-tags-list" style="display: none">';
-				$smart_tags     .= '<div class="smart-tag-title ur-smart-tag-title">Smart Tags</div><ul class="ur-smart-tags">';
-				foreach ( $smart_tags_list as $key => $value ) {
-					$smart_tags .= "<li class='ur-select-smart-tag' data-key = '" . esc_attr( $key ) . "'> " . esc_html( $value ) . '</li>';
-				}
-				$smart_tags .= '</ul></div>';
+				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
 			}
-			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
-			$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 
-			$value = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
+
+			if ( 'toggle' !== $field['type'] ) {
+				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
+				$value              = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
+			} else {
+				if ( isset( $this->field_data->advance_setting->$field_key ) ) {
+					if ( empty( $this->field_data->advance_setting->$field_key ) ) {
+						$value = false;
+					} else {
+						$value = ur_string_to_bool( $this->field_data->advance_setting->$field_key );
+					}
+				} else {
+					if ( isset( $field['default'] ) ) {
+						$value = ur_string_to_bool( $field['default'] );
+					}
+				}
+			}
 
 			switch ( $field['type'] ) {
 
@@ -161,6 +172,16 @@ abstract class UR_Field_Settings {
 					}
 
 					$this->fields_html .= ' />';
+					break;
+				case 'toggle':
+					$this->fields_html .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
+					$this->fields_html .= '<label class="ur-label checkbox" for="ur-type-toggle">' . $field['label'] . $tooltip_html . '</label>';
+					$this->fields_html .= '<span class="user-registration-toggle-form">';
+					$checked            = ur_string_to_bool( $value ) ? 'checked' : '';
+					$this->fields_html .= '<input type="checkbox" data-advance-field="' . esc_attr( $field_key ) . '" class="' . esc_attr( $field['class'] ) . '"  name="' . esc_attr( $field['name'] ) . '" ' . $checked . ' data-id="' . ( isset( $field['data-id'] ) ? esc_attr( $field['data-id'] ) : '' ) . '">';
+					$this->fields_html .= '<span class="slider round"></span>';
+					$this->fields_html .= '</span>';
+					$this->fields_html .= '</div>';
 					break;
 				default:
 			}

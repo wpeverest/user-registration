@@ -311,6 +311,8 @@
 
 				var conditional_roles_settings_data =
 					URFormBuilder.get_form_conditional_role_data();
+				var conditional_submit_settings_data =
+					URFormBuilder.get_form_conditional_submit_data();
 				var email_content_override_settings_data =
 					URFormBuilder.get_form_email_content_override_data();
 
@@ -319,6 +321,10 @@
 					"#ur-multi-part-page-settings"
 				).serializeArray();
 				/** End Multistep form code. */
+
+				var profile_completeness__custom_percentage = $(
+					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select"
+				).serializeArray();
 
 				var data = {
 					action: "user_registration_form_save_action",
@@ -331,9 +337,13 @@
 						form_setting_data: form_setting_data,
 						conditional_roles_settings_data:
 							conditional_roles_settings_data,
+						conditional_submit_settings_data:
+							conditional_submit_settings_data,
 						email_content_override_settings_data:
 							email_content_override_settings_data,
 						multipart_page_setting: multipart_page_setting,
+						profile_completeness__custom_percentage:
+							profile_completeness__custom_percentage,
 					},
 				};
 
@@ -354,6 +364,60 @@
 					);
 					return;
 				}
+
+				// Profile Completeness validation.
+				if (
+					$(
+						"#user_registration_profile_completeness_completion_percentage",
+						$(document)
+					).length != 0
+				) {
+					var sanitized_percent = parseFloat(
+						$(
+							"#user_registration_profile_completeness_completion_percentage",
+							$(document)
+						)
+							.val()
+							.replace(/[^\d\.]/g, "")
+							.replace(/\.(([^\.]*)\.)*/g, ".$2")
+					);
+
+					if (sanitized_percent <= 0) {
+						URFormBuilder.show_message(
+							user_registration_form_builder_data.i18n_admin
+								.i18n_pc_profile_completion_error
+						);
+						return;
+					}
+
+					var sum = 0;
+
+					$.each(
+						profile_completeness__custom_percentage,
+						function (index, field) {
+							if (
+								field.name ==
+									"user_registration_profile_completeness_custom_percentage_field[]" &&
+								field.value !== ""
+							) {
+								sum += parseFloat(
+									profile_completeness__custom_percentage[
+										index + 1
+									].value
+								);
+							}
+						}
+					);
+
+					if (sum > sanitized_percent) {
+						URFormBuilder.show_message(
+							user_registration_form_builder_data.i18n_admin
+								.i18n_pc_custom_percentage_filed_error
+						);
+						return;
+					}
+				}
+
 				$.ajax({
 					url: user_registration_form_builder_data.ajax_url,
 					data: data,
@@ -374,8 +438,7 @@
 									.i18n_form_successfully_saved;
 
 							if (
-								user_registration_form_builder_data.is_edit_form !==
-								"1"
+								!user_registration_form_builder_data.is_edit_form
 							) {
 								var title = "Form successfully created.";
 								message_body =
@@ -1051,6 +1114,11 @@
 								var value = $(element)
 									.find("input.ur-type-checkbox-money-input")
 									.val();
+								var sell_value = $(element)
+									.find(
+										"input.ur-checkbox-selling-price-input"
+									)
+									.val();
 								if (
 									array_value.every(function (each_value) {
 										return each_value.label !== label;
@@ -1060,6 +1128,7 @@
 										array_value.push({
 											label: label,
 											value: value,
+											sell_value: sell_value,
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -1137,8 +1206,21 @@
 						// Check input type.
 						switch ($this_node.attr("type")) {
 							case "checkbox":
-								if ($this_node.is(":checked")) {
+								value = $this_node.is(":checked");
+
+								if (
+									$this_node.hasClass(
+										"ur-type-checkbox-value"
+									)
+								) {
 									value = $this_node.val();
+								}
+
+								if (
+									$this_node.hasClass("ur-type-toggle") &&
+									!value
+								) {
+									value = "false";
 								}
 								break;
 
@@ -1146,6 +1228,7 @@
 								value = $this_node.val();
 								break;
 						}
+
 						break;
 					case "select":
 						value = $this_node.val();
@@ -1155,6 +1238,7 @@
 						break;
 					default:
 				}
+
 				return value;
 			},
 			/**
@@ -1256,6 +1340,77 @@
 				return form_data;
 			},
 			/**
+			 * Get all the conditions data for conditional logic settings for submit button.
+			 */
+			get_form_conditional_submit_data: function () {
+				var form_data = [];
+				var single_row = $(".urcl-submit-logic-wrap");
+
+				$.each(single_row, function () {
+					var grid_list_item = $(this).find(".urcl-submit-field");
+					var all_field_data = [];
+					var or_field_data = [];
+					var action = "";
+					$.each(grid_list_item, function () {
+						$field_key = $(this).attr("name").split("[");
+
+						if (
+							"user_registration_form_conditional_submit" ===
+							$field_key[0]
+						) {
+							action = $(this).val();
+							grid_list_item.splice($(this), 1);
+						}
+					});
+
+					var conditional_group = $(this).find(
+						".urcl-conditional-group"
+					);
+					$.each(conditional_group, function () {
+						var inner_conditions = [];
+						var grid_list_item = $(this).find(".urcl-submit-field");
+						$.each(grid_list_item, function () {
+							var conditions = {
+								field_key: $(this).attr("name"),
+								field_value: $(this).val(),
+							};
+							inner_conditions.push(conditions);
+						});
+						all_field_data.push(inner_conditions);
+					});
+
+					var or_groups = $(this).find(".urcl-or-groups");
+					$.each(or_groups, function () {
+						var conditional_or_group = $(this).find(
+							".urcl-conditional-or-group"
+						);
+						var or_data = [];
+						$.each(conditional_or_group, function () {
+							var inner_or_conditions = [];
+							var or_list_item =
+								$(this).find(".urcl-submit-field");
+							$.each(or_list_item, function () {
+								var or_conditions = {
+									field_key: $(this).attr("name"),
+									field_value: $(this).val(),
+								};
+								inner_or_conditions.push(or_conditions);
+							});
+							or_data.push(inner_or_conditions);
+						});
+						or_field_data.push(or_data);
+					});
+					var all_fields = {
+						action: action,
+						conditions: all_field_data,
+						or_conditions: or_field_data,
+					};
+
+					form_data.push(all_fields);
+				});
+				return form_data;
+			},
+			/**
 			 * Get all the overrided email contents saved by the user.
 			 */
 			get_form_email_content_override_data: function () {
@@ -1323,8 +1478,7 @@
 							},
 							single_row: function () {
 								if (
-									user_registration_form_builder_data.is_edit_form !==
-									"1"
+									!user_registration_form_builder_data.is_edit_form
 								) {
 									var single_row = $(
 										"<div class='ur-single-row'/ data-row-id=\"0\">"
@@ -1468,9 +1622,9 @@
 							 * Hides label of fields if hide label option is enabled.
 							 */
 							manage_label_hidden_fields: function () {
-								$('select[data-field="hide_label"]').each(
+								$('input[data-field="hide_label"]').each(
 									function () {
-										if ($(this).val() === "yes") {
+										if ($(this).is(":checked")) {
 											$(this)
 												.closest(".ur-selected-item")
 												.find(".ur-label")
@@ -1510,38 +1664,39 @@
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'select[data-field="required"]'
+												'input[data-field="required"]'
 											)
-											.val("yes")
 											.trigger("change");
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'select[data-field="required"]'
-											)
-											.find('option[value="yes"]')
-											.attr("selected", "selected");
-										field_node
-											.closest(".ur-selected-item")
-											.find(
-												'select[data-field="required"]'
+												'input[data-field="required"]'
 											)
 											.attr("disabled", "disabled");
 									}
 								}
 
-								var label_node = selected_inputs
-									.find('select[data-field="required"]')
-									.find(
-										'option[selected="selected"][value="yes"]'
-									)
-									.closest(".ur-selected-item")
-									.find(".ur-label")
-									.find("label");
-								label_node.find("span:contains('*')").remove();
-								label_node.append(
-									'<span style="color:red">*</span>'
-								);
+								selected_inputs
+									.find(".ur-selected-item")
+									.each(function () {
+										if (
+											$(this)
+												.find(
+													'input[data-field="required"]'
+												)
+												.is(":checked")
+										) {
+											var label_node = $(this)
+												.find(".ur-label")
+												.find("label");
+											label_node
+												.find("span:contains('*')")
+												.remove();
+											label_node.append(
+												'<span style="color:red">*</span>'
+											);
+										}
+									});
 							},
 							/**
 							 * Structure for empty grid.
@@ -1693,8 +1848,49 @@
 											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
 										).selectWoo();
 
+										var $template = $(template);
+
+										// Get fieldKey from data-field-key attribute.
+										var fieldKey = $template
+											.find(".ur-field")
+											.data("field-key");
+
+										// Get field name.
+										var fieldName = $template
+											.find(
+												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+											)
+											.val();
+
+										// Get label text from label tag, excluding any span tags
+										var label = $template
+											.find(".ur-label label")
+											.contents()
+											.filter(function () {
+												return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+											})
+											.text()
+											.trim();
+
+										// Get the visibility of the field.
+										var visibleTo = $template
+											.find(
+												'select.ur_advance_setting.ur-settings-field-visibility[name="' +
+													fieldKey +
+													'_advance_setting[field_visibility]"]'
+											)
+											.val();
+
 										$(document.body).trigger(
-											"ur_new_field_created"
+											"ur_new_field_created",
+											[
+												{
+													fieldKey: fieldKey,
+													fieldName: fieldName,
+													label: label,
+													visibleTo: visibleTo,
+												},
+											]
 										);
 									},
 								});
@@ -1908,7 +2104,7 @@
 															icon: "success",
 															title: "Successfully deleted!",
 															customClass:
-																"user-registration-swal2-modal user-registration-swal2-modal--center",
+																"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-swal2-no-button",
 															showConfirmButton: false,
 															timer: 1000,
 														});
@@ -2201,6 +2397,31 @@
 											ele = $this,
 											$ele = $(this);
 
+										// Get fieldKey from data-field-key attribute.
+										var fieldKey = $ele
+											.closest(".ur-selected-item")
+											.find(".ur-field")
+											.data("field-key");
+
+										// Get field name.
+										var fieldName = $ele
+											.closest(".ur-selected-item")
+											.find(
+												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+											)
+											.val();
+
+										// Get label text from label tag, excluding any span tags
+										var label = $ele
+											.closest(".ur-selected-item")
+											.find(".ur-label label")
+											.contents()
+											.filter(function () {
+												return this.nodeType === 3; // Filter out non-text nodes (e.g. <span> tags)
+											})
+											.text()
+											.trim();
+
 										ur_confirmation(
 											user_registration_form_builder_data
 												.i18n_admin
@@ -2243,7 +2464,16 @@
 													).remove();
 
 													$(document.body).trigger(
-														"ur_field_removed"
+														"ur_field_removed",
+														[
+															{
+																fieldName:
+																	fieldName,
+																fieldKey:
+																	fieldKey,
+																label: label,
+															},
+														]
 													);
 
 													// To prevent click on whole item.
@@ -2682,6 +2912,8 @@
 						case "field_name":
 						case "max_files":
 						case "input_mask":
+						case "hidden_value":
+						case "custom_class":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_field_name(
 									$(this)
@@ -2785,6 +3017,31 @@
 								);
 							});
 							break;
+						case "selling_price":
+							if (!$this_obj.is(":checked")) {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.hide();
+							}
+
+							$this_obj.on("change", function () {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-general-setting-block")
+									.find(".ur-selling-price")
+									.toggle();
+							});
+							$this_obj.on("change", function () {
+								URFormBuilder.trigger_general_setting_selling_price(
+									$(this)
+								);
+							});
+							break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -2821,7 +3078,7 @@
 				);
 
 				$(".ur-settings-enable-min-max").on("change", function () {
-					if ("true" === $(this).val()) {
+					if ($(this).is(":checked")) {
 						$(
 							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date"
 						).show();
@@ -2908,10 +3165,9 @@
 							break;
 						case "min_date":
 							if (
-								"true" ===
 								$(".ur-item-active")
 									.find(".ur-settings-enable-min-max")
-									.val()
+									.is(":checked")
 							) {
 								$(this)
 									.addClass("flatpickr-field")
@@ -2956,10 +3212,9 @@
 							break;
 						case "max_date":
 							if (
-								"true" ===
 								$(".ur-item-active")
 									.find(".ur-settings-enable-min-max")
-									.val()
+									.is(":checked")
 							) {
 								$(this)
 									.addClass("flatpickr-field")
@@ -3002,59 +3257,203 @@
 							break;
 
 						case "enable_prepopulate":
-							if ("false" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-parameter_name")
+									.show();
+							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-parameter_name")
 									.hide();
 							}
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-parameter_name")
-									.toggle();
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
 
-								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-parameter_name")
-									.toggle();
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-parameter_name")
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-parameter_name")
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-parameter_name")
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-parameter_name")
+											.hide();
+									}
+								}
 							});
 							break;
 						case "autocomplete_address":
-							if ("no" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-address_style")
+									.show();
+							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-address_style")
 									.hide();
 							}
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-address_style")
-									.toggle();
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
 
-								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-address_style")
-									.toggle();
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-address_style")
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-address_style")
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-advance-address_style")
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(".ur-advance-address_style")
+											.hide();
+									}
+								}
 							});
 							break;
 						case "validate_unique":
-							if ("false" === $this_node.val()) {
+							if ($this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-validation_message")
+									.show();
+							} else {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-validation_message")
 									.hide();
 							}
 
+							$this_node.on("click", function () {
+								var wrapper = $(
+										".ur-selected-item.ur-item-active"
+									),
+									selector_field_name = $(this)
+										.closest("#ur-setting-form")
+										.find("[data-field='field_name']")
+										.val(),
+									active_field_name = wrapper
+										.find("[data-field='field_name']")
+										.val();
+								wrapper
+									.find(".ur-advance-setting-block")
+									.find(
+										'input[data-field="' +
+											$(this).attr("data-field") +
+											'"]'
+									)
+									.prop("checked", $(this).is(":checked"));
+
+								if (selector_field_name === active_field_name) {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(
+												".ur-advance-validation_message"
+											)
+											.show();
+										$(".ur-selected-item.ur-item-active")
+											.find(
+												".ur-advance-validation_message"
+											)
+											.show();
+									} else {
+										$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(
+												".ur-advance-validation_message"
+											)
+											.hide();
+										$(".ur-selected-item.ur-item-active")
+											.find(
+												".ur-advance-validation_message"
+											)
+											.hide();
+									}
+								}
+							});
+							break;
+						case "enable_selling_price_single_item":
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-selling_price")
+									.hide();
+							}
+
 							$this_node.on("change", function () {
 								$(this)
 									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-validation_message")
+									.find(".ur-advance-selling_price")
 									.toggle();
 
 								$(".ur-selected-item.ur-item-active")
-									.find(".ur-advance-validation_message")
+									.find(".ur-advance-selling_price")
 									.toggle();
 							});
 							break;
@@ -3119,7 +3518,7 @@
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
 						.find("[data-field='required']")
-						.val() === "yes"
+						.is(":checked")
 				) {
 					wrapper
 						.find(".ur-label")
@@ -3414,12 +3813,16 @@
 					var value = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.val();
+					var sell_value = $(element)
+						.find("input.ur-checkbox-selling-price-input")
+						.val();
 					var currency = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.attr("data-currency");
 
 					label = label.trim();
 					value = value.trim();
+					sell_value = sell_value.trim();
 					currency = currency.trim();
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
@@ -3433,6 +3836,7 @@
 						array_value.push({
 							label: label,
 							value: value,
+							sell_value: sell_value,
 							currency: currency,
 							checkbox: checkbox,
 						});
@@ -3526,6 +3930,21 @@
 					.val($label.val());
 			},
 			/**
+			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label enable selling price field of fields from field settings.
+			 */
+			trigger_general_setting_selling_price: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="' + $label.attr("data-field") + '"]'
+					)
+					.prop("checked", $label.is(":checked"));
+			},
+			/**
 			 * Reflects changes in descriptions field of field settings into selected field in form builder area.
 			 *
 			 * @param object $label Descriptions field of fields from field settings.
@@ -3573,13 +3992,9 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'select[data-field="' +
-							$label.attr("data-field") +
-							'"] option:selected'
+						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
-					.attr("selected", false);
-
-				$label.find("option").attr("selected", false);
+					.prop("checked", $label.is(":checked"));
 
 				wrapper
 					.find(".ur-label")
@@ -3587,23 +4002,12 @@
 					.find("span:contains(*)")
 					.remove();
 
-				if ($label.val() === "yes") {
+				if ($label.is(":checked")) {
 					wrapper
 						.find(".ur-label")
 						.find("label")
 						.append('<span style="color:red">*</span>');
 				}
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'select[data-field="' + $label.attr("data-field") + '"]'
-					)
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
-
-				$label
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
@@ -3628,25 +4032,15 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'select[data-field="' +
-							$label.attr("data-field") +
-							'"] option:selected'
+						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
-					.removeAttr("selected");
+					.prop("checked", $label.is(":checked"));
 
-				if ("yes" === $label.val()) {
+				if ($label.is(":checked")) {
 					wrapper.find(".ur-label").find("label").hide();
 				} else {
 					wrapper.find(".ur-label").find("label").show();
 				}
-
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'select[data-field="' + $label.attr("data-field") + '"]'
-					)
-					.find('option[value="' + $label.val() + '"]')
-					.attr("selected", true);
 			},
 
 			/**
@@ -3660,9 +4054,17 @@
 				var hidden_node = wrapper
 					.find(".ur-advance-setting-block")
 					.find('[data-id="' + this_node_id + '"]');
+
 				switch (node_type) {
 					case "input":
-						hidden_node.val($this_node.val());
+						if ($this_node.attr("type") === "checkbox") {
+							hidden_node.prop(
+								"checked",
+								$this_node.is(":checked")
+							);
+						} else {
+							hidden_node.val($this_node.val());
+						}
 						break;
 					case "select":
 						hidden_node.find("option").prop("selected", false);
@@ -3792,6 +4194,7 @@
 				cloning_element
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
+				cloning_element.find('select[data-field="options"]').val("");
 
 				$this.parent("li").after(cloning_element);
 				$wrapper
@@ -3821,6 +4224,10 @@
 				) {
 					URFormBuilder.render_multiple_choice($this);
 				}
+
+				$(document.body).trigger("ur_field_option_changed", [
+					{ action: "add", wrapper: $wrapper },
+				]);
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -3863,6 +4270,10 @@
 						URFormBuilder.render_multiple_choice($any_siblings);
 					}
 				}
+
+				$(document.body).trigger("ur_field_option_changed", [
+					{ action: "remove", wrapper: $wrapper },
+				]);
 			},
 		};
 
@@ -3987,6 +4398,30 @@
 			}
 		});
 
+		$(document)
+			.find(
+				"input[name='user_registration_form_setting_minimum_password_strength']"
+			)
+			.each(function () {
+				$(this).on("click", function () {
+					$(this)
+						.closest(".ur-radio-group-list")
+						.find(".active")
+						.removeClass("active");
+					$(this)
+						.closest(".ur-radio-group-list")
+						.find(
+							"input[name='user_registration_form_setting_minimum_password_strength']"
+						)
+						.prop("checked", false);
+					$(this)
+						.closest(".ur-radio-group-list--item")
+						.addClass("active");
+
+					$(this).prop("checked", true);
+				});
+			});
+
 		$(document).on("click", function () {
 			if ($(document).find(".ur-smart-tags-list").is(":visible")) {
 				$(".ur-smart-tags-list").hide();
@@ -4030,6 +4465,14 @@
 				update_input(input_value);
 			}
 		);
+		$(document.body).on(
+			"change",
+			".ur-general-setting.ur-general-setting-hidden-value input",
+			function () {
+				input_value = $(this).val();
+				update_input(input_value);
+			}
+		);
 		/**
 		 * For update the default value.
 		 */
@@ -4048,8 +4491,19 @@
 				"input[data-id=textarea_advance_setting_default_value]"
 			);
 
+			target_input_hidden_field = $(active_field).find(
+				".ur-general-setting-block"
+			);
+			ur_toggle_hidden_content = target_input_hidden_field.find(
+				".ur-general-setting.ur-general-setting-hidden-value"
+			);
+			target_hidden_input = $(ur_toggle_hidden_content).find(
+				'input[data-field="hidden_value"]'
+			);
+
 			target_input.val(input_value);
 			target_textarea.val(input_value);
+			target_hidden_input.val(input_value);
 		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
