@@ -1721,7 +1721,7 @@ function ur_is_json( $str ) {
 	}
 
 	$json = json_decode( $str );
-	return $json && $str !== $json;
+	return $json && $str != $json && json_last_error() == JSON_ERROR_NONE
 }
 
 /**
