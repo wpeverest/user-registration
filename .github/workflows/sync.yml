@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - ur/internal-release-fixes
     workflow_dispatch:
 jobs:
   sync:
