@@ -1,7 +1,7 @@
 {
   "name": "wpeverest/user-registration",
   "description": "Easily allows to create registration and login page.",
-  "homepage": "https://wpeverest.com/plugins/user-registration/",
+  "homepage": "https://wpuserregistration.com/",
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
   "minimum-stability": "dev",

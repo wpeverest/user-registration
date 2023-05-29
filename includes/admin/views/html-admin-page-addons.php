@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 												<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">
-													<a class="button upgrade-now" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
+													<a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>
 												</div>
 										<?php } ?>
 									</div>
@@ -71,7 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p>
 			<?php
 				/* translators: %s - User Registration Extensions Catalog */
-				printf( esc_html__( 'Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href="%s">User Registration Extensions Catalog</a>', 'user-registration' ), 'https://wpeverest.com/user-registration-extensions/' );
+				printf( esc_html__( 'Our catalog of User Registration Extensions can be found on WPUserRegistration.com here: <a href="%s">User Registration Extensions Catalog</a>', 'user-registration' ), 'https://wpuserregistration.com/features/' );
 			?>
 		</p>
 	<?php endif; ?>

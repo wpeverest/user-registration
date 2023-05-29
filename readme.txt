@@ -22,9 +22,9 @@ The best thing is that there are unlimited customization options for each field 
 
 [youtube https://www.youtube.com/watch?v=zNhNvj8jPhM]
 
-[All features](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](http://docs.wpeverest.com/docs/user-registration/)
+[All features](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](https://docs.wpuserregistration.com/)
 
-[Try User Registration Premium ](https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
+[Try User Registration Premium ](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 ### Key Features of User Registration
 * **Easy Drag and Drop Builder:** Simply drag and drop the form fields into a blank slate and create a registration form in no time. No code, no fuss.
@@ -41,31 +41,31 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Assign User Roles and Capabilities:** Assign default WordPress user roles like Editor, Author, Subscriber, and more while creating registration forms. This lets you control who has access to which sections of your website and what actions they can perform.
 
-* **[Premium] [Multi-Step Form:](https://wpeverest.com/wordpress-plugins/user-registration/multi-part/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
+* **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
 
-* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpeverest.com/wordpress-plugins/user-registration/payments/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards(Stripe)](https://wpeverest.com/wordpress-plugins/user-registration/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
+* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards(Stripe)](https://wpuserregistration.com/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
 
-* **[Premium] [Create Easy Content Restriction Rules:](https://wpeverest.com/wordpress-plugins/user-registration/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
+* **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
 
-* **[Premium] [Register Users Using Social Profile Account:](https://wpeverest.com/wordpress-plugins/user-registration/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, your users can directly register and log in using their existing social accounts on Facebook, Twitter, LinkedIn, and Google. The data from the social account used in registration is then imported to the corresponding user profile.
+* **[Premium] [Register Users Using Social Profile Account:](https://wpuserregistration.com/features/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, your users can directly register and log in using their existing social accounts on Facebook, Twitter, LinkedIn, and Google. The data from the social account used in registration is then imported to the corresponding user profile.
 
-* **[Premium] [WooCommerce Integration:](https://wpeverest.com/wordpress-plugins/user-registration/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
+* **[Premium] [WooCommerce Integration:](https://wpuserregistration.com/features/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
 
-* **[Premium] [Collect Geolocation Data for Users:](https://wpeverest.com/wordpress-plugins/user-registration/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium addon enables you to collect and save the geolocation data of users who register on your website. And it’s pretty easy when you have fields like Country, City, and Postcode.
+* **[Premium] [Collect Geolocation Data for Users:](https://wpuserregistration.com/features/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium addon enables you to collect and save the geolocation data of users who register on your website. And it’s pretty easy when you have fields like Country, City, and Postcode.
 
-* **[Premium] [LearnDash Integration:](https://wpeverest.com/wordpress-plugins/user-registration/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrating LearnDash with User Registration allows you to add a LearnDash course field in your registration form. This automatically enrolls the users into their specified LearnDash course.
+* **[Premium] [LearnDash Integration:](https://wpuserregistration.com/features/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrating LearnDash with User Registration allows you to add a LearnDash course field in your registration form. This automatically enrolls the users into their specified LearnDash course.
 
-* **[Premium] [Set Fields Visibility:](https://wpeverest.com/wordpress-plugins/user-registration/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Hide specific user registration fields in the published forms and user profile page. You can decide whether the field is visible in the registration form or profile details, or both.
+* **[Premium] [Set Fields Visibility:](https://wpuserregistration.com/features/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Hide specific user registration fields in the published forms and user profile page. You can decide whether the field is visible in the registration form or profile details, or both.
 
-* **[Premium] [Import Users:](https://wpeverest.com/wordpress-plugins/user-registration/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration plugin lets you import users to any registration form on your WordPress website. Just upload the CSV file with user information and map it with the registration form of your choice.
+* **[Premium] [Import Users:](https://wpuserregistration.com/features/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration plugin lets you import users to any registration form on your WordPress website. Just upload the CSV file with user information and map it with the registration form of your choice.
 
-* **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpeverest.com/wordpress-plugins/user-registration/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
+* **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpeverest.com/wordpress-plugins/user-registration/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpeverest.com/wordpress-plugins/user-registration/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpeverest.com/wordpress-plugins/user-registration/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
 
-* **[Premium] [Drag and Drop Multi File Upload:](https://wpeverest.com/wordpress-plugins/user-registration/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
+* **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
-* **[Premium] [Smart Conditional Logic:](https://wpeverest.com/wordpress-plugins/user-registration/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
+* **[Premium] [Smart Conditional Logic:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
 
 
 ### User Registration Has Every Form Field You’ll Ever Need:
@@ -111,17 +111,17 @@ Here’s a brief look at the features that make User Registration one of the bes
 
 * **[Premium] User Registration Data in Graphs and Charts:** Receive accurate stats on every user registration form through graphs and charts. You can view the total, approved, denied, and pending registrations your website receives in a day, week, month, or a specific period.
 
-* **[Premium] [Live Form Designer Tool:](https://wpeverest.com/wordpress-plugins/user-registration/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, and Button Styles without writing any code.
+* **[Premium] [Live Form Designer Tool:](https://wpuserregistration.com/features/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, and Button Styles without writing any code.
 
-* **[Premium] [Invite Codes for Registration:](https://wpeverest.com/wordpress-plugins/user-registration/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration allows access to the registration page to only users with an invitation code. You can either create a code on your own or generate random codes
+* **[Premium] [Invite Codes for Registration:](https://wpuserregistration.com/features/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration allows access to the registration page to only users with an invitation code. You can either create a code on your own or generate random codes
 
 * **Easily Import Export Forms:** If you own multiple websites, you don’t have to create registration forms from scratch every single time. You can save time by exporting and importing forms as JSON files which include form settings as well.
 
-* **[Premium] [Front-end Listing:](https://wpeverest.com/wordpress-plugins/user-registration/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to display all your registered users on your website, the Front-end Listing addon is your answer. Users and guests alike can view individual profiles of your users from this front-end list.
+* **[Premium] [Front-end Listing:](https://wpuserregistration.com/features/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to display all your registered users on your website, the Front-end Listing addon is your answer. Users and guests alike can view individual profiles of your users from this front-end list.
 
-* **[Premium] [Customize My Account:](https://wpeverest.com/wordpress-plugins/user-registration/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing and deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, and more.
+* **[Premium] [Customize My Account:](https://wpuserregistration.com/features/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing and deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, and more.
 
-* **[Premium] [Two Factor Authentication:](https://wpeverest.com/wordpress-plugins/user-registration/two-factor-authentication/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to protect your website from lousy hackers and digital vulnerabilities, the Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.
+* **[Premium] [Two Factor Authentication:](https://wpuserregistration.com/features/two-factor-authentication/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** If you want to protect your website from lousy hackers and digital vulnerabilities, the Two Factor Authentication add-on, also known as 2FA, will provide OTP-based verification for the users for maintaining a secure site and preventing data breaching.
 
 ### Who is User Registration for?
 * Schools and Universities
@@ -252,7 +252,7 @@ All the users registered via the registration forms and their data can be access
 
 = Can a user edit their profile informaton after registration?
 
-Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
+Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
 
 = Does the plugin come with a login form as well?
 

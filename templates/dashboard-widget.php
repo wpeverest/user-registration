@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.wpeverest.com/user-registration/template-structure/
+ * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @author  WPEverest
  * @package UserRegistration/Templates
  * @since   1.5.8
@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-logo-wrap">
 			<img src="<?php echo UR()->plugin_url() . '/assets/images/logo.png'; ?>">
 			<div class="ur-plugin-info">
-				<?php echo 'User registration';?>
-				<span class="ur-version"><?php echo __('Current Version:', 'user-registration' ) . UR_VERSION;?></span>
+				<?php echo 'User Registration'; ?>
+				<span class="ur-version"><?php echo __( 'Current Version:', 'user-registration' ) . UR_VERSION; ?></span>
 			</div>
 		</div>
 		<div class="ur-dashboard-widget-forms">
