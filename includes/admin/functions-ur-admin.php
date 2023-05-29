@@ -126,6 +126,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',
+		$ur_screen_id . '_page_user-registration-content-restriction',
 		'profile',
 		'user-edit',
 	);
