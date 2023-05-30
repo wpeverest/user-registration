@@ -393,9 +393,9 @@ class UR_Frontend_Scripts {
 
 			case 'ur-password-strength-meter':
 				return array(
-					'home_url'            => home_url(),
-					'i18n_password_error' => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
-					'pwsL10n'             => array(
+					'home_url'             => home_url(),
+					'i18n_password_error'  => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
+					'pwsL10n'              => array(
 						'shortpw'  => esc_html__( 'Very Weak', 'user-registration' ),
 						'bad'      => esc_html__( 'Weak', 'user-registration' ),
 						'good'     => esc_html__( 'Medium', 'user-registration' ),
@@ -403,7 +403,10 @@ class UR_Frontend_Scripts {
 						'mismatch' => esc_html__( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
-					'i18n_password_hint'  => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint'   => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint_1' => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters', 'user-registration' ),
+					'i18n_password_hint_2' => esc_html__( 'Hint: Minimum one uppercase letter, a number and must be 7 characters', 'user-registration' ),
+					'i18n_password_hint_3' => esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
 				);
 				break;
 			case 'ur-login':
