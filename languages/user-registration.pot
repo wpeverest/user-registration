@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-29T11:10:46+00:00\n"
+"POT-Creation-Date: 2023-05-30T04:10:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -304,15 +304,15 @@ msgid "Add New"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:332
-msgid "Minimum one uppercase letter"
+msgid "Minimum one letter"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:333
-msgid "Minimum one uppercase letter and a number"
+msgid "Minimum one uppercase letter and must be 4 characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:334
-msgid "Minimum one uppercase letter, a number and a special character"
+msgid "Minimum one uppercase letter, a number and must be 7 characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:335
@@ -2681,7 +2681,7 @@ msgstr ""
 
 #. translators: 1: License Page 2: Plugin Name
 #: includes/admin/views/html-notice-key-unvalidated.php:16
-msgid "%1$s Please enter your license key%2$s in the plugin list below to get updates for <strong>%3$s</strong> Add-Ons."
+msgid "%1$s Please enter your license key%2$s to get updates for <strong>%3$s</strong> Add-Ons."
 msgstr ""
 
 #: includes/admin/views/html-notice-php-deprecation.php:16
@@ -3139,6 +3139,18 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:406
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:407
+msgid "Hint: Minimum one uppercase letter and must be 4 characters"
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:408
+msgid "Hint: Minimum one uppercase letter, a number and must be 7 characters"
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:409
+msgid "Hint: Minimum one uppercase letter, a number, a special character and must be 8 characters"
 msgstr ""
 
 #: includes/class-ur-install.php:370
