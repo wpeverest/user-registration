@@ -2313,7 +2313,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use conditional logicsss', 'user-registration' ) . '</label>';
+		$output .= '<label>' . esc_html__( 'Use conditional logics', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
