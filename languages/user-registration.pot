@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-30T04:10:51+00:00\n"
+"POT-Creation-Date: 2023-05-31T08:43:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -1151,19 +1151,19 @@ msgstr ""
 
 #: includes/admin/functions-ur-admin.php:660
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:679
 msgid ""
-"<strong>Hey there!</strong> <br>\n"
+"<strong>Hey there!</strong> <br>\r\n"
 "\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:684
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\n"
+"<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -1194,6 +1194,8 @@ msgid "Site Key (reCAPTCHA v2)"
 msgstr ""
 
 #. translators: %1$s - Google reCAPTCHA docs url
+#. translators: %1$s - Google reCAPTCHA docs url
+#. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:76
 #: includes/admin/settings/class-ur-settings-captcha.php:101
 #: includes/admin/settings/class-ur-settings-captcha.php:137
@@ -1204,6 +1206,8 @@ msgstr ""
 msgid "Secret Key ( reCAPTCHA v2)"
 msgstr ""
 
+#. translators: %1$s - Google reCAPTCHA docs url
+#. translators: %1$s - Google reCAPTCHA docs url
 #. translators: %1$s - Google reCAPTCHA docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:89
 #: includes/admin/settings/class-ur-settings-captcha.php:114
@@ -2796,6 +2800,7 @@ msgid "Your email address has not been updated yet. Please check your inbox at <
 msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
+#. translators: 1: Pending email message 2: Cancel Link
 #: includes/class-ur-ajax.php:437
 #: includes/functions-ur-template.php:568
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
@@ -2951,6 +2956,8 @@ msgid "User does not exist!"
 msgstr ""
 
 #. translators: %s - Resend Verification Link.
+#. translators: %s - Resend Verification Link.
+#. translators: %s - Resend Verification Link.
 #. translators: %s - Redirect URL.
 #. translators: %s - Username
 #. translators: %s - Lost password URL
@@ -2973,12 +2980,16 @@ msgid "ERROR:"
 msgstr ""
 
 #. translators: %s - Resend Verification Link.
+#. translators: %s - Resend Verification Link.
+#. translators: %s - Resend Verification Link.
 #: includes/class-ur-email-confirmation.php:402
 #: includes/class-ur-user-approval.php:231
 #: includes/class-ur-user-approval.php:257
 msgid "Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s"
 msgstr ""
 
+#. translators: %s - Resend Verification Link.
+#. translators: %s - Resend Verification Link.
 #. translators: %s - Resend Verification Link.
 #: includes/class-ur-email-confirmation.php:402
 #: includes/class-ur-user-approval.php:231
@@ -3355,6 +3366,7 @@ msgstr ""
 msgid "Edit Form"
 msgstr ""
 
+#. translators: %s - Form name.
 #. translators: %s - Form name.
 #: includes/class-ur-preview.php:121
 #: includes/class-ur-preview.php:168
@@ -5302,7 +5314,7 @@ msgid "Conditional Logic"
 msgstr ""
 
 #: includes/functions-ur-core.php:2316
-msgid "Use conditional logicsss"
+msgid "Use conditional logics"
 msgstr ""
 
 #: includes/functions-ur-core.php:2321
@@ -5317,6 +5329,12 @@ msgstr ""
 msgid "Checked"
 msgstr ""
 
+#. translators: %1$s: Activation error message
+#. translators: %1$s: Activation error message
+#. translators: %1$s: Activation error message
+#. translators: %1$s: Activation error message
+#. translators: %1$s: Activation error message
+#. translators: %1$s: Activation error message
 #. translators: %1$s: Activation error message
 #: includes/functions-ur-core.php:2464
 #: includes/functions-ur-core.php:2483

@@ -858,17 +858,8 @@
                   opacity: 0.5; }
                   .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item label input {
                     display: none; }
-            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button-customize-login {
-              max-width: 50%;
-              text-align: center; }
-            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-image-uploader {
-              max-width: 40%;
-              text-align: center; }
-            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-image-remover {
-              max-width: 40%;
-              text-align: center; }
-            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration-deactivate-license-key {
-              width: 25%;
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button, .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-button {
+              width: fit-content;
               text-align: center; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field #select-smart-tags {
               color: #2271B1;
