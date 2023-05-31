@@ -4,6 +4,7 @@
 * Refactor - Login process.
 * Feature  - Search global settings.
 * Enhance  - Redirection after registration.
+* Enhance  - Password strength check made more robust.
 * Enhance  - Changed checkbox and yes/no select option to toggle.
 * Enhance  - New smart tags added in email content and default value of fields.
 * Dev 	   - Compatibility for hidden field.

@@ -77,25 +77,27 @@ jQuery(function ($) {
 		 * @return {Int}
 		 */
 		checkPasswordStrength: function (wrapper, field) {
-			var meter = wrapper.find(".user-registration-password-strength");
-			var hint = wrapper.find(".user-registration-password-hint");
-			var hint_html =
-				'<small class="user-registration-password-hint">' +
-				ur_password_strength_meter_params.i18n_password_hint +
-				"</small>";
-			var submit_button = wrapper.find(
-				'input[type="submit"].user-registration-Button'
-			);
-			var minimum_password_strength = wrapper.attr(
-				"data-minimum-password-strength"
-			);
+			var meter = wrapper.find(".user-registration-password-strength"),
+				hint = wrapper.find(".user-registration-password-hint"),
+				minimum_password_strength = wrapper.attr(
+					"data-minimum-password-strength"
+				),
+				hint_name = "i18n_password_hint_" + minimum_password_strength,
+				hint_html =
+					'<small class="user-registration-password-hint">' +
+					ur_password_strength_meter_params[hint_name] +
+					"</small>",
+				submit_button = wrapper.find(
+					'input[type="submit"].user-registration-Button'
+				),
+				disallowedListArray = [];
 
-			var disallowedListArray = [];
 			if (
 				"function" ===
 				typeof wp.passwordStrength.userInputDisallowedList
 			) {
-				disallowedListArray = wp.passwordStrength.userInputDisallowedList();
+				disallowedListArray =
+					wp.passwordStrength.userInputDisallowedList();
 			} else {
 				disallowedListArray = wp.passwordStrength.userInputBlacklist();
 			}
@@ -106,38 +108,29 @@ jQuery(function ($) {
 				wrapper.find('input[data-id="user_login"]').val()
 			); // Add username in disallowedList.
 
-			var strength = wp.passwordStrength.meter(
+			var strength = ur_password_strength_meter.extraPasswordChecks(
 				field.val(),
 				disallowedListArray
 			);
 
-			var error = "";
 			// Reset
 			meter.removeClass("short bad good strong");
 			hint.remove();
+			meter.after(hint_html);
 
 			wrapper
 				.find(".user-registration-password-strength")
 				.attr("data-current-strength", strength);
 
-			if (strength >= minimum_password_strength) {
-				submit_button.prop("disabled", false);
-			} else {
-				submit_button.prop("disabled", true);
-			}
-
 			switch (strength) {
 				case 0:
 					meter.addClass("short").html(pwsL10n.shortpw);
-					meter.after(hint_html);
 					break;
 				case 1:
 					meter.addClass("bad").html(pwsL10n.bad);
-					meter.after(hint_html);
 					break;
 				case 2:
 					meter.addClass("good").html(pwsL10n.good);
-					meter.after(hint_html);
 					break;
 				case 3:
 				case 4:
@@ -147,6 +140,70 @@ jQuery(function ($) {
 					meter.addClass("short").html(pwsL10n.mismatch);
 					break;
 			}
+
+			if (strength >= minimum_password_strength) {
+				submit_button.prop("disabled", false);
+			} else {
+				submit_button.prop("disabled", true);
+			}
+
+			return strength;
+		},
+		/**
+		 *
+		 * @param string password Password provided by the user.
+		 * @param array disallowedListArray Disallowed List.
+		 * @returns
+		 */
+		extraPasswordChecks: function (password, disallowedListArray) {
+			var strength = wp.passwordStrength.meter(
+					password,
+					disallowedListArray
+				),
+				pattern = /[A-Z]/;
+
+			switch (strength) {
+				case 1:
+					if (!pattern.test(password)) {
+						strength = 0;
+					}
+					break;
+				case 2:
+					if (pattern.test(password)) {
+						pattern = /\d/;
+						if (!pattern.test(password)) {
+							strength = 1;
+						}
+					} else {
+						strength = 0;
+					}
+
+					break;
+				case 3:
+				case 4:
+					if (pattern.test(password)) {
+						pattern = /\d/;
+						if (pattern.test(password)) {
+							pattern = /[!@#$%^&*(),.?":{}|<>]/;
+							if (
+								pattern.test(password) &&
+								password.length >= 8
+							) {
+								strength = 4;
+							} else {
+								strength = 2;
+							}
+						} else {
+							strength = 1;
+						}
+					} else {
+						strength = 0;
+					}
+					break;
+				default:
+					strength = strength;
+			}
+
 			return strength;
 		},
 	};

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-23T08:49:17+00:00\n"
+"POT-Creation-Date: 2023-05-30T04:10:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: user-registration\n"
@@ -19,7 +19,7 @@ msgid "User Registration"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://wpeverest.com/plugins/user-registration"
+msgid "https://wpuserregistration.com/"
 msgstr ""
 
 #. Description of the plugin
@@ -283,7 +283,7 @@ msgid "Close Builder"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:318
-#: includes/admin/views/html-admin-page-forms.php:52
+#: includes/admin/views/html-admin-page-forms.php:55
 msgid "Preview Form"
 msgstr ""
 
@@ -304,15 +304,15 @@ msgid "Add New"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:332
-msgid "Minimum one uppercase letter"
+msgid "Minimum one letter"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:333
-msgid "Minimum one uppercase letter and a number"
+msgid "Minimum one uppercase letter and must be 4 characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:334
-msgid "Minimum one uppercase letter, a number and a special character"
+msgid "Minimum one uppercase letter, a number and must be 7 characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:335
@@ -638,7 +638,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-form-templates.php:98
 #: includes/admin/class-ur-admin-registrations-table-list.php:126
 #: includes/admin/views/html-admin-page-form-templates.php:100
-#: includes/admin/views/html-admin-page-forms.php:52
+#: includes/admin/views/html-admin-page-forms.php:55
 msgid "Preview"
 msgstr ""
 
@@ -783,7 +783,7 @@ msgid "Add to menu"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:821
-#: includes/admin/views/html-admin-page-forms.php:131
+#: includes/admin/views/html-admin-page-forms.php:134
 msgid "Untitled"
 msgstr ""
 
@@ -802,8 +802,8 @@ msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #: includes/admin/class-ur-admin-profile.php:60
-#: includes/admin/functions-ur-admin.php:149
-#: includes/admin/functions-ur-admin.php:212
+#: includes/admin/functions-ur-admin.php:150
+#: includes/admin/functions-ur-admin.php:213
 msgid "User Extra Information"
 msgstr ""
 
@@ -1022,7 +1022,7 @@ msgid "Select a Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:63
-#: includes/admin/views/html-admin-page-forms.php:74
+#: includes/admin/views/html-admin-page-forms.php:77
 #: includes/class-ur-form-block.php:65
 msgid "Form Settings"
 msgstr ""
@@ -1086,11 +1086,11 @@ msgstr ""
 msgid "loading..."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:232
+#: includes/admin/functions-ur-admin.php:233
 msgid "WordPress User Extra Information"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:426
+#: includes/admin/functions-ur-admin.php:427
 #: includes/admin/settings/class-ur-settings-general.php:34
 #: includes/admin/settings/class-ur-settings-general.php:76
 #: includes/admin/settings/class-ur-settings-general.php:370
@@ -1099,80 +1099,80 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:610
+#: includes/admin/functions-ur-admin.php:611
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:611
+#: includes/admin/functions-ur-admin.php:612
 msgid "No, Thanks"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:617
+#: includes/admin/functions-ur-admin.php:618
 msgid "Sure, I'd love to!"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:618
+#: includes/admin/functions-ur-admin.php:619
 msgid "I already did!"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:619
+#: includes/admin/functions-ur-admin.php:620
 msgid "Maybe later"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:620
+#: includes/admin/functions-ur-admin.php:621
 #: includes/class-ur-plugin-updater.php:615
 #: includes/class-ur-plugin-updater.php:638
 msgid "I have a query"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:622
+#: includes/admin/functions-ur-admin.php:623
 msgid "Never show again"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:645
+#: includes/admin/functions-ur-admin.php:646
 msgid "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:646
+#: includes/admin/functions-ur-admin.php:647
 msgid "Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. "
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:647
+#: includes/admin/functions-ur-admin.php:648
 msgid "Once again, thank you for choosing us! ❤️ <br>"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:657
+#: includes/admin/functions-ur-admin.php:658
 msgid "( The above word is just to draw your attention. <span class=\"dashicons dashicons-smiley smile-icon\"></span> )"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:658
+#: includes/admin/functions-ur-admin.php:659
 msgid "Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:659
+#: includes/admin/functions-ur-admin.php:660
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:678
+#: includes/admin/functions-ur-admin.php:679
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:683
+#: includes/admin/functions-ur-admin.php:684
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:707
-msgid "Help us improve the plugin's features by sharing <a href=\"https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
+#: includes/admin/functions-ur-admin.php:708
+msgid "Help us improve the plugin's features by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:717
-msgid "Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
+#: includes/admin/functions-ur-admin.php:718
+msgid "Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-captcha.php:34
@@ -1769,7 +1769,7 @@ msgid "Default WordPress login page wp-login.php will  be disabled."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:486
-msgid "Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href=\"https://docs.wpeverest.com/docs/user-registration/registration-form-and-login-form/how-to-show-login-form/\" target=\"_blank\">here</a>."
+msgid "Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-login-form/\" target=\"_blank\">here</a>."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:490
@@ -2008,7 +2008,7 @@ msgid "Allow Usage Tracking"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-misc.php:82
-msgid " Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
+msgid " Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
@@ -2408,7 +2408,7 @@ msgstr ""
 
 #. translators: %s - User Registration Extensions Catalog
 #: includes/admin/views/html-admin-page-addons.php:74
-msgid "Our catalog of User Registration Extensions can be found on WPEverest.com here: <a href=\"%s\">User Registration Extensions Catalog</a>"
+msgid "Our catalog of User Registration Extensions can be found on WPUserRegistration.com here: <a href=\"%s\">User Registration Extensions Catalog</a>"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-builder-setup.php:20
@@ -2521,47 +2521,47 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:50
+#: includes/admin/views/html-admin-page-forms.php:53
 msgid "Fullscreen"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:64
+#: includes/admin/views/html-admin-page-forms.php:67
 msgid "Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:66
+#: includes/admin/views/html-admin-page-forms.php:69
 msgid "Field Options"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:87
+#: includes/admin/views/html-admin-page-forms.php:90
 msgid "Whoops!"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:88
+#: includes/admin/views/html-admin-page-forms.php:91
 msgid "There is not any field that you were searching for."
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:90
+#: includes/admin/views/html-admin-page-forms.php:93
 msgid "Default User Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:93
+#: includes/admin/views/html-admin-page-forms.php:96
 msgid "Extra Fields"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:143
+#: includes/admin/views/html-admin-page-forms.php:146
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:144
+#: includes/admin/views/html-admin-page-forms.php:147
 msgid "Get Support"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:145
+#: includes/admin/views/html-admin-page-forms.php:148
 msgid "Create Login Form"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:146
+#: includes/admin/views/html-admin-page-forms.php:149
 msgid "Documentation"
 msgstr ""
 
@@ -2681,7 +2681,7 @@ msgstr ""
 
 #. translators: 1: License Page 2: Plugin Name
 #: includes/admin/views/html-notice-key-unvalidated.php:16
-msgid "%1$s Please enter your license key%2$s in the plugin list below to get updates for <strong>%3$s</strong> Add-Ons."
+msgid "%1$s Please enter your license key%2$s to get updates for <strong>%3$s</strong> Add-Ons."
 msgstr ""
 
 #: includes/admin/views/html-notice-php-deprecation.php:16
@@ -3071,8 +3071,8 @@ msgid "Please enter a valid phone number."
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:377
-#: includes/form/class-ur-form-field-user-login.php:87
-#: includes/form/class-ur-form-field-user-login.php:90
+#: includes/form/class-ur-form-field-user-login.php:91
+#: includes/form/class-ur-form-field-user-login.php:94
 msgid "Please enter a valid username."
 msgstr ""
 
@@ -3139,6 +3139,18 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:406
 msgid "Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:407
+msgid "Hint: Minimum one uppercase letter and must be 4 characters"
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:408
+msgid "Hint: Minimum one uppercase letter, a number and must be 7 characters"
+msgstr ""
+
+#: includes/class-ur-frontend-scripts.php:409
+msgid "Hint: Minimum one uppercase letter, a number, a special character and must be 8 characters"
 msgstr ""
 
 #: includes/class-ur-install.php:370
@@ -5318,7 +5330,7 @@ msgstr ""
 
 #. translators: %1$s - My account Link.
 #: includes/functions-ur-core.php:2786
-msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpeverest.com/user-registration/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" target=\"_blank\">How to setup My Account page</a>."
+msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
 #: includes/functions-ur-core.php:3296

@@ -510,7 +510,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
+			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
 			$link    .= '<li><a class="button button-secondary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License Key', 'user-registration' ) . '</a></li>';
 		}
 
@@ -612,7 +612,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<?php echo wp_kses_post( $update_addon_content ); ?>
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
-								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+								<li><a href="<?php echo esc_url_raw( 'https://wpuserregistration.com/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 							</ul>
 						</div>
 					</div>
@@ -635,7 +635,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
 								<?php echo esc_html( $license_key ) ? '<li><form method="post">' . wp_kses_post( $link ) . '</form></li>' : wp_kses_post( $link ); ?>
-								<li><a href="<?php echo esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+								<li><a href="<?php echo esc_url_raw( 'https://wpuserregistration.com/support/' ); ?>" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial" ></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 							</ul>
 						</div>
 					</div>
