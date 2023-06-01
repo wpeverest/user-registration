@@ -319,6 +319,55 @@
         "plus",
         "professional"
       ]
+	  },
+    {
+      "title": "Save and Continue",
+      "slug" : "user-registration-save-and-continue",
+      "name" : "User Registration Save and Continue",
+      "image": "extensions-json/sections/images/save-and-continue.png",
+      "excerpt": "With the Save and Continue add-on for User Registration, users can save their incomplete form progress and complete it later. It’s convenient, user-friendly, and reduces form abandonment.",
+      "link": "https://wpuserregistration.com/features/save-and-continue/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=save-and-continue",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Profile Completeness",
+      "slug" : "user-registration-profile-completeness",
+      "name" : "User Registration Profile Completeness",
+      "image": "extensions-json/sections/images/profile-completeness.png",
+      "excerpt": "Display your user's profile completeness status graphically to motivate them to complete their profiles and boost user engagement on your site.",
+      "link": "https://wpuserregistration.com/features/profile-completeness/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-completeness",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Klaviyo",
+      "slug" : "user-registration-klaviyo",
+      "name" : "User Registration Klaviyo",
+      "image": "extensions-json/sections/images/klaviyo.png",
+      "excerpt": "Integrate your WordPress registration forms with Klaviyo. It auto-syncs registered user data to Klaviyo and lets you launch targeted email campaigns for enhanced customer engagement.",
+      "link": "https://wpuserregistration.com/features/klaviyo/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=klaviyo",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
+	  },
+	  {
+      "title": "Post Submissions",
+      "slug" : "user-registration-post-submissions",
+      "name" : "User Registration Post Submissions",
+      "image": "extensions-json/sections/images/post-submission.png",
+      "excerpt": "Allow users to submit post content during registration. It streamlines the user-generated content submission process by eliminating the need for separate sign-up.",
+      "link": "https://wpuserregistration.com/features/post-submission/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=post-submission",
+      "plan" : [
+        "plus",
+        "professional"
+      ]
 	  }
   ]
 }

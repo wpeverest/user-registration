@@ -2551,18 +2551,32 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			$install_status = install_plugin_install_status( $api );
 
-			if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-				$status['activateUrl'] =
-				esc_url_raw(
-					add_query_arg(
-						array(
-							'action'   => 'activate',
-							'plugin'   => $install_status['file'],
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
-						),
-						admin_url( 'admin.php?page=user-registration-addons' )
-					)
-				);
+			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
+				if ( is_plugin_inactive( $install_status['file'] ) ) {
+					$status['activateUrl'] =
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'action'   => 'activate',
+								'plugin'   => $install_status['file'],
+								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+							),
+							admin_url( 'admin.php?page=user-registration-addons' )
+						)
+					);
+				} else {
+					$status['deActivateUrl'] =
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'action'   => 'deactivate',
+								'plugin'   => $install_status['file'],
+								'_wpnonce' => wp_create_nonce( 'deactivate-plugin_' . $install_status['file'] ),
+							),
+							admin_url( 'admin.php?page=user-registration-addons' )
+						)
+					);
+				}
 			}
 
 			$status['success'] = true;
