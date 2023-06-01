@@ -2932,7 +2932,7 @@ body {
 			 	&.swal2-icon-warning {
 					border-top: 6px solid #facea8;
 			 	}
-			}			
+			}
 
 			.swal2-header {
 				padding: $spacing_34px $spacing_40px 0 $spacing_40px;
@@ -2954,7 +2954,7 @@ body {
 			&.user-registration-swal2-no-button {
 				.swal2-header {
 					padding-bottom: $spacing_34px;
-				}	
+				}
 			}
 
 			.swal2-content {
@@ -3328,6 +3328,12 @@ body {
 					&:hover {
 						background: $primary_dark;
 						border-color: $primary_dark;
+					}
+
+					svg {
+						width: 18px;
+						height: 18px;
+						margin-bottom: 3px;
 					}
 				}
 			}

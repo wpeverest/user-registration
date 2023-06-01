@@ -126,6 +126,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',
+		$ur_screen_id . '_page_user-registration-content-restriction',
 		'profile',
 		'user-edit',
 	);
@@ -631,7 +632,7 @@ if ( ! function_exists( 'review_notice_content' ) ) {
 	 */
 	function review_notice_content() {
 
-		$form_users = get_users(
+		$form_users         = get_users(
 			array(
 				'meta_key' => 'ur_form_id',
 			)
@@ -705,7 +706,7 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 				sprintf(
 					'<br/><p>%s</p>',
 					__(
-						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 						'user-registration'
 					)
 				)
@@ -715,7 +716,7 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 				sprintf(
 					'<br/><p>%s</p>',
 					__(
-						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 						'user-registration'
 					)
 				)

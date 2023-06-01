@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			'user-registration'
 		);
 		?>
-		<a href="https://docs.wpeverest.com/user-registration/docs/php-version-lesser-than-7-2-is-not-supported/" target="_blank"><?php esc_html_e( 'Learn More', 'user-registration' ); ?> </a>
+		<a href="https://docs.wpuserregistration.com/docs/php-version-lesser-than-7-2-is-not-supported/" target="_blank"><?php esc_html_e( 'Learn More', 'user-registration' ); ?> </a>
 	</p>
 </div>
 

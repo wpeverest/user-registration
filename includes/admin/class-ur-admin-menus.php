@@ -561,7 +561,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					esc_html__( 'Upgrade to Pro', 'user-registration' )
 				),
 				'manage_options',
-				esc_url_raw( 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' )
+				esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' )
 			);
 		}
 
@@ -644,7 +644,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
 					'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
 					'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
-					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 					'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
 					'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),

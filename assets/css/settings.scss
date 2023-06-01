@@ -1306,23 +1306,8 @@ body {
 								}
 							}
 
-							.button-customize-login {
-								max-width: 50%;
-								text-align: center;
-							}
-
-							.ur-image-uploader {
-								max-width: 40%;
-								text-align: center;
-							}
-
-							.ur-image-remover {
-								max-width: 40%;
-								text-align: center;
-							}
-
-							.user_registration-deactivate-license-key {
-								width: 25%;
+							.button, .ur-button {
+								width: fit-content;
 								text-align: center;
 							}
 

@@ -11,9 +11,9 @@ assignees: ''
 We don't offer technical support on GitHub so we recommend using the following:
 
 **Reading our documentation**
-Usage docs can be found here: http://docs.wpeverest.com/docs/user-registration/
+Usage docs can be found here: https://docs.wpuserregistration.com/
 
-If you have a problem, you may want to start with the self help guide here: https://docs.wpeverest.com/docs/user-registration/troubleshooting/
+If you have a problem, you may want to start with the self help guide here: https://docs.wpuserregistration.com/docs-category/troubleshooting/
 
 **Technical support for premium extensions or if you're a WPEverest.com customer**
  from a human being - submit a ticket via the helpdesk
@@ -21,4 +21,4 @@ https://wpeverest.com/contact/
 
 **General usage and development questions**
 - WordPress.org Forums: https://wordpress.org/plugins/user-registration/
-- WPEverest free support portal: https://wpeverest.com/support-forum/forum/user-registration/
+- WPEverest free support portal: https://wpuserregistration.com/support/

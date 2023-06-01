@@ -38,7 +38,7 @@ const ConsentModal = (openPopup) => {
 						<Text fontSize="16px">
 							Help us improve the plugin's features by sharing{" "}
 							<Link
-								href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title"
+								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
 								isExternal
 								color="#475BB2"
 							>
@@ -52,7 +52,7 @@ const ConsentModal = (openPopup) => {
 							instant discount coupon with occasional email
 							updates by sharing{" "}
 							<Link
-								href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title"
+								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
 								isExternal
 								color="#475BB2"
 							>
