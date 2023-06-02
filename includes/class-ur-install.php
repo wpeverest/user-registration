@@ -143,8 +143,6 @@ class UR_Install {
 
 		$path = UR_UPLOAD_PATH . 'profile-pictures';
 
-		lg( $path, 'path' );
-
 		if ( ! is_dir( $path ) ) {
 			mkdir( $path, 0777, true );
 		}
