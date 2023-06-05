@@ -54,7 +54,8 @@ class UR_Frontend_Form_Handler {
 		}
 
 		$values = array(
-			'form_id' => $form_id,
+			'form_id'      => $form_id,
+			'process_type' => 'ur_process_before_registration',
 		);
 		foreach ( $form_data as $key => $value ) {
 			if ( 'user_email' === $value->field_name ) {

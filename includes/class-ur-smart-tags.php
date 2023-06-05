@@ -93,7 +93,7 @@ class UR_Smart_Tags {
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
 			$values    = wp_parse_args( $values, $default_values );
-			$user_data = UR_Emailer::user_data_smart_tags( $values['email'] );
+			$user_data = ! empty( $values['process_type'] ) && 'ur_process_before_registration' === $values['process_type'] ? array() : UR_Emailer::user_data_smart_tags( $values['email'] );
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
 				$user_data = array_merge( $user_data, $name_value );
 			}
