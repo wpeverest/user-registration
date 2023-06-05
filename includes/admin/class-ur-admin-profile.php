@@ -115,6 +115,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							if ( 'data-date-format' === $name ) {
 								$date_format = $value;
 							}
+							if ( 'data-default-date' === $name ) {
+								continue;
+							}
 							if ( 'data-mode' === $name ) {
 								$date_mode = $value;
 							}
@@ -221,7 +224,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											   id="<?php echo esc_attr( $key ); ?>" value="1"
 											   class="<?php echo esc_attr( $field['class'] ); ?>"
 																 <?php
-																	if ( '1' == $value ) {
+																	if ( ur_string_to_bool( $value ) ) {
 																		echo 'checked="checked"';
 																	}
 																	?>
@@ -255,7 +258,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 														$value      = date_i18n( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date_i18n( $date_format, strtotime( trim( $date_range[1] ) ) );
 													}
 													?>
-									<input type="text" 
+									<input type="text"
 										   value="<?php echo esc_attr( $actual_value ); ?>"
 										   class="ur-flatpickr-field regular-text"
 										   data-id = '<?php echo esc_attr( $key ); ?>'
@@ -540,7 +543,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$date_format                    = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
 									$fields[ $field_index ]['attributes']['data-date-format'] = $date_format;
 
-									if ( isset( $field->advance_setting->enable_min_max ) && 'true' === $field->advance_setting->enable_min_max ) {
+									if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
 										if ( ! empty( $field->advance_setting->min_date ) ) {
 											$min_date = str_replace( '/', '-', $field->advance_setting->min_date );
 											$fields[ $field_index ]['attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
@@ -553,12 +556,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									}
 
 									if ( ! empty( $field->advance_setting->set_current_date ) ) {
-										$set_current_date = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+										$set_current_date = isset( $field->advance_setting->set_current_date ) ? ur_string_to_bool( $field->advance_setting->set_current_date ) : '';
 										$fields[ $field_index ]['attributes']['data-default-date'] = $set_current_date;
 									}
 
 									if ( ! empty( $field->advance_setting->enable_date_range ) ) {
-										$enable_date_range                                 = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+										$enable_date_range                                 = isset( $field->advance_setting->enable_date_range ) ? ur_string_to_bool( $field->advance_setting->enable_date_range ) : '';
 										$fields[ $field_index ]['attributes']['data-mode'] = $enable_date_range;
 									}
 

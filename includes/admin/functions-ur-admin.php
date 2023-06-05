@@ -126,6 +126,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',
+		$ur_screen_id . '_page_user-registration-content-restriction',
 		'profile',
 		'user-edit',
 	);
@@ -456,7 +457,7 @@ function ur_update_form_settings( $setting_data, $form_id ) {
 		}
 	}
 
-	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id );
+	$setting_fields = apply_filters( 'user_registration_form_settings_save', ur_admin_form_settings_fields( $form_id ), $form_id, $setting_data );
 
 	foreach ( $setting_fields as $field_data ) {
 		if ( isset( $field_data['id'] ) && isset( $remap_setting_data[ $field_data['id'] ] ) ) {
@@ -617,7 +618,7 @@ function promotional_notice_links( $notice_type, $notice_target_link = '#' ) {
 			<li><a class="button button-primary" href="<?php echo esc_url( $notice_target_link ); ?>" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
 			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
 			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
-			<li><a href="https://wpeverest.com/support-forum/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+			<li><a href="https://wpeverest.com/support-ticket/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 		</ul>
 		<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
@@ -631,18 +632,39 @@ if ( ! function_exists( 'review_notice_content' ) ) {
 	 */
 	function review_notice_content() {
 
-		echo wp_kses_post(
-			sprintf(
-				"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-				__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
-				__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
-				__(
-					'<strong>What benefit would you have?</strong> <br>
-				Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-					'user-registration'
-				)
+		$form_users         = get_users(
+			array(
+				'meta_key' => 'ur_form_id',
 			)
 		);
+		$total_registration = count( $form_users );
+
+		if ( 20 <= $total_registration ) {
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
+					__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
+					__(
+						'Once again, thank you for choosing us! ❤️ <br>',
+						'user-registration'
+					)
+				)
+			);
+		} else {
+			echo wp_kses_post(
+				sprintf(
+					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+					__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
+					__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+					__(
+						'<strong>What benefit would you have?</strong> <br>
+					Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+						'user-registration'
+					)
+				)
+			);
+		}
 	}
 }
 
@@ -684,7 +706,7 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 				sprintf(
 					'<br/><p>%s</p>',
 					__(
-						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 						'user-registration'
 					)
 				)
@@ -694,7 +716,7 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 				sprintf(
 					'<br/><p>%s</p>',
 					__(
-						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 						'user-registration'
 					)
 				)

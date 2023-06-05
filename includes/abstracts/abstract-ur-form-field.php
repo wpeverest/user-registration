@@ -137,14 +137,14 @@ abstract class UR_Form_Field {
 		$form_data['field_key'] = $field_key;
 		$form_data['icon']      = $data['icon'];
 
-		if ( isset( $form_data['hide_label'] ) && 'yes' === $form_data['hide_label'] ) {
+		if ( isset( $form_data['hide_label'] ) && ur_string_to_bool( $form_data['hide_label'] ) ) {
 			unset( $form_data['label'] );
 		}
 
 		if ( isset( $data['general_setting']->required ) ) {
 
 			if ( in_array( $field_key, ur_get_required_fields() )
-				|| 'yes' === $data['general_setting']->required ) {
+				|| ur_string_to_bool( $data['general_setting']->required ) ) {
 
 				$form_data['required']                      = true;
 				$form_data['custom_attributes']['required'] = 'required';
@@ -183,6 +183,10 @@ abstract class UR_Form_Field {
 			$form_data['valid_file_type'] = $data['advance_setting']->valid_file_type;
 		}
 
+		if ( isset( $data['advance_setting']->enable_crop_picture ) ) {
+			$form_data['enable_crop_picture'] = $data['advance_setting']->enable_crop_picture;
+		}
+
 		$form_data['input_class'] = array( 'ur-frontend-field ' );
 
 		if ( isset( $data['advance_setting']->custom_class ) ) {
@@ -194,7 +198,7 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
-		if ( isset( $data['advance_setting']->enable_min_max ) && 'true' === $data['advance_setting']->enable_min_max ) {
+		if ( isset( $data['advance_setting']->enable_min_max ) && ur_string_to_bool( $data['advance_setting']->enable_min_max ) ) {
 			if ( isset( $data['advance_setting']->min_date ) ) {
 				$min_date                                        = str_replace( '/', '-', $data['advance_setting']->min_date );
 				$form_data['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $data['advance_setting']->date_format, strtotime( $min_date ) ) : '';
@@ -207,11 +211,11 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->set_current_date ) ) {
-			$form_data['custom_attributes']['data-default-date'] = $data['advance_setting']->set_current_date;
+			$form_data['custom_attributes']['data-default-date'] = ur_string_to_bool( $data['advance_setting']->set_current_date );
 		}
 
 		if ( isset( $data['advance_setting']->enable_date_range ) ) {
-			$form_data['custom_attributes']['data-mode'] = $data['advance_setting']->enable_date_range;
+			$form_data['custom_attributes']['data-mode'] = ur_string_to_bool( $data['advance_setting']->enable_date_range );
 		}
 
 		if ( isset( $data['advance_setting']->date_localization ) ) {
@@ -266,7 +270,7 @@ abstract class UR_Form_Field {
 
 			if ( 'multi_select2' === $field_key ) {
 				$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
-				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+				$form_data['select_all']   = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			}
 		}
 
@@ -285,7 +289,7 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'checkbox' === $field_key ) {
-			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options                 = array();
@@ -300,9 +304,13 @@ abstract class UR_Form_Field {
 
 			$form_data['choice_limit'] = isset( $data['advance_setting']->choice_limit ) ? $data['advance_setting']->choice_limit : '';
 		}
+		if ( 'single_item' === $field_key ) {
+			$form_data['enable_selling_price_single_item'] = isset( $data['advance_setting']->enable_selling_price_single_item ) ? ur_string_to_bool( $data['advance_setting']->enable_selling_price_single_item ) : '';
+			$form_data['selling_price']                    = isset( $data['advance_setting']->selling_price ) ? $data['advance_setting']->selling_price : '';
+		}
 
 		if ( 'multiple_choice' === $field_key ) {
-			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? $data['advance_setting']->select_all : '';
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
 			$options                 = array();
@@ -310,8 +318,9 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option->label ] = array(
-						'label' => $option->label,
-						'value' => $option->value,
+						'label'      => $option->label,
+						'value'      => $option->value,
+						'sell_value' => $option->sell_value,
 					);
 				}
 
@@ -331,13 +340,13 @@ abstract class UR_Form_Field {
 			$form_data['range_min']             = ( isset( $data['advance_setting']->range_min ) && '' !== $data['advance_setting']->range_min ) ? $data['advance_setting']->range_min : '0';
 			$form_data['range_max']             = ( isset( $data['advance_setting']->range_max ) && '' !== $data['advance_setting']->range_max ) ? $data['advance_setting']->range_max : '10';
 			$form_data['range_step']            = isset( $data['advance_setting']->range_step ) ? $data['advance_setting']->range_step : '';
-			$enable_prefix_postfix              = isset( $data['advance_setting']->enable_prefix_postfix ) ? $data['advance_setting']->enable_prefix_postfix : 'false';
-			$enable_text_prefix_postfix         = isset( $data['advance_setting']->enable_text_prefix_postfix ) ? $data['advance_setting']->enable_text_prefix_postfix : 'false';
-			$form_data['enable_payment_slider'] = isset( $data['advance_setting']->enable_payment_slider ) ? $data['advance_setting']->enable_payment_slider : 'false';
+			$enable_prefix_postfix              = isset( $data['advance_setting']->enable_prefix_postfix ) ? ur_string_to_bool( $data['advance_setting']->enable_prefix_postfix ) : false;
+			$enable_text_prefix_postfix         = isset( $data['advance_setting']->enable_text_prefix_postfix ) ? ur_string_to_bool( $data['advance_setting']->enable_text_prefix_postfix ) : false;
+			$form_data['enable_payment_slider'] = isset( $data['advance_setting']->enable_payment_slider ) ? ur_string_to_bool( $data['advance_setting']->enable_payment_slider ) : false;
 
-			if ( 'true' === $enable_prefix_postfix ) {
+			if ( $enable_prefix_postfix ) {
 
-				if ( 'true' === $enable_text_prefix_postfix ) {
+				if ( $enable_text_prefix_postfix ) {
 					$form_data['range_prefix']  = isset( $data['advance_setting']->range_prefix ) ? $data['advance_setting']->range_prefix : '';
 					$form_data['range_postfix'] = isset( $data['advance_setting']->range_postfix ) ? $data['advance_setting']->range_postfix : '';
 				} else {
@@ -434,12 +443,21 @@ abstract class UR_Form_Field {
 		$general_setting_html = '';
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
-			$tooltip_html             = ! empty( $setting_value['tip'] ) ? ur_help_tip( $setting_value['tip'], false, 'ur-portal-tooltip' ) : '';
-			$setting_id               = isset( $setting_value['setting_id'] ) ? $setting_value['setting_id'] : str_replace( ' ', '-', strtolower( $setting_value['label'] ) );
-			$general_setting_wrapper  = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . $setting_id . '">';
-			$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . ( isset( $setting_value['add_bulk_options'] ) ? $setting_value['add_bulk_options'] : '' ) . '</label>';
-			$sub_string_key           = substr( $this->id, strlen( 'user_registration_' ), 5 );
-			$strip_prefix             = substr( $this->id, 18 );
+			$tooltip_html            = ! empty( $setting_value['tip'] ) ? ur_help_tip( $setting_value['tip'], false, 'ur-portal-tooltip' ) : '';
+			$setting_id              = isset( $setting_value['setting_id'] ) ? $setting_value['setting_id'] : str_replace( ' ', '-', strtolower( $setting_value['label'] ) );
+			$general_setting_wrapper = '<div class="ur-general-setting ur-setting-' . $setting_value['type'] . ' ur-general-setting-' . $setting_id . '">';
+
+			if ( 'toggle' !== $setting_value['type'] ) {
+				$general_setting_wrapper .= '<label for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . ( isset( $setting_value['add_bulk_options'] ) ? $setting_value['add_bulk_options'] : '' ) . '</label>';
+			}
+
+			$sub_string_key = substr( $this->id, strlen( 'user_registration_' ), 5 );
+			$strip_prefix   = substr( $this->id, 18 );
+
+			$smart_tags = '';
+			if ( 'hidden_value' === $setting_key ) {
+				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
+			}
 
 			switch ( $setting_value['type'] ) {
 				case 'text':
@@ -516,10 +534,11 @@ abstract class UR_Form_Field {
 						foreach ( $options as $key => $option ) {
 							$label                    = is_array( $option ) ? $option['label'] : $option->label;
 							$value                    = is_array( $option ) ? $option['value'] : $option->value;
+							$sell_value               = ( is_array( $option ) && isset( $option['sell_value'] ) ) ? $option['sell_value'] : ( ( is_object( $option ) && isset( $option->sell_value ) ) ? $option->sell_value : null );
 							$currency                 = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies               = ur_payment_integration_get_currencies();
 							$currency                 = $currency . ' ' . $currencies[ $currency ]['symbol'];
-							$general_setting_wrapper .= '<li>';
+							$general_setting_wrapper .= '<li class="ur-multiple-choice">';
 							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 							</div>';
@@ -534,9 +553,10 @@ abstract class UR_Form_Field {
 								$general_setting_wrapper .= '/>';
 							}
 							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " >';
+							$general_setting_wrapper .= '<div class="ur-regular-price"><span>Regular Price</span><input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " ></div>';
+							$general_setting_wrapper .= '<div class="ur-selling-price"><span>Selling Price</span><input value="' . esc_attr( $sell_value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-' . esc_attr( $setting_value['type'] ) . '-selling-price-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_selling_value" data-currency=" ' . esc_attr( $currency ) . ' " placeholder="0.00"></div>';
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
-							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a><br/>';
+							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
 							$general_setting_wrapper .= '</li>';
 						}
 					} else {
@@ -569,7 +589,24 @@ abstract class UR_Form_Field {
 					}
 						$general_setting_wrapper .= '</ul>';
 					break;
+				case 'toggle':
+					$disabled = '';
 
+					// To make invite code required field non editable.
+					if ( 'required' === $setting_key && 'invite_code' === $strip_prefix ) {
+						$disabled = 'disabled';
+					}
+
+					$general_setting_wrapper .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
+					$general_setting_wrapper .= '<label class="ur-label checkbox" for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . '</label>';
+					$general_setting_wrapper .= '<span class="user-registration-toggle-form">';
+					$value                    = $this->get_general_setting_data( $setting_key ) === 1 && isset( $setting_value['default'] ) ? $setting_value['default'] : $this->get_general_setting_data( $setting_key );
+					$checked                  = ur_string_to_bool( $this->get_general_setting_data( $setting_key ) ) ? 'checked' : '';
+					$general_setting_wrapper .= '<input type="checkbox" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $checked . ' ' . $disabled . '>';
+					$general_setting_wrapper .= '<span class="slider round"></span>';
+					$general_setting_wrapper .= '</span>';
+					$general_setting_wrapper .= '</div>';
+					break;
 				case 'select':
 					if ( isset( $setting_value['options'] )
 						&& gettype( $setting_value['options'] ) == 'array' ) {
@@ -628,6 +665,7 @@ abstract class UR_Form_Field {
 					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
 
+			$general_setting_wrapper .= $smart_tags;
 			$general_setting_wrapper .= '</div>';
 			$general_setting_html    .= $general_setting_wrapper;
 

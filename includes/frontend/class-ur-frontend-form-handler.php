@@ -98,6 +98,8 @@ class UR_Frontend_Form_Handler {
 				$userdata['user_login'] = $username;
 			}
 
+			$userdata = apply_filters( 'user_registration_before_insert_user', $userdata );
+
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
@@ -114,7 +116,7 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
 					}
-				} elseif ( '1' === ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', 'no' ) ) {
+				} elseif ( ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', false ) ) ) {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
@@ -122,7 +124,8 @@ class UR_Frontend_Form_Handler {
 
 					if ( 'auto_login' === $login_option ) {
 						wp_clear_auth_cookie();
-						wp_set_auth_cookie( $user_id );
+						$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+						wp_set_auth_cookie( $user_id, $remember );
 						$success_params['auto_login'] = true;
 					}
 				}
@@ -160,6 +163,7 @@ class UR_Frontend_Form_Handler {
 						}
 					}
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
+					$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
 					wp_send_json_success( $success_params );
 				}
 			}
@@ -195,16 +199,6 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 		return ( $form_field_data_array );
-	}
-
-	/**
-	 * Sanitize form data
-	 *
-	 * @deprecated 2.3.4
-	 * @param  obj $form_data Form data.
-	 */
-	public static function get_sanitize_value( &$form_data ) {
-		ur_deprecated_function( 'UR_Frontend_Form_Handler::get_sanitize_value', '2.3.4', 'UR_Form_Validation::get_sanitize_value' );
 	}
 
 	/**

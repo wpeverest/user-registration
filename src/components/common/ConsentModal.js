@@ -38,9 +38,9 @@ const ConsentModal = (openPopup) => {
 						<Text fontSize="16px">
 							Help us improve the plugin's features by sharing{" "}
 							<Link
-								href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title"
+								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
 								isExternal
-								color="teal.500"
+								color="#475BB2"
 							>
 								non-sensitive plugin data
 							</Link>{" "}
@@ -52,9 +52,9 @@ const ConsentModal = (openPopup) => {
 							instant discount coupon with occasional email
 							updates by sharing{" "}
 							<Link
-								href="https://docs.wpeverest.com/user-registration/docs/miscellaneous-settings/#1-toc-title"
+								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
 								isExternal
-								color="teal.500"
+								color="#475BB2"
 							>
 								non-sensitive plugin data
 							</Link>{" "}
@@ -65,6 +65,15 @@ const ConsentModal = (openPopup) => {
 
 				<ModalFooter>
 					<Button
+						variant="ghost"
+						onClick={() => {
+							closeModal("disallow");
+							setIsPopupOpen(false);
+						}}
+					>
+						No Thanks
+					</Button>
+					<Button
 						colorScheme="blue"
 						mr={3}
 						onClick={() => {
@@ -73,15 +82,6 @@ const ConsentModal = (openPopup) => {
 						}}
 					>
 						Allow
-					</Button>
-					<Button
-						variant="ghost"
-						onClick={() => {
-							closeModal("disallow");
-							setIsPopupOpen(false);
-						}}
-					>
-						No Thanks
 					</Button>
 				</ModalFooter>
 			</ModalContent>

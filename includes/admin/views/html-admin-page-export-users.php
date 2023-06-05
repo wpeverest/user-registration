@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<h3 class="ur-settings-section-header main_header"></h3>
 <div class="ur-export-users-page">
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">
@@ -23,7 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 
 						<p>
-							<select name="export_users" class="ur-input forms-list">
+							<select name="export_users" id="selected-export-user-form" class="ur-input forms-list">
+								<option value="" ><?php esc_html_e( 'Select Form', 'user-registration' ); ?></option>
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {
 									echo '<option value ="' . esc_attr( $form_id ) . '">' . esc_html( $form ) . '</option>';
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 						<?php do_action( 'user_registration_custom_export_template', array_keys( $all_forms )[0] ); ?>
 
-						<input type="submit" class="button button-primary" name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
+						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
 
 					</div>
 				</div><!-- .postbox -->

@@ -12,7 +12,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.wpeverest.com/user-registration/template-structure/
+ * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -36,11 +36,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
 		if ( is_numeric( $profile_picture_url ) ) {
-			$profile_picture_url  = wp_get_attachment_url( $profile_picture_url );
+			$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 		}
-			$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+			$image = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 
-		if ( 'no' === get_option( 'user_registration_disable_profile_picture', 'no' ) ) {
+		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 
 			?>
 					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">

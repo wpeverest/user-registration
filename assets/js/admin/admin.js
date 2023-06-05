@@ -24,15 +24,17 @@ jQuery(function ($) {
 			var search_result_fields_count = $(this).find(
 				".ur-registered-item.ur-searched-item"
 			).length;
-			var hr = $(this).prev("hr");
-			var heading = $(this).prev("hr").prev(".ur-toggle-heading");
+			var hr = $(this).prev("hr"),
+				heading = $(this).prev("hr").prev(".ur-toggle-heading");
 
 			if (0 === search_result_fields_count) {
 				hr.hide();
 				heading.hide();
+				$(this).hide();
 			} else {
 				hr.show();
 				heading.show();
+				$(this).show();
 			}
 		});
 
@@ -44,38 +46,118 @@ jQuery(function ($) {
 		}
 	});
 
+	//Bind UI Actions for locked fields
+	$(document).on("mousedown", ".ur-locked-field", function (e) {
+		e.preventDefault();
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+		var field_data = $(this).data("field-data");
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			field_data.title +
+			"</span>";
+		Swal.fire({
+			title: title,
+			html: field_data.message,
+			showCloseButton: true,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
+			confirmButtonText: field_data.button_title,
+		}).then(function (result) {
+			if (result.value) {
+				var url = field_data.link;
+				window.open(url, "_blank");
+			}
+		});
+	});
 	// Bind UI Actions for upgradable fields
 	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
 		e.preventDefault();
 
-		var icon = '<i class="dashicons dashicons-lock"></i>';
-		var label = $(this).text();
-		var title =
-			icon +
-			'<span class="user-registration-swal2-modal__title">' +
-			label +
-			" is a premium field.</span>";
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 		var plan = $(this).data("plan");
-		var message =
-			label +
-			" field is locked. Upgrade to <strong>" +
-			plan +
-			"</strong> to unlock this field.";
+		var name = $(this).data("name");
+		var slug = $(this).data("slug"),
+			$this = $(this);
 
-		Swal.fire({
-			title: title,
-			html: message,
-			customClass:
-				"user-registration-swal2-modal user-registration-swal2-modal--centered",
-			showCloseButton: true,
-			confirmButtonText: "View Pricing",
-		}).then(function (result) {
-			if (result.value) {
-				var url =
-					"https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro";
-				window.open(url, "_blank");
-			}
-		});
+		if (slug != "" && plan != "") {
+			$.ajax({
+				url: user_registration_locked_form_fields_notice_params.ajax_url,
+				type: "POST",
+				data: {
+					action: "user_registration_locked_form_fields_notice",
+					slug: slug,
+					plan: plan,
+					name: name,
+					security:
+						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
+				},
+				success: function (response) {
+					var action_button = $(response.data.action_button).find(
+						"a"
+					);
+
+					if (!action_button.length) {
+						action_button = $(response.data.action_button).find(
+							"form"
+						);
+					}
+
+					var title =
+						icon +
+						'<span class="user-registration-swal2-modal__title" > ';
+
+					if (action_button.hasClass("activate-license-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.license_activation_required_message;
+						title +=
+							user_registration_locked_form_fields_notice_params.license_activation_required_title;
+					} else if (action_button.hasClass("activate-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.activation_required_title;
+					} else if (action_button.hasClass("install-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.installation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.installation_required_title;
+					} else {
+						var message =
+							user_registration_locked_form_fields_notice_params.unlock_message
+								.replace("%field%", $this.text())
+								.replace("%plan%", plan);
+						title +=
+							$this.text() +
+							" " +
+							user_registration_locked_form_fields_notice_params.lock_message;
+					}
+
+					title += "</span>";
+					message =
+						message + "<br><br>" + response.data.action_button;
+					Swal.fire({
+						title: title,
+						html: message,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+						showCloseButton: true,
+						showConfirmButton: false,
+						allowOutsideClick: false,
+					}).then(function (result) {
+						// Do Nothing.
+					});
+				},
+			});
+		}
 	});
 
 	// Adjust builder width
@@ -126,6 +208,9 @@ jQuery(function ($) {
 		}
 	);
 
+	$("#ur-form-name").on("change", function () {
+		$(".ur-form-title").text($(this).val());
+	});
 	// In case the user goes out of focus from title edit state.
 	$(document)
 		.not($(".user-registration-editable-title"))
@@ -179,6 +264,37 @@ jQuery(function ($) {
 							suppressScrollX: true,
 						}
 					);
+
+					var collapseBtn = document.querySelector("#ur-collapse");
+
+					collapseBtn.addEventListener("click", function () {
+						if (collapseBtn.classList.contains("open")) {
+							$(collapseBtn).removeClass("open");
+							$(collapseBtn).addClass("close");
+						} else {
+							$(collapseBtn).addClass("open");
+							$(collapseBtn).removeClass("close");
+						}
+
+						var targetEl = document.querySelector(
+							".ur-registered-inputs"
+						);
+
+						if (targetEl.classList.contains("collapsed")) {
+							targetEl.classList.remove("collapsed");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.show();
+							$(".ur-registered-inputs").css("width", "412px");
+							window.ur_tab_scrollbar.update(); // Refresh the scrollbar
+						} else {
+							targetEl.classList.add("collapsed");
+							$(".ur-registered-inputs").css("width", "0px");
+							$(".ur-registered-inputs")
+								.find("nav.ur-tabs")
+								.hide();
+						}
+					});
 				} else if ("undefined" !== typeof window.ur_tab_scrollbar) {
 					window.ur_tab_scrollbar.update();
 					tab_content.scrollTop(0);
@@ -293,28 +409,37 @@ jQuery(function ($) {
 	);
 	var enable_strong_password = strong_password_field.is(":checked");
 
-	if ("yes" === enable_strong_password || true === enable_strong_password) {
+	if (enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
 		minimum_password_strength_wrapper_field.hide();
 	}
 	var password_strength_option = minimum_password_strength_wrapper_field.find(
-		"#user_registration_form_setting_minimum_password_strength"
+		"[data-id='user_registration_form_setting_minimum_password_strength']"
 	);
 
 	// show password strength info.
 	$(document).ready(function () {
 		var strength_info = "";
 		var password_hint = "";
-		var password_strength_value = password_strength_option
-			.find(":selected")
-			.val();
-		show_password_strength_info(password_strength_value);
+
+		password_strength_option.each(function () {
+			if ($(this).is(":checked")) {
+				var password_strength_value = $(this).val();
+				show_password_strength_info(password_strength_value);
+			}
+		});
 
 		$(password_strength_option).on("change", function () {
-			password_hint =
-				minimum_password_strength_wrapper_field.find("span");
-			$strength = $(this).find(":selected").val();
+			password_hint = minimum_password_strength_wrapper_field
+				.find("span")
+				.not(".user-registration-help-tip");
+			var $strength = "";
+
+			if ($(this).is(":checked")) {
+				$strength = $(this).val();
+			}
+
 			password_hint.remove();
 			show_password_strength_info($strength);
 		});
@@ -342,7 +467,9 @@ jQuery(function ($) {
 					break;
 			}
 			minimum_password_strength_wrapper_field.append(
-				"<span class='description'>" + strength_info + "</span>"
+				"<span class='description' style='margin-bottom: 20px'>" +
+					strength_info +
+					"</span>"
 			);
 		}
 	});
@@ -350,24 +477,61 @@ jQuery(function ($) {
 	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
-		if (
-			"yes" === enable_strong_password ||
-			true === enable_strong_password
-		) {
+		if (enable_strong_password) {
 			minimum_password_strength_wrapper_field.show("slow");
 		} else {
 			minimum_password_strength_wrapper_field.hide("slow");
 		}
 	});
 
+	$(document).ready(function () {
+		hide_show_redirection_options();
+
+		$("#user_registration_form_setting_redirect_after_registration").on(
+			"change",
+			hide_show_redirection_options
+		);
+	});
+
+	/**
+	 * Hide or Show Redirection settings.
+	 */
+	var hide_show_redirection_options = function () {
+		var redirect_after_registration = $(
+			"#user_registration_form_setting_redirect_after_registration"
+		);
+		var selected_redirection_option =
+			redirect_after_registration.find(":selected");
+		var custom_redirection_page = $(
+			"#user_registration_form_setting_redirect_page"
+		)
+			.closest(".form-row")
+			.slideUp(800);
+		var redirect_url = $("#user_registration_form_setting_redirect_options")
+			.closest(".form-row")
+			.slideUp(800);
+
+		if (selected_redirection_option.length) {
+			switch (selected_redirection_option.val()) {
+				case "internal-page":
+					custom_redirection_page.slideDown(800);
+					break;
+				case "external-url":
+					redirect_url.slideDown(800);
+					break;
+				default:
+					break;
+			}
+		}
+	};
+
 	// Tooltips
 	$(document.body)
 		.on("init_tooltips", function () {
 			ur_init_tooltips(".tips, .help_tip, .user-registration-help-tip");
-			ur_init_tooltips(
-				".ur-copy-shortcode, .ur-portal-tooltip",
-				{ keepAlive: false }
-			);
+			ur_init_tooltips(".ur-copy-shortcode, .ur-portal-tooltip", {
+				keepAlive: false,
+			});
 
 			// Add Tooltipster to parent element for widefat tables
 			$(".parent-tips").each(function () {
@@ -465,7 +629,8 @@ jQuery(function ($) {
 			},
 			type: "post",
 			beforeSend: function () {
-				var spinner = '<span class="ur-spinner is-active"></span>';
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
 				$(".user_registration_send_email_test").append(spinner);
 			},
 			complete: function (response) {
@@ -478,13 +643,17 @@ jQuery(function ($) {
 						'<div class="success notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				} else {
 					message_string =
 						'<div class="error notice notice-success is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
-					$(".user-registration-header").after(message_string);
+					$(".user-registration-options-container").prepend(
+						message_string
+					);
 				}
 				$(
 					".user-registration_page_user-registration-settings .notice"
@@ -497,20 +666,19 @@ jQuery(function ($) {
 	// Email Status
 	$(".user-registration-email-status-toggle").on("change", function (e) {
 		e.preventDefault();
-		var status = $(this).find('input[type="checkbox"]:checked').val();
-		var id = $(this).find('input[type="checkbox"]').attr('id');
+		var status = $(this).find('input[type="checkbox"]').is(":checked");
+		var id = $(this).find('input[type="checkbox"]').attr("id");
 		$.ajax({
 			url: user_registration_email_setting_status.ajax_url,
 			type: "POST",
 			data: {
 				action: "user_registration_email_setting_status",
 				status: status,
-				id : id,
-				security : user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+				id: id,
+				security:
+					user_registration_email_setting_status.user_registration_email_setting_status_nonce,
 			},
-			success: function (response) {
-
-			},
+			success: function (response) {},
 		});
 	});
 });
@@ -574,16 +742,33 @@ jQuery(function ($) {
 		});
 
 		$(".ur_export_form_action_button").on("click", function () {
-			var formid = $('#selected-export-forms').val();
-			$(document).find('#message').remove();
-			if(formid.length === 0) {
-				message_string ='<div id="message" class="error inline ur-import_notice"><p><strong>' + user_registration_admin_data.export_error_message+ '</strong></p></div>';
+			var formid = $("#selected-export-forms").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
 				$(".ur-export-users-page").prepend(message_string);
 			} else {
-				$('.ur_export_form_action_button').attr('type','submit');
+				$(".ur_export_form_action_button").attr("type", "submit");
 			}
+		});
+		$(".ur_export_user_action_button").on("click", function () {
+			var formid = $("#selected-export-user-form").val();
+			$(document).find("#message").remove();
+			if (formid.length === 0) {
+				message_string =
+					'<div id="message" class="error inline ur-import_notice"><p><strong>' +
+					user_registration_admin_data.export_error_message +
+					"</strong></p></div>";
+				$(".ur-export-users-page").prepend(message_string);
+			} else {
+				$(".ur_export_user_action_button").attr("type", "submit");
+			}
+		});
 	});
-})})(jQuery, window.user_registration_admin_data);
+})(jQuery, window.user_registration_admin_data);
 
 /**
  * Set tooltips for specified elements.
@@ -641,7 +826,7 @@ function ur_confirmation(message, options) {
 		options.title;
 	Swal.fire({
 		customClass:
-			"user-registration-swal2-modal user-registration-swal2-modal--centered",
+			"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-trashed",
 		title: title,
 		text: message,
 		showCancelButton:

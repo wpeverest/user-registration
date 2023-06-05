@@ -1,9 +1,9 @@
 <?php //phpcs:ignore
 /**
  * Plugin Name: User Registration
- * Plugin URI: https://wpeverest.com/plugins/user-registration
+ * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 2.3.3.1
+ * Version: 3.0
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.3.3.1';
+		public $version = '3.0';
 
 		/**
 		 * Session instance.
@@ -188,7 +188,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
-			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php'; // User Approval class.
+			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php';
+			include_once UR_ABSPATH . 'includes/class-ur-smart-tags.php'; // User Approval class.
 			include_once UR_ABSPATH . 'includes/class-ur-emailer.php';
 			include_once UR_ABSPATH . 'includes/class-ur-ajax.php';
 			include_once UR_ABSPATH . 'includes/class-ur-query.php';
@@ -358,8 +359,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
 				$new_plugin_meta = array(
-					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpeverest.com/user-registration/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
-					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpeverest.com/support-forum/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpuserregistration.com/support/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
 				);
 
 				return array_merge( $plugin_meta, $new_plugin_meta );

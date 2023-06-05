@@ -3,6 +3,9 @@
 	position: relative;
 	overflow-x: auto;
 	overflow-y: hidden;
+	display: flex;
+	// margin: 0 0 36px;
+	gap: 20px;
 
 	&__items {
 		display: flex;
@@ -11,6 +14,7 @@
 		overflow-y: hidden;
 		white-space: nowrap;
 		scroll-behavior: smooth;
+		width: 100%;
 
 		&::-webkit-scrollbar {
 			display: none;
@@ -26,10 +30,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		padding: 8px;
+		padding-bottom: 13px;
 
 		&--backward {
 			left: 0;
@@ -42,6 +43,7 @@
 		&__icon {
 			color: #333;
 			cursor: pointer;
+			margin-bottom: 5px;
 		}
 	}
 

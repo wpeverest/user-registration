@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 					<p><?php esc_html_e( 'Let\'s get started with the first contact forms for your site.', 'user-registration' ); ?></p>
 				</div>
 			</a>
-			<a href="https://docs.wpeverest.com/docs/user-registration/" class="user-registration-welcome-container__action-card" target="blank">
+			<a href="https://docs.wpuserregistration.com/" class="user-registration-welcome-container__action-card" target="blank">
 				<figure class="user-registration-welcome-container__action-card-img">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><style>.cls-1{fill:none;}.cls-1,.cls-2{stroke:#3D8FC9;stroke-linecap:round;stroke-miterlimit:10;stroke-width:2px;}.cls-2{fill:#E1F0FA;}</style></defs><rect x="13" y="5" width="26" height="38" rx="2" ry="2" class="cls-1"/><path class="cls-1" d="M22,19a3,3,0,0,0-3,3V40a3,3,0,0,1-3,3h9V22A3,3,0,0,0,22,19Z"/><path class="cls-2" d="M49,19H22a3,3,0,0,1,3,3V57a2,2,0,0,0,2,2H49a2,2,0,0,0,2-2V21A2,2,0,0,0,49,19Z"/><line class="cls-1" x1="30" y1="27" x2="46" y2="27"/><line class="cls-1" x1="18" y1="13" x2="34" y2="13"/><line class="cls-1" x1="30" y1="33" x2="46" y2="33"/><line class="cls-1" x1="30" y1="39" x2="46" y2="39"/><line class="cls-1" x1="30" y1="45" x2="40" y2="45"/><line class="cls-1" x1="44" y1="45" x2="46" y2="45"/><line class="cls-1" x1="30" y1="51" x2="40" y2="51"/><line class="cls-1" x1="44" y1="51" x2="46" y2="51"/></svg>
 				</figure>

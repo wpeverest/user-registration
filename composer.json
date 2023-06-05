@@ -1,17 +1,25 @@
 {
   "name": "wpeverest/user-registration",
   "description": "Easily allows to create registration and login page.",
-  "homepage": "https://wpeverest.com/plugins/user-registration/",
+  "homepage": "https://wpuserregistration.com/",
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "wpeverest",
+      "email": "support@wpeverest.com"
+    }
+  ],
   "config": {
     "process-timeout": 0,
     "sort-packages": true,
     "preferred-install": "dist",
     "allow-plugins": {
+      "composer/installers": true,
       "roots/wordpress-core-installer": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true,
-      "composer/installers": true
+      "dealerdirect/phpcodesniffer-composer-installer": true
     },
     "platform": {
       "php": "7.4.3"
@@ -19,18 +27,22 @@
   },
   "require": {
     "php": ">=5.6.20",
-    "composer/installers": "~2.0.0"
+    "composer/installers": "2.0.1"
   },
   "require-dev": {
-    "wp-cli/db-command": "2.0.13",
-    "wp-cli/i18n-command": "2.2.9",
-    "wpeverest/wpeverest-sniffs": "0.1.0",
-    "phpunit/phpunit": "^5 || ^7",
-    "wp-phpunit/wp-phpunit": "5.8.0",
-    "spatie/phpunit-watcher": "1.23.2",
-    "vlucas/phpdotenv": "5.3.0",
     "10up/wp_mock": "dev-enhance/allow-to-enable-disable-mock-constants-functions",
+    "jolicode/jolinotif": "2.3.0",
+    "phpunit/phpunit": "^5 || ^7",
+    "psr/container": "1.0.0",
     "roots/wordpress": "5.8.0",
+    "spatie/phpunit-watcher": "1.8.3",
+    "squizlabs/php_codesniffer": "^3.7",
+    "vlucas/phpdotenv": "5.4.1",
+    "wp-cli/db-command": "2.0.19",
+    "wp-cli/i18n-command": "2.2.13",
+    "wp-coding-standards/wpcs": "*",
+    "wp-phpunit/wp-phpunit": "5.8.2",
+    "wpeverest/wpeverest-sniffs": "0.1.0",
     "yoast/phpunit-polyfills": "1.0.3"
   },
   "repositories": [
@@ -67,6 +79,9 @@
     ],
     "post-update-cmd": [
       "@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.example', 'tests/.env' );\""
+    ],
+    "post-install-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
     ]
   },
   "extra": {

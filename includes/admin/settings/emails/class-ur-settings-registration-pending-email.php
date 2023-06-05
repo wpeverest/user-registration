@@ -66,7 +66,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 									'desc'     => __( 'Enable this email sent to the user notifying the registration is pending.', 'user-registration' ),
 									'id'       => 'user_registration_enable_registration_pending_email',
 									'default'  => 'yes',
-									'type'     => 'checkbox',
+									'type'     => 'toggle',
 									'autoload' => false,
 								),
 

@@ -230,7 +230,7 @@ function LastPage({ onBoardIconsURL }) {
 				</Flex>
 				<center>
 					<Link
-						href="https://wpeverest.com/wordpress-plugins/user-registration/addons/"
+						href="https://wpuserregistration.com/features/"
 						isExternal
 					>
 						<Button

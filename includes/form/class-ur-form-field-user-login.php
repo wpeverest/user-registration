@@ -78,7 +78,11 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 			);
 		}
 
-		$status = validate_username( $username );
+		if ( empty( $username ) ) {
+			$status = true;
+		} else {
+			$status = validate_username( $username );
+		}
 
 		if ( ! $status ) {
 			add_filter(

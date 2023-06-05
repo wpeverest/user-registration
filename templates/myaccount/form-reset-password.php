@@ -10,8 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.wpeverest.com/user-registration/template-structure/
- * @author  WPEverest
+ * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -33,7 +32,7 @@ ur_print_notices(); ?>
 					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
 					<?php
-					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
 					}
 					?>
@@ -44,7 +43,7 @@ ur_print_notices(); ?>
 					<span class="password-input-group">
 					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" />
 					<?php
-					if ( 'yes' === get_option( 'user_registration_login_option_hide_show_password', 'no' ) ) {
+					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
 					}
 					?>
