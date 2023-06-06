@@ -46,7 +46,7 @@ class UR_Preview {
 
 			} elseif ( isset( $_GET['ur_email_preview'] ) ) {
 				add_filter( 'template_include', array( $this, 'handle_email_preview' ), PHP_INT_MAX );
-				add_filter('astra_remove_entry_header_content', '__return_true'); // Need to remove in next version, If astra release the patches.
+				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 			}
 		}
 	}
@@ -200,11 +200,30 @@ class UR_Preview {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Displays content of email preview.
+	 *
+	 * @param string $content Page/Post content.
+	 * @return string
+	 */
 	public function handle_email_preview() {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
-		ur_get_template( "email-preview.php" );
+
+		$option_name   = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
+		$email_content = get_option( 'user_registration_' . $option_name );
+		$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
+
+		$email_subject = get_option( 'user_registration_' . $option_name . '_subject' );
+
+		ur_get_template(
+			'email-preview.php',
+			array(
+				'email_content' => $email_content,
+				'email_subject' => $email_subject,
+			)
+		);
 	}
 }
 

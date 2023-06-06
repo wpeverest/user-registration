@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <!DOCTYPE html>
-	<html <?php language_attributes(); ?>>
+	<html <?php language_attributes(); ?> style="background-color: #E9EAEC;">
 		<head>
 			<meta name="viewport" content="width=device-width"/>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -27,14 +27,9 @@ defined( 'ABSPATH' ) || exit;
 			</style>
 		</head>
 		<body <?php body_class(); ?> >
-		 <?php
-			$option_name = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
-			$email_content = get_option( 'user_registration_' . $option_name );
+			<?php
+				echo wp_kses_post( user_registration_process_email_content( $email_content, $email_subject ) );
 			?>
-			<div class="user-registration-email-preview">
-				<?php echo sprintf( __( '%s', 'user-registration' ), $email_content ); ?>
-			</div>
-
 		</body>
 		<?php wp_footer(); ?>
 	</html>

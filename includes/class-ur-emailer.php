@@ -612,6 +612,10 @@ class UR_Emailer {
 		// Check if email template is selected.
 		if ( '' !== $template_id && 'none' !== $template_id ) {
 			$message = apply_filters( 'user_registration_email_template_message', $message, $template_id );
+		} else {
+			ob_start();
+			user_registration_process_email_content( $message );
+			$message = ob_get_clean();
 		}
 
 		wp_mail( $email, $subject, $message, $header, $attachment, $template_id );

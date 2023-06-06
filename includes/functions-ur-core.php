@@ -3747,3 +3747,35 @@ if ( ! function_exists( 'ur_get_all_pages' ) ) {
 		return $pages_array;
 	}
 }
+
+
+if ( ! function_exists( 'user_registration_process_email_content' ) ) {
+	/**
+	 * Returns email content wrapped in email template.
+	 *
+	 * @param string $email_content Email Content.
+	 * @param string $email_subject Email Subject.
+	 */
+	function user_registration_process_email_content( $email_content, $email_subject = '' ) {
+		?>
+		<div class="user-registration-email-body" style="text-align: center;display: flex;flex-direction: column;gap: 10px;padding: 100px;background-color: #E9EAEC;">
+			<?php
+			if ( ! empty( $email_subject ) ) {
+				?>
+				<h3 style="color: #475bb2;"> <?php echo wp_kses_post( sprintf( __( '%s - Preview', 'user-registration' ), $email_subject ) ); ?> </h3>
+				<?php
+			}
+			?>
+			<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: 40%;background: white;display: flex;justify-content: center;padding: 100px 30px;border: 1px solid #C1C1C1;flex-direction: column;align-items: center;margin-left: 500px;margin-right: 300px;">
+				<tbody>
+					<tr>
+						<td colspan="2" style="text-align: left; border: none;">
+							<?php echo wp_kses_post( $email_content ); ?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<?php
+	}
+}
