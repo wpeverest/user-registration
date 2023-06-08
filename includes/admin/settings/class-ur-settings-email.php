@@ -193,6 +193,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				array(
 					'name'    => __( 'Email', 'user-registration' ),
 					'status'  => __( 'Status', 'user-registration' ),
+					'preview' => __( 'Preview', 'user-registration' ),
 					'actions' => __( 'Configure', 'user-registration' ),
 				)
 			);
@@ -218,6 +219,16 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
 				$settings .= $label;
 				$settings .= '</label>';
+				$settings .= '</td>';
+				$settings .= '<td class="ur-email-settings-table">';
+				$settings .= '<a class="button tips user-registration-email-preview " target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
+					add_query_arg(
+						array(
+							'ur_email_preview' => $email->id,
+						),
+						home_url()
+					)
+				) . '"><span class="dashicons dashicons-visibility"></span></a>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
 				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';

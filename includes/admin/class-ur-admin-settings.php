@@ -271,7 +271,6 @@ class UR_Admin_Settings {
 					if ( 'card' === $section['type'] ) {
 						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
 						$settings .= '<div class="user-registration-card__header ur-border-0">';
-
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
 
@@ -281,6 +280,7 @@ class UR_Admin_Settings {
 
 							$settings .= '</h3>';
 						}
+
 						$settings .= '</div>';
 
 						if ( ! empty( $section['desc'] ) ) {

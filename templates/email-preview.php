@@ -6,6 +6,7 @@
  *
  * @package User registration email preview template.
  */
+
 defined( 'ABSPATH' ) || exit;
 ?>
 <!DOCTYPE html>
@@ -14,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 			<meta name="viewport" content="width=device-width"/>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 			<title>
-				<?php esc_html__( get_bloginfo( 'name' ) ); ?>
+				<?php get_bloginfo( 'name' ); ?>
 			</title>
 			<?php wp_head(); ?>
 			<style>
@@ -28,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 		</head>
 		<body <?php body_class(); ?> >
 			<?php
-				echo wp_kses_post( user_registration_process_email_content( $email_content, $email_subject ) );
+				echo user_registration_process_email_content( $email_content, $email_template ); // phpcs:ignore.
 			?>
 		</body>
 		<?php wp_footer(); ?>

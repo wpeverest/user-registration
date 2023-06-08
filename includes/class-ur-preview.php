@@ -211,19 +211,29 @@ class UR_Preview {
 			return;
 		}
 
-		$option_name   = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
-		$email_content = get_option( 'user_registration_' . $option_name );
-		$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
+		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
+		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( $_GET['ur_email_template'] ) : '';
 
-		$email_subject = get_option( 'user_registration_' . $option_name . '_subject' );
+		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 
-		ur_get_template(
-			'email-preview.php',
-			array(
-				'email_content' => $email_content,
-				'email_subject' => $email_subject,
-			)
-		);
+		if ( ! class_exists( $class_name ) ) {
+			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.' ) . '</h3>';
+		} else {
+			$class_instance  = new $class_name();
+			$default_content = 'ur_get_' . $option_name;
+
+			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
+
+			ur_get_template(
+				'email-preview.php',
+				array(
+					'email_content'  => $email_content,
+					'email_template' => $email_template,
+				)
+			);
+		}
+
 	}
 }
 

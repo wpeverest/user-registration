@@ -45,18 +45,18 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
 							'settings'  => array(
 								array(
-									'type'     => 'link',
-									'css'      => 'min-width:70px;',
-									'buttons'  => array(
+									'type'    => 'link',
+									'css'     => 'min-width:70px;',
+									'buttons' => array(
 										array(
-											'title' => __( 'Preview', 'user-registration' ),
-											'href'  => add_query_arg(
+											'title'  => __( 'Preview', 'user-registration' ),
+											'href'   => add_query_arg(
 												array(
 													'ur_email_preview' => $this->id,
 												),
 												home_url()
 											),
-											'class'  => 'user_registration_email_preview',
+											'class'  => 'user-registration-email-preview ',
 											'target' => '_blank',
 										),
 									),
