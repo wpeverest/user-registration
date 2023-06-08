@@ -78,7 +78,7 @@ class UR_Setting_Validation {
 				$validations = $this->get_setting_validations( $setting_type );
 			}
 
-			$validations = apply_filters( 'user_registration_validate_' . $setting_type, $validations, $option, $value );
+			$validations = apply_filters( 'user_registration_validate_setting_' . $setting_type, $validations, $option, $value );
 
 			foreach ( $validations as $validation ) {
 				if ( method_exists( 'UR_Validation', $validation ) ) {
