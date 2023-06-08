@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-830-feature-email-preview
     workflow_dispatch:
 jobs:
   sync:
