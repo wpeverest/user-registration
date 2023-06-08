@@ -89,11 +89,12 @@ class UR_Smart_Tags {
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
 		if ( ! empty( $values['email'] ) ) {
+			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
 			$values    = wp_parse_args( $values, $default_values );
-			$user_data = ! empty( $values['process_type'] ) && 'ur_process_before_registration' === $values['process_type'] ? array() : UR_Emailer::user_data_smart_tags( $values['email'] );
+			$user_data = UR_Emailer::user_data_smart_tags( $values['email'] );
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
 				$user_data = array_merge( $user_data, $name_value );
 			}
@@ -122,6 +123,11 @@ class UR_Smart_Tags {
 			foreach ( $values as $key => $value ) {
 				$value = ur_format_field_values( $key, $value );
 				if ( ! is_array( $value ) ) {
+					if ( 'profile_pic_url' === $key && $process_type ) {
+						$content = str_replace( '{{' . $key . '}}', '', $content );
+						continue;
+					}
+
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
 				}
 			}

@@ -3747,3 +3747,39 @@ if ( ! function_exists( 'ur_get_all_pages' ) ) {
 		return $pages_array;
 	}
 }
+
+add_action( 'user_registration_after_user_meta_update', 'ur_parse_and_update_hidden_field', 10, 3 );
+
+if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
+	/**
+	 * Parse the hidden field value and update.
+	 *
+	 * @param array $form_data form data.
+	 * @param int   $form_id form id.
+	 * @param int   $user_id user id.
+	 */
+	function ur_parse_and_update_hidden_field( $form_data, $form_id, $user_id ) {
+		$values = array(
+			'form_id'      => $form_id,
+			'process_type' => 'ur_parse_after_meta_update',
+		);
+
+		foreach ( $form_data as $key => $value ) {
+			if ( 'user_email' === $value->field_name ) {
+				$values['email'] = ur_format_field_values( $value->field_name, $value->value );
+			}
+
+			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $value->value );
+		}
+		foreach ( $form_data as $key => $value ) {
+			if ( isset( $value->field_type ) && 'hidden' === $value->field_type ) {
+				$content    = $value->value;
+				$field_name = 'user_registration_' . $value->field_name;
+				if ( '' !== $content ) {
+					$content = apply_filters( 'user_registration_process_smart_tags', $content, $values );
+					update_user_meta( $user_id, $field_name, $content );
+				}
+			}
+		}
+	}
+}

@@ -53,22 +53,6 @@ class UR_Frontend_Form_Handler {
 			$form_data = array();
 		}
 
-		$values = array(
-			'form_id'      => $form_id,
-			'process_type' => 'ur_process_before_registration',
-		);
-		foreach ( $form_data as $key => $value ) {
-			if ( 'user_email' === $value->field_name ) {
-				$values['email'] = $value->value;
-			} else {
-				$values[ $value->field_name ] = $value->value;
-			}
-		}
-		$form_json_data = wp_json_encode( $form_data );
-
-		$content   = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values );
-		$form_data = json_decode( $content );
-
 		$form_field_data = self::get_form_field_data( $post_content_array );
 
 		$user_pass = '';
