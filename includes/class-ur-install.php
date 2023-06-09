@@ -8,6 +8,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( class_exists( 'UR_Install' ) ) {
+	return;
+}
 /**
  * UR_Install Class.
  */
