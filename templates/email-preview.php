@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
 			<title>
 				<?php get_bloginfo( 'name' ); ?>
 			</title>
-			<?php wp_head(); ?>
 			<style>
 				html,
 				body {
@@ -32,5 +31,4 @@ defined( 'ABSPATH' ) || exit;
 				echo user_registration_process_email_content( $email_content, $email_template ); // phpcs:ignore.
 			?>
 		</body>
-		<?php wp_footer(); ?>
 	</html>

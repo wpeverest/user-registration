@@ -3767,7 +3767,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: 40%; margin: 0 auto; background: #ffffff; padding: 30px 30px 4px; border: 0.4px solid #d3d3d3; border-radius: 11px;">
 					<tbody>
 						<tr>
-							<td colspan="2" style="text-align: left; border: none;">
+							<td colspan="2" style="text-align: left;">
 								<?php echo wp_kses_post( $email_content ); ?>
 							</td>
 						</tr>
