@@ -144,7 +144,7 @@ class UR_Install {
 		self::maybe_add_installation_date();
 		self::maybe_run_migrations();
 
-		$path = WP_CONTENT_DIR . '/uploads/user_registration_uploads/profile-pictures';
+		$path = UR_UPLOAD_PATH . 'profile-pictures';
 
 		if ( ! is_dir( $path ) ) {
 			mkdir( $path, 0777, true );
