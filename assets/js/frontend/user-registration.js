@@ -925,7 +925,14 @@
 
 																window.setTimeout(
 																	function () {
-																		location.reload();
+																		if (
+																			typeof response.data.redirect_url !== 'undefined' &&
+																			response.data.redirect_url
+																		) {
+																			window.location = response.data.redirect_url;
+																		} else {
+																			location.reload();
+																		}
 																	},
 																	timeout
 																);
