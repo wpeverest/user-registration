@@ -20,9 +20,10 @@ defined( 'ABSPATH' ) || exit;
 			<style>
 				html,
 				body {
-					overflow: hidden;
+					overflow: auto;
 					-webkit-overflow-scrolling: auto;
 					margin: 0;
+					min-height: 100vh;
 				}
 			</style>
 		</head>

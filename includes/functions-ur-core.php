@@ -3763,7 +3763,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 		} else {
 			ob_start();
 			?>
-			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb; min-height: 100vh;">
+			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: 40%; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 						<tr>
