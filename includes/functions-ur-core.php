@@ -2553,17 +2553,17 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
-				$status['activateUrl'] =
-				esc_url_raw(
-					add_query_arg(
-						array(
-							'action'   => 'activate',
-							'plugin'   => $install_status['file'],
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
-						),
-						admin_url( 'admin.php?page=user-registration-addons' )
-					)
-				);
+					$status['activateUrl'] =
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'action'   => 'activate',
+								'plugin'   => $install_status['file'],
+								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+							),
+							admin_url( 'admin.php?page=user-registration-addons' )
+						)
+					);
 				} else {
 					$status['deActivateUrl'] =
 					esc_url_raw(
@@ -3769,11 +3769,12 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 
 			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $value->value );
 		}
+
 		foreach ( $form_data as $key => $value ) {
-			if ( isset( $value->field_type ) && 'hidden' === $value->field_type ) {
+			if ( isset( $value->extra_params['field_key'] ) && 'hidden' === $value->extra_params['field_key'] ) {
 				$content    = $value->value;
 				$field_name = 'user_registration_' . $value->field_name;
-				if ( '' !== $content && 'profile_pic_url' !== $value->field_name ) {
+				if ( '' !== $content ) {
 					$content = apply_filters( 'user_registration_process_smart_tags', $content, $values );
 					update_user_meta( $user_id, $field_name, $content );
 				}
