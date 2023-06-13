@@ -20,7 +20,7 @@ Moreover, this free, lightweight, and 100% responsive plugin comes with a beauti
 
 The best thing is that there are unlimited customization options for each field and form. To add more extendibility to this, you get premium addons to include extra functionalities in your registration forms. So, you’ve got yourself a fantastic WordPress user registration and login plugin.
 
-[youtube https://www.youtube.com/watch?v=zNhNvj8jPhM]
+[youtube https://www.youtube.com/watch?v=BdZNmZecPoQ]
 
 [All features](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](https://docs.wpuserregistration.com/)
 
