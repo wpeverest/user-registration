@@ -31,9 +31,13 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Custom Form Fields Apart from Default User Fields:** User Registration removes the limitations posed by the default WordPress fields while registering users. Use custom form fields like Country, Privacy Policy, and Profile Picture to design any kind of form you need.
 
+* **Quick Form Preview:** Enables form functionality checking before publishing, improving UX.
+
 * **Email Notifications for Users:** Send customized email notifications to your users as soon as they complete the registration process. Additionally, you can send notifications regarding payments and changes made to profile details as well.
 
 * **Beautiful User Profile Account Page:** User Registration automatically creates a WordPress user profile account for all your registered users. Even better is the fact that you’re still in complete control of the customization of this page.
+
+* **Global Search Settings:** Admins can search in the Global Settings to quickly access the required settings.
 
 * **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration. Just redirect your users to this page from the registration page.
 
@@ -41,9 +45,17 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Assign User Roles and Capabilities:** Assign default WordPress user roles like Editor, Author, Subscriber, and more while creating registration forms. This lets you control who has access to which sections of your website and what actions they can perform.
 
+* **Smart Tags:** Personalizes email notifications with user-specific data.
+
+* **Ajax Form Submission:** Provides seamless and fast form submissions without page reloading.
+
+* **Gutenberg Support:** User Registration fully supports the Block Editor. So, you can add login and registration forms to any page using the User Registration Block.
+
+* **Form Templates:** Kickstart your registration process with our pre-designed form templates. Use as-it-is or modify according to your needs.
+
 * **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
 
-* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards(Stripe)](https://wpuserregistration.com/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
+* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards and Ideal Payments(Stripe)](https://wpuserregistration.com/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
 
 * **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
 
@@ -66,6 +78,38 @@ The best thing is that there are unlimited customization options for each field 
 * **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
 * **[Premium] [Smart Conditional Logic:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
+
+* **[Premium] Passwordless Login:** Enables user authentication through a secure email link, eliminating the need for passwords.
+
+* **[Premium] [Profile Privacy:](https://docs.wpuserregistration.com/docs/user-registration-pro/#20-toc-title)** Gives users control over their profile visibility, search engine indexing, erasure and downloading of their personal data ensuring privacy.
+
+* **[Premium] [Conditional Redirection:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Redirect users after registration based on user-submitted data for a personalized experience.
+
+* **[Premium] [Unique Field Validation:](https://docs.wpuserregistration.com/docs/user-registration-pro/#22-toc-title)** Maintains data integrity by ensuring uniqueness in selected fields.
+
+* **[Premium] [Form Field Mapping:](https://docs.wpuserregistration.com/docs/how-to-map-the-user-registration-form-fields-value-to-external-plugin-field-metas/)** Enhances integration by mapping form fields with other plugins.
+
+* **[Premium] [Prevent Concurrent Login:](https://docs.wpuserregistration.com/docs/how-to-map-the-user-registration-form-fields-value-to-external-plugin-field-metas/)** Enhances security by allowing site owners to setup number of times a user can login into different browsers or devices at the same time.
+
+* **[Premium] [Redirect to Previous Page:]** Smoothens user experience by redirecting users back to their previous page after login.
+
+* **[Premium] [Role-Based Redirection:](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Smoothens user experience by redirecting users back to their previous page after login.
+
+* **[Premium] [External URL Data Transfer:](https://docs.wpuserregistration.com/docs/user-registration-pro/#post-submission-send-data-to-custom-url)** Facilitates connection with third-party services by sending form data to an external URL post-submission.
+
+* **[Premium] [Elementor Support:]** Utilize the User Registration widget in your Elementor editor to quickly add registration forms to any page and customize their design.
+
+* **[Premium] [Keyboard-Friendly Forms:](https://docs.wpuserregistration.com/docs/keyboard-shortcut-in-form-builder/#1-toc-title)** Instantly direct a user to the registration form on a page without any distractions and let them fill the form using their keyboard only.
+
+* **[Premium] [Auto-Populate Form via Query String:](https://docs.wpuserregistration.com/docs/user-registration-pro/#how-to-allow-fields-to-be-populate-dynamically)** Enhance user experience with auto-populated forms, reducing the time it takes for users to fill out your forms and increasing conversion rates.
+
+* **[Premium] [Post Submissions:](https://wpuserregistration.com/features/post-submission/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Allow users to submit posts directly from the frontend while registering without giving access to the WordPress dashboard.
+
+* **[Premium] [Profile Completeness:](https://wpuserregistration.com/features/profile-completeness/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Display a visual progress bar indicating profile completeness to encourage users to complete their profile information.
+
+* **[Premium] [Save and Continue:](https://wpuserregistration.com/features/save-and-continue/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Users can save their progress on a registration form and come back to it later to submit the form.
+
+* **[Premium] [Klaviyo:](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Sync your user registration forms with Klaviyo to automatically collect user data for personalized marketing campaigns.
 
 
 ### User Registration Has Every Form Field You’ll Ever Need:
@@ -103,6 +147,9 @@ The best thing is that there are unlimited customization options for each field 
 * Select2
 * Multi Select
 * Profile Picture
+* Range
+* Hidden field
+* Custom URL Field
 * Single Item
 * Stripe Gateway
 
@@ -229,6 +276,26 @@ Here’s a brief look at the features that make User Registration one of the bes
 * [How to Allow User Registration with Invitation Code?](https://wpeverest.com/blog/user-registration-invitation-code/)
 * [How to Create a Custom Registration Form for LearnDash?](https://wpeverest.com/blog/learndash-custom-registration-form/)
 
+== Get in Touch with us  ==
+
+👉 [Facebook Group](https://www.facebook.com/wpuserregistration)
+
+👉 [Twitter](https://twitter.com/user_register)
+
+👉 [Youtube](https://www.youtube.com/@UserRegistration)
+
+== Explore More Products from Our Team==
+Love User Registration? If you do, then you should check out more WordPress themes and plugins from us.
+
+* [Everest Forms](https://wpeverest.com/wordpress-plugins/everest-forms/) - Best WordPress Form Plugin.
+
+* [Masteriyo](https://masteriyo.com/) - A Powerful and Easy WordPress LMS Plugin. 
+
+* [Gutenberg Blocks by BlockArt](https://wordpress.org/plugins/blockart-blocks/) - Free Gutenberg Custom Blocks Plugin.
+
+* [Zakra](https://wordpress.org/themes/zakra/) - Best WordPress Multipurpose Theme Powering 60K+ Websites.
+
+* [ThemeGrill](https://themegrill.com/wordpress-themes/free/) - Beautiful Responsive WordPress Themes & Templates.
 
 == Installation ==
 
@@ -257,6 +324,18 @@ Yes, a registered user can access their profile details via the account page. On
 = Does the plugin come with a login form as well?
 
 Yes, the plugin has a shortcode for the login form.
+
+= Can I add custom fields to my registration forms?
+
+Yes, our form builder allows you to effortlessly add and arrange custom fields in your forms.
+
+= Is the User Registration plugin compatible with my version of WordPress?
+
+User Registration is updated regularly to ensure compatibility with the latest versions of WordPress. Please check the `Requires at least` and `Tested up to` fields in our `readme.txt` file to see if it's compatible with your version.
+
+= What should I do if User Registration is having problems?
+
+We are ready to assist you! You can contact us through the WordPress.org help forums or by visiting our [help page](https://wpuserregistration.com/support/).
 
 == Screenshots ==
 
