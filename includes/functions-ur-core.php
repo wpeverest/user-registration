@@ -3773,7 +3773,7 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 			if ( isset( $value->field_type ) && 'hidden' === $value->field_type ) {
 				$content    = $value->value;
 				$field_name = 'user_registration_' . $value->field_name;
-				if ( '' !== $content ) {
+				if ( '' !== $content && 'profile_pic_url' !== $value->field_name ) {
 					$content = apply_filters( 'user_registration_process_smart_tags', $content, $values );
 					update_user_meta( $user_id, $field_name, $content );
 				}
