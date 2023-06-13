@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.2.2
-Stable tag: 3.0
+Stable tag: 3.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -278,6 +278,16 @@ Yes, the plugin has a shortcode for the login form.
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.1    - 13/06/2023
+* Dev      - Update duplicate hook name.
+* Dev      - Compatibility for autologin redirection.
+* Tweak    - Add new addons to extensions page.
+* Tweak    - Field smart tag support in hidden field value.
+* Tweak    - Create global constant for upload dir path and url.
+* Tweak    - Profile pic showing max upload size in KB instead of MB.
+* Fix      - Free plugin file not being deleted when pro is activated.
+* Fix      - Password strength meter not working with Cyrillic letters.
 
 = 3.0      - 31/05/2023
 * Refactor - Form Builder Design.

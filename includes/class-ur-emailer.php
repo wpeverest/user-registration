@@ -28,7 +28,6 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-
 		add_action( 'user_registration_email_send_before', array( __CLASS__, 'ur_send_email_before' ) );
 		add_action( 'user_registration_email_send_after', array( __CLASS__, 'ur_send_email_after' ) );
 

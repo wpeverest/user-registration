@@ -547,7 +547,7 @@ class UR_AJAX {
 				$attachment_id = wp_rand();
 
 				ur_clean_tmp_files();
-				$url = home_url() . '/wp-content/uploads/user_registration_uploads/temp-uploads/' . sanitize_file_name( $file_name );
+				$url = UR_UPLOAD_URL . 'temp-uploads/' . sanitize_file_name( $file_name );
 				wp_send_json_success(
 					array(
 						'attachment_id' => $attachment_id,
