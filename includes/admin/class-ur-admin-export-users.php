@@ -71,7 +71,8 @@ class UR_Admin_Export_Users {
 
 			$unchecked_fields = array_diff( $all_fields, $checked_fields );
 		} else {
-			$unchecked_fields = array();
+			$unchecked_fields          = array();
+			$checked_additional_fields = array( 'user_id', 'user_role', 'ur_user_status', 'date_created', 'date_created_gmt' );
 		}
 		$from_date     = isset( $_POST['from_date'] ) ? sanitize_text_field( wp_unslash( $_POST['from_date'] ) ) : '';
 		$to_date       = isset( $_POST['to_date'] ) ? sanitize_text_field( wp_unslash( $_POST['to_date'] ) ) : '';
