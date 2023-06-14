@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.0.1    - 13/06/2023
+= 3.0.1    - 14/06/2023
 * Dev      - Update duplicate hook name.
 * Dev      - Compatibility for autologin redirection.
 * Tweak    - Add new addons to extensions page.
@@ -367,6 +367,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Tweak    - Profile pic showing max upload size in KB instead of MB.
 * Fix      - Free plugin file not being deleted when pro is activated.
 * Fix      - Password strength meter not working with Cyrillic letters.
+* Fix      - Password preview not working on login shortcode page when recaptcha disabled.
 
 = 3.0      - 31/05/2023
 * Refactor - Form Builder Design.
