@@ -141,7 +141,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 		$login_option      = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
 		$paypal_is_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', false ) );
 
-		if ( 'auto_login' !== $login_option && ! $paypal_is_enabled ) {
+		if ( ! $paypal_is_enabled ) {
 
 			if ( empty( $redirect_url ) ) {
 				// Getting redirect options from global settings for backward compatibility.
@@ -174,6 +174,10 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						break;
 
 					default:
+				}
+
+				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
+					$redirect_url = ur_get_my_account_url();
 				}
 			}
 
