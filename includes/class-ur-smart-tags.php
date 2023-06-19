@@ -89,6 +89,7 @@ class UR_Smart_Tags {
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
 		if ( ! empty( $values['email'] ) ) {
+			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
@@ -122,6 +123,11 @@ class UR_Smart_Tags {
 			foreach ( $values as $key => $value ) {
 				$value = ur_format_field_values( $key, $value );
 				if ( ! is_array( $value ) ) {
+					if ( 'profile_pic_url' === $key && $process_type ) {
+						$content = str_replace( '{{' . $key . '}}', '', $content );
+						continue;
+					}
+
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
 				}
 			}

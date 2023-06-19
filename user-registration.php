@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.0
+ * Version: 3.0.1
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.0';
+		public $version = '3.0.1';
 
 		/**
 		 * Session instance.
@@ -115,8 +115,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * Define FT Constants.
 		 */
 		private function define_constants() {
-			$upload_dir = wp_upload_dir();
+			$upload_dir = apply_filters( 'user_registration_upload_dir', wp_upload_dir() );
 			$this->define( 'UR_LOG_DIR', $upload_dir['basedir'] . '/ur-logs/' );
+			$this->define( 'UR_UPLOAD_PATH', $upload_dir['basedir'] . '/user_registration_uploads/' );
+			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
 			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
 			$this->define( 'UR_ABSPATH', dirname( __FILE__ ) . UR_DS );

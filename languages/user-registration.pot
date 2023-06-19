@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.0\n"
+"Project-Id-Version: User Registration 3.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-01T02:25:28+00:00\n"
+"POT-Creation-Date: 2023-06-14T06:34:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -155,7 +155,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:648
 #: includes/admin/views/html-admin-page-addons.php:60
 #: includes/class-ur-ajax.php:1409
-#: includes/functions-ur-core.php:3356
+#: includes/functions-ur-core.php:3368
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -568,28 +568,28 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:87
+#: includes/admin/class-ur-admin-export-users.php:88
 msgid "No users found with this form id."
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:156
+#: includes/admin/class-ur-admin-export-users.php:157
 #: includes/class-ur-smart-tags.php:40
 msgid "User ID"
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:159
+#: includes/admin/class-ur-admin-export-users.php:160
 msgid "User Role"
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:161
+#: includes/admin/class-ur-admin-export-users.php:162
 msgid "User Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:163
+#: includes/admin/class-ur-admin-export-users.php:164
 msgid "User Registered"
 msgstr ""
 
-#: includes/admin/class-ur-admin-export-users.php:165
+#: includes/admin/class-ur-admin-export-users.php:166
 msgid "User Registered GMT"
 msgstr ""
 
@@ -673,7 +673,7 @@ msgid "Please select json file to import form data."
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:61
-#: includes/functions-ur-core.php:3311
+#: includes/functions-ur-core.php:3323
 msgid "User Registration - File Upload"
 msgstr ""
 
@@ -702,7 +702,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:219
 #: includes/admin/class-ur-admin-menus.php:293
-#: includes/functions-ur-core.php:3299
+#: includes/functions-ur-core.php:3311
 msgid "User Registration - WooCommerce"
 msgstr ""
 
@@ -717,7 +717,7 @@ msgid "User Registration settings"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:508
-#: user-registration.php:346
+#: user-registration.php:348
 msgid "Settings"
 msgstr ""
 
@@ -733,7 +733,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:558
 #: includes/admin/class-ur-admin-menus.php:561
-#: includes/functions-ur-core.php:3386
+#: includes/functions-ur-core.php:3398
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -1645,7 +1645,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:194
 #: includes/class-ur-form-handler.php:369
 #: includes/class-ur-frontend-scripts.php:386
-#: includes/functions-ur-core.php:3492
+#: includes/functions-ur-core.php:3504
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -2741,13 +2741,13 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:175
 #: includes/class-ur-form-handler.php:357
-#: includes/functions-ur-core.php:3482
+#: includes/functions-ur-core.php:3494
 msgid "Error on hCaptcha. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-ajax.php:186
 #: includes/class-ur-form-handler.php:364
-#: includes/functions-ur-core.php:3488
+#: includes/functions-ur-core.php:3500
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -2964,11 +2964,11 @@ msgstr ""
 #: includes/class-ur-user-approval.php:273
 #: includes/functions-ur-account.php:55
 #: includes/functions-ur-account.php:58
-#: includes/functions-ur-core.php:3482
-#: includes/functions-ur-core.php:3488
-#: includes/functions-ur-core.php:3492
-#: includes/functions-ur-core.php:3502
-#: includes/functions-ur-core.php:3506
+#: includes/functions-ur-core.php:3494
+#: includes/functions-ur-core.php:3500
+#: includes/functions-ur-core.php:3504
+#: includes/functions-ur-core.php:3514
+#: includes/functions-ur-core.php:3518
 msgid "ERROR:"
 msgstr ""
 
@@ -3153,31 +3153,31 @@ msgstr ""
 msgid "Hint: Minimum one uppercase letter, a number, a special character and must be 8 characters"
 msgstr ""
 
-#: includes/class-ur-install.php:370
+#: includes/class-ur-install.php:373
 #: includes/RestApi/class-ur-rest-api.php:153
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
-#: includes/class-ur-install.php:371
+#: includes/class-ur-install.php:374
 #: includes/RestApi/class-ur-rest-api.php:154
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
-#: includes/class-ur-install.php:381
+#: includes/class-ur-install.php:384
 #: includes/RestApi/class-ur-rest-api.php:146
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
-#: includes/class-ur-install.php:382
+#: includes/class-ur-install.php:385
 #: includes/RestApi/class-ur-rest-api.php:147
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
-#: includes/class-ur-install.php:436
+#: includes/class-ur-install.php:439
 msgid "Default form"
 msgstr ""
 
@@ -3621,7 +3621,7 @@ msgstr ""
 msgid "Author Name"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:106
+#: includes/class-ur-smart-tags.php:107
 #: includes/functions-ur-core.php:2182
 msgid "Chosen Password"
 msgstr ""
@@ -5329,73 +5329,73 @@ msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
 #. translators: %1$s - My account Link.
-#: includes/functions-ur-core.php:2786
+#: includes/functions-ur-core.php:2800
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
-#: includes/functions-ur-core.php:3296
+#: includes/functions-ur-core.php:3308
 #: src/components/screens/LastPage.js:128
 msgid "WooCommerce"
 msgstr ""
 
-#: includes/functions-ur-core.php:3302
+#: includes/functions-ur-core.php:3314
 #: src/components/screens/LastPage.js:171
 msgid "Content Restriction"
 msgstr ""
 
-#: includes/functions-ur-core.php:3305
+#: includes/functions-ur-core.php:3317
 msgid "User Registration - Content Restriction"
 msgstr ""
 
-#: includes/functions-ur-core.php:3308
+#: includes/functions-ur-core.php:3320
 msgid "File Uploads"
 msgstr ""
 
-#: includes/functions-ur-core.php:3314
+#: includes/functions-ur-core.php:3326
 #: src/components/screens/LastPage.js:213
 msgid "Customize My Account"
 msgstr ""
 
-#: includes/functions-ur-core.php:3317
+#: includes/functions-ur-core.php:3329
 msgid "User Registration customize my account"
 msgstr ""
 
 #. translators: %s: License Plan Name.
-#: includes/functions-ur-core.php:3355
+#: includes/functions-ur-core.php:3367
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
-#: includes/functions-ur-core.php:3373
+#: includes/functions-ur-core.php:3385
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
 #. translators: %s: Action Name.
-#: includes/functions-ur-core.php:3376
+#: includes/functions-ur-core.php:3388
 msgid "%s Addon"
 msgstr ""
 
-#: includes/functions-ur-core.php:3385
+#: includes/functions-ur-core.php:3397
 msgid "You are currently using the free version of our plugin. Please upgrade to premium version to use this feature."
 msgstr ""
 
-#: includes/functions-ur-core.php:3432
+#: includes/functions-ur-core.php:3444
 msgid "Username is required."
 msgstr ""
 
-#: includes/functions-ur-core.php:3435
-#: includes/functions-ur-core.php:3516
+#: includes/functions-ur-core.php:3447
+#: includes/functions-ur-core.php:3528
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/functions-ur-core.php:3519
+#: includes/functions-ur-core.php:3531
 msgid "ERROR: "
 msgstr ""
 
-#: includes/functions-ur-core.php:3551
-#: includes/functions-ur-core.php:3554
-#: includes/functions-ur-core.php:3560
 #: includes/functions-ur-core.php:3563
+#: includes/functions-ur-core.php:3566
+#: includes/functions-ur-core.php:3572
+#: includes/functions-ur-core.php:3575
 msgid "ERROR"
 msgstr ""
 
@@ -5472,7 +5472,7 @@ msgid "Your password has been reset successfully."
 msgstr ""
 
 #. translators: %s - Link to logout.
-#: includes/shortcodes/class-ur-shortcode-login.php:69
+#: includes/shortcodes/class-ur-shortcode-login.php:67
 msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
 msgstr ""
 
@@ -5651,8 +5651,8 @@ msgid "Confirm new password"
 msgstr ""
 
 #: templates/myaccount/form-edit-password.php:81
-#: templates/myaccount/form-edit-profile.php:410
-#: templates/myaccount/form-edit-profile.php:415
+#: templates/myaccount/form-edit-profile.php:411
+#: templates/myaccount/form-edit-profile.php:416
 msgid "Save changes"
 msgstr ""
 
@@ -5660,27 +5660,27 @@ msgstr ""
 msgid "Profile Detail"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:71
+#: templates/myaccount/form-edit-profile.php:72
 msgid "Max size: "
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:74
+#: templates/myaccount/form-edit-profile.php:75
 msgid "Upload your new profile image."
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:96
+#: templates/myaccount/form-edit-profile.php:97
 msgid "Remove"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:98
+#: templates/myaccount/form-edit-profile.php:99
 msgid "Upload Picture"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:108
+#: templates/myaccount/form-edit-profile.php:109
 msgid "You can change your profile picture on"
 msgstr ""
 
-#: templates/myaccount/form-edit-profile.php:108
+#: templates/myaccount/form-edit-profile.php:109
 msgid "Gravatar"
 msgstr ""
 
@@ -5729,27 +5729,27 @@ msgstr ""
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
 msgstr ""
 
-#: user-registration.php:346
+#: user-registration.php:348
 msgid "View User Registration settings"
 msgstr ""
 
-#: user-registration.php:362
+#: user-registration.php:364
 msgid "View User Registration documentation"
 msgstr ""
 
-#: user-registration.php:362
+#: user-registration.php:364
 msgid "Docs"
 msgstr ""
 
-#: user-registration.php:363
+#: user-registration.php:365
 msgid "Visit free customer support"
 msgstr ""
 
-#: user-registration.php:363
+#: user-registration.php:365
 msgid "Free support"
 msgstr ""
 
-#: user-registration.php:468
+#: user-registration.php:470
 msgid "As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 

@@ -160,7 +160,7 @@ jQuery(function ($) {
 					password,
 					disallowedListArray
 				),
-				pattern = /[A-Z]/;
+				pattern = /[A-ZА-Я]/;
 
 			switch (strength) {
 				case 1:
