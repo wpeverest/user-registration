@@ -3781,3 +3781,23 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 		return $email_content;
 	}
 }
+
+if ( ! function_exists( 'ur_email_preview_link' ) ) {
+
+	/**
+	 * Get link for preview email button used on email settings.
+	 *
+	 * @param  string $label Label.
+	 * @param  string $email_id Email id.
+	 */
+	function ur_email_preview_link( $label, $email_id ) {
+		$url = add_query_arg(
+			array(
+				'ur_email_preview' => $email_id,
+			),
+			home_url()
+		);
+
+		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview " style="min-width:70px;">' . esc_html( $label ) . '</a>';
+	}
+}

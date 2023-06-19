@@ -38,28 +38,15 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'email_confirmation' => array(
-							'title'     => __( 'Confirmation Email', 'user-registration' ),
-							'type'      => 'card',
-							'desc'      => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings'  => array(
-								array(
-									'type'    => 'link',
-									'css'     => 'min-width:70px;',
-									'buttons' => array(
-										array(
-											'title'  => __( 'Preview', 'user-registration' ),
-											'href'   => add_query_arg(
-												array(
-													'ur_email_preview' => $this->id,
-												),
-												home_url()
-											),
-											'class'  => 'user-registration-email-preview ',
-											'target' => '_blank',
-										),
-									),
-								),
+							'title'        => __( 'Confirmation Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Email Subject', 'user-registration' ),
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
