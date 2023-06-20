@@ -216,11 +216,21 @@ class UR_Preview {
 
 		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 
+		$emails = apply_filters( 'user_registration_email_classes', array() );
+
+		if ( isset( $emails[ $class_name ] ) && ! class_exists( $class_name ) ) {
+			$class_name = get_class( $emails[ $class_name ] );
+		}
+
 		if ( ! class_exists( $class_name ) ) {
 			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.' ) . '</h3>';
 		} else {
 			$class_instance  = new $class_name();
 			$default_content = 'ur_get_' . $option_name;
+
+			if ( ! method_exists( $class_instance, $default_content ) ) {
+				$default_content = 'user_registration_get_' . $option_name;
+			}
 
 			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
 			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
