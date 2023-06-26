@@ -473,30 +473,39 @@ jQuery(function ($) {
 		}
 	});
 
-
-
-	$(document).ready( function() {
+	$(document).ready(function () {
 		hide_show_redirection_options();
 
-		$( '#user_registration_form_setting_redirect_after_registration' ).on( 'change', hide_show_redirection_options );
+		$("#user_registration_form_setting_redirect_after_registration").on(
+			"change",
+			hide_show_redirection_options
+		);
 	});
-
 
 	/**
 	 * Hide or Show Redirection settings.
 	 */
-	var hide_show_redirection_options = function() {
-		var redirect_after_registration = $( '#user_registration_form_setting_redirect_after_registration' );
-		var selected_redirection_option = redirect_after_registration.find(':selected');
-		var custom_redirection_page = $('#user_registration_form_setting_redirect_page' ).closest( '.form-row' ).slideUp(800);
-		var redirect_url = $( '#user_registration_form_setting_redirect_options' ).closest( '.form-row' ).slideUp(800);
+	var hide_show_redirection_options = function () {
+		var redirect_after_registration = $(
+			"#user_registration_form_setting_redirect_after_registration"
+		);
+		var selected_redirection_option =
+			redirect_after_registration.find(":selected");
+		var custom_redirection_page = $(
+			"#user_registration_form_setting_redirect_page"
+		)
+			.closest(".form-row")
+			.slideUp(800);
+		var redirect_url = $("#user_registration_form_setting_redirect_options")
+			.closest(".form-row")
+			.slideUp(800);
 
-		if ( selected_redirection_option.length ) {
+		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
-				case 'internal-page':
+				case "internal-page":
 					custom_redirection_page.slideDown(800);
 					break;
-				case 'external-url':
+				case "external-url":
 					redirect_url.slideDown(800);
 					break;
 				default:
@@ -627,7 +636,7 @@ jQuery(function ($) {
 					);
 				} else {
 					message_string =
-						'<div class="error notice notice-success is-dismissible"><p><strong>' +
+						'<div class="error notice notice-error is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
 					$(".user-registration-options-container").prepend(
