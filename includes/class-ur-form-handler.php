@@ -66,7 +66,7 @@ class UR_Form_Handler {
 			return;
 		}
 
-		if (empty($_POST['action']) || 'save_profile_details' !== $_POST['action'] || empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'save_profile_details')) { //phpcs:ignore
+		if ( empty( $_POST['action'] ) || 'save_profile_details' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_profile_details' ) ) { //phpcs:ignore
 			return;
 		}
 
@@ -106,9 +106,9 @@ class UR_Form_Handler {
 					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
-							if (sanitize_email(wp_unslash($_POST[$key])) !== $user->user_email) { // phpcs:ignore
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
 								$email_updated = true;
-								$pending_email = sanitize_email(wp_unslash($_POST[$key])); // phpcs:ignore
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 							}
 							continue;
 						}
@@ -239,7 +239,7 @@ class UR_Form_Handler {
 
 		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : null;  // phpcs:ignore WordPress.Security.NonceVerification
 
-		if (empty($action) || 'save_change_password' !== $_POST['action'] || empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'save_change_password')) { // phpcs:ignore
+		if ( empty( $action ) || 'save_change_password' !== $_POST['action'] || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'save_change_password' ) ) { // phpcs:ignore
 			return;
 		}
 
@@ -253,9 +253,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = !empty($_POST['password_current']) ? wp_unslash($_POST['password_current']) : ''; //phpcs:ignore;
-		$pass1                   = !empty($_POST['password_1']) ? wp_unslash($_POST['password_1']) : ''; //phpcs:ignore;
-		$pass2                   = !empty($_POST['password_2']) ? wp_unslash($_POST['password_2']) : ''; //phpcs:ignore;
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';//phpcs:ignore;
+		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';//phpcs:ignore;
+		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';//phpcs:ignore;
 		$save_pass               = true;
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
