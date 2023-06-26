@@ -547,7 +547,7 @@ class UR_AJAX {
 				$attachment_id = wp_rand();
 
 				ur_clean_tmp_files();
-				$url = home_url() . '/wp-content/uploads/user_registration_uploads/temp-uploads/' . sanitize_file_name( $file_name );
+				$url = UR_UPLOAD_URL . 'temp-uploads/' . sanitize_file_name( $file_name );
 				wp_send_json_success(
 					array(
 						'attachment_id' => $attachment_id,
@@ -748,7 +748,7 @@ class UR_AJAX {
 							/* translators: %s - Integration tab url */
 								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
-								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) ) ) ); //phpcs:ignore
+								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
 				}
 			}
@@ -1156,7 +1156,7 @@ class UR_AJAX {
 				'captcha_setup_error_msg' => sprintf(
 						/* translators: %s - Integration tab url */
 					__( 'Seems like you haven\'t added the reCAPTCHA Keys. <a href="%s" >Add Now.</a>', 'user-registration' ),
-					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=integration' ) )
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 				),
 			)
 		);
@@ -1406,7 +1406,7 @@ class UR_AJAX {
 				$button = '<div class="action-buttons"><a class="button activate-license-now" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank">' . esc_html__( 'Activate License', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			} else {
-				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
+				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			}
 		}

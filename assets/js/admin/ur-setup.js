@@ -635,7 +635,17 @@ jQuery(function ($) {
 									'<span class="user-registration-swal2-modal__title">' +
 									ur_setup_params.download_successful_title +
 									"</span>",
-								text: ur_setup_params.download_successful_message,
+								text: $(node).hasClass(
+									"user-registration-settings-addon-activate"
+								)
+									? ur_setup_params.download_successful_message.replace(
+											" installed and",
+											""
+									  )
+									: ur_setup_params.download_successful_message.replace(
+											" Activated",
+											""
+									  ),
 								allowOutsideClick: false,
 								confirmButtonText:
 									ur_setup_params.save_changes_text,

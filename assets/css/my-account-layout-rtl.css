@@ -98,7 +98,7 @@
     #user-registration .user-registration-MyAccount-content .ur-frontend-form:has(.user-registration-PrivacyTab) h2 {
       text-align: right; }
     #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditProfileForm .user-registration-profile-fields h2 {
-      text-align: right; }
+      text-align: center; }
     #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditAccountForm .ur-form-grid > p {
       float: left;
       margin-top: 24px;

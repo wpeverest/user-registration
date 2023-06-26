@@ -55,7 +55,9 @@ class UR_Shortcodes {
 		)
 	) {
 		ob_start();
-
+		include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
+		$notices = ur_get_notices();
+		ur_print_notices();
 		$wrap_before = empty( $wrapper['before'] ) ? '<div id="user-registration" class="' . esc_attr( $wrapper['class'] ) . '">' : $wrapper['before'];
 		echo wp_kses_post( $wrap_before );
 		call_user_func( $function, $atts );

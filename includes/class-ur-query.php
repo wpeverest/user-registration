@@ -109,7 +109,7 @@ class UR_Query {
 	public function add_endpoints() {
 		$mask = $this->get_endpoints_mask();
 
-		foreach ( $this->query_vars as $key => $var ) {
+		foreach ( $this->get_query_vars() as $key => $var ) {
 			if ( ! empty( $var ) ) {
 				add_rewrite_endpoint( $var, $mask );
 			}

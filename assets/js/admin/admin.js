@@ -415,22 +415,31 @@ jQuery(function ($) {
 		minimum_password_strength_wrapper_field.hide();
 	}
 	var password_strength_option = minimum_password_strength_wrapper_field.find(
-		"#user_registration_form_setting_minimum_password_strength"
+		"[data-id='user_registration_form_setting_minimum_password_strength']"
 	);
 
 	// show password strength info.
 	$(document).ready(function () {
 		var strength_info = "";
 		var password_hint = "";
-		var password_strength_value = password_strength_option
-			.find(":selected")
-			.val();
-		show_password_strength_info(password_strength_value);
+
+		password_strength_option.each(function () {
+			if ($(this).is(":checked")) {
+				var password_strength_value = $(this).val();
+				show_password_strength_info(password_strength_value);
+			}
+		});
 
 		$(password_strength_option).on("change", function () {
-			password_hint =
-				minimum_password_strength_wrapper_field.find("span");
-			$strength = $(this).find(":selected").val();
+			password_hint = minimum_password_strength_wrapper_field
+				.find("span")
+				.not(".user-registration-help-tip");
+			var $strength = "";
+
+			if ($(this).is(":checked")) {
+				$strength = $(this).val();
+			}
+
 			password_hint.remove();
 			show_password_strength_info($strength);
 		});
@@ -458,7 +467,9 @@ jQuery(function ($) {
 					break;
 			}
 			minimum_password_strength_wrapper_field.append(
-				"<span class='description'>" + strength_info + "</span>"
+				"<span class='description' style='margin-bottom: 20px'>" +
+					strength_info +
+					"</span>"
 			);
 		}
 	});
@@ -618,7 +629,8 @@ jQuery(function ($) {
 			},
 			type: "post",
 			beforeSend: function () {
-				var spinner = '<span class="ur-spinner is-active"></span>';
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
 				$(".user_registration_send_email_test").append(spinner);
 			},
 			complete: function (response) {

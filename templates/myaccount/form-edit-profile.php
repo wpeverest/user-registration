@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.wpeverest.com/user-registration/template-structure/
+ * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @package UserRegistration/Templates
  * @version 1.0.0
  */
@@ -48,6 +48,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 								$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
+								$crop_picture    = false;
 
 								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
@@ -58,17 +59,17 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 											if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
 												$edit_profile_valid_file_type = isset( $single_item->advance_setting->valid_file_type ) && '' !== $single_item->advance_setting->valid_file_type ? implode( ', ', $single_item->advance_setting->valid_file_type ) : $edit_profile_valid_file_type;
 												$max_upload_size              = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
+												$crop_picture                 = isset( $single_item->advance_setting->enable_crop_picture ) ? ur_string_to_bool( $single_item->advance_setting->enable_crop_picture ) : false;
 											}
 										}
 									}
 								}
 
-								$crop_picture = isset( $single_item->advance_setting->enable_crop_picture ) ? ur_string_to_bool( $single_item->advance_setting->enable_crop_picture ) : false;
 
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
 								</div>
 								<header>
 									<p><strong><?php echo esc_html( apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) ) ); ?></strong></p>

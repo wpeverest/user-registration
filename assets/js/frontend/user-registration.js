@@ -925,7 +925,14 @@
 
 																window.setTimeout(
 																	function () {
-																		location.reload();
+																		if (
+																			typeof response.data.redirect_url !== 'undefined' &&
+																			response.data.redirect_url
+																		) {
+																			window.location = response.data.redirect_url;
+																		} else {
+																			location.reload();
+																		}
 																	},
 																	timeout
 																);
@@ -1563,10 +1570,9 @@
 								date_selector.data("date-format")
 							);
 
-							field.attr(
-								"data-mode",
-								1 === date_selector.data("mode") ? "range" : ""
-							);
+							if (date_selector.data("mode")) {
+								field.attr("data-mode", "range");
+							}
 							field.attr(
 								"data-locale",
 								date_selector.data("locale")

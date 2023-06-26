@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.wpeverest.com/user-registration/template-structure/
+ * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @package UserRegistration/Templates
  * @version 1.4.7
  */
@@ -124,6 +124,7 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<div>
+						<?php do_action( 'user_registration_login_form_before_submit_button' ); ?>
 							<?php if ( $enable_ajax ) { ?>
 							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
 							<span></span>

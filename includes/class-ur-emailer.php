@@ -28,10 +28,6 @@ class UR_Emailer {
 	 */
 	public static function init() {
 
-		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
-			return;
-		}
-
 		add_action( 'user_registration_email_send_before', array( __CLASS__, 'ur_send_email_before' ) );
 		add_action( 'user_registration_email_send_after', array( __CLASS__, 'ur_send_email_after' ) );
 
@@ -117,6 +113,12 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+
+		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
+			return;
+		}
+
 		$attachments     = apply_filters( 'user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
@@ -150,6 +152,10 @@ class UR_Emailer {
 	 * @since 1.6.3
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
+
+		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
+			return;
+		}
 		$profile      = user_registration_form_data( $user_id, $form_id );
 		$name_value   = array();
 		$data_html    = '';

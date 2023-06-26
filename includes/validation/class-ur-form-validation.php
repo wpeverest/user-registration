@@ -554,7 +554,7 @@ class UR_Form_Validation extends UR_Validation {
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
 			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
-				return true;
+				$is_required = true;
 			}
 		}
 

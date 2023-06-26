@@ -214,7 +214,7 @@ class UR_Admin_Assets {
 				'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
 				'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
 				'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
-				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=evf-upgrade-to-pro' ),
+				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
 				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
@@ -223,7 +223,7 @@ class UR_Admin_Assets {
 				'i18n_form_title'              => esc_html__( 'Uplift your form experience to the next level.', 'user-registration' ),
 				'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
 				'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
-				'download_successful_message'  => esc_html__( 'Addons have been installed and Activated. You have to reload the page.', 'user-registration' ),
+				'download_successful_message'  => esc_html__( 'Addons have been Installed and Activated. You have to reload the page.', 'user-registration' ),
 				'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
 				'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
 			)
@@ -329,9 +329,9 @@ class UR_Admin_Assets {
 					home_url()
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
-				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one uppercase letter', 'user-registration' ),
-				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and a number', 'user-registration' ),
-				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and a special character', 'user-registration' ),
+				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one letter', 'user-registration' ),
+				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters', 'user-registration' ),
+				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and must be 7 characters', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
 			);
 

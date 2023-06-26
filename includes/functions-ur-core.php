@@ -1716,8 +1716,12 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
  * @return mixed
  */
 function ur_is_json( $str ) {
+	if ( ! is_string( $str ) ) {
+		return false;
+	}
+
 	$json = json_decode( $str );
-	return $json && $str !== $json;
+	return $json && $str != $json && json_last_error() == JSON_ERROR_NONE;
 }
 
 /**
@@ -2309,7 +2313,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use conditional logic', 'user-registration' ) . '</label>';
+		$output .= '<label>' . esc_html__( 'Use conditional logics', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
@@ -2547,18 +2551,32 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			$install_status = install_plugin_install_status( $api );
 
-			if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-				$status['activateUrl'] =
-				esc_url_raw(
-					add_query_arg(
-						array(
-							'action'   => 'activate',
-							'plugin'   => $install_status['file'],
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
-						),
-						admin_url( 'admin.php?page=user-registration-addons' )
-					)
-				);
+			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
+				if ( is_plugin_inactive( $install_status['file'] ) ) {
+					$status['activateUrl'] =
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'action'   => 'activate',
+								'plugin'   => $install_status['file'],
+								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+							),
+							admin_url( 'admin.php?page=user-registration-addons' )
+						)
+					);
+				} else {
+					$status['deActivateUrl'] =
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'action'   => 'deactivate',
+								'plugin'   => $install_status['file'],
+								'_wpnonce' => wp_create_nonce( 'deactivate-plugin_' . $install_status['file'] ),
+							),
+							admin_url( 'admin.php?page=user-registration-addons' )
+						)
+					);
+				}
 			}
 
 			$status['success'] = true;
@@ -2779,7 +2797,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 
 			$message = sprintf(
 				/* translators: %1$s - My account Link. */
-				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpeverest.com/user-registration/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
 				$my_account_setting_link
 			);
 			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
@@ -3090,8 +3108,7 @@ if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
 	 * @return string
 	 */
 	function ur_get_tmp_dir() {
-		$uploads  = wp_upload_dir();
-		$tmp_root = untrailingslashit( $uploads['basedir'] ) . '/user_registration_uploads/temp-uploads';
+		$tmp_root = UR_UPLOAD_PATH . 'temp-uploads';
 
 		if ( ! file_exists( $tmp_root ) || ! wp_is_writable( $tmp_root ) ) {
 			wp_mkdir_p( $tmp_root );
@@ -3138,8 +3155,7 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 	 */
 	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
 		$attachment_id = array();
-		$upload_dir    = wp_upload_dir();
-		$upload_path   = $upload_dir['basedir'] . '/user_registration_uploads/profile-pictures'; /*Get path of upload dir of WordPress*/
+		$upload_path   = UR_UPLOAD_PATH . 'profile-pictures'; /*Get path of upload dir of User Registration for profile pictures*/
 
 		// Checks if the upload directory exists and create one if not.
 		if ( ! file_exists( $upload_path ) ) {
@@ -3349,7 +3365,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
 					/* translators: %s: License Plan Name. */
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					$button       = '<a target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
 					$plugin_name = $detail['name'];
@@ -3379,7 +3395,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 				}
 
 				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a target="_blank" href="https://wpeverest.com/wordpress-plugins/user-registration/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				$button       = '<a target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=pro-fields&utm_medium=popup-button&utm_campaign=ur-upgrade-to-pro">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
 				array_push( $tabs_to_display, $tab );
 			}
 
@@ -3727,5 +3743,42 @@ if ( ! function_exists( 'ur_get_all_pages' ) ) {
 		}
 
 		return $pages_array;
+	}
+}
+
+add_action( 'user_registration_after_user_meta_update', 'ur_parse_and_update_hidden_field', 10, 3 );
+
+if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
+	/**
+	 * Parse the hidden field value and update.
+	 *
+	 * @param array $form_data form data.
+	 * @param int   $form_id form id.
+	 * @param int   $user_id user id.
+	 */
+	function ur_parse_and_update_hidden_field( $form_data, $form_id, $user_id ) {
+		$values = array(
+			'form_id'      => $form_id,
+			'process_type' => 'ur_parse_after_meta_update',
+		);
+
+		foreach ( $form_data as $key => $value ) {
+			if ( 'user_email' === $value->field_name ) {
+				$values['email'] = ur_format_field_values( $value->field_name, $value->value );
+			}
+
+			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $value->value );
+		}
+
+		foreach ( $form_data as $key => $value ) {
+			if ( isset( $value->extra_params['field_key'] ) && 'hidden' === $value->extra_params['field_key'] ) {
+				$content    = $value->value;
+				$field_name = 'user_registration_' . $value->field_name;
+				if ( '' !== $content ) {
+					$content = apply_filters( 'user_registration_process_smart_tags', $content, $values );
+					update_user_meta( $user_id, $field_name, $content );
+				}
+			}
+		}
 	}
 }
