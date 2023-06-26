@@ -310,6 +310,10 @@ class UR_Admin_Assets {
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
+				/* translators: %field%: Field Label */
+				'form_one_time_draggable_fields_locked_title' => esc_html__( '%field% field is Locked.', 'user-registration' ),
+				/* translators: %field%: Field Label */
+				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
 				'i18n_shortcut_keys'                     => array(

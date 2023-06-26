@@ -1754,8 +1754,18 @@
 											).length > 0
 										) {
 											$this.draggable("disable");
+											$this.addClass("ur-locked-field");
+											$this.addClass(
+												"ur-one-time-draggable-disabled"
+											);
 										} else {
 											$this.draggable("enable");
+											$this.removeClass(
+												"ur-locked-field"
+											);
+											$this.removeClass(
+												"ur-one-time-draggable-disabled"
+											);
 										}
 									}
 								});
