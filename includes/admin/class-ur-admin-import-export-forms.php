@@ -185,7 +185,7 @@ class UR_Admin_Import_Export_Forms {
 										}
 
 										if ( is_serialized( $meta_value ) ) {
-											$meta_value = maybe_unserialize( $meta_value );
+											$meta_value = ur_maybe_unserialize( $meta_value );
 										}
 
 										add_post_meta( $post_id, $meta_key, $meta_value );
