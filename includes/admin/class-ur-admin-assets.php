@@ -330,9 +330,9 @@ class UR_Admin_Assets {
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one letter', 'user-registration' ),
-				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters', 'user-registration' ),
-				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and must be 7 characters', 'user-registration' ),
-				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
+				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
+				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
+				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
 			);
 
 			wp_localize_script(

@@ -187,7 +187,7 @@ jQuery(function ($) {
 							pattern = /[!@#$%^&*(),.?":{}|<>]/;
 							if (
 								pattern.test(password) &&
-								password.length >= 8
+								password.length >= 9
 							) {
 								strength = 4;
 							} else {
