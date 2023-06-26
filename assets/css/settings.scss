@@ -596,7 +596,7 @@ body {
 
 				&.success {
 					border-left-color: $green;
-					background: $greenLight;				
+					background: $greenLight;
 				}
 
 				&.error {
@@ -614,7 +614,7 @@ body {
 					}
 				}
 			}
-			
+
 
 			.user-registration-integrations {
 				border-radius: 3px;
@@ -1154,7 +1154,7 @@ body {
 							vertical-align: top;
 							text-align: left;
 							line-height: 1.3;
-							font-weight: 600;
+							font-weight: 500;
 							color: $grey-400;
 							font-size: 14px;
 							flex: 0 0 38%;
