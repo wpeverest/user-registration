@@ -232,6 +232,10 @@
 				&:last-child {
 					margin-bottom: 0;
 				}
+
+				.form-row {
+					display: block;
+				}
 			}
 
 			input[type="text"],
