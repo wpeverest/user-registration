@@ -811,6 +811,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
+					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -912,6 +913,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						if ( isset( $field->advance_setting->validate_unique ) ) {
 							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
 							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
+						}
+
+						if ( isset( $field->advance_setting->enable_payment_slider ) ) {
+							$fields[ 'user_registration_' . $field_name ]['enable_payment_slider']  = $enable_payment_slider;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
