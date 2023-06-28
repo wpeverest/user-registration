@@ -27,7 +27,7 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function required( $value ) {
-		if ( empty( $value ) ) {
+		if ( ! isset( $value ) ) {
 			return new WP_Error(
 				'user_registration_validation_empty_field',
 				__( 'Please enter a valid value', 'user-registration' )
