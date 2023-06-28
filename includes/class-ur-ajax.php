@@ -294,7 +294,7 @@ class UR_AJAX {
 				$field['type'] = 'text';
 			}
 			// Unset hidden field value.
-			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] || 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) {
+			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
 				$key = array_search( $field, $profile, true );
 				if ( false !== ( $key ) ) {
 					unset( $profile[ $key ] );
