@@ -404,9 +404,9 @@ class UR_Frontend_Scripts {
 
 					),
 					'i18n_password_hint'   => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
-					'i18n_password_hint_1' => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters', 'user-registration' ),
-					'i18n_password_hint_2' => esc_html__( 'Hint: Minimum one uppercase letter, a number and must be 7 characters', 'user-registration' ),
-					'i18n_password_hint_3' => esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
+					'i18n_password_hint_1' => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
+					'i18n_password_hint_2' => esc_html__( 'Hint: Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
+					'i18n_password_hint_3' => esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
 				);
 				break;
 			case 'ur-login':
