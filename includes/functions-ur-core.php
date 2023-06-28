@@ -3797,7 +3797,7 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 	function ur_maybe_unserialize( $data, $options = array() ) {
 
 		if ( is_serialized( $data ) ) {
-			if ( version_compare( PHP_VERSION, '7.1.0', '<=' ) ) {
+			if ( version_compare( PHP_VERSION, '7.1.0', '>=' ) ) {
 				$options = wp_parse_args( $options, array( 'allowed_classes' => false ) );
 				return @unserialize( trim( $data ), $options );
 			}
