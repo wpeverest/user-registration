@@ -4483,6 +4483,7 @@
 				update_input(input_value);
 			}
 		);
+
 		/**
 		 * For update the default value.
 		 */
@@ -4515,6 +4516,7 @@
 			target_textarea.val(input_value);
 			target_hidden_input.val(input_value);
 		}
+
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *
@@ -4614,6 +4616,36 @@
 
 				// Add select all button in dropdown
 				DropdownAdapter = Utils.Decorate(DropdownAdapter, SelectAll);
+			}
+		);
+
+		// Prevent invalid input for Max Upload Size setting and Maximum upload limit input.
+
+		$(document.body).on(
+			"input",
+			'[data-advance-field="max_upload_size"], [data-field="max_files"]',
+			function () {
+				var $this = $(this);
+				var inputValue = $this.val();
+				inputValue = inputValue.replace(/[^0-9]/g, "");
+				$this.val(inputValue);
+			}
+		);
+
+		$(document.body).on(
+			"focusout",
+			'[data-advance-field="max_upload_size"], [data-field="max_files"]',
+			function () {
+				var $this = $(this);
+				var inputValue = $this.val();
+
+				if ("" === inputValue || 0 === parseInt(inputValue)) {
+					inputValue = "";
+				} else {
+					inputValue = parseInt(inputValue); // Remove prefixing zeros(0).
+				}
+
+				$this.val(inputValue);
 			}
 		);
 	});
