@@ -84,9 +84,12 @@ jQuery(function ($) {
 				),
 				hint_name = "i18n_password_hint_" + minimum_password_strength,
 				hint_html =
-					'<small class="user-registration-password-hint">' +
-					ur_password_strength_meter_params[hint_name] +
-					"</small>",
+					"undefined" !==
+					typeof ur_password_strength_meter_params[hint_name]
+						? '<small class="user-registration-password-hint">' +
+						  ur_password_strength_meter_params[hint_name] +
+						  "</small>"
+						: "",
 				submit_button = wrapper.find(
 					'input[type="submit"].user-registration-Button'
 				),
