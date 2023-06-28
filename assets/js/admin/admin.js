@@ -53,7 +53,6 @@ jQuery(function ($) {
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
 		if ($(this).hasClass("ur-one-time-draggable-disabled")) {
-			console.log($(this).find("span").text());
 			var title =
 					icon +
 					'<span class="user-registration-swal2-modal__title">' +
