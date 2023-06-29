@@ -787,6 +787,8 @@
               display: inline; }
         .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item:last-child {
           margin-bottom: 0; }
+        .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .form-row {
+          display: block; }
       .ur-frontend-form .ur-form-row .ur-form-grid input[type="text"],
       .ur-frontend-form .ur-form-row .ur-form-grid input[type="email"],
       .ur-frontend-form .ur-form-row .ur-form-grid input[type="url"],

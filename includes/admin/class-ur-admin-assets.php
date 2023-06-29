@@ -310,6 +310,10 @@ class UR_Admin_Assets {
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
+				/* translators: %field%: Field Label */
+				'form_one_time_draggable_fields_locked_title' => esc_html__( '%field% field is Locked.', 'user-registration' ),
+				/* translators: %field%: Field Label */
+				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
 				'i18n_shortcut_keys'                     => array(
@@ -330,9 +334,9 @@ class UR_Admin_Assets {
 				),
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one letter', 'user-registration' ),
-				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters', 'user-registration' ),
-				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number and must be 7 characters', 'user-registration' ),
-				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character and must be 8 characters', 'user-registration' ),
+				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
+				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
+				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
 			);
 
 			wp_localize_script(

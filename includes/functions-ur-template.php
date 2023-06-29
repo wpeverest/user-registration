@@ -141,7 +141,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 		$login_option      = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
 		$paypal_is_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard', false ) );
 
-		if ( 'auto_login' !== $login_option && ! $paypal_is_enabled ) {
+		if ( ! $paypal_is_enabled ) {
 
 			if ( empty( $redirect_url ) ) {
 				// Getting redirect options from global settings for backward compatibility.
@@ -174,6 +174,10 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						break;
 
 					default:
+				}
+
+				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
+					$redirect_url = ur_get_my_account_url();
 				}
 			}
 
@@ -811,6 +815,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
+					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -912,6 +917,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						if ( isset( $field->advance_setting->validate_unique ) ) {
 							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
 							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
+						}
+
+						if ( isset( $field->advance_setting->enable_payment_slider ) ) {
+							$fields[ 'user_registration_' . $field_name ]['enable_payment_slider']  = $enable_payment_slider;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
