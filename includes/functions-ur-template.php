@@ -279,8 +279,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['required'] = '';
 		}
 
-		if ( is_null( $value ) || empty( $value ) ) {
-			$value = $args['default'];
+		if ( ( is_null( $value ) || empty( $value ) ) && ! is_numeric( $value ) ) {
+				$value = $args['default'];
 		}
 
 		// Custom attribute handling.
@@ -920,7 +920,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						if ( isset( $field->advance_setting->enable_payment_slider ) ) {
-							$fields[ 'user_registration_' . $field_name ]['enable_payment_slider']  = $enable_payment_slider;
+							$fields[ 'user_registration_' . $field_name ]['enable_payment_slider'] = $enable_payment_slider;
 						}
 
 						if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
