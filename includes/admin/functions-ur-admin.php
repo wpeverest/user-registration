@@ -196,7 +196,7 @@ function user_registration_data_exporter( $email_address, $page = 1 ) {
 			if ( array_key_exists( $strip_prefix, $form_data ) ) {
 
 				if ( is_serialized( $meta->meta_value ) ) {
-					$meta->meta_value = maybe_unserialize( $meta->meta_value );
+					$meta->meta_value = ur_maybe_unserialize( $meta->meta_value );
 					$meta->meta_value = implode( ',', $meta->meta_value );
 				}
 

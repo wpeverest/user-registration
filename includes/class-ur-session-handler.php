@@ -280,7 +280,7 @@ class UR_Session_Handler extends UR_Session {
 			wp_cache_add( $this->get_cache_prefix() . $customer_id, $value, UR_SESSION_CACHE_GROUP, $this->_session_expiration - time() );
 		}
 
-		return maybe_unserialize( $value );
+		return ur_maybe_unserialize( $value );
 	}
 
 	/**

@@ -514,7 +514,15 @@ class UR_AJAX {
 
 			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
 			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
+			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
 
+			if ( ! in_array( $file_mime_type, $valid_extension_type ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration' ),
+					)
+				);
+			}
 			// Validates if the uploaded file has the acceptable extension.
 			if ( ! in_array( $file_extension, $valid_ext ) ) {
 				wp_send_json_error(
