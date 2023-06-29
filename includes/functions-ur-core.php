@@ -656,6 +656,22 @@ function ur_get_registered_user_meta_fields() {
 	);
 }
 
+if ( ! function_exists( 'ur_get_field_name_with_prefix_usermeta' ) ) {
+	/**
+	 * Returns user registration meta fields with prefix before registration.
+	 *
+	 * @return string
+	 */
+	function ur_get_field_name_with_prefix_usermeta( $field_name ) {
+		$default_fields = array_merge_recursive( ur_get_user_table_fields(), ur_get_registered_user_meta_fields() );
+		if ( ! in_array( $field_name, $default_fields ) ) {
+			$field_name = 'user_registration_' . $field_name;
+		}
+		return $field_name;
+	}
+
+}
+
 /**
  * All registered form fields
  *
