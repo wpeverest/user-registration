@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Handle frontend forms.
  *
@@ -16,11 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Form_Handler {
 
+
 	/**
 	 * Hook in methods.
 	 */
 	public static function init() {
-		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
+		 add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
 
 		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
@@ -37,7 +39,7 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		$ur_account_page_exists      = ur_get_page_id( 'myaccount' ) > 0;
+		 $ur_account_page_exists     = ur_get_page_id( 'myaccount' ) > 0;
 		$is_ur_login_or_account_page = is_ur_account_page();
 
 		if ( ! $ur_account_page_exists ) {
@@ -59,7 +61,6 @@ class UR_Form_Handler {
 	 * @return mixed
 	 */
 	public static function save_profile_details() {
-
 		$profile_endpoint = get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' );
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' !== strtoupper( wp_unslash( sanitize_key( $_SERVER['REQUEST_METHOD'] ) ) ) ) {
 			return;
@@ -178,7 +179,7 @@ class UR_Form_Handler {
 		$to           = $new_email;
 		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
 		$message      = sprintf(
-		/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
+			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
 			__(
 				'Dear %1$s,<br /><br />
 		You recently requested to change your email address associated with your account to %2$s.<br /><br />
@@ -252,9 +253,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : ''; //phpcs:ignore;
-		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : ''; //phpcs:ignore;
-		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : ''; //phpcs:ignore;
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';//phpcs:ignore;
+		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';//phpcs:ignore;
+		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';//phpcs:ignore;
 		$save_pass               = true;
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
@@ -358,7 +359,8 @@ class UR_Form_Handler {
 							return false;
 						}
 					} else {
-						$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
+						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha' );
+						$data = wp_remote_get( $url . 'api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
 						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score <= get_option( 'user_registration_captcha_setting_recaptcha_threshold_score_v3', apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) ) {
 							ur_add_notice( __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
@@ -410,7 +412,7 @@ class UR_Form_Handler {
 			if ( ! isset( $_POST[ $field ] ) ) {
 				return;
 			}
-			$posted_fields[ $field ] = $_POST[ $field ]; // phpcs:ignore
+			$posted_fields[$field] = $_POST[$field]; // phpcs:ignore
 		}
 
 		if ( ! wp_verify_nonce( $posted_fields['_wpnonce'], 'reset_password' ) ) {
@@ -505,8 +507,8 @@ class UR_Form_Handler {
 	 * @since 1.7.2
 	 */
 	public function get_form( $id = '', $args = array() ) {
-		$forms = array();
-		$args  = apply_filters( 'user_registration_get_form_args', $args );
+		 $forms = array();
+		$args   = apply_filters( 'user_registration_get_form_args', $args );
 
 		if ( is_numeric( $id ) ) {
 			$the_post = get_post( absint( $id ) );
@@ -596,7 +598,6 @@ class UR_Form_Handler {
 	 * @return int|bool Form ID on successful creation else false.
 	 */
 	public function create( $title = '', $template = 'blank', $args = array(), $data = array() ) {
-
 		if ( empty( $title ) ) {
 			return false;
 		}

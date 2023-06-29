@@ -169,7 +169,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 							do_action( 'user_registration_before_form_buttons', $form_id );
 
 							$submit_btn_class          = apply_filters( 'user_registration_form_submit_btn_class', array(), $form_id );
-							$condition_submit_settings = maybe_unserialize( get_post_meta( $form_id, 'user_registration_submit_condition', true ) );
+							$condition_submit_settings = ur_maybe_unserialize( get_post_meta( $form_id, 'user_registration_submit_condition', true ) );
 
 							$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 							?>

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.2.2
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,19 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.2    - 29/06/2023
+* Enhance  - One time draggable field locked message.
+* Tweak    - Filter added for recaptcha url.
+* Tweak    - Password strength meter hint text updated.
+* Tweak    - Apply redirection settings when autologin is set.
+* Fix      - Inconsistencies in v3.0 design update.
+* Fix      - Form design conflict with themes using bootstrap.
+* Fix      - Security Vulnerability issue from arbitrary file upload.
+* Fix      - Validation error thrown when range is used as payment field.
+* Fix      - Default values for global settings options cannot be changed.
+* Fix      - Required validation thrown when entering 0 in the number field.
+* Fix      - Max upload size option accepting non-numeric, negative, and 0 as values.
 
 = 3.0.1    - 14/06/2023
 * Dev      - Update duplicate hook name.

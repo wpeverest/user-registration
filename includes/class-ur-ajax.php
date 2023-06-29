@@ -294,7 +294,7 @@ class UR_AJAX {
 				$field['type'] = 'text';
 			}
 			// Unset hidden field value.
-			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] ) {
+			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
 				$key = array_search( $field, $profile, true );
 				if ( false !== ( $key ) ) {
 					unset( $profile[ $key ] );
@@ -514,7 +514,15 @@ class UR_AJAX {
 
 			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
 			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
+			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
 
+			if ( ! in_array( $file_mime_type, $valid_extension_type ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file type, please contact with site administrator.', 'user-registration' ),
+					)
+				);
+			}
 			// Validates if the uploaded file has the acceptable extension.
 			if ( ! in_array( $file_extension, $valid_ext ) ) {
 				wp_send_json_error(
@@ -635,7 +643,7 @@ class UR_AJAX {
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
-		wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
 		}
 	}
 	/**

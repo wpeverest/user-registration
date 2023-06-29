@@ -51,25 +51,52 @@ jQuery(function ($) {
 		e.preventDefault();
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
-		var field_data = $(this).data("field-data");
-		var title =
-			icon +
-			'<span class="user-registration-swal2-modal__title">' +
-			field_data.title +
-			"</span>";
-		Swal.fire({
-			title: title,
-			html: field_data.message,
-			showCloseButton: true,
-			customClass:
-				"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
-			confirmButtonText: field_data.button_title,
-		}).then(function (result) {
-			if (result.value) {
-				var url = field_data.link;
-				window.open(url, "_blank");
-			}
-		});
+
+		if ($(this).hasClass("ur-one-time-draggable-disabled")) {
+			var title =
+					icon +
+					'<span class="user-registration-swal2-modal__title">' +
+					user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
+						"%field%",
+						$(this).text()
+					) +
+					"</span>",
+				message =
+					user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
+						"%field%",
+						$(this).text()
+					);
+
+			Swal.fire({
+				title: title,
+				html: message,
+				showCloseButton: true,
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
+			}).then(function (result) {
+				// Do Nothing here.
+			});
+		} else {
+			var field_data = $(this).data("field-data");
+			var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">' +
+				field_data.title +
+				"</span>";
+			Swal.fire({
+				title: title,
+				html: field_data.message,
+				showCloseButton: true,
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
+				confirmButtonText: field_data.button_title,
+			}).then(function (result) {
+				if (result.value) {
+					var url = field_data.link;
+					window.open(url, "_blank");
+				}
+			});
+		}
 	});
 	// Bind UI Actions for upgradable fields
 	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
@@ -648,7 +675,7 @@ jQuery(function ($) {
 					);
 				} else {
 					message_string =
-						'<div class="error notice notice-success is-dismissible"><p><strong>' +
+						'<div class="error notice notice-error is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
 					$(".user-registration-options-container").prepend(

@@ -530,17 +530,17 @@ class UR_AddOn_Updater {
 		}
 
 		if ( $request && isset( $request->sections ) ) {
-			$request->sections = maybe_unserialize( $request->sections );
+			$request->sections = ur_maybe_unserialize( $request->sections );
 		} else {
 			$request = false;
 		}
 
 		if ( $request && isset( $request->banners ) ) {
-			$request->banners = maybe_unserialize( $request->banners );
+			$request->banners = ur_maybe_unserialize( $request->banners );
 		}
 
 		if ( $request && isset( $request->icons ) ) {
-			$request->icons = maybe_unserialize( $request->icons );
+			$request->icons = ur_maybe_unserialize( $request->icons );
 		}
 
 		if ( ! empty( $request->sections ) ) {

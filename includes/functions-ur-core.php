@@ -211,7 +211,7 @@ function ur_string_to_array( $string, $delimiter = ',' ) {
  * @return bool
  */
 function ur_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === $string || 'on' === $string || 1 === $string || 'true' === $string || '1' === $string || 'today' === $string || 'range' === $string );
+	return is_bool( $string ) ? $string : ( ( 'yes' === $string || 'on' === $string || 1 === $string || 'true' === $string || '1' === $string || 'today' === $string || 'range' === $string ) ? true : ( null === $string ? '0' : false ) );
 }
 
 /**
@@ -654,6 +654,21 @@ function ur_get_registered_user_meta_fields() {
 			'description',
 		)
 	);
+}
+
+if ( ! function_exists( 'ur_get_field_name_with_prefix_usermeta' ) ) {
+	/**
+	 * Returns user registration meta fields with prefix before registration.
+	 *
+	 * @return string
+	 */
+	function ur_get_field_name_with_prefix_usermeta( $field_name ) {
+		$default_fields = array_merge_recursive( ur_get_user_table_fields(), ur_get_registered_user_meta_fields() );
+		if ( ! in_array( $field_name, $default_fields ) ) {
+			$field_name = 'user_registration_' . $field_name;
+		}
+		return $field_name;
+	}
 }
 
 /**
@@ -2075,7 +2090,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 			case 'checkbox':
 			case 'multi_select2':
 				if ( ! is_array( $value ) && ! empty( $value ) ) {
-					$value = maybe_unserialize( $value );
+					$value = ur_maybe_unserialize( $value );
 				}
 				break;
 			case 'file':
@@ -3161,12 +3176,14 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 		if ( ! file_exists( $upload_path ) ) {
 			wp_mkdir_p( $upload_path );
 		}
-
-		$upload_file = $valid_form_data['profile_pic_url']->value;
+		$valid_extensions = array( 'image/jpeg', 'image/jpg', 'image/gif', 'image/png' );
+		$upload_file      = $valid_form_data['profile_pic_url']->value;
 
 		if ( ! is_numeric( $upload_file ) ) {
-			$upload = maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
-			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) ) {
+			$upload           = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
+
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) && in_array( $upload_file_type, $valid_extensions ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
@@ -3780,5 +3797,28 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 				}
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
+	/**
+	 * UR Unserialize data.
+	 *
+	 * @param string $data Data that might be unserialized.
+	 * @return mixed Unserialized data can be any type.
+	 *
+	 * @since 3.0.2
+	 */
+	function ur_maybe_unserialize( $data, $options = array() ) {
+
+		if ( is_serialized( $data ) ) {
+			if ( version_compare( PHP_VERSION, '7.1.0', '>=' ) ) {
+				$options = wp_parse_args( $options, array( 'allowed_classes' => false ) );
+				return @unserialize( trim( $data ), $options );
+			}
+			return @unserialize( trim( $data ) );
+		}
+
+		return $data;
 	}
 }
