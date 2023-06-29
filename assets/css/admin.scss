@@ -1015,7 +1015,7 @@
 					background-image: none;
 					border-radius: 0;
 					margin: 0;
-					margin-bottom: -1px;
+					margin-bottom: -2px;
 					padding: 0px;
 					border: 0;
 					flex: 1;
@@ -1039,6 +1039,7 @@
 						padding: $spacing_8px $spacing_16px $spacing_14px;
 						font-weight: $medium;
 						cursor: pointer;
+						font-size: 15px;
 
 						 &:focus {
 							 box-shadow: 0 0 0 0px transparent,
@@ -1157,7 +1158,7 @@
 
 				h2 {
 					margin: $spacing_16px 0 $spacing_14px;
-					font-size: 16px;
+					font-size: 15px;
 					line-height: 150%;
 					font-weight: $medium;
 					color: $grey-400;

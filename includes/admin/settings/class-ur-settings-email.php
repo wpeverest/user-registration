@@ -273,7 +273,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			if ( ! empty( $current_section ) ) {
 				?>
 				<div id ="smart-tags">
-					<a href="https://docs.wpuserregistration.com/docs/smart-tags/"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
+				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
 				</div>
 				<?php
 			}

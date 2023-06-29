@@ -675,7 +675,7 @@ jQuery(function ($) {
 					);
 				} else {
 					message_string =
-						'<div class="error notice notice-success is-dismissible"><p><strong>' +
+						'<div class="error notice notice-error is-dismissible"><p><strong>' +
 						response.responseJSON.data.message +
 						"</strong></p></div>";
 					$(".user-registration-options-container").prepend(
