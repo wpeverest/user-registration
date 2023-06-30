@@ -669,7 +669,6 @@ if ( ! function_exists( 'ur_get_field_name_with_prefix_usermeta' ) ) {
 		}
 		return $field_name;
 	}
-
 }
 
 /**
@@ -3178,13 +3177,13 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 			wp_mkdir_p( $upload_path );
 		}
 		$valid_extensions = array( 'image/jpeg', 'image/jpg', 'image/gif', 'image/png' );
-		$upload_file = $valid_form_data['profile_pic_url']->value;
+		$upload_file      = $valid_form_data['profile_pic_url']->value;
 
 		if ( ! is_numeric( $upload_file ) ) {
 			$upload           = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
 			$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
 
-			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] )  && in_array( $upload_file_type, $valid_extensions ) ) {
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) && in_array( $upload_file_type, $valid_extensions ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
@@ -3808,7 +3807,7 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 	 * @param string $data Data that might be unserialized.
 	 * @return mixed Unserialized data can be any type.
 	 *
-	 * @since 3.1
+	 * @since 3.0.2
 	 */
 	function ur_maybe_unserialize( $data, $options = array() ) {
 
