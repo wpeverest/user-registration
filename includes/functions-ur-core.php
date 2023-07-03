@@ -3064,7 +3064,7 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		if ( empty( $secret_key ) || empty( $secret_iv ) ) {
 			$secret_key = ur_generate_random_key();
 			$secret_iv  = ur_generate_random_key();
-			update_option( 'ur_secret_iv', $secret_key );
+			update_option( 'ur_secret_key', $secret_key );
 			update_option( 'ur_secret_iv', $secret_iv );
 		}
 
