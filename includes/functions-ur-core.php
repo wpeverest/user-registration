@@ -3058,8 +3058,15 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 	 * @return string Encrypted/Decrypted string.
 	 */
 	function crypt_the_string( $string, $action = 'e' ) {
-		$secret_key = 'ur_secret_key';
-		$secret_iv  = 'ur_secret_iv';
+		$secret_key = get_option( 'ur_secret_key' );
+		$secret_iv  = get_option( 'ur_secret_iv' );
+
+		if ( empty( $secret_key ) || empty( $secret_iv ) ) {
+			$secret_key = ur_generate_random_key();
+			$secret_iv  = ur_generate_random_key();
+			update_option( 'secret_key', $secret_key );
+			update_option( 'secret_iv', $secret_iv );
+		}
 
 		$output         = false;
 		$encrypt_method = 'AES-256-CBC';
@@ -3083,6 +3090,18 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 		return $output;
 	}
 } //phpcs:ignore
+
+if ( ! function_exists( 'ur_generate_random_key' ) ) {
+	/**
+	 * Fucntion to generate the radom key.
+	 */
+	function ur_generate_random_key() {
+		$length              = 32;
+		$allow_special_chars = true;
+		$key                 = wp_generate_password( $length, $allow_special_chars );
+		return $key;
+	}
+}
 
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
