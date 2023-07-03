@@ -3191,8 +3191,13 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 		}
 
 		if ( ! is_numeric( $upload_file ) ) {
-			$upload           = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
-			$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
+			$upload = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			if ( function_exists( 'mime_content_type' ) ) {
+				$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
+			} else {
+				$upload_file_info = isset( $upload['file_path'] ) ? wp_check_filetype( $upload['file_path'] ) : '';
+				$upload_file_type = ! empty( $upload_file_info ) ? $upload_file_info['type'] : '';
+			}
 
 			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) && in_array( $upload_file_type, $valid_extensions ) && in_array( $upload['file_extension'], $valid_ext ) ) {
 				$upload_path = $upload_path . '/';
@@ -3203,7 +3208,7 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				$moved    = '';
 
 				if ( basename( $upload['file_path'] ) === $upload['file_name'] ) {
-					$moved    = rename( $upload['file_path'], $file_path );
+					$moved = rename( $upload['file_path'], $file_path );
 				}
 
 				if ( $moved ) {
