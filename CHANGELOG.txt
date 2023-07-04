@@ -1,3 +1,6 @@
+= 3.0.2.1  - 04/07/2023
+* Fix      - Arbitrary file upload.
+
 = 3.0.2    - 29/06/2023
 * Enhance  - One time draggable field locked message.
 * Tweak    - Filter added for recaptcha url.

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.0.2\n"
+"Project-Id-Version: User Registration 3.0.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-29T10:50:28+00:00\n"
+"POT-Creation-Date: 2023-07-04T05:20:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: user-registration\n"
@@ -155,7 +155,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:648
 #: includes/admin/views/html-admin-page-addons.php:60
 #: includes/class-ur-ajax.php:1417
-#: includes/functions-ur-core.php:3385
+#: includes/functions-ur-core.php:3425
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -683,7 +683,7 @@ msgid "Please select json file to import form data."
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:61
-#: includes/functions-ur-core.php:3340
+#: includes/functions-ur-core.php:3380
 msgid "User Registration - File Upload"
 msgstr ""
 
@@ -712,7 +712,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:219
 #: includes/admin/class-ur-admin-menus.php:293
-#: includes/functions-ur-core.php:3328
+#: includes/functions-ur-core.php:3368
 msgid "User Registration - WooCommerce"
 msgstr ""
 
@@ -743,7 +743,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:558
 #: includes/admin/class-ur-admin-menus.php:561
-#: includes/functions-ur-core.php:3415
+#: includes/functions-ur-core.php:3455
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -1655,7 +1655,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:194
 #: includes/class-ur-form-handler.php:371
 #: includes/class-ur-frontend-scripts.php:386
-#: includes/functions-ur-core.php:3521
+#: includes/functions-ur-core.php:3561
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -2751,13 +2751,13 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:175
 #: includes/class-ur-form-handler.php:358
-#: includes/functions-ur-core.php:3511
+#: includes/functions-ur-core.php:3551
 msgid "Error on hCaptcha. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-ajax.php:186
 #: includes/class-ur-form-handler.php:366
-#: includes/functions-ur-core.php:3517
+#: includes/functions-ur-core.php:3557
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -2975,11 +2975,11 @@ msgstr ""
 #: includes/class-ur-user-approval.php:273
 #: includes/functions-ur-account.php:55
 #: includes/functions-ur-account.php:58
-#: includes/functions-ur-core.php:3511
-#: includes/functions-ur-core.php:3517
-#: includes/functions-ur-core.php:3521
-#: includes/functions-ur-core.php:3531
-#: includes/functions-ur-core.php:3535
+#: includes/functions-ur-core.php:3551
+#: includes/functions-ur-core.php:3557
+#: includes/functions-ur-core.php:3561
+#: includes/functions-ur-core.php:3571
+#: includes/functions-ur-core.php:3575
 msgid "ERROR:"
 msgstr ""
 
@@ -5344,69 +5344,69 @@ msgstr ""
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
-#: includes/functions-ur-core.php:3325
+#: includes/functions-ur-core.php:3365
 #: src/components/screens/LastPage.js:128
 msgid "WooCommerce"
 msgstr ""
 
-#: includes/functions-ur-core.php:3331
+#: includes/functions-ur-core.php:3371
 #: src/components/screens/LastPage.js:171
 msgid "Content Restriction"
 msgstr ""
 
-#: includes/functions-ur-core.php:3334
+#: includes/functions-ur-core.php:3374
 msgid "User Registration - Content Restriction"
 msgstr ""
 
-#: includes/functions-ur-core.php:3337
+#: includes/functions-ur-core.php:3377
 msgid "File Uploads"
 msgstr ""
 
-#: includes/functions-ur-core.php:3343
+#: includes/functions-ur-core.php:3383
 #: src/components/screens/LastPage.js:213
 msgid "Customize My Account"
 msgstr ""
 
-#: includes/functions-ur-core.php:3346
+#: includes/functions-ur-core.php:3386
 msgid "User Registration customize my account"
 msgstr ""
 
 #. translators: %s: License Plan Name.
-#: includes/functions-ur-core.php:3384
+#: includes/functions-ur-core.php:3424
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
-#: includes/functions-ur-core.php:3402
+#: includes/functions-ur-core.php:3442
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
 #. translators: %s: Action Name.
-#: includes/functions-ur-core.php:3405
+#: includes/functions-ur-core.php:3445
 msgid "%s Addon"
 msgstr ""
 
-#: includes/functions-ur-core.php:3414
+#: includes/functions-ur-core.php:3454
 msgid "You are currently using the free version of our plugin. Please upgrade to premium version to use this feature."
 msgstr ""
 
-#: includes/functions-ur-core.php:3461
+#: includes/functions-ur-core.php:3501
 msgid "Username is required."
 msgstr ""
 
-#: includes/functions-ur-core.php:3464
-#: includes/functions-ur-core.php:3545
+#: includes/functions-ur-core.php:3504
+#: includes/functions-ur-core.php:3585
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/functions-ur-core.php:3548
+#: includes/functions-ur-core.php:3588
 msgid "ERROR: "
 msgstr ""
 
-#: includes/functions-ur-core.php:3580
-#: includes/functions-ur-core.php:3583
-#: includes/functions-ur-core.php:3589
-#: includes/functions-ur-core.php:3592
+#: includes/functions-ur-core.php:3620
+#: includes/functions-ur-core.php:3623
+#: includes/functions-ur-core.php:3629
+#: includes/functions-ur-core.php:3632
 msgid "ERROR"
 msgstr ""
 

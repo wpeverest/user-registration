@@ -3058,8 +3058,15 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 	 * @return string Encrypted/Decrypted string.
 	 */
 	function crypt_the_string( $string, $action = 'e' ) {
-		$secret_key = 'ur_secret_key';
-		$secret_iv  = 'ur_secret_iv';
+		$secret_key = get_option( 'ur_secret_key' );
+		$secret_iv  = get_option( 'ur_secret_iv' );
+
+		if ( empty( $secret_key ) || empty( $secret_iv ) ) {
+			$secret_key = ur_generate_random_key();
+			$secret_iv  = ur_generate_random_key();
+			update_option( 'ur_secret_key', $secret_key );
+			update_option( 'ur_secret_iv', $secret_iv );
+		}
 
 		$output         = false;
 		$encrypt_method = 'AES-256-CBC';
@@ -3084,6 +3091,19 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 	}
 } //phpcs:ignore
 
+if ( ! function_exists( 'ur_generate_random_key' ) ) {
+	/**
+	 * Function to generate the random key.
+	 *
+	 * @since 3.0.2.1
+	 */
+	function ur_generate_random_key() {
+		$length              = 32;
+		$allow_special_chars = true;
+		$key                 = wp_generate_password( $length, $allow_special_chars );
+		return $key;
+	}
+}
 
 if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 	/**
@@ -3178,18 +3198,38 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 		}
 		$valid_extensions = array( 'image/jpeg', 'image/jpg', 'image/gif', 'image/png' );
 		$upload_file      = $valid_form_data['profile_pic_url']->value;
+		$valid_ext        = array();
+
+		foreach ( $valid_extensions as $key => $value ) {
+			$image_extension   = explode( '/', $value );
+			$valid_ext[ $key ] = isset( $image_extension[1] ) ? $image_extension[1] : '';
+
+			if ( 'jpeg' === $valid_ext[ $key ] ) {
+				$index               = count( $valid_extensions );
+				$valid_ext[ $index ] = 'jpg';
+			}
+		}
 
 		if ( ! is_numeric( $upload_file ) ) {
-			$upload           = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
-			$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
+			$upload = ur_maybe_unserialize( crypt_the_string( $upload_file, 'd' ) );
+			if ( function_exists( 'mime_content_type' ) ) {
+				$upload_file_type = isset( $upload['file_path'] ) ? mime_content_type( $upload['file_path'] ) : '';
+			} else {
+				$upload_file_info = isset( $upload['file_path'] ) ? wp_check_filetype( $upload['file_path'] ) : '';
+				$upload_file_type = ! empty( $upload_file_info ) ? $upload_file_info['type'] : '';
+			}
 
-			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) && in_array( $upload_file_type, $valid_extensions ) ) {
+			if ( isset( $upload['file_name'] ) && isset( $upload['file_path'] ) && isset( $upload['file_extension'] ) && in_array( $upload_file_type, $valid_extensions ) && in_array( $upload['file_extension'], $valid_ext ) ) {
 				$upload_path = $upload_path . '/';
 				$file_name   = wp_unique_filename( $upload_path, $upload['file_name'] );
 				$file_path   = $upload_path . sanitize_file_name( $file_name );
 				// Check the type of file. We'll use this as the 'post_mime_type'.
 				$filetype = wp_check_filetype( basename( $file_name ), null );
-				$moved    = rename( $upload['file_path'], $file_path );
+				$moved    = '';
+
+				if ( basename( $upload['file_path'] ) === $upload['file_name'] ) {
+					$moved = rename( $upload['file_path'], $file_path );
+				}
 
 				if ( $moved ) {
 					$attachment_id = wp_insert_attachment(
