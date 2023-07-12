@@ -322,6 +322,8 @@ class UR_Smart_Tags {
 				}
 			}
 		}
+		$content = apply_filters( 'user_registration_smart_tag_content', $values, $content );
+
 		return $content;
 	}
 
