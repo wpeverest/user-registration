@@ -45,7 +45,7 @@ class UR_Admin {
 	 */
 	public function ur_add_post_state( $post_states, $post ) {
 
-		$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
+		$my_account_page_id = (int) get_option( 'user_registration_myaccount_page_id' );
 
 		if ( $post->ID === $my_account_page_id ) {
 			$post_states[] = __( 'UR My Account Page', 'user-registration' );

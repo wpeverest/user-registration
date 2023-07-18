@@ -322,7 +322,7 @@ class UR_Smart_Tags {
 				}
 			}
 		}
-		$content = apply_filters( 'user_registration_smart_tag_content', $values, $content );
+		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
 
 		return $content;
 	}
