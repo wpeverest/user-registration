@@ -3093,7 +3093,9 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 
 if ( ! function_exists( 'ur_generate_random_key' ) ) {
 	/**
-	 * Fucntion to generate the radom key.
+	 * Function to generate the random key.
+	 *
+	 * @since 3.0.2.1
 	 */
 	function ur_generate_random_key() {
 		$length              = 32;

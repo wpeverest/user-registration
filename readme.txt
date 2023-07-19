@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.2.2
-Stable tag: 3.0.2
+Stable tag: 3.0.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,9 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.2.1  - 04/07/2023
+* Fix      - Arbitrary file upload.
 
 = 3.0.2    - 29/06/2023
 * Enhance  - One time draggable field locked message.
