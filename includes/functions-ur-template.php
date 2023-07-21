@@ -13,8 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action( 'template_redirect', 'ur_template_redirect' );
-add_action( 'template_redirect', 'ur_login_template_redirect' );
-add_action( 'template_redirect', 'ur_registration_template_redirect' );
+
 
 /**
  * Redirect after logout.
@@ -34,96 +33,6 @@ function ur_template_redirect() {
 		// Redirect to the correct logout endpoint.
 		wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		exit;
-	}
-}
-
-/**
- * Check for login shortcode in the page and redirect to the url passed with login shortcode parameter redirect_url
- * Handle redirects before content is output - hooked into template_redirect so is_page works.
- */
-function ur_login_template_redirect() {
-	global $post;
-
-	$post_content = isset( $post->post_content ) ? $post->post_content : '';
-
-	if ( ( has_shortcode( $post_content, 'user_registration_login' ) || has_shortcode( $post_content, 'user_registration_my_account' ) ) && is_user_logged_in() ) {
-		preg_match( '/' . get_shortcode_regex() . '/s', $post_content, $matches );
-
-		// Remove all html tags.
-		$escaped_atts_string = preg_replace( '/<[\/]{0,1}[^<>]*>/', '', $matches[3] );
-
-		$attributes   = shortcode_parse_atts( $escaped_atts_string );
-		$redirect_url = isset( $attributes['redirect_url'] ) ? $attributes['redirect_url'] : '';
-		$redirect_url = trim( $redirect_url, ']' );
-		$redirect_url = trim( $redirect_url, '"' );
-		$redirect_url = trim( $redirect_url, "'" );
-
-		$redirect_url = apply_filters( 'user_registration_redirect_url_after_login', $redirect_url );
-
-		if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-			wp_redirect( $redirect_url ); //PHPCS:ignore;
-			exit();
-		}
-	}
-}
-
-/**
- * Redirects the logged in user to the option set in form settings if registration page is selected.
- * Donot redirect for admins.
- *
- * @return void
- * @since  1.5.1
- */
-function ur_registration_template_redirect() {
-
-	// Return if the user is not logged in.
-	if ( is_user_logged_in() === false ) {
-		return;
-	}
-
-	$current_user    = wp_get_current_user();
-	$current_user_id = $current_user->ID;
-	$form_id         = 0;
-
-	// Donot redirect for admins.
-	if ( in_array( 'administrator', wp_get_current_user()->roles ) ) {
-		return;
-	} else {
-
-		global $post;
-
-		$post_content = isset( $post->post_content ) ? $post->post_content : '';
-
-		$shortcodes = parse_blocks( $post_content );
-		$matched    = false;
-		foreach ( $shortcodes as $shortcode ) {
-			if ( ! empty( $shortcode['blockName'] ) ) {
-				if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['formId'] ) ) {
-					$matched = true;
-					$form_id = $shortcode['attrs']['formId'];
-
-				}
-			}
-		}
-
-		if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
-
-			$attributes = ur_get_shortcode_attr( $post_content );
-			$form_id    = isset( $attributes[0]['id'] ) ? $attributes[0]['id'] : 0;
-			$matched    = true;
-		}
-
-		if ( $matched ) {
-			preg_match_all( '!\d+!', $form_id, $form_id );
-
-			$redirect_url = ur_get_form_redirect_url( $form_id[0][0] );
-			$redirect_url = apply_filters( 'user_registration_redirect_from_registration_page', $redirect_url, $current_user );
-
-			if ( ! is_elementor_editing_page() && ! empty( $redirect_url ) ) {
-				wp_redirect( $redirect_url ); //PHPCS:ignore;
-				exit();
-			}
-		}
 	}
 }
 
