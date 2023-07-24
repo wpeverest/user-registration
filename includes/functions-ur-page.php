@@ -76,7 +76,7 @@ function ur_get_page_id( $page ) {
 			$translations = pll_get_post_translations( $page );
 			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
 		}
-	} elseif ( $page > 0 && has_filter( 'wpml_current_language' ) ) {
+	} elseif ( $page > 0 && class_exists( 'SitePress', false ) ) {
 		$page = ur_get_wpml_page_language( $page );
 	}
 
@@ -116,7 +116,7 @@ function ur_get_page_permalink( $page ) {
 			$translations = pll_get_post_translations( $page_id );
 			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
-	} elseif ( $page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+	} elseif ( $page_id > 0 && class_exists( 'SitePress', false ) ) {
 		$page = ur_get_wpml_page_language( $page_id );
 	}
 
@@ -140,7 +140,7 @@ if ( ! function_exists( 'ur_get_login_url' ) ) {
 				$translations       = pll_get_post_translations( $my_account_page_id );
 				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
-		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+		} elseif ( $my_account_page_id > 0 && class_exists( 'SitePress', false ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
@@ -170,7 +170,7 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 				$translations       = pll_get_post_translations( $my_account_page_id );
 				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
-		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+		} elseif ( $my_account_page_id > 0 && class_exists( 'SitePress', false ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
@@ -205,7 +205,7 @@ if ( ! function_exists( 'ur_get_current_language' ) ) {
 
 		if ( function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
-		} elseif ( has_filter( 'wpml_current_language' ) ) {
+		} elseif ( class_exists( 'SitePress', false ) ) {
 			$current_language = apply_filters( 'wpml_current_language', $current_language );
 		}
 		return $current_language;
