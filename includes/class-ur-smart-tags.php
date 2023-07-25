@@ -76,6 +76,7 @@ class UR_Smart_Tags {
 			'{{form_id}}'         => esc_html__( 'Form ID', 'user-registration' ),
 			'{{author_email}}'    => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'     => esc_html__( 'Author Name', 'user-registration' ),
+			'{{unique_id}}'       => esc_html__( 'Unique ID', 'user-registration' ),
 		);
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
@@ -318,6 +319,10 @@ class UR_Smart_Tags {
 					case 'author_name':
 						$author  = get_the_author_meta( 'display_name' );
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
+						break;
+					case 'unique_id':
+						$unique_id = uniqid( 'ur', true );
+						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 				}
 			}
