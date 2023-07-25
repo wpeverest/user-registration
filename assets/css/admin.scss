@@ -314,7 +314,7 @@
  /**
    * Form Builder Styles
    **/
- .user-registration_page_add-new-registration {
+ .user-registration_page_add-new-registration, .toplevel_page_user-registration {
 	 #wpfooter {
 		 display: none; //Hide WP footer on form builder page
 	 }
@@ -391,6 +391,14 @@
 				 margin-right: 8px;
 				 display: flex;
 			 }
+			 a{
+				text-decoration: none;
+				border: none;
+			 }
+			 a:focus {
+				outline: none;
+				box-shadow: none;
+			  }
 		 }
 
 		 &::before,
@@ -437,6 +445,21 @@
 				}
 			}
 		}
+		.login-forms-shortcode-action {
+		   input {
+			   &.code {
+				   font-size: large;
+				   width: 320px;
+				   height: 33px;
+				   padding: 0 $spacing_6px;
+				   margin: 0;
+				   border-color: $grey-50;
+				   background: $blue-25;
+				   border-radius: 3px 0 0 3px;
+				   display: inline;
+			   }
+		   }
+	   }
 
 		 #copy-shortcode {
 			 margin-left: -5px;
@@ -3234,7 +3257,7 @@ body {
 	 }
  }
 
-.user-registration_page_add-new-registration {
+.user-registration_page_add-new-registration, .toplevel_page_user-registration {
 	#nav-menu-header {
 		padding-right: $spacing_30px;
 
@@ -3461,6 +3484,44 @@ body {
 		.ur-selected-inputs {
 			padding: $spacing_30px;
 			background: $canva-color;
+
+			.ur-login-form-wrapper{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+			}
+			.ur-login-shortcode{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-top: 2rem;
+
+				h1{
+					font-weight: bold;
+					font-size: 35px;
+					margin-bottom: 2rem;
+				}
+
+				p{
+					font-size: 16px;
+				}
+				.ur-login-content{
+					margin-left: 10rem;
+					margin-right: 5rem;
+				}
+
+			}
+			.ur-login-view-doc{
+				margin-top:5rem;
+				a {
+					font-size:large;
+					text-decoration:underline;
+				}
+
+			}
 		}
 
 		.ur-builder {

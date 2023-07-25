@@ -602,7 +602,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 		public function registration_page() {
 			global $registration_table_list;
-			$registration_table_list->display_page();
+			if ( isset( $_GET['tab'] ) && 'login-forms' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				include_once dirname( __FILE__ ) . '/views/html-login-page-forms.php';
+			} else {
+				$registration_table_list->display_page();
+			}
 		}
 
 			/**
