@@ -321,8 +321,10 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
 					case 'unique_id':
-						$unique_id = uniqid( 'ur', true );
-						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
+						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
+						$prefix      = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id   = uniqid( $prefix, $uni_entropy );
+						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 				}
 			}
