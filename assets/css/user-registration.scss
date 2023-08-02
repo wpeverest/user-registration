@@ -139,11 +139,11 @@
 		content: "\f534";
 	}
 }
-.ur-input-border-green{
-	border-color: green !important;
+input.ur-input-border-green{
+	border-color: #1EA71B !important;
 }
-.ur-input-border-red{
-	border-color: red !important;
+input.ur-input-border-red{
+	border-color: $red !important;
 }
 
 .ur-frontend-form {
@@ -243,7 +243,9 @@
 					display: block;
 				}
 			}
-
+			input{
+				border-style: solid;
+			}
 			input[type="text"],
 			input[type="email"],
 			input[type="url"],
