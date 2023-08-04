@@ -58,25 +58,26 @@ class UR_Smart_Tags {
 	 */
 	public static function ur_unauthenticated_parsable_smart_tags_list() {
 		$smart_tags = array(
-			'{{blog_info}}'        => esc_html__( 'Blog Info', 'user-registration' ),
-			'{{home_url}}'         => esc_html__( 'Home URL', 'user-registration' ),
-			'{{admin_email}}'      => esc_html__( 'Site Admin Email', 'user-registration' ),
-			'{{site_name}}'        => esc_html__( 'Site Name', 'user-registration' ),
-			'{{site_url}}'         => esc_html__( 'Site URL', 'user-registration' ),
-			'{{page_title}}'       => esc_html__( 'Page Title', 'user-registration' ),
-			'{{page_url}}'         => esc_html__( 'Page URL', 'user-registration' ),
-			'{{page_id}}'          => esc_html__( 'Page ID', 'user-registration' ),
-			'{{post_title}}'       => esc_html__( 'Post Title', 'user-registration' ),
-			'{{current_date}}'     => esc_html__( 'Current Date', 'user-registration' ),
-			'{{current_time}}'     => esc_html__( 'Current Time', 'user-registration' ),
-			'{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
-			'{{email_token}}'      => esc_html__( 'Email Token', 'user-registration' ),
-			'{{key}}'              => esc_html__( 'Key', 'user-registration' ),
-			'{{user_ip_address}}'  => esc_html__( 'User IP Address', 'user-registration' ),
-			'{{referrer_url}}'     => esc_html__( 'Referrer URL', 'user-registration' ),
-			'{{form_id}}'          => esc_html__( 'Form ID', 'user-registration' ),
-			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
-			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
+			'{{blog_info}}'       => esc_html__( 'Blog Info', 'user-registration' ),
+			'{{home_url}}'        => esc_html__( 'Home URL', 'user-registration' ),
+			'{{admin_email}}'     => esc_html__( 'Site Admin Email', 'user-registration' ),
+			'{{site_name}}'       => esc_html__( 'Site Name', 'user-registration' ),
+			'{{site_url}}'        => esc_html__( 'Site URL', 'user-registration' ),
+			'{{page_title}}'      => esc_html__( 'Page Title', 'user-registration' ),
+			'{{page_url}}'        => esc_html__( 'Page URL', 'user-registration' ),
+			'{{page_id}}'         => esc_html__( 'Page ID', 'user-registration' ),
+			'{{post_title}}'      => esc_html__( 'Post Title', 'user-registration' ),
+			'{{current_date}}'    => esc_html__( 'Current Date', 'user-registration' ),
+			'{{current_time}}'    => esc_html__( 'Current Time', 'user-registration' ),
+      '{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
+			'{{email_token}}'     => esc_html__( 'Email Token', 'user-registration' ),
+			'{{key}}'             => esc_html__( 'Key', 'user-registration' ),
+			'{{user_ip_address}}' => esc_html__( 'User IP Address', 'user-registration' ),
+			'{{referrer_url}}'    => esc_html__( 'Referrer URL', 'user-registration' ),
+			'{{form_id}}'         => esc_html__( 'Form ID', 'user-registration' ),
+			'{{author_email}}'    => esc_html__( 'Author Email', 'user-registration' ),
+			'{{author_name}}'     => esc_html__( 'Author Name', 'user-registration' ),
+			'{{unique_id}}'       => esc_html__( 'Unique ID', 'user-registration' ),
 		);
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
@@ -324,6 +325,12 @@ class UR_Smart_Tags {
 					case 'author_name':
 						$author  = get_the_author_meta( 'display_name' );
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
+						break;
+					case 'unique_id':
+						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
+						$prefix      = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id   = uniqid( $prefix, $uni_entropy );
+						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 				}
 			}
