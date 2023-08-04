@@ -236,11 +236,13 @@
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
+							$element.removeClass('ur-input-border-green').addClass('ur-input-border-red');
 					},
 					unhighlight: function (element, errorClass, validClass) {
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
+							$element.removeClass('ur-input-border-red').addClass('ur-input-border-green');
 
 						if (
 							$element.attr("type") === "radio" ||

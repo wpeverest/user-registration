@@ -69,6 +69,7 @@ class UR_Smart_Tags {
 			'{{post_title}}'      => esc_html__( 'Post Title', 'user-registration' ),
 			'{{current_date}}'    => esc_html__( 'Current Date', 'user-registration' ),
 			'{{current_time}}'    => esc_html__( 'Current Time', 'user-registration' ),
+      '{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
 			'{{email_token}}'     => esc_html__( 'Email Token', 'user-registration' ),
 			'{{key}}'             => esc_html__( 'Key', 'user-registration' ),
 			'{{user_ip_address}}' => esc_html__( 'User IP Address', 'user-registration' ),
@@ -293,6 +294,11 @@ class UR_Smart_Tags {
 					case 'current_time':
 						$current_time = date_i18n( get_option( 'time_format' ) );
 						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_time ), $content );
+						break;
+
+					case 'current_language':
+						$current_language =  ur_get_current_language();
+						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
 						break;
 
 					case 'post_title':
