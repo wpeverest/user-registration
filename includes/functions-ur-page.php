@@ -62,22 +62,16 @@ function ur_get_page_id( $page ) {
 	 * Check if the page sent as parameter is My Account page and return the id,
 	 * Else use the page's page_id sent as parameter.
 	 */
-	if ( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) && $page_id === $my_account_page_id ) {
-		$page = $page_id;
-	} elseif ( 'myaccount' !== $page && ur_post_content_has_shortcode( 'user_registration_login' ) && $page_id !== $my_account_page_id ) {
-		$page = $page_id;
-	} else {
-		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
-	}
+	$page = ur_find_my_account_in_page( $page_id );
 
 	if ( $page > 0 && function_exists( 'pll_current_language' ) ) {
 		$current_language = pll_current_language();
 		if ( ! empty( $current_language ) ) {
-			$translations = pll_get_post_translations( $page );
-			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+			$translations = pll_get_post_translations( $page_id );
+			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
 	} elseif ( $page > 0 && has_filter( 'wpml_current_language' ) ) {
-		$page = ur_get_wpml_page_language( $page );
+		$page = ur_get_wpml_page_language( $page_id );
 	}
 
 	return $page ? absint( $page ) : - 1;
@@ -268,13 +262,13 @@ function ur_nav_menu_items( $items ) {
 				if ( empty( $item->url ) ) {
 					continue;
 				}
-				$path  = parse_url( $item->url, PHP_URL_PATH );
-				$query = parse_url( $item->url, PHP_URL_QUERY );
+				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? '';
+				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? '';
 
-				if ( null !== $path && null !== $customer_logout ) {
-					if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
+				$customer_logout = $customer_logout ?? '';
+
+				if (strstr($path, $customer_logout) !== false || strstr($query, $customer_logout) !== false) {
 						unset( $items[ $key ] );
-					}
 				}
 			}
 		}
