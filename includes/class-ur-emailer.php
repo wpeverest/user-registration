@@ -609,7 +609,7 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
-		$message = user_registration_process_email_content( $message, '', $template_id );
+		$message = user_registration_process_email_content( $message, $template_id );
 		wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
 	}
 }
