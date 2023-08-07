@@ -3707,6 +3707,60 @@ if ( ! function_exists( 'ur_get_all_pages' ) ) {
 	}
 }
 
+
+if ( ! function_exists( 'user_registration_process_email_content' ) ) {
+	/**
+	 * Returns email content wrapped in email template.
+	 *
+	 * @param string $email_content Email Content.
+	 * @param string $template Email Template id.
+	 */
+	function user_registration_process_email_content( $email_content, $template = '' ) {
+		// Check if email template is selected.
+		if ( '' !== $template && 'none' !== $template ) {
+			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
+		} else {
+			ob_start();
+			?>
+			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
+				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: 40%; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+					<tbody>
+						<tr>
+							<td colspan="2" style="text-align: left;">
+								<?php echo wp_kses_post( $email_content ); ?>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<?php
+			$email_content = wp_kses_post( ob_get_clean() );
+		}
+
+		return $email_content;
+	}
+}
+
+if ( ! function_exists( 'ur_email_preview_link' ) ) {
+
+	/**
+	 * Get link for preview email button used on email settings.
+	 *
+	 * @param  string $label Label.
+	 * @param  string $email_id Email id.
+	 */
+	function ur_email_preview_link( $label, $email_id ) {
+		$url = add_query_arg(
+			array(
+				'ur_email_preview' => $email_id,
+			),
+			home_url()
+		);
+
+		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview " style="min-width:70px;">' . esc_html( $label ) . '</a>';
+	}
+}
+
 add_action( 'user_registration_after_user_meta_update', 'ur_parse_and_update_hidden_field', 10, 3 );
 
 if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {

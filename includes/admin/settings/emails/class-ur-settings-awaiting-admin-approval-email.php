@@ -39,11 +39,15 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'awaiting_admin_approval_email' => array(
-							'title'     => __( 'Awaiting Admin Approval Email', 'user-registration' ),
-							'type'      => 'card',
-							'desc'      => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings'  => array(
+							'title'        => __( 'Awaiting Admin Approval Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to user notifying the registration is awaiting admin approval.', 'user-registration' ),

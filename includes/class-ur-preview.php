@@ -44,6 +44,9 @@ class UR_Preview {
 				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 
+			} elseif ( isset( $_GET['ur_email_preview'] ) ) {
+				add_filter( 'template_include', array( $this, 'handle_email_preview' ), PHP_INT_MAX );
+				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 			}
 		}
 	}
@@ -195,6 +198,52 @@ class UR_Preview {
 		);
 		echo '</div>';
 		return ob_get_clean();
+	}
+
+	/**
+	 * Displays content of email preview.
+	 *
+	 * @param string $content Page/Post content.
+	 * @return string
+	 */
+	public function handle_email_preview() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
+		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( $_GET['ur_email_template'] ) : '';
+
+		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
+
+		$emails = apply_filters( 'user_registration_email_classes', array() );
+
+		if ( isset( $emails[ $class_name ] ) && ! class_exists( $class_name ) ) {
+			$class_name = get_class( $emails[ $class_name ] );
+		}
+
+		if ( ! class_exists( $class_name ) ) {
+			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.' ) . '</h3>';
+		} else {
+			$class_instance  = new $class_name();
+			$default_content = 'ur_get_' . $option_name;
+
+			if ( ! method_exists( $class_instance, $default_content ) ) {
+				$default_content = 'user_registration_get_' . $option_name;
+			}
+
+			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
+
+			ur_get_template(
+				'email-preview.php',
+				array(
+					'email_content'  => $email_content,
+					'email_template' => $email_template,
+				)
+			);
+		}
+
 	}
 }
 

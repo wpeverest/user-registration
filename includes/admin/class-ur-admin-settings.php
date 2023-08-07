@@ -270,8 +270,13 @@ class UR_Admin_Settings {
 
 					if ( 'card' === $section['type'] ) {
 						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
-						$settings .= '<div class="user-registration-card__header ur-border-0">';
 
+						$header_css = '';
+						if ( isset( $section['preview_link'] ) ) {
+							$header_css = 'display:flex; justify-content: space-between;';
+						}
+
+						$settings .= '<div class="user-registration-card__header ur-border-0" style="' . esc_attr( $header_css ) . '">';
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
 
@@ -281,6 +286,11 @@ class UR_Admin_Settings {
 
 							$settings .= '</h3>';
 						}
+
+						if ( isset( $section['preview_link'] ) ) {
+							$settings .= wp_kses_post( $section['preview_link'] );
+						}
+
 						$settings .= '</div>';
 
 						if ( ! empty( $section['desc'] ) ) {
