@@ -96,9 +96,11 @@ class UR_Emailer {
 	 * @return string email header
 	 */
 	public static function ur_get_header() {
-		$header  = 'From: ' . self::ur_sender_name() . ' <' . self::ur_sender_email() . ">\r\n";
-		$header .= 'Reply-To: ' . self::ur_sender_email() . "\r\n";
-		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$header = array(
+			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>\r\n',
+			'Reply-To:' . self::ur_sender_email() . '\r\n',
+			'Content-Type:text/html; charset=UTF-8'
+		);
 
 		return $header;
 	}
