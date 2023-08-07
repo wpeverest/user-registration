@@ -56,7 +56,7 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
  */
 function ur_get_page_id( $page ) {
 	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
-	$page_id            = get_the_ID();
+	$page_id            = get_the_ID() ? get_the_ID() : $my_account_page_id;
 
 	/**
 	 * Check if the page sent as parameter is My Account page and return the id,
