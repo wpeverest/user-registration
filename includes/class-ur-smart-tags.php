@@ -69,6 +69,7 @@ class UR_Smart_Tags {
 			'{{post_title}}'      => esc_html__( 'Post Title', 'user-registration' ),
 			'{{current_date}}'    => esc_html__( 'Current Date', 'user-registration' ),
 			'{{current_time}}'    => esc_html__( 'Current Time', 'user-registration' ),
+      '{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
 			'{{email_token}}'     => esc_html__( 'Email Token', 'user-registration' ),
 			'{{key}}'             => esc_html__( 'Key', 'user-registration' ),
 			'{{user_ip_address}}' => esc_html__( 'User IP Address', 'user-registration' ),
@@ -76,6 +77,7 @@ class UR_Smart_Tags {
 			'{{form_id}}'         => esc_html__( 'Form ID', 'user-registration' ),
 			'{{author_email}}'    => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'     => esc_html__( 'Author Name', 'user-registration' ),
+			'{{unique_id}}'       => esc_html__( 'Unique ID', 'user-registration' ),
 		);
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
@@ -294,6 +296,11 @@ class UR_Smart_Tags {
 						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_time ), $content );
 						break;
 
+					case 'current_language':
+						$current_language =  ur_get_current_language();
+						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
+						break;
+
 					case 'post_title':
 						$post_title = get_the_title();
 						$content    = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $post_title ), $content );
@@ -319,9 +326,17 @@ class UR_Smart_Tags {
 						$author  = get_the_author_meta( 'display_name' );
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
+					case 'unique_id':
+						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
+						$prefix      = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id   = uniqid( $prefix, $uni_entropy );
+						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
+						break;
 				}
 			}
 		}
+		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
+
 		return $content;
 	}
 

@@ -628,9 +628,11 @@ class UR_AJAX {
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
 		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
-		$header  = 'From: ' . $from_name . ' <' . $sender_email . ">\r\n";
-		$header .= 'Reply-To: ' . $sender_email . "\r\n";
-		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$header = array(
+			'From:' . $from_name . ' <' . $sender_email . '>',
+			'Reply-To:' . $sender_email,
+			'Content-Type:text/html; charset=UTF-8'
+		);
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>

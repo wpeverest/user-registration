@@ -96,9 +96,11 @@ class UR_Emailer {
 	 * @return string email header
 	 */
 	public static function ur_get_header() {
-		$header  = 'From: ' . self::ur_sender_name() . ' <' . self::ur_sender_email() . ">\r\n";
-		$header .= 'Reply-To: ' . self::ur_sender_email() . "\r\n";
-		$header .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$header = array(
+			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>\r\n',
+			'Reply-To:' . self::ur_sender_email() . '\r\n',
+			'Content-Type:text/html; charset=UTF-8'
+		);
 
 		return $header;
 	}
@@ -609,11 +611,7 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
-		// Check if email template is selected.
-		if ( '' !== $template_id && 'none' !== $template_id ) {
-			$message = apply_filters( 'user_registration_email_template_message', $message, $template_id );
-		}
-
+		$message = user_registration_process_email_content( $message, $template_id );
 		wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
 	}
 }

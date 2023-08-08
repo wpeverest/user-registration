@@ -194,68 +194,25 @@ class UR_Frontend {
 		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
 		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 		$matched        = 0;
+		$page_id = 0;
 
 		if ( ( isset( $_POST['learndash-login-form'] ) || isset( $_POST['learndash-registration-form'] ) ) ) { //phpcs:ignore
 			return;
 		}
 
 		if ( ! empty( $login_page ) ) {
-			$shortcodes = parse_blocks( $login_page->post_content );
-			foreach ( $shortcodes as $shortcode ) {
-				if ( ! empty( $shortcode['blockName'] ) ) {
-					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
-						$matched = 1;
-						break;
-					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						}
-						if ( 0 < absint( $matched ) ) {
-							break;
-						}
-					}
-				} else {
-					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $login_page->post_content );
-					if ( 1 > absint( $matched ) ) {
-						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $login_page->post_content );
-					}
-					if ( 0 < absint( $matched ) ) {
-						break;
-					}
-				}
+			$matched    = ur_find_my_account_in_page( $login_page->ID );
+			if ( $matched > 0 ) {
+				$page_id = $login_page->ID;
 			}
-			$page_id = $login_page->ID;
-		} elseif ( ! empty( $myaccount_page ) ) {
-			$shortcodes = parse_blocks( $myaccount_page->post_content );
-			foreach ( $shortcodes as $shortcode ) {
-				if ( ! empty( $shortcode['blockName'] ) ) {
-					if ( 'user-registration/form-selector' === $shortcode['blockName'] && isset( $shortcode['attrs']['shortcode'] ) ) {
-						$matched = 1;
-						break;
-					} elseif ( ( 'core/shortcode' === $shortcode['blockName'] || 'core/paragraph' === $shortcode['blockName'] ) && isset( $shortcode['innerHTML'] ) ) {
-						$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						if ( 1 > absint( $matched ) ) {
-							$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $shortcode['innerHTML'] );
-						}
-						if ( 0 < absint( $matched ) ) {
-							break;
-						}
-					}
-				} else {
-					$matched = preg_match( '/\[user_registration_my_account(\s\S+){0,3}\]|\[user_registration_login(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					if ( 1 > absint( $matched ) ) {
-						$matched = preg_match( '/\[woocommerce_my_account(\s\S+){0,3}\]/', $myaccount_page->post_content );
-					}
-					if ( 0 < absint( $matched ) ) {
-						break;
-					}
-				}
+		} elseif ( ! empty( $myaccount_page ) && 0 !== $page_id ) {
+			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			if ( $matched > 0 ) {
+				$page_id = $myaccount_page->ID;
 			}
-			$page_id = $myaccount_page->ID;
 		}
 
-		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) && 1 <= absint( $matched ) ) {
+		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) && 0 < absint( $matched ) ) {
 
 			// Redirect to core login reset password page on multisite.
 			if ( is_multisite() && ( 'lostpassword' === $action || 'resetpass' === $action ) ) {

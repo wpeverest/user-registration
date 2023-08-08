@@ -1092,6 +1092,7 @@ jQuery(function ($) {
 					return false;
 				},
 			}).then(function (result) {
+				if(result.isConfirmed) {
 				if ($(".user-registration-template-continue").length > 0) {
 					var $formName = $("#user-registration-setup-name");
 
@@ -1128,7 +1129,8 @@ jQuery(function ($) {
 						});
 					});
 				}
-			});
+			}
+		});
 		},
 		input_keypress: function (e) {
 			var button = e.keyCode || e.which;

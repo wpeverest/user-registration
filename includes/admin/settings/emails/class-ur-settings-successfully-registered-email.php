@@ -39,11 +39,15 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'successfully_registered_email' => array(
-							'title'     => __( 'Successfully Registered Email', 'user-registration' ),
-							'type'      => 'card',
-							'desc'      => '',
-							'back_link' => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
-							'settings'  => array(
+							'title'        => __( 'Successfully Registered Email', 'user-registration' ),
+							'type'         => 'card',
+							'desc'         => '',
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'preview_link' => ur_email_preview_link(
+								__( 'Preview', 'user-registration' ),
+								$this->id
+							),
+							'settings'     => array(
 								array(
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the user after successful user registration.', 'user-registration' ),

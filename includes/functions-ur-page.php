@@ -56,27 +56,21 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
  */
 function ur_get_page_id( $page ) {
 	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
-	$page_id            = get_the_ID();
+	$page_id            = get_the_ID() ? get_the_ID() : $my_account_page_id;
 
 	/**
 	 * Check if the page sent as parameter is My Account page and return the id,
 	 * Else use the page's page_id sent as parameter.
 	 */
-	if ( 'myaccount' === $page && ur_post_content_has_shortcode( 'user_registration_my_account' ) && $page_id === $my_account_page_id ) {
-		$page = $page_id;
-	} elseif ( 'myaccount' !== $page && ur_post_content_has_shortcode( 'user_registration_login' ) && $page_id !== $my_account_page_id ) {
-		$page = $page_id;
-	} else {
-		$page = apply_filters( 'user_registration_get_' . $page . '_page_id', get_option( 'user_registration_' . $page . '_page_id' ) );
-	}
+	$page = ur_find_my_account_in_page( $page_id );
 
 	if ( $page > 0 && function_exists( 'pll_current_language' ) ) {
 		$current_language = pll_current_language();
 		if ( ! empty( $current_language ) ) {
-			$translations = pll_get_post_translations( $page );
-			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page;
+			$translations = pll_get_post_translations( $page_id );
+			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
-	} elseif ( $page > 0 && has_filter( 'wpml_current_language' ) ) {
+	} elseif ( $page > 0 && class_exists( 'SitePress', false ) ) {
 		$page = ur_get_wpml_page_language( $page );
 	}
 
@@ -116,7 +110,7 @@ function ur_get_page_permalink( $page ) {
 			$translations = pll_get_post_translations( $page_id );
 			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
-	} elseif ( $page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+	} elseif ( $page_id > 0 && class_exists( 'SitePress', false ) ) {
 		$page = ur_get_wpml_page_language( $page_id );
 	}
 
@@ -140,7 +134,7 @@ if ( ! function_exists( 'ur_get_login_url' ) ) {
 				$translations       = pll_get_post_translations( $my_account_page_id );
 				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
-		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+		} elseif ( $my_account_page_id > 0 && class_exists( 'SitePress', false ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
@@ -170,7 +164,7 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 				$translations       = pll_get_post_translations( $my_account_page_id );
 				$my_account_page_id = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $my_account_page_id;
 			}
-		} elseif ( $my_account_page_id > 0 && has_filter( 'wpml_current_language' ) ) {
+		} elseif ( $my_account_page_id > 0 && class_exists( 'SitePress', false ) ) {
 			$my_account_page_id = ur_get_wpml_page_language( $my_account_page_id );
 		}
 
@@ -205,7 +199,7 @@ if ( ! function_exists( 'ur_get_current_language' ) ) {
 
 		if ( function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
-		} elseif ( has_filter( 'wpml_current_language' ) ) {
+		} elseif ( class_exists( 'SitePress', false ) ) {
 			$current_language = apply_filters( 'wpml_current_language', $current_language );
 		}
 		return $current_language;
@@ -268,13 +262,13 @@ function ur_nav_menu_items( $items ) {
 				if ( empty( $item->url ) ) {
 					continue;
 				}
-				$path  = parse_url( $item->url, PHP_URL_PATH );
-				$query = parse_url( $item->url, PHP_URL_QUERY );
+				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? '';
+				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? '';
 
-				if ( null !== $path && null !== $customer_logout ) {
-					if ( strstr( $path, $customer_logout ) || strstr( $query, $customer_logout ) ) {
+				$customer_logout = $customer_logout ?? '';
+
+				if (strstr($path, $customer_logout) !== false || strstr($query, $customer_logout) !== false) {
 						unset( $items[ $key ] );
-					}
 				}
 			}
 		}
