@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.0.3    - 10/08/2023
+= 3.0.3    - 11/08/2023
 * Feature  - Email Preview.
 * Feature  - User registered language with smart tag.
 * Enhance  - Wrap emails in default template while previewing or sending.

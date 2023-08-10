@@ -30,7 +30,6 @@
     "composer/installers": "2.0.1"
   },
   "require-dev": {
-    "10up/wp_mock": "dev-enhance/allow-to-enable-disable-mock-constants-functions",
     "jolicode/jolinotif": "2.3.0",
     "phpunit/phpunit": "^5 || ^7",
     "psr/container": "1.0.0",
@@ -45,12 +44,6 @@
     "wpeverest/wpeverest-sniffs": "0.1.0",
     "yoast/phpunit-polyfills": "1.0.3"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:mi5t4n/wp_mock.git"
-    }
-  ],
   "scripts": {
     "phpcs": [
       "phpcs -s -p"
@@ -79,9 +72,6 @@
     ],
     "post-update-cmd": [
       "@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.example', 'tests/.env' );\""
-    ],
-    "post-install-cmd": [
-      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
     ]
   },
   "extra": {
