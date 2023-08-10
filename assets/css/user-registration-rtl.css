@@ -732,10 +732,10 @@
   .user-registration-error::before {
     content: "\f534"; }
 
-input.ur-input-border-green {
+input.ur-input-border-green, textarea.ur-input-border-green {
   border-color: #1EA71B !important; }
 
-input.ur-input-border-red {
+input.ur-input-border-red, textarea.ur-input-border-red {
   border-color: #ff4f55 !important; }
 
 .ur-frontend-form {

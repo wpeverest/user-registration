@@ -696,6 +696,11 @@
             vertical-align: middle; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table:nth-child(2), .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table:last-child {
               text-align: center; }
+            .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table:nth-child(2) {
+              padding-left: 0;
+              padding-right: 0; }
+              .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table:nth-child(2) label {
+                font-size: 76%; }
             .user-registration-settings .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table a {
               font-weight: 400;
               font-size: 14px;
