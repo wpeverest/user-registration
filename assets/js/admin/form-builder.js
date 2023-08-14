@@ -4484,6 +4484,15 @@
 			}
 		);
 
+		$(document.body).on(
+			"change",
+			".ur_advance_setting.ur-settings-pattern_value",
+			function () {
+				input_value = $(this).val();
+				update_input(input_value);
+			}
+		);
+
 		/**
 		 * For update the default value.
 		 */
@@ -4511,10 +4520,17 @@
 			target_hidden_input = $(ur_toggle_hidden_content).find(
 				'input[data-field="hidden_value"]'
 			);
-
+			// pattern value
+			ur_toggle_pattern_content = target_input_field.find(
+				".ur-advance-setting.ur-advance-pattern_value"
+			);
+			target_pattern_input = $(ur_toggle_pattern_content).find(
+				"input[data-advance-field=pattern_value]"
+			);
 			target_input.val(input_value);
 			target_textarea.val(input_value);
 			target_hidden_input.val(input_value);
+			target_pattern_input.val(input_value);
 		}
 
 		/**
