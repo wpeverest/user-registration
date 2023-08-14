@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.2.2
-Stable tag: 3.0.2.1
+Tested up to: 6.3
+Stable tag: 3.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,23 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.3    - 11/08/2023
+* Feature  - Email Preview.
+* Feature  - User registered language with smart tag.
+* Enhance  - Wrap emails in default template while previewing or sending.
+* Dev 	   - Check null for file_exits function.
+* Dev 	   - Change mail header format to array.
+* Dev 	   - Add Extra parameter in the filter hook user_registration_before_insert_user.
+* Tweak    - Added unique id smart tag.
+* Tweak    - Add filter to modify smart tag content.
+* Tweak    - Input box highlighting according to error or validity of form field input.
+* Fix      - Conflict with TranslatePress.
+* Fix  	   - Typecasting issue in myaccount tag state.
+* Fix 	   - Make login shortcode compatible with all editors.
+* Fix      - Lost Password not working for translated myaccount page.
+* Fix 	   - Form created even if its canceled in form naming area after choosing a template.
+* Fix 	   - Form set redirection working while trying to visit page with registration or login form after login.
 
 = 3.0.2.1  - 04/07/2023
 * Fix      - Arbitrary file upload.

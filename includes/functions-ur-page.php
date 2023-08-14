@@ -72,6 +72,8 @@ function ur_get_page_id( $page ) {
 		}
 	} elseif ( $page > 0 && class_exists( 'SitePress', false ) ) {
 		$page = ur_get_wpml_page_language( $page );
+	} else {
+		$page = $page_id;
 	}
 
 	return $page ? absint( $page ) : - 1;
