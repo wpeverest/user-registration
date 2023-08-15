@@ -3467,6 +3467,30 @@
 									.toggle();
 							});
 							break;
+						case "enable_pattern" :
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-pattern_value")
+									.hide();
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-pattern_message")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-pattern_value")
+									.toggle();
+
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-pattern_message")
+									.toggle();
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
@@ -4461,7 +4485,11 @@
 				.val();
 			smart_tag = $(this).data("key");
 			input_value += smart_tag;
-			update_input(input_value);
+			var inputElement = $(this).parent().parent().parent().find("input"),
+			advanceFieldData = inputElement.data("advance-field"),
+			fieldData = inputElement.data("field"),
+			field_name = advanceFieldData !== undefined ? advanceFieldData : fieldData;
+			update_input(field_name,input_value);
 
 			$(this).parent().parent().parent().find("input").val(input_value);
 			$(document.body).find(".ur-smart-tags-list").hide();
@@ -4472,6 +4500,7 @@
 			".ur_advance_setting.ur-settings-default-value",
 			function () {
 				input_value = $(this).val();
+				field_name = $(this).data("advance-field");
 				update_input(input_value);
 			}
 		);
@@ -4480,6 +4509,7 @@
 			".ur-general-setting.ur-general-setting-hidden-value input",
 			function () {
 				input_value = $(this).val();
+				field_name = $(this).data("field");
 				update_input(input_value);
 			}
 		);
@@ -4489,6 +4519,7 @@
 			".ur_advance_setting.ur-settings-pattern_value",
 			function () {
 				input_value = $(this).val();
+				field_name = $(this).data("advance-field");
 				update_input(input_value);
 			}
 		);
@@ -4496,7 +4527,7 @@
 		/**
 		 * For update the default value.
 		 */
-		function update_input(input_value) {
+		function update_input(field_name,input_value) {
 			active_field = $(".ur-item-active");
 			target_input_field = $(active_field).find(
 				".user-registration-field-option-group.ur-advance-setting-block"
@@ -4505,10 +4536,10 @@
 				".ur-advance-setting.ur-advance-default_value"
 			);
 			target_input = $(ur_toggle_content).find(
-				"input[data-id=text_advance_setting_default_value]"
+				'input[data-advance-field="' + field_name + '"]'
 			);
 			target_textarea = $(ur_toggle_content).find(
-				"input[data-id=textarea_advance_setting_default_value]"
+				'input[data-advance-field="' + field_name + '"]'
 			);
 
 			target_input_hidden_field = $(active_field).find(
@@ -4518,14 +4549,14 @@
 				".ur-general-setting.ur-general-setting-hidden-value"
 			);
 			target_hidden_input = $(ur_toggle_hidden_content).find(
-				'input[data-field="hidden_value"]'
+				'input[data-field="' + field_name + '"]'
 			);
 			// pattern value
 			ur_toggle_pattern_content = target_input_field.find(
 				".ur-advance-setting.ur-advance-pattern_value"
 			);
 			target_pattern_input = $(ur_toggle_pattern_content).find(
-				"input[data-advance-field=pattern_value]"
+				'input[data-advance-field="' + field_name + '"]'
 			);
 			target_input.val(input_value);
 			target_textarea.val(input_value);
