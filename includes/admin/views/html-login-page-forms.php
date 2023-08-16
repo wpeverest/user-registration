@@ -48,6 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="ur-builder-wrapper-content ur-login-form-wrapper">
 									<div class="ur-login-shortcode">
 										<h1><?php echo esc_html__( 'Login Shortcode', 'user-registration' ); ?></h1>
+										<div class="ur-login-shortcode--wrapper">
 										<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/login_form.png' ); ?>" alt="Login Form">
 										<div class="ur-login-content">
 											<?php printf( '<p>%s <strong>%s</strong> %s</p>', esc_html( 'You can add this shortcode', 'user-registration' ), esc_html__( '[user_registration_login]', 'user-registration' ), esc_html__( 'in the pages where you want to show your login form which is provided below:-', 'user-registration' ) ); ?>
@@ -85,6 +86,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 												</div>
 											</div>
 										</div>
+									</div>
 									</div>
 									<div class="ur-login-view-doc">
 										<a href="<?php echo esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-show-login-form/' ); ?>" target="_blank"><?php echo esc_html__( 'View Documentation For More Details', 'user-registration' ); ?></a>
