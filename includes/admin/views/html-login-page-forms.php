@@ -19,7 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--backward is-disabled">
 						<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-left-alt2"></i>
 					</div>
-					<div class="ur-scroll-ui__scroll-nav"><ul class="subsubsub  ur-scroll-ui__items"><li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration" class="current ur-scroll-ui__item">Registration Forms</a></li><li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registrationtab=login-forms" class=" ur-scroll-ui__item">Login Forms</a></li></ul></div>							<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
+					<div class="ur-scroll-ui__scroll-nav">
+						<ul class="subsubsub  ur-scroll-ui__items">
+							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item">Registration Forms</a></li>
+							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=" ur-scroll-ui__item">Login Forms</a></li>
+						</ul>
+					</div>
+					<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
 						<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
 					</div>
 				</div>

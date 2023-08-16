@@ -165,8 +165,8 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 							<div class="ur-scroll-ui">
 								<div class="ur-scroll-ui__scroll-nav">
 									<ul class="subsubsub  ur-scroll-ui__items">
-										<li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration" class="current ur-scroll-ui__item">Registration Forms</a></li>
-										<li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration&tab=login-forms" class=" ur-scroll-ui__item">Login Forms</a></li>
+										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item">Registration Forms</a></li>
+										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=" ur-scroll-ui__item">Login Forms</a></li>
 									</ul>
 								</div>
 								<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
