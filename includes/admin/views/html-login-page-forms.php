@@ -10,6 +10,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
+<div class="wrap">
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
+	<div class="user-registration-settings-container">
+		<div class="user-registration-options-header">
+			<div class="user-registration-options-header--bottom" >
+				<div class="ur-scroll-ui">
+					<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--backward is-disabled">
+						<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-left-alt2"></i>
+					</div>
+					<div class="ur-scroll-ui__scroll-nav"><ul class="subsubsub  ur-scroll-ui__items"><li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration" class="current ur-scroll-ui__item">Registration Forms</a></li><li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registrationtab=login-forms" class=" ur-scroll-ui__item">Login Forms</a></li></ul></div>							<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
+						<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="wrap user-registration__wrap ur-form-container">
 	<h1 style="display:none"></h1> <!-- To manage notices -->
 	<div id="menu-management-liquid" class="ur-form-subcontainer">
@@ -18,16 +35,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div> -->
 		<div id="menu-management">
 			<div class="menu-edit">
-				<div id="nav-menu-header">
-					<div class="ur-brand-logo ur-px-2">
-						<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
-					</div>
-					<div class="ur-brand-logo ur-px-2">
-					<a class="ur-menu-link" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>"><span class="ur-form-title">Registration Forms</span></a>
-					</div>
-					<div class="ur-brand-logo ur-px-2">
-					<a class="ur-menu-link"  href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>"><span class="ur-form-title">Login Forms</span></a>					</div>
-				</div><!-- END .nav-menu-header -->
 				<div id="post-body">
 					<div class="ur-registered-from">
 						<div class='ur-builder-wrapper'>

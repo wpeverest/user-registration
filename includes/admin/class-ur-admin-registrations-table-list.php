@@ -159,6 +159,23 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		?>
 			<div class="wrap">
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
+				<div class="user-registration-settings-container">
+					<div class="user-registration-options-header">
+						<div class="user-registration-options-header--bottom" >
+							<div class="ur-scroll-ui">
+								<div class="ur-scroll-ui__scroll-nav">
+									<ul class="subsubsub  ur-scroll-ui__items">
+										<li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration" class="current ur-scroll-ui__item">Registration Forms</a></li>
+										<li><a href="http://localhost/milan/wp-admin/admin.php?page=user-registration&tab=login-forms" class=" ur-scroll-ui__item">Login Forms</a></li>
+									</ul>
+								</div>
+								<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
+									<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				<hr class="wp-header-end">
 				<form id="registration-list" method="get">
