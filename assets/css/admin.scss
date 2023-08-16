@@ -3827,10 +3827,79 @@ body {
 
 	.user-registration {
 		&__wrap {
+			#menu-management {
+				.menu-edit {
+					position: unset;
+				}
+			}
+
 			#post-body {
 				.ur-registered-from {
 					display: block;
 					background-color: transparent;
+
+					.ur-builder-wrapper {
+						height: auto;
+						overflow-y: unset;
+						border-left: 0;
+						background: transparent;
+
+						.ur-selected-inputs {
+							background: #f0f0f1;
+
+							.ur-builder-wrapper-content {
+								padding: $spacing_32px $spacing_32px $spacing_60px;
+								// max-width: 900px;
+								// margin: 0 auto;
+
+								.ur-login-shortcode {
+									// flex-direction: row;
+									// gap: $spacing_40px;
+									margin-top: 0;
+									display: block;
+
+									h1 {
+										margin-bottom: $spacing_12px;
+									}
+
+									&--wrapper {
+										// width: 45%;
+										display: flex;
+										align-items: center;
+										gap: $spacing_30px;
+										flex-wrap: nowrap;
+
+										@media (max-width: 1000px) {
+											flex-wrap: wrap;
+											justify-content: center;
+										}
+
+										img {
+											margin-left: -$spacing_20px;
+
+											@media (max-width: 1000px) {
+												margin-left: 0;
+											}
+
+											@media (max-width: 768px) {
+												width: 100%;
+											}
+										}
+
+										.ur-login-content {
+											// width: 55%;
+											margin-left: 0;
+											margin-right: 0;
+											padding: $spacing_24px;
+											background: #f6f6f6;
+											border-radius: $border_radius_7;
+										}
+									}
+									
+								}
+							}
+						}
+					}
 				}
 			}
 		}
