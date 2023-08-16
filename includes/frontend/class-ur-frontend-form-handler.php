@@ -102,7 +102,9 @@ class UR_Frontend_Form_Handler {
 
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
-			self::ur_update_user_meta( $user_id, self::$valid_form_data, $form_id ); // Insert user data in usermeta table.
+			$filtered_form_data = apply_filters( 'user_registration_before_user_meta_update', self::$valid_form_data, $user_id, $form_id );
+
+			self::ur_update_user_meta( $user_id, $filtered_form_data, $form_id ); // Insert user data in usermeta table.
 
 			if ( $user_id > 0 ) {
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );

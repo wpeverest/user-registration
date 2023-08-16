@@ -3820,3 +3820,48 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 		return $data;
 	}
 }
+
+if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
+	/**
+	 * Filter user meta field when conditinal logic applied.
+	 *
+	 * @param array $valid_form_data Form Data.
+	 * @param int $user_id User Id.
+	 * @param int $form_id Form Id.
+	 * @return array array of form data.
+	 *
+	 * @since 3.0.4
+	 */
+	function user_registration_conditional_user_meta_filter( $valid_form_data, $user_id, $form_id ) {
+		$profile_data = user_registration_form_data( $user_id, $form_id );
+		$field_name   = '';
+		$field_key    = '';
+		$field_value  = '';
+		foreach ( $profile_data as $key => $field ) {
+			if ( isset( $field['enable_conditional_logic'] ) && ur_string_to_bool( $field['enable_conditional_logic'] ) ) {
+				$cl_map      = json_decode($field['cl_map'], true);
+				$conditions  = $cl_map['logic_map']['conditions'][0]['conditions'][0];
+				$field_name  = $conditions['triggerer_id'];
+				$field_value = $conditions['value'];
+				if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) {
+					$field_key = str_replace( 'user_registration_', '', $key );
+					if ( in_array( $field_key, array_keys( $valid_form_data ) ) && $valid_form_data[$field_name]->value !== $field_value ) {
+						unset( $valid_form_data[$field_key] );
+					}
+				} else {
+					$field_key = $key;
+					$field_name = 'user_registration_' . $field_name;
+					if ( in_array( $field_key, array_keys( $valid_form_data ) ) && $valid_form_data[$field_name]['default'] !== $field_value ) {
+						unset($valid_form_data[$field_key]);
+					}
+				}
+
+			}
+		}
+
+		return $valid_form_data;
+	}
+}
+
+add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
+add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
