@@ -184,16 +184,24 @@ class UR_Admin_User_List_Manager {
 
 		$args = array(
 			'meta_query' => array(
-				'relation' => 'OR',
+				'relation' => 'AND',
 				array(
 					'key'     => 'ur_user_status',
 					'value'   => 0,
 					'compare' => '=',
 				),
 				array(
-					'key'     => 'ur_confirm_email',
-					'value'   => 0,
-					'compare' => '=',
+					'relation' => 'OR',
+					array(
+						'key'     => 'ur_confirm_email',
+						'value'   => '0',
+						'compare' => '!=',
+					),
+					array(
+						'key'     => 'ur_admin_approval_after_email_confirmation',
+						'value'   => 'false',
+						'compare' => '!=',
+					),
 				),
 			),
 		);
@@ -297,6 +305,14 @@ class UR_Admin_User_List_Manager {
 		if ( 'ur_user_user_status' === $column_name ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
+
+			if ( '0' == $status['user_status'] ) {
+				if ( in_array( $status['login_option'], array( 'email_confirmation', 'admin_approval_after_email_confirmation' ), true ) ) {
+					if ( 0 == $status['email_status'] || 'false' == $status['email_status'] ) {
+						return __( 'Awaiting Email Confirmation', 'user-registration' );
+					}
+				}
+			}
 
 			if ( ! empty( $status ) ) {
 				return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
