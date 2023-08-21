@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-749-merge-two-duplicate-methods-on-ur-form-va-two-duplicate-methods-on-ur-form-validation
+      - UR-749-merge-two-duplicate-methods-on-ur-form-validation
     workflow_dispatch:
 jobs:
   sync:
