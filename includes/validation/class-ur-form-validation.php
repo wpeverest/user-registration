@@ -675,15 +675,7 @@ class UR_Form_Validation extends UR_Validation {
 			$form_data
 		);
 
-		$skippable_fields = apply_filters(
-			'user_registration_validation_skip_fields',
-			array(
-				'user_email',
-				'user_pass',
-				'user_confirm_email',
-				'user_confirm_password',
-			)
-		);
+		$skippable_fields = $this->get_update_profile_validation_skippable_fields( $form_field_data );
 
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
@@ -699,7 +691,7 @@ class UR_Form_Validation extends UR_Validation {
 		foreach ( $form_data as $data ) {
 			$single_field_name = $data->field_name;
 
-			if ( in_array( $single_field_name, $skippable_fields ) ) {
+			if ( in_array( $single_field_name, $skippable_fields, true ) ) {
 				continue;
 			}
 
@@ -727,10 +719,6 @@ class UR_Form_Validation extends UR_Validation {
 				$required = isset( $single_form_field->general_setting->required ) ?
 							$single_form_field->general_setting->required :
 							false;
-
-				if ( 'last_name' == $data->field_name ) {
-					lg( 'hello world' );
-				}
 
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
@@ -777,6 +765,85 @@ class UR_Form_Validation extends UR_Validation {
 				do_action( 'user_registration_validate_field_' . $single_field_key, wp_unslash( $single_field_value ), $single_form_field ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			}
 		}
+	}
+
+
+	/**
+	 * Returns a list of fields to skip validation for like Confirmation Fields,
+	 * Woocommerce fields and Payment fields that are not submitted on profile update.
+	 *
+	 * @param [array] $form_data Form fields data.
+	 * @return array
+	 */
+	private function get_update_profile_validation_skippable_fields( $form_data ) {
+		$skippable_fields = array();
+
+		$skippable_field_types = array(
+			'user_pass',
+			'user_confirm_email',
+			'user_confirm_password',
+			'profile_picture',
+			'hidden',
+			'invite_code',
+			'billing_address_title',
+			'billing_first_name',
+			'billing_last_name',
+			'billing_company',
+			'billing_email',
+			'billing_phone',
+			'separate_shipping',
+			'billing_address_1',
+			'billing_address_2',
+			'billing_city',
+			'billing_state',
+			'billing_country',
+			'billing_postcode',
+			'shipping_address_title',
+			'shipping_first_name',
+			'shipping_last_name',
+			'shipping_company',
+			'shipping_country',
+			'shipping_address_1',
+			'shipping_address_2',
+			'shipping_city',
+			'shipping_state',
+			'shipping_postcode',
+			'single_item',
+			'multiple_choice',
+			'range',
+			'quantity_field',
+			'total_field',
+			'stripe_gateway',
+		);
+
+		$form_skippable_fields = array_filter(
+			$form_data,
+			function( $field ) use ( $skippable_field_types ) {
+				if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+					if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
+						return false;
+					}
+
+					return true;
+				}
+
+				return false;
+			}
+		);
+
+		$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+		$skippable_fields      = $form_skippable_fields;
+
+		/**
+		 * Add fields to skip validation on update profile.
+		 * 
+		 * @param [array] $skippable_fields Skippable fields array.
+		 * @param [array] $form_data Form Fields data array.
+		 * 
+		 * @since 3.0.4
+		 */
+		return apply_filters( 'user_registration_update_profile_validation_skip_fields', $skippable_fields, $form_data );
 	}
 
 
