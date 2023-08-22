@@ -182,43 +182,7 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function user_registration_pending_users_notices() {
 
-		$args = array(
-			'meta_query' => array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'ur_user_status',
-					'value'   => '0',
-					'compare' => '=',
-				),
-				array(
-					'relation' => 'AND',
-					array(
-						'relation' => 'OR',
-						array(
-							'key'     => 'ur_confirm_email',
-							'value'   => '0',
-							'compare' => '!=',
-						),
-						array(
-							'key'     => 'ur_confirm_email',
-							'compare' => 'NOT EXISTS',
-						),
-					),
-					array(
-						'relation' => 'OR',
-						array(
-							'key'     => 'ur_admin_approval_after_email_confirmation',
-							'value'   => 'false',
-							'compare' => '=',
-						),
-						array(
-							'key'     => 'ur_admin_approval_after_email_confirmation',
-							'compare' => 'NOT EXISTS',
-						),
-					),
-				),
-			),
-		);
+		$args = $this->get_pending_users_meta_query();
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
@@ -485,19 +449,7 @@ class UR_Admin_User_List_Manager {
 					return;
 			}
 
-			$meta_query = array(
-				'relation' => 'OR',
-				array(
-					'key'     => 'ur_user_status',
-					'value'   => $status,
-					'compare' => '=',
-				),
-				array(
-					'key'     => 'ur_confirm_email',
-					'value'   => $status,
-					'compare' => '=',
-				),
-			);
+			$meta_query = $this->get_pending_users_meta_query();
 
 			if ( UR_Admin_User_Manager::APPROVED === $status ) {
 				$meta_query = array(
@@ -692,6 +644,53 @@ class UR_Admin_User_List_Manager {
 			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_email_confirmation_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
+	}
+
+	/**
+	 * Returns meta query array to fetch pending users.
+	 *
+	 * @return array
+	 */
+	private function get_pending_users_meta_query() {
+		$meta_query = array(
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'ur_user_status',
+					'value'   => '0',
+					'compare' => '=',
+				),
+				array(
+					'relation' => 'AND',
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'ur_confirm_email',
+							'value'   => '0',
+							'compare' => '!=',
+						),
+						array(
+							'key'     => 'ur_confirm_email',
+							'compare' => 'NOT EXISTS',
+						),
+					),
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'ur_admin_approval_after_email_confirmation',
+							'value'   => 'false',
+							'compare' => '=',
+						),
+						array(
+							'key'     => 'ur_admin_approval_after_email_confirmation',
+							'compare' => 'NOT EXISTS',
+						),
+					),
+				),
+			),
+		);
+
+		return $meta_query;
 	}
 }
 
