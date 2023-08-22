@@ -4484,7 +4484,7 @@
 				.find("input")
 				.val();
 			smart_tag = $(this).data("key");
-			input_value += smart_tag;
+			input_value = smart_tag;
 			var inputElement = $(this).parent().parent().parent().find("input"),
 			advanceFieldData = inputElement.data("advance-field"),
 			fieldData = inputElement.data("field"),
