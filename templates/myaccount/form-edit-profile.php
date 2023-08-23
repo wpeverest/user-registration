@@ -49,7 +49,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 								$max_size        = wp_max_upload_size();
 								$max_upload_size = $max_size;
 								$crop_picture    = false;
-
+								$profile_pic_args            = array();
 								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
@@ -57,6 +57,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 											if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
+												$profile_pic_args = (array) $single_item->advance_setting;
 												$edit_profile_valid_file_type = isset( $single_item->advance_setting->valid_file_type ) && '' !== $single_item->advance_setting->valid_file_type ? implode( ', ', $single_item->advance_setting->valid_file_type ) : $edit_profile_valid_file_type;
 												$max_upload_size              = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
 												$crop_picture                 = isset( $single_item->advance_setting->enable_crop_picture ) ? ur_string_to_bool( $single_item->advance_setting->enable_crop_picture ) : false;
@@ -64,7 +65,6 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 										}
 									}
 								}
-
 
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
@@ -84,7 +84,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
 													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 													</span>
-													<?php do_action( 'uraf_profile_picture_buttons' ); ?>
+													<?php do_action( 'uraf_profile_picture_buttons', $profile_pic_args ); ?>
 												</p>
 												<div style="clear:both; margin-bottom: 20px"></div>
 											</div>
