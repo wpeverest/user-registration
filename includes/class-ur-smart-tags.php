@@ -414,7 +414,7 @@ class UR_Smart_Tags {
 		$pattern_lists          .= '<div class="ur-smart-tags-list" style="display: none">';
 		$pattern_lists          .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
 		foreach ( $pattern_validation_list as $key => $value ) {
-			$pattern_lists .= "<li class='ur-select-smart-tag' data-key = '" . esc_attr( $key ) . "'> " . esc_html( $value ) . '</li>';
+			$pattern_lists .= '<li class="ur-select-smart-tag" data-key = "' . esc_attr( $key ) . '">' . esc_html( $value ) . '</li>';
 		}
 		$pattern_lists .= '</ul></div>';
 		return $pattern_lists;
