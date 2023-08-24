@@ -83,15 +83,10 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 		public function feedback_html() {
 			$deactivate_reasons = array(
 				'feature_unavailable'    => array(
-					'title'             => esc_html__( 'I didn’t find the feature I was looking for', 'user-registration' ),
-					'input_placeholder' => esc_html__( 'If possible, please elaborate on this', 'user-registration' ),
+					'title'             => sprintf( '%s <a href="%s">here</a>', esc_html__( 'I didn\'t find the feature I was looking for. Kindly request it ', 'user-registration' ), esc_url_raw( 'https://user-registration.feedbear.com/roadmap' ) ),
 				),
 				'complex_to_use'         => array(
-					'title'             => esc_html__( 'I found the plugin complex to use', 'user-registration' ),
-					'input_placeholder' => esc_html__( 'If possible, please elaborate on this', 'user-registration' ),
-				),
-				'couldnt_build_the_form' => array(
-					'title'             => esc_html__( 'I couldn\'t build the form', 'user-registration' ),
+					'title'             => sprintf( '%s <a href="%s">documentation</a> or reach out to our <a href="%s">support team</a>', esc_html__( 'I found the plugin complex to use. Find guidance in the', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs-category/registration-and-login-form/' ), esc_url_raw( 'https://wpuserregistration.com/support/' ) ),
 					'input_placeholder' => esc_html__( 'If possible, please elaborate on this', 'user-registration' ),
 				),
 				'found_a_better_plugin'  => array(
@@ -107,7 +102,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 					'input_placeholder' => '',
 				),
 				'other'                  => array(
-					'title'             => esc_html__( 'Other', 'user-registration' ),
+					'title'             => esc_html__( 'Other or found a glitch in the plugin?', 'user-registration' ),
 					'input_placeholder' => esc_html__( 'If possible, please elaborate on this', 'user-registration' ),
 				),
 			);

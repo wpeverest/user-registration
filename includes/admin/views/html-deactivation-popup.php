@@ -49,7 +49,7 @@ $deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . UR
 							class="ur-deactivate-feedback-input" type="radio" name="reason_slug"
 							value="<?php echo esc_attr( $reason_slug ); ?>"/>
 						<label for="ur-deactivate-feedback-<?php echo esc_attr( $reason_slug ); ?>"
-							class="ur-deactivate-feedback-label"><?php echo esc_html( $reason['title'] ); ?></label>
+							class="ur-deactivate-feedback-label"><?php echo wp_kses_post( $reason['title'] ); ?></label>
 						<?php if ( ! empty( $reason['input_placeholder'] ) ) : ?>
 							<input class="ur-feedback-text" type="text"
 								name="reason_<?php echo esc_attr( $reason_slug ); ?>"
