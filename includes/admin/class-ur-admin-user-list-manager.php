@@ -277,23 +277,19 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function add_column_cell( $val, $column_name, $user_id ) {
 
-		$form_id = ur_get_form_id_by_userid( $user_id );
-
 		if ( 'ur_user_user_status' === $column_name ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
 
-			if ( in_array( $status['login_option'], array( 'email_confirmation', 'admin_approval_after_email_confirmation' ), true ) ) {
-				if ( '0' == $status['approval_status'] || '' == $status['approval_status'] ) {
-					if ( 0 == $status['email_status'] || 'false' == $status['email_status'] ) {
-						return __( 'Awaiting Email Confirmation', 'user-registration' );
-					}
-				} elseif ( '-1' == $status['approval_status'] ) {
+			if ( ! empty( $status ) ) {
+				if ( $user_manager->is_email_pending() ) {
+					return UR_Admin_User_Manager::email_pending_label();
+				}
+
+				if ( $user_manager->is_denied() ) {
 					return UR_Admin_User_Manager::get_status_label( '-1' );
 				}
-			}
 
-			if ( ! empty( $status ) ) {
 				return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
 			}
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {

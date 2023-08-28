@@ -266,6 +266,11 @@ class UR_Admin_User_Manager {
 		$user_status = $this->get_user_status();
 
 		if ( is_array( $user_status ) ) {
+
+			if ( isset( $user_status['approval_status'] ) ) {
+				return self::DENIED == $user_status['approval_status'];
+			}
+
 			return ( self::DENIED == $user_status['user_status'] );
 		}
 		return ( self::DENIED == $user_status );
@@ -284,7 +289,11 @@ class UR_Admin_User_Manager {
 				'admin_approval_after_email_confirmation' === $user_status['login_option'] ||
 				'email_confirmation' === $user_status['login_option']
 			) {
-				return '0' == $user_status['email_status'];
+				if ( empty( $user_status['approval_status'] ) ) {
+					if ( 0 == $user_status['email_status'] || 'false' == $user_status['email_status'] ) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -428,6 +437,15 @@ class UR_Admin_User_Manager {
 		}
 
 		return ucfirst( $label );
+	}
+
+	/**
+	 * Label for user awaiting email confirmation.
+	 *
+	 * @return string
+	 */
+	public static function email_pending_label() {
+		return esc_html__( 'Awaiting Email Confirmation', 'user-registration' );
 	}
 
 	/**
