@@ -65,9 +65,10 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 									'class'    => '',
 									'desc_tip' => true,
 									'options'  => array(
-										'v2'       => 'reCAPTCHA v2',
-										'v3'       => 'reCAPTCHA v3',
-										'hCaptcha' => 'hCaptcha',
+										'v2'         => 'reCAPTCHA v2',
+										'v3'         => 'reCAPTCHA v3',
+										'hCaptcha'   => 'hCaptcha',
+										'cloudflare' => 'Cloudflare Turnstile',
 									),
 								),
 								array(
@@ -192,7 +193,41 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 									'css'               => 'min-width: 350px;',
 									'desc_tip'          => true,
 								),
+								array(
+									'title'    => __( 'Site Key (Cloudflare Turnstile)', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get site key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" target="_blank">', '</a>' ), //phpcs:ignore
+									'id'       => 'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
+									'default'  => '',
+									'type'     => 'text',
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
 
+								),
+								array(
+									'title'    => __( 'Secret Key (Cloudflare Turnstile)', 'user-registration' ),
+									'desc'     => sprintf( __( 'Get secret key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" target="_blank">', '</a>' ), 	//phpcs:ignore
+									'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
+									'default'  => '',
+									'type'     => 'text',
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Theme', 'user-registration' ),
+									'desc'     => sprintf( esc_html__( 'Please select theme mode for your Cloudflare Turnstile. <a href="%1$s" target="_blank">Learn More</a>', 'user-registration' ), esc_url( 'https://www.cloudflare.com/products/turnstile/' ) ),
+									'id'       => 'user_registration_captcha_setting_recaptcha_cloudflare_theme',
+									'options'  => array(
+										'auto'  => esc_html__( 'Auto', 'user-registration' ),
+										'light' => esc_html__( 'Light', 'user-registration' ),
+										'dark'  => esc_html__( 'Dark', 'user-registration' ),
+									),
+									'type'     => 'select',
+									'class'    => '',
+									'css'      => 'min-width: 350px;',
+									'desc_tip' => true,
+								),
 							),
 						),
 					),

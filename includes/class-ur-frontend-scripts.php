@@ -233,6 +233,11 @@ class UR_Frontend_Scripts {
 				'deps'    => array(),
 				'version' => UR_VERSION,
 			),
+			'ur-recaptcha-cloudflare'    => array(
+				'src'     => 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
+				'deps'    => array(),
+				'version' => '',
+			),
 			'ur-my-account'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),
 				'deps'    => array( 'jquery', 'user-registration' ),
