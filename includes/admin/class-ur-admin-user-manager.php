@@ -181,7 +181,9 @@ class UR_Admin_User_Manager {
 			);
 
 		} elseif ( '' !== $user_status && '' === $user_email_status ) {
-
+			/**
+			 * Case: Admin Approval.
+			 */
 			$this->user_status = $user_status;
 
 			$result = array(
@@ -190,6 +192,9 @@ class UR_Admin_User_Manager {
 			);
 
 		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status ) {
+			/**
+			 * Case: Admin Approval after Email Confirmation.
+			 */
 			if ( 'denied' === $admin_approval_after_email_confirmation_status ) {
 				$admin_approval_after_email_confirmation_status = self::DENIED;
 			} elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ur_string_to_bool( $user_email_status ) ) {
@@ -208,6 +213,9 @@ class UR_Admin_User_Manager {
 				'approval_status' => $admin_approval_after_email_confirmation_status,
 			);
 		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
+			/**
+			 * Case: Email Confirmation.
+			 */
 
 			$this->user_status = $user_email_status;
 
@@ -261,6 +269,25 @@ class UR_Admin_User_Manager {
 			return ( self::DENIED == $user_status['user_status'] );
 		}
 		return ( self::DENIED == $user_status );
+	}
+
+	/**
+	 * Check if the user is awaiting email confirmation.
+	 *
+	 * @return bool
+	 */
+	public function is_email_pending() {
+		$user_status = $this->get_user_status();
+
+		if ( is_array( $user_status ) ) {
+			if (
+				'admin_approval_after_email_confirmation' === $user_status['login_option'] ||
+				'email_confirmation' === $user_status['login_option']
+			) {
+				return '0' == $user_status['email_status'];
+			}
+		}
+		return false;
 	}
 
 	/**
