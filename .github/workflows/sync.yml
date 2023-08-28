@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-1139-handle-user-status-properly
     workflow_dispatch:
 jobs:
   sync:
