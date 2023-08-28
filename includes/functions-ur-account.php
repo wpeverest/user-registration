@@ -264,3 +264,31 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 
 	return $avatar;
 }
+
+/**
+ * Returns user login option set in 'ur_login_option' meta.
+ * If the meta is not set ( old users ), login option from form is returned.
+ *
+ * @param integer $user_id User Id.
+ * @return string
+ */
+function ur_get_user_login_option( $user_id = 0 ) {
+
+	$user_id = (int) $user_id;
+
+	if ( 1 > $user_id ) {
+		return '';
+	}
+
+	$login_option = get_user_meta( $user_id, 'ur_login_option', true );
+
+	if ( empty( $login_option ) ) {
+		$form_id = ur_get_form_id_by_userid( $user_id );
+
+		// Handle backwards compatibility.
+		$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
+		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', $login_option );
+	}
+
+	return $login_option;
+}

@@ -191,7 +191,7 @@ class UR_Email_Confirmation {
 
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
-			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+			$login_option = ur_get_user_login_option( $user_id );
 
 			if ( $user && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				$this->set_email_status( array(), '', $user_id );
@@ -235,7 +235,7 @@ class UR_Email_Confirmation {
 			$form_id = ur_get_form_id_by_userid( $user_id );
 
 			// Check if the token matches the token value stored in db.
-			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+			$login_option = ur_get_user_login_option( $user_id );
 
 			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				if ( isset( $output[1] ) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
@@ -348,7 +348,7 @@ class UR_Email_Confirmation {
 	 */
 	public function set_email_status( $valid_form_data, $form_id, $user_id ) {
 		$form_id      = isset( $form_id ) ? $form_id : 0;
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		if ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
 			$token = $this->get_token( $user_id );
@@ -386,7 +386,7 @@ class UR_Email_Confirmation {
 
 		$general_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 
-		if ( 'email_confirmation' === ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', $general_login_option ) ) {
+		if ( 'email_confirmation' === ur_get_user_login_option( $user->ID ) ) {
 			$email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
 
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );

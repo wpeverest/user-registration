@@ -80,7 +80,7 @@ class UR_Admin_User_Manager {
 
 		$action_label = '';
 		$form_id      = get_user_meta( $this->user->ID, 'ur_form_id', true );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $this->user->ID );
 
 		switch ( $status ) {
 			case self::APPROVED:

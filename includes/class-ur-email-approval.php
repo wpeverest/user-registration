@@ -131,7 +131,7 @@ class UR_Email_Approval {
 	 */
 	public function set_approval_status( $valid_form_data, $form_id, $user_id ) {
 		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 
