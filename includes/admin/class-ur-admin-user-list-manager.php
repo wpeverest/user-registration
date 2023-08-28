@@ -282,12 +282,12 @@ class UR_Admin_User_List_Manager {
 			$status       = $user_manager->get_user_status();
 
 			if ( ! empty( $status ) ) {
-				if ( $user_manager->is_email_pending() ) {
-					return UR_Admin_User_Manager::email_pending_label();
-				}
-
 				if ( $user_manager->is_denied() ) {
 					return UR_Admin_User_Manager::get_status_label( '-1' );
+				}
+
+				if ( $user_manager->is_email_pending() ) {
+					return UR_Admin_User_Manager::email_pending_label();
 				}
 
 				return UR_Admin_User_Manager::get_status_label( $status['user_status'] );

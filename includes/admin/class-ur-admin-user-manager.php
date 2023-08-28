@@ -116,9 +116,9 @@ class UR_Admin_User_Manager {
 		}
 		$this->user_status = $status;
 
-		if ( is_super_admin( $this->user->ID ) ) {
-			return;
-		}
+		// if ( is_super_admin( $this->user->ID ) ) {
+		// 	return;
+		// }
 
 		return update_user_meta( absint( $this->user->ID ), 'ur_user_status', sanitize_text_field( $status ) );
 	}
@@ -212,7 +212,7 @@ class UR_Admin_User_Manager {
 				'email_status'    => $user_email_status,
 				'approval_status' => $admin_approval_after_email_confirmation_status,
 			);
-		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
+		} elseif ( ( '' !== $user_email_status ) ) {
 			/**
 			 * Case: Email Confirmation.
 			 */
@@ -263,7 +263,7 @@ class UR_Admin_User_Manager {
 	 * @return bool
 	 */
 	public function is_denied() {
-		$user_status = $this->get_user_status();
+		$user_status = $this->get_user_status( true );
 
 		if ( is_array( $user_status ) ) {
 
@@ -282,7 +282,7 @@ class UR_Admin_User_Manager {
 	 * @return bool
 	 */
 	public function is_email_pending() {
-		$user_status = $this->get_user_status();
+		$user_status = $this->get_user_status( true );
 
 		if ( is_array( $user_status ) ) {
 			if (
