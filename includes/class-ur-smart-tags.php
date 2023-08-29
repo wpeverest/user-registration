@@ -18,6 +18,7 @@ class UR_Smart_Tags {
 	public function __construct() {
 		add_filter( 'user_registration_process_smart_tags', array( $this, 'process' ), 10, 3 );
 		add_filter( 'ur_smart_tags_list_in_general', array( $this, 'select_smart_tags_in_general' ), 10, 1 );
+		add_filter( 'ur_pattern_validation_list_in_advanced_settings', array( $this, 'select_pattern_validation' ), 10, 1 );
 	}
 
 	/**
@@ -355,6 +356,68 @@ class UR_Smart_Tags {
 		}
 		$smart_tags .= '</ul></div>';
 		return $smart_tags;
+	}
+
+	/**
+	 * List of Pattern which can checked against.
+	 *
+	 * @return array array of pattern lists.
+	 */
+	public static function ur_pattern_validation_lists() {
+		$pattern_lists = apply_filters(
+			'user_registration_pattern_validation_lists',
+			array(
+				'^[a-zA-Z]+$'                                 => __( 'Alpha', 'user-registration' ),
+				'^[a-zA-Z0-9]+$'                              => __( 'Alphanumeric', 'user-registration' ),
+				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'         => __( 'Color', 'user-registration' ),
+				'^[A-Za-z]{2}$'                               => __( 'Country Code (2 Character)', 'user-registration' ),
+				'^[A-Za-z]{3}$'                               => __( 'Country Code (3 Character)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$'   => __( 'Date (mm/dd)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$'   => __( 'Date (dd/mm)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$' => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$' => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
+				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$'   => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$' => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$' =>  __( 'Date (dd/mm/yyyy)', 'user-registration' ),
+				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' => __( 'Email', 'user-registration' ),
+				'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$' => __( 'IP (Version 4)', 'user-registration' ),
+				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'                  => __( 'IP (Version 6)', 'user-registration' ),
+				'^978(?:-[\d]+){3}-[\d]$'                          => __( 'ISBN', 'user-registration' ),
+				'-?\d{1,3}\.\d+'                                   => __( 'Latitude or Longitude', 'user-registration' ),
+				'^[0-9]+$'                                         => __( 'Numeric', 'user-registration' ),
+				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$'       => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
+				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'              => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
+				'[0-9+()-. ]+'                                     => __( 'Phone - General', 'user-registration' ),
+				'^\+44\d{10}$'                                     => __( 'Phone - UK', 'user-registration' ),
+				'\d{3}[\-]\d{3}[\-]\d{4}'                          => __( 'Phone - US: 123-456-7890', 'user-registration' ),
+				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'                    => __( 'Phone - US: (123)456-7890', 'user-registration' ),
+				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}'          => __( 'Phone - US: Flexible', 'user-registration' ),
+				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$'  => __( 'Postal Code (UK)', 'user-registration' ),
+				'\d+(\.\d{2})?$'                                   => __( 'Price (1.23)', 'user-registration' ),
+				'^[a-zA-Z0-9-]+$'                                  => __( 'Slug', 'user-registration' ),
+				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'           => __( 'Time (hh:mm:ss)', 'user-registration' ),
+				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'            => __( 'URL', 'user-registration' ),
+				'(\d{5}([\-]\d{4})?)'                              => __( 'Zip Code', 'user-registration' ),
+			)
+		);
+		return $pattern_lists;
+	}
+
+	/**
+	 * Smart tag list button in general setting and advanced settin of field.
+	 *
+	 * @param string $smart_tags list of smart tags.
+	 */
+	public function select_pattern_validation( $pattern_lists ) {
+		$pattern_validation_list = self::ur_pattern_validation_lists();
+		$pattern_lists          .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+		$pattern_lists          .= '<div class="ur-smart-tags-list" style="display: none">';
+		$pattern_lists          .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
+		foreach ( $pattern_validation_list as $key => $value ) {
+			$pattern_lists .= '<li class="ur-select-smart-tag" data-key = "' . esc_attr( $key ) . '">' . esc_html( $value ) . '</li>';
+		}
+		$pattern_lists .= '</ul></div>';
+		return $pattern_lists;
 	}
 }
 
