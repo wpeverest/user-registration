@@ -16,15 +16,14 @@ jQuery(function ($) {
 					URCopyShortcode.urSetClipboard(res, $this);
 
 					$this
-						.tooltipster({
-							theme: 'tooltipster-borderless',
-							attribute: "data-copied",
-							activation: "focus",
-							fadeIn: 50,
-							fadeOut: 50,
-							delay: 200,
-						})
-						.trigger("focus");
+					.tooltipster( 'content', $( this ).attr( 'data-copied' ) )
+					.trigger( 'focus' )
+					.on( 'mouseleave', function() {
+						var $this = $( this );
+						setTimeout( function() {
+							$this.tooltipster( 'content', $this.attr( 'data-tip' ) );
+						}, 1000 );
+					} );
 					evt.preventDefault();
 				});
 			});

@@ -21,8 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 					<div class="ur-scroll-ui__scroll-nav">
 						<ul class="subsubsub  ur-scroll-ui__items">
-							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item">Registration Forms</a></li>
-							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=" ur-scroll-ui__item active">Login Forms</a></li>
+							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="ur-scroll-ui__item">Registration Forms</a></li>
+							<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class="current ur-scroll-ui__item">Login Forms</a></li>
 						</ul>
 					</div>
 					<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
@@ -53,26 +53,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<div class="ur-login-shortcode--wrapper">
 											<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/login_form.png' ); ?>" alt="Login Form">
 											<div class="ur-login-content">
-												<?php printf( '<p>%s <strong>%s</strong> %s</p>', esc_html( 'You can add this shortcode', 'user-registration' ), esc_html__( '[user_registration_login]', 'user-registration' ), esc_html__( 'in the pages where you want to show your login form which is provided below:-', 'user-registration' ) ); ?>
+												<?php printf( '<p>%s</p>', esc_html( 'You can add the following shortcode in the pages where you want to show the login form.', 'user-registration' ) ); ?>
 												<div class="major-publishing-actions wp-clearfix">
 													<div class="login-forms-shortcode-action shortcode">
 														<input type="text" onfocus="this.select();" readonly="readonly"
 														value='[user_registration_login]'
 														class="widefat code" size="35"></span>
 
-														<button id="copy-shortcode" class="button ur-copy-shortcode help_tip" href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
+														<button id="login-copy-shortcode" class="button ur-copy-shortcode" href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 															<span class="dashicons dashicons-admin-page"></span>
 														</button>
 													</div>
 												</div>
-												<?php printf( '<p>%s <strong>%s</strong> %s</p>', esc_html( 'If you want to create your own my account page, you can create a new page and You can add this shortcode', 'user-registration' ), esc_html__( '[user_registration_myaccount]', 'user-registration' ), esc_html__( 'in the pages where you want to show your myaccount login form which is provided below:-', 'user-registration' ) ); ?>
+												<?php printf( '<p>%s</p>', esc_html( 'If you want to create a My Account page, you need to create a new page and add the following shortcode. This will show the My Account Login Form.', 'user-registration' ) ); ?>
 												<div class="major-publishing-actions wp-clearfix">
 													<div class="login-forms-shortcode-action shortcode">
 														<input type="text" onfocus="this.select();" readonly="readonly"
-														value='[user_registration_myaccount]'
+														value='[user_registration_my_account]'
 														class=" code" size="35"></span>
 
-														<button id="copy-shortcode" class="button ur-copy-shortcode help_tip" href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
+														<button id="myaccount-copy-shortcode" class="button ur-copy-shortcode" href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 															<span class="dashicons dashicons-admin-page"></span>
 														</button>
 													</div>

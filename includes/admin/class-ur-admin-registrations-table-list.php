@@ -144,7 +144,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
 		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', esc_attr( $shortcode ) );
 		?>
-		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
+		<button id="copy-shortcode-<?php echo esc_attr( $registration->ID ); ?>" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 			<span class="dashicons dashicons-admin-page"></span>
 		</button>
 		<?php
@@ -166,7 +166,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 							<div class="ur-scroll-ui">
 								<div class="ur-scroll-ui__scroll-nav">
 									<ul class="subsubsub  ur-scroll-ui__items">
-										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item active">Registration Forms</a></li>
+										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item">Registration Forms</a></li>
 										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=" ur-scroll-ui__item">Login Forms</a></li>
 									</ul>
 								</div>
