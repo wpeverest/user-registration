@@ -1161,6 +1161,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array(),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
+				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
 				'tip'               => __( 'Time to wait after registration before redirecting user to another page.', 'user-registration' ),
 			),
