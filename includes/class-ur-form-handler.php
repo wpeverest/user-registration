@@ -39,12 +39,8 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		 $ur_account_page_exists     = ur_get_page_id( 'myaccount' ) > 0;
-		$is_ur_login_or_account_page = is_ur_account_page();
-
-		if ( ! $ur_account_page_exists ) {
-			$is_ur_login_or_account_page = is_ur_login_page();
-		}
+		$page_id     = ur_get_page_id( 'myaccount' );
+		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
 		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification

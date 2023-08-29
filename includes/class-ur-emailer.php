@@ -97,8 +97,8 @@ class UR_Emailer {
 	 */
 	public static function ur_get_header() {
 		$header = array(
-			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>\r\n',
-			'Reply-To:' . self::ur_sender_email() . '\r\n',
+			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>',
+			'Reply-To:' . self::ur_sender_email(),
 			'Content-Type:text/html; charset=UTF-8'
 		);
 
