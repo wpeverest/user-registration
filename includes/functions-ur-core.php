@@ -1152,6 +1152,19 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
 				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
 			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Waiting Period Before Redirection ( In seconds )', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after',
+				'class'             => array(),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
+				'tip'               => __( 'Time to wait after registration before redirecting user to another page.', 'user-registration' ),
+			),
 		),
 	);
 
