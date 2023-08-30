@@ -3833,3 +3833,52 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 		return $data;
 	}
 }
+
+if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
+	/**
+	 * Filter user meta field when conditinal logic applied.
+	 *
+	 * @param array $valid_form_data Form Data.
+	 * @param int $user_id User Id.
+	 * @param int $form_id Form Id.
+	 * @return array array of form data.
+	 *
+	 * @since 3.0.4
+	 */
+	function user_registration_conditional_user_meta_filter( $valid_form_data, $user_id, $form_id ) {
+		if ( $user_id <= 0 ) {
+			return;
+		}
+
+		$field_name   = '';
+		$hidden_field = $_POST['urcl_hide_fields'];
+
+		if ( ! isset( $hidden_field ) ) {
+			return;
+		}
+
+		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
+
+		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) {
+			foreach ( $hidden_array_field as $field ) {
+				$field_name = $field;
+				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
+					unset( $valid_form_data[$field_name] );
+				}
+			}
+		} else {
+			foreach ( $hidden_array_field as $field ) {
+				$field_name = 'user_registration_' . $field;
+				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
+					unset( $valid_form_data[$field_name] );
+				}
+			}
+
+		}
+
+		return $valid_form_data;
+	}
+}
+
+add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
+add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
