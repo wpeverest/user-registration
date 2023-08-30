@@ -481,11 +481,11 @@ class UR_Admin_User_List_Manager {
 						'value' => UR_Admin_User_Manager::APPROVED,
 					),
 				);
+			} elseif ( UR_Admin_User_Manager::DENIED == $status ) {
+				$meta_query = $this->get_denied_users_meta_query();
+			} elseif ( 'pending_email' == $status ) {
+				$meta_query = $this->get_pending_email_meta_query();
 			}
-		}
-
-		if ( 'pending_email' == $status ) {
-			$meta_query = $this->get_pending_email_meta_query();
 		}
 
 		// Deduct meta_query to filter user according to form id and approval status set.
@@ -695,6 +695,31 @@ class UR_Admin_User_List_Manager {
 							'compare' => 'NOT EXISTS',
 						),
 					),
+				),
+			),
+		);
+
+		return $meta_query;
+	}
+
+	/**
+	 * Returns meta query array to fetch denied users.
+	 *
+	 * @return array
+	 */
+	private function get_denied_users_meta_query() {
+		$meta_query = array(
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key'     => 'ur_user_status',
+					'value'   => '-1',
+					'compare' => '=',
+				),
+				array(
+					'key'     => 'ur_confirm_email',
+					'value'   => '-1',
+					'compare' => '=',
 				),
 			),
 		);
