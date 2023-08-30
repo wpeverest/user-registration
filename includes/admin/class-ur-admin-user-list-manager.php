@@ -363,6 +363,8 @@ class UR_Admin_User_List_Manager {
 		$pending_label  = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::PENDING );
 		$denied_label   = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::DENIED );
 
+		$pending_email_label = __( 'Awaiting Email Confirmation', 'user-registration' );
+
 		?>
 		</div><!-- .alignleft.actions opened in extra_tablenav() - class-wp-users-list-table.php:259 -->
 		<div class="alignleft actions">
@@ -376,6 +378,7 @@ class UR_Admin_User_List_Manager {
 		echo '<option value="approved" ' . esc_attr( selected( 'approved', $status_filter_value ) ) . '>' . esc_html( $approved_label ) . '</option>';
 		echo '<option value="pending" ' . esc_attr( selected( 'pending', $status_filter_value ) ) . '>' . esc_html( $pending_label ) . '</option>';
 		echo '<option value="denied" ' . esc_attr( selected( 'denied', $status_filter_value ) ) . '>' . esc_html( $denied_label ) . '</option>';
+		echo '<option value="pending_email" ' . esc_attr( selected( 'pending_email', $status_filter_value ) ) . '>' . esc_html( $pending_email_label ) . '</option>';
 		?>
 		</select>
 
@@ -445,6 +448,8 @@ class UR_Admin_User_List_Manager {
 				case 'denied':
 					$status = UR_Admin_User_Manager::DENIED;
 					break;
+				case 'pending_email':
+					break;
 				default:
 					return;
 			}
@@ -477,6 +482,10 @@ class UR_Admin_User_List_Manager {
 					),
 				);
 			}
+		}
+
+		if ( 'pending_email' == $status ) {
+			$meta_query = $this->get_pending_email_meta_query();
 		}
 
 		// Deduct meta_query to filter user according to form id and approval status set.
@@ -685,6 +694,41 @@ class UR_Admin_User_List_Manager {
 							'key'     => 'ur_admin_approval_after_email_confirmation',
 							'compare' => 'NOT EXISTS',
 						),
+					),
+				),
+			),
+		);
+
+		return $meta_query;
+	}
+
+	/**
+	 * Returns meta query array to fetch email pending users.
+	 *
+	 * @return array
+	 */
+	private function get_pending_email_meta_query() {
+		$meta_query = array(
+			'meta_query' => array(
+
+				array(
+					'relation' => 'AND',
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'ur_user_status',
+							'compare' => 'NOT EXISTS',
+						),
+						array(
+							'key'     => 'ur_user_status',
+							'value'   => '0',
+							'compare' => '=',
+						),
+					),
+					array(
+						'key'     => 'ur_confirm_email',
+						'value'   => '0',
+						'compare' => '=',
 					),
 				),
 			),
