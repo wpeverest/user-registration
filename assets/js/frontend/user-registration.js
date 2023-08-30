@@ -628,6 +628,13 @@
 										captchaResponse = $this
 											.find('[name="h-captcha-response"]')
 											.val();
+									} else if (
+										"cloudflare" ===
+										user_registration_params.recaptcha_type
+									) {
+										captchaResponse = $this
+											.find('[name="cf-turnstile-response"]')
+											.val();
 									} else {
 										captchaResponse = $this
 											.find(
