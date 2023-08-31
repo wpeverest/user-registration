@@ -2,10 +2,11 @@
 * Feature  - Cloudflare turnstile captcha integration.
 * Enhance  - Login forms menu to show the login form shortcode.
 * Enhance  - Custom hold time before redirection after registration.
+* Dev      - Modified function that parses my account page id.
 * Dev      - Compatibility for pattern validation for input fields.
 * Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Incorrect filtering of pending users.
 * Fix      - Reset Password link throws invalid key.
-* Fix      - Invalid Myaccount link for it's endpoints.
 * Fix      - Remove other plugins notice in settings area.
 * Fix      - Conditionally hidden fields value being submitted.
 * Fix      - Copied tooltip not being shown when shortcode is copied.
@@ -26,8 +27,6 @@
 * Fix      - Lost Password not working for translated myaccount page.
 * Fix 	   - Form created even if its canceled in form naming area after choosing a template.
 * Fix 	   - Form set redirection working while trying to visit page with registration or login form after login.
-
-
 
 = 3.0.2.1  - 04/07/2023
 * Fix      - Arbitrary file upload.

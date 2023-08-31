@@ -5920,7 +5920,7 @@
             cursor: pointer;
             font-size: 15px; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7651,7 +7651,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;
@@ -7774,7 +7774,7 @@ a.button.ur-smart-tags-list-button {
             align-items: center;
             gap: 30px;
             flex-wrap: wrap; }
-            @media (max-width: 1000px) {
+            @media (max-width: 1400px) {
               #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper {
                 flex-wrap: wrap;
                 justify-content: center; } }

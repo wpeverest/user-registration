@@ -362,10 +362,11 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Feature  - Cloudflare turnstile captcha integration.
 * Enhance  - Login forms menu to show the login form shortcode.
 * Enhance  - Custom hold time before redirection after registration.
+* Dev      - Modified function that parses my account page id.
 * Dev      - Compatibility for pattern validation for input fields.
 * Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Incorrect filtering of pending users.
 * Fix      - Reset Password link throws invalid key.
-* Fix      - Invalid Myaccount link for it's endpoints.
 * Fix      - Remove other plugins notice in settings area.
 * Fix      - Conditionally hidden fields value being submitted.
 * Fix      - Copied tooltip not being shown when shortcode is copied.
