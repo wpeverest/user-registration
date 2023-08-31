@@ -765,7 +765,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				<p class="button-controls">
 					<span class="list-controls">
 						<input type="checkbox" id="ur-endpoints-tab" class="select-all">
-						<label for="ur-endpoints-tab">Select All</label>
+						<label for="ur-endpoints-tab">
+							<?php esc_html_e( 'Select All', 'user-registration' ); ?>
+						</label>
 					</span>
 					<span class="add-to-menu">
 					<input type="submit" class="button-secondary submit-add-to-menu right"
