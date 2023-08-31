@@ -14,7 +14,7 @@
   #ur-deactivate-feedback-popup-wrapper.active {
     display: block; }
   #ur-deactivate-feedback-popup-wrapper .ur-deactivate-feedback-popup-inner {
-    max-width: 600px;
+    max-width: 760px;
     background-color: #fff;
     position: absolute;
     border-radius: 3px;

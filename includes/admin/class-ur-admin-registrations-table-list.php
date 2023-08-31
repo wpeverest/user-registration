@@ -144,7 +144,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
 		echo sprintf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', esc_attr( $shortcode ) );
 		?>
-		<button id="copy-shortcode" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
+		<button id="copy-shortcode-<?php echo esc_attr( $registration->ID ); ?>" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
 			<span class="dashicons dashicons-admin-page"></span>
 		</button>
 		<?php
@@ -160,6 +160,23 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			<div class="wrap">
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
+				<div class="user-registration-settings-container">
+					<div class="user-registration-options-header">
+						<div class="user-registration-options-header--bottom" >
+							<div class="ur-scroll-ui">
+								<div class="ur-scroll-ui__scroll-nav">
+									<ul class="subsubsub  ur-scroll-ui__items">
+										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current ur-scroll-ui__item">Registration Forms</a></li>
+										<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=" ur-scroll-ui__item">Login Forms</a></li>
+									</ul>
+								</div>
+								<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
+									<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<hr class="wp-header-end">
 				<form id="registration-list" method="get">
 					<input type="hidden" name="page" value="user-registration" />

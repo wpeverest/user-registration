@@ -314,7 +314,7 @@
  /**
    * Form Builder Styles
    **/
- .user-registration_page_add-new-registration {
+ .user-registration_page_add-new-registration, .toplevel_page_user-registration {
 	 #wpfooter {
 		 display: none; //Hide WP footer on form builder page
 	 }
@@ -391,6 +391,14 @@
 				 margin-right: 8px;
 				 display: flex;
 			 }
+			 a{
+				text-decoration: none;
+				border: none;
+			 }
+			 a:focus {
+				outline: none;
+				box-shadow: none;
+			  }
 		 }
 
 		 &::before,
@@ -437,6 +445,21 @@
 				}
 			}
 		}
+		.login-forms-shortcode-action {
+		   input {
+			   &.code {
+				   font-size: large;
+				   width: 320px;
+				   height: 33px;
+				   padding: 0 $spacing_6px;
+				   margin: 0;
+				   border-color: $grey-50;
+				   background: $blue-25;
+				   border-radius: 3px 0 0 3px;
+				   display: inline;
+			   }
+		   }
+	   }
 
 		 #copy-shortcode {
 			 margin-left: -5px;
@@ -3172,11 +3195,11 @@ body {
 	 box-shadow: inset 0 1px 2px rgba(35, 40, 45, 0.1);
  }
 
- .ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value {
+ .ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value, .ur-advance-setting.ur-advance-pattern_value {
 	 position: relative;
 	 margin-bottom: 15px;
 
-	 & input.ur_advance_setting.ur-settings-default-value, & input.ur-general-setting-field {
+	 & input.ur_advance_setting.ur-settings-default-value, & input.ur-general-setting-field,  & input.ur_advance_setting.ur-settings-pattern_value {
 		 width: calc(100% - 40px) !important;
 		 min-height: 27px;
 	 }
@@ -3234,7 +3257,7 @@ body {
 	 }
  }
 
-.user-registration_page_add-new-registration {
+.user-registration_page_add-new-registration, .toplevel_page_user-registration {
 	#nav-menu-header {
 		padding-right: $spacing_30px;
 
@@ -3461,6 +3484,44 @@ body {
 		.ur-selected-inputs {
 			padding: $spacing_30px;
 			background: $canva-color;
+
+			.ur-login-form-wrapper{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+			}
+			.ur-login-shortcode{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-top: 2rem;
+
+				h1{
+					font-weight: bold;
+					font-size: 35px;
+					margin-bottom: 2rem;
+				}
+
+				p{
+					font-size: 16px;
+				}
+				.ur-login-content{
+					margin-left: 10rem;
+					margin-right: 5rem;
+				}
+
+			}
+			.ur-login-view-doc{
+				margin-top:5rem;
+				a {
+					font-size:large;
+					text-decoration:underline;
+				}
+
+			}
 		}
 
 		.ur-builder {
@@ -3675,6 +3736,222 @@ body {
 			}
 		}
 	}
+}
+
+#wpcontent {
+	.wp-heading-inline {
+		font-weight: $semi_bold;
+		padding: 0;
+		margin: $spacing_20px 0 0;
+		font-size: 24px;
+		line-height: 120%;
+	}
+
+	.user-registration-settings-container {
+		margin: $spacing_24px 0 0;
+
+		.user-registration-options-header {
+			&--top {
+				display: flex;
+				align-items: center;
+
+				h3 {
+					margin: 0;
+					font-weight: $semi_bold;
+					font-size: 26px;
+					line-height: 120%;
+					color: $grey-800;
+				}
+
+				p.submit {
+					display: none;
+					margin-top: 0;
+				}
+			}
+
+			&--bottom {
+				ul {
+					display: flex;
+					align-items: center;
+					gap: $spacing_32px;
+					border-bottom: $border_width solid $border-color;
+					width: 100%;
+
+					li {
+						a {
+							font-weight: $regular;
+							font-size: 15px;
+							line-height: 140%;
+							color: $grey-600;
+							padding: 0;
+							position: relative;
+							padding-bottom: $spacing_16px;
+							transition: all .3s ease-in-out;
+
+							&::before {
+								content: "";
+								background: $primary_color;
+								position: absolute;
+								width: 100%;
+								height: 3px;
+								border-radius: $border_radius_11;
+								bottom: 0;
+								left: 0;
+								opacity: 0;
+								transition: all .3s ease-in-out;
+							}
+
+							&:focus {
+								outline: none;
+								box-shadow: none;
+							}
+
+							&.current,
+							&.active {
+								font-weight: $semi_bold;
+							}
+
+							&:hover,
+							&.current,
+							&.active {
+								color: $primary_color;
+
+								&::before {
+									opacity: 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.user-registration-login-form-container {
+		.user-registration {
+			&__wrap {
+				#menu-management-liquid {
+					float: none;
+				}
+	
+				#menu-management {
+					.menu-edit {
+						position: unset;
+					}
+				}
+	
+				#post-body {
+					.ur-registered-from {
+						display: block;
+						background-color: transparent;
+	
+						.ur-builder-wrapper {
+							height: auto;
+							overflow-y: unset;
+							border-left: 0;
+							background: transparent;
+	
+							.ur-selected-inputs {
+								background: #f0f0f1;
+								padding: $spacing_24px;
+	
+								.ur-builder-wrapper-content {
+									padding: $spacing_20px $spacing_30px $spacing_60px;
+									border-radius: $border_radius_7;
+	
+									.ur-login {
+										&-shortcode {
+											margin-top: 0;
+											display: block;
+		
+											h1 {
+												margin-bottom: $spacing_12px;
+											}
+		
+											&--wrapper {
+												// width: 45%;
+												display: flex;
+												align-items: center;
+												gap: $spacing_30px;
+												// flex-wrap: nowrap;
+												flex-wrap: wrap;
+		
+												@media (max-width: 1000px) {
+													flex-wrap: wrap;
+													justify-content: center;
+												}
+		
+												img {
+													margin-left: -$spacing_24px;
+		
+													@media (max-width: 1000px) {
+														margin-left: 0;
+													}
+		
+													@media (max-width: 768px) {
+														width: 100%;
+													}
+												}
+		
+												.ur-login-content {
+													// width: 55%;
+													margin-left: 0;
+													margin-right: 0;
+													padding: $spacing_24px;
+													background: #f6f6f6;
+													border-radius: $border_radius_7;
+													flex: 1;
+		
+													p {
+														&:first-child {
+															margin-top: 0;
+														}
+													}
+		
+													.login-forms-shortcode-action {
+														input {
+															height: 32px;
+															font-size: 15px;
+														}
+		
+														.ur-copy-shortcode {
+															box-shadow: none;
+															transition: all .3s ease-in-out;
+		
+															svg {
+																path {
+																	fill: $primary_color;
+																	transition: all .3s ease-in-out;
+																}
+															}
+		
+															&:hover {
+																background: $primary_color !important;
+		
+																svg {
+																	path {
+																		fill: $grey-0;
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+	
+										&-view-doc {
+											margin-top: $spacing_32px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}	
 }
 
 @media (max-width: 960px) {

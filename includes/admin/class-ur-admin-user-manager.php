@@ -202,16 +202,20 @@ class UR_Admin_User_Manager {
 			$this->user_status = $admin_approval_after_email_confirmation_status;
 
 			$result = array(
-				'login_option' => 'admin_approval_after_email_confirmation',
-				'user_status'  => $admin_approval_after_email_confirmation_status,
+				'login_option'    => 'admin_approval_after_email_confirmation',
+				'user_status'     => $admin_approval_after_email_confirmation_status,
+				'email_status'    => $user_email_status,
+				'approval_status' => $admin_approval_after_email_confirmation_status,
 			);
 		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
 
 			$this->user_status = $user_email_status;
 
 			$result = array(
-				'login_option' => 'email_confirmation',
-				'user_status'  => $user_email_status,
+				'login_option'    => 'email_confirmation',
+				'user_status'     => $user_email_status,
+				'email_status'    => $user_email_status,
+				'approval_status' => $user_status,
 			);
 		}
 		return $result;

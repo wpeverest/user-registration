@@ -83,7 +83,18 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param WP_User $user Users Data.
 		 */
 		public function show_user_extra_fields( $user ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			/**
+			 * Filter Hook: user_registration_hide_user_extra_fields_to_non_admin
+			 *
+			 * Allow users without 'manage_options' capability to view and edit User Extra Details.
+			 *
+			 * @since 3.0.4
+			 *
+			 * @param [bool] $hide Whether to hide details.
+			 *
+			 * @return bool
+			 */
+			if ( ! current_user_can( 'manage_options' ) && apply_filters( 'user_registration_hide_user_extra_fields_to_non_admin', true ) ) {
 				return;
 			}
 

@@ -29,6 +29,11 @@ jQuery(function ($) {
 							.closest("form")
 							.find('[name="h-captcha-response"]')
 							.val();
+					} else if ("cloudflare" === ur_login_params.recaptcha_type) {
+						var CaptchaResponse = $this
+							.closest("form")
+							.find('[name="cf-turnstile-response"]')
+							.val();
 					} else {
 						var CaptchaResponse = $this
 							.closest("form")

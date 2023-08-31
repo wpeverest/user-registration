@@ -97,8 +97,8 @@ class UR_Emailer {
 	 */
 	public static function ur_get_header() {
 		$header = array(
-			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>\r\n',
-			'Reply-To:' . self::ur_sender_email() . '\r\n',
+			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>',
+			'Reply-To:' . self::ur_sender_email(),
 			'Content-Type:text/html; charset=UTF-8'
 		);
 
@@ -351,8 +351,10 @@ class UR_Emailer {
 	 */
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
 
-		$header  = "Reply-To: {{email}} \r\n";
-		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$header = array(
+			'Reply-To:' . $user_email . '\r\n',
+			'Content-Type: text/html; charset=UTF-8'
+		);
 
 		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
 		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
@@ -387,7 +389,6 @@ class UR_Emailer {
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
 		$message                   = self::parse_smart_tags( $message, $values, $name_value );
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
-		$header                    = self::parse_smart_tags( $header, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
 			foreach ( $admin_email as $email ) {
@@ -523,8 +524,10 @@ class UR_Emailer {
 	 */
 	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
-		$header  = "Reply-To: {{email}} \r\n";
-		$header .= 'Content-Type: text/html; charset=UTF-8';
+		$header = array(
+			'Reply-To:' . $user_email . '\r\n',
+			'Content-Type: text/html; charset=UTF-8'
+		);
 
 		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
 		$admin_email = get_option( 'user_registration_edit_profile_email_receipents', get_option( 'admin_email' ) );
@@ -547,7 +550,7 @@ class UR_Emailer {
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message                   = self::parse_smart_tags( $message, $values, $name_value );
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
-		$header                    = self::parse_smart_tags( $header, $values, $name_value );
+
 
 		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
 			foreach ( $admin_email as $email ) {

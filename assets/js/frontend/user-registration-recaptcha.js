@@ -42,6 +42,12 @@
 								.val();
 
 							hcaptcha.reset(google_recaptcha_user_registration);
+						} else if (ur_recaptcha_code.version == "cloudflare") {
+							var captchaResponse = $registration_form
+								.find('[name="cf-turnstile-response"]')
+								.val();
+
+							turnstile.reset(google_recaptcha_user_registration);
 						} else {
 							var captchaResponse = $registration_form
 								.find('[name="g-recaptcha-response"]')
@@ -83,6 +89,11 @@
 						.find(
 							"#ur-recaptcha-node #node_recaptcha_login.g-recaptcha-hcaptcha"
 						).length;
+					var ur_recaptcha_node_cloudflare = $login_form
+						.closest("form")
+						.find(
+							"#ur-recaptcha-node #node_recaptcha_login.cf-turnstile"
+						).length;
 					var ur_recaptcha_node_v3 = $login_form
 						.closest("form")
 						.find(
@@ -91,12 +102,15 @@
 					if (
 						ur_recaptcha_node !== 0 ||
 						ur_recaptcha_node_hcaptcha !== 0 ||
+						ur_recaptcha_node_cloudflare !== 0 ||
 						ur_recaptcha_node_v3 !== 0
 					) {
 						if (ur_recaptcha_code.version == "v3") {
 							request_recaptcha_token();
 						} else if (ur_recaptcha_code.version == "hCaptcha") {
 							hcaptcha.reset(google_recaptcha_login);
+						} else if (ur_recaptcha_code.version == "cloudflare") {
+							turnstile.reset(google_recaptcha_login);
 						} else {
 							for (var i = 0; i <= google_recaptcha_login; i++) {
 								grecaptcha.reset(i);
@@ -142,6 +156,18 @@ var onloadURCallback = function () {
 								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 							}
 						);
+					} else if ("cloudflare" === ur_recaptcha_code.version) {
+						$this
+							.find("#ur-recaptcha-node .cf-turnstile")
+							.attr("id", "node_recaptcha_register_" + form_id);
+						google_recaptcha_user_registration = turnstile.render(
+							"#node_recaptcha_register_" + form_id,
+							{
+								sitekey: ur_recaptcha_code.site_key,
+								theme: ur_recaptcha_code.theme_mode,
+								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+							}
+						);
 					} else {
 						$this
 							.find("#ur-recaptcha-node .g-recaptcha")
@@ -183,6 +209,17 @@ var onloadURCallback = function () {
 								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 							}
 						);
+					} else if ("cloudflare" === ur_recaptcha_code.version) {
+						google_recaptcha_login = turnstile.render(
+							"#"+ur_recaptcha_node
+								.find(".cf-turnstile")
+								.attr("id"),
+							{
+								sitekey: ur_recaptcha_code.site_key,
+								theme: ur_recaptcha_code.theme_mode,
+								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+							}
+						);
 					} else {
 						google_recaptcha_login = grecaptcha.render(
 							ur_recaptcha_node.find(".g-recaptcha").attr("id"),
@@ -216,6 +253,18 @@ var onloadURCallback = function () {
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+								}
+							);
+					} else if ("cloudflare" === ur_recaptcha_code.version) {
+						google_recaptcha_ur_lost_reset_password =
+							turnstile.render(
+								"#"+ur_recaptcha_node
+									.find(".cf-turnstile")
+									.attr("id"),
+								{
+									sitekey: ur_recaptcha_code.site_key,
+									theme: ur_recaptcha_code.theme_mode,
 									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 								}
 							);

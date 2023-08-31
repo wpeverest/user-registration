@@ -1,3 +1,15 @@
+= 3.0.4    - 04/09/2023
+* Feature  - Cloudflare turnstile captcha integration.
+* Enhance  - Login forms menu to show the login form shortcode.
+* Enhance  - Custom hold time before redirection after registration.
+* Dev      - Compatibility for pattern validation for input fields.
+* Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Reset Password link throws invalid key.
+* Fix      - Invalid Myaccount link for it's endpoints.
+* Fix      - Remove other plugins notice in settings area.
+* Fix      - Conditionally hidden fields value being submitted.
+* Fix      - Copied tooltip not being shown when shortcode is copied.
+
 = 3.0.3    - 11/08/2023
 * Feature  - Email Preview.
 * Feature  - User registered language with smart tag.

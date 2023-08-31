@@ -56,7 +56,11 @@ add_filter( 'the_title', 'ur_page_endpoint_title', 10 );
  */
 function ur_get_page_id( $page ) {
 	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
-	$page_id            = get_the_ID() ? get_the_ID() : $my_account_page_id;
+	$page_id            = get_the_ID();
+
+	if( 'myaccount' == $page || 'login' == $page ) {
+		$page_id            = ! empty ( $my_account_page_id ) ? $my_account_page_id : $page_id;
+	}
 
 	/**
 	 * Check if the page sent as parameter is My Account page and return the id,
@@ -68,15 +72,13 @@ function ur_get_page_id( $page ) {
 		$current_language = pll_current_language();
 		if ( ! empty( $current_language ) ) {
 			$translations = pll_get_post_translations( $page_id );
-			$page         = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
+			$page_id      = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
 	} elseif ( $page > 0 && class_exists( 'SitePress', false ) ) {
-		$page = ur_get_wpml_page_language( $page );
-	} else {
-		$page = $page_id;
+		$page_id = ur_get_wpml_page_language( $page_id );
 	}
 
-	return $page ? absint( $page ) : - 1;
+	return $page_id ? absint( $page_id ) : - 1;
 }
 
 /**

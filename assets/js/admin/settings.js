@@ -226,6 +226,19 @@
 			)
 				.closest(".user-registration-global-settings")
 				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_key_cloudflare")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_site_secret_cloudflare"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_cloudflare_theme"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
 		} else if (value == "hCaptcha") {
 			$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
 				.closest(".user-registration-global-settings")
@@ -235,6 +248,67 @@
 			)
 				.closest(".user-registration-global-settings")
 				.show();
+			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_key")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_secret")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_invisible_site_key")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_threshold_score_v3")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_key_cloudflare")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_site_secret_cloudflare"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_cloudflare_theme"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
+		} else if (value == "cloudflare") {
+			$("#user_registration_captcha_setting_recaptcha_site_key_cloudflare")
+				.closest(".user-registration-global-settings")
+				.show();
+			$(
+				"#user_registration_captcha_setting_recaptcha_site_secret_cloudflare"
+			)
+				.closest(".user-registration-global-settings")
+				.show();
+			$(
+				"#user_registration_captcha_setting_recaptcha_cloudflare_theme"
+			)
+				.closest(".user-registration-global-settings")
+				.show();
+				$("#user_registration_captcha_setting_recaptcha_site_key_hcaptcha")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_site_secret_hcaptcha"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
 			$("#user_registration_captcha_setting_recaptcha_site_key_v3")
 				.closest(".user-registration-global-settings")
 				.hide();
@@ -278,6 +352,19 @@
 					.closest(".user-registration-global-settings")
 					.hide();
 				$("#user_registration_captcha_setting_recaptcha_site_secret")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_captcha_setting_recaptcha_site_key_cloudflare")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$(
+					"#user_registration_captcha_setting_recaptcha_site_secret_cloudflare"
+				)
+					.closest(".user-registration-global-settings")
+					.hide();
+				$(
+					"#user_registration_captcha_setting_recaptcha_cloudflare_theme"
+				)
 					.closest(".user-registration-global-settings")
 					.hide();
 				$(
@@ -325,6 +412,19 @@
 				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_captcha_setting_recaptcha_site_secret_v3")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$("#user_registration_captcha_setting_recaptcha_site_key_cloudflare")
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_site_secret_cloudflare"
+			)
+				.closest(".user-registration-global-settings")
+				.hide();
+			$(
+				"#user_registration_captcha_setting_recaptcha_cloudflare_theme"
+			)
 				.closest(".user-registration-global-settings")
 				.hide();
 			$("#user_registration_captcha_setting_invisible_recaptcha_v2")
