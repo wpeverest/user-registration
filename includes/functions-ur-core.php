@@ -3886,14 +3886,14 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
 	 */
 	function user_registration_conditional_user_meta_filter( $valid_form_data, $user_id, $form_id ) {
 		if ( $user_id <= 0 ) {
-			return;
+			return $valid_form_data;
 		}
 
 		$field_name   = '';
-		$hidden_field = $_POST['urcl_hide_fields'];
+		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array();
 
-		if ( ! isset( $hidden_field ) ) {
-			return;
+		if ( empty( $hidden_field ) ) {
+			return $valid_form_data;
 		}
 
 		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
