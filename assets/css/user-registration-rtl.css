@@ -756,6 +756,8 @@ input.ur-input-border-red, textarea.ur-input-border-red {
     padding: 0; }
   .ur-frontend-form .register #node_recaptcha_register {
     padding: 0 10px; }
+  .ur-frontend-form #ur-recaptcha-node {
+    margin-top: 10px; }
   .ur-frontend-form * {
     box-sizing: border-box; }
   .ur-frontend-form .description {
