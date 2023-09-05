@@ -660,6 +660,8 @@ if ( ! function_exists( 'ur_get_field_name_with_prefix_usermeta' ) ) {
 	/**
 	 * Returns user registration meta fields with prefix before registration.
 	 *
+	 * @param string $field_name Field name.
+	 *
 	 * @return string
 	 */
 	function ur_get_field_name_with_prefix_usermeta( $field_name ) {
@@ -2867,12 +2869,12 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
-			$wpdb->prepare("SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" )
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 		);
 
 		if ( $matched <= 0 ){
 			$matched = $wpdb->get_var(
-				$wpdb->prepare("SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" )
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 			);
 		}
 		return $matched;
