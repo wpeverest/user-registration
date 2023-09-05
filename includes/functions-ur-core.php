@@ -3921,3 +3921,24 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
 
 add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
 add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
+if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
+	/**
+	 * Get all the page slugs.
+	 */
+	function ur_get_all_page_slugs() {
+		$args = array(
+			'post_type'      => 'page',
+			'posts_per_page' => -1,
+		);
+
+		$pages = get_pages( $args );
+
+		$slugs = array();
+
+		foreach ( $pages as $page ) {
+			$slugs[] = $page->post_name;
+		}
+
+		return $slugs;
+	}
+}
