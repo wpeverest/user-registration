@@ -311,4 +311,18 @@ class UR_Shortcodes {
 			)
 		);
 	}
+	/**
+	 * Check the redirection url is valid url or slug.
+	 *
+	 * @param string $redirect_url redirection url.
+	 */
+	public static function check_is_valid_redirect_url( $redirect_url ) {
+		if ( filter_var( $redirect_url, FILTER_VALIDATE_URL ) === false ) {
+			$all_page_slug = ur_get_all_page_slugs();
+			if ( in_array( $redirect_url, $all_page_slug, true ) ) {
+				$redirect_url = site_url( $redirect_url );
+			}
+		}
+		return $redirect_url;
+	}
 }
