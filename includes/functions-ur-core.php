@@ -2872,7 +2872,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 		);
 
-		if ( $matched <= 0 ){
+		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 			);
@@ -3857,6 +3857,8 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 	 * UR Unserialize data.
 	 *
 	 * @param string $data Data that might be unserialized.
+	 * @param array  $options Options.
+	 *
 	 * @return mixed Unserialized data can be any type.
 	 *
 	 * @since 3.0.2
@@ -3866,7 +3868,7 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 		if ( is_serialized( $data ) ) {
 			if ( version_compare( PHP_VERSION, '7.1.0', '>=' ) ) {
 				$options = wp_parse_args( $options, array( 'allowed_classes' => false ) );
-				return @unserialize( trim( $data ), $options );
+				return @unserialize( trim( $data ), $options ); //phpcs:ignore
 			}
 			return @unserialize( trim( $data ) );
 		}
@@ -3875,13 +3877,13 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 	}
 }
 
-if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
+if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 	/**
 	 * Filter user meta field when conditinal logic applied.
 	 *
 	 * @param array $valid_form_data Form Data.
-	 * @param int $user_id User Id.
-	 * @param int $form_id Form Id.
+	 * @param int   $user_id User Id.
+	 * @param int   $form_id Form Id.
 	 * @return array array of form data.
 	 *
 	 * @since 3.0.4
@@ -3900,7 +3902,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter') ) {
 
 		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
 
-		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) {
+		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) { //phpcs:ignore
 			foreach ( $hidden_array_field as $field ) {
 				$field_name = $field;
 				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
