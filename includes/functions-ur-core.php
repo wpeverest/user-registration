@@ -3894,7 +3894,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 		}
 
 		$field_name   = '';
-		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array();
+		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array(); //phpcs:ignore
 
 		if ( empty( $hidden_field ) ) {
 			return $valid_form_data;
@@ -3906,17 +3906,16 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 			foreach ( $hidden_array_field as $field ) {
 				$field_name = $field;
 				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
-					unset( $valid_form_data[$field_name] );
+					unset( $valid_form_data[ $field_name ] );
 				}
 			}
 		} else {
 			foreach ( $hidden_array_field as $field ) {
 				$field_name = 'user_registration_' . $field;
 				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
-					unset( $valid_form_data[$field_name] );
+					unset( $valid_form_data[ $field_name ] );
 				}
 			}
-
 		}
 
 		return $valid_form_data;
