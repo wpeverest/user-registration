@@ -46,7 +46,7 @@ class UR_Emailer {
 				__CLASS__,
 				'ur_profile_details_changed_mail',
 			),
-			10,
+			8,
 			2
 		);
 	}
