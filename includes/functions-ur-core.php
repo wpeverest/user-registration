@@ -3924,3 +3924,68 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 
 add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
 add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
+
+
+if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
+	/**
+	 * Add plugin specific links to the admin bar menu.
+	 *
+	 * @param [WP_Admin_Bar] $wp_admin_bar
+	 * @return void
+	 */
+	function ur_add_links_to_top_nav( $wp_admin_bar ) {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		/**
+		 * Add a link to create new form in admin bar.
+		 */
+		$wp_admin_bar->add_node(
+			array(
+				'id'     => 'ur-new-form',
+				'parent' => 'new-content',
+				'title'  => __( 'Form', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=add-new-registration' ),
+			)
+		);
+
+		/**
+		 * Add Edit Form link in Form Preview Page.
+		 */
+
+		$form_id = 0;
+
+		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
+			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
+		} else if ( is_page() || is_single() ) {
+			$post_content = get_the_content();
+
+			if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
+				if ( preg_match( '/\[user_registration_form id="(\d+)"\]/', $post_content, $matches ) ) {
+					$form_id = $matches[1];
+				}
+			}
+		}
+
+		if ( ! empty( $form_id ) ) {
+			$wp_admin_bar->add_node(
+				array(
+					'id'    => 'ur-edit-form',
+					'title' => __( 'Edit Form', 'user-registration' ),
+					'href'  =>  add_query_arg(
+						'edit-registration',
+						$form_id,
+						admin_url( 'admin.php?page=add-new-registration' )
+					),
+					'meta' => array(
+						'target' => "_blank"
+					)
+				)
+			);
+		}
+	}
+
+	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
+}
