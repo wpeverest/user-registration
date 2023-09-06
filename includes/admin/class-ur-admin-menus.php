@@ -521,8 +521,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function status_menu() {
 			add_submenu_page(
 				'user-registration',
-				__( 'User Registration Status', 'user-registration' ),
-				__( 'Status', 'user-registration' ),
+				__( 'User Registration Tools', 'user-registration' ),
+				__( 'Tools', 'user-registration' ),
 				'manage_user_registration',
 				'user-registration-status',
 				array(

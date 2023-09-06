@@ -599,7 +599,6 @@ function ur_get_user_profile_field_only() {
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_fields_without_prefix', $fields );
-
 }
 
 /**
@@ -1558,9 +1557,9 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
 		$enqueue_script        = 'ur-recaptcha-hcaptcha';
 	} elseif ( 'cloudflare' === $recaptcha_type ) {
-		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
-		$theme_mod             = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
-		$enqueue_script        = 'ur-recaptcha-cloudflare';
+		$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+		$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
+		$enqueue_script     = 'ur-recaptcha-cloudflare';
 	}
 	static $rc_counter = 0;
 
@@ -2836,7 +2835,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 		}
 
 		if ( ! empty( $myaccount_page ) ) {
-			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
 		}
 
 		if ( 0 === $matched ) {
@@ -2865,7 +2864,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	 */
 	function ur_find_my_account_in_page( $login_page_id ) {
 		global $wpdb;
-		$post_table = $wpdb->prefix . 'posts';
+		$post_table      = $wpdb->prefix . 'posts';
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
@@ -3286,7 +3285,6 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 		}
 
 		return false;
-
 	}
 }
 
@@ -3481,7 +3479,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( ur_is_ajax_login_enabled() ) {
-				$recaptcha_value  = $captcha_response;
+				$recaptcha_value = $captcha_response;
 			}
 
 			if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
@@ -3494,16 +3492,16 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
 					} elseif ( 'cloudflare' === $recaptcha_type ) {
-						$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-						$params       = array(
+						$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+						$params = array(
 							'method' => 'POST',
 							'body'   => array(
 								'secret'   => $secret_key,
 								'response' => $recaptcha_value,
 							),
 						);
-						$data = wp_safe_remote_post( $url, $params );
-						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						$data   = wp_safe_remote_post( $url, $params );
+						$data   = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on Cloudflare. Contact your site administrator.', 'user-registration' ) );
