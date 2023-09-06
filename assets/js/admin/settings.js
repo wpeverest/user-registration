@@ -485,18 +485,6 @@
 									}
 								});
 						}
-
-						var recaptchaV2Interval = setInterval(
-							function () {
-								var captchaResponse = grecaptcha.getResponse();
-
-								if (captchaResponse.length) {
-									clearInterval(recaptchaV2Interval);
-									display_captcha_test_status('Captcha test successful', 'success');
-								}
-							},
-							1000
-						);
 						break;
 
 					case 'v3':
@@ -537,6 +525,8 @@
 									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 								}
 							);
+
+								ur_recaptcha_node.find('iframe').css('display', 'block');
 						} catch (err) {
 							display_captcha_test_status(err.message, 'error');
 						}
@@ -550,10 +540,19 @@
 
 		if (notice.length) {
 			var notice_container = $('#ur-captcha-notice');
+			var notice_icon = $('#ur-captcha-notice--icon');
+			var notice_text = $('#ur-captcha-notice--text');
 
-			if (notice_container.length) {
-				notice_container.html(notice);
-				notice_container.removeClass().addClass(type);
+			if (notice_text.length) {
+				notice_text.html(notice);
+
+				if ('success' === type) {
+					notice_container.removeClass().addClass('success');
+					notice_icon.addClass('dashicons dashicons-yes-alt');
+				} else if ('error' === type) {
+					notice_container.removeClass().addClass('error');
+					notice_icon.addClass('dashicons dashicons-dismiss');
+				}
 			}
 		}
 

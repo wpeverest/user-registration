@@ -272,7 +272,10 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 					<div>
 						<div id="ur-captcha-test-container">
 							<div id="ur-captcha-node">%s</div>
-							<div id="ur-captcha-notice"></div>
+							<div id="ur-captcha-notice">
+								<span id="ur-captcha-notice--icon"></span>
+								<span id="ur-captcha-notice--text"></span>
+							</div>
 
 
 						</div>
