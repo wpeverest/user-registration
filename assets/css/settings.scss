@@ -1357,6 +1357,12 @@ body {
 							min-width: 512px;
 							display: block;
 
+							#node_recaptcha_login {
+								iframe {
+									display: inline-block !important;
+								}
+							}
+
 							#ur-captcha-notice {
 								padding: 8px;
 								margin: 2px;

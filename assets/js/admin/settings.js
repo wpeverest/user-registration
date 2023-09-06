@@ -451,69 +451,96 @@
 		var spinner = $('#user_registration_captcha_setting_captcha_test .spinner');
 		spinner.show();
 
+		setTimeout(
+			function () {
+				spinner.hide();
+			},
+			2500
+		);
+
 		var ur_recaptcha_node = $("#ur-captcha-node");
 		if (
 			"undefined" !== typeof ur_recaptcha_code &&
 			ur_recaptcha_code.site_key.length
 		) {
 			if (ur_recaptcha_node.length !== 0) {
-				if ("hCaptcha" === ur_recaptcha_code.version) {
-					google_recaptcha_login = hcaptcha.render(
-						ur_recaptcha_node
-							.find(".g-recaptcha-hcaptcha")
-							.attr("id"),
-						{
-							sitekey: ur_recaptcha_code.site_key,
-							theme: "light",
-							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-						}
-					)
-					spinner.hide();
-				} else if ('v3' === ur_recaptcha_code.version) {
-					try {
-						grecaptcha.execute(
-							ur_recaptcha_code.site_key,
+				switch (ur_recaptcha_code.version) {
+					case 'v2':
+						google_recaptcha_login = grecaptcha.render(
+							ur_recaptcha_node.find(".g-recaptcha").attr("id"),
 							{
-								action: 'click'
+								sitekey: ur_recaptcha_code.site_key,
+								theme: "light",
+								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 							}
-						).then(function (token) {
-							display_captcha_test_status('Captcha test successful!', 'success');
-						});
-					} catch (err) {
-						display_captcha_test_status(err.message, 'error');
-					}
-				} else {
-					google_recaptcha_login = grecaptcha.render(
-						ur_recaptcha_node.find(".g-recaptcha").attr("id"),
-						{
-							sitekey: ur_recaptcha_code.site_key,
-							theme: "light",
-							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+						);
+
+						if (ur_recaptcha_code.is_invisible) {
+							grecaptcha
+								.execute(google_recaptcha_login)
+								.then(function (token) {
+									if (null !== token) {
+										display_captcha_test_status('Some error occured', 'error');
+										return;
+									}
+								});
 						}
-					);
 
-					if (ur_recaptcha_code.is_invisible) {
-						grecaptcha
-							.execute(google_recaptcha_login)
-							.then(function (token) {
-								if (null !== token) {
-									display_captcha_test_status('Some error occured', 'error');
-									return;
+						var recaptchaV2Interval = setInterval(
+							function () {
+								var captchaResponse = grecaptcha.getResponse();
+
+								if (captchaResponse.length) {
+									clearInterval(recaptchaV2Interval);
+									display_captcha_test_status('Captcha test successful', 'success');
 								}
-							});
-					}
+							},
+							1000
+						);
+						break;
 
-					var recaptchaV2Interval = setInterval(
-						function () {
-							var captchaResponse = grecaptcha.getResponse();
-
-							if (captchaResponse.length) {
-								clearInterval(recaptchaV2Interval);
+					case 'v3':
+						try {
+							grecaptcha.execute(
+								ur_recaptcha_code.site_key,
+								{
+									action: 'click'
+								}
+							).then(function (d) {
 								display_captcha_test_status('Captcha test successful', 'success');
+							});
+						} catch (err) {
+							display_captcha_test_status(err.message, 'error');
+						}
+						break;
+
+					case 'hCaptcha':
+						google_recaptcha_login = hcaptcha.render(
+							ur_recaptcha_node
+								.find(".g-recaptcha-hcaptcha")
+								.attr("id"),
+							{
+								sitekey: ur_recaptcha_code.site_key,
+								theme: "light",
+								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 							}
-						},
-						1000
-					);
+						)
+						break;
+
+					case 'cloudflare':
+						try {
+							turnstile.render(
+								'#' + ur_recaptcha_node.find('.cf-turnstile').attr('id'),
+								{
+									sitekey: ur_recaptcha_code.site_key,
+									theme: ur_recaptcha_code.theme_mode,
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+								}
+							);
+						} catch (err) {
+							display_captcha_test_status(err.message, 'error');
+						}
+						break;
 				}
 			}
 		}

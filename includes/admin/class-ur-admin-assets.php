@@ -442,6 +442,13 @@ class UR_Admin_Assets {
 			array(),
 			UR_VERSION,
 		);
+
+		wp_register_script(
+			'ur-recaptcha-cloudflare',
+			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
+			array(),
+			UR_VERSION,
+		);
 	}
 
 	/**

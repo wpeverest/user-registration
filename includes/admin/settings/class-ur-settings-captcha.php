@@ -346,6 +346,20 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 					}
 					break;
 
+				case 'cloudflare':
+					$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+					$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
+
+					if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+						return array(
+							'type'       => 'cloudflare',
+							'site_key'   => $site_key,
+							'secret_key' => $secret_key,
+						);
+					}
+					break;
+
+
 			return apply_filters( 'user_registration_active_recaptcha', false );
 			}
 		}
