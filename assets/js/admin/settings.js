@@ -432,6 +432,108 @@
 				.show();
 		}
 	}
+
+	var captchaSettingsChanged = false;
+
+	$('.user-registration-global-settings').find('input').on('change', function() {
+		captchaSettingsChanged = true;
+	});
+
+	$('.user-registration').on('click', '#user_registration_captcha_setting_captcha_test', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (captchaSettingsChanged) {
+			alert('You have unsaved changes. Please save and try again.');
+			return;
+		}
+
+		var spinner = $('#user_registration_captcha_setting_captcha_test .spinner');
+		spinner.show();
+
+		var ur_recaptcha_node = $("#ur-captcha-node");
+		if (
+			"undefined" !== typeof ur_recaptcha_code &&
+			ur_recaptcha_code.site_key.length
+		) {
+			if (ur_recaptcha_node.length !== 0) {
+				if ("hCaptcha" === ur_recaptcha_code.version) {
+					google_recaptcha_login = hcaptcha.render(
+						ur_recaptcha_node
+							.find(".g-recaptcha-hcaptcha")
+							.attr("id"),
+						{
+							sitekey: ur_recaptcha_code.site_key,
+							theme: "light",
+							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+						}
+					)
+					spinner.hide();
+				} else if ('v3' === ur_recaptcha_code.version) {
+					try {
+						grecaptcha.execute(
+							ur_recaptcha_code.site_key,
+							{
+								action: 'click'
+							}
+						).then(function (token) {
+							display_captcha_test_status('Captcha test successful!', 'success');
+						});
+					} catch (err) {
+						display_captcha_test_status(err.message, 'error');
+					}
+				} else {
+					google_recaptcha_login = grecaptcha.render(
+						ur_recaptcha_node.find(".g-recaptcha").attr("id"),
+						{
+							sitekey: ur_recaptcha_code.site_key,
+							theme: "light",
+							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+						}
+					);
+
+					if (ur_recaptcha_code.is_invisible) {
+						grecaptcha
+							.execute(google_recaptcha_login)
+							.then(function (token) {
+								if (null !== token) {
+									display_captcha_test_status('Some error occured', 'error');
+									return;
+								}
+							});
+					}
+
+					var recaptchaV2Interval = setInterval(
+						function () {
+							var captchaResponse = grecaptcha.getResponse();
+
+							if (captchaResponse.length) {
+								clearInterval(recaptchaV2Interval);
+								display_captcha_test_status('Captcha test successful', 'success');
+							}
+						},
+						1000
+					);
+				}
+			}
+		}
+	});
+
+	function display_captcha_test_status(notice = '', type = 'success') {
+
+		if (notice.length) {
+			var notice_container = $('#ur-captcha-notice');
+
+			if (notice_container.length) {
+				notice_container.html(notice);
+				notice_container.removeClass().addClass(type);
+			}
+		}
+
+		var spinner = $('#user_registration_captcha_setting_captcha_test .spinner');
+		spinner.hide();
+	}
+
 	$(".ur-redirect-to-login-page").ready(function () {
 		var $url = $(".ur-redirect-to-login-page"),
 			$check = $("#user_registration_login_options_prevent_core_login"),

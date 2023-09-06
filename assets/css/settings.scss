@@ -1346,6 +1346,31 @@ body {
 								width: 30%;
 							}
 						}
+
+						#user_registration_captcha_setting_captcha_test {
+							.spinner {
+								visibility: visible !important;
+							}
+						}
+						
+						#ur-captcha-test-container {
+							min-width: 512px;
+							display: block;
+
+							#ur-captcha-notice {
+								padding: 8px;
+								margin: 2px;
+
+								&.success {
+									border: 1px solid green;
+								}
+
+								&.error {
+									border: 1px solid red;
+								}
+							}
+						}
+
 					}
 				}
 

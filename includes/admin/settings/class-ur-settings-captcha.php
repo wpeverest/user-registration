@@ -36,6 +36,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_filter( 'user_registration_admin_field_recaptcha_test', array( $this, 'output_captcha_test' ), 10, 2 );
 		}
 
 		/**
@@ -228,6 +229,11 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
+								array(
+									'title' => __( 'Test Captcha', 'user-registration' ),
+									'id'    => 'user_registration_captcha_setting_recaptcha_test',
+									'type'  => 'recaptcha_test',
+								),
 							),
 						),
 					),
@@ -243,6 +249,105 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		public function save() {
 			$settings = $this->get_settings();
 			UR_Admin_Settings::save_fields( $settings );
+		}
+
+		/**
+		 * Add html for Test Captcha button and captcha node.
+		 *
+		 * @param [string] $settings Captcha settings html
+		 * @param [string] $value Value.
+		 * @return string
+		 */
+		public function output_captcha_test( $settings, $value ) {
+
+			$active_captcha = self::get_active_captcha();
+
+			if ( ! $active_captcha ) {
+				return $settings;
+			}
+
+			$test_captcha = <<<HTML
+				<div class="user-registration-global-settings">
+					<button class="button ur-button" id="user_registration_captcha_setting_captcha_test">%s<span class="spinner" style="display:none"></span></button>
+					<div>
+						<div id="ur-captcha-test-container">
+							<div id="ur-captcha-node">%s</div>
+							<div id="ur-captcha-notice"></div>
+
+
+						</div>
+					</div>
+				</div>
+			HTML;
+
+			$captcha_node = ur_get_recaptcha_node( 'login', true );
+
+			$test_captcha = sprintf(
+				$test_captcha,
+				__( 'Test Captcha', 'user-registration' ),
+				$captcha_node
+			);
+
+			$settings .= $test_captcha;
+
+			return $settings;
+		}
+
+		/**
+		 * Returns the active captcha settings.
+		 * Returns false if captcha is not set or settings empty.
+		 *
+		 * @return array or boolean
+		 */
+		public static function get_active_captcha() {
+			$captcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version' );
+
+			switch ( $captcha_type ) {
+				case 'v2':
+					$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
+					$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
+					$invisible  = get_option( 'user_registration_captcha_setting_invisible_recaptcha_v2' );
+
+					if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+						return array(
+							'type'       => 'v2',
+							'site_key'   => $site_key,
+							'secret_key' => $secret_key,
+							'invisible'  => $invisible,
+						);
+					}
+					break;
+
+				case 'v3':
+					$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
+					$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
+					$threshold  = get_option( 'user_registration_captcha_setting_recaptcha_threshold_score_v3', '0.4' );
+
+					if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+						return array(
+							'type'       => 'v2',
+							'site_key'   => $site_key,
+							'secret_key' => $secret_key,
+							'threshold'  => $threshold
+						);
+					}
+					break;
+
+				case 'hCaptcha':
+					$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
+					$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
+
+					if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+						return array(
+							'type'       => 'hCaptcha',
+							'site_key'   => $site_key,
+							'secret_key' => $secret_key,
+						);
+					}
+					break;
+
+			return apply_filters( 'user_registration_active_recaptcha', false );
+			}
 		}
 	}
 
