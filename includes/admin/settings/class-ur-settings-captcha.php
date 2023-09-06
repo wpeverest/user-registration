@@ -319,6 +319,21 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'invisible'  => $invisible,
 						);
 					}
+
+					if ( $invisible ) {
+						$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key' );
+						$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret' );
+
+						if ( ! empty( $site_key ) && ! empty( $secret_key ) ) {
+							return array(
+								'type'       => 'invisible_v2',
+								'site_key'   => $site_key,
+								'secret_key' => $secret_key,
+								'invisible'  => $invisible,
+							);
+						}
+					}
+
 					break;
 
 				case 'v3':

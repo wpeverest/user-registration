@@ -439,12 +439,15 @@
 		captchaSettingsChanged = true;
 	});
 
+	/**
+	 * Test Captcha from settings page.
+	 */
 	$('.user-registration').on('click', '#user_registration_captcha_setting_captcha_test', function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 
 		if (captchaSettingsChanged) {
-			alert('You have unsaved changes. Please save and try again.');
+			alert(user_registration_settings_params.i18n.unsaved_changes);
 			return;
 		}
 
@@ -480,8 +483,10 @@
 								.execute(google_recaptcha_login)
 								.then(function (token) {
 									if (null !== token) {
-										display_captcha_test_status('Some error occured', 'error');
+										display_captcha_test_status(user_registration_settings_params.i18n.captcha_failed, 'error');
 										return;
+									} else {
+										display_captcha_test_status(user_registration_settings_params.i18n.captcha_success, 'success');
 									}
 								});
 						}
@@ -495,7 +500,7 @@
 									action: 'click'
 								}
 							).then(function (d) {
-								display_captcha_test_status('Captcha test successful', 'success');
+								display_captcha_test_status(user_registration_settings_params.i18n.captcha_success, 'success');
 							});
 						} catch (err) {
 							display_captcha_test_status(err.message, 'error');
@@ -536,6 +541,11 @@
 		}
 	});
 
+	/**
+	 *
+	 * @param {string} notice Notice message.
+	 * @param {string} type Notice type.
+	 */
 	function display_captcha_test_status(notice = '', type = 'success') {
 
 		if (notice.length) {
