@@ -352,7 +352,7 @@ class UR_Emailer {
 	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
 
 		$header = array(
-			'Reply-To:' . $user_email . '\r\n',
+			'Reply-To:' . $user_email,
 			'Content-Type: text/html; charset=UTF-8'
 		);
 
@@ -525,7 +525,7 @@ class UR_Emailer {
 	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
 		$header = array(
-			'Reply-To:' . $user_email . '\r\n',
+			'Reply-To:' . $user_email,
 			'Content-Type: text/html; charset=UTF-8'
 		);
 
