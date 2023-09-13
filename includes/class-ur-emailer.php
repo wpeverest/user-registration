@@ -96,11 +96,24 @@ class UR_Emailer {
 	 * @return string email header
 	 */
 	public static function ur_get_header() {
-		$header = array(
+		$header       = array(
 			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>',
 			'Reply-To:' . self::ur_sender_email(),
-			'Content-Type:text/html; charset=UTF-8'
+			'Content-Type:text/html; charset=UTF-8',
 		);
+		$sender_email = self::ur_sender_email();
+		$sender_name  = self::ur_sender_name();
+
+		/**
+		 * Hook to modify user email header such as from name, reply to etc.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $sender_email Sender Email.
+		 * @param string $sender_name Sender Name.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_user_email_header', $header, $sender_email, $sender_name );
 
 		return $header;
 	}
@@ -353,8 +366,18 @@ class UR_Emailer {
 
 		$header = array(
 			'Reply-To:' . $user_email,
-			'Content-Type: text/html; charset=UTF-8'
+			'Content-Type: text/html; charset=UTF-8',
 		);
+
+		/**
+		 * Hook to modify admin email header.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $user_email User Email.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
 
 		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
 		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
@@ -526,8 +549,17 @@ class UR_Emailer {
 
 		$header = array(
 			'Reply-To:' . $user_email,
-			'Content-Type: text/html; charset=UTF-8'
+			'Content-Type: text/html; charset=UTF-8',
 		);
+		/**
+		 * Hook to modify admin email header.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $user_email User Email.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
 
 		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
 		$admin_email = get_option( 'user_registration_edit_profile_email_receipents', get_option( 'admin_email' ) );
@@ -550,7 +582,6 @@ class UR_Emailer {
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 		$message                   = self::parse_smart_tags( $message, $values, $name_value );
 		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
-
 
 		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
 			foreach ( $admin_email as $email ) {
