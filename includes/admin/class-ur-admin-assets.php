@@ -155,6 +155,18 @@ class UR_Admin_Assets {
 			UR_VERSION,
 			false
 		);
+
+		wp_register_script(
+			'user-registration-form-settings',
+			UR()->plugin_url() . '/assets/js/admin/form-settings' . $suffix . '.js',
+			array(
+				'user-registration-admin',
+				'user-registration-form-builder',
+			),
+			UR_VERSION,
+			false
+		);
+
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'jquery-confirm', UR()->plugin_url() . '/assets/js/jquery-confirm/jquery-confirm' . $suffix . '.js', array( 'jquery' ), '2.70', true );
@@ -290,6 +302,7 @@ class UR_Admin_Assets {
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
 			wp_enqueue_script( 'user-registration-admin' );
 			wp_enqueue_script( 'user-registration-form-builder' );
+			wp_enqueue_script( 'user-registration-form-settings' );
 			wp_enqueue_script( 'jquery-confirm' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
