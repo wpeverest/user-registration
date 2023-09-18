@@ -1133,6 +1133,34 @@
 								}
 								general_setting_data["options"] = array_value;
 							});
+						} else if (
+							"captcha" ===
+							$(this).attr("data-field-name")) {
+							var li_elements = $(this).closest("ul").find("li");
+							var captcha_value = [];
+
+							li_elements.each(function (index, element) {
+
+								var question = $(element)
+									.find("input.ur-type-captcha-question")
+									.val();
+
+								var answer = $(element)
+									.find(".ur-type-captcha-answer")
+									.val();
+								if (
+									captcha_value.every(function (each_value) {
+										return each_value.question !== question;
+									})
+								) {
+									general_setting_data["options"] =
+									captcha_value.push({
+											question: question,
+											answer: answer,
+										});
+								}
+								general_setting_data["options"] = captcha_value;
+							});
 						} else {
 							var choice_value = URFormBuilder.get_ur_data(
 								$(this)
@@ -1475,6 +1503,7 @@
 								this.single_row();
 								this.manage_required_fields();
 								this.manage_label_hidden_fields();
+								this.manage_captcha_type();
 							},
 							single_row: function () {
 								if (
@@ -1635,6 +1664,34 @@
 												.closest(".ur-selected-item")
 												.find(".ur-label")
 												.find("label")
+												.show();
+										}
+									}
+								);
+							},
+							/**
+							 *	Hide show captcha type based on captcha format.
+							 */
+							manage_captcha_type: function () {
+								$('select[data-field="captcha_format"]').each(
+									function () {
+										if ($(this).val() == "math") {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-field").find(".ur-captcha-equation")
+												.show();
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-field").find(".ur-captcha-question")
+												.hide();
+										} else {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-field").find(".ur-captcha-equation")
+												.hide();
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-field").find(".ur-captcha-question")
 												.show();
 										}
 									}
@@ -2980,6 +3037,19 @@
 											$(this)
 										);
 									}
+									else if (
+										$this_obj
+											.closest(
+												".ur-general-setting-block"
+											)
+											.hasClass(
+												"ur-general-setting-captcha-question"
+											)
+									) {
+										URFormBuilder.render_captcha_question(
+											$(this)
+										);
+									}
 								}
 							});
 							break;
@@ -3020,6 +3090,16 @@
 									URFormBuilder.render_multiple_choice(
 										$(this)
 									);
+								} else if (
+									$this_obj
+										.closest(".ur-general-setting-block")
+										.hasClass(
+											"ur-general-setting-captcha-question"
+										)
+								) {
+									URFormBuilder.render_captcha_question(
+										$(this)
+									);
 								}
 
 								URFormBuilder.trigger_general_setting_options(
@@ -3052,6 +3132,32 @@
 								);
 							});
 							break;
+						case "captcha_format":
+						if ($this_obj.val() === 'math') {
+							$(this)
+								.closest(".ur-general-setting-block")
+								.find(".ur-general-setting-options")
+								.hide();
+							console.log($this_obj.val());
+						}
+
+						$this_obj.on("change", function () {
+							$(this)
+								.closest(".ur-general-setting-block")
+								.find(".ur-general-setting-options")
+								.toggle();
+
+							$(".ur-selected-item.ur-item-active")
+								.find(".ur-general-setting-block")
+								.find(".ur-general-setting-options")
+								.toggle();
+						});
+						$this_obj.on("change", function () {
+							URFormBuilder.trigger_general_setting_captcha_format(
+								$(this)
+							);
+						});
+						break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -3641,6 +3747,9 @@
 					case "multiple_choice":
 						URFormBuilder.render_multiple_choice(value);
 						break;
+					case "captcha":
+						URFormBuilder.render_captcha_question(value);
+						break;
 				}
 			},
 			/**
@@ -3920,6 +4029,55 @@
 				}
 			},
 			/**
+			 * Reflects changes in captcha field of field settings into selected field in form builder area.
+			 *
+			 * @param object this_node  captcha  field from field settings.
+			 *
+			 * @since 4.0.5
+			 */
+			render_captcha_question: function (this_node) {
+				var captcha_value = [];
+				var li_elements = this_node.closest("ul").find("li");
+				li_elements.each(function (index, element) {
+					var question = $(element)
+						.find("input.ur-type-captcha-question")
+						.val();
+					var answer = $(element)
+						.find("input.ur-type-captcha-answer")
+						.val();
+
+					question = question.trim();
+					answer = answer.trim();
+					if (
+						captcha_value.every(function (each_value) {
+							return each_value.question !== question;
+						})
+					) {
+						captcha_value.push({
+							question: question,
+							answer: answer,
+						});
+					}
+				});
+				var wrapper = $(".ur-selected-item.ur-item-active");
+				var captcha = wrapper.find(".ur-field");
+				captcha.html("");
+
+				for (var i = 0; i < captcha_value.length; i++) {
+					if (captcha_value[i] !== "") {
+						captcha.append(
+							'<label><input value="' +
+							captcha_value[i].question.trim() +
+								'" type="text" '+
+								" disabled>" +
+								captcha_value[i].question.trim() +
+								"</label>"
+						);
+					}
+				}
+
+			},
+			/**
 			 * Reflects changes in options of choice fields of field settings into selected field in form builder area.
 			 *
 			 * @param object $label Options of choice fields from field settings.
@@ -3939,6 +4097,16 @@
 								'"]'
 						)
 						.val($label.val());
+				} else if ( "captcha" === $label.attr("data-field-name") ) {
+					wrapper
+					.find(
+						".ur-general-setting-block li:nth(" +
+							index +
+							') input[name="' +
+							$label.attr("name") +
+							'"]'
+					)
+					.val($label.val());
 				} else {
 					wrapper
 						.find(
@@ -3977,6 +4145,34 @@
 						'input[data-field="' + $label.attr("data-field") + '"]'
 					)
 					.prop("checked", $label.is(":checked"));
+			},
+			/**
+			 * Reflects changes in captcha format field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label captcha format field of fields from field settings.
+			 */
+			trigger_general_setting_captcha_format: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active"),
+				value       = $.trim($label.val());
+				console.log(value);
+				wrapper
+					.find(".ur-general-setting-captcha-format select option")
+					.prop("selected", false);
+				wrapper
+					.find(
+						'.ur-general-setting-captcha-format select option[value="' +
+							value +
+							'"]'
+					)
+					.prop("selected", true);
+
+				if ("math" === value) {
+					wrapper.find(".ur-field").find(".ur-captcha-question").hide();
+					wrapper.find(".ur-field").find(".ur-captcha-equation").show();
+				} else {
+					wrapper.find(".ur-field").find(".ur-captcha-equation").hide();
+					wrapper.find(".ur-field").find(".ur-captcha-question").show();
+				}
 			},
 			/**
 			 * Reflects changes in descriptions field of field settings into selected field in form builder area.
@@ -4256,7 +4452,13 @@
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-multiple_choice")
 				) {
-					URFormBuilder.render_multiple_choice($this);
+					URFormBuilder.render_captcha_question($this);
+				} else if (
+					$this
+						.closest(".ur-general-setting-block")
+						.hasClass("ur-general-setting-captcha-question")
+				) {
+					URFormBuilder.render_captcha_question($this);
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
@@ -4302,6 +4504,12 @@
 							.hasClass("ur-general-setting-multiple_choice")
 					) {
 						URFormBuilder.render_multiple_choice($any_siblings);
+					} else if (
+						$any_siblings
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-captcha-question")
+					) {
+						URFormBuilder.render_captcha_question($any_siblings);
 					}
 				}
 
