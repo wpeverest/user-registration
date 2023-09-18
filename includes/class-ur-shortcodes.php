@@ -321,6 +321,8 @@ class UR_Shortcodes {
 			$all_page_slug = ur_get_all_page_slugs();
 			if ( in_array( $redirect_url, $all_page_slug, true ) ) {
 				$redirect_url = site_url( $redirect_url );
+			} else {
+				$redirect_url = home_url();
 			}
 		}
 		return $redirect_url;
