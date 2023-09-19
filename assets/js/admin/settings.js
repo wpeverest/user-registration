@@ -437,6 +437,7 @@
 
 	$('.user-registration-global-settings').find('input').on('change', function() {
 		captchaSettingsChanged = true;
+		$( '#user_registration_captcha_setting_captcha_test' ).parent().hide();
 	});
 
 	/**
