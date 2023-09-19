@@ -3934,20 +3934,21 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 	 * @return void
 	 */
 	function ur_add_links_to_top_nav( $wp_admin_bar ) {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! is_admin_bar_showing() || ! current_user_can( 'manage_user_registration' ) ) {
 			return;
 		}
 
 		/**
-		 * Add a link to create new form in admin bar.
+		 * Add User Registration links in the admin top nav bar.
 		 */
-		$wp_admin_bar->add_node(
+
+		$wp_admin_bar->add_menu(
 			array(
-				'id'     => 'ur-new-form',
-				'parent' => 'new-content',
-				'title'  => __( 'Form', 'user-registration' ),
-				'href'   => admin_url( 'admin.php?page=add-new-registration' ),
+				'id'     => 'user-registration-menu',
+				'parent' => null,
+				'group'  => null,
+				'title'  => 'User Registration', // you can use img tag with image link. it will show the image icon Instead of the title.
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
 			)
 		);
 
@@ -3959,7 +3960,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 
 		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
-		} else if ( is_page() || is_single() ) {
+		} elseif ( is_page() || is_single() ) {
 			$post_content = get_the_content();
 
 			if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
@@ -3970,11 +3971,12 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 		}
 
 		if ( ! empty( $form_id ) ) {
-			$wp_admin_bar->add_node(
+			$wp_admin_bar->add_menu(
 				array(
-					'id'    => 'ur-edit-form',
-					'title' => __( 'Edit Form', 'user-registration' ),
-					'href'  =>  add_query_arg(
+					'parent' => 'user-registration-menu',
+					'id'     => 'ur-edit-form',
+					'title'  => __( 'Edit Form', 'user-registration' ),
+					'href'   => add_query_arg(
 						'edit-registration',
 						$form_id,
 						admin_url( 'admin.php?page=add-new-registration' )
@@ -3985,6 +3987,57 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 				)
 			);
 		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-all-forms',
+				'title'  => __( 'All Forms', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-add-new',
+				'title'  => __( 'Add New', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=add-new-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-settings',
+				'title'  => __( 'Settings', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration-settings' ),
+			)
+		);
+
+		$href = add_query_arg(
+			array(
+				'utm_medium'  => 'admin-bar',
+				'utm_source'  => 'WordPress',
+				'utm_content' => 'Documentation',
+			),
+			esc_url_raw( 'https://docs.wpuserregistration.com/' )
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-docs',
+				'title'  => __( 'Documentation', 'user-registration' ),
+				'href'   => $href,
+				'meta'   => array(
+					'target' => '_blank',
+					'rel'    => 'noopener noreferrer',
+				),
+			)
+		);
+
+		do_action( 'everest_forms_top_admin_bar_menu', $wp_admin_bar );
 	}
 
 	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
