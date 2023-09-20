@@ -2,7 +2,7 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form");
+	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
 
 	var field_selector = "";
 
@@ -141,6 +141,11 @@
 		load_validation: function () {
 			if (typeof $.fn.validate === "undefined") {
 				return false;
+			}
+			//Validation by pass for wc quantity field.
+			var qty_max = $(document).find('[name="quantity"]');
+			if(qty_max.attr('max') === ""){
+				qty_max.removeAttr('max');
 			}
 			var $this_node = this;
 

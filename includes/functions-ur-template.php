@@ -182,8 +182,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
-			$args['class'][] = 'validate-required';
-			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
+			$args['class'][]                       = 'validate-required';
+			$args['custom_attributes']['required'] = 'required';
+			$required                              = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
 			$args['required'] = '';
 		}
