@@ -593,6 +593,36 @@
 		},
 	});
 
+	// Set localStorage with expiry
+	function setStorageValue( key, value ) {
+		const current = new Date();
+		
+		const data = {
+			value: value,
+			expiry: current.getTime() + 86400000, // 1day of expiry time
+		}
+
+		localStorage.setItem( key, JSON.stringify(data) );
+	}
+
+	// Get localStorage with expiry
+	function getStorageValue( key ) {
+		const item = localStorage.getItem( key );
+
+		if ( !item ) {
+			return false;
+		}
+
+		const data = JSON.parse(item);
+		const current = new Date();
+
+		if ( current.getTime() > data.expiry ) {
+			localStorage.removeItem( key );
+			return false;
+		}
+		return true;
+	}
+
 	// Handles collapse of side menu.
 	$("#ur-settings-collapse").on("click", function (e) {
 		e.preventDefault();
@@ -600,12 +630,24 @@
 		if ($(this).hasClass("close")) {
 			$(this).closest("header").addClass("collapsed");
 			$(this).removeClass("close").addClass("open");
+			setStorageValue("ur-settings-navCollapsed", true); // set to localStorage
 		} else {
 			$(this).closest("header").removeClass("collapsed");
 			$(this).removeClass("open").addClass("close");
+			localStorage.removeItem("ur-settings-navCollapsed"); // remove from localStorage
 		}
 	});
 
+	// Persist the collapsable state through page reload
+	const isNavCollapsed = getStorageValue("ur-settings-navCollapsed") === true ? 'collapsed' : 'not-collapsed' ;
+	if( isNavCollapsed == "collapsed" ) {
+		$('.user-registration-header').addClass("collapsed");
+		$('#ur-settings-collapse').removeClass("close").addClass("open");
+	}else {
+		$('.user-registration-header').removeClass("collapsed");
+		$('#ur-settings-collapse').removeClass("open").addClass("close");
+	}
+	
 	$(".ur-nav-premium").each(function () {
 		$(this).hover(
 			function (e) {
