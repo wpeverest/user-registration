@@ -219,7 +219,13 @@ class UR_Frontend {
 				return;
 			}
 
-			if ( 'register' === $action || 'login' === $action || 'lostpassword' === $action || 'resetpass' === $action ) {
+			if ( 'resetpass' === $action ) {
+				$ur_reset_pass_url = get_permalink( $page_id ) . '?' . sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING']  ?? '' ) );
+				wp_safe_redirect( $ur_reset_pass_url );
+				exit;
+			}
+
+			if ( 'register' === $action || 'login' === $action || 'lostpassword' === $action ) {
 				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
