@@ -404,7 +404,7 @@ class UR_Emailer {
 		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
 
 		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
 		}

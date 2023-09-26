@@ -615,6 +615,9 @@ jQuery(function ($) {
 	if (
 		$("#user_registration_form_setting_login_options").val() !==
 		"admin_approval"
+		&&
+		$("#user_registration_form_setting_login_options").val() !==
+		"admin_approval_after_email_confirmation"
 	) {
 		$("#user_registration_form_setting_enable_email_approval")
 			.parent()
@@ -638,7 +641,7 @@ jQuery(function ($) {
 				.parent()
 				.parent();
 
-			if ($(this).val() === "admin_approval") {
+			if ($(this).val() === "admin_approval" || $(this).val() === "admin_approval_after_email_confirmation") {
 				$("#user_registration_form_setting_enable_email_approval").prop(
 					"checked",
 					user_registration_form_setting_enable_email_approval_initial_value
