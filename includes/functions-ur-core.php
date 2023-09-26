@@ -3959,4 +3959,18 @@ if ( ! function_exists( 'ur_update_user_ip_in_user_meta' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_update_user_ip_after_profile_update' ) ) {
+	/**
+	 * Update the user's IP address in form data if not already present.
+	 *
+	 * @param int $user_id The ID of the User.
+	 * @param int $form_id   The ID of the form.
+	 */
+	function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+	}
+}
+
+add_action( 'user_registration_save_profile_details', 'ur_update_user_ip_after_profile_update', 10, 2 );
 add_action( 'user_registration_after_user_meta_update', 'ur_update_user_ip_in_user_meta', 10, 3 );
