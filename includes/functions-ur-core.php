@@ -3947,7 +3947,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 				'id'     => 'user-registration-menu',
 				'parent' => null,
 				'group'  => null,
-				'title'  => 'User Registration', // you can use img tag with image link. it will show the image icon Instead of the title.
+				'title'  => __( 'User Registration', 'user-registration' ), // you can use img tag with image link. it will show the image icon Instead of the title.
 				'href'   => admin_url( 'admin.php?page=user-registration' ),
 			)
 		);
