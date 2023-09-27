@@ -23,8 +23,10 @@
 						.append(
 							'<div class="ur-image-uploader-wrapper">' +
 							'<img src="#" style="display:none">' +
+							'<div class="ur-image-uploader-btns-wrapper">' +
 							'<button class="ur-file-upload-button button" style="display:none">Upload</button>' +
 							'<button class="ur-file-remove-button button button-danger" style="display:none">Remove</button>' +
+							'</div>' +
 							'</div>'
 					);
 
