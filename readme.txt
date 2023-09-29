@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.3
-Stable tag: 3.0.3
+Tested up to: 6.3.1
+Stable tag: 3.0.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,22 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.4.1  - 05/09/2023
+* Fix      - User field value not being saved while registering or updating the profile.
+
+= 3.0.4    - 04/09/2023
+* Feature  - Cloudflare turnstile captcha integration.
+* Enhance  - Login forms menu to show the login form shortcode.
+* Enhance  - Custom hold time before redirection after registration.
+* Dev      - Modified function that parses my account page id.
+* Dev      - Compatibility for pattern validation for input fields.
+* Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Incorrect filtering of pending users.
+* Fix      - Reset Password link throws invalid key.
+* Fix      - Remove other plugins notice in settings area.
+* Fix      - Conditionally hidden fields value being submitted.
+* Fix      - Copied tooltip not being shown when shortcode is copied.
 
 = 3.0.3    - 11/08/2023
 * Feature  - Email Preview.

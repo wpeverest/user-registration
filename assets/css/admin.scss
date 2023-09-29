@@ -3833,41 +3833,38 @@ body {
 				#menu-management-liquid {
 					float: none;
 				}
-	
 				#menu-management {
 					.menu-edit {
 						position: unset;
 					}
 				}
-	
 				#post-body {
 					.ur-registered-from {
 						display: block;
 						background-color: transparent;
-	
 						.ur-builder-wrapper {
 							height: auto;
 							overflow-y: unset;
 							border-left: 0;
 							background: transparent;
-	
+
 							.ur-selected-inputs {
 								background: #f0f0f1;
 								padding: $spacing_24px;
-	
+
 								.ur-builder-wrapper-content {
 									padding: $spacing_20px $spacing_30px $spacing_60px;
 									border-radius: $border_radius_7;
-	
+
 									.ur-login {
 										&-shortcode {
 											margin-top: 0;
 											display: block;
-		
+
 											h1 {
 												margin-bottom: $spacing_12px;
 											}
-		
+
 											&--wrapper {
 												// width: 45%;
 												display: flex;
@@ -3875,24 +3872,23 @@ body {
 												gap: $spacing_30px;
 												// flex-wrap: nowrap;
 												flex-wrap: wrap;
-		
-												@media (max-width: 1000px) {
+
+												@media (max-width: 1400px) {
 													flex-wrap: wrap;
 													justify-content: center;
 												}
-		
+
 												img {
 													margin-left: -$spacing_24px;
-		
+
 													@media (max-width: 1000px) {
 														margin-left: 0;
 													}
-		
+
 													@media (max-width: 768px) {
 														width: 100%;
 													}
 												}
-		
 												.ur-login-content {
 													// width: 55%;
 													margin-left: 0;
@@ -3901,33 +3897,31 @@ body {
 													background: #f6f6f6;
 													border-radius: $border_radius_7;
 													flex: 1;
-		
 													p {
 														&:first-child {
 															margin-top: 0;
 														}
 													}
-		
 													.login-forms-shortcode-action {
 														input {
 															height: 32px;
 															font-size: 15px;
 														}
-		
+
 														.ur-copy-shortcode {
 															box-shadow: none;
 															transition: all .3s ease-in-out;
-		
+
 															svg {
 																path {
 																	fill: $primary_color;
 																	transition: all .3s ease-in-out;
 																}
 															}
-		
+
 															&:hover {
 																background: $primary_color !important;
-		
+
 																svg {
 																	path {
 																		fill: $grey-0;
@@ -3939,7 +3933,6 @@ body {
 												}
 											}
 										}
-	
 										&-view-doc {
 											margin-top: $spacing_32px;
 										}
@@ -3951,7 +3944,7 @@ body {
 				}
 			}
 		}
-	}	
+	}
 }
 
 @media (max-width: 960px) {

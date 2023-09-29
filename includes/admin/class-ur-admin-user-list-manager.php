@@ -483,7 +483,7 @@ class UR_Admin_User_List_Manager {
 				);
 			} elseif ( UR_Admin_User_Manager::DENIED == $status ) {
 				$meta_query = $this->get_denied_users_meta_query();
-			} elseif ( 'pending_email' == $status ) {
+			} elseif ( 'pending_email' === $status ) {
 				$meta_query = $this->get_pending_email_meta_query();
 			}
 		}
