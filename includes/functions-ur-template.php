@@ -645,37 +645,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';
 				$field       .= '<input type="hidden" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden ur-frontend-field ' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '"/>';
 				break;
-			case 'captcha' :
-				if ( ! isset( $args['captcha_format'] ) ) {
-					return;
-				}
-				$field       .= ' <span class="input-wrapper ur-captcha-'. $args['captcha_format'] .'"> ';
-				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';
-				$qid          = ur_captcha_random_question( $args['options'] );
-				$question     = $args['options'][$qid]['question'];
-				$answer       = $args['options'][$qid]['answer'];
-				switch ($args['captcha_format']) {
-					case 'math':
-						$field .= '<span class="ur-captcha-equation" style = "margin-right:10px; display:inline-block">
-									<span class="n1" value=""></span>
-									<span class="cal"></span>
-									<span class="n2"></span>
-									<span class="e">=</span>
-									</span>';
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-captcha ' . esc_attr( implode( ' ', $args['input_class'] ) ) . esc_attr( $custom_class ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
-						$field .= '<input type="hidden" name="' . esc_attr( $key ) . '[cal]" class="cal">';
-						$field .= '<input type="hidden" name="' . esc_attr( $key ) . '[n2]" class="n2">';
-						$field .= '<input type="hidden" name="' . esc_attr( $key ) . '[n1]" class="n1">';
-						break;
-
-					case 'qa':
-						$field .= '<h7 style = "margin-right:10px">' . sprintf( __( '%s', 'user-registration' ), $question ) . '</h7><input type="' . esc_attr( $args['type'] ) . '" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-captcha '. esc_attr( implode( ' ', $args['input_class'] ) )  . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" data-a = "' . $answer . '" value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . '/>';
-						$field .= '<input type="hidden" name="' . esc_attr( $key ) . '[question]" class="qa" value="' . esc_attr( $qid ) . '">';
-						break;
-				}
-
-				$field .= '</span> ';
-				break;
 		}
 		// End switch().
 		if ( $args['description'] ) {
@@ -712,33 +681,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		}
 	}
 } // End if().
-
-/**
- * Function to pick random captcha question from an array.
- *
- * @param array $options options.
- * @return string $index index.
-*/
-if ( ! function_exists( 'ur_captcha_random_question') ) {
-	function ur_captcha_random_question( $options ) {
-
-		if ( empty( $options ) ) {
-			return false;
-		}
-
-		foreach ( $options as $key => $question ) {
-			if ( empty( $question['question'] ) || empty( $question['answer'] ) ) {
-				unset( $form_fields['questions'][ $key ] );
-			}
-		}
-		$index =  array_rand( $options );
-		if ( ! isset( $options[ $index ]['question'] ) || ! isset( $options[ $index ]['answer'] ) ) {
-			$index = ur_captcha_random_question( $options );
-		}
-		return $index;
-
-	}
-}
 
 if ( ! function_exists( 'user_registration_form_data' ) ) {
 
