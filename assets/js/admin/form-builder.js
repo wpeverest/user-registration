@@ -4218,19 +4218,19 @@
 			handle_options_sort: function ($this_obj) {
 				URFormBuilder.ur_clone_options($this_obj);
 				if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-radio")
 				) {
 					URFormBuilder.render_radio($this_obj);
 				} else if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-checkbox")
 				) {
 					URFormBuilder.render_check_box($this_obj);
 				} else if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-multiple_choice")
 				) {
@@ -4296,13 +4296,7 @@
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-multiple_choice")
 				) {
-					URFormBuilder.render_captcha_question($this);
-				} else if (
-					$this
-						.closest(".ur-general-setting-block")
-						.hasClass("ur-general-setting-captcha-question")
-				) {
-					URFormBuilder.render_captcha_question($this);
+					URFormBuilder.render_multiple_choice($this);
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
@@ -4348,12 +4342,6 @@
 							.hasClass("ur-general-setting-multiple_choice")
 					) {
 						URFormBuilder.render_multiple_choice($any_siblings);
-					} else if (
-						$any_siblings
-							.closest(".ur-general-setting-block")
-							.hasClass("ur-general-setting-captcha-question")
-					) {
-						URFormBuilder.render_captcha_question($any_siblings);
 					}
 				}
 
