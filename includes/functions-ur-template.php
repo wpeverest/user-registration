@@ -723,7 +723,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
-					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
+					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value needs to be unique.', 'user-registration' );
 					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 
 					if ( empty( $field_label ) ) {
