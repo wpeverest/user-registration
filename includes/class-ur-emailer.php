@@ -218,6 +218,11 @@ class UR_Emailer {
 						$value = implode( ',',$upload_data );
 						}
 				}
+
+				if ( 'privacy_policy' === $form_data['field_key'] && '' !== $value ) {
+					$value = esc_html__( 'Accepted', 'user-registration' );
+				}
+
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
 					$country_class = ur_load_form_field_class( $form_data['field_key'] );
 					$countries     = $country_class::get_instance()->get_country();
