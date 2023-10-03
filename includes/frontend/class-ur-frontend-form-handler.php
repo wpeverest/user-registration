@@ -235,6 +235,15 @@ class UR_Frontend_Form_Handler {
 			}
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
+
+		/**
+		 * Saving the user ip in user meta.
+		 *
+		 * @since  3.0.4.1
+		 */
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+
 		$current_language = ur_get_current_language();
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 	}
