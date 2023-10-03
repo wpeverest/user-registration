@@ -342,8 +342,8 @@ abstract class UR_Form_Field {
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
 					$options[ $option->question ] = array(
-						'question'    => $option->question,
-						'answer'      => $option->answer,
+						'question' => ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->question ),
+						'answer'   => $option->answer,
 					);
 				}
 
