@@ -4037,7 +4037,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			)
 		);
 
-		do_action( 'everest_forms_top_admin_bar_menu', $wp_admin_bar );
+		do_action( 'user_registration_top_admin_bar_menu', $wp_admin_bar );
 	}
 
 	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
