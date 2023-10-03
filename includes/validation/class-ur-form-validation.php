@@ -562,102 +562,6 @@ class UR_Form_Validation extends UR_Validation {
 
 
 	/**
-	 * Validate form data on update profile from My Account page
-	 * when submitted using AJAX submission.
-	 *
-	 * @param [array] $form_fields Form Field Settings.
-	 * @param [array] $form_data Form Data.
-	 * @param [int]   $form_id Form Id.
-	 * @return void
-	 */
-	public function validate_update_profile_AJAX( $form_fields, $form_data, $form_id ) {
-
-		$form_key_list = array_map(
-			function( $el ) {
-				return str_replace( 'user_registration_', '', $el );
-			},
-			array_keys( $form_fields )
-		);
-
-		$request_form_keys = array_map(
-			function( $el ) {
-				return $el->field_name;
-			},
-			$form_data
-		);
-
-		if ( array_diff( $form_key_list, $request_form_keys ) ) {
-			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
-			return;
-		}
-
-		$form_field_data = $this->get_form_field_data( $form_id );
-		$form_key_list   = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
-		$form_key_list   = apply_filters( 'user_registration_form_key_list', $form_key_list );
-
-		// Triger validation method for user fields. Useful for custom fields validation.
-		$this->add_hook( $form_field_data, $form_data );
-
-		foreach ( $form_data as $data ) {
-			$single_field_name = $data->field_name;
-
-			if ( in_array( $single_field_name, $form_key_list, true ) ) {
-				$field_setting      = $form_fields[ 'user_registration_' . $single_field_name ];
-				$single_field_label = isset( $field_setting['label'] ) ? $field_setting['label'] : '';
-				$single_field_key   = $field_setting['field_key'];
-				$single_field_value = isset( $data->value ) ? $data->value : '';
-				$data->extra_params = array(
-					'field_key' => $single_field_key,
-					'label'     => $single_field_label,
-				);
-
-				$form_data_index   = array_search( $data->field_name, $form_key_list, true );
-				$single_form_field = $form_field_data[ $form_data_index ];
-
-				/**
-				 * Validate form field according to the validations set in $validations array.
-				 *
-				 * @see this->get_field_validations()
-				 */
-
-				$validations = $this->get_field_validations( $single_field_key );
-
-				$required = isset( $single_form_field->general_setting->required ) ?
-							$single_form_field->general_setting->required :
-							false;
-
-				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
-
-				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
-					array_unshift( $validations, 'required' );
-				}
-
-				if ( ! empty( $validations ) ) {
-					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
-						foreach ( $validations as $validation ) {
-							$result = self::$validation( $single_field_value );
-
-							if ( is_wp_error( $result ) ) {
-								$error_code = $result->get_error_code();
-								$message    = $this->get_error_message( $error_code, $single_field_label );
-								ur_add_notice( $message, 'error' );
-								break;
-							}
-						}
-					}
-				}
-
-				if ( 'email' === $field_setting['type'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
-				}
-
-				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
-			}
-		}
-	}
-
-
-	/**
 	 * Validate update profile data submitted.
 	 *
 	 * @param [array] $form_fields Form Fields.
@@ -837,10 +741,10 @@ class UR_Form_Validation extends UR_Validation {
 
 		/**
 		 * Add fields to skip validation on update profile.
-		 * 
+		 *
 		 * @param [array] $skippable_fields Skippable fields array.
 		 * @param [array] $form_data Form Fields data array.
-		 * 
+		 *
 		 * @since 3.0.4
 		 */
 		return apply_filters( 'user_registration_update_profile_validation_skip_fields', $skippable_fields, $form_data );
