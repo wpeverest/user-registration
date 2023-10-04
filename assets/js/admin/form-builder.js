@@ -1133,6 +1133,34 @@
 								}
 								general_setting_data["options"] = array_value;
 							});
+						} else if (
+							"captcha" ===
+							$(this).attr("data-field-name")) {
+							var li_elements = $(this).closest("ul").find("li");
+							var captcha_value = [];
+
+							li_elements.each(function (index, element) {
+
+								var question = $(element)
+									.find("input.ur-type-captcha-question")
+									.val();
+
+								var answer = $(element)
+									.find(".ur-type-captcha-answer")
+									.val();
+								if (
+									captcha_value.every(function (each_value) {
+										return each_value.question !== question;
+									})
+								) {
+									general_setting_data["options"] =
+									captcha_value.push({
+											question: question,
+											answer: answer,
+										});
+								}
+								general_setting_data["options"] = captcha_value;
+							});
 						} else {
 							var choice_value = URFormBuilder.get_ur_data(
 								$(this)
@@ -3083,6 +3111,7 @@
 							});
 							break;
 					}
+					$(document.body).trigger('ur_general_field_settings_to_update_form_fields_in_builder',[$this_obj]);
 				});
 				var advance_settings = $(
 					"#ur-setting-form .ur_advance_setting"
@@ -3643,6 +3672,7 @@
 						URFormBuilder.render_multiple_choice(value);
 						break;
 				}
+				$(document.body).trigger("ur_sync_textarea_field_settings_in_selected_field_of_form_builder",[field_type,value]);
 			},
 			/**
 			 * Reflects changes in select field of field settings into selected field in form builder area.
@@ -3940,6 +3970,16 @@
 								'"]'
 						)
 						.val($label.val());
+				} else if ( "captcha" === $label.attr("data-field-name") ) {
+					wrapper
+					.find(
+						".ur-general-setting-block li:nth(" +
+							index +
+							') input[name="' +
+							$label.attr("name") +
+							'"]'
+					)
+					.val($label.val());
 				} else {
 					wrapper
 						.find(
@@ -4179,19 +4219,19 @@
 			handle_options_sort: function ($this_obj) {
 				URFormBuilder.ur_clone_options($this_obj);
 				if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-radio")
 				) {
 					URFormBuilder.render_radio($this_obj);
 				} else if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-checkbox")
 				) {
 					URFormBuilder.render_check_box($this_obj);
 				} else if (
-					$this
+					$this_obj
 						.closest(".ur-general-setting-block")
 						.hasClass("ur-general-setting-multiple_choice")
 				) {
