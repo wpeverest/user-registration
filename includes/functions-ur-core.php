@@ -3945,7 +3945,7 @@ if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
 
 		return $slugs;
 	}
-
+}
 
 if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 	/**
