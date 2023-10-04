@@ -55,7 +55,7 @@
 							var image_url = uploaded_image.toJSON().url;
 
 							if ( image_url.length ) {
-								ur_uploader.siblings( 'img' ).attr( 'src', image_url ).show();
+								ur_uploader.closest( '.ur-image-uploader-wrapper' ).find( 'img' ).attr( 'src', image_url ).show();
 								ur_uploader.closest( '.input-wrapper' ).find( 'input' ).attr( 'value', image_url );
 								ur_uploader.siblings( 'button.ur-file-remove-button' ).show();
 								ur_uploader.hide();
@@ -68,7 +68,7 @@
 							e.preventDefault();
 
 							$( this ).closest( '.input-wrapper' ).find( 'input' ).attr( 'value', '' );
-							$( this ).siblings( 'img' ).hide();
+							$( this ).closest( '.ur-image-uploader-wrapper' ).find( 'img' ).hide();
 							$( this ).hide();
 							$( this ).siblings( 'button.ur-file-upload-button' ).show();
 						}
