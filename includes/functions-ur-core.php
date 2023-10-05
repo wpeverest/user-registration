@@ -1289,9 +1289,7 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$form_id = ur_get_form_id_by_userid( $user_id );
-
-	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+	$login_option = ur_get_user_login_option( $user_id );
 
 	if ( 'admin_approval' === $login_option ) {
 
@@ -1507,25 +1505,6 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 	}
 
 	return $all_forms;
-}
-
-/**
- * Checks user login option, if not email confirmation force not disable emails.
- */
-function ur_get_user_login_option() {
-
-	if ( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
-		return array(
-			'title'    => __( 'Disable emails', 'user-registration' ),
-			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
-			'id'       => 'user_registration_email_setting_disable_email',
-			'default'  => 'no',
-			'type'     => 'toggle',
-			'autoload' => false,
-		);
-	} else {
-		update_option( 'user_registration_email_setting_disable_email', false );
-	}
 }
 
 /**

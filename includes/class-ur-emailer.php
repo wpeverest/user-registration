@@ -128,7 +128,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
@@ -281,7 +281,7 @@ class UR_Emailer {
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
 
 		$form_id      = ur_get_form_id_by_userid( $user_id );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
@@ -407,7 +407,7 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {

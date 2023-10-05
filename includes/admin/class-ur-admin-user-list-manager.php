@@ -145,8 +145,7 @@ class UR_Admin_User_List_Manager {
 			$status       = $action;
 			$user_id      = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : 0;
 			$user_manager = new UR_Admin_User_Manager( $user_id );
-			$form_id      = ur_get_form_id_by_userid( $user_id );
-			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+			$login_option = ur_get_user_login_option( $user_id );
 
 			if ( 'approve' === $status ) {
 
@@ -278,8 +277,6 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function add_column_cell( $val, $column_name, $user_id ) {
 
-		$form_id = ur_get_form_id_by_userid( $user_id );
-
 		if ( 'ur_user_user_status' === $column_name ) {
 			$user_manager = new UR_Admin_User_Manager( $user_id );
 			$status       = $user_manager->get_user_status();
@@ -295,6 +292,14 @@ class UR_Admin_User_List_Manager {
 			}
 
 			if ( ! empty( $status ) ) {
+				if ( $user_manager->is_denied() ) {
+					return UR_Admin_User_Manager::get_status_label( '-1' );
+				}
+
+				if ( $user_manager->is_email_pending() ) {
+					return UR_Admin_User_Manager::email_pending_label();
+				}
+
 				return UR_Admin_User_Manager::get_status_label( $status['user_status'] );
 			}
 		} elseif ( 'ur_user_user_registered_source' === $column_name ) {
@@ -440,13 +445,13 @@ class UR_Admin_User_List_Manager {
 		if ( isset( $status ) && '' !== $status ) {
 			switch ( $status ) {
 				case 'approved':
-					$status = UR_Admin_User_Manager::APPROVED;
+					$meta_query = $this->get_approved_users_meta_query();
 					break;
 				case 'pending':
-					$status = UR_Admin_User_Manager::PENDING;
+					$meta_query = $this->get_pending_users_meta_query();
 					break;
 				case 'denied':
-					$status = UR_Admin_User_Manager::DENIED;
+					$meta_query = $this->get_denied_users_meta_query();
 					break;
 				case 'pending_email':
 					break;
@@ -653,6 +658,40 @@ class UR_Admin_User_List_Manager {
 			$new_status = sanitize_text_field( wp_unslash( $_POST['ur_user_email_confirmation_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			return update_user_meta( absint( $user_id ), 'ur_confirm_email', $new_status );
 		}
+	}
+
+	/**
+	 * Returns meta query array to fetch approved users.
+	 *
+	 * @return array
+	 */
+	private function get_approved_users_meta_query() {
+		$meta_query = array(
+			'relation' => 'OR',
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'ur_user_status',
+					'compare' => 'NOT EXISTS', // works!
+					'value'   => '', // This is ignored, but is necessary...
+				),
+				array(
+					'key'     => 'ur_confirm_email',
+					'compare' => 'NOT EXISTS', // works!
+					'value'   => '', // This is ignored, but is necessary...
+				),
+			),
+			array(
+				'key'   => 'ur_user_status',
+				'value' => UR_Admin_User_Manager::APPROVED,
+			),
+			array(
+				'key'   => 'ur_confirm_email',
+				'value' => UR_Admin_User_Manager::APPROVED,
+			),
+		);
+
+		return $meta_query;
 	}
 
 	/**
