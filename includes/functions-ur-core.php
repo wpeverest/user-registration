@@ -1537,9 +1537,9 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
 		$enqueue_script        = 'ur-recaptcha-hcaptcha';
 	} elseif ( 'cloudflare' === $recaptcha_type ) {
-		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
-		$theme_mod             = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
-		$enqueue_script        = 'ur-recaptcha-cloudflare';
+		$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+		$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
+		$enqueue_script     = 'ur-recaptcha-cloudflare';
 	}
 	static $rc_counter = 0;
 
@@ -2815,7 +2815,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 		}
 
 		if ( ! empty( $myaccount_page ) ) {
-			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
 		}
 
 		if ( 0 === $matched ) {
@@ -2844,7 +2844,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	 */
 	function ur_find_my_account_in_page( $login_page_id ) {
 		global $wpdb;
-		$post_table = $wpdb->prefix . 'posts';
+		$post_table      = $wpdb->prefix . 'posts';
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
@@ -3460,7 +3460,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( ur_is_ajax_login_enabled() ) {
-				$recaptcha_value  = $captcha_response;
+				$recaptcha_value = $captcha_response;
 			}
 
 			if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
@@ -3473,16 +3473,16 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
 					} elseif ( 'cloudflare' === $recaptcha_type ) {
-						$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-						$params       = array(
+						$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+						$params = array(
 							'method' => 'POST',
 							'body'   => array(
 								'secret'   => $secret_key,
 								'response' => $recaptcha_value,
 							),
 						);
-						$data = wp_safe_remote_post( $url, $params );
-						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						$data   = wp_safe_remote_post( $url, $params );
+						$data   = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on Cloudflare. Contact your site administrator.', 'user-registration' ) );
@@ -3903,6 +3903,26 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 
 add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
 add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
+
+if ( ! function_exists( 'ur_get_ip_address' ) ) {
+	/**
+	 * Get current user IP Address.
+	 *
+	 * @return string
+	 */
+	function ur_get_ip_address() {
+		if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) { // WPCS: input var ok, CSRF ok.
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );  // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
+			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+			// Make sure we always only send through the first IP in the list which should always be the client IP.
+			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+		}
+		return '';
+	}
+}
 
 if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
 	/**

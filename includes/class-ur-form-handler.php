@@ -33,6 +33,7 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
+		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
 	}
 
 	/**
@@ -791,6 +792,19 @@ class UR_Form_Handler {
 		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
 
 		return $form_id;
+	}
+
+	/**
+	 * Update the user's IP address in form data if not already present.
+	 *
+	 * @since  3.0.4.1
+	 *
+	 * @param int $user_id The ID of the User.
+	 * @param int $form_id   The ID of the form.
+	 */
+	public static function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
 	}
 }
 

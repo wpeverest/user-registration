@@ -237,6 +237,14 @@ class UR_Frontend_Form_Handler {
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
 
+		/**
+		 * Saving the user ip in user meta.
+		 *
+		 * @since  3.1.0
+		 */
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+
 		$login_option = ur_get_user_login_option( $user_id );
 		update_user_meta( $user_id, 'ur_login_option', $login_option );
 
