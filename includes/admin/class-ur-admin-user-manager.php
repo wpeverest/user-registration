@@ -436,6 +436,31 @@ class UR_Admin_User_Manager {
 	}
 
 	/**
+	 * Returns the status code for the specified status label.
+	 *
+	 * @param [string] $status_label Status label.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return string or int
+	 */
+	public static function get_status_code( $status_label ) {
+		$status_code = '';
+
+		$status_map = array(
+			'approved' => 1,
+			'pending' => 0,
+			'denied' => -1
+		);
+
+		if ( isset( $status_map[ $status_label ] ) ) {
+			return $status_map[ $status_label ];
+		}
+
+		return $status_code;
+	}
+
+	/**
 	 * Label for user awaiting email confirmation.
 	 *
 	 * @return string
