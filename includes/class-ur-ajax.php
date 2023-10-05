@@ -162,6 +162,9 @@ class UR_AJAX {
 		} elseif ( 'hCaptcha' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
+		}  elseif ( 'cloudflare' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
 		if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
@@ -173,6 +176,24 @@ class UR_AJAX {
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				} elseif ( 'cloudflare' === $recaptcha_type ) {
+					$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+					$params       = array(
+						'method' => 'POST',
+						'body'   => array(
+							'secret'   => $secret_key,
+							'response' => $captcha_response,
+						),
+					);
+					$data = wp_safe_remote_post( $url, $params );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					if ( empty( $data->success ) ) {
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ),
 							)
 						);
 					}

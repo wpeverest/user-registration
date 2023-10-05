@@ -30,6 +30,8 @@
 		<key name="user_registration_reset_password_email" />
 		<key name="user_registration_profile_details_changed_email_subject" />
 		<key name="user_registration_profile_details_changed_email" />
+		<key name="user_registration_profile_details_updated_email_subject" />
+		<key name="user_registration_profile_details_Updated_email" />
 
 		<key name="user_registration_general_setting_registration_label" />
 		<key name="user_registration_general_setting_registration_url_options"/>

@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.3
-Stable tag: 3.0.3
+Tested up to: 6.3.1
+Stable tag: 3.0.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,9 +22,9 @@ The best thing is that there are unlimited customization options for each field 
 
 [youtube https://www.youtube.com/watch?v=BdZNmZecPoQ]
 
-[All features](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) | [Demo](http://demo.wpeverest.com/user-registration/) | [Documentation](https://docs.wpuserregistration.com/)
+[All features](https://wpuserregistration.com/) | [Demo](https://userregistration.demoswp.net/) | [Documentation](https://docs.wpuserregistration.com/)
 
-[Try User Registration Premium ](https://wpuserregistration.com/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
+[Try User Registration Premium ](https://wpuserregistration.com/)
 
 ### Key Features of User Registration
 * **Easy Drag and Drop Builder:** Simply drag and drop the form fields into a blank slate and create a registration form in no time. No code, no fuss.
@@ -53,15 +53,15 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Form Templates:** Kickstart your registration process with our pre-designed form templates. Use as-it-is or modify according to your needs.
 
-* **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
+* **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step-form/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Long and detailed forms can look dull and crammed. That’s why we’ve created multi-step forms that let you break long forms into multiple sections for a cleaner and engaging presentation.
 
-* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards and Ideal Payments(Stripe)](https://wpuserregistration.com/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
+* **[Premium] Collect Payments via Credit Cards and PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Credit Cards and Ideal Payments(Stripe)](https://wpuserregistration.com/features/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). So, you’ll have no problem collecting payments from users during registration using these payment gateways.
 
 * **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction to posts, pages, and categories with the premium Content Restriction addon. You can also create advanced custom content access rules based on roles, capabilities, user state, and more.
 
 * **[Premium] [Register Users Using Social Profile Account:](https://wpuserregistration.com/features/social-connect/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, your users can directly register and log in using their existing social accounts on Facebook, Twitter, LinkedIn, and Google. The data from the social account used in registration is then imported to the corresponding user profile.
 
-* **[Premium] [WooCommerce Integration:](https://wpuserregistration.com/features/woocommerce/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
+* **[Premium] [WooCommerce Integration:](https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin and add WooCommerce Shipping/Billing Address fields to your user registration forms.
 
 * **[Premium] [Collect Geolocation Data for Users:](https://wpuserregistration.com/features/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium addon enables you to collect and save the geolocation data of users who register on your website. And it’s pretty easy when you have fields like Country, City, and Postcode.
 
@@ -73,9 +73,9 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
 
-* **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-upload/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
+* **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-uploads/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
 * **[Premium] [Smart Conditional Logic:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Now, you can personalize registration forms for users and make them more interactive with conditional logic. Show different users specific fields based on their previous input.
 
@@ -357,6 +357,22 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.0.4.1  - 05/09/2023
+* Fix      - User field value not being saved while registering or updating the profile.
+
+= 3.0.4    - 04/09/2023
+* Feature  - Cloudflare turnstile captcha integration.
+* Enhance  - Login forms menu to show the login form shortcode.
+* Enhance  - Custom hold time before redirection after registration.
+* Dev      - Modified function that parses my account page id.
+* Dev      - Compatibility for pattern validation for input fields.
+* Dev      - Compatibility for enabling/disabling taking picture from the webcam.
+* Fix      - Incorrect filtering of pending users.
+* Fix      - Reset Password link throws invalid key.
+* Fix      - Remove other plugins notice in settings area.
+* Fix      - Conditionally hidden fields value being submitted.
+* Fix      - Copied tooltip not being shown when shortcode is copied.
 
 = 3.0.3    - 11/08/2023
 * Feature  - Email Preview.

@@ -191,7 +191,7 @@ class UR_Frontend_Scripts {
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.15.1',
+				'version' => '1.19.5',
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
@@ -232,6 +232,11 @@ class UR_Frontend_Scripts {
 				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
 				'deps'    => array(),
 				'version' => UR_VERSION,
+			),
+			'ur-recaptcha-cloudflare'    => array(
+				'src'     => 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
+				'deps'    => array(),
+				'version' => '',
 			),
 			'ur-my-account'              => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/my-account' . $suffix . '.js' ),

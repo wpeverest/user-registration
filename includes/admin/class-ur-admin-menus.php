@@ -602,7 +602,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 		public function registration_page() {
 			global $registration_table_list;
-			$registration_table_list->display_page();
+			if ( isset( $_GET['tab'] ) && 'login-forms' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				include_once dirname( __FILE__ ) . '/views/html-login-page-forms.php';
+			} else {
+				$registration_table_list->display_page();
+			}
 		}
 
 			/**
@@ -760,8 +764,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</div>
 				<p class="button-controls">
 					<span class="list-controls">
-					<a href="<?php echo esc_url( admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-user-registration-endpoints' ) ); ?>"
-					class="select-all"><?php esc_html_e( 'Select all', 'user-registration' ); ?></a>
+						<input type="checkbox" id="ur-endpoints-tab" class="select-all">
+						<label for="ur-endpoints-tab">
+							<?php esc_html_e( 'Select All', 'user-registration' ); ?>
+						</label>
 					</span>
 					<span class="add-to-menu">
 					<input type="submit" class="button-secondary submit-add-to-menu right"

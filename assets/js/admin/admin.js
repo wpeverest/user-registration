@@ -552,6 +552,18 @@ jQuery(function ($) {
 		}
 	};
 
+	/**
+	 * Prevent negative input for Waiting Period Before Redirection setting.
+	 */
+	$('#user_registration_form_setting_redirect_after').on('change input paste', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		var $this = $(e.target);
+
+		$this.val(Math.abs($this.val()));
+	});
+
 	// Tooltips
 	$(document.body)
 		.on("init_tooltips", function () {

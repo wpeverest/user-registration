@@ -150,6 +150,11 @@ class UR_Admin_Settings {
 				'ajax_url'         => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'             => array(
+					'captcha_success' => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
+					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
+					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
+				),
 			)
 		);
 
