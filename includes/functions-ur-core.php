@@ -4042,3 +4042,34 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 
 	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
 }
+
+if ( ! function_exists( 'ur_array_clone' ) ) {
+	/**
+	 * Clone Array or Object
+	 *
+	 * @since 3.0.5
+	 *
+	 * @param  [mixed] $array
+	 */
+	function ur_array_clone( $array ) {
+		if ( is_object( $array ) ) {
+			return clone $array;
+		}
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+		return array_map(
+			function ( $element ) {
+				return ( ( is_array( $element ) )
+				? array_clone( $element )
+				: ( ( is_object( $element ) )
+					? clone $element
+					: $element
+				)
+				);
+			},
+			$array
+		);
+	}
+}
+
