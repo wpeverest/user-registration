@@ -46,7 +46,7 @@ class UR_Emailer {
 				__CLASS__,
 				'ur_profile_details_changed_mail',
 			),
-			10,
+			8,
 			2
 		);
 	}
@@ -128,7 +128,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
@@ -218,6 +218,11 @@ class UR_Emailer {
 						$value = implode( ',',$upload_data );
 						}
 				}
+
+				if ( 'privacy_policy' === $form_data['field_key'] && '' !== $value ) {
+					$value = esc_html__( 'Accepted', 'user-registration' );
+				}
+
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
 					$country_class = ur_load_form_field_class( $form_data['field_key'] );
 					$countries     = $country_class::get_instance()->get_country();
@@ -254,6 +259,7 @@ class UR_Emailer {
 			do_action( 'user_registration_email_send_before' );
 
 			self::send_profile_changed_email_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
+			self::send_profile_changed_email_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
 
 			do_action( 'user_registration_email_send_after' );
 		}
@@ -275,7 +281,7 @@ class UR_Emailer {
 	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
 
 		$form_id      = ur_get_form_id_by_userid( $user_id );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$status       = ur_get_user_approval_status( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
@@ -401,10 +407,10 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options' );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
 		}
@@ -588,6 +594,49 @@ class UR_Emailer {
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
+		}
+	}
+
+	/**
+	 * Trigger the email after profile details changed by user.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @return void
+	 * @since 3.0.5
+	 */
+	public static function send_profile_changed_email_to_user( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8'
+		);
+
+		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
+		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Details Updated Email: {{blog_info}}', 'user-registration' ) );
+		$settings   = new UR_Settings_Profile_Details_Updated_Email();
+		$message    = $settings->ur_get_profile_details_updated_email();
+		$message    = get_option( 'user_registration_profile_details_updated_email', $message );
+		$form_id    = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'form_id'    => $form_id,
+		);
+
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message                   = self::parse_smart_tags( $message, $values, $name_value );
+		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_profile_details_updated_email', true ) ) {
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
 		}
 	}
 

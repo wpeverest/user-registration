@@ -131,11 +131,11 @@ class UR_Email_Approval {
 	 */
 	public function set_approval_status( $valid_form_data, $form_id, $user_id ) {
 		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 
-		if ( ( 'admin_approval' == $login_option ) && ( $email_approval_enabled ) ) {
+		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
 		} else {

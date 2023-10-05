@@ -1289,9 +1289,7 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$form_id = ur_get_form_id_by_userid( $user_id );
-
-	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+	$login_option = ur_get_user_login_option( $user_id );
 
 	if ( 'admin_approval' === $login_option ) {
 
@@ -1507,25 +1505,6 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 	}
 
 	return $all_forms;
-}
-
-/**
- * Checks user login option, if not email confirmation force not disable emails.
- */
-function ur_get_user_login_option() {
-
-	if ( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
-		return array(
-			'title'    => __( 'Disable emails', 'user-registration' ),
-			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
-			'id'       => 'user_registration_email_setting_disable_email',
-			'default'  => 'no',
-			'type'     => 'toggle',
-			'autoload' => false,
-		);
-	} else {
-		update_option( 'user_registration_email_setting_disable_email', false );
-	}
 }
 
 /**
@@ -3943,4 +3922,143 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 		}
 		return '';
 	}
+}
+
+if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
+	/**
+	 * Get all the page slugs.
+	 */
+	function ur_get_all_page_slugs() {
+		$args = array(
+			'post_type'      => 'page',
+			'posts_per_page' => -1,
+		);
+
+		$pages = get_pages( $args );
+
+		$slugs = array();
+
+		foreach ( $pages as $page ) {
+			$slugs[] = $page->post_name;
+		}
+
+		return $slugs;
+	}
+}
+
+if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
+	/**
+	 * Add plugin specific links to the admin bar menu.
+	 *
+	 * @param [WP_Admin_Bar] $wp_admin_bar
+	 * @return void
+	 */
+	function ur_add_links_to_top_nav( $wp_admin_bar ) {
+		if ( ! is_admin_bar_showing() || ! current_user_can( 'manage_user_registration' ) ) {
+			return;
+		}
+
+		/**
+		 * Add User Registration links in the admin top nav bar.
+		 */
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'     => 'user-registration-menu',
+				'parent' => null,
+				'group'  => null,
+				'title'  => __( 'User Registration', 'user-registration' ), // you can use img tag with image link. it will show the image icon Instead of the title.
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
+			)
+		);
+
+		/**
+		 * Add Edit Form link in Form Preview Page.
+		 */
+
+		$form_id = 0;
+
+		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
+			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
+		} elseif ( is_page() || is_single() ) {
+			$post_content = get_the_content();
+
+			if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
+				if ( preg_match( '/\[user_registration_form id="(\d+)"\]/', $post_content, $matches ) ) {
+					$form_id = $matches[1];
+				}
+			}
+		}
+
+		if ( ! empty( $form_id ) ) {
+			$wp_admin_bar->add_menu(
+				array(
+					'parent' => 'user-registration-menu',
+					'id'     => 'ur-edit-form',
+					'title'  => __( 'Edit Form', 'user-registration' ),
+					'href'   => add_query_arg(
+						'edit-registration',
+						$form_id,
+						admin_url( 'admin.php?page=add-new-registration' )
+					),
+					'meta' => array(
+						'target' => "_blank"
+					)
+				)
+			);
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-all-forms',
+				'title'  => __( 'All Forms', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-add-new',
+				'title'  => __( 'Add New', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=add-new-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-settings',
+				'title'  => __( 'Settings', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration-settings' ),
+			)
+		);
+
+		$href = add_query_arg(
+			array(
+				'utm_medium'  => 'admin-bar',
+				'utm_source'  => 'WordPress',
+				'utm_content' => 'Documentation',
+			),
+			esc_url_raw( 'https://docs.wpuserregistration.com/' )
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-docs',
+				'title'  => __( 'Documentation', 'user-registration' ),
+				'href'   => $href,
+				'meta'   => array(
+					'target' => '_blank',
+					'rel'    => 'noopener noreferrer',
+				),
+			)
+		);
+
+		do_action( 'user_registration_top_admin_bar_menu', $wp_admin_bar );
+	}
+
+	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
 }

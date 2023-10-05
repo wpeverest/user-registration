@@ -191,7 +191,7 @@ class UR_Frontend_Scripts {
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.15.1',
+				'version' => '1.19.5',
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),

@@ -108,7 +108,8 @@ class UR_Frontend_Form_Handler {
 
 			if ( $user_id > 0 ) {
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
-				$login_option   = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+
+				$login_option   = ur_get_user_login_option( $user_id );
 				$success_params = array(
 					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				);
@@ -239,10 +240,13 @@ class UR_Frontend_Form_Handler {
 		/**
 		 * Saving the user ip in user meta.
 		 *
-		 * @since  3.0.4.1
+		 * @since  3.1.0
 		 */
 		$user_ip = ur_get_ip_address();
 		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+
+		$login_option = ur_get_user_login_option( $user_id );
+		update_user_meta( $user_id, 'ur_login_option', $login_option );
 
 		$current_language = ur_get_current_language();
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
