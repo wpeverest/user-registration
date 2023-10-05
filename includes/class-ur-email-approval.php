@@ -135,7 +135,7 @@ class UR_Email_Approval {
 
 		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
 
-		if ( ( 'admin_approval' == $login_option ) && ( $email_approval_enabled ) ) {
+		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
 		} else {
