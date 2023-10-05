@@ -462,7 +462,8 @@ class UR_AJAX {
 				);
 			}
 
-			$response = apply_filters( 'user_registration_profile_update_response', $response );
+			$response = apply_filters( 'user_registration_profile_update_response', $response ,$user_id, $form_id );
+
 
 			wp_send_json_success(
 				$response
