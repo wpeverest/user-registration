@@ -599,7 +599,6 @@ function ur_get_user_profile_field_only() {
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_fields_without_prefix', $fields );
-
 }
 
 /**
@@ -3265,7 +3264,6 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 		}
 
 		return false;
-
 	}
 }
 

@@ -17,10 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="alignleft">
 			<h2>
 				<?php echo esc_html( $viewed_log ); ?>
-				<?php if ( ! empty( $handle ) ) : ?>
-					<a class="page-title-action"
-					href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => $handle ), admin_url( 'admin.php?page=user-registration-status' ) ), 'remove_log' ) ); ?>"
-					class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
+				<?php if ( 1 < count( $logs ) ) : ?>
+				<a class="page-title-action page-title-action-all" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle_all' => sanitize_title( 'delete-all-logs' ) ), admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ), 'remove_all_logs' ) ); ?>" class="button"><?php esc_html_e( 'Delete all logs', 'user-registration' ); ?></a>
+				<?php endif; ?>
+				<?php if ( ! empty( $viewed_log ) ) : ?>
+					<a class="page-title-action" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => sanitize_title( $viewed_log ) ), admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ), 'remove_log' ) ); ?>" class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
 				<?php endif; ?>
 			</h2>
 		</div>

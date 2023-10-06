@@ -38,6 +38,9 @@ class UR_Admin_Status {
 		if ( ! empty( $_REQUEST['handle'] ) ) {
 			self::remove_log();
 		}
+		if ( ! empty( $_REQUEST['handle_all'] ) ) {
+			self::remove_all_logs();
+		}
 
 		$logs = self::scan_log_files();
 
@@ -170,6 +173,23 @@ class UR_Admin_Status {
 		if ( ! empty( $_REQUEST['handle'] ) ) {
 			$log_handler = new UR_Log_Handler_File();
 			$log_handler->remove( sanitize_text_field( wp_unslash( $_REQUEST['handle'] ) ) );
+		}
+
+		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
+		exit();
+	}
+
+	/**
+	 * Remove/delete all logs.
+	 */
+	public static function remove_all_logs() {
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'remove_all_logs' ) ) {
+			wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		}
+
+		if ( ! empty( $_REQUEST['handle_all'] ) ) {
+			$log_handler = new UR_Log_Handler_File();
+			$log_handler->remove_all();
 		}
 
 		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
