@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.3.1
-Stable tag: 3.0.4.1
+Stable tag: 3.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,32 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.0    - 12/10/2023
+* Refactor - Handle user approval status properly.
+* Feature  - Test captcha from settings.
+* Feature  - Profile details updated email to user.
+* Feature  - Edit form button in form preview window.
+* Feature  - User Registration menu added in admin menu bar.
+* Enhance  - Error logging mechanism in status menu.
+* Enhance  - Remember and retrieve the collapse state of settings menu.
+* Enhance  - Accept page slug as redirect_url parameter value in login or my account shortcode.
+* Dev      - Compatibility for custom captcha field.
+* Dev      - Compatibility for custom user listing area.
+* Dev      - Compatibility for Conversational Forms addon.
+* Dev      - Introduced new hooks to modify email header.
+* Dev      - Merge two duplicate methods on form validation.
+* Dev      - jQuery validation library updated to latest version.
+* Dev      - Compatibility for the fix of Lock addon field if integration not set.
+* Dev      - Compatibility for form fields integration on woo commerce product page.
+* Tweak    - Save the user IP on the user meta.
+* Tweak    - Onboarding last page design changes.
+* Fix      - Admin email not being delivered.
+* Fix      - Wrong escaping done in redirect_url parameter.
+* Fix      - Grammatical typo for unique validation message.
+* Fix      - Send password reset not working on prevent core login.
+* Fix      - Select All button not working while adding endpoints as menu.
+* Fix      - WPML compatibilty for validation message for duplicate added.
 
 = 3.0.4.1  - 05/09/2023
 * Fix      - User field value not being saved while registering or updating the profile.
