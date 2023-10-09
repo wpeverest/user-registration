@@ -454,42 +454,10 @@ class UR_Admin_User_List_Manager {
 					$meta_query = $this->get_denied_users_meta_query();
 					break;
 				case 'pending_email':
+					$meta_query = $this->get_pending_email_meta_query();
 					break;
 				default:
 					return;
-			}
-
-			$meta_query = $this->get_pending_users_meta_query();
-
-			if ( UR_Admin_User_Manager::APPROVED === $status ) {
-				$meta_query = array(
-					'relation' => 'OR',
-					array(
-						'relation' => 'AND',
-						array(
-							'key'     => 'ur_user_status',
-							'compare' => 'NOT EXISTS', // works!
-							'value'   => '', // This is ignored, but is necessary...
-						),
-						array(
-							'key'     => 'ur_confirm_email',
-							'compare' => 'NOT EXISTS', // works!
-							'value'   => '', // This is ignored, but is necessary...
-						),
-					),
-					array(
-						'key'   => 'ur_user_status',
-						'value' => UR_Admin_User_Manager::APPROVED,
-					),
-					array(
-						'key'   => 'ur_confirm_email',
-						'value' => UR_Admin_User_Manager::APPROVED,
-					),
-				);
-			} elseif ( UR_Admin_User_Manager::DENIED == $status ) {
-				$meta_query = $this->get_denied_users_meta_query();
-			} elseif ( 'pending_email' === $status ) {
-				$meta_query = $this->get_pending_email_meta_query();
 			}
 		}
 
@@ -682,12 +650,27 @@ class UR_Admin_User_List_Manager {
 				),
 			),
 			array(
-				'key'   => 'ur_user_status',
-				'value' => UR_Admin_User_Manager::APPROVED,
+				'relation' => 'AND',
+				array(
+					'key'   => 'ur_user_status',
+					'value' => UR_Admin_User_Manager::APPROVED,
+				),
+				array(
+					'key'     => 'ur_admin_approval_after_email_confirmation',
+					'compare' => 'NOT EXISTS', // works!
+					'value'   => '', // This is ignored, but is necessary...
+				),
 			),
 			array(
-				'key'   => 'ur_confirm_email',
-				'value' => UR_Admin_User_Manager::APPROVED,
+				'relation' => 'AND',
+				array(
+					'key'   => 'ur_user_status',
+					'value' => UR_Admin_User_Manager::APPROVED,
+				),
+				array(
+					'key'   => 'ur_admin_approval_after_email_confirmation',
+					'value' => true,
+				),
 			),
 		);
 
