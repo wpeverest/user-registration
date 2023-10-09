@@ -37,6 +37,7 @@ class UR_Shortcode_Login {
 		global $wp, $post;
 
 		$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
+		$redirect_url = UR_Shortcodes::check_is_valid_redirect_url( $redirect_url );
 
 		if ( ! is_user_logged_in() ) {
 			// After password reset, add confirmation message.

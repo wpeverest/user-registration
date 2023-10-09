@@ -33,6 +33,7 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
+		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
 	}
 
 	/**
@@ -79,9 +80,10 @@ class UR_Form_Handler {
 			$form_id = $form_id_array[0];
 		}
 
-		$profile = user_registration_form_data( $user_id, $form_id );
+		$profile   = user_registration_form_data( $user_id, $form_id );
+		$form_data = self::get_form_data_from_post( $form_id );
 
-		do_action( 'user_registration_validate_profile_update_post', $profile, $form_id );
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
 
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
@@ -157,6 +159,86 @@ class UR_Form_Handler {
 	}
 
 	/**
+	 * This format returns form field data in object format.
+	 *
+	 * In Non-ajax method of update profile, form data is received in key => value format
+	 * which is different from the data received while using ajax submission.
+	 *
+	 * So, to maintain consistency of form data object while passing to different functions,
+	 * data is formatted properly.
+	 *
+	 * @param [int] $form_id Form Id.
+	 * @return array
+	 */
+	public static function get_form_data_from_post( $form_id ) {
+
+		$form_field_data = ur_get_form_field_data( $form_id );
+
+		$fields = array();
+
+		foreach ( $form_field_data as $field ) {
+			$field_name = $field->general_setting->field_name;
+			$key        = 'user_registration_' . $field_name;
+
+			$field_obj             = new StdClass();
+			$field_obj->field_name = $field_name;
+
+			$value = '';
+
+			switch ( $field->field_key ) {
+				case 'checkbox':
+					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+						$value = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
+					} else {
+						$value = (int) isset( $_POST[ $key ] );
+					}
+					break;
+
+				case 'wysiwyg':
+					if ( isset( $_POST[ $key ] ) ) {
+						$value = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
+					} else {
+						$value = '';
+					}
+					break;
+
+				case 'email':
+					if ( isset( $_POST[ $key ] ) ) {
+						$value = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+					} else {
+						$user_data     = get_userdata( $user_id );
+						$value = $user_data->data->user_email;
+					}
+					break;
+				case 'profile_picture':
+					if ( isset( $_POST['profile_pic_url'] ) ) {
+						$value = sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) );
+					} else {
+						$value = '';
+					}
+					break;
+
+				default:
+					$value = isset( $_POST[ $key ] ) ? $_POST[ $key ] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+					break;
+			}
+
+			$field_obj->value = ur_clean( $value );
+
+			if ( isset( $field->field_key ) ) {
+				$field_obj->field_type = $field->field_key;
+			}
+
+			if ( isset( $field->general_setting->label ) ) {
+				$field_obj->label = $field->general_setting->label;
+			}
+
+			$fields[ $field_name ] = $field_obj;
+		}
+		return $fields;
+	}
+
+	/**
 	 * Send confirmation email.
 	 *
 	 * @param object $user User.
@@ -192,8 +274,8 @@ class UR_Form_Handler {
 			get_bloginfo( 'name' )
 		);
 		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>' . "\r\n";
-		$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>';
+		$headers .= "Content-Type: text/html; charset=UTF-8";
 
 		wp_mail( $to, $subject, $message, $headers );
 
@@ -710,6 +792,19 @@ class UR_Form_Handler {
 		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
 
 		return $form_id;
+	}
+
+	/**
+	 * Update the user's IP address in form data if not already present.
+	 *
+	 * @since  3.0.4.1
+	 *
+	 * @param int $user_id The ID of the User.
+	 * @param int $form_id   The ID of the form.
+	 */
+	public static function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
 	}
 }
 

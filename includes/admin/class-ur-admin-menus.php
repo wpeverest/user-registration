@@ -521,8 +521,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function status_menu() {
 			add_submenu_page(
 				'user-registration',
-				__( 'User Registration Status', 'user-registration' ),
-				__( 'Status', 'user-registration' ),
+				__( 'User Registration Tools', 'user-registration' ),
+				__( 'Tools', 'user-registration' ),
 				'manage_user_registration',
 				'user-registration-status',
 				array(
@@ -764,8 +764,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</div>
 				<p class="button-controls">
 					<span class="list-controls">
-					<a href="<?php echo esc_url( admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-user-registration-endpoints' ) ); ?>"
-					class="select-all"><?php esc_html_e( 'Select all', 'user-registration' ); ?></a>
+						<input type="checkbox" id="ur-endpoints-tab" class="select-all">
+						<label for="ur-endpoints-tab">
+							<?php esc_html_e( 'Select All', 'user-registration' ); ?>
+						</label>
 					</span>
 					<span class="add-to-menu">
 					<input type="submit" class="button-secondary submit-add-to-menu right"

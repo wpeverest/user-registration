@@ -103,12 +103,32 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		private function init_hooks() {
 			register_activation_hook( __FILE__, array( 'UR_Install', 'install' ) );
+			register_shutdown_function( array( $this, 'log_errors' ) );
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
+		}
+
+		/**
+		 * Ensures fatal errors are logged so they can be picked up in the status report.
+		 *
+		 * @since 3.0.5
+		 */
+		public function log_errors() {
+			$error = error_get_last();
+
+			if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
+				$logger = ur_get_logger();
+				$logger->critical(
+					$error['message'] . PHP_EOL,
+					array(
+						'source' => 'fatal-errors',
+					)
+				);
+			}
 		}
 
 		/**
@@ -188,6 +208,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Core classes.
 			 */
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
+			include_once UR_ABSPATH . 'includes/functions-ur-form.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
 			include_once UR_ABSPATH . 'includes/class-ur-user-approval.php';
@@ -413,7 +434,6 @@ if ( ! function_exists( 'UR' ) ) {
 		function user_registration_free_activated() {
 
 			set_transient( 'user_registration_free_activated', true );
-
 		}
 	}
 	add_action( 'activate_user-registration/user-registration.php', 'user_registration_free_activated' );

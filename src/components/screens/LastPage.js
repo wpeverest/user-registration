@@ -54,12 +54,12 @@ function LastPage({ onBoardIconsURL }) {
 				>
 					{__("Our Popular Addons", "user-registration")}
 				</Text>
-				<Flex justify="space-between" wrap="wrap" gap="18px">
+				<Flex justify="space-between" wrap="wrap" gap="10px">
 					<Flex
-						flex="0 0 48%"
-						padding="10px 14px 10px 10px"
+						flex="0 0 49%"
+						padding="10px"
 						justifyContent="space-between"
-						gap="20px"
+						gap="10px"
 						width="358px"
 						height="125px"
 						borderRadius="7px"
@@ -86,22 +86,22 @@ function LastPage({ onBoardIconsURL }) {
 								{__("Advanced Fields", "user-registration")}
 							</Text>
 							<Text
-								fontSize="13px"
+								fontSize="12px"
 								fontWeight="400"
-								noOfLines={3}
+								noOfLines={4}
 							>
 								{__(
-									"Advanced Fields provides you with additional advanced fields like Section Title, Custom HTML, Phone, Time Picker and WYSIWYG Fields.",
+									"Offers extra fields like Section Title, Phone, Profile Picture, HTML, Time Picker, and WYSIWYG for complex forms.",
 									"user-registration"
 								)}
 							</Text>
 						</Flex>
 					</Flex>
 					<Flex
-						flex="0 0 48%"
-						padding="10px 14px 10px 10px"
+						flex="0 0 49%"
+						padding="10px"
 						justifyContent="space-between"
-						gap="20px"
+						gap="10px"
 						width="358px"
 						height="125px"
 						borderRadius="7px"
@@ -128,20 +128,20 @@ function LastPage({ onBoardIconsURL }) {
 								{__("WooCommerce", "user-registration")}
 							</Text>
 							<Text
-								fontSize="13px"
+								fontSize="12px"
 								fontWeight="400"
-								noOfLines={3}
+								noOfLines={4}
 							>
 								{__(
-									"Integrates WooCommerce plugin with your user-registration and allows you to manage user billing, shipping, orders via user registration account page",
+									"Integrate WooCommerce plugin for user registration, enabling user account management of billing, shipping, and orders",
 									"user-registration"
 								)}
 							</Text>
 						</Flex>
 					</Flex>
 					<Flex
-						flex="0 0 48%"
-						padding="10px 14px 10px 10px"
+						flex="0 0 49%"
+						padding="10px"
 						justifyContent="space-between"
 						width="358px"
 						height="125px"
@@ -150,7 +150,7 @@ function LastPage({ onBoardIconsURL }) {
 							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
 						}}
 						bg="#FAFAFA"
-						gap="20px"
+						gap="10px"
 					>
 						<Image
 							htmlWidth="140px"
@@ -171,20 +171,20 @@ function LastPage({ onBoardIconsURL }) {
 								{__("Content Restriction", "user-registration")}
 							</Text>
 							<Text
-								fontSize="13px"
+								fontSize="12px"
 								fontWeight="400"
-								noOfLines={3}
+								noOfLines={4}
 							>
 								{__(
-									"Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.",
+									"Easily restrict page or post content to logged-in users or specific user roles with this addon.",
 									"user-registration"
 								)}
 							</Text>
 						</Flex>
 					</Flex>
 					<Flex
-						flex="0 0 48%"
-						padding="10px 14px 10px 10px"
+						flex="0 0 49%"
+						padding="10px"
 						justifyContent="space-between"
 						height="125px"
 						borderRadius="7px"
@@ -193,7 +193,7 @@ function LastPage({ onBoardIconsURL }) {
 						}}
 						bg="#FAFAFA"
 						width="358px"
-						gap="20px"
+						gap="10px"
 					>
 						<Image
 							htmlWidth="140px"
@@ -216,12 +216,12 @@ function LastPage({ onBoardIconsURL }) {
 								)}
 							</Text>
 							<Text
-								fontSize="13px"
+								fontSize="12px"
 								fontWeight="400"
-								noOfLines={3}
+								noOfLines={4}
 							>
 								{__(
-									"User Registration Customize My Account add-on allows you to create, edit and delete additional	tabs on the account page along with custom content for that tab. Also supports drag and	drop sorting of account tabs",
+									"Easily create, edit, delete, and sort custom tabs on the account page with custom content",
 									"user-registration"
 								)}
 							</Text>

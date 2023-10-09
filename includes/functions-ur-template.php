@@ -182,8 +182,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
-			$args['class'][] = 'validate-required';
-			$required        = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
+			$args['class'][]                       = 'validate-required';
+			$args['custom_attributes']['required'] = 'required';
+			$required                              = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
 		} else {
 			$args['required'] = '';
 		}
@@ -314,7 +315,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$choice_index = ur_sanitize_tooltip( $choice_index );
 						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
 						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
-						$checkbox_start++;
+						++$checkbox_start;
 					}
 					$field .= '</ul>';
 				} else {
@@ -723,7 +724,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$cl_map                 = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
 					$custom_attributes      = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
-					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value need to be unique.', 'user-registration' );
+					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value needs to be unique.', 'user-registration' );
 					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 
 					if ( empty( $field_label ) ) {
@@ -825,7 +826,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						if ( isset( $field->advance_setting->validate_unique ) ) {
 							$fields[ 'user_registration_' . $field_name ]['validate_unique']  = $enable_validate_unique;
-							$fields[ 'user_registration_' . $field_name ]['validate_message'] = $validate_message;
+							$fields[ 'user_registration_' . $field_name ]['validate_message'] = ur_string_translation( $form_id, 'ur_validation_message_for_duplicate', $validate_message );
 						}
 
 						if ( isset( $field->advance_setting->enable_payment_slider ) ) {

@@ -247,17 +247,62 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	 */
 	public function remove( $handle ) {
 		$removed = false;
-		$file    = self::get_log_file_path( $handle );
+		$logs    = $this->get_log_files();
+		$handle  = sanitize_title( $handle );
 
-		if ( $file ) {
-			if ( is_file( $file ) && is_writable( $file ) ) {
-				$this->close( $handle ); // Close first to be certain no processes keep it alive after it is unlinked.
-				$removed = unlink( $file );
+		if ( isset( $logs[ $handle ] ) && $logs[ $handle ] ) {
+			$file = realpath( trailingslashit( UR_LOG_DIR ) . $logs[ $handle ] );
+			if ( 0 === stripos( $file, realpath( trailingslashit( UR_LOG_DIR ) ) ) && is_file( $file ) && is_writable( $file ) ) { // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable
+				$this->close( $file ); // Close first to be certain no processes keep it alive after it is unlinked.
+				$removed = unlink( $file ); // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_unlink
 			}
 			do_action( 'user_registration_log_remove', $handle, $removed );
 		}
-
 		return $removed;
+	}
+
+	/**
+	 * Remove/delete all log files.
+	 *
+	 * @return bool
+	 */
+	public function remove_all() {
+		$removed = false;
+		$logs    = $this->get_log_files();
+
+		if ( count( $logs ) ) {
+			foreach ( $logs as $key => $log ) {
+				$file = realpath( trailingslashit( UR_LOG_DIR ) . $log );
+				if ( 0 === stripos( $file, realpath( trailingslashit( UR_LOG_DIR ) ) ) && is_file( $file ) && is_writable( $file ) ) { // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable
+					$this->close( $file ); // Close first to be certain no processes keep it alive after it is unlinked.
+					$removed = unlink( $file ); // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_unlink
+				}
+			}
+		}
+		return $removed;
+	}
+
+	/**
+	 * Get all log files in the log directory.
+	 *
+	 * @since 1.6.2
+	 * @return array
+	 */
+	public static function get_log_files() {
+		$files  = @scandir( UR_LOG_DIR ); // @codingStandardsIgnoreLine.
+		$result = array();
+
+		if ( ! empty( $files ) ) {
+			foreach ( $files as $key => $value ) {
+				if ( ! in_array( $value, array( '.', '..' ), true ) ) {
+					if ( ! is_dir( $value ) && strstr( $value, '.log' ) ) {
+						$result[ sanitize_title( $value ) ] = $value;
+					}
+				}
+			}
+		}
+
+		return $result;
 	}
 
 	/**
@@ -301,7 +346,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	 * @param string $handle Log handle
 	 */
 	protected function log_rotate( $handle ) {
-		for ( $i = 8; $i >= 0; $i -- ) {
+		for ( $i = 8; $i >= 0; $i-- ) {
 			$this->increment_log_infix( $handle, $i );
 		}
 		$this->increment_log_infix( $handle );
@@ -336,7 +381,6 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 		} else {
 			return false;
 		}
-
 	}
 
 	/**
@@ -377,5 +421,4 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 			$this->add( $log['entry'], $log['handle'] );
 		}
 	}
-
 }

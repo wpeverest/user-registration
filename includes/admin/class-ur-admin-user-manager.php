@@ -80,7 +80,7 @@ class UR_Admin_User_Manager {
 
 		$action_label = '';
 		$form_id      = get_user_meta( $this->user->ID, 'ur_form_id', true );
-		$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+		$login_option = ur_get_user_login_option( $this->user->ID );
 
 		switch ( $status ) {
 			case self::APPROVED:
@@ -115,10 +115,6 @@ class UR_Admin_User_Manager {
 			do_action( 'ur_user_' . $action_label, $this->user->ID );
 		}
 		$this->user_status = $status;
-
-		if ( is_super_admin( $this->user->ID ) ) {
-			return;
-		}
 
 		return update_user_meta( absint( $this->user->ID ), 'ur_user_status', sanitize_text_field( $status ) );
 	}
@@ -181,7 +177,9 @@ class UR_Admin_User_Manager {
 			);
 
 		} elseif ( '' !== $user_status && '' === $user_email_status ) {
-
+			/**
+			 * Case: Admin Approval.
+			 */
 			$this->user_status = $user_status;
 
 			$result = array(
@@ -190,6 +188,9 @@ class UR_Admin_User_Manager {
 			);
 
 		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status ) {
+			/**
+			 * Case: Admin Approval after Email Confirmation.
+			 */
 			if ( 'denied' === $admin_approval_after_email_confirmation_status ) {
 				$admin_approval_after_email_confirmation_status = self::DENIED;
 			} elseif ( ! ur_string_to_bool( $admin_approval_after_email_confirmation_status ) && ur_string_to_bool( $user_email_status ) ) {
@@ -207,7 +208,10 @@ class UR_Admin_User_Manager {
 				'email_status'    => $user_email_status,
 				'approval_status' => $admin_approval_after_email_confirmation_status,
 			);
-		} elseif ( ( '' === $user_status && '' !== $user_email_status ) || ( '' !== $user_status && '' !== $user_email_status ) ) {
+		} elseif ( ( '' !== $user_email_status ) ) {
+			/**
+			 * Case: Email Confirmation.
+			 */
 
 			$this->user_status = $user_email_status;
 
@@ -255,12 +259,40 @@ class UR_Admin_User_Manager {
 	 * @return bool
 	 */
 	public function is_denied() {
-		$user_status = $this->get_user_status();
+		$user_status = $this->get_user_status( true );
 
 		if ( is_array( $user_status ) ) {
+
+			if ( isset( $user_status['approval_status'] ) ) {
+				return self::DENIED == $user_status['approval_status'];
+			}
+
 			return ( self::DENIED == $user_status['user_status'] );
 		}
 		return ( self::DENIED == $user_status );
+	}
+
+	/**
+	 * Check if the user is awaiting email confirmation.
+	 *
+	 * @return bool
+	 */
+	public function is_email_pending() {
+		$user_status = $this->get_user_status( true );
+
+		if ( is_array( $user_status ) ) {
+			if (
+				'admin_approval_after_email_confirmation' === $user_status['login_option'] ||
+				'email_confirmation' === $user_status['login_option']
+			) {
+				if ( empty( $user_status['approval_status'] ) ) {
+					if ( 0 == $user_status['email_status'] || 'false' == $user_status['email_status'] ) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -401,6 +433,40 @@ class UR_Admin_User_Manager {
 		}
 
 		return ucfirst( $label );
+	}
+
+	/**
+	 * Returns the status code for the specified status label.
+	 *
+	 * @param [string] $status_label Status label.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return string or int
+	 */
+	public static function get_status_code( $status_label ) {
+		$status_code = '';
+
+		$status_map = array(
+			'approved' => 1,
+			'pending' => 0,
+			'denied' => -1
+		);
+
+		if ( isset( $status_map[ $status_label ] ) ) {
+			return $status_map[ $status_label ];
+		}
+
+		return $status_code;
+	}
+
+	/**
+	 * Label for user awaiting email confirmation.
+	 *
+	 * @return string
+	 */
+	public static function email_pending_label() {
+		return esc_html__( 'Awaiting Email Confirmation', 'user-registration' );
 	}
 
 	/**

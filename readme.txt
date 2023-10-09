@@ -24,7 +24,7 @@ The best thing is that there are unlimited customization options for each field 
 
 [All features](https://wpuserregistration.com/) | [Demo](https://userregistration.demoswp.net/) | [Documentation](https://docs.wpuserregistration.com/)
 
-[Try User Registration Premium ](https://wpuserregistration.com/)
+[Try User Registration Premium ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 ### Key Features of User Registration
 * **Easy Drag and Drop Builder:** Simply drag and drop the form fields into a blank slate and create a registration form in no time. No code, no fuss.
@@ -270,11 +270,11 @@ Here’s a brief look at the features that make User Registration one of the bes
 
 
 ### Know your way around User Registration with our tutorials
-* [How to Create a WordPress User Registration Form?](https://wpeverest.com/blog/wordpress-user-registration-form/)
-* [How to Create a Custom User Profile Page in WordPress?](https://wpeverest.com/blog/create-user-profile-page-in-wordpress/)
-* [How to Create a Multi-step Registration Form in WordPress?](https://wpeverest.com/blog/multi-step-registration-form/)
-* [How to Allow User Registration with Invitation Code?](https://wpeverest.com/blog/user-registration-invitation-code/)
-* [How to Create a Custom Registration Form for LearnDash?](https://wpeverest.com/blog/learndash-custom-registration-form/)
+* [How to Create a WordPress User Registration Form?](https://wpuserregistration.com/blog/create-user-registration-form-in-wordpress/)
+* [How to Create a Custom User Profile Page in WordPress?](https://wpuserregistration.com/blog/create-user-profile-page-in-wordpress/)
+* [How to Create a Multi-step Registration Form in WordPress?](https://wpuserregistration.com/blog/multi-step-registration-form/)
+* [How to Allow User Registration with Invitation Code?](https://wpuserregistration.com/blog/register-users-with-invitation-code/)
+* [How to Create a Custom Registration Form for LearnDash?](https://wpuserregistration.com/blog/learndash-custom-registration-form/)
 
 == Get in Touch with us  ==
 
@@ -287,7 +287,7 @@ Here’s a brief look at the features that make User Registration one of the bes
 == Explore More Products from Our Team==
 Love User Registration? If you do, then you should check out more WordPress themes and plugins from us.
 
-* [Everest Forms](https://wpeverest.com/wordpress-plugins/everest-forms/) - Best WordPress Form Plugin.
+* [Everest Forms](https://everestforms.net/) - Best WordPress Form Plugin.
 
 * [Masteriyo](https://masteriyo.com/) - A Powerful and Easy WordPress LMS Plugin. 
 

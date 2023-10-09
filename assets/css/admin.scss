@@ -3833,18 +3833,15 @@ body {
 				#menu-management-liquid {
 					float: none;
 				}
-
 				#menu-management {
 					.menu-edit {
 						position: unset;
 					}
 				}
-
 				#post-body {
 					.ur-registered-from {
 						display: block;
 						background-color: transparent;
-
 						.ur-builder-wrapper {
 							height: auto;
 							overflow-y: unset;
@@ -3892,7 +3889,6 @@ body {
 														width: 100%;
 													}
 												}
-
 												.ur-login-content {
 													// width: 55%;
 													margin-left: 0;
@@ -3901,13 +3897,11 @@ body {
 													background: #f6f6f6;
 													border-radius: $border_radius_7;
 													flex: 1;
-
 													p {
 														&:first-child {
 															margin-top: 0;
 														}
 													}
-
 													.login-forms-shortcode-action {
 														input {
 															height: 32px;
@@ -3939,7 +3933,6 @@ body {
 												}
 											}
 										}
-
 										&-view-doc {
 											margin-top: $spacing_32px;
 										}

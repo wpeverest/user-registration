@@ -599,7 +599,6 @@ function ur_get_user_profile_field_only() {
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
 	return apply_filters( 'user_registration_fields_without_prefix', $fields );
-
 }
 
 /**
@@ -1289,9 +1288,7 @@ function ur_get_user_approval_status( $user_id ) {
 
 	$user_status = 1;
 
-	$form_id = ur_get_form_id_by_userid( $user_id );
-
-	$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
+	$login_option = ur_get_user_login_option( $user_id );
 
 	if ( 'admin_approval' === $login_option ) {
 
@@ -1510,25 +1507,6 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 }
 
 /**
- * Checks user login option, if not email confirmation force not disable emails.
- */
-function ur_get_user_login_option() {
-
-	if ( 'email_confirmation' !== get_option( 'user_registration_general_setting_login_options' ) ) {
-		return array(
-			'title'    => __( 'Disable emails', 'user-registration' ),
-			'desc'     => __( 'Disable all emails sent after registration.', 'user-registration' ),
-			'id'       => 'user_registration_email_setting_disable_email',
-			'default'  => 'no',
-			'type'     => 'toggle',
-			'autoload' => false,
-		);
-	} else {
-		update_option( 'user_registration_email_setting_disable_email', false );
-	}
-}
-
-/**
  * Get the node to display google reCaptcha
  *
  * @param string $context Recaptcha context.
@@ -1558,9 +1536,9 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
 		$enqueue_script        = 'ur-recaptcha-hcaptcha';
 	} elseif ( 'cloudflare' === $recaptcha_type ) {
-		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
-		$theme_mod             = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
-		$enqueue_script        = 'ur-recaptcha-cloudflare';
+		$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+		$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
+		$enqueue_script     = 'ur-recaptcha-cloudflare';
 	}
 	static $rc_counter = 0;
 
@@ -2836,7 +2814,7 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 		}
 
 		if ( ! empty( $myaccount_page ) ) {
-			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
 		}
 
 		if ( 0 === $matched ) {
@@ -2865,7 +2843,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	 */
 	function ur_find_my_account_in_page( $login_page_id ) {
 		global $wpdb;
-		$post_table = $wpdb->prefix . 'posts';
+		$post_table      = $wpdb->prefix . 'posts';
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
@@ -3286,7 +3264,6 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 		}
 
 		return false;
-
 	}
 }
 
@@ -3481,7 +3458,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( ur_is_ajax_login_enabled() ) {
-				$recaptcha_value  = $captcha_response;
+				$recaptcha_value = $captcha_response;
 			}
 
 			if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
@@ -3494,16 +3471,16 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ) );
 						}
 					} elseif ( 'cloudflare' === $recaptcha_type ) {
-						$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-						$params       = array(
+						$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+						$params = array(
 							'method' => 'POST',
 							'body'   => array(
 								'secret'   => $secret_key,
 								'response' => $recaptcha_value,
 							),
 						);
-						$data = wp_safe_remote_post( $url, $params );
-						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						$data   = wp_safe_remote_post( $url, $params );
+						$data   = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
 							throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . esc_html__( 'Error on Cloudflare. Contact your site administrator.', 'user-registration' ) );
@@ -3924,3 +3901,162 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 
 add_filter( 'user_registration_before_user_meta_update', 'user_registration_conditional_user_meta_filter', 10, 3 );
 add_filter( 'user_registration_before_save_profile_details', 'user_registration_conditional_user_meta_filter', 10, 3 );
+
+if ( ! function_exists( 'ur_get_ip_address' ) ) {
+	/**
+	 * Get current user IP Address.
+	 *
+	 * @return string
+	 */
+	function ur_get_ip_address() {
+		if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) { // WPCS: input var ok, CSRF ok.
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );  // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
+			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+			// Make sure we always only send through the first IP in the list which should always be the client IP.
+			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+		}
+		return '';
+	}
+}
+
+if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
+	/**
+	 * Get all the page slugs.
+	 */
+	function ur_get_all_page_slugs() {
+		$args = array(
+			'post_type'      => 'page',
+			'posts_per_page' => -1,
+		);
+
+		$pages = get_pages( $args );
+
+		$slugs = array();
+
+		foreach ( $pages as $page ) {
+			$slugs[] = $page->post_name;
+		}
+
+		return $slugs;
+	}
+}
+
+if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
+	/**
+	 * Add plugin specific links to the admin bar menu.
+	 *
+	 * @param [WP_Admin_Bar] $wp_admin_bar
+	 * @return void
+	 */
+	function ur_add_links_to_top_nav( $wp_admin_bar ) {
+		if ( ! is_admin_bar_showing() || ! current_user_can( 'manage_user_registration' ) ) {
+			return;
+		}
+
+		/**
+		 * Add User Registration links in the admin top nav bar.
+		 */
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'     => 'user-registration-menu',
+				'parent' => null,
+				'group'  => null,
+				'title'  => __( 'User Registration', 'user-registration' ), // you can use img tag with image link. it will show the image icon Instead of the title.
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
+			)
+		);
+
+		/**
+		 * Add Edit Form link in Form Preview Page.
+		 */
+
+		$form_id = 0;
+
+		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
+			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
+		} elseif ( is_page() || is_single() ) {
+			$post_content = get_the_content();
+
+			if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
+				if ( preg_match( '/\[user_registration_form id="(\d+)"\]/', $post_content, $matches ) ) {
+					$form_id = $matches[1];
+				}
+			}
+		}
+
+		if ( ! empty( $form_id ) ) {
+			$wp_admin_bar->add_menu(
+				array(
+					'parent' => 'user-registration-menu',
+					'id'     => 'ur-edit-form',
+					'title'  => __( 'Edit Form', 'user-registration' ),
+					'href'   => add_query_arg(
+						'edit-registration',
+						$form_id,
+						admin_url( 'admin.php?page=add-new-registration' )
+					),
+					'meta' => array(
+						'target' => "_blank"
+					)
+				)
+			);
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-all-forms',
+				'title'  => __( 'All Forms', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-add-new',
+				'title'  => __( 'Add New', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=add-new-registration' ),
+			)
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-settings',
+				'title'  => __( 'Settings', 'user-registration' ),
+				'href'   => admin_url( 'admin.php?page=user-registration-settings' ),
+			)
+		);
+
+		$href = add_query_arg(
+			array(
+				'utm_medium'  => 'admin-bar',
+				'utm_source'  => 'WordPress',
+				'utm_content' => 'Documentation',
+			),
+			esc_url_raw( 'https://docs.wpuserregistration.com/' )
+		);
+
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'user-registration-menu',
+				'id'     => 'user-registration-docs',
+				'title'  => __( 'Documentation', 'user-registration' ),
+				'href'   => $href,
+				'meta'   => array(
+					'target' => '_blank',
+					'rel'    => 'noopener noreferrer',
+				),
+			)
+		);
+
+		do_action( 'user_registration_top_admin_bar_menu', $wp_admin_bar );
+	}
+
+	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
+}

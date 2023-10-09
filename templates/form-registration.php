@@ -137,8 +137,10 @@ do_action( 'user_registration_before_registration_form', $form_id );
 												?>
 																<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 														<?php
-															$frontend->user_registration_frontend_form( $single_item, $form_id );
-															$is_field_exists = true;
+														do_action( 'user_registration_before_frontend_form_field', $single_item, $form_id );
+														$frontend->user_registration_frontend_form( $single_item, $form_id );
+														do_action( 'user_registration_after_frontend_form_field', $single_item, $form_id );
+														$is_field_exists = true;
 														?>
 																</div>
 														<?php
@@ -199,7 +201,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 				<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo esc_attr( $enable_field_icon ); ?>"/>
 				<?php } ?>
 				<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
-				<input type="hidden" name="ur-redirect-url" value="<?php echo esc_attr( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ); ?>"/>
+				<input type="hidden" name="ur-redirect-url" value="<?php echo esc_url( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ); ?>"/>
 				<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 
 				<?php do_action( 'user_registration_form_registration_end', $form_id ); ?>
