@@ -123,7 +123,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
 				$logger = ur_get_logger();
 				$logger->critical(
-					$error['message'] . PHP_EOL,
+					/* translators: 1: error message 2: file name and path 3: line number */
+					sprintf( __( '%1$s in %2$s on line %3$s', 'user-registration' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
 					array(
 						'source' => 'fatal-errors',
 					)
