@@ -276,8 +276,6 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								<span id="ur-captcha-notice--icon"></span>
 								<span id="ur-captcha-notice--text"></span>
 							</div>
-
-
 						</div>
 					</div>
 				</div>
