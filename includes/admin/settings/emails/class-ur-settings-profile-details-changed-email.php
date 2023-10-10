@@ -22,7 +22,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 		 */
 		public function __construct() {
 			$this->id          = 'profile_details_changed_email';
-			$this->title       = __( 'Profile Details Changed Email', 'user-registration' );
+			$this->title       = __( 'Profile Details Changed Admin Email', 'user-registration' );
 			$this->description = __( 'Email sent to the admin when a user changed profile information', 'user-registration' );
 		}
 
@@ -39,7 +39,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'profile_details_changed_email' => array(
-							'title'        => __( 'Profile Details Changed Email', 'user-registration' ),
+							'title'        => __( 'Profile Details Changed Admin Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
 							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
@@ -52,7 +52,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 									'title'    => __( 'Enable this email', 'user-registration' ),
 									'desc'     => __( 'Enable this email sent to the admin when a user changed profile information.', 'user-registration' ),
 									'id'       => 'user_registration_enable_profile_details_changed_email',
-									'default'  => 'false',
+									'default'  => 'yes',
 									'type'     => 'toggle',
 									'autoload' => false,
 								),
