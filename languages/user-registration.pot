@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-09T02:55:33+00:00\n"
+"POT-Creation-Date: 2023-10-10T05:45:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: user-registration\n"
@@ -738,7 +738,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:508
 #: includes/functions-ur-core.php:4031
-#: user-registration.php:369
+#: user-registration.php:370
 msgid "Settings"
 msgstr ""
 
@@ -1014,21 +1014,21 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:525
-#: includes/admin/class-ur-admin-user-list-manager.php:526
+#: includes/admin/class-ur-admin-user-list-manager.php:493
+#: includes/admin/class-ur-admin-user-list-manager.php:494
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:528
-#: includes/admin/class-ur-admin-user-list-manager.php:529
+#: includes/admin/class-ur-admin-user-list-manager.php:496
+#: includes/admin/class-ur-admin-user-list-manager.php:497
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:605
+#: includes/admin/class-ur-admin-user-list-manager.php:573
 msgid "Approval Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:620
+#: includes/admin/class-ur-admin-user-list-manager.php:588
 msgid "If user has access to sign in or not."
 msgstr ""
 
@@ -6011,27 +6011,32 @@ msgstr ""
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
 msgstr ""
 
-#: user-registration.php:369
+#. translators: 1: error message 2: file name and path 3: line number
+#: user-registration.php:127
+msgid "%1$s in %2$s on line %3$s"
+msgstr ""
+
+#: user-registration.php:370
 msgid "View User Registration settings"
 msgstr ""
 
-#: user-registration.php:385
+#: user-registration.php:386
 msgid "View User Registration documentation"
 msgstr ""
 
-#: user-registration.php:385
+#: user-registration.php:386
 msgid "Docs"
 msgstr ""
 
-#: user-registration.php:386
+#: user-registration.php:387
 msgid "Visit free customer support"
 msgstr ""
 
-#: user-registration.php:386
+#: user-registration.php:387
 msgid "Free support"
 msgstr ""
 
-#: user-registration.php:490
+#: user-registration.php:491
 msgid "As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 

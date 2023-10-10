@@ -24,6 +24,7 @@
 * Fix      - Send password reset not working on prevent core login.
 * Fix      - Select All button not working while adding endpoints as menu.
 * Fix      - WPML compatibilty for validation message for duplicate added.
+* Fix      - Delete profile picture file from directory when removed while updating profile.
 
 = 3.0.4    - 04/09/2023
 * Feature  - Cloudflare turnstile captcha integration.

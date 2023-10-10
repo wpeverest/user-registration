@@ -384,6 +384,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Fix      - Send password reset not working on prevent core login.
 * Fix      - Select All button not working while adding endpoints as menu.
 * Fix      - WPML compatibilty for validation message for duplicate added.
+* Fix      - Delete profile picture file from directory when removed while updating profile.
 
 = 3.0.4.1  - 05/09/2023
 * Fix      - User field value not being saved while registering or updating the profile.
