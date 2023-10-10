@@ -377,6 +377,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Dev      - Compatibility for form fields integration on woo commerce product page.
 * Tweak    - Save the user IP on the user meta.
 * Tweak    - Onboarding last page design changes.
+* Tweak    - Add filter to change profile picture upload directory.
 * Fix      - Admin email not being delivered.
 * Fix      - Wrong escaping done in redirect_url parameter.
 * Fix      - Grammatical typo for unique validation message.
