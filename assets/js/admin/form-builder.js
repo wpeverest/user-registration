@@ -1503,6 +1503,8 @@
 								this.single_row();
 								this.manage_required_fields();
 								this.manage_label_hidden_fields();
+								this.manage_length_limit_fields();
+								this.manage_length_minimum_fields();
 							},
 							single_row: function () {
 								if (
@@ -1664,6 +1666,54 @@
 												.find(".ur-label")
 												.find("label")
 												.show();
+										}
+									}
+								);
+							},
+							/**
+							 * Hides Count and Mode Settings of fields for Limit Length toggle option.
+							 */
+							manage_length_limit_fields: function () {
+								$('input[data-advance-field="limit_length"]').each(
+									function () {
+										var parentDiv = $(this).closest('.ur-advance-setting');
+										var parentNextDiv = parentDiv.next('.ur-advance-setting');
+										if ($(this).is(":checked")) {
+											parentNextDiv
+											.show();
+											parentNextDiv
+											.next('.ur-advance-setting')
+											.show();
+										} else {
+											parentNextDiv
+											.hide();
+											parentNextDiv
+											.next('.ur-advance-setting')
+											.hide();
+										}
+									}
+								);
+							},
+							/**
+							 * Hides Count and Mode Settings of fields for Minimum Length toggle option.
+							 */
+							manage_length_minimum_fields: function () {
+								$('input[data-advance-field="minimum_length"]').each(
+									function () {
+										var parentDiv = $(this).closest('.ur-advance-setting');
+										var parentNextDiv = parentDiv.next('.ur-advance-setting');
+										if ($(this).is(":checked")) {
+											parentNextDiv
+											.show();
+											parentNextDiv
+											.next('.ur-advance-setting')
+											.show();
+										} else {
+											parentNextDiv
+											.hide();
+											parentNextDiv
+											.next('.ur-advance-setting')
+											.hide();
 										}
 									}
 								);
@@ -3196,6 +3246,26 @@
 				$.each(advance_settings, function () {
 					var $this_node = $(this);
 					switch ($this_node.attr("data-advance-field")) {
+						case "limit_length":
+						case "minimum_length":
+							$this_node.on("change", function () {
+								var parentDiv = $this_node.closest('.ur-advance-setting');
+								var parentNextDiv = parentDiv.next('.ur-advance-setting');
+								if ($this_node.is(":checked")) {
+									parentNextDiv
+									.show();
+									parentNextDiv
+									.next('.ur-advance-setting')
+									.show();
+								} else {
+									parentNextDiv
+									.hide();
+									parentNextDiv
+									.next('.ur-advance-setting')
+									.hide();
+								}
+							});
+							break;
 						case "date_format":
 							$this_node.on("change", function () {
 								URFormBuilder.trigger_general_setting_date_format(
