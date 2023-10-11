@@ -38,6 +38,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			ur_deprecated_function( 'UR_Admin_Profile::get_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::get_user_meta_by_form_fields' );
 		}
 
+		public function get_exclude_fields_for_admin_profile() {
+			return apply_filters( 'user_registration_exclude_fields_for_admin_profile', array() );
+		}
+
 		/**
 		 * Get User extra fields from usermeta and integrate with form
 		 *
@@ -98,7 +102,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				return;
 			}
 
-			$show_fields = $this->get_user_meta_by_form_fields( $user->ID );
+			$show_fields    = $this->get_user_meta_by_form_fields( $user->ID );
+			$exclude_fields = $this->get_exclude_fields_for_admin_profile();
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo esc_html( $fieldset['title'] ); ?></h2>
@@ -115,6 +120,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					);
 					foreach ( $fieldset['fields'] as $key => $field ) :
 
+						$field['field_key'] = isset( $field['field_key'] ) ? $field['field_key'] : '';
+
+						if ( in_array( $field['field_key'], $exclude_fields, true ) ) {
+							continue;
+						}
 						$field['label']       = isset( $field['label'] ) ? $field['label'] : '';
 						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
 						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
@@ -219,27 +229,27 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 															id="<?php echo esc_attr( $key ); ?>"
 															value="<?php echo esc_attr( $option ); ?>"
 															class="<?php echo esc_attr( $field['class'] ); ?>"
-																			  <?php
+																				<?php
 																				if ( is_array( $value ) && in_array( $option, $value ) ) {
 																					echo 'checked="checked"';
 																				} elseif ( $value == $option ) {
 																					echo 'checked="checked"';
 																				}
 																				?>
-											 ><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
+											><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
 											<?php
 										}
 									} else {
 										?>
 										<input type="checkbox" name="<?php echo esc_attr( $key ); ?>"
-											   id="<?php echo esc_attr( $key ); ?>" value="1"
-											   class="<?php echo esc_attr( $field['class'] ); ?>"
-																 <?php
-																	if ( ur_string_to_bool( $value ) ) {
-																		echo 'checked="checked"';
-																	}
-																	?>
-										 >
+												id="<?php echo esc_attr( $key ); ?>" value="1"
+												class="<?php echo esc_attr( $field['class'] ); ?>"
+																<?php
+																if ( ur_string_to_bool( $value ) ) {
+																	echo 'checked="checked"';
+																}
+																?>
+										>
 										<?php
 									}
 									?>
@@ -250,15 +260,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<input checked type="checkbox" disabled="disabled"/>
 								<?php elseif ( ! empty( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
 									<textarea name="<?php echo esc_attr( $key ); ?>"
-											  id="<?php echo esc_attr( $key ); ?>"
+												id="<?php echo esc_attr( $key ); ?>"
 
-											  class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 										<?php echo esc_attr( $attribute_string ); ?>
-											  rows="5"
-											  cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
+												rows="5"
+												cols="30"><?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?></textarea>
 
-											  <?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
-												  <?php
+												<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
+													<?php
 													$value        = $this->get_user_meta( $user->ID, $key );
 													$actual_value = $value;
 													$value        = str_replace( '/', '-', $value );
@@ -270,24 +280,23 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 													}
 													?>
 									<input type="text"
-										   value="<?php echo esc_attr( $actual_value ); ?>"
-										   class="ur-flatpickr-field regular-text"
-										   data-id = '<?php echo esc_attr( $key ); ?>'
+											value="<?php echo esc_attr( $actual_value ); ?>"
+											class="ur-flatpickr-field regular-text"
+											data-id = '<?php echo esc_attr( $key ); ?>'
 										   <?php echo $attribute_string; //phpcs:ignore?>
-										   readonly />
-										   <input type="hidden" id="formated_date" value="<?php echo esc_attr( $value ); ?>"/>
-										   <input type="text" name="<?php echo esc_attr( $key ); ?>"
-										   id="<?php echo esc_attr( $key ); ?>"
-										   value="<?php echo esc_attr( $value ); ?>"
-										   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
-										   style="display:none"
+											readonly />
+											<input type="hidden" id="formated_date" value="<?php echo esc_attr( $value ); ?>"/>
+											<input type="text" name="<?php echo esc_attr( $key ); ?>"
+											id="<?php echo esc_attr( $key ); ?>"
+											value="<?php echo esc_attr( $value ); ?>"
+											class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+											style="display:none"
 												  <?php echo $attribute_string; //phpcs:ignore?>
 											/>
 
-												  <?php
-								else :
+													<?php
+								elseif ( ! empty( $field['type'] ) ) :
 
-									if ( ! empty( $field['type'] ) ) {
 										$data = array(
 											'key'   => $key,
 											'value' => $this->get_user_meta( $user->ID, $key ),
@@ -296,23 +305,22 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 										);
 										do_action( 'user_registration_profile_field_' . $field['type'], $data );
-									} else {
+									else :
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
 
 										if ( empty( $extra_params ) ) {
 											?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
-												   id="<?php echo esc_attr( $key ); ?>"
-												   value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
-												   class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+													id="<?php echo esc_attr( $key ); ?>"
+													value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+													class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
 											<?php
-										}
-									} endif;
-								?>
+										} endif;
+									?>
 								<br/>
 							</td>
 						</tr>
@@ -483,6 +491,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$fields[ $field_index ] = array(
 									'label'       => $field_label,
 									'description' => $field_description,
+									'field_key'   => $field_key,
 								);
 
 							} elseif ( ! in_array( $field_name, ur_get_fields_without_prefix() ) ) {
@@ -490,6 +499,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								$fields[ $field_index ] = array(
 									'label'       => $field_label,
 									'description' => $field_description,
+									'field_key'   => $field_key,
 								);
 							}
 							switch ( $field_key ) {
