@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-10T05:45:41+00:00\n"
+"POT-Creation-Date: 2023-10-12T10:40:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: user-registration\n"
@@ -37,6 +37,7 @@ msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:730
 #: src/components/App.js:61
+#: chunks/main.js:50364
 msgid "General Settings"
 msgstr ""
 
@@ -821,14 +822,14 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:60
+#: includes/admin/class-ur-admin-profile.php:64
 #: includes/admin/functions-ur-admin.php:150
 #: includes/admin/functions-ur-admin.php:213
 msgid "User Extra Information"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:169
-#: includes/admin/class-ur-admin-profile.php:181
+#: includes/admin/class-ur-admin-profile.php:179
+#: includes/admin/class-ur-admin-profile.php:191
 #: includes/form/class-ur-form-field-select.php:44
 #: includes/form/class-ur-form-field-select.php:49
 #: includes/functions-ur-core.php:733
@@ -1138,6 +1139,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:370
 #: includes/RestApi/class-ur-rest-api.php:192
 #: src/components/App.js:60
+#: chunks/main.js:50363
 msgid "General"
 msgstr ""
 
@@ -1472,6 +1474,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:108
 #: src/components/screens/InstallPage.js:86
+#: chunks/main.js:38387
 msgid "My Account Page"
 msgstr ""
 
@@ -2286,7 +2289,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:25
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:42
-msgid "Profile Details Changed Email"
+msgid "Profile Details Changed Admin Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:26
@@ -2315,12 +2318,15 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:25
-#: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:42
-msgid "Profile Details Updated Email"
+msgid "Profile Details Updated User Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:26
 msgid "Email sent to the user when a user changed their profile information"
+msgstr ""
+
+#: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:42
+msgid "Profile Details Updated Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:53
@@ -3444,6 +3450,7 @@ msgstr ""
 #: includes/class-ur-post-types.php:47
 #: includes/RestApi/class-ur-rest-api.php:220
 #: src/components/App.js:71
+#: chunks/main.js:50374
 msgid "Registration"
 msgstr ""
 
@@ -5617,11 +5624,13 @@ msgstr ""
 
 #: includes/functions-ur-core.php:3282
 #: src/components/screens/LastPage.js:128
+#: chunks/main.js:50158
 msgid "WooCommerce"
 msgstr ""
 
 #: includes/functions-ur-core.php:3288
 #: src/components/screens/LastPage.js:171
+#: chunks/main.js:50201
 msgid "Content Restriction"
 msgstr ""
 
@@ -5635,6 +5644,7 @@ msgstr ""
 
 #: includes/functions-ur-core.php:3300
 #: src/components/screens/LastPage.js:213
+#: chunks/main.js:50243
 msgid "Customize My Account"
 msgstr ""
 
@@ -5733,6 +5743,7 @@ msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:253
 #: src/components/App.js:82
+#: chunks/main.js:50385
 msgid "My Account"
 msgstr ""
 
@@ -5771,16 +5782,15 @@ msgstr ""
 msgid "Enter a username or email address."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:394
-#: includes/shortcodes/class-ur-shortcode-my-account.php:399
+#: includes/shortcodes/class-ur-shortcode-my-account.php:392
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:409
+#: includes/shortcodes/class-ur-shortcode-my-account.php:405
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/shortcodes/class-ur-shortcode-my-account.php:422
+#: includes/shortcodes/class-ur-shortcode-my-account.php:418
 msgid "The email could not be sent. Contact your site administrator. "
 msgstr ""
 
@@ -6042,110 +6052,139 @@ msgstr ""
 
 #: src/components/App.js:49
 #: src/components/App.js:50
+#: chunks/main.js:50352
+#: chunks/main.js:50353
 msgid "Install Pages"
 msgstr ""
 
 #: src/components/App.js:51
+#: chunks/main.js:50354
 msgid "The following pages will be installed automatically."
 msgstr ""
 
 #: src/components/App.js:62
+#: chunks/main.js:50365
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:72
+#: chunks/main.js:50375
 msgid "Registration Settings"
 msgstr ""
 
 #: src/components/App.js:73
+#: chunks/main.js:50376
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:83
+#: chunks/main.js:50386
 msgid "My Account Settings"
 msgstr ""
 
 #: src/components/App.js:84
+#: chunks/main.js:50387
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:93
+#: chunks/main.js:50396
 msgid "Final Step"
 msgstr ""
 
 #: src/components/App.js:354
+#: chunks/main.js:50657
 msgid "Edit Default Form"
 msgstr ""
 
 #: src/components/App.js:366
+#: chunks/main.js:50669
 msgid "Back"
 msgstr ""
 
 #: src/components/App.js:384
+#: chunks/main.js:50687
 msgid "Create New Form"
 msgstr ""
 
 #: src/components/App.js:403
+#: chunks/main.js:50706
 msgid "Skip this step"
 msgstr ""
 
 #: src/components/App.js:416
+#: chunks/main.js:50719
 msgid "Install & Proceed"
 msgstr ""
 
 #: src/components/App.js:434
+#: chunks/main.js:50737
 msgid "Next"
 msgstr ""
 
 #: src/components/App.js:474
+#: chunks/main.js:50777
 msgid "Go to dashboard"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:85
+#: chunks/main.js:38386
 msgid "Registration Page"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:97
+#: chunks/main.js:38398
 msgid "Installing..."
 msgstr ""
 
 #: src/components/screens/InstallPage.js:114
 #: src/components/screens/InstallPage.js:150
+#: chunks/main.js:38415
+#: chunks/main.js:38451
 msgid "Installed"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:137
+#: chunks/main.js:38438
 msgid "Default Registration Form"
 msgstr ""
 
 #: src/components/screens/LastPage.js:38
+#: chunks/main.js:50068
 msgid "Congratulations, You’re all set! 🎉"
 msgstr ""
 
 #: src/components/screens/LastPage.js:55
+#: chunks/main.js:50085
 msgid "Our Popular Addons"
 msgstr ""
 
 #: src/components/screens/LastPage.js:86
+#: chunks/main.js:50116
 msgid "Advanced Fields"
 msgstr ""
 
 #: src/components/screens/LastPage.js:93
+#: chunks/main.js:50123
 msgid "Offers extra fields like Section Title, Phone, Profile Picture, HTML, Time Picker, and WYSIWYG for complex forms."
 msgstr ""
 
 #: src/components/screens/LastPage.js:135
+#: chunks/main.js:50165
 msgid "Integrate WooCommerce plugin for user registration, enabling user account management of billing, shipping, and orders"
 msgstr ""
 
 #: src/components/screens/LastPage.js:178
+#: chunks/main.js:50208
 msgid "Easily restrict page or post content to logged-in users or specific user roles with this addon."
 msgstr ""
 
 #: src/components/screens/LastPage.js:223
+#: chunks/main.js:50253
 msgid "Easily create, edit, delete, and sort custom tabs on the account page with custom content"
 msgstr ""
 
 #: src/components/screens/LastPage.js:251
+#: chunks/main.js:50281
 msgid "View All Addons"
 msgstr ""
