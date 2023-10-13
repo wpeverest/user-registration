@@ -1,4 +1,4 @@
-= 3.1.0    - 12/10/2023
+= 3.1.0    - 13/10/2023
 * Refactor - Handle user approval status properly.
 * Feature  - Test captcha from settings.
 * Feature  - Profile details updated email to user.

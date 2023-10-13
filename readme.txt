@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.3.1
+Tested up to: 6.3.2
 Stable tag: 3.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.0    - 12/10/2023
+= 3.1.0    - 13/10/2023
 * Refactor - Handle user approval status properly.
 * Feature  - Test captcha from settings.
 * Feature  - Profile details updated email to user.
