@@ -71,7 +71,7 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 				if ( $login_title ) {
 					$login_title_label = apply_filters( 'ur_login_title', $labels['login'] );
 					/* translators: %s - Login Title. */
-					echo wp_kses_post( sprintf( __( '<span> %s </span>', 'user-registration' ), $login_title_label ) );
+					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span>', 'user-registration' ), $login_title_label ) );
 				}
 				?>
 					<?php do_action( 'user_registration_login_form_start' ); ?>
