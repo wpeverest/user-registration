@@ -896,6 +896,21 @@ if ( ! function_exists( 'user_registration_account_navigation' ) ) {
 	}
 }
 
+if ( ! function_exists( 'user_registration_account_dashboard' ) ) {
+
+	/**
+	 * My Account > Dashboard template.
+	 */
+	function user_registration_account_dashboard() {
+		ur_get_template(
+			'myaccount/dashboard.php',
+			array(
+				'current_user' => get_user_by( 'id', get_current_user_id() ),
+			)
+		);
+	}
+}
+
 if ( ! function_exists( 'user_registration_account_edit_profile' ) ) {
 
 	/**
