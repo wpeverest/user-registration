@@ -187,10 +187,13 @@ jQuery(function ($) {
 	};
 
 	// Handle profile picture remove event.
-	$(".profile-pic-remove").on("click", function (e) {
-		e.preventDefault();
-		user_registration_profile_picture_upload.remove_avatar($(this));
-	});
+	$(".profile-pic-remove, .uraf-profile-picture-remove").on(
+		"click",
+		function (e) {
+			e.preventDefault();
+			user_registration_profile_picture_upload.remove_avatar($(this));
+		}
+	);
 
 	$(document).on(
 		"user_registration_frontend_before_edit_profile_submit",
@@ -205,30 +208,36 @@ jQuery(function ($) {
 	/**
 	 * Dismiss  a pending change of user email.
 	 */
-	$(document).on("click", "input#user_registration_user_email + div.email-updated.inline a", function (e) {
-		e.preventDefault();
+	$(document).on(
+		"click",
+		"input#user_registration_user_email + div.email-updated.inline a",
+		function (e) {
+			e.preventDefault();
 
-		var $this = $(this);
-		var url = new URL(e.target.href);
-		var cancel_email_change = url.searchParams.get("cancel_email_change");
-		var nonce = url.searchParams.get("_wpnonce");
-		var ajaxUrl = user_registration_params.ajax_url;
+			var $this = $(this);
+			var url = new URL(e.target.href);
+			var cancel_email_change = url.searchParams.get(
+				"cancel_email_change"
+			);
+			var nonce = url.searchParams.get("_wpnonce");
+			var ajaxUrl = user_registration_params.ajax_url;
 
-		$.ajax({
-			type: "POST",
-			url: ajaxUrl,
-			data: {
-				action: "user_registration_cancel_email_change",
-				cancel_email_change: cancel_email_change,
-				_wpnonce: nonce,
-			},
-			success: function (response) {
-				if (response.success) {
-					$this.parents("div.email-updated.inline").remove();
-				}
-			},
-		});
-	});
+			$.ajax({
+				type: "POST",
+				url: ajaxUrl,
+				data: {
+					action: "user_registration_cancel_email_change",
+					cancel_email_change: cancel_email_change,
+					_wpnonce: nonce,
+				},
+				success: function (response) {
+					if (response.success) {
+						$this.parents("div.email-updated.inline").remove();
+					}
+				},
+			});
+		}
+	);
 
 	// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 	if (

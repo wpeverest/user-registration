@@ -3105,7 +3105,7 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 	 */
 	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
 		$attachment_id = array();
-		$upload_path   = UR_UPLOAD_PATH . 'profile-pictures'; /*Get path of upload dir of User Registration for profile pictures*/
+		$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', UR_UPLOAD_PATH . 'profile-pictures' ); /*Get path of upload dir of WordPress*/
 
 		// Checks if the upload directory exists and create one if not.
 		if ( ! file_exists( $upload_path ) ) {

@@ -254,6 +254,9 @@
 .ur-icon-hidden-field::before {
   content: ""; }
 
+.ur-icon-captcha-field::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,

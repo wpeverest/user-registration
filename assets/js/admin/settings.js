@@ -580,7 +580,7 @@
 	 * @param {string} notice Notice message.
 	 * @param {string} type Notice type.
 	 */
-	function display_captcha_test_status(notice = "", type = "success") {
+	function display_captcha_test_status(notice, type) {
 		if (notice.length) {
 			var notice_container = $("#ur-captcha-notice");
 			var notice_icon = $("#ur-captcha-notice--icon");
@@ -767,30 +767,30 @@
 	});
 
 	// Set localStorage with expiry
-	function setStorageValue( key, value ) {
-		const current = new Date();
-		
-		const data = {
+	function setStorageValue(key, value) {
+		var current = new Date();
+
+		var data = {
 			value: value,
 			expiry: current.getTime() + 86400000, // 1day of expiry time
-		}
+		};
 
-		localStorage.setItem( key, JSON.stringify(data) );
+		localStorage.setItem(key, JSON.stringify(data));
 	}
 
 	// Get localStorage with expiry
-	function getStorageValue( key ) {
-		const item = localStorage.getItem( key );
+	function getStorageValue(key) {
+		var item = localStorage.getItem(key);
 
-		if ( !item ) {
+		if (!item) {
 			return false;
 		}
 
-		const data = JSON.parse(item);
-		const current = new Date();
+		var data = JSON.parse(item);
+		var current = new Date();
 
-		if ( current.getTime() > data.expiry ) {
-			localStorage.removeItem( key );
+		if (current.getTime() > data.expiry) {
+			localStorage.removeItem(key);
 			return false;
 		}
 		return true;
@@ -812,15 +812,18 @@
 	});
 
 	// Persist the collapsable state through page reload
-	const isNavCollapsed = getStorageValue("ur-settings-navCollapsed") === true ? 'collapsed' : 'not-collapsed' ;
-	if( isNavCollapsed == "collapsed" ) {
-		$('.user-registration-header').addClass("collapsed");
-		$('#ur-settings-collapse').removeClass("close").addClass("open");
-	}else {
-		$('.user-registration-header').removeClass("collapsed");
-		$('#ur-settings-collapse').removeClass("open").addClass("close");
+	var isNavCollapsed =
+		getStorageValue("ur-settings-navCollapsed") === true
+			? "collapsed"
+			: "not-collapsed";
+	if (isNavCollapsed == "collapsed") {
+		$(".user-registration-header").addClass("collapsed");
+		$("#ur-settings-collapse").removeClass("close").addClass("open");
+	} else {
+		$(".user-registration-header").removeClass("collapsed");
+		$("#ur-settings-collapse").removeClass("open").addClass("close");
 	}
-	
+
 	$(".ur-nav-premium").each(function () {
 		$(this).hover(
 			function (e) {

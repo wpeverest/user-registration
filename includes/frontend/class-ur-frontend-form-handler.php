@@ -123,14 +123,12 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
-				} else {
+				} elseif ( 'auto_login' === $login_option ) {
 
-					if ( 'auto_login' === $login_option ) {
 						wp_clear_auth_cookie();
 						$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 						wp_set_auth_cookie( $user_id, $remember );
 						$success_params['auto_login'] = true;
-					}
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
 				$success_params['form_login_option']       = $login_option;
@@ -138,9 +136,16 @@ class UR_Frontend_Form_Handler {
 				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
 
 				$success_params['redirect_timeout'] = apply_filters( 'user_registration_hold_success_message_before_redirect', $redirect_timeout );
-				$success_params                     = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
+
+				$redirect_url = ur_get_form_redirect_url( $form_id );
+
+				if ( ! empty( $redirect_url ) ) {
+					$success_params['redirect_url'] = $redirect_url;
+				}
+				$success_params = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
 				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+					$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
 					wp_send_json_success( $success_params );
 				} else {
 

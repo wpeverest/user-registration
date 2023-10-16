@@ -274,8 +274,8 @@ class UR_Form_Handler {
 			get_bloginfo( 'name' )
 		);
 		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>';
-		$headers .= "Content-Type: text/html; charset=UTF-8";
+		$headers  = "From: " . get_bloginfo( 'name' ) . " <" . get_option( 'admin_email' ) . ">\n";
+		$headers .= "Content-Type: text/html; charset=UTF-8\n";
 
 		wp_mail( $to, $subject, $message, $headers );
 

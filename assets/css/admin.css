@@ -846,6 +846,9 @@
 .ur-icon-hidden-field::before {
   content: ""; }
 
+.ur-icon-captcha-field::before {
+  content: ""; }
+
 .user-registration-table {
   width: 100%;
   background: #ffffff;

@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.3.1
-Stable tag: 3.0.4.1
+Tested up to: 6.3.2
+Stable tag: 3.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,7 +73,7 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
 
 * **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-uploads/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
@@ -357,6 +357,34 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.0    - 13/10/2023
+* Refactor - Handle user approval status properly.
+* Feature  - Test captcha from settings.
+* Feature  - Profile details updated email to user.
+* Feature  - Edit form button in form preview window.
+* Feature  - User Registration menu added in admin menu bar.
+* Enhance  - Error logging mechanism in status menu.
+* Enhance  - Remember and retrieve the collapse state of settings menu.
+* Enhance  - Accept page slug as redirect_url parameter value in login or my account shortcode.
+* Dev      - Compatibility for custom captcha field.
+* Dev      - Compatibility for custom user listing area.
+* Dev      - Compatibility for Conversational Forms addon.
+* Dev      - Introduced new hooks to modify email header.
+* Dev      - Merge two duplicate methods on form validation.
+* Dev      - jQuery validation library updated to latest version.
+* Dev      - Compatibility for the fix of Lock addon field if integration not set.
+* Dev      - Compatibility for form fields integration on woo commerce product page.
+* Tweak    - Save the user IP on the user meta.
+* Tweak    - Onboarding last page design changes.
+* Tweak    - Add filter to change profile picture upload directory.
+* Fix      - Admin email not being delivered.
+* Fix      - Wrong escaping done in redirect_url parameter.
+* Fix      - Grammatical typo for unique validation message.
+* Fix      - Send password reset not working on prevent core login.
+* Fix      - Select All button not working while adding endpoints as menu.
+* Fix      - WPML compatibilty for validation message for duplicate added.
+* Fix      - Delete profile picture file from directory when removed while updating profile.
 
 = 3.0.4.1  - 05/09/2023
 * Fix      - User field value not being saved while registering or updating the profile.

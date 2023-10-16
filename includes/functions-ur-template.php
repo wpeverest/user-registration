@@ -981,7 +981,7 @@ function ur_logout_url( $redirect = '' ) {
 		return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
 	} else {
 		if ( '' === $redirect ) {
-			$redirect = home_url();
+			$redirect = ur_get_page_permalink( 'myaccount' );
 		}
 		return wp_logout_url( $redirect );
 	}

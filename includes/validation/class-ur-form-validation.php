@@ -718,6 +718,7 @@ class UR_Form_Validation extends UR_Validation {
 			'quantity_field',
 			'total_field',
 			'stripe_gateway',
+			'captcha',
 		);
 
 		$form_skippable_fields = array_filter(
