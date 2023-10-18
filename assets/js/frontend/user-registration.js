@@ -321,9 +321,11 @@
 
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
-								$submit_node.append(wrapper);
+								$submit_node.parent().parent().append(wrapper);
+								$submit_node.parent().hide();
 							} else {
-								$submit_node.prepend(wrapper);
+								$submit_node.parent().parent().prepend(wrapper);
+								$submit_node.parent().hide();
 							}
 						}
 					},
