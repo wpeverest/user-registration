@@ -318,14 +318,25 @@
 									'" id="ur-submit-message-node"/>'
 							);
 							wrapper.append(message);
+							console.log(type);
 
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
-								$submit_node.parent().parent().append(wrapper);
-								$submit_node.parent().hide();
+								
+								if(type == "success"){
+									$submit_node.parent().parent().append(wrapper);
+									$submit_node.parent().hide();
+								}else{
+									$submit_node.append(wrapper);
+								}
+
 							} else {
-								$submit_node.parent().parent().prepend(wrapper);
-								$submit_node.parent().hide();
+								if(type == "success"){
+									$submit_node.parent().parent().prepend(wrapper);
+									$submit_node.parent().hide();
+								}else{
+									$submit_node.prepend(wrapper);
+								}
 							}
 						}
 					},
