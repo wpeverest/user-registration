@@ -318,7 +318,6 @@
 									'" id="ur-submit-message-node"/>'
 							);
 							wrapper.append(message);
-							console.log(type);
 
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
