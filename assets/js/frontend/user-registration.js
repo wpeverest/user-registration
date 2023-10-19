@@ -322,17 +322,17 @@
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
 								
-								if(type == "success"){
-									$submit_node.parent().parent().append(wrapper);
-									$submit_node.parent().hide();
+								if(type == "message"){
+									$submit_node.closest(".entry-content").append(wrapper);
+									$submit_node.closest(".ur-frontend-form").hide();
 								}else{
 									$submit_node.append(wrapper);
 								}
 
 							} else {
-								if(type == "success"){
-									$submit_node.parent().parent().prepend(wrapper);
-									$submit_node.parent().hide();
+								if(type == "message"){
+									$submit_node.closest(".entry-content").prepend(wrapper);
+									$submit_node.closest(".ur-frontend-form").hide();
 								}else{
 									$submit_node.prepend(wrapper);
 								}
