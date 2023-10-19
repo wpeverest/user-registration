@@ -26,7 +26,8 @@ function ur_template_redirect() {
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
-		
+	
+		// Check if external url is present in URL
 		if ( isset ( $_GET['redirect_to'] ) ) {
 			wp_logout();
 			wp_redirect( esc_url( $_GET['redirect_to'] ) );
@@ -1022,6 +1023,13 @@ function is_elementor_editing_page() {
 		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] ); //PHPCS:ignore;
 }
 
+/**
+ * Check if the url is Slug or External url.
+ *
+ * @param string $redirect URL.
+ *
+ * @return string
+ */
 function check_external_url( $url ) {
 	$all_page_slug = ur_get_all_page_slugs();
 	if ( in_array( $url, $all_page_slug, true ) ) {
