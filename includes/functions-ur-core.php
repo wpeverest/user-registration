@@ -1058,8 +1058,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'options'           => array(
-					'0' => __( 'Top', 'user-registration' ),
-					'1' => __( 'Bottom', 'user-registration' ),
+					'0' => esc_html__( 'Top', 'user-registration' ),
+					'1' => esc_html__( 'Bottom', 'user-registration' ),
+					'2' => esc_html__( 'Hide Form After Successful Submission', 'user-registration' )
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' ),
