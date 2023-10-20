@@ -155,6 +155,26 @@ abstract class UR_Form_Field {
 			$form_data['size'] = $data['advance_setting']->size;
 		}
 
+		if ( isset( $data['advance_setting']->limit_length ) && $data['advance_setting']->limit_length ) {
+			if ( isset( $data['advance_setting']->limit_length_limit_count ) && isset( $data['advance_setting']->limit_length_limit_mode ) ) {
+				if ( $data['advance_setting']->limit_length_limit_mode === "characters" ) {
+					$form_data['max-characters'] = $data['advance_setting']->limit_length_limit_count;
+				} else if ( $data['advance_setting']->limit_length_limit_mode === "words" ) {
+					$form_data['max-words'] = $data['advance_setting']->limit_length_limit_count;
+				}
+			}
+		}
+
+		if ( isset( $data['advance_setting']->minimum_length ) && $data['advance_setting']->minimum_length ) {
+			if ( isset( $data['advance_setting']->minimum_length_limit_count ) && isset( $data['advance_setting']->minimum_length_limit_mode ) ) {
+				if ( $data['advance_setting']->minimum_length_limit_mode === "characters" ) {
+					$form_data['min-characters'] = $data['advance_setting']->minimum_length_limit_count;
+				} else if ( $data['advance_setting']->minimum_length_limit_mode === "words" ) {
+					$form_data['min-words'] = $data['advance_setting']->minimum_length_limit_count;
+				}
+			}
+		}
+
 		if ( isset( $data['advance_setting']->min ) ) {
 			$form_data['min'] = $data['advance_setting']->min;
 		}

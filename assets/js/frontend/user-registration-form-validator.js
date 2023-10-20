@@ -25,6 +25,18 @@
 				this.validate_field
 			);
 
+			$(".input-text").keypress(function (event) {
+				$this = $(this);
+				var has_max_words = Number($this.attr('max-words'));
+				var words = $this.val().split(' ').length;
+
+				if( typeof has_max_words !== 'undefined' ) {
+					if ( words > has_max_words ) {
+						event.preventDefault();
+					}
+				}
+			});
+
 			// Prevent invalid key input in number fields.
 			$("[type='number']").keypress(function (event) {
 				var keyCode = event.keyCode;

@@ -205,6 +205,30 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['custom_attributes']['min'] = $args['min'];
 		}
 
+		if ( isset( $args['min-characters'] ) ) {
+			if ( ! empty( $args['min-characters'] ) || '0' === $args['min-characters'] ) {
+				$args['custom_attributes']['minlength'] = $args['min-characters'];
+			}
+		}
+
+		if ( isset( $args['max-characters'] ) ) {
+			if ( ! empty( $args['max-characters'] ) || '0' === $args['max-characters'] ) {
+				$args['custom_attributes']['maxlength'] = $args['max-characters'];
+			}
+		}
+
+		if ( isset( $args['min-words'] ) ) {
+			if ( ! empty( $args['min-words'] ) || '0' === $args['min-words'] ) {
+				$args['custom_attributes']['min-words'] = $args['min-words'];
+			}
+		}
+
+		if ( isset( $args['max-words'] ) ) {
+			if ( ! empty( $args['max-words'] ) || '0' === $args['max-words'] ) {
+				$args['custom_attributes']['max-words'] = $args['max-words'];
+			}
+		}
+		
 		if ( ! empty( $args['max'] ) || '0' === $args['max'] ) {
 			$args['custom_attributes']['max'] = $args['max'];
 		}
