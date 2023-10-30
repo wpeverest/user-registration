@@ -46,6 +46,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			add_filter( 'user_registration_admin_field_email_notification', array( $this, 'email_notification_setting' ), 10, 2 );
 
 			$this->emails['UR_Settings_Admin_Email']                   = include 'emails/class-ur-settings-admin-email.php';
+			$this->emails['UR_Settings_Approval_Link_Email']           = include 'emails/class-ur-settings-approval-link-email.php';
 			$this->emails['UR_Settings_Awaiting_Admin_Approval_Email'] = include 'emails/class-ur-settings-awaiting-admin-approval-email.php';
 
 			$this->emails['UR_Settings_Email_Confirmation'] = include 'emails/class-ur-settings-email-confirmation.php';
