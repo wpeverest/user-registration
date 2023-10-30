@@ -395,7 +395,7 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
  */
 function ur_enable_ur_plugin_headers( $headers ) {
 	if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
-		include_once dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updates.php';
+		include_once __DIR__ . '/admin/updater/class-ur-plugin-updates.php';
 	}
 
 	$headers['URRequires'] = UR_Plugin_Updates::VERSION_REQUIRED_HEADER;
@@ -1051,7 +1051,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'select',
-				'label'             => __( 'Success message position', 'user-registration' ),
+				'label'             => __( 'Success message display', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_success_message_position',
@@ -1060,7 +1060,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => array(
 					'0' => esc_html__( 'Top', 'user-registration' ),
 					'1' => esc_html__( 'Bottom', 'user-registration' ),
-					'2' => esc_html__( 'Hide Form After Successful Submission', 'user-registration' )
+					'2' => esc_html__( 'Hide Form After Successful Submission', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' ),
@@ -1327,15 +1327,12 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 						} else {
 							$form_data_array[] = $field_data;
 						}
-					} else {
+					} elseif ( $field_key === $key ) {
 
-						if ( $field_key === $key ) {
-
-							if ( ! empty( $field_name ) ) {
-								$form_data_array[ $field_name ] = $field_data;
-							} else {
-								$form_data_array[] = $field_data;
-							}
+						if ( ! empty( $field_name ) ) {
+							$form_data_array[ $field_name ] = $field_data;
+						} else {
+							$form_data_array[] = $field_data;
 						}
 					}
 				}
@@ -1469,7 +1466,7 @@ function check_username( $username ) {
 		if ( isset( $matches[0][0] ) ) {
 			$last_char       = $matches[0][0];
 			$strip_last_char = substr( $username, 0, -( strlen( (string) $last_char ) ) );
-			$last_char++;
+			++$last_char;
 			$username = $strip_last_char . $last_char;
 			$username = check_username( $username );
 
@@ -1566,7 +1563,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 			} else {
 				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
 			}
-			$rc_counter++;
+			++$rc_counter;
 		}
 
 		if ( 'v3' === $recaptcha_type ) {
@@ -1603,29 +1600,25 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 			} else {
 				$recaptcha_node = '';
 			}
-		} else {
-			if ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
-				if ( 'login' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" data-size="invisible"></div>';
-				} elseif ( 'register' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" data-size="invisible"></div>';
-				} elseif ( 'lost_password' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_lost_password" class="g-recaptcha" data-size="invisible"></div>';
-				} else {
-					$recaptcha_node = '';
-				}
+		} elseif ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
+			if ( 'login' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha" data-size="invisible"></div>';
+			} elseif ( 'register' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha" data-size="invisible"></div>';
+			} elseif ( 'lost_password' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_lost_password" class="g-recaptcha" data-size="invisible"></div>';
 			} else {
-				if ( 'login' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
-
-				} elseif ( 'register' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
-				} elseif ( 'lost_password' === $context ) {
-					$recaptcha_node = '<div id="node_recaptcha_lost_password" class="g-recaptcha"></div>';
-				} else {
-					$recaptcha_node = '';
-				}
+				$recaptcha_node = '';
 			}
+		} elseif ( 'login' === $context ) {
+				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
+
+		} elseif ( 'register' === $context ) {
+			$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
+		} elseif ( 'lost_password' === $context ) {
+			$recaptcha_node = '<div id="node_recaptcha_lost_password" class="g-recaptcha"></div>';
+		} else {
+			$recaptcha_node = '';
 		}
 	} else {
 		$recaptcha_node = '';
@@ -1703,12 +1696,10 @@ function ur_get_user_status( $user_status, $user_email_status ) {
 		array_push( $status, 'Pending' );
 	} elseif ( '-1' === $user_status || '-1' === $user_email_status ) {
 		array_push( $status, 'Denied' );
-	} else {
-		if ( $user_email_status ) {
+	} elseif ( $user_email_status ) {
 			array_push( $status, 'Verified' );
-		} else {
-			array_push( $status, 'Approved' );
-		}
+	} else {
+		array_push( $status, 'Approved' );
 	}
 	return $status;
 }
@@ -2120,11 +2111,9 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 						}
 					}
 					$value = ! empty( $attachment_ids ) ? $attachment_ids : $value;
-				} else {
+				} elseif ( wp_http_validate_url( $value ) ) {
 
-					if ( wp_http_validate_url( $value ) ) {
 						$value = attachment_url_to_postid( $value );
-					}
 				}
 				break;
 		}
@@ -3106,7 +3095,7 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 	 */
 	function ur_upload_profile_pic( $valid_form_data, $user_id ) {
 		$attachment_id = array();
-		$upload_path = apply_filters( 'user_registration_profile_pic_upload_url', UR_UPLOAD_PATH . 'profile-pictures' ); /*Get path of upload dir of WordPress*/
+		$upload_path   = apply_filters( 'user_registration_profile_pic_upload_url', UR_UPLOAD_PATH . 'profile-pictures' ); /*Get path of upload dir of WordPress*/
 
 		// Checks if the upload directory exists and create one if not.
 		if ( ! file_exists( $upload_path ) ) {
@@ -3574,14 +3563,12 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			} else {
 				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
 					$redirect = admin_url();
-				} else {
-					if ( ! empty( $post['redirect'] ) ) {
+				} elseif ( ! empty( $post['redirect'] ) ) {
 						$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
-					} elseif ( wp_get_raw_referer() ) {
-						$redirect = wp_get_raw_referer();
-					} else {
-						$redirect = get_home_url();
-					}
+				} elseif ( wp_get_raw_referer() ) {
+					$redirect = wp_get_raw_referer();
+				} else {
+					$redirect = get_home_url();
 				}
 
 				$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
@@ -4000,9 +3987,9 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 						$form_id,
 						admin_url( 'admin.php?page=add-new-registration' )
 					),
-					'meta' => array(
-						'target' => "_blank"
-					)
+					'meta'   => array(
+						'target' => '_blank',
+					),
 				)
 			);
 		}
