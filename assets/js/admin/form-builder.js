@@ -325,7 +325,9 @@
 				var profile_completeness__custom_percentage = $(
 					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select"
 				).serializeArray();
-
+				var form_restriction_extra_settings_data = $(
+					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction"
+				).serializeArray();
 				var data = {
 					action: "user_registration_form_save_action",
 					security: user_registration_form_builder_data.ur_form_save,
@@ -344,6 +346,8 @@
 						multipart_page_setting: multipart_page_setting,
 						profile_completeness__custom_percentage:
 							profile_completeness__custom_percentage,
+						form_restriction_extra_settings_data:
+						form_restriction_extra_settings_data,
 					},
 				};
 
