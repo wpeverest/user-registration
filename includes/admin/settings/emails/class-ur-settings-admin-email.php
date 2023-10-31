@@ -97,7 +97,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		 *
 		 * @param bool $email_approval_enabled Email Approval Enabled.
 		 */
-		public function ur_get_admin_email( $email_approval_enabled = false ) {
+		public function ur_get_admin_email() {
 
 			$general_msg = sprintf(
 				__(
@@ -111,21 +111,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 				)
 			);
 
-			$approval_msg = sprintf(
-				__(
-					'Hi Admin, <br/>
-
-					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-
-					Click on this link to approve this user directly :  {{approval_link}} <br /><br />
-					Thank You!',
-					'user-registration'
-				)
-			);
-
-			$message = $email_approval_enabled ? $approval_msg : $general_msg;
-
-			$message = apply_filters( 'user_registration_admin_email_message', $message );
+			$message = apply_filters( 'user_registration_admin_email_message', $general_msg );
 
 			return $message;
 		}

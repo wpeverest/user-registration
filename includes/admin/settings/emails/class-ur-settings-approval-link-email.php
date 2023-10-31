@@ -71,7 +71,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_approval_link_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Approval link for new user registration', 'user-registration' ),
+									'default'  => __( 'Approval Link For New User Registration', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -80,7 +80,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_approval_link_email',
 									'type'     => 'tinymce',
-									'default'  => $this->ur_get_admin_email(),
+									'default'  => $this->ur_get_approval_link_email(),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -98,8 +98,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 *
 		 * @param bool $email_approval_enabled Email Approval Enabled.
 		 */
-		public function ur_get_admin_email( $email_approval_enabled = false ) {
-
+		public function ur_get_approval_link_email( $email_approval_enabled = false ) {
 			$general_msg = sprintf(
 				__(
 					'Hi Admin, <br/>

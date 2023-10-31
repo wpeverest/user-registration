@@ -153,6 +153,7 @@ class UR_Emailer {
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
+			self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 
 			do_action( 'user_registration_email_send_after' );
 		}
@@ -427,6 +428,76 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Trigger the approval link in email.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @param  mixed  $template_id Email Template Id.
+	 * @return void
+	 */
+	public static function send_approve_link_in_email( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8',
+		);
+
+		/**
+		 * Hook to modify admin email header.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $user_email User Email.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
+
+		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
+		$admin_email = get_option( 'user_registration_approval_link_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = explode( ',', $admin_email );
+		$admin_email = array_map( 'trim', $admin_email );
+
+		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration', 'user-registration' ) );
+		$settings = new UR_Settings_Approval_Link_Email();
+
+		$form_id                = ur_get_form_id_by_userid( $user_id );
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+
+		$message = $settings->ur_get_approval_link_email( $email_approval_enabled );
+		$message = get_option( 'user_registration_approval_link_email', $message );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'user_id'    => $user_id,
+			'form_id'    => $form_id,
+		);
+
+		$login_option = ur_get_user_login_option( $user_id );
+
+		// If enabled approval via email setting.
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
+		}
+
+		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
+		$message                   = self::parse_smart_tags( $message, $values, $name_value );
+		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_approval_link_email', true ) ) {
+			foreach ( $admin_email as $email ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
+			}
+		}
+	}
+
+	/**
 	 * Trigger status change email while admin changes users status on admin approval.
 	 *
 	 * @param  string $email    Email address of the user.
@@ -613,7 +684,7 @@ class UR_Emailer {
 
 		$header = array(
 			'Reply-To:' . $user_email,
-			'Content-Type: text/html; charset=UTF-8'
+			'Content-Type: text/html; charset=UTF-8',
 		);
 
 		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
