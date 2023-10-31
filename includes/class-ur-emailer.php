@@ -152,8 +152,14 @@ class UR_Emailer {
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
-			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
-			self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
+
+			$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+
+			if ( $email_approval_enabled ) {
+				self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
+			} else {
+				self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
+			}
 
 			do_action( 'user_registration_email_send_after' );
 		}
@@ -394,10 +400,8 @@ class UR_Emailer {
 		$subject  = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
 		$settings = new UR_Settings_Admin_Email();
 
-		$form_id                = ur_get_form_id_by_userid( $user_id );
-		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
-
-		$message = $settings->ur_get_admin_email( $email_approval_enabled );
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		$message = $settings->ur_get_admin_email();
 		$message = get_option( 'user_registration_admin_email', $message );
 
 		$values = array(
@@ -411,7 +415,7 @@ class UR_Emailer {
 		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">Approve Now</a><br />';
 		}
