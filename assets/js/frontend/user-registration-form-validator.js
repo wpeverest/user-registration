@@ -93,13 +93,14 @@
 			 * @since 1.9.4
 			 */
 			$.validator.addMethod(
-				"minWordsValidator",
+				"wordsValidator",
 				function (value, element, param) {
-					return value.length <= param;
+					var wordsCount = value.trim().split( /\s+/ ).length;
+					return wordsCount >= param;
 				},
-				$.validator.format("Please enter less than {0} characters.")
+				$.validator.format("Please enter at least {0} words.")
 			);
-
+			
 			/**
 			 * Validation for username length.
 			 *
@@ -394,7 +395,7 @@
 				/**
 				 * For real time min words validation
 				 */
-				$.each(minWordsDiv, function(key, element){
+				$.each( minWordsDiv, function ( key, element ){
 					var minWordsValidator = {};
 					$this = $(element);
 
