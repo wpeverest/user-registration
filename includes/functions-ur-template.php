@@ -219,7 +219,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( isset( $args['min-words'] ) ) {
 			if ( ! empty( $args['min-words'] ) || '0' === $args['min-words'] ) {
-				$args['custom_attributes']['min-words'] = $args['min-words'];
+				$args['custom_attributes']['data-min-words'] = $args['min-words'];
 			}
 		}
 

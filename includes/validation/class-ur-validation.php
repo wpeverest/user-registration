@@ -144,6 +144,57 @@ class UR_Validation {
 	}
 
 	/**
+	 * Validate if a string is shorter than min length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Min Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_min_length( $value, $size ) {
+		if ( strlen( $value ) < $size ) {
+			return new WP_Error(
+				'user_registration_validation_min_size_not_met',
+				'Please enter value of length at least ' . $size
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validate if number of words in string is more than max length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Max Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_max_words_length( $value, $size ) {
+		if ( count(preg_split('/\s+/', $value)) > $size ) {
+			return new WP_Error(
+				'user_registration_validation_max_words_size_exceeded',
+				'Please enter number of words less than ' . $size
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validate if number of words in string is less than min length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Min Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_min_words_length( $value, $size ) {
+		if ( count(preg_split('/\s+/', $value)) < $size ) {
+			return new WP_Error(
+				'user_registration_validation_min_words_size_not_met',
+				'Please enter number of words at least ' . $size
+			);
+		}
+		return true;
+	}
+
+	/**
 	 * Validates if a value is an integer.
 	 *
 	 * @param [mixed] $value Value.

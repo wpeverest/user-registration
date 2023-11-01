@@ -28,6 +28,7 @@
 			$(".input-text").keypress(function (event) {
 				$this = $(this);
 				var has_max_words = Number($this.attr('max-words'));
+				var has_min_words = Number($this.attr('min-words'));
 				var words = $this.val().split(' ').length;
 
 				if( typeof has_max_words !== 'undefined' ) {
@@ -85,6 +86,19 @@
 				);
 				return this.optional(element) || pattern.test(value);
 			};
+
+			/**
+			 * Validation for min words.
+			 *
+			 * @since 1.9.4
+			 */
+			$.validator.addMethod(
+				"minWordsValidator",
+				function (value, element, param) {
+					return value.length <= param;
+				},
+				$.validator.format("Please enter less than {0} characters.")
+			);
 
 			/**
 			 * Validation for username length.
@@ -301,6 +315,7 @@
 				url: user_registration_params.message_url_fields,
 				email: user_registration_params.message_email_fields,
 				number: user_registration_params.message_number_fields,
+				minwords: user_registration_params.message_min_words_fields,
 				confirmpassword:
 					user_registration_params.message_confirm_password_fields,
 			});
@@ -373,6 +388,29 @@
 		custom_validation: function (this_node) {
 			var rules = {},
 				messages = {};
+
+			var minWordsDiv = this_node.find('[data-min-words]');
+			if ( minWordsDiv.length ) {
+				/**
+				 * For real time min words validation
+				 */
+				$.each(minWordsDiv, function(key, element){
+					var minWordsValidator = {};
+					$this = $(element);
+
+					minWordsValidator.wordsValidator = $this.data('min-words');
+
+					var selector = $this.data('id');
+					rules[selector] = minWordsValidator;
+
+					messages[selector] = {
+						wordsValidator : user_registration_params.message_min_words_fields.replace(
+							"%qty%",
+							minWordsValidator.wordsValidator
+						),
+					};
+				});
+			}
 
 			if (this_node.find("#user_confirm_email").length) {
 				/**
@@ -506,12 +544,19 @@
 					element.min
 				);
 			};
+			$.validator.messages.minWords = function (params, element) {
+				return user_registration_params.message_min_words_fields.replace(
+					"%qty%",
+					element.min-words
+				);
+			};
 			$.validator.messages.step = function (params, element) {
 				return user_registration_params.message_confirm_number_field_step.replace(
 					"%qty%",
 					element.step
 				);
 			};
+			// console.log($.validator.messages);
 		},
 	};
 
