@@ -71,6 +71,7 @@ class UR_AJAX {
 			'locked_form_fields_notice' => false,
 			'search_global_settings'    => false,
 			'php_notice_dismiss'        => false,
+			'locate_form_action'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -641,6 +642,36 @@ class UR_AJAX {
 			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
 		}
 	}
+
+	/**
+	 * Locate form.
+	 */
+	public static function locate_form_action() {
+		global $wpdb;
+		try {
+			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
+			$id                     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
+			$form_id_shortcode      = '%{"formId":"' . $id . '"%';
+			$pages                  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$page_list              = array();
+			foreach ( $pages as $page ) {
+				if ( '0' === $page->post_parent ) {
+					$page_title               = $page->post_title;
+					$page_guid                = $page->guid;
+					$page_list[ $page_title ] = $page_guid;
+				}
+			}
+			wp_send_json_success( $page_list );
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => $e->getMessage(),
+				)
+			);
+		}
+	}
+
 	/**
 	 * User input dropped function
 	 *

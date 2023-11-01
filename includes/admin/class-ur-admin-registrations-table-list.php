@@ -129,6 +129,10 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			if ( 'publish' === $post_status ) {
 				$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . esc_html__( 'Duplicate', 'user-registration' ) . '</a>';
 			}
+
+			if ( 'publish' === $post_status ) {
+				$actions['locate'] = '<a href="#" class="ur-form-locate" data-id= "' . esc_attr( $row->ID ) . '">' . __( 'Locate', 'user-registration' ) . '</a>';
+			}
 		}
 		return $actions;
 	}

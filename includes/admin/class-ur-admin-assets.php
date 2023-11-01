@@ -354,6 +354,17 @@ class UR_Admin_Assets {
 
 			wp_localize_script(
 				'user-registration-admin',
+				'user_registration_admin_locate',
+				array(
+					'ajax_locate_nonce' => wp_create_nonce( 'process-locate-ajax-nonce' ),
+					'ajax_url'          => admin_url( 'admin-ajax.php' ),
+					'form_found_error'  => esc_html__( 'Form not found in content', 'user-registration' ),
+					'form_found'        => esc_html__( 'Form found in page:', 'user-registration' ),
+				)
+			);
+
+			wp_localize_script(
+				'user-registration-admin',
 				'user_registration_admin_data',
 				array(
 					'ajax_url'             => admin_url( 'admin-ajax.php' ),
