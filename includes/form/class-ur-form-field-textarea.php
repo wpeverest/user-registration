@@ -79,7 +79,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 			$max_size = $single_form_field->advance_setting->limit_length_limit_count;
 
 			if ( $single_form_field->advance_setting->limit_length_limit_mode === 'characters' ) {
-				if ( is_wp_error( UR_Validation::validate_max_length( $value, $max_size ) ) ) {
+				if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
 					add_filter(
 						$filter_hook,
 						function ( $msg ) use ( $max_size, $label ) {

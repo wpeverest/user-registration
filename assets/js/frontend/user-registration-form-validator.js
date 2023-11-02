@@ -28,7 +28,6 @@
 			$(".input-text").keypress(function (event) {
 				$this = $(this);
 				var has_max_words = Number($this.attr('max-words'));
-				var has_min_words = Number($this.attr('min-words'));
 				var words = $this.val().split(' ').length;
 
 				if( typeof has_max_words !== 'undefined' ) {
@@ -96,7 +95,10 @@
 				"wordsValidator",
 				function (value, element, param) {
 					var wordsCount = value.trim().split( /\s+/ ).length;
-					return wordsCount >= param;
+					if ( '' == value ) {
+						return true;
+					}
+ 					return wordsCount >= param;
 				},
 				$.validator.format("Please enter at least {0} words.")
 			);
@@ -316,7 +318,6 @@
 				url: user_registration_params.message_url_fields,
 				email: user_registration_params.message_email_fields,
 				number: user_registration_params.message_number_fields,
-				minwords: user_registration_params.message_min_words_fields,
 				confirmpassword:
 					user_registration_params.message_confirm_password_fields,
 			});
@@ -543,12 +544,6 @@
 				return user_registration_params.message_confirm_number_field_min.replace(
 					"%qty%",
 					element.min
-				);
-			};
-			$.validator.messages.minWords = function (params, element) {
-				return user_registration_params.message_min_words_fields.replace(
-					"%qty%",
-					element.min-words
 				);
 			};
 			$.validator.messages.step = function (params, element) {
