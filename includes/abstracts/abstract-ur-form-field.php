@@ -381,6 +381,7 @@ abstract class UR_Form_Field {
 		if ( 'timepicker' == $field_key ) {
 			$form_data['current_time']  = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : '';
 			$form_data['time_interval'] = isset( $data['advance_setting']->time_interval ) ? $data['advance_setting']->time_interval : '';
+			$form_data['enable_time_slot_booking'] = isset( $data['advance_setting']->enable_time_slot_booking ) ? $data['advance_setting']->enable_time_slot_booking : '';
 			$form_data['time_min']      = ( isset( $data['advance_setting']->time_min ) && '' !== $data['advance_setting']->time_min ) ? $data['advance_setting']->time_min : '';
 			$form_data['time_max']      = ( isset( $data['advance_setting']->time_max ) && '' !== $data['advance_setting']->time_max ) ? $data['advance_setting']->time_max : '';
 			$timemin                    = isset( $form_data['time_min'] ) ? strtolower( substr( $form_data['time_min'], -2 ) ) : '';
@@ -400,6 +401,10 @@ abstract class UR_Form_Field {
 			} else {
 				$form_data['time_max'] = $form_data['time_max'] . '' . $maxampm;
 			}
+		}
+
+		if('date' == $field_key){
+			$form_data['enable_date_slot_booking'] = isset( $data['advance_setting']->enable_date_slot_booking ) ? $data['advance_setting']->enable_date_slot_booking : '';
 		}
 
 		/** Redundant Codes End. */
