@@ -903,6 +903,14 @@
 								".ur-advance-setting-block .ur-settings-time_interval"
 							)
 							.val();
+
+						var $time_format = $(this)
+							.closest(".ur-selected-item")
+							.find(
+							".ur-advance-setting-block .ur-settings-time_format"
+							)
+							.val();
+
 						var label = $(this)
 							.closest(".ur-selected-item")
 							.find(".ur-label label")

@@ -414,6 +414,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
 				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
 				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
 				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
 				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
@@ -429,6 +430,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				if ( '' !== $time_interval ) {
 					$attr .= 'data-time-interval="' . $time_interval . '"';
+				}
+
+				if ( '' !== $time_format ) {
+					$attr .= 'data-time-format="' . $time_format . '"';
 				}
 
 				if ( '' !== $time_min ) {
