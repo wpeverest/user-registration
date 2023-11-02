@@ -71,7 +71,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		// Custom Field Validation here..
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 
 		// Validate size.
 		if ( isset( $single_form_field->advance_setting->size ) ) {
@@ -80,10 +80,15 @@ class UR_Form_Field_Text extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $max_size, $label ) {
-						return sprintf(
-							'Please enter a value of length less than %d for %s',
-							$max_size,
-							"<strong>$label</strong>."
+						$message = array(
+							/* translators: %s - validation message */
+							$label       => sprintf( __( 'Please enter a value of length less than %d.', 'user-registration' ), $max_size ),
+							'individual' => true,
+						);
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
 						);
 					}
 				);

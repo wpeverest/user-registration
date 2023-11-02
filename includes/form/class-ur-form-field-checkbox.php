@@ -75,7 +75,7 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Custom Field Validation here..
 
-		$field_label = $single_form_field->general_setting->label;
+		$field_label = $single_form_field->general_setting->field_name;
 		$value       = $form_data->value;
 
 		if ( ! empty( $single_form_field->advance_setting->choice_limit ) ) {
@@ -87,10 +87,15 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $limit, $field_label ) {
-						return sprintf(
-							'Only %d options can be selected for %s.',
-							$limit,
-							"<strong>$field_label</strong>"
+						$message = array(
+							/* translators: %s - validation message */
+							$field_label => sprintf( __( 'Only %d options can be selected.', 'user-registration' ), $limit ),
+							'individual' => true,
+						);
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
 						);
 					}
 				);
