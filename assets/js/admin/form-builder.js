@@ -1772,7 +1772,7 @@
 										$.inArray(
 											data_field_id,
 											single_draggable_fields
-										) >= 0 && !$this.hasClass('ur-locked-field')
+										) >= 0 && (!$this.hasClass('ur-locked-field') || ($this.hasClass('ur-locked-field') && $this.hasClass('ur-one-time-draggable-disabled')))
 									) {
 										if (
 											$(".ur-input-grids").find(
@@ -1787,7 +1787,6 @@
 												"ur-one-time-draggable-disabled"
 											);
 										} else {
-											console.log('in');
 											$this.draggable("enable");
 											$this.removeClass(
 												"ur-locked-field"
