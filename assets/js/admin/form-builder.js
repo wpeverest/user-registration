@@ -326,7 +326,7 @@
 					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select"
 				).serializeArray();
 				var form_restriction_extra_settings_data = $(
-					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction"
+					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction, #urfr_age_criteria_equation"
 				).serializeArray();
 				var data = {
 					action: "user_registration_form_save_action",
