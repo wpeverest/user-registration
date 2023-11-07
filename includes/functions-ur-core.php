@@ -3281,25 +3281,25 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 			'woocommerce'                            => array(
 				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 				'plugin' => 'user-registration-woocommerce',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 			),
 			'content_restriction'                    => array(
 				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
 				'plugin' => 'user-registration-content-restriction',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - Content Restriction', 'user-registration' ),
 			),
 			'file_upload'                            => array(
 				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
 			),
 			'user-registration-customize-my-account' => array(
 				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 				'plugin' => 'user-registration-customize-my-account',
-				'plan'   => array( 'plus', 'professional' ),
+				'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
 			),
 		);
