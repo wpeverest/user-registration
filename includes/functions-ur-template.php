@@ -415,6 +415,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
 				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
 				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
+				$time_range         = isset( $args['time_range'] ) ? $args['time_range'] : '';
 				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
 				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
 				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
@@ -444,6 +445,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$attr .= 'data-time-max="' . $time_max . '"';
 				}
 
+				if ( $time_range ) {
+					$attr .= 'data-time-range="' . $time_range . '"';
+				}
+
 				if ( $current_time ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
@@ -459,7 +464,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+					if ( $time_range ) {
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '-start" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+					} else {
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+					}
 				} else {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 				}
@@ -680,6 +691,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		}
 
 		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value );
+
 		if ( $args['return'] ) {
 			return $field;
 		} else {

@@ -382,6 +382,7 @@ abstract class UR_Form_Field {
 			$form_data['current_time']  = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : '';
 			$form_data['time_interval'] = isset( $data['advance_setting']->time_interval ) ? $data['advance_setting']->time_interval : '';
 			$form_data['time_format']   = isset( $data['advance_setting']->time_format ) ? $data['advance_setting']->time_format : '';
+			$form_data['time_range']    = isset( $data['advance_setting']->time_range ) ? $data['advance_setting']->time_range : '';
 			$form_data['time_min']      = ( isset( $data['advance_setting']->time_min ) && '' !== $data['advance_setting']->time_min ) ? $data['advance_setting']->time_min : '';
 			$form_data['time_max']      = ( isset( $data['advance_setting']->time_max ) && '' !== $data['advance_setting']->time_max ) ? $data['advance_setting']->time_max : '';
 			$timemin                    = isset( $form_data['time_min'] ) ? strtolower( substr( $form_data['time_min'], -2 ) ) : '';

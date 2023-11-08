@@ -22,7 +22,7 @@ class UR_Form_Handler {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		 add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
 
 		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
@@ -40,7 +40,7 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		$page_id     = ur_get_page_id( 'myaccount' );
+		$page_id                     = ur_get_page_id( 'myaccount' );
 		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
 		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -206,8 +206,8 @@ class UR_Form_Handler {
 					if ( isset( $_POST[ $key ] ) ) {
 						$value = sanitize_email( wp_unslash( $_POST[ $key ] ) );
 					} else {
-						$user_data     = get_userdata( $user_id );
-						$value = $user_data->data->user_email;
+						$user_data = get_userdata( $user_id );
+						$value     = $user_data->data->user_email;
 					}
 					break;
 				case 'profile_picture':
@@ -274,7 +274,7 @@ class UR_Form_Handler {
 			get_bloginfo( 'name' )
 		);
 		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers  = "From: " . get_bloginfo( 'name' ) . " <" . get_option( 'admin_email' ) . ">\n";
+		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . ">\n";
 		$headers .= "Content-Type: text/html; charset=UTF-8\n";
 
 		wp_mail( $to, $subject, $message, $headers );
@@ -441,16 +441,16 @@ class UR_Form_Handler {
 							return false;
 						}
 					} elseif ( 'cloudflare' === $recaptcha_type ) {
-						$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-						$params       = array(
+						$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+						$params = array(
 							'method' => 'POST',
 							'body'   => array(
 								'secret'   => $secret_key,
 								'response' => $recaptcha_value,
 							),
 						);
-						$data = wp_safe_remote_post( $url, $params );
-						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						$data   = wp_safe_remote_post( $url, $params );
+						$data   = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
 							ur_add_notice( __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ), 'error' );
@@ -605,8 +605,8 @@ class UR_Form_Handler {
 	 * @since 1.7.2
 	 */
 	public function get_form( $id = '', $args = array() ) {
-		 $forms = array();
-		$args   = apply_filters( 'user_registration_get_form_args', $args );
+		$forms = array();
+		$args  = apply_filters( 'user_registration_get_form_args', $args );
 
 		if ( is_numeric( $id ) ) {
 			$the_post = get_post( absint( $id ) );

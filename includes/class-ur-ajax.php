@@ -162,7 +162,7 @@ class UR_AJAX {
 		} elseif ( 'hCaptcha' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
-		}  elseif ( 'cloudflare' === $recaptcha_type ) {
+		} elseif ( 'cloudflare' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
@@ -180,16 +180,16 @@ class UR_AJAX {
 						);
 					}
 				} elseif ( 'cloudflare' === $recaptcha_type ) {
-					$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-					$params       = array(
+					$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+					$params = array(
 						'method' => 'POST',
 						'body'   => array(
 							'secret'   => $secret_key,
 							'response' => $captcha_response,
 						),
 					);
-					$data = wp_safe_remote_post( $url, $params );
-					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					$data   = wp_safe_remote_post( $url, $params );
+					$data   = json_decode( wp_remote_retrieve_body( $data ) );
 					if ( empty( $data->success ) ) {
 						wp_send_json_error(
 							array(
@@ -259,8 +259,10 @@ class UR_AJAX {
 		$form_data = array();
 
 		if ( isset( $_POST['form_data'] ) ) {
-			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) );  // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
+
+		error_log( print_r( $form_data, true ) );
 
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
 	}
@@ -621,10 +623,10 @@ class UR_AJAX {
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
 		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
-		$header = array(
+		$header  = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Reply-To:' . $sender_email,
-			'Content-Type:text/html; charset=UTF-8'
+			'Content-Type:text/html; charset=UTF-8',
 		);
 		$message =
 		'Congratulations,<br>
@@ -654,14 +656,14 @@ class UR_AJAX {
          $form_field_id = ( isset( $_POST['form_field_id'] ) ) ? $_POST['form_field_id'] : null; //phpcs:ignore
 
 			if ( null == $form_field_id || '' == $form_field_id ) {
-				throw  new Exception( 'Empty form data' );
+				throw new Exception( 'Empty form data' );
 			}
 
 			$class_file_name = str_replace( 'user_registration_', '', $form_field_id );
 			$class_name      = ur_load_form_field_class( $class_file_name );
 
 			if ( empty( $class_name ) ) {
-				throw  new Exception( 'class not exists' );
+				throw new Exception( 'class not exists' );
 			}
 
 			$templates = $class_name::get_instance()->get_admin_template();
@@ -723,12 +725,12 @@ class UR_AJAX {
 
 			if ( isset( self::$failed_key_value['value'] ) && '' != self::$failed_key_value['value'] ) {
 				if ( in_array( self::$failed_key_value['value'], self::$field_key_aray ) ) {
-					throw  new Exception( sprintf( "Could not save form. Duplicate field name <span style='color:red'>%s</span>", self::$failed_key_value['value'] ) );
+					throw new Exception( sprintf( "Could not save form. Duplicate field name <span style='color:red'>%s</span>", self::$failed_key_value['value'] ) );
 				}
 			}
 
 			if ( false === self::$is_field_key_pass ) {
-				throw  new Exception( __( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ) );
+				throw new Exception( __( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ) );
 			}
 
 			$required_fields = array(
@@ -746,7 +748,7 @@ class UR_AJAX {
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
 					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys() ) {
-						throw  new Exception(
+						throw new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
 								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
@@ -883,8 +885,8 @@ class UR_AJAX {
 
 							// Check if the option_value contains an open <a> tag but not a closing </a> tag.
 							if ( preg_match( '/<a\s[^>]*>/i', $option_value ) && ! preg_match( '/<\/a>/i', $option_value ) ) {
-								   // Add a closing </a> tag to the end of the option_value.
-								   $option_value .= '</a>';
+									// Add a closing </a> tag to the end of the option_value.
+									$option_value .= '</a>';
 							}
 
 							$sanitized_options [] = $option_value;
@@ -1382,7 +1384,7 @@ class UR_AJAX {
 			wp_send_json_success( 'Successfully Updated' );
 		} else {
 			wp_send_json_error( 'Update failed !' );
-		};
+		}
 	}
 	/**
 	 * Install or upgrade to premium.
@@ -1427,12 +1429,10 @@ class UR_AJAX {
 			} else {
 				$plan_list = array( 'personal' );
 			}
-		} else {
-			if ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $license_plan ) {
+		} elseif ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $license_plan ) {
 				$plan_list = array( 'plus', 'professional', 'personal' );
-			} else {
-				$plan_list = array();
-			}
+		} else {
+			$plan_list = array();
 		}
 		if ( $plan ) {
 			$addon = (object) array(
@@ -1447,7 +1447,6 @@ class UR_AJAX {
 		do_action( 'user_registration_after_addons_description', $addon );
 		$button = ob_get_clean();
 		wp_send_json_success( array( 'action_button' => $button ) );
-
 	}
 
 
