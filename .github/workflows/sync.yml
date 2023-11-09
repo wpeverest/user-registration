@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - tweak/new-license-plan-check
+      - master
     workflow_dispatch:
 jobs:
   sync:
