@@ -698,29 +698,14 @@ if ( ! function_exists( 'allow_usage_content' ) ) {
 	 * Allow Usage Content.
 	 */
 	function allow_usage_content() {
-		// Return if license key not found.
-		$license_key = trim( get_option( 'user-registration_license_key' ) );
-
-		if ( $license_key ) {
-			echo wp_kses_post(
-				sprintf(
-					'<br/><p>%s</p>',
-					__(
-						'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
-						'user-registration'
-					)
+		echo wp_kses_post(
+			sprintf(
+				'<br/><p>%s</p>',
+				__(
+					'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+					'user-registration'
 				)
-			);
-		} else {
-			echo wp_kses_post(
-				sprintf(
-					'<br/><p>%s</p>',
-					__(
-						'Help us improve the plugin\'s features and receive an instant discount coupon with occasional email updates by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
-						'user-registration'
-					)
-				)
-			);
-		}
+			)
+		);
 	}
 }
