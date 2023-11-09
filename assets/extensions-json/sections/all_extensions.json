@@ -398,6 +398,19 @@
         "professional",
         "themegrill agency"
       ]
+	  },
+	  {
+      "title": "Conversational Forms",
+      "slug" : "user-registration-conversational-forms",
+      "name" : "User Registration Conversational Forms",
+      "image": "extensions-json/sections/images/conversational-forms.png",
+      "excerpt": "Build interactive registration forms without hassle and provide a better user experience during the signup process.",
+      "link": "https://wpuserregistration.com/features/conversational-forms/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=post-submission",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
 	  }
   ]
 }
