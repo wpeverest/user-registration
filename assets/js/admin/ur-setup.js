@@ -407,14 +407,12 @@ jQuery(function ($) {
 			);
 
 			// Settings addon install actions.
-			$(document).on(
-				"click",
-				".user-registration-settings-addon-install, .user-registration-settings-addon-activate",
-				function (e) {
-					e.preventDefault();
-					ur_setup_actions.install_addon_from_settings($(this));
-				}
-			);
+			$(
+				".user-registration-settings-addon-install, .user-registration-settings-addon-activate"
+			).click(function (e) {
+				e.preventDefault();
+				ur_setup_actions.install_addon_from_settings($(this));
+			});
 
 			$(document).on(
 				"click",
@@ -1092,45 +1090,50 @@ jQuery(function ($) {
 					return false;
 				},
 			}).then(function (result) {
-				if(result.isConfirmed) {
-				if ($(".user-registration-template-continue").length > 0) {
-					var $formName = $("#user-registration-setup-name");
+				if (result.isConfirmed) {
+					if ($(".user-registration-template-continue").length > 0) {
+						var $formName = $("#user-registration-setup-name");
 
-					// Check that form title is provided.
-					if ($formName.val()) {
-						formName = $formName.val();
-					} else {
-						return;
-					}
-
-					var data = {
-						title: formName,
-						action: "user_registration_create_form",
-						template: template,
-						security: ur_setup_params.create_form_nonce,
-					};
-
-					$.post(ur_setup_params.ajax_url, data, function (response) {
-						if (response.success) {
-							window.location.href = response.data.redirect;
+						// Check that form title is provided.
+						if ($formName.val()) {
+							formName = $formName.val();
 						} else {
-							$(".user-registartion-setup-name").focus();
+							return;
+						}
+
+						var data = {
+							title: formName,
+							action: "user_registration_create_form",
+							template: template,
+							security: ur_setup_params.create_form_nonce,
+						};
+
+						$.post(
+							ur_setup_params.ajax_url,
+							data,
+							function (response) {
+								if (response.success) {
+									window.location.href =
+										response.data.redirect;
+								} else {
+									$(".user-registartion-setup-name").focus();
+									Swal.fire({
+										icon: "error",
+										title: "Oops...",
+										text: response.data.error,
+									});
+								}
+							}
+						).fail(function (xhr) {
 							Swal.fire({
 								icon: "error",
 								title: "Oops...",
-								text: response.data.error,
+								text: xhr.responseText,
 							});
-						}
-					}).fail(function (xhr) {
-						Swal.fire({
-							icon: "error",
-							title: "Oops...",
-							text: xhr.responseText,
 						});
-					});
+					}
 				}
-			}
-		});
+			});
 		},
 		input_keypress: function (e) {
 			var button = e.keyCode || e.which;

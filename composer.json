@@ -72,6 +72,9 @@
     ],
     "post-update-cmd": [
       "@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.example', 'tests/.env' );\""
+    ],
+    "post-install-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
     ]
   },
   "extra": {

@@ -1195,19 +1195,19 @@ msgstr ""
 
 #: includes/admin/functions-ur-admin.php:660
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:679
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:684
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
