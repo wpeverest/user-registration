@@ -465,14 +465,27 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				if ( empty( $extra_params ) ) {
 					if ( $time_range ) {
-						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '-start" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						// Extract the start and end time if the time is given in range.
+						$pattern = '/^(\d{2}:\d{2}(?:\s?[APap][Mm])?)\s+to\s+(\d{2}:\d{2}(?:\s?[APap][Mm])?)$/';
+
+						if ( preg_match( $pattern, $value, $times ) ) {
+							$start_time = $times[1];
+							$end_time   = $times[2];
+						}
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $start_time ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $end_time ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+					} else {
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-test-1" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+					}
+				} elseif ( ! empty( $extra_params ) ) {
+					if ( $time_range ) {
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start-test" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '-start" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
 					} else {
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-test" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 					}
-				} else {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
 				}
 
 				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {

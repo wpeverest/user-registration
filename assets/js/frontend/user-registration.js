@@ -1449,7 +1449,7 @@
 															$field_id.includes(
 																index
 															)
-														) {
+														) {;
 															var error_message =
 																'<label id="' +
 																index +

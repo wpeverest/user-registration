@@ -262,8 +262,6 @@ class UR_AJAX {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
-		error_log( print_r( $form_data, true ) );
-
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
 	}
 
