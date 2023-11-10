@@ -210,7 +210,16 @@
 									.closest(".ur-range-row")
 									.find(".ur-range-number")
 							);
-						} else {
+						} else if (
+							"text" === element.attr("type") &&
+							element.hasClass("input-timepicker")
+						) {
+							error.insertAfter(
+								element
+									.closest(".ur-timepicker")
+							);
+						}
+						else {
 							$(document).trigger(
 								"user-registration-append-error-messages",
 								element
