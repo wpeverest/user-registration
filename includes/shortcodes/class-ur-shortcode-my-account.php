@@ -307,6 +307,9 @@ class UR_Shortcode_My_Account {
 
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) { // phpcs:ignore
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) ); // phpcs:ignore
+				$user = get_user_by( 'id', $rp_login );
+				$rp_login = isset( $user->user_login ) ? $user->user_login : $rp_login;
+
 				$user                      = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
