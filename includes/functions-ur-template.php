@@ -987,7 +987,7 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = trim( $redirect, ']' );
 			$redirect = trim( $redirect, '"' );
 			$redirect = trim( $redirect, "'" );
-			$redirect = '' != $redirect ? check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
+			$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 		}
 	} else {
 		$blocks = parse_blocks( $post->post_content );
