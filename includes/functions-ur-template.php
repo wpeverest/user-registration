@@ -1030,7 +1030,7 @@ function is_elementor_editing_page() {
  *
  * @return string
  */
-function check_external_url( $url ) {
+function ur_check_external_url( $url ) {
 	$all_page_slug = ur_get_all_page_slugs();
 	if ( in_array( $url, $all_page_slug, true ) ) {
 		$redirect_url = site_url( $url );
