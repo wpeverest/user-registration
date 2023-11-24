@@ -115,7 +115,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 				)
 			);
 
-			$approval_msg = apply_filters( 'user_registration_admin_email_message', $approval_msg );
+			$approval_msg = apply_filters( 'user_registration_admin_approval_email_message', $approval_msg );
 
 			return $approval_msg;
 		}
