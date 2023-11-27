@@ -70,8 +70,8 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-limit-length-limit-mode',
 				'type'        => 'select',
 				'options'     => array(
-					'characters' => esc_html__("Characters", 'user-registration'),
-					'words' => esc_html__("Words Count", 'user-registration'),
+					'characters' => esc_html__( 'Characters', 'user-registration' ),
+					'words' => esc_html__( 'Words Count', 'user-registration' ),
 				),
 				'required'    => false,
 				'default'     => 'characters',
@@ -107,8 +107,8 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'class'       => $this->default_class . ' ur-settings-minimum-length-limit-mode',
 				'type'        => 'select',
 				'options'     => array(
-					'characters' => esc_html__("Characters", 'user-registration'),
-					'words' => esc_html__("Words Count", 'user-registration'),
+					'characters' => esc_html__( 'Characters', 'user-registration' ),
+					'words' => esc_html__( 'Words Count', 'user-registration' ),
 				),
 				'required'    => false,
 				'default'     => 'characters',
