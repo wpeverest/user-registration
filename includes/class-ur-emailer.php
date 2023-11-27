@@ -127,7 +127,7 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
-
+		$valid_form_data = ur_array_clone( $valid_form_data );
 		$login_option = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
