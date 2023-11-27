@@ -719,7 +719,7 @@ abstract class UR_Form_Field {
 						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
 						$general_setting_wrapper .= '</li>';
-						}
+					}
 					$general_setting_wrapper .= '</ul>';
 					break;
 
