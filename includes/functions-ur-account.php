@@ -188,8 +188,8 @@ function ur_get_account_endpoint_url( $endpoint ) {
 	if ( 'user-logout' === $endpoint ) {
 		if (
 			get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
-		   ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
-		   return ur_logout_url( ur_get_page_permalink( 'myaccount' ) ); 
+		    ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
+		   		return ur_logout_url( ur_get_page_permalink( 'myaccount' ) );
 	   }
 	}
 
