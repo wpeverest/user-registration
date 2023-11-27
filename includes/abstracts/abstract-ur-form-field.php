@@ -157,9 +157,9 @@ abstract class UR_Form_Field {
 
 		if ( isset( $data['advance_setting']->limit_length ) && $data['advance_setting']->limit_length ) {
 			if ( isset( $data['advance_setting']->limit_length_limit_count ) && isset( $data['advance_setting']->limit_length_limit_mode ) ) {
-				if ( $data['advance_setting']->limit_length_limit_mode === "characters" ) {
+				if ( 'characters' === $data['advance_setting']->limit_length_limit_mode ) {
 					$form_data['max-characters'] = $data['advance_setting']->limit_length_limit_count;
-				} else if ( $data['advance_setting']->limit_length_limit_mode === "words" ) {
+				} else if ( 'words' === $data['advance_setting']->limit_length_limit_mode ) {
 					$form_data['max-words'] = $data['advance_setting']->limit_length_limit_count;
 				}
 			}
@@ -167,9 +167,9 @@ abstract class UR_Form_Field {
 
 		if ( isset( $data['advance_setting']->minimum_length ) && $data['advance_setting']->minimum_length ) {
 			if ( isset( $data['advance_setting']->minimum_length_limit_count ) && isset( $data['advance_setting']->minimum_length_limit_mode ) ) {
-				if ( $data['advance_setting']->minimum_length_limit_mode === "characters" ) {
+				if ( 'characters' === $data['advance_setting']->minimum_length_limit_mode ) {
 					$form_data['min-characters'] = $data['advance_setting']->minimum_length_limit_count;
-				} else if ( $data['advance_setting']->minimum_length_limit_mode === "words" ) {
+				} else if ( 'words' === $data['advance_setting']->minimum_length_limit_mode ) {
 					$form_data['min-words'] = $data['advance_setting']->minimum_length_limit_count;
 				}
 			}
@@ -701,9 +701,9 @@ abstract class UR_Form_Field {
 
 					$general_setting_wrapper .= '/>';
 					break;
-				case 'captcha' :
+				case 'captcha':
 					$default_options          = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
-					$old_options     		  = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+					$old_options              = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options                  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 
