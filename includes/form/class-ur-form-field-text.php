@@ -78,7 +78,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode ) ) {
 
 				$max_size = $single_form_field->advance_setting->limit_length_limit_count;
-	
+
 				if ( 'characters' === $single_form_field->advance_setting->limit_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
 						add_filter(
@@ -114,7 +114,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode ) ) {
 
 				$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
-				
+
 				if ( 'characters' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
 						add_filter(

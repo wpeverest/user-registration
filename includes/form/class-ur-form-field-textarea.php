@@ -109,11 +109,11 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 
 		// Validate Minimum Length.
 		if ( isset( $single_form_field->advance_setting->minimum_length ) && $single_form_field->advance_setting->minimum_length ) {
-			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode) ) {
+			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode ) ) {
 
 				$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
-				
-				if ( $single_form_field->advance_setting->minimum_length_limit_mode === 'characters' ) {
+
+				if ( 'characters' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
 						add_filter(
 							$filter_hook,
@@ -126,7 +126,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 							}
 						);
 					}
-				} else if ( $single_form_field->advance_setting->minimum_length_limit_mode === 'words' ) {
+				} else if ( 'words' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
 						add_filter(
 							$filter_hook,
