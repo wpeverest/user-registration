@@ -1024,9 +1024,9 @@ function is_elementor_editing_page() {
 }
 
 /**
- * Check if the url is Slug or External url.
+ * Check if the $url is Slug or External url.
  *
- * @param string $redirect URL.
+ * @param string $redirect_url.
  *
  * @return string
  */
@@ -1038,6 +1038,6 @@ function ur_check_external_url( $url ) {
 		$redirect_url = ur_get_page_permalink( 'myaccount' );
 		$redirect_url = add_query_arg( 'redirect_to', $url, $redirect_url );
 	}
-	return $redirect_url ;
+	return $redirect_url;
 }
 
