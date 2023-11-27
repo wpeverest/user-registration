@@ -28,9 +28,9 @@ function ur_template_redirect() {
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
-		if ( isset ( $_GET['redirect_to'] ) ) {
+		if ( isset( $_GET['redirect_to'] ) ) {
 			wp_logout();
-			wp_redirect( esc_url( sanitize_url ( wp_unslash( $_GET['redirect_to'] ) ) ) );
+			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
 			exit;
 		}
 
