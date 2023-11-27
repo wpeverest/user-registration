@@ -2686,7 +2686,11 @@ if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
 
 				$meta_key = isset( $field['key'] ) ? $field['key'] : '';
 
-				$attachment_ids = explode( ',', get_user_meta( $user->ID, 'user_registration_' . $meta_key, true ) );
+				$attachment_ids = get_user_meta( $user->ID, 'user_registration_' . $meta_key, true );
+
+				if( is_string($attachment_ids )){
+					$attachment_ids = explode( ',', $attachment_ids);
+				}
 
 				foreach ( $attachment_ids as $attachment_id ) {
 					$file_path = get_attached_file( $attachment_id );
