@@ -75,74 +75,74 @@ class UR_Form_Field_Text extends UR_Form_Field {
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
-			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode) )
+			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode ) ) {
 
-			$max_size = $single_form_field->advance_setting->limit_length_limit_count;
-
-			if ( $single_form_field->advance_setting->limit_length_limit_mode === 'characters' ) {
-				if ( is_wp_error( UR_Validation::validate_max_length( $value, $max_size ) ) ) {
-					add_filter(
-						$filter_hook,
-						function ( $msg ) use ( $max_size, $label ) {
-							return sprintf(
-								'Please enter a value of length less than %d for %s',
-								$max_size,
-								"<strong>$label</strong>."
-							);
-						}
-					);
-				}
-			} else if ( $single_form_field->advance_setting->limit_length_limit_mode === 'words' ) {
-				if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
-					add_filter(
-						$filter_hook,
-						function ( $msg ) use ( $max_size, $label ) {
-							return sprintf(
-								'Please enter number of words less than %d for %s',
-								$max_size,
-								"<strong>$label</strong>."
-							);
-						}
-					);
+				$max_size = $single_form_field->advance_setting->limit_length_limit_count;
+	
+				if ( 'characters' === $single_form_field->advance_setting->limit_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $max_size, $label ) {
+								return sprintf(
+									'Please enter a value of length less than %d for %s',
+									$max_size,
+									"<strong>$label</strong>."
+								);
+							}
+						);
+					}
+				} else if ( 'words' === $single_form_field->advance_setting->limit_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $max_size, $label ) {
+								return sprintf(
+									'Please enter number of words less than %d for %s',
+									$max_size,
+									"<strong>$label</strong>."
+								);
+							}
+						);
+					}
 				}
 			}
-
 		}
 
 		// Validate Minimum Length.
 		if ( isset( $single_form_field->advance_setting->minimum_length ) && $single_form_field->advance_setting->minimum_length ) {
-			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode) )
+			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode ) ) {
 
-			$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
-
-			if ( $single_form_field->advance_setting->minimum_length_limit_mode === 'characters' ) {
-				if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
-					add_filter(
-						$filter_hook,
-						function ( $msg ) use ( $min_size, $label ) {
-							return sprintf(
-								'Please enter a value of length at least %d for %s',
-								$min_size,
-								"<strong>$label</strong>."
-							);
-						}
-					);
-				}
-			} else if ( $single_form_field->advance_setting->minimum_length_limit_mode === 'words' ) {
-				if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
-					add_filter(
-						$filter_hook,
-						function ( $msg ) use ( $min_size, $label ) {
-							return sprintf(
-								'Please enter number of words at least %d for %s',
-								$min_size,
-								"<strong>$label</strong>."
-							);
-						}
-					);
+				$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
+				
+				if ( 'characters' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $min_size, $label ) {
+								return sprintf(
+									'Please enter a value of length at least %d for %s',
+									$min_size,
+									"<strong>$label</strong>."
+								);
+							}
+						);
+					}
+				} else if ( 'words' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $min_size, $label ) {
+								return sprintf(
+									'Please enter number of words at least %d for %s',
+									$min_size,
+									"<strong>$label</strong>."
+								);
+							}
+						);
+					}
 				}
 			}
-
 		}
 	}
 }
