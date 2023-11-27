@@ -50,7 +50,7 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 			'user_input_dropped'        => true,
-			'form_save_action'          => true,
+			'form_save_action'          => false,
 			'user_form_submit'          => true,
 			'update_profile_details'    => true,
 			'profile_pic_upload'        => true,
