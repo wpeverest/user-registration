@@ -96,11 +96,7 @@ abstract class UR_Field_Settings {
 				$pattern_validationList = apply_filters( 'ur_pattern_validation_list_in_advanced_settings', $pattern_validationList );
 			}
 
-			if ( 'limit_length_limit_count' === $field_key || 'limit_length_limit_mode' === $field_key || 'minimum_length_limit_count' === $field_key || 'minimum_length_limit_mode' === $field_key ) {
-				$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '" style="display:none;">';
-			} else {
-				$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
-			}
+			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
 
 			if ( 'toggle' !== $field['type'] ) {
 				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
