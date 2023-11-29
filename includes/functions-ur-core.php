@@ -1764,7 +1764,7 @@ function ur_is_json( $str ) {
  * @since  1.5.3
  * @return boolean
  */
-function ur_has_date_field( $form_id ) {
+function ur_has_flatpickr_field( $form_id ) {
 
 	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
@@ -1772,7 +1772,7 @@ function ur_has_date_field( $form_id ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
-					if ( isset( $field->field_key ) && 'date' === $field->field_key ) {
+					if ( isset( $field->field_key ) && ( 'date' === $field->field_key || 'timepicker' === $field->field_key ) ) {
 						return true;
 					}
 				}
