@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configure Email
  *
@@ -32,7 +31,6 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 *
 		 * @return array
 		 */
-
 		public function get_settings() {
 
 			$settings = apply_filters(
@@ -97,8 +95,6 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 
 		/**
 		 * Email format.
-		 *
-		 * @param bool $email_approval_enabled Email Approval Enabled.
 		 */
 		public function ur_get_approval_link_email() {
 			$approval_msg = sprintf(

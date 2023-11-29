@@ -94,8 +94,6 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 
 		/**
 		 * Email format.
-		 *
-		 * @param bool $email_approval_enabled Email Approval Enabled.
 		 */
 		public function ur_get_admin_email() {
 
