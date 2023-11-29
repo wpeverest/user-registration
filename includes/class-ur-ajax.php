@@ -1022,7 +1022,7 @@ class UR_AJAX {
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( $_POST['dismiss_forever'] ) ) {
+			if ( ! empty( ( wp_slash( $_POST['dismiss_forever'] ) ) ) && ur_string_to_bool( $_POST['dismiss_forever'] ) ) {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 			} else {
@@ -1372,7 +1372,7 @@ class UR_AJAX {
 		$key    = 'user_registration_enable_' . $id;
 
 		$option = get_option( $key, 'NO_OPTION' );
-		if ( $option === 'NO_OPTION' ) {
+		if ( 'NO_OPTION' === $option ) {
 			$status = add_option( $key, $value );
 		} else {
 
