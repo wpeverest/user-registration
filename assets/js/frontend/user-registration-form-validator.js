@@ -144,8 +144,8 @@
 			}
 			//Validation by pass for wc quantity field.
 			var qty_max = $(document).find('[name="quantity"]');
-			if(qty_max.attr('max') === ""){
-				qty_max.removeAttr('max');
+			if (qty_max.attr("max") === "") {
+				qty_max.removeAttr("max");
 			}
 			var $this_node = this;
 
@@ -214,14 +214,10 @@
 							"text" === element.attr("type") &&
 							element.hasClass("input-timepicker")
 						) {
-							if( !element.hasClass("timepicker-end") ){
-								error.insertAfter(
-									element
-										.parent()
-								);
+							if (!element.hasClass("timepicker-end")) {
+								error.insertAfter(element.parent());
 							}
-						}
-						else {
+						} else {
 							$(document).trigger(
 								"user-registration-append-error-messages",
 								element
@@ -252,13 +248,17 @@
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
-							$element.removeClass('ur-input-border-green').addClass('ur-input-border-red');
+						$element
+							.removeClass("ur-input-border-green")
+							.addClass("ur-input-border-red");
 					},
 					unhighlight: function (element, errorClass, validClass) {
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
-							$element.removeClass('ur-input-border-red').addClass('ur-input-border-green');
+						$element
+							.removeClass("ur-input-border-red")
+							.addClass("ur-input-border-green");
 
 						if (
 							$element.attr("type") === "radio" ||
