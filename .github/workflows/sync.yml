@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@UR-648-tweak/timepicker-ui-enhancement-library-change
+        uses: actions/checkout@master
       - name: Run GitHub File Sync
         uses: BetaHuhn/repo-file-sync-action@v1.17.17
         with:
