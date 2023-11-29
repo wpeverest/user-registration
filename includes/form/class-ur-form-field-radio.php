@@ -75,16 +75,22 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$value   = isset( $form_data->value ) ? $form_data->value : '';
-		$label   = $single_form_field->general_setting->label;
+		$label   = $single_form_field->general_setting->field_name;
 		$options = $single_form_field->general_setting->options;
 
 		if ( ! empty( $value ) && ! in_array( $value, $options, true ) ) {
 			add_filter(
 				$filter_hook,
 				function ( $msg ) use ( $label ) {
-					return sprintf(
-						'Please choose a valid option for %s',
-						"<strong>$label</strong>."
+					$message = array(
+						/* translators: %s - validation message */
+						$label       => sprintf( __( 'Please choose a valid option', 'user-registration' ) ),
+						'individual' => true,
+					);
+					wp_send_json_error(
+						array(
+							'message' => $message,
+						)
 					);
 				}
 			);
