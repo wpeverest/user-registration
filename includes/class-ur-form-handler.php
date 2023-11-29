@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Handle frontend forms.
  *
