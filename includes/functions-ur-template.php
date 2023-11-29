@@ -1024,9 +1024,9 @@ function is_elementor_editing_page() {
 }
 
 /**
- * Check if the $url is Slug or External url.
+ * Check if the URL is slug or external url.
  *
- * @param string $redirect_url.
+ * @param string $url URL.
  *
  * @return string
  */
@@ -1040,4 +1040,3 @@ function ur_check_external_url( $url ) {
 	}
 	return $redirect_url;
 }
-
