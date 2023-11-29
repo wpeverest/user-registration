@@ -2204,6 +2204,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$countries        = $country_class::get_instance()->get_country();
 			$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
 		}
+		$form_data = apply_filters("user_registration_parse_values_for_smart_tags", $form_data);
 
 		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
 		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
@@ -2691,7 +2692,11 @@ if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
 
 				$meta_key = isset( $field['key'] ) ? $field['key'] : '';
 
-				$attachment_ids = explode( ',', get_user_meta( $user->ID, 'user_registration_' . $meta_key, true ) );
+				$attachment_ids = get_user_meta( $user->ID, 'user_registration_' . $meta_key, true );
+
+				if( is_string($attachment_ids )){
+					$attachment_ids = explode( ',', $attachment_ids);
+				}
 
 				foreach ( $attachment_ids as $attachment_id ) {
 					$file_path = get_attached_file( $attachment_id );
@@ -3286,25 +3291,25 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 			'woocommerce'                            => array(
 				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 				'plugin' => 'user-registration-woocommerce',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 			),
 			'content_restriction'                    => array(
 				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
 				'plugin' => 'user-registration-content-restriction',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - Content Restriction', 'user-registration' ),
 			),
 			'file_upload'                            => array(
 				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
-				'plan'   => array( 'personal', 'plus', 'professional' ),
+				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
 			),
 			'user-registration-customize-my-account' => array(
 				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 				'plugin' => 'user-registration-customize-my-account',
-				'plan'   => array( 'plus', 'professional' ),
+				'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
 			),
 		);
@@ -4062,4 +4067,34 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 	}
 
 	add_action( 'admin_bar_menu', 'ur_add_links_to_top_nav', 999, 1 );
+}
+
+if ( ! function_exists( 'ur_array_clone' ) ) {
+	/**
+	 * Clone Array or Object
+	 *
+	 * @since 3.0.5
+	 *
+	 * @param  [mixed] $array
+	 */
+	function ur_array_clone( $array ) {
+		if ( is_object( $array ) ) {
+			return clone $array;
+		}
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+		return array_map(
+			function ( $element ) {
+				return ( ( is_array( $element ) )
+				? array_clone( $element )
+				: ( ( is_object( $element ) )
+					? clone $element
+					: $element
+				)
+				);
+			},
+			$array
+		);
+	}
 }

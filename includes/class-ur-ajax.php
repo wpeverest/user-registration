@@ -50,7 +50,7 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 			'user_input_dropped'        => true,
-			'form_save_action'          => true,
+			'form_save_action'          => false,
 			'user_form_submit'          => true,
 			'update_profile_details'    => true,
 			'profile_pic_upload'        => true,
@@ -1418,17 +1418,17 @@ class UR_AJAX {
 		$license_plan = $license_plan . ' plan';
 		$license_plan = trim( $license_plan );
 
-		if ( 'professional plan' === $license_plan || 'plus plan' === $license_plan ) {
-			$license_plan = 'professional plan or plus plan';
+		if ( 'themegrill agency plan' === $license_plan || 'professional plan' === $license_plan || 'plus plan' === $license_plan ) {
+			$license_plan = 'themegrill agency plan or professional plan or plus plan';
 		}
 		if ( strtolower( $plan ) === $license_plan ) {
-			if ( 'professional plan or plus plan' === $license_plan ) {
-				$plan_list = array( 'plus', 'professional', 'personal' );
+			if ( 'themegrill agency plan or professional plan or plus plan' === $license_plan ) {
+				$plan_list = array( 'plus', 'professional', 'personal', 'themegrill agency' );
 			} else {
 				$plan_list = array( 'personal' );
 			}
-		} elseif ( strtolower( $plan ) === 'personal plan' && 'professional plan or plus plan' === $license_plan ) {
-				$plan_list = array( 'plus', 'professional', 'personal' );
+		} elseif ( strtolower( $plan ) === 'personal plan' && 'themegrill agency plan or professional plan or plus plan' === $license_plan ) {
+				$plan_list = array( 'plus', 'professional', 'personal', 'themegrill agency' );
 		} else {
 			$plan_list = array();
 		}

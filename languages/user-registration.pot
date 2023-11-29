@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.1.0\n"
+"Project-Id-Version: User Registration 3.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-13T04:43:01+00:00\n"
+"POT-Creation-Date: 2023-11-10T04:45:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -37,7 +37,6 @@ msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:730
 #: src/components/App.js:61
-#: chunks/main.js:51342
 msgid "General Settings"
 msgstr ""
 
@@ -92,24 +91,24 @@ msgstr ""
 msgid "Copy of "
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:475
+#: includes/abstracts/abstract-ur-list-table.php:477
 msgid "Empty trash"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:552
+#: includes/abstracts/abstract-ur-list-table.php:554
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #. translators: %s - Human readable time
-#: includes/abstracts/abstract-ur-list-table.php:565
+#: includes/abstracts/abstract-ur-list-table.php:567
 msgid "%s ago"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:569
+#: includes/abstracts/abstract-ur-list-table.php:571
 msgid "Y/m/d"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:652
+#: includes/abstracts/abstract-ur-list-table.php:654
 #: includes/admin/views/html-admin-page-form-templates.php:40
 msgid "All"
 msgstr ""
@@ -1139,7 +1138,6 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:370
 #: includes/RestApi/class-ur-rest-api.php:192
 #: src/components/App.js:60
-#: chunks/main.js:51341
 msgid "General"
 msgstr ""
 
@@ -1211,12 +1209,9 @@ msgid ""
 "\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/functions-ur-admin.php:708
+#: includes/admin/functions-ur-admin.php:704
+#: includes/admin/settings/class-ur-settings-misc.php:82
 msgid "Help us improve the plugin's features by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
-msgstr ""
-
-#: includes/admin/functions-ur-admin.php:718
-msgid "Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-captcha.php:34
@@ -1474,7 +1469,6 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:108
 #: src/components/screens/InstallPage.js:86
-#: chunks/main.js:38587
 msgid "My Account Page"
 msgstr ""
 
@@ -2096,10 +2090,6 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-misc.php:81
 msgid "Allow Usage Tracking"
-msgstr ""
-
-#: includes/admin/settings/class-ur-settings-misc.php:82
-msgid " Help us improve the plugin's features and receive an instant discount coupon with occasional email updates by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:24
@@ -3140,12 +3130,12 @@ msgstr ""
 #. translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name.
 #: includes/class-ur-form-handler.php:261
 msgid ""
-"Dear %1$s,<br /><br />\n"
-"\t\tYou recently requested to change your email address associated with your account to %2$s.<br /><br />\n"
-"\t\tTo confirm this change, please click on the following link:<br />\n"
-"\t\t<a href=\"%3$s\">%3$s</a><br /><br />\n"
-"\t\tThis link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />\n"
-"\t\tBest regards,<br />\n"
+"Dear %1$s,<br /><br />\r\n"
+"\t\tYou recently requested to change your email address associated with your account to %2$s.<br /><br />\r\n"
+"\t\tTo confirm this change, please click on the following link:<br />\r\n"
+"\t\t<a href=\"%3$s\">%3$s</a><br /><br />\r\n"
+"\t\tThis link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />\r\n"
+"\t\tBest regards,<br />\r\n"
 "\t\t%4$s"
 msgstr ""
 
@@ -3450,7 +3440,6 @@ msgstr ""
 #: includes/class-ur-post-types.php:47
 #: includes/RestApi/class-ur-rest-api.php:220
 #: src/components/App.js:71
-#: chunks/main.js:51352
 msgid "Registration"
 msgstr ""
 
@@ -5624,13 +5613,11 @@ msgstr ""
 
 #: includes/functions-ur-core.php:3282
 #: src/components/screens/LastPage.js:128
-#: chunks/main.js:51136
 msgid "WooCommerce"
 msgstr ""
 
 #: includes/functions-ur-core.php:3288
 #: src/components/screens/LastPage.js:171
-#: chunks/main.js:51179
 msgid "Content Restriction"
 msgstr ""
 
@@ -5644,7 +5631,6 @@ msgstr ""
 
 #: includes/functions-ur-core.php:3300
 #: src/components/screens/LastPage.js:213
-#: chunks/main.js:51221
 msgid "Customize My Account"
 msgstr ""
 
@@ -5743,7 +5729,6 @@ msgstr ""
 
 #: includes/RestApi/class-ur-rest-api.php:253
 #: src/components/App.js:82
-#: chunks/main.js:51363
 msgid "My Account"
 msgstr ""
 
@@ -6052,115 +6037,91 @@ msgstr ""
 
 #: src/components/App.js:49
 #: src/components/App.js:50
-#: chunks/main.js:51330
-#: chunks/main.js:51331
 msgid "Install Pages"
 msgstr ""
 
 #: src/components/App.js:51
-#: chunks/main.js:51332
 msgid "The following pages will be installed automatically."
 msgstr ""
 
 #: src/components/App.js:62
-#: chunks/main.js:51343
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:72
-#: chunks/main.js:51353
 msgid "Registration Settings"
 msgstr ""
 
 #: src/components/App.js:73
-#: chunks/main.js:51354
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:83
-#: chunks/main.js:51364
 msgid "My Account Settings"
 msgstr ""
 
 #: src/components/App.js:84
-#: chunks/main.js:51365
 msgid "Customize your my account page settings as per your preference."
 msgstr ""
 
 #: src/components/App.js:93
-#: chunks/main.js:51374
 msgid "Final Step"
 msgstr ""
 
 #: src/components/App.js:354
-#: chunks/main.js:51635
 msgid "Edit Default Form"
 msgstr ""
 
 #: src/components/App.js:366
-#: chunks/main.js:51647
 msgid "Back"
 msgstr ""
 
 #: src/components/App.js:384
-#: chunks/main.js:51665
 msgid "Create New Form"
 msgstr ""
 
 #: src/components/App.js:403
-#: chunks/main.js:51684
 msgid "Skip this step"
 msgstr ""
 
 #: src/components/App.js:416
-#: chunks/main.js:51697
 msgid "Install & Proceed"
 msgstr ""
 
 #: src/components/App.js:434
-#: chunks/main.js:51715
 msgid "Next"
 msgstr ""
 
 #: src/components/App.js:474
-#: chunks/main.js:51755
 msgid "Go to dashboard"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:85
-#: chunks/main.js:38586
 msgid "Registration Page"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:97
-#: chunks/main.js:38598
 msgid "Installing..."
 msgstr ""
 
 #: src/components/screens/InstallPage.js:114
 #: src/components/screens/InstallPage.js:150
-#: chunks/main.js:38615
-#: chunks/main.js:38651
 msgid "Installed"
 msgstr ""
 
 #: src/components/screens/InstallPage.js:137
-#: chunks/main.js:38638
 msgid "Default Registration Form"
 msgstr ""
 
 #: src/components/screens/LastPage.js:38
-#: chunks/main.js:51046
 msgid "Congratulations, You’re all set! 🎉"
 msgstr ""
 
 #: src/components/screens/LastPage.js:55
-#: chunks/main.js:51063
 msgid "Our Popular Addons"
 msgstr ""
 
 #: src/components/screens/LastPage.js:86
-#: chunks/main.js:51094
 msgid "Advanced Fields"
 msgstr ""
 
@@ -6181,22 +6142,5 @@ msgid "Easily create, edit, delete, and sort custom tabs on the account page wit
 msgstr ""
 
 #: src/components/screens/LastPage.js:251
-#: chunks/main.js:51259
 msgid "View All Addons"
-msgstr ""
-
-#: chunks/main.js:51101
-msgid "Advanced Fields provides you with additional advanced fields like Section Title, Custom HTML, Phone, Time Picker and WYSIWYG Fields."
-msgstr ""
-
-#: chunks/main.js:51143
-msgid "Integrates WooCommerce plugin with your user-registration and allows you to manage user billing, shipping, orders via user registration account page"
-msgstr ""
-
-#: chunks/main.js:51186
-msgid "Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles."
-msgstr ""
-
-#: chunks/main.js:51231
-msgid "User Registration Customize My Account add-on allows you to create, edit and delete additional\ttabs on the account page along with custom content for that tab. Also supports drag and\tdrop sorting of account tabs"
 msgstr ""
