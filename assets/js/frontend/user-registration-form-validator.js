@@ -214,10 +214,12 @@
 							"text" === element.attr("type") &&
 							element.hasClass("input-timepicker")
 						) {
-							error.insertAfter(
-								element
-									.closest(".ur-timepicker")
-							);
+							if( !element.hasClass("timepicker-end") ){
+								error.insertAfter(
+									element
+										.parent()
+								);
+							}
 						}
 						else {
 							$(document).trigger(
