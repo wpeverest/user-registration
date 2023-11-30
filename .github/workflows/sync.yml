@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-648-tweak/timepicker-ui-enhancement-library-change
     workflow_dispatch:
 jobs:
   sync:
