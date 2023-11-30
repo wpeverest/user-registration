@@ -26,6 +26,14 @@ function ur_template_redirect() {
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+
+		// Check if external url is present in URL.
+		if ( isset( $_GET['redirect_to'] ) ) {
+			wp_logout();
+			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
+			exit;
+		}
+
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -979,7 +987,7 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = trim( $redirect, ']' );
 			$redirect = trim( $redirect, '"' );
 			$redirect = trim( $redirect, "'" );
-			$redirect = '' != $redirect ? home_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
+			$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 		}
 	} else {
 		$blocks = parse_blocks( $post->post_content );
@@ -1013,4 +1021,22 @@ function is_elementor_editing_page() {
 	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
 		! empty( $_GET['elementor-preview'] ) || //PHPCS:ignore;
 		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] ); //PHPCS:ignore;
+}
+
+/**
+ * Check if the URL is slug or external url.
+ *
+ * @param string $url URL.
+ *
+ * @return string
+ */
+function ur_check_external_url( $url ) {
+	$all_page_slug = ur_get_all_page_slugs();
+	if ( in_array( $url, $all_page_slug, true ) ) {
+		$redirect_url = site_url( $url );
+	} else {
+		$redirect_url = ur_get_page_permalink( 'myaccount' );
+		$redirect_url = add_query_arg( 'redirect_to', $url, $redirect_url );
+	}
+	return $redirect_url;
 }
