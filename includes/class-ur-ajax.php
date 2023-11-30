@@ -163,7 +163,7 @@ class UR_AJAX {
 		} elseif ( 'hCaptcha' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
-		}  elseif ( 'cloudflare' === $recaptcha_type ) {
+		} elseif ( 'cloudflare' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
