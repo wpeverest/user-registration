@@ -293,6 +293,15 @@ class UR_Shortcodes {
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
 		$form_data_array   = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 
+		/** Allow filter to return early if some condition is not meet.
+		 *
+		 * @since 4.1.0
+		 */
+		if ( ! apply_filters( 'user_registration_frontend_before_load', true, $form_data_array, $form_id ) ) {
+			do_action( 'user_registration_frontend_not_loaded', $form_data_array, $form_id );
+			return;
+		}
+
 		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
 
 		include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
