@@ -93,7 +93,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 		// Get actions.
 		$actions = array(
-			// Translate ID for Post.
+			// translators: %d is a placeholder for the Post ID
 			'id' => sprintf( esc_html__( 'ID: %d', 'user-registration' ), $row->ID ),
 		);
 
