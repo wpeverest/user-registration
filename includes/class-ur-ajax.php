@@ -126,7 +126,7 @@ class UR_AJAX {
 
 		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
-		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are already logged in.', 'user-registration' ),
@@ -1022,7 +1022,7 @@ class UR_AJAX {
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			if ( ! empty( ( wp_unslash( $_POST['dismiss_forever'] ) ) ) && ur_string_to_bool( wp_unslash( $_POST['dismiss_forever'] ) ) ) {
+			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( sanitize_text_field( wp_unslash( $_POST['dismiss_forever'] ) ) ) ) {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 			} else {
