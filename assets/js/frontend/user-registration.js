@@ -322,6 +322,17 @@
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
 								$submit_node.append(wrapper);
+							} else if ("2" === position) {
+								if (type == "message") {
+									$submit_node
+										.closest(".entry-content")
+										.prepend(wrapper);
+									$submit_node
+										.closest(".ur-frontend-form")
+										.hide();
+								} else {
+									$submit_node.append(wrapper);
+								}
 							} else {
 								$submit_node.prepend(wrapper);
 							}
@@ -633,7 +644,9 @@
 										user_registration_params.recaptcha_type
 									) {
 										captchaResponse = $this
-											.find('[name="cf-turnstile-response"]')
+											.find(
+												'[name="cf-turnstile-response"]'
+											)
 											.val();
 									} else {
 										captchaResponse = $this
@@ -933,10 +946,16 @@
 																window.setTimeout(
 																	function () {
 																		if (
-																			typeof response.data.redirect_url !== 'undefined' &&
-																			response.data.redirect_url
+																			typeof response
+																				.data
+																				.redirect_url !==
+																				"undefined" &&
+																			response
+																				.data
+																				.redirect_url
 																		) {
-																			window.location = response.data.redirect_url;
+																			window.location =
+																				response.data.redirect_url;
 																		} else {
 																			location.reload();
 																		}
