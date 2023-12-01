@@ -3521,6 +3521,76 @@
 									.toggle();
 							});
 							break;
+						case 'enable_date_slot_booking':
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_timepicker_field")
+									.hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_timepicker_field")
+									.toggle();
+							});
+							break;
+						case 'enable_time_slot_booking':
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_date_field")
+									.hide();
+							}
+							if($this_node.is(":checked")){
+
+								if(!$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-settings-time_range").is(":checked")){
+
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range")
+									.trigger("click");
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range")
+									.attr("checked", true);
+								}
+
+								$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+							}
+
+							$this_node.on("change", function () {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_date_field")
+									.toggle();
+
+								if($(this).is(":checked")){
+
+									if(!$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range").is(":checked")){
+
+										$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.trigger("click");
+										$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.attr("checked", true);
+									}
+
+									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+								}else{
+									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
+								}
+
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 

@@ -419,6 +419,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
 				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? isset( $args['enable_time_slot_booking'] ) : '';
+				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
 				$attr               = '';
 				if ( '' !== $username_length ) {
 					$attr .= 'data-username-length="' . $username_length . '"';
@@ -441,8 +442,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
+					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
+
 					$attr  .= 'data-enable-time-slot-booking="' . $time_slot_booking . '"';
-					$class .= ' time-slot-booking';
+					$attr  .= 'data-target-date-field="' . $target_date_field . '"';
+					$class .= ' time-slot-booking ';
 				}
 
 				if ( $current_time ) {
@@ -504,13 +508,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'date':
-				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$date_slot_booking  = isset( $args['enable_date_slot_booking'] ) ? isset( $args['enable_date_slot_booking'] ) : '';
+				$extra_params_key  = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params      = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$date_slot_booking = isset( $args['enable_date_slot_booking'] ) ? $args['enable_date_slot_booking'] : '';
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
-					$custom_attributes[] = 'data-enable-date-slot-booking="'.$date_slot_booking.'"';
-					$class .= ' date-slot-booking';
+					$target_timepicker_field = isset( $args['target_timepicker_field'] ) ? $args['target_timepicker_field'] : '';
+
+					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
+					$custom_attributes[] = 'data-target-timepicker-field="' . $target_timepicker_field . '"';
+					$class              .= ' date-slot-booking';
 				}
+
 				$actual_value = $value;
 				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
 					$date_format  = $args['custom_attributes']['data-date-format'];
