@@ -1742,6 +1742,21 @@
 				});
 			}
 		});
+		/**
+		 * Check the placeholder in the country and set as default option.
+		 *
+		 * @since 4.1.0
+		 */
+		var countryFields = $('.ur-frontend-form .ur-form-row').find('.field-country');
+		$.each(countryFields, function(index, countryField){
+			country = $(countryField).find('.ur-frontend-field');
+			placeholder = $(country).data('placeholder');
+			if(placeholder === '') {
+				return;
+			}
+			$(country).prepend("<option value='' selected>"+placeholder+"</option>");
+		});
+
 	};
 
 	/**
@@ -1793,6 +1808,18 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
+
+
+	var countryFields = $('.ur-frontend-form .ur-form-row').find('.field-country');
+	$.each(countryFields, function(index, countryField){
+		country = $(countryField).find('.ur-frontend-field');
+		placeholder = $(country).data('placeholder');
+		if(typeof placeholder === 'undefined' || placeholder === '') {
+			return;
+		}
+		$(country).prepend("<option value='' selected>"+placeholder+"</option>");
+	});
+
 })(jQuery);
 
 function ur_includes(arr, item) {
