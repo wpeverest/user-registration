@@ -2755,7 +2755,7 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "";
+							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
 							var self = this;
 
 							// Get html of selected countries

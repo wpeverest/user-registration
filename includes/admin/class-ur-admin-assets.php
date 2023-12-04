@@ -241,6 +241,8 @@ class UR_Admin_Assets {
 			)
 		);
 
+		wp_localize_script( 'user-registration-form-settings', 'user_registration_form_settings_params', array( 'ur_default_country_value_option' => apply_filters( 'user_registration_default_country_option', esc_html__( 'None', 'user-registration' ) ) ) );
+
 		wp_register_script( 'ur-form-templates', UR()->plugin_url() . '/assets/js/admin/form-templates' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'ur-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy' . $suffix . '.js', 'jquery', UR_VERSION, false );
 		wp_register_script( 'ur-my-account', UR()->plugin_url() . '/assets/js/frontend/my-account' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
