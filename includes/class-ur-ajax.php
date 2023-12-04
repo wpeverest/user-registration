@@ -71,6 +71,7 @@ class UR_AJAX {
 			'locked_form_fields_notice' => false,
 			'search_global_settings'    => false,
 			'php_notice_dismiss'        => false,
+			'locate_form_action'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -162,7 +163,7 @@ class UR_AJAX {
 		} elseif ( 'hCaptcha' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
-		}  elseif ( 'cloudflare' === $recaptcha_type ) {
+		} elseif ( 'cloudflare' === $recaptcha_type ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
@@ -624,7 +625,7 @@ class UR_AJAX {
 		$header = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Reply-To:' . $sender_email,
-			'Content-Type:text/html; charset=UTF-8'
+			'Content-Type:text/html; charset=UTF-8',
 		);
 		$message =
 		'Congratulations,<br>
@@ -641,6 +642,36 @@ class UR_AJAX {
 			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
 		}
 	}
+
+	/**
+	 * Locate form.
+	 */
+	public static function locate_form_action() {
+		global $wpdb;
+		try {
+			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
+			$id                     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
+			$form_id_shortcode      = '%{"formId":"' . $id . '"%';
+			$pages                  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$page_list              = array();
+			foreach ( $pages as $page ) {
+				if ( '0' === $page->post_parent ) {
+					$page_title               = $page->post_title;
+					$page_guid                = $page->guid;
+					$page_list[ $page_title ] = $page_guid;
+				}
+			}
+			wp_send_json_success( $page_list );
+		} catch ( Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => $e->getMessage(),
+				)
+			);
+		}
+	}
+
 	/**
 	 * User input dropped function
 	 *
@@ -1022,7 +1053,7 @@ class UR_AJAX {
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 
 		if ( ! empty( $_POST['dismissed'] ) ) {
-			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( $_POST['dismiss_forever'] ) ) {
+			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( sanitize_text_field( wp_unslash( $_POST['dismiss_forever'] ) ) ) ) {
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
 				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
 			} else {
@@ -1372,7 +1403,7 @@ class UR_AJAX {
 		$key    = 'user_registration_enable_' . $id;
 
 		$option = get_option( $key, 'NO_OPTION' );
-		if ( $option === 'NO_OPTION' ) {
+		if ( 'NO_OPTION' === $option ) {
 			$status = add_option( $key, $value );
 		} else {
 
