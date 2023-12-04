@@ -2663,7 +2663,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 	/**
 	 * Update text field advance settings from size to limit length.
 	 *
-	 * @since 3.2.0.
+	 * @since 3.1.2.
 	 */
 	function ur_size_to_limit_length_migration_script() {
 
