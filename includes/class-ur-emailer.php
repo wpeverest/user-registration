@@ -128,7 +128,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 		$valid_form_data = ur_array_clone( $valid_form_data );
-		$login_option = ur_get_user_login_option( $user_id );
+		$login_option    = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
@@ -180,7 +180,7 @@ class UR_Emailer {
 		}
 		$profile      = user_registration_form_data( $user_id, $form_id );
 		$name_value   = array();
-		$data_html    = '';
+		$data_html    = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
 		$smart_data   = array();
 		$email        = '';
 		$user_data    = get_userdata( $user_id );
@@ -237,7 +237,8 @@ class UR_Emailer {
 				}
 				// @codingStandardsIgnoreEnd
 
-				$data_html                .= $form_data['label'] . ' : ' . $value . '<br/>';
+				$data_html .= '<tr><td>' . $form_data['label'] . ' : </td><td>' . $value . '</td></tr>';
+
 				$field_key                 = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
 				$name_value[ $field_name ] = $value;
 
@@ -256,6 +257,7 @@ class UR_Emailer {
 				array_push( $smart_data, $tmp_data );
 			}
 		}
+		$data_html .= '</tbody></table>';
 
 		// Smart tag process for extra fields.
 		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data, $form_id, $user_id );
