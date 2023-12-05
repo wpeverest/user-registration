@@ -89,7 +89,7 @@
 			/**
 			 * Validation for min words.
 			 *
-			 * @since 1.9.4
+			 * @since 3.1.2
 			 */
 			$.validator.addMethod(
 				"wordsValidator",
@@ -102,7 +102,7 @@
 				},
 				$.validator.format("Please enter at least {0} words.")
 			);
-			
+
 			/**
 			 * Validation for username length.
 			 *
@@ -552,7 +552,6 @@
 					element.step
 				);
 			};
-			// console.log($.validator.messages);
 		},
 	};
 

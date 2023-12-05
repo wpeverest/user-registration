@@ -71,7 +71,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		// Custom Field Validation here..
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = __( $single_form_field->general_setting->label, 'user-registration' );
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
@@ -85,7 +85,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 							$filter_hook,
 							function ( $msg ) use ( $max_size, $label ) {
 								return sprintf(
-									'Please enter a value of length less than %d for %s',
+									esc_html__( 'Please enter a value of length less than %d for %s', 'user-registration' ),
 									$max_size,
 									"<strong>$label</strong>."
 								);
@@ -98,7 +98,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 							$filter_hook,
 							function ( $msg ) use ( $max_size, $label ) {
 								return sprintf(
-									'Please enter number of words less than %d for %s',
+									esc_html__( 'Please enter number of words less than %d for %s', 'user-registration' ),
 									$max_size,
 									"<strong>$label</strong>."
 								);
@@ -121,7 +121,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 							$filter_hook,
 							function ( $msg ) use ( $min_size, $label ) {
 								return sprintf(
-									'Please enter a value of length at least %d for %s',
+									esc_html__( 'Please enter a value of length at least %d for %s', 'user-registration' ),
 									$min_size,
 									"<strong>$label</strong>."
 								);
@@ -134,7 +134,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 							$filter_hook,
 							function ( $msg ) use ( $min_size, $label ) {
 								return sprintf(
-									'Please enter number of words at least %d for %s',
+									esc_html__( 'Please enter number of words at least %d for %s', 'user-registration' ),
 									$min_size,
 									"<strong>$label</strong>."
 								);
