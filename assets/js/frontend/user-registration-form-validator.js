@@ -27,11 +27,11 @@
 
 			$(".input-text").keypress(function (event) {
 				$this = $(this);
-				var has_max_words = Number($this.attr('max-words'));
-				var words = $this.val().split(' ').length;
+				var has_max_words = Number($this.attr("max-words"));
+				var words = $this.val().split(" ").length;
 
-				if( typeof has_max_words !== 'undefined' ) {
-					if ( words > has_max_words ) {
+				if (typeof has_max_words !== "undefined") {
+					if (words > has_max_words) {
 						event.preventDefault();
 					}
 				}
@@ -94,11 +94,11 @@
 			$.validator.addMethod(
 				"wordsValidator",
 				function (value, element, param) {
-					var wordsCount = value.trim().split( /\s+/ ).length;
-					if ( '' == value ) {
+					var wordsCount = value.trim().split(/\s+/).length;
+					if ("" == value) {
 						return true;
 					}
- 					return wordsCount >= param;
+					return wordsCount >= param;
 				},
 				$.validator.format("Please enter at least {0} words.")
 			);
@@ -173,8 +173,8 @@
 			}
 			//Validation by pass for wc quantity field.
 			var qty_max = $(document).find('[name="quantity"]');
-			if(qty_max.attr('max') === ""){
-				qty_max.removeAttr('max');
+			if (qty_max.attr("max") === "") {
+				qty_max.removeAttr("max");
 			}
 			var $this_node = this;
 
@@ -270,13 +270,17 @@
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
-							$element.removeClass('ur-input-border-green').addClass('ur-input-border-red');
+						$element
+							.removeClass("ur-input-border-green")
+							.addClass("ur-input-border-red");
 					},
 					unhighlight: function (element, errorClass, validClass) {
 						var $element = $(element),
 							$parent = $element.closest(".form-row"),
 							inputName = $element.attr("name");
-							$element.removeClass('ur-input-border-red').addClass('ur-input-border-green');
+						$element
+							.removeClass("ur-input-border-red")
+							.addClass("ur-input-border-green");
 
 						if (
 							$element.attr("type") === "radio" ||
@@ -391,25 +395,26 @@
 			var rules = {},
 				messages = {};
 
-			var minWordsDiv = this_node.find('[data-min-words]');
-			if ( minWordsDiv.length ) {
+			var minWordsDiv = this_node.find("[data-min-words]");
+			if (minWordsDiv.length) {
 				/**
 				 * For real time min words validation
 				 */
-				$.each( minWordsDiv, function ( key, element ){
+				$.each(minWordsDiv, function (key, element) {
 					var minWordsValidator = {};
 					$this = $(element);
 
-					minWordsValidator.wordsValidator = $this.data('min-words');
+					minWordsValidator.wordsValidator = $this.data("min-words");
 
-					var selector = $this.data('id');
+					var selector = $this.data("id");
 					rules[selector] = minWordsValidator;
 
 					messages[selector] = {
-						wordsValidator : user_registration_params.message_min_words_fields.replace(
-							"%qty%",
-							minWordsValidator.wordsValidator
-						),
+						wordsValidator:
+							user_registration_params.message_min_words_fields.replace(
+								"%qty%",
+								minWordsValidator.wordsValidator
+							),
 					};
 				});
 			}

@@ -71,13 +71,13 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		// Custom Field Validation here..
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = __( $single_form_field->general_setting->label, 'user-registration' );
+		$label = esc_html__( $single_form_field->general_setting->label, 'user-registration' );
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
 			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode ) ) {
 
-				$max_size = $single_form_field->advance_setting->limit_length_limit_count;
+				$max_size = esc_html__( $single_form_field->advance_setting->limit_length_limit_count, 'user-registration' );
 
 				if ( 'characters' === $single_form_field->advance_setting->limit_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
@@ -113,7 +113,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		if ( isset( $single_form_field->advance_setting->minimum_length ) && $single_form_field->advance_setting->minimum_length ) {
 			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode ) ) {
 
-				$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
+				$min_size = esc_html__( $single_form_field->advance_setting->minimum_length_limit_count, 'user-registration' );
 
 				if ( 'characters' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
