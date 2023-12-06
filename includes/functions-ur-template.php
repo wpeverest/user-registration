@@ -236,7 +236,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$args['custom_attributes']['max-words'] = $args['max-words'];
 			}
 		}
-		
+
 		if ( ! empty( $args['max'] ) || '0' === $args['max'] ) {
 			$args['custom_attributes']['max'] = $args['max'];
 		}

@@ -220,7 +220,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 														if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
 															if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
 																$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
-															} else if ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+															} elseif ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
 																$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
 															}
 														}
@@ -230,7 +230,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 														if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
 															if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
 																$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
-															} else if ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+															} elseif ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
 																$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
 															}
 														}
