@@ -239,6 +239,13 @@
 									.closest(".ur-range-row")
 									.find(".ur-range-number")
 							);
+						} else if (
+							"text" === element.attr("type") &&
+							element.hasClass("input-timepicker")
+						) {
+							if (!element.hasClass("timepicker-end")) {
+								error.insertAfter(element.parent());
+							}
 						} else {
 							$(document).trigger(
 								"user-registration-append-error-messages",

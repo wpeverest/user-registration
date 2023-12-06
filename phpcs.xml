@@ -10,12 +10,13 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 
 	<!-- Configs -->
-	<config name="minimum_supported_wp_version" value="4.7" />
+	<config name="minimum_supported_wp_version" value="5.2" />
 	<config name="testVersion" value="5.4-" />
 
 	<!-- PHPCompatibility -->
 	<rule ref="PHPCompatibility">
 		<exclude-pattern>tests/</exclude-pattern>
+		<exclude name="PHPCompatibility.FunctionUse.NewParameters.unserialize_allowed_classesFound" />
 	</rule>
 
 	<!-- WordPress -->

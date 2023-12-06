@@ -325,7 +325,9 @@
 				var profile_completeness__custom_percentage = $(
 					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select"
 				).serializeArray();
-
+				var form_restriction_extra_settings_data = $(
+					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction, #urfr_age_criteria_equation"
+				).serializeArray();
 				var data = {
 					action: "user_registration_form_save_action",
 					security: user_registration_form_builder_data.ur_form_save,
@@ -344,6 +346,8 @@
 						multipart_page_setting: multipart_page_setting,
 						profile_completeness__custom_percentage:
 							profile_completeness__custom_percentage,
+						form_restriction_extra_settings_data:
+							form_restriction_extra_settings_data,
 					},
 				};
 
@@ -903,6 +907,14 @@
 								".ur-advance-setting-block .ur-settings-time_interval"
 							)
 							.val();
+
+						var $time_format = $(this)
+							.closest(".ur-selected-item")
+							.find(
+								".ur-advance-setting-block .ur-settings-time_format"
+							)
+							.val();
+
 						var label = $(this)
 							.closest(".ur-selected-item")
 							.find(".ur-label label")
@@ -1772,7 +1784,13 @@
 											data_field_id,
 											single_draggable_fields
 										) >= 0 &&
-										!$this.hasClass("ur-locked-field")
+										(!$this.hasClass("ur-locked-field") ||
+											($this.hasClass(
+												"ur-locked-field"
+											) &&
+												$this.hasClass(
+													"ur-one-time-draggable-disabled"
+												)))
 									) {
 										if (
 											$(".ur-input-grids").find(

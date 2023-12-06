@@ -111,7 +111,7 @@ class UR_Frontend_Form_Handler {
 
 				$login_option   = ur_get_user_login_option( $user_id );
 				$success_params = array(
-					'username' => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
+					'username' => isset( $userdata['user_login'] ) ? $userdata['user_login'] : '',
 				);
 
 				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification

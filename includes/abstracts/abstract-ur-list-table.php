@@ -373,6 +373,8 @@ abstract class UR_List_Table extends WP_List_Table {
 				}
 			}
 
+			do_action( 'user_registration_after_form_duplication', $post_id, $new_post_id );
+
 			/*
 			 * Finally, redirect to the edit post screen for the new draft.
 			 */

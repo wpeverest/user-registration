@@ -130,9 +130,9 @@ class UR_Shortcode_My_Account {
 			if ( ! empty( $form_id ) ) {
 
 				do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
-				$has_date = ur_has_date_field( $form_id );
+				$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
-				if ( true === $has_date ) {
+				if ( true === $has_flatpickr ) {
 					wp_enqueue_style( 'flatpickr' );
 					wp_enqueue_script( 'flatpickr' );
 				}
@@ -389,7 +389,7 @@ class UR_Shortcode_My_Account {
 			ur_add_notice( $errors->get_error_message(), 'error' );
 			return false;
 		}
-		$error_message =  apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
+		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
 			ur_add_notice( $error_message, 'error' );

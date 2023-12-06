@@ -723,6 +723,61 @@ jQuery(function ($) {
 			success: function (response) {},
 		});
 	});
+
+	$(document).find('.ur-form-locate').on('click', function(e) {
+		var id = $(this).data('id');
+		var data = {
+			'action':'user_registration_locate_form_action',
+			'id':id,
+			'security':user_registration_admin_locate.ajax_locate_nonce
+		}
+		var tag = e.target;
+		var target_tag = tag.closest(".row-actions");
+		$.ajax({
+			url : user_registration_admin_locate.ajax_url,
+			dataType: 'json', // JSON type is expected back from the PHP script.
+			cache: false,
+			data: data,
+			type: 'POST',
+			beforeSend: function () {
+				var spinner = '<i class="ur-spinner ur-spinner-active"></i>';
+				$(target_tag).append( spinner );
+			},
+			success: function(response) {
+				var len = Object.keys(response.data).length;
+				if(len>0) {
+					var add_tag = '<div class = "locate-form"><span>'+user_registration_admin_locate.form_found+'</span>';
+					var i = 1;
+					$.each(response.data, function(index, value) {
+						if(i > 1) {
+							add_tag +=", ";
+						}
+						let wordsArray = index.split(" ");
+						if(wordsArray.length > 4 ) {
+							let slicedArray = wordsArray.slice(0, 4);
+							index = slicedArray.join(" ");
+							index = index + "...";
+						}
+						add_tag+=' <a href="'+value+'" target="_blank">'+index+'</a>';
+						i++;
+					});
+					add_tag +="</div>";
+					if($(target_tag).find('.locate-form').length !=0) {
+						$(target_tag).find('.locate-form').remove();
+					}
+					$(target_tag).find('span:first').prepend(add_tag);
+
+				} else {
+					if($(target_tag).find('.locate-form').length !=0) {
+						$(target_tag).find('.locate-form').remove();
+					}
+					$(target_tag).find('span:first').prepend('<div class = "locate-form"><span>'+user_registration_admin_locate.form_found_error+'</span></div>');
+				}
+				$(target_tag).find('.ur-spinner').remove();
+			}
+
+		})
+	});
 });
 
 (function ($, user_registration_admin_data) {

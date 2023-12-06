@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Handle frontend forms.
  *
@@ -22,7 +21,7 @@ class UR_Form_Handler {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		 add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'redirect_reset_password_link' ) );
 
 		if ( ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 			add_action( 'template_redirect', array( __CLASS__, 'save_profile_details' ) );
@@ -40,7 +39,7 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		$page_id     = ur_get_page_id( 'myaccount' );
+		$page_id                     = ur_get_page_id( 'myaccount' );
 		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
 		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -187,15 +186,15 @@ class UR_Form_Handler {
 
 			switch ( $field->field_key ) {
 				case 'checkbox':
-					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+					if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) { // phpcs:ignore
 						$value = wp_unslash( $_POST[ $key ] ); // phpcs:ignore
 					} else {
-						$value = (int) isset( $_POST[ $key ] );
+						$value = (int) isset( $_POST[ $key ] ); // phpcs:ignore
 					}
 					break;
 
 				case 'wysiwyg':
-					if ( isset( $_POST[ $key ] ) ) {
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
 						$value = sanitize_text_field( htmlentities( wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore
 					} else {
 						$value = '';
@@ -203,23 +202,24 @@ class UR_Form_Handler {
 					break;
 
 				case 'email':
-					if ( isset( $_POST[ $key ] ) ) {
-						$value = sanitize_email( wp_unslash( $_POST[ $key ] ) );
+					if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore
+						$value = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 					} else {
-						$user_data     = get_userdata( $user_id );
-						$value = $user_data->data->user_email;
+						$user_id   = get_current_user_id();
+						$user_data = get_userdata( $user_id );
+						$value     = $user_data->data->user_email;
 					}
 					break;
 				case 'profile_picture':
-					if ( isset( $_POST['profile_pic_url'] ) ) {
-						$value = sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) );
+					if ( isset( $_POST['profile_pic_url'] ) ) { // phpcs:ignore
+						$value = sanitize_text_field( wp_unslash( $_POST['profile_pic_url'] ) ); // phpcs:ignore
 					} else {
 						$value = '';
 					}
 					break;
 
 				default:
-					$value = isset( $_POST[ $key ] ) ? $_POST[ $key ] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+					$value = isset( $_POST[ $key ] ) ? $_POST[ $key ] : ''; // phpcs:ignore
 					break;
 			}
 
@@ -274,7 +274,7 @@ class UR_Form_Handler {
 			get_bloginfo( 'name' )
 		);
 		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers  = "From: " . get_bloginfo( 'name' ) . " <" . get_option( 'admin_email' ) . ">\n";
+		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . ">\n";
 		$headers .= "Content-Type: text/html; charset=UTF-8\n";
 
 		wp_mail( $to, $subject, $message, $headers );
@@ -406,7 +406,7 @@ class UR_Form_Handler {
 	public static function process_lost_password() {
 		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'lost_password' ) ) {
 
-			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? ur_clean( wp_unslash( $_POST['g-recaptcha-response'] ) ) : '';
+			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) ) : '';
 			$recaptcha_enabled   = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
@@ -421,11 +421,11 @@ class UR_Form_Handler {
 				$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
 				$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
 			} elseif ( 'hCaptcha' === $recaptcha_type ) {
-				$recaptcha_value = isset( $_POST['h-captcha-response'] ) ? ur_clean( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
+				$recaptcha_value = isset( $_POST['h-captcha-response'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) ) : '';
 				$site_key        = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
 			} elseif ( 'cloudflare' === $recaptcha_type ) {
-				$recaptcha_value = isset( $_POST['cf-turnstile-response'] ) ? ur_clean( wp_unslash( $_POST['cf-turnstile-response'] ) ) : '';
+				$recaptcha_value = isset( $_POST['cf-turnstile-response'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_POST['cf-turnstile-response'] ) ) ) : '';
 				$site_key        = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
@@ -441,16 +441,16 @@ class UR_Form_Handler {
 							return false;
 						}
 					} elseif ( 'cloudflare' === $recaptcha_type ) {
-						$url          = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-						$params       = array(
+						$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+						$params = array(
 							'method' => 'POST',
 							'body'   => array(
 								'secret'   => $secret_key,
 								'response' => $recaptcha_value,
 							),
 						);
-						$data = wp_safe_remote_post( $url, $params );
-						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						$data   = wp_safe_remote_post( $url, $params );
+						$data   = json_decode( wp_remote_retrieve_body( $data ) );
 
 						if ( empty( $data->success ) ) {
 							ur_add_notice( __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ), 'error' );
@@ -605,8 +605,8 @@ class UR_Form_Handler {
 	 * @since 1.7.2
 	 */
 	public function get_form( $id = '', $args = array() ) {
-		 $forms = array();
-		$args   = apply_filters( 'user_registration_get_form_args', $args );
+		$forms = array();
+		$args  = apply_filters( 'user_registration_get_form_args', $args );
 
 		if ( is_numeric( $id ) ) {
 			$the_post = get_post( absint( $id ) );
