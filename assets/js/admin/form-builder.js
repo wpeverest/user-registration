@@ -347,7 +347,7 @@
 						profile_completeness__custom_percentage:
 							profile_completeness__custom_percentage,
 						form_restriction_extra_settings_data:
-						form_restriction_extra_settings_data,
+							form_restriction_extra_settings_data,
 					},
 				};
 
@@ -911,7 +911,7 @@
 						var $time_format = $(this)
 							.closest(".ur-selected-item")
 							.find(
-							".ur-advance-setting-block .ur-settings-time_format"
+								".ur-advance-setting-block .ur-settings-time_format"
 							)
 							.val();
 
@@ -1146,13 +1146,12 @@
 								general_setting_data["options"] = array_value;
 							});
 						} else if (
-							"captcha" ===
-							$(this).attr("data-field-name")) {
+							"captcha" === $(this).attr("data-field-name")
+						) {
 							var li_elements = $(this).closest("ul").find("li");
 							var captcha_value = [];
 
 							li_elements.each(function (index, element) {
-
 								var question = $(element)
 									.find("input.ur-type-captcha-question")
 									.val();
@@ -1166,7 +1165,7 @@
 									})
 								) {
 									general_setting_data["options"] =
-									captcha_value.push({
+										captcha_value.push({
 											question: question,
 											answer: answer,
 										});
@@ -1784,7 +1783,14 @@
 										$.inArray(
 											data_field_id,
 											single_draggable_fields
-										) >= 0 && (!$this.hasClass('ur-locked-field') || ($this.hasClass('ur-locked-field') && $this.hasClass('ur-one-time-draggable-disabled')))
+										) >= 0 &&
+										(!$this.hasClass("ur-locked-field") ||
+											($this.hasClass(
+												"ur-locked-field"
+											) &&
+												$this.hasClass(
+													"ur-one-time-draggable-disabled"
+												)))
 									) {
 										if (
 											$(".ur-input-grids").find(
@@ -3122,7 +3128,10 @@
 							});
 							break;
 					}
-					$(document.body).trigger('ur_general_field_settings_to_update_form_fields_in_builder',[$this_obj]);
+					$(document.body).trigger(
+						"ur_general_field_settings_to_update_form_fields_in_builder",
+						[$this_obj]
+					);
 				});
 				var advance_settings = $(
 					"#ur-setting-form .ur_advance_setting"
@@ -3206,7 +3215,15 @@
 
 				$.each(advance_settings, function () {
 					var $this_node = $(this);
+
 					switch ($this_node.attr("data-advance-field")) {
+						case "limit_length":
+						case "minimum_length":
+							$this_node.on("change", function () {
+								URFormBuilder.handle_min_max_length($this_node);
+							});
+							URFormBuilder.handle_min_max_length($this_node);
+							break;
 						case "date_format":
 							$this_node.on("change", function () {
 								URFormBuilder.trigger_general_setting_date_format(
@@ -3508,13 +3525,13 @@
 									.toggle();
 							});
 							break;
-						case "enable_pattern" :
+						case "enable_pattern":
 							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-pattern_value")
 									.hide();
-									$(this)
+								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-pattern_message")
 									.hide();
@@ -3526,7 +3543,7 @@
 									.find(".ur-advance-pattern_value")
 									.toggle();
 
-									$(this)
+								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-pattern_message")
 									.toggle();
@@ -3580,6 +3597,22 @@
 						);
 					});
 				});
+			},
+			/**
+			 * Reflects changes in Minimum Length and Limit Length Field of field settings.
+			 *
+			 * @param object $this_node field from field settings.
+			 */
+			handle_min_max_length: function ($this_node) {
+				var parentDiv = $this_node.closest(".ur-advance-setting");
+				var parentNextDiv = parentDiv.next(".ur-advance-setting");
+				if ($this_node.is(":checked")) {
+					parentNextDiv.show();
+					parentNextDiv.next(".ur-advance-setting").show();
+				} else {
+					parentNextDiv.hide();
+					parentNextDiv.next(".ur-advance-setting").hide();
+				}
 			},
 			/**
 			 * Reflects changes in label field of field settings into selected field in form builder area.
@@ -3683,7 +3716,10 @@
 						URFormBuilder.render_multiple_choice(value);
 						break;
 				}
-				$(document.body).trigger("ur_sync_textarea_field_settings_in_selected_field_of_form_builder",[field_type,value]);
+				$(document.body).trigger(
+					"ur_sync_textarea_field_settings_in_selected_field_of_form_builder",
+					[field_type, value]
+				);
 			},
 			/**
 			 * Reflects changes in select field of field settings into selected field in form builder area.
@@ -3981,16 +4017,16 @@
 								'"]'
 						)
 						.val($label.val());
-				} else if ( "captcha" === $label.attr("data-field-name") ) {
+				} else if ("captcha" === $label.attr("data-field-name")) {
 					wrapper
-					.find(
-						".ur-general-setting-block li:nth(" +
-							index +
-							') input[name="' +
-							$label.attr("name") +
-							'"]'
-					)
-					.val($label.val());
+						.find(
+							".ur-general-setting-block li:nth(" +
+								index +
+								') input[name="' +
+								$label.attr("name") +
+								'"]'
+						)
+						.val($label.val());
 				} else {
 					wrapper
 						.find(
@@ -4538,10 +4574,13 @@
 			smart_tag = $(this).data("key");
 			input_value = smart_tag;
 			var inputElement = $(this).parent().parent().parent().find("input"),
-			advanceFieldData = inputElement.data("advance-field"),
-			fieldData = inputElement.data("field"),
-			field_name = advanceFieldData !== undefined ? advanceFieldData : fieldData;
-			update_input(field_name,input_value);
+				advanceFieldData = inputElement.data("advance-field"),
+				fieldData = inputElement.data("field"),
+				field_name =
+					advanceFieldData !== undefined
+						? advanceFieldData
+						: fieldData;
+			update_input(field_name, input_value);
 
 			$(this).parent().parent().parent().find("input").val(input_value);
 			$(document.body).find(".ur-smart-tags-list").hide();
@@ -4579,7 +4618,7 @@
 		/**
 		 * For update the default value.
 		 */
-		function update_input(field_name,input_value) {
+		function update_input(field_name, input_value) {
 			active_field = $(".ur-item-active");
 			target_input_field = $(active_field).find(
 				".user-registration-field-option-group.ur-advance-setting-block"

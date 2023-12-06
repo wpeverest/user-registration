@@ -2675,6 +2675,54 @@ if ( ! function_exists( 'ur_profile_picture_migration_script' ) ) {
 	}
 }
 
+add_action( 'user_registration_init', 'ur_size_to_limit_length_migration_script' );
+
+if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
+
+	/**
+	 * Update text field advance settings from size to limit length.
+	 *
+	 * @since 3.1.2.
+	 */
+	function ur_size_to_limit_length_migration_script() {
+
+		if ( ! get_option( 'ur_size_to_limit_length_migrated', false ) ) {
+
+			$all_forms = ur_get_all_user_registration_form();
+
+			foreach ( $all_forms as $key => $value ) {
+
+				$form_id            = $key;
+				$post               = ( $form_id ) ? get_post( $form_id ) : '';
+				$post_content       = isset( $post->post_content ) ? $post->post_content : '';
+				$post_content_array = json_decode( $post_content );
+
+				foreach ( $post_content_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
+
+							if ( isset( $field->field_key ) && 'text' === $field->field_key ) {
+								if ( isset( $field->advance_setting ) ) {
+									if ( isset( $field->advance_setting->size ) && ! empty( $field->advance_setting->size ) ) {
+										$field->advance_setting->limit_length             = true;
+										$field->advance_setting->limit_length_limit_count = $field->advance_setting->size;
+										$field->advance_setting->limit_length_limit_mode  = 'characters';
+									}
+								}
+							}
+						}
+					}
+					$post_content       = json_encode( $post_content_array );
+					$post->post_content = $post_content;
+				}
+				wp_update_post( $post );
+			}
+
+			update_option( 'ur_size_to_limit_length_migrated', true );
+		}
+	}
+}
+
 add_action( 'delete_user', 'ur_delete_user_files_on_user_delete', 10, 3 );
 
 if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
