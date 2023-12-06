@@ -200,6 +200,15 @@ class UR_Form_Validation extends UR_Validation {
 					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
 				}
 
+				/**
+				 * Slot booking backend validation.
+				 *
+				 * @since 4.1.0
+				 */
+				if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+					do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
+				}
+
 				if (
 					isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
 				) {
@@ -650,6 +659,14 @@ class UR_Form_Validation extends UR_Validation {
 
 				if ( 'email' === $field_setting['type'] ) {
 					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
+				}
+				/**
+				 * Slot booking backend validation.
+				 *
+				 * @since 4.1.0
+				 */
+				if ( 'date' === $field_setting['field_key'] || 'timepicker' === $field_setting['field_key'] ) {
+					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
 				}
 
 				if ( 'user_email' === $field_setting['field_key'] ) {

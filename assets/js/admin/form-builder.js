@@ -3521,22 +3521,12 @@
 									.toggle();
 							});
 							break;
-						case 'enable_date_slot_booking':
-							if (!$this_node.is(":checked")) {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-target_timepicker_field")
-									.hide();
-							}
+							case 'enable_time_slot_booking':
 
-							$this_node.on("change", function () {
-								$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-advance-target_timepicker_field")
-									.toggle();
-							});
-							break;
-						case 'enable_time_slot_booking':
+							var form = $this_node.closest('form'),
+							general_settings = form.find('.ur-general-setting-timepicker'),
+							requiredWrapper = general_settings.find('.ur-general-setting-required'),
+							requiredField = requiredWrapper.find('input');
 							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
@@ -3544,6 +3534,12 @@
 									.hide();
 							}
 							if($this_node.is(":checked")){
+
+								//Required true if the slot booking is enable.
+								if(!requiredField.is(":checked")){
+									requiredField.trigger('click');
+									requiredField.attr('checked', true);
+								}
 
 								if(!$(this)
 								.closest(".ur-advance-setting-block")
@@ -3563,6 +3559,15 @@
 							}
 
 							$this_node.on("change", function () {
+
+								if($this_node.is(":checked")){
+									//Required true if the slot booking is enable.
+									if(!requiredField.is(":checked")){
+										requiredField.trigger('click');
+										requiredField.attr('checked', true);
+									}
+								}
+
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-target_date_field")
@@ -3589,6 +3594,30 @@
 									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
 								}
 
+							});
+							break;
+						case 'enable_date_slot_booking':
+							var form = $this_node.closest('form'),
+							general_settings = form.find('.ur-general-setting-date'),
+							requiredWrapper = general_settings.find('.ur-general-setting-required'),
+							requiredField = requiredWrapper.find('input');
+
+							if($this_node.is(":checked")){
+								//Required true if the slot booking is enable.
+								if(!requiredField.is(":checked")){
+									requiredField.trigger('click');
+									requiredField.attr('checked', true);
+								}
+							}
+
+							$this_node.on("change", function () {
+								if($this_node.is(":checked")){
+									//Required true if the slot booking is enable.
+									if(!requiredField.is(":checked")){
+										requiredField.trigger('click');
+										requiredField.attr('checked', true);
+									}
+								}
 							});
 							break;
 					}

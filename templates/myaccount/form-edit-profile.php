@@ -376,7 +376,6 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												if( 'date' === $single_item->field_key ) {
 													//For slot booking.
 													$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
-													$field['target_timepicker_field']  = isset( $advance_data['advance_setting']->target_timepicker_field ) ? $advance_data['advance_setting']->target_timepicker_field : false;
 												}
 
 												$filter_data = array(

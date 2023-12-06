@@ -418,7 +418,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
 				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
-				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? isset( $args['enable_time_slot_booking'] ) : '';
+				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
 				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
 				$attr               = '';
 				if ( '' !== $username_length ) {
@@ -512,10 +512,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params      = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 				$date_slot_booking = isset( $args['enable_date_slot_booking'] ) ? $args['enable_date_slot_booking'] : '';
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
-					$target_timepicker_field = isset( $args['target_timepicker_field'] ) ? $args['target_timepicker_field'] : '';
 
 					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
-					$custom_attributes[] = 'data-target-timepicker-field="' . $target_timepicker_field . '"';
 					$class              .= ' date-slot-booking';
 				}
 

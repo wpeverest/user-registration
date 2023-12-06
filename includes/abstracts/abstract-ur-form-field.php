@@ -406,7 +406,6 @@ abstract class UR_Form_Field {
 
 		if ( 'date' == $field_key ) {
 			$form_data['enable_date_slot_booking'] = isset( $data['advance_setting']->enable_date_slot_booking ) ? $data['advance_setting']->enable_date_slot_booking : false;
-			$form_data['target_timepicker_field']  = isset( $data['advance_setting']->target_timepicker_field ) ? $data['advance_setting']->target_timepicker_field : false;
 		}
 
 		/** Redundant Codes End. */
