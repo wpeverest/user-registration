@@ -91,19 +91,23 @@ class UR_Form_Field_Date extends UR_Form_Field {
 				$result = UR_Validation::is_date( trim( $date ) );
 
 				if ( is_wp_error( $result ) ) {
+					$message = array(
+						/* translators: %s - validation message */
+						$field_label => sprintf( __( 'Please select a valid date range.', 'user-registration' ) ),
+						'individual' => true,
+					);
 					add_filter(
 						$filter_hook,
-						function ( $field_label ) {
-							$message = array(
-								/* translators: %s - validation message */
-								$field_label => sprintf( __( 'Please select a valid date range.', 'user-registration' ) ),
-								'individual' => true,
-							);
-							wp_send_json_error(
-								array(
-									'message' => $message,
-								)
-							);
+						function ( $msg ) use ( $field_label, $message ) {
+							if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								return sprintf( $message[ $field_label ] );
+							} else {
+								wp_send_json_error(
+									array(
+										'message' => $message,
+									)
+								);
+							}
 						}
 					);
 				}
@@ -125,19 +129,23 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		$result = UR_Validation::is_date( trim( $value ) );
 
 		if ( is_wp_error( $result ) ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$field_label => sprintf( __( 'Please select a valid date.', 'user-registration' ) ),
+				'individual' => true,
+			);
 			add_filter(
 				$filter_hook,
-				function () use ( $field_label ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$field_label => sprintf( __( 'Please select a valid date.', 'user-registration' ) ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $field_label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $field_label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}
@@ -170,19 +178,23 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		$min_date_timestamp = strtotime( $min_date );
 
 		if ( $date_timestamp < $min_date_timestamp ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$field_label => sprintf( __( 'Please select a date after %s.', 'user-registration' ), $min_date ),
+				'individual' => true,
+			);
 			add_filter(
 				$filter_hook,
-				function() use ( $field_label, $min_date ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$field_label => sprintf( __( 'Please select a date after %s.', 'user-registration' ), $min_date ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $field_label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $field_label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}
@@ -202,19 +214,23 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		$max_date_timestamp = strtotime( $max_date );
 
 		if ( $date_timestamp > $max_date_timestamp ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$field_label => sprintf( __( 'Please select a date before %s', 'user-registration' ), $max_date ),
+				'individual' => true,
+			);
 			add_filter(
 				$filter_hook,
-				function() use ( $field_label, $max_date ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$field_label => sprintf( __( 'Please select a date before %s', 'user-registration' ), $max_date ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $field_label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $field_label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}

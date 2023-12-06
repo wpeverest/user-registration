@@ -77,19 +77,23 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		if ( isset( $single_form_field->advance_setting->size ) ) {
 			$max_size = $single_form_field->advance_setting->size;
 			if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
+				$message = array(
+					/* translators: %s - validation message */
+					$label       => sprintf( __( 'Please enter a value of length less than %d.', 'user-registration' ), $max_size ),
+					'individual' => true,
+				);
 				add_filter(
 					$filter_hook,
-					function ( $msg ) use ( $max_size, $label ) {
-						$message = array(
-							/* translators: %s - validation message */
-							$label       => sprintf( __( 'Please enter a value of length less than %d.', 'user-registration' ), $max_size ),
-							'individual' => true,
-						);
-						wp_send_json_error(
-							array(
-								'message' => $message,
-							)
-						);
+					function ( $msg ) use ( $label, $message ) {
+						if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+							return sprintf( $message[ $label ] );
+						} else {
+							wp_send_json_error(
+								array(
+									'message' => $message,
+								)
+							);
+						}
 					}
 				);
 			}

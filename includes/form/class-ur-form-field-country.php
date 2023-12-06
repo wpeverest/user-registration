@@ -301,12 +301,12 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 * @param [string] $field_name Field Name.
 	 */
 	public function get_selected_countries( $form_id, $field_name ) {
-		$countries = $this->get_country();
+		$countries          = $this->get_country();
 		$filtered_countries = array();
 		$selected_countries = array();
 
 		$form_data = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
-		$fields = self::get_form_field_data( $form_data );
+		$fields    = self::get_form_field_data( $form_data );
 
 		// Get selected_countries data of the field.
 		foreach ( $fields as $field ) {
@@ -393,19 +393,24 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$valid_countries = $single_form_field->advance_setting->selected_countries;
 
 		if ( ! in_array( $value, $valid_countries, true ) ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$field_label => sprintf( __( 'Please choose a different country.', 'user-registration' ) ),
+				'individual' => true,
+			);
+
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$field_label => sprintf( __( 'Please choose a different country.', 'user-registration' ) ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $field_label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $field_label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}

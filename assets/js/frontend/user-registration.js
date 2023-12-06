@@ -633,7 +633,9 @@
 										user_registration_params.recaptcha_type
 									) {
 										captchaResponse = $this
-											.find('[name="cf-turnstile-response"]')
+											.find(
+												'[name="cf-turnstile-response"]'
+											)
 											.val();
 									} else {
 										captchaResponse = $this
@@ -933,10 +935,16 @@
 																window.setTimeout(
 																	function () {
 																		if (
-																			typeof response.data.redirect_url !== 'undefined' &&
-																			response.data.redirect_url
+																			typeof response
+																				.data
+																				.redirect_url !==
+																				"undefined" &&
+																			response
+																				.data
+																				.redirect_url
 																		) {
-																			window.location = response.data.redirect_url;
+																			window.location =
+																				response.data.redirect_url;
 																		} else {
 																			location.reload();
 																		}
@@ -1445,11 +1453,14 @@
 												$.each(
 													response.data.message,
 													function (index, value) {
+														index =
+															"user_registration_" +
+															index;
 														if (
 															$field_id.includes(
 																index
 															)
-														) {;
+														) {
 															var error_message =
 																'<label id="' +
 																index +
