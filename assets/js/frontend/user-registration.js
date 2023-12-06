@@ -1466,6 +1466,9 @@
 												$.each(
 													response.data.message,
 													function (index, value) {
+														index =
+															"user_registration_" +
+															index;
 														if (
 															$field_id.includes(
 																index

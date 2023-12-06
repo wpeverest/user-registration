@@ -70,19 +70,23 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 		$username = isset( $form_data->value ) ? $form_data->value : '';
 		$label    = $single_form_field->general_setting->field_name;
 		if ( username_exists( $username ) ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$label       => sprintf( __( 'Username already exists.', 'user-registration' ) ),
+				'individual' => true,
+			);
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $label ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$label       => sprintf( __( 'Username already exists.', 'user-registration' ) ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}
@@ -94,16 +98,26 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 		}
 
 		if ( ! $status ) {
+			$invalid_msg = get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) );
+
+			$message = array(
+				/* translators: %s - validation message */
+				$label       => $invalid_msg,
+				'individual' => true,
+			);
+
 			add_filter(
 				$filter_hook,
-				function ( $msg ) {
-					$invalid_msg = get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) );
-
-					if ( empty( $invalid_msg ) ) {
-						$invalid_msg = esc_html__( 'Please enter a valid username.', 'user-registration' );
+				function ( $msg ) use ( $label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
 					}
-
-					return $invalid_msg;
 				}
 			);
 		}

@@ -45,11 +45,11 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-								$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-								$max_size        = wp_max_upload_size();
-								$max_upload_size = $max_size;
-								$crop_picture    = false;
-								$profile_pic_args            = array();
+								$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$max_size                     = wp_max_upload_size();
+								$max_upload_size              = $max_size;
+								$crop_picture                 = false;
+								$profile_pic_args             = array();
 								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
@@ -57,7 +57,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 										foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 											if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
-												$profile_pic_args = (array) $single_item->advance_setting;
+												$profile_pic_args             = (array) $single_item->advance_setting;
 												$edit_profile_valid_file_type = isset( $single_item->advance_setting->valid_file_type ) && '' !== $single_item->advance_setting->valid_file_type ? implode( ', ', $single_item->advance_setting->valid_file_type ) : $edit_profile_valid_file_type;
 												$max_upload_size              = isset( $single_item->advance_setting->max_upload_size ) && '' !== $single_item->advance_setting->max_upload_size ? $single_item->advance_setting->max_upload_size : $max_size;
 												$crop_picture                 = isset( $single_item->advance_setting->enable_crop_picture ) ? ur_string_to_bool( $single_item->advance_setting->enable_crop_picture ) : false;
@@ -350,6 +350,8 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												if ( 'timepicker' === $single_item->field_key ) {
 													$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
 													$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
+													$field['time_format']   = isset( $advance_data['advance_setting']->time_format ) ? $advance_data['advance_setting']->time_format : '';
+													$field['time_range']    = isset( $advance_data['advance_setting']->time_range ) ? $advance_data['advance_setting']->time_range : '';
 													$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
 													$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
 													$timemin                = isset( $field['time_min'] ) ? strtolower( substr( $field['time_min'], -2 ) ) : '';
@@ -386,7 +388,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 												 * Embed the current country value to allow to remove it if it's not allowed.
 												 */
 												if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-													echo sprintf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+													printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
 												}
 												?>
 											</div>

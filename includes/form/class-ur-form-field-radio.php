@@ -79,19 +79,23 @@ class UR_Form_Field_Radio extends UR_Form_Field {
 		$options = $single_form_field->general_setting->options;
 
 		if ( ! empty( $value ) && ! in_array( $value, $options, true ) ) {
+			$message = array(
+				/* translators: %s - validation message */
+				$label       => sprintf( __( 'Please choose a valid option', 'user-registration' ) ),
+				'individual' => true,
+			);
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $label ) {
-					$message = array(
-						/* translators: %s - validation message */
-						$label       => sprintf( __( 'Please choose a valid option', 'user-registration' ) ),
-						'individual' => true,
-					);
-					wp_send_json_error(
-						array(
-							'message' => $message,
-						)
-					);
+				function ( $msg ) use ( $label, $message ) {
+					if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						return sprintf( $message[ $label ] );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $message,
+							)
+						);
+					}
 				}
 			);
 		}
