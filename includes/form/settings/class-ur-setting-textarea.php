@@ -1,22 +1,32 @@
 <?php
+/**
+ * UR_Setting_Textarea Class
+ *
+ * @package  UserRegistration/Form/Settings
+ * @version  1.0.0
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Textarea Class
- *
- * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
+ * UR_Setting_Textarea Class.
  */
 class UR_Setting_Textarea extends UR_Field_Settings {
 
+		/**
+		 * UserRegistration Form Textarea Settings Constructor.
+		 */
 	public function __construct() {
 		$this->field_id = 'textarea_advance_setting';
 	}
 
+	/**
+	 * Outputs settings html.
+	 *
+	 * @param array $field_data Field data array.
+	 */
 	public function output( $field_data = array() ) {
 
 		$this->field_data = $field_data;
@@ -26,10 +36,13 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register new settings field.
+	 */
 	public function register_fields() {
 
 		$fields = array(
-			'limit_length' => array(
+			'limit_length'               => array(
 				'label'       => __( 'Limit Length', 'user-registration' ),
 				'data-id'     => $this->field_id . '_limit_length',
 				'name'        => $this->field_id . '[limit_length]',
@@ -40,7 +53,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'placeholder' => '',
 				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
 			),
-			'limit_length_limit_count' => array(
+			'limit_length_limit_count'   => array(
 				'label'       => __( 'Limit Count', 'user-registration' ),
 				'data-id'     => $this->field_id . '_limit_length_limit_count',
 				'name'        => $this->field_id . '[limit_length_limit_count]',
@@ -51,7 +64,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'placeholder' => '',
 				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
 			),
-			'limit_length_limit_mode' => array(
+			'limit_length_limit_mode'    => array(
 				'label'       => __( 'Limit Mode', 'user-registration' ),
 				'data-id'     => $this->field_id . '_limit_length_limit_mode',
 				'name'        => $this->field_id . '[limit_length_limit_mode]',
@@ -59,14 +72,14 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'type'        => 'select',
 				'options'     => array(
 					'characters' => esc_html__( 'Characters', 'user-registration' ),
-					'words' => esc_html__( 'Words Count', 'user-registration' ),
+					'words'      => esc_html__( 'Words Count', 'user-registration' ),
 				),
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
 				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
 			),
-			'minimum_length' => array(
+			'minimum_length'             => array(
 				'label'       => __( 'Minimum Length', 'user-registration' ),
 				'data-id'     => $this->field_id . '_minimum_length',
 				'name'        => $this->field_id . '[minimum_length]',
@@ -88,7 +101,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'placeholder' => '',
 				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
 			),
-			'minimum_length_limit_mode' => array(
+			'minimum_length_limit_mode'  => array(
 				'label'       => __( 'Limit Mode', 'user-registration' ),
 				'data-id'     => $this->field_id . '_minimum_length_limit_mode',
 				'name'        => $this->field_id . '[minimum_length_limit_mode]',
@@ -96,14 +109,14 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'type'        => 'select',
 				'options'     => array(
 					'characters' => esc_html__( 'Characters', 'user-registration' ),
-					'words' => esc_html__( 'Words Count', 'user-registration' ),
+					'words'      => esc_html__( 'Words Count', 'user-registration' ),
 				),
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
 				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
 			),
-			'default_value' => array(
+			'default_value'              => array(
 				'label'       => __( 'Default Value', 'user-registration' ),
 				'data-id'     => $this->field_id . '_default_value',
 				'name'        => $this->field_id . '[default_value]',
@@ -115,7 +128,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'tip'         => __( 'Default value for this field.', 'user-registration' ),
 
 			),
-			'custom_class'  => array(
+			'custom_class'               => array(
 				'label'       => __( 'Custom Class', 'user-registration' ),
 				'data-id'     => $this->field_id . '_custom_class',
 				'name'        => $this->field_id . '[custom_class]',

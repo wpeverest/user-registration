@@ -2690,23 +2690,23 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 
 			$all_forms = ur_get_all_user_registration_form();
 
-			foreach( $all_forms as $key => $value ) {
+			foreach ( $all_forms as $key => $value ) {
 
-				$form_id = $key;
-				$post = ( $form_id ) ? get_post( $form_id ) : '' ;
-				$post_content = isset( $post->post_content ) ? $post->post_content : '';
+				$form_id            = $key;
+				$post               = ( $form_id ) ? get_post( $form_id ) : '';
+				$post_content       = isset( $post->post_content ) ? $post->post_content : '';
 				$post_content_array = json_decode( $post_content );
 
-				foreach( $post_content_array as $post_content_row ) {
-					foreach( $post_content_row as $post_content_grid ) {
-						foreach( $post_content_grid as $field ) {
+				foreach ( $post_content_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
 
 							if ( isset( $field->field_key ) && 'text' === $field->field_key ) {
 								if ( isset( $field->advance_setting ) ) {
 									if ( isset( $field->advance_setting->size ) && ! empty( $field->advance_setting->size ) ) {
-										$field->advance_setting->limit_length = true;
+										$field->advance_setting->limit_length             = true;
 										$field->advance_setting->limit_length_limit_count = $field->advance_setting->size;
-										$field->advance_setting->limit_length_limit_mode = 'characters';
+										$field->advance_setting->limit_length_limit_mode  = 'characters';
 									}
 								}
 							}
