@@ -215,8 +215,26 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 												}
 
-												if ( 'text' === $single_item->field_key ) {
-													$field['size'] = isset( $advance_data['advance_setting']->size ) ? $advance_data['advance_setting']->size : '';
+												if ( 'text' === $single_item->field_key || 'textarea' === $single_item->field_key ) {
+													if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
+														if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
+															if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+																$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
+															} else if ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+																$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
+															}
+														}
+													}
+
+													if ( isset( $advance_data['advance_setting']->minimum_length ) && $advance_data['advance_setting']->minimum_length ) {
+														if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
+															if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+																$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
+															} else if ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+																$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
+															}
+														}
+													}
 												}
 
 												if ( 'range' === $single_item->field_key ) {
