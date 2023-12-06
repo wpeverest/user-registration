@@ -168,7 +168,7 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function validate_max_words_length( $value, $size ) {
-		if ( count(preg_split('/\s+/', $value)) > $size ) {
+		if ( count(preg_split('/\s+/', rtrim( $value ))) > $size ) {
 			return new WP_Error(
 				'user_registration_validation_max_words_size_exceeded',
 				esc_html__( 'Please enter number of words less than ' . $size, 'user-registration' )
