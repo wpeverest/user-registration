@@ -127,6 +127,7 @@ class UR_Email_Confirmation {
 	public function custom_registration_message() {
 		$default = __( 'User successfully registered. Login to continue.', 'user-registration' );
 		$message = get_option( 'user_registration_successful_email_verified_message', $default );
+		$message = ur_string_translation( 0, 'user_registration_successful_email_verified_message', $message );
 		return ur_print_notice( $message );
 	}
 
@@ -136,6 +137,7 @@ class UR_Email_Confirmation {
 	public function custom_email_confirmed_admin_await_message() {
 		$default = __( 'Email has successfully been verified. Now, please wait until the admin approves you to give access for the login.', 'user-registration' );
 		$message = get_option( 'user_registration_pro_email_verified_admin_approval_await_message', $default );
+		$message = ur_string_translation( 0, 'user_registration_pro_email_verified_admin_approval_await_message', $message );
 		return ur_print_notice( $message );
 	}
 

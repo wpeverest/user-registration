@@ -203,7 +203,6 @@ class UR_Preview {
 	/**
 	 * Displays content of email preview.
 	 *
-	 * @param string $content Page/Post content.
 	 * @return string
 	 */
 	public function handle_email_preview() {
@@ -223,9 +222,10 @@ class UR_Preview {
 		}
 
 		if ( ! class_exists( $class_name ) ) {
-			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.' ) . '</h3>';
+			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.', 'user-registration' ) . '</h3>';
 		} else {
-			$class_instance  = new $class_name();
+			$class_instance = new $class_name();
+
 			$default_content = 'ur_get_' . $option_name;
 
 			if ( ! method_exists( $class_instance, $default_content ) ) {
@@ -243,7 +243,6 @@ class UR_Preview {
 				)
 			);
 		}
-
 	}
 }
 

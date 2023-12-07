@@ -155,6 +155,26 @@ abstract class UR_Form_Field {
 			$form_data['size'] = $data['advance_setting']->size;
 		}
 
+		if ( isset( $data['advance_setting']->limit_length ) && $data['advance_setting']->limit_length ) {
+			if ( isset( $data['advance_setting']->limit_length_limit_count ) && isset( $data['advance_setting']->limit_length_limit_mode ) ) {
+				if ( 'characters' === $data['advance_setting']->limit_length_limit_mode ) {
+					$form_data['max-characters'] = $data['advance_setting']->limit_length_limit_count;
+				} elseif ( 'words' === $data['advance_setting']->limit_length_limit_mode ) {
+					$form_data['max-words'] = $data['advance_setting']->limit_length_limit_count;
+				}
+			}
+		}
+
+		if ( isset( $data['advance_setting']->minimum_length ) && $data['advance_setting']->minimum_length ) {
+			if ( isset( $data['advance_setting']->minimum_length_limit_count ) && isset( $data['advance_setting']->minimum_length_limit_mode ) ) {
+				if ( 'characters' === $data['advance_setting']->minimum_length_limit_mode ) {
+					$form_data['min-characters'] = $data['advance_setting']->minimum_length_limit_count;
+				} elseif ( 'words' === $data['advance_setting']->minimum_length_limit_mode ) {
+					$form_data['min-words'] = $data['advance_setting']->minimum_length_limit_count;
+				}
+			}
+		}
+
 		if ( isset( $data['advance_setting']->min ) ) {
 			$form_data['min'] = $data['advance_setting']->min;
 		}
@@ -382,6 +402,8 @@ abstract class UR_Form_Field {
 			$form_data['current_time']             = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : '';
 			$form_data['time_interval']            = isset( $data['advance_setting']->time_interval ) ? $data['advance_setting']->time_interval : '';
 			$form_data['enable_time_slot_booking'] = isset( $data['advance_setting']->enable_time_slot_booking ) ? $data['advance_setting']->enable_time_slot_booking : '';
+			$form_data['time_format']              = isset( $data['advance_setting']->time_format ) ? $data['advance_setting']->time_format : '';
+			$form_data['time_range']               = isset( $data['advance_setting']->time_range ) ? $data['advance_setting']->time_range : '';
 			$form_data['target_date_field']        = isset( $data['advance_setting']->target_date_field ) ? $data['advance_setting']->target_date_field : '';
 			$form_data['time_min']                 = ( isset( $data['advance_setting']->time_min ) && '' !== $data['advance_setting']->time_min ) ? $data['advance_setting']->time_min : '';
 			$form_data['time_max']                 = ( isset( $data['advance_setting']->time_max ) && '' !== $data['advance_setting']->time_max ) ? $data['advance_setting']->time_max : '';
@@ -686,9 +708,9 @@ abstract class UR_Form_Field {
 
 					$general_setting_wrapper .= '/>';
 					break;
-				case 'captcha' :
+				case 'captcha':
 					$default_options          = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
-					$old_options     		  = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+					$old_options              = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options                  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 

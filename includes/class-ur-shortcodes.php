@@ -25,9 +25,9 @@ class UR_Shortcodes {
 		$shortcodes = array(
 			'user_registration_form'          => __CLASS__ . '::form', // change it to user_registration_form.
 			'user_registration_my_account'    => __CLASS__ . '::my_account',
-			'user_registration_login'         => __class__ . '::login',
-			'user_registration_edit_profile'  => __class__ . '::edit_profile',
-			'user_registration_edit_password' => __class__ . '::edit_password',
+			'user_registration_login'         => __CLASS__ . '::login',
+			'user_registration_edit_profile'  => __CLASS__ . '::edit_profile',
+			'user_registration_edit_password' => __CLASS__ . '::edit_password',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 ); // phpcs:ignore
 
@@ -161,9 +161,9 @@ class UR_Shortcodes {
 			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
-			$has_date = ur_has_date_field( $form_id );
+			$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
-		if ( true === $has_date ) {
+		if ( true === $has_flatpickr ) {
 			wp_enqueue_style( 'flatpickr' );
 			wp_enqueue_script( 'flatpickr' );
 		}
@@ -278,9 +278,9 @@ class UR_Shortcodes {
 
 		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 
-		$has_date = ur_has_date_field( $form_id );
+		$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
-		if ( true === $has_date ) {
+		if ( true === $has_flatpickr ) {
 			wp_enqueue_style( 'flatpickr' );
 			wp_enqueue_script( 'flatpickr' );
 		}
@@ -292,6 +292,15 @@ class UR_Shortcodes {
 		$recaptcha_enabled = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
 		$form_data_array   = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
+
+		/** Allow filter to return early if some condition is not meet.
+		 *
+		 * @since 4.1.0
+		 */
+		if ( ! apply_filters( 'user_registration_frontend_before_load', true, $form_data_array, $form_id ) ) {
+			do_action( 'user_registration_frontend_not_loaded', $form_data_array, $form_id );
+			return;
+		}
 
 		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
 
@@ -321,7 +330,7 @@ class UR_Shortcodes {
 			$all_page_slug = ur_get_all_page_slugs();
 			if ( in_array( $redirect_url, $all_page_slug, true ) ) {
 				$redirect_url = site_url( $redirect_url );
-			} elseif( '' === $redirect_url ) {
+			} elseif ( '' === $redirect_url ) {
 				$redirect_url;
 			} else {
 				$redirect_url = home_url();

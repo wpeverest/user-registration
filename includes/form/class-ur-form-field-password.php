@@ -69,20 +69,29 @@ class UR_Form_Field_Password extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 
 		// Validate size.
 		if ( isset( $single_form_field->advance_setting->size ) ) {
 			$max_size = $single_form_field->advance_setting->size;
 			if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
+				$message = array(
+					/* translators: %s - validation message */
+					$label       => sprintf( __( 'Please enter a password of length less than %d', 'user-registration' ), $max_size ),
+					'individual' => true,
+				);
 				add_filter(
 					$filter_hook,
-					function ( $msg ) use ( $max_size, $label ) {
-						return sprintf(
-							'Please enter a password of length less than %d for %s',
-							$max_size,
-							"<strong>$label</strong>."
-						);
+					function ( $msg ) use ( $label, $message ) {
+						if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+							return sprintf( $message[ $label ] );
+						} else {
+							wp_send_json_error(
+								array(
+									'message' => $message,
+								)
+							);
+						}
 					}
 				);
 			}

@@ -108,11 +108,6 @@ class UR_Install {
 			wp_safe_redirect( admin_url( 'admin.php?page=user-registration-settings' ) );
 			exit;
 		}
-		if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
-			self::create_pages();
-			UR_Admin_Notices::remove_notice( 'install' );
-			delete_option( 'user_registration_onboarding_skipped' );
-		}
 	}
 
 	/**

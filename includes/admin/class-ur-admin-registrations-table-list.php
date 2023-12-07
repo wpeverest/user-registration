@@ -37,7 +37,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 * No items found text.
 	 */
 	public function no_items() {
-		_e( 'No user registration found.', 'user-registration' );
+		esc_html_e( 'No user registration found.', 'user-registration' );
 	}
 
 	/**
@@ -58,7 +58,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	/**
 	 * Post Edit Link.
 	 *
-	 * @param  object $row
+	 * @param object $row Post.
 	 *
 	 * @return string
 	 */
@@ -70,7 +70,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	/**
 	 * Post Duplicate Link.
 	 *
-	 * @param  mixed $post_id
+	 * @param  mixed $post_id Post ID.
 	 *
 	 * @return string
 	 */
@@ -93,6 +93,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 		// Get actions.
 		$actions = array(
+			// Translators: %d is a placeholder for the Post ID.
 			'id' => sprintf( esc_html__( 'ID: %d', 'user-registration' ), $row->ID ),
 		);
 
@@ -129,6 +130,10 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			if ( 'publish' === $post_status ) {
 				$actions['duplicate'] = '<a href="' . esc_url( $duplicate_link ) . '">' . esc_html__( 'Duplicate', 'user-registration' ) . '</a>';
 			}
+
+			if ( 'publish' === $post_status ) {
+				$actions['locate'] = '<a href="#" class="ur-form-locate" data-id= "' . esc_attr( $row->ID ) . '">' . esc_html__( 'Locate', 'user-registration' ) . '</a>';
+			}
 		}
 		return $actions;
 	}
@@ -158,7 +163,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		$this->prepare_items();
 		?>
 			<div class="wrap">
-				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration', 'user-registration' ); ?></h1>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				<div class="user-registration-settings-container">
 					<div class="user-registration-options-header">

@@ -22,6 +22,7 @@
 		<key name="user_registration_registration_denied_email" />
 		<key name="user_registration_successfully_registered_email_subject" />
 		<key name="user_registration_successfully_registered_email" />
+		<key name="user_registration_successful_email_verified_message" />
 		<key name="user_registration_registration_pending_email_subject" />
 		<key name="user_registration_registration_pending_email" />
 		<key name="user_registration_registration_approved_email_subject" />
