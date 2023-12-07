@@ -137,7 +137,62 @@ class UR_Validation {
 		if ( strlen( $value ) > $size ) {
 			return new WP_Error(
 				'user_registration_validation_max_size_exceeded',
-				'Please enter value of length less than ' . $size
+				/* translators: %d - Size */
+				sprintf( esc_html__( 'Please enter value of length less than %d', 'user-registration' ), $size )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validate if a string is shorter than min length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Min Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_min_length( $value, $size ) {
+		if ( strlen( $value ) < $size ) {
+			return new WP_Error(
+				'user_registration_validation_min_size_not_met',
+				/* translators: %d - Size */
+				sprintf( esc_html__( 'Please enter value of length at least %d', 'user-registration' ), $size )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validate if number of words in string is more than max length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Max Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_max_words_length( $value, $size ) {
+		if ( count( preg_split( '/\s+/', rtrim( $value ) ) ) > $size ) {
+			return new WP_Error(
+				'user_registration_validation_max_words_size_exceeded',
+				/* translators: %d - Size */
+				sprintf( esc_html__( 'Please enter number of words less than %d', 'user-registration' ), $size )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Validate if number of words in string is less than min length.
+	 *
+	 * @param [mixed] $value Value to validate.
+	 * @param [int]   $size Min Size.
+	 * @return boolean or WP_Error.
+	 */
+	public static function validate_min_words_length( $value, $size ) {
+		if ( count( preg_split( '/\s+/', $value ) ) < $size ) {
+			return new WP_Error(
+				'user_registration_validation_min_words_size_not_met',
+				/* translators: %d - Size */
+				sprintf( esc_html__( 'Please enter number of words at least %d', 'user-registration' ), $size )
 			);
 		}
 		return true;
@@ -153,7 +208,7 @@ class UR_Validation {
 		if ( intval( $value ) != floatval( $value ) ) { //phpcs:ignore
 			return new WP_Error(
 				'user_registration_validation_non_integer',
-				'Please enter an integer value'
+				__( 'Please enter an integer value', 'user-registration' )
 			);
 		}
 		return true;
@@ -169,7 +224,7 @@ class UR_Validation {
 		if ( ! self::is_numeric( $value ) || intval( $value ) < 0 ) {
 			return new WP_Error(
 				'user_registration_validation_negative_value',
-				'Please enter a non negative value'
+				__( 'Please enter a non negative value', 'user-registration' )
 			);
 		}
 		return true;

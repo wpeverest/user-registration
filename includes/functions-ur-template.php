@@ -26,6 +26,14 @@ function ur_template_redirect() {
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+
+		// Check if external url is present in URL.
+		if ( isset( $_GET['redirect_to'] ) ) {
+			wp_logout();
+			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
+			exit;
+		}
+
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
@@ -203,6 +211,30 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( ! empty( $args['min'] ) || '0' === $args['min'] ) {
 			$args['custom_attributes']['min'] = $args['min'];
+		}
+
+		if ( isset( $args['min-characters'] ) ) {
+			if ( ! empty( $args['min-characters'] ) || '0' === $args['min-characters'] ) {
+				$args['custom_attributes']['minlength'] = $args['min-characters'];
+			}
+		}
+
+		if ( isset( $args['max-characters'] ) ) {
+			if ( ! empty( $args['max-characters'] ) || '0' === $args['max-characters'] ) {
+				$args['custom_attributes']['maxlength'] = $args['max-characters'];
+			}
+		}
+
+		if ( isset( $args['min-words'] ) ) {
+			if ( ! empty( $args['min-words'] ) || '0' === $args['min-words'] ) {
+				$args['custom_attributes']['data-min-words'] = $args['min-words'];
+			}
+		}
+
+		if ( isset( $args['max-words'] ) ) {
+			if ( ! empty( $args['max-words'] ) || '0' === $args['max-words'] ) {
+				$args['custom_attributes']['max-words'] = $args['max-words'];
+			}
 		}
 
 		if ( ! empty( $args['max'] ) || '0' === $args['max'] ) {
@@ -414,10 +446,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
 				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
 				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
+				$time_range         = isset( $args['time_range'] ) ? $args['time_range'] : '';
 				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
 				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
 				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
+				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
+				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
 				$attr               = '';
 				if ( '' !== $username_length ) {
 					$attr .= 'data-username-length="' . $username_length . '"';
@@ -431,6 +467,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$attr .= 'data-time-interval="' . $time_interval . '"';
 				}
 
+				if ( '' !== $time_format ) {
+					$attr .= 'data-time-format="' . $time_format . '"';
+				}
+
 				if ( '' !== $time_min ) {
 					$attr .= 'data-time-min="' . $time_min . '"';
 				}
@@ -439,8 +479,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$attr .= 'data-time-max="' . $time_max . '"';
 				}
 
+				if ( $time_range ) {
+					$attr .= 'data-time-range="' . $time_range . '"';
+				}
+
 				if ( $current_time ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
+				}
+
+				if ( ur_string_to_bool( $time_slot_booking ) ) {
+					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
+
+					$attr  .= 'data-enable-time-slot-booking="' . $time_slot_booking . '"';
+					$attr  .= 'data-target-date-field="' . $target_date_field . '"';
+					$class .= ' time-slot-booking ';
 				}
 
 				$field .= ' <span class="input-wrapper"> ';
@@ -453,10 +505,39 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 				}
 
+				$timpicker_class = '';
+				if ( 'timepicker' === $args['type'] ) {
+					$timpicker_class = 'ur-timepicker';
+				}
+
 				if ( empty( $extra_params ) ) {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
-				} else {
-					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
+					if ( $time_range ) {
+						// Extract the start and end time if the time is given in range.
+						$pattern = '/^(\d{1,2}:\d{2}(?:\s?[APap][Mm])?)\s+to\s+(\d{1,2}:\d{2}(?:\s?[APap][Mm])?)$/';
+
+						$start_time = '';
+						$end_time   = '';
+
+						if ( preg_match( $pattern, $value, $times ) ) {
+							$start_time = $times[1];
+							$end_time   = $times[2];
+						}
+						$field .= '<div class = "ur-timepicker-range">';
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '" placeholder="Start Time "  value="' . esc_attr( $start_time ? $start_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="End Time"  value="' . esc_attr( $end_time ? $end_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . esc_attr( $timpicker_class ) . ' ' . $class . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+						$field .= '</div>';
+					} else {
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+					}
+				} elseif ( ! empty( $extra_params ) ) {
+					if ( $time_range ) {
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start-test" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '-start" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+					} else {
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
+					}
 				}
 
 				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {
@@ -498,8 +579,14 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'date':
-				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$extra_params_key  = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params      = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$date_slot_booking = isset( $args['enable_date_slot_booking'] ) ? $args['enable_date_slot_booking'] : '';
+				if ( ur_string_to_bool( $date_slot_booking ) ) {
+
+					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
+					$class              .= ' date-slot-booking';
+				}
 
 				$actual_value = $value;
 				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
@@ -675,6 +762,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		}
 
 		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value );
+
 		if ( $args['return'] ) {
 			return $field;
 		} else {
@@ -979,7 +1067,7 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = trim( $redirect, ']' );
 			$redirect = trim( $redirect, '"' );
 			$redirect = trim( $redirect, "'" );
-			$redirect = '' != $redirect ? home_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
+			$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 		}
 	} else {
 		$blocks = parse_blocks( $post->post_content );
@@ -1013,4 +1101,22 @@ function is_elementor_editing_page() {
 	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
 		! empty( $_GET['elementor-preview'] ) || //PHPCS:ignore;
 		( ! empty( $_GET['action'] ) && 'elementor' === $_GET['action'] ); //PHPCS:ignore;
+}
+
+/**
+ * Check if the URL is slug or external url.
+ *
+ * @param string $url URL.
+ *
+ * @return string
+ */
+function ur_check_external_url( $url ) {
+	$all_page_slug = ur_get_all_page_slugs();
+	if ( in_array( $url, $all_page_slug, true ) ) {
+		$redirect_url = site_url( $url );
+	} else {
+		$redirect_url = ur_get_page_permalink( 'myaccount' );
+		$redirect_url = add_query_arg( 'redirect_to', $url, $redirect_url );
+	}
+	return $redirect_url;
 }

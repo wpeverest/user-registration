@@ -200,6 +200,15 @@ class UR_Form_Validation extends UR_Validation {
 					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
 				}
 
+				/**
+				 * Slot booking backend validation.
+				 *
+				 * @since 4.1.0
+				 */
+				if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+					do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
+				}
+
 				if (
 					isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
 				) {
@@ -541,6 +550,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * and conditional logic.
 	 *
 	 * @param [object] $field Field object.
+	 * @param array    $form_data Form Data.
 	 * @return boolean
 	 */
 	public function is_field_required( $field, $form_data = array() ) {
@@ -565,15 +575,17 @@ class UR_Form_Validation extends UR_Validation {
 	 * Validate update profile data submitted.
 	 *
 	 * @param [array] $form_fields Form Fields.
+	 * @param array   $form_data Form Data.
 	 * @param [int]   $form_id Form Id.
 	 * @return void
 	 */
 	public function validate_update_profile( $form_fields, $form_data, $form_id ) {
+		$user_id = get_current_user_id();
 
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
-			function( $el ) {
+			function ( $el ) {
 				return $el->field_name;
 			},
 			$form_data
@@ -651,6 +663,14 @@ class UR_Form_Validation extends UR_Validation {
 				if ( 'email' === $field_setting['type'] ) {
 					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
 				}
+				/**
+				 * Slot booking backend validation.
+				 *
+				 * @since 4.1.0
+				 */
+				if ( 'date' === $field_setting['field_key'] || 'timepicker' === $field_setting['field_key'] ) {
+					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
+				}
 
 				if ( 'user_email' === $field_setting['field_key'] ) {
 
@@ -660,7 +680,6 @@ class UR_Form_Validation extends UR_Validation {
 							ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 						}
 					}
-
 				}
 
 				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
@@ -723,7 +742,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		$form_skippable_fields = array_filter(
 			$form_data,
-			function( $field ) use ( $skippable_field_types ) {
+			function ( $field ) use ( $skippable_field_types ) {
 				if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
 
 					if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {

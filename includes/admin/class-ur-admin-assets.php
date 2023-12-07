@@ -354,6 +354,17 @@ class UR_Admin_Assets {
 
 			wp_localize_script(
 				'user-registration-admin',
+				'user_registration_admin_locate',
+				array(
+					'ajax_locate_nonce' => wp_create_nonce( 'process-locate-ajax-nonce' ),
+					'ajax_url'          => admin_url( 'admin-ajax.php' ),
+					'form_found_error'  => esc_html__( 'Form not found in content', 'user-registration' ),
+					'form_found'        => esc_html__( 'Form found in page:', 'user-registration' ),
+				)
+			);
+
+			wp_localize_script(
+				'user-registration-admin',
 				'user_registration_admin_data',
 				array(
 					'ajax_url'             => admin_url( 'admin-ajax.php' ),
@@ -437,7 +448,7 @@ class UR_Admin_Assets {
 			'ur-google-recaptcha',
 			'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
 			array(),
-			'2.0.0',
+			'2.0.0'
 		);
 
 		$recaptcha_site_key_v3 = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
@@ -446,21 +457,21 @@ class UR_Admin_Assets {
 			'ur-google-recaptcha-v3',
 			'https://www.google.com/recaptcha/api.js?render=' . $recaptcha_site_key_v3,
 			array(),
-			'3.0.0',
+			'3.0.0'
 		);
 
 		wp_register_script(
 			'ur-recaptcha-hcaptcha',
 			'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
 			array(),
-			UR_VERSION,
+			UR_VERSION
 		);
 
 		wp_register_script(
 			'ur-recaptcha-cloudflare',
 			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
 			array(),
-			UR_VERSION,
+			UR_VERSION
 		);
 	}
 

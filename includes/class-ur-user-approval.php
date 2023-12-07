@@ -50,7 +50,6 @@ class UR_User_Approval {
 		add_action( 'ur_user_user_denied', array( $this, 'disconnect_user_session' ) );
 
 		do_action( 'ur_user_construct' );
-
 	}
 
 	/**
@@ -128,7 +127,6 @@ class UR_User_Approval {
 		if ( $this->is_admin_creation_process() ) {
 			return;
 		}
-
 	}
 
 	/**

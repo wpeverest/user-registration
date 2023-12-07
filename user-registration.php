@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.1.1
+ * Version: 3.1.2
  * Author: WPEverest
  * Author URI: https://wpeverest.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.1.1';
+		public $version = '3.1.2';
 
 		/**
 		 * Session instance.
@@ -142,7 +142,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
 			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
-			$this->define( 'UR_ABSPATH', dirname( __FILE__ ) . UR_DS );
+			$this->define( 'UR_ABSPATH', __DIR__ . UR_DS );
 			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 			$this->define( 'UR_VERSION', $this->version );
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
@@ -320,7 +320,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			unload_textdomain( 'user-registration' );
 			load_textdomain( 'user-registration', WP_LANG_DIR . '/user-registration/user-registration-' . $locale . '.mo' );
-			load_plugin_textdomain( 'user-registration', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			load_plugin_textdomain( 'user-registration', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
 
 		/**

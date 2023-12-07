@@ -59,8 +59,8 @@ function ur_get_page_id( $page ) {
 	$my_account_page_id = get_option( 'user_registration_myaccount_page_id' );
 	$page_id            = get_the_ID();
 
-	if( 'myaccount' == $page || 'login' == $page ) {
-		$page_id            = ! empty ( $my_account_page_id ) ? $my_account_page_id : $page_id;
+	if ( 'myaccount' == $page || 'login' == $page ) {
+		$page_id = ! empty( $my_account_page_id ) ? $my_account_page_id : $page_id;
 	}
 
 	/**
@@ -90,6 +90,17 @@ function ur_get_page_id( $page ) {
 function ur_get_wpml_page_language( $page_id ) {
 	global $wpdb;
 	$current_language = apply_filters( 'wpml_current_language', 'en' );
+
+	$element_prepared = $wpdb->prepare(
+		"SELECT trid FROM {$wpdb->prefix}icl_translations WHERE element_id=%d AND element_type=%s",
+		array( $page_id, 'post_page' )
+	);
+	$trid       = $wpdb->get_var( $element_prepared ); //phpcs:ignore.
+
+	if ( $trid > 0 ) {
+		$page_id = $trid;
+	}
+
 	$element_prepared = $wpdb->prepare(
 		"SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE trid=%d AND element_type=%s AND language_code=%s",
 		array( $page_id, 'post_page', $current_language )
@@ -243,7 +254,7 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 	}
 
 	if (
-		 get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
+		get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
 		ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
@@ -272,7 +283,7 @@ function ur_nav_menu_items( $items ) {
 
 				$customer_logout = $customer_logout ?? '';
 
-				if (strstr($path, $customer_logout) !== false || strstr($query, $customer_logout) !== false) {
+				if ( strstr( $path, $customer_logout ) !== false || strstr( $query, $customer_logout ) !== false ) {
 						unset( $items[ $key ] );
 				}
 			}

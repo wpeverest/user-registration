@@ -45,7 +45,13 @@ class UR_Admin_Settings {
 		if ( empty( self::$settings ) ) {
 			$settings = array();
 
-			include_once dirname( __FILE__ ) . '/settings/class-ur-settings-page.php';
+			include_once __DIR__ . '/settings/class-ur-settings-page.php';
+
+			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				UR_Install::create_pages();
+				UR_Admin_Notices::remove_notice( 'install' );
+				delete_option( 'user_registration_onboarding_skipped' );
+			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
 			$settings[] = include 'settings/class-ur-settings-captcha.php';
@@ -190,7 +196,7 @@ class UR_Admin_Settings {
 			$GLOBALS['hide_save_button'] = true;
 		}
 
-		include dirname( __FILE__ ) . '/views/html-admin-settings.php';
+		include __DIR__ . '/views/html-admin-settings.php';
 	}
 
 	/**
@@ -1078,7 +1084,7 @@ class UR_Admin_Settings {
 										} else {
 											$autocomplete_results[ $index ]['value'] = admin_url( 'admin.php?page=user-registration-settings&tab=' . $section->id . '&searched_option=' . $value['id'] );
 										}
-										$index++;
+										++$index;
 									}
 								}
 								continue;
@@ -1106,7 +1112,6 @@ class UR_Admin_Settings {
 				)
 			);
 		}
-
 	}
 
 	/**
@@ -1135,7 +1140,7 @@ class UR_Admin_Settings {
 							$desc_tip                  = isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ? $value['desc_tip'] : '';
 							$desc                      = isset( $value['desc'] ) && true !== $value['desc'] ? $value['desc'] : '';
 							$result[ $index ]['desc']  = ! empty( $desc_tip ) ? $desc_tip : $desc;
-							$index++;
+							++$index;
 							break;
 						}
 					}
