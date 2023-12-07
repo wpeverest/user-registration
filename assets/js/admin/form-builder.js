@@ -3549,6 +3549,105 @@
 									.toggle();
 							});
 							break;
+							case 'enable_time_slot_booking':
+
+							var form = $this_node.closest('form'),
+							general_settings = form.find('.ur-general-setting-timepicker'),
+							requiredWrapper = general_settings.find('.ur-general-setting-required'),
+							requiredField = requiredWrapper.find('input');
+							if (!$this_node.is(":checked")) {
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_date_field")
+									.hide();
+							}
+							if($this_node.is(":checked")){
+
+								//Required true if the slot booking is enable.
+								if(!requiredField.is(":checked")){
+									requiredField.trigger('click');
+									requiredField.attr('checked', true);
+								}
+
+								if(!$(this)
+								.closest(".ur-advance-setting-block")
+								.find(".ur-settings-time_range").is(":checked")){
+
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range")
+									.trigger("click");
+									$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range")
+									.attr("checked", true);
+								}
+
+								$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+							}
+
+							$this_node.on("change", function () {
+
+								if($this_node.is(":checked")){
+									//Required true if the slot booking is enable.
+									if(!requiredField.is(":checked")){
+										requiredField.trigger('click');
+										requiredField.attr('checked', true);
+									}
+								}
+
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-target_date_field")
+									.toggle();
+
+								if($(this).is(":checked")){
+
+									if(!$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-settings-time_range").is(":checked")){
+
+										$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.trigger("click");
+										$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.attr("checked", true);
+									}
+
+									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+								}else{
+									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
+								}
+
+							});
+							break;
+						case 'enable_date_slot_booking':
+							var form = $this_node.closest('form'),
+							general_settings = form.find('.ur-general-setting-date'),
+							requiredWrapper = general_settings.find('.ur-general-setting-required'),
+							requiredField = requiredWrapper.find('input');
+
+							if($this_node.is(":checked")){
+								//Required true if the slot booking is enable.
+								if(!requiredField.is(":checked")){
+									requiredField.trigger('click');
+									requiredField.attr('checked', true);
+								}
+							}
+
+							$this_node.on("change", function () {
+								if($this_node.is(":checked")){
+									//Required true if the slot booking is enable.
+									if(!requiredField.is(":checked")){
+										requiredField.trigger('click');
+										requiredField.attr('checked', true);
+									}
+								}
+							});
+							break;
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 

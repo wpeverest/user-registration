@@ -159,7 +159,7 @@ abstract class UR_Form_Field {
 			if ( isset( $data['advance_setting']->limit_length_limit_count ) && isset( $data['advance_setting']->limit_length_limit_mode ) ) {
 				if ( 'characters' === $data['advance_setting']->limit_length_limit_mode ) {
 					$form_data['max-characters'] = $data['advance_setting']->limit_length_limit_count;
-				} else if ( 'words' === $data['advance_setting']->limit_length_limit_mode ) {
+				} elseif ( 'words' === $data['advance_setting']->limit_length_limit_mode ) {
 					$form_data['max-words'] = $data['advance_setting']->limit_length_limit_count;
 				}
 			}
@@ -169,7 +169,7 @@ abstract class UR_Form_Field {
 			if ( isset( $data['advance_setting']->minimum_length_limit_count ) && isset( $data['advance_setting']->minimum_length_limit_mode ) ) {
 				if ( 'characters' === $data['advance_setting']->minimum_length_limit_mode ) {
 					$form_data['min-characters'] = $data['advance_setting']->minimum_length_limit_count;
-				} else if ( 'words' === $data['advance_setting']->minimum_length_limit_mode ) {
+				} elseif ( 'words' === $data['advance_setting']->minimum_length_limit_mode ) {
 					$form_data['min-words'] = $data['advance_setting']->minimum_length_limit_count;
 				}
 			}
@@ -399,16 +399,18 @@ abstract class UR_Form_Field {
 		}
 
 		if ( 'timepicker' == $field_key ) {
-			$form_data['current_time']  = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : '';
-			$form_data['time_interval'] = isset( $data['advance_setting']->time_interval ) ? $data['advance_setting']->time_interval : '';
-			$form_data['time_format']   = isset( $data['advance_setting']->time_format ) ? $data['advance_setting']->time_format : '';
-			$form_data['time_range']    = isset( $data['advance_setting']->time_range ) ? $data['advance_setting']->time_range : '';
-			$form_data['time_min']      = ( isset( $data['advance_setting']->time_min ) && '' !== $data['advance_setting']->time_min ) ? $data['advance_setting']->time_min : '';
-			$form_data['time_max']      = ( isset( $data['advance_setting']->time_max ) && '' !== $data['advance_setting']->time_max ) ? $data['advance_setting']->time_max : '';
-			$timemin                    = isset( $form_data['time_min'] ) ? strtolower( substr( $form_data['time_min'], -2 ) ) : '';
-			$timemax                    = isset( $form_data['time_max'] ) ? strtolower( substr( $form_data['time_max'], -2 ) ) : '';
-			$minampm                    = intval( $form_data['time_min'] ) <= 12 ? 'AM' : 'PM';
-			$maxampm                    = intval( $form_data['time_max'] ) <= 12 ? 'AM' : 'PM';
+			$form_data['current_time']             = isset( $data['advance_setting']->current_time ) ? $data['advance_setting']->current_time : '';
+			$form_data['time_interval']            = isset( $data['advance_setting']->time_interval ) ? $data['advance_setting']->time_interval : '';
+			$form_data['enable_time_slot_booking'] = isset( $data['advance_setting']->enable_time_slot_booking ) ? $data['advance_setting']->enable_time_slot_booking : '';
+			$form_data['time_format']              = isset( $data['advance_setting']->time_format ) ? $data['advance_setting']->time_format : '';
+			$form_data['time_range']               = isset( $data['advance_setting']->time_range ) ? $data['advance_setting']->time_range : '';
+			$form_data['target_date_field']        = isset( $data['advance_setting']->target_date_field ) ? $data['advance_setting']->target_date_field : '';
+			$form_data['time_min']                 = ( isset( $data['advance_setting']->time_min ) && '' !== $data['advance_setting']->time_min ) ? $data['advance_setting']->time_min : '';
+			$form_data['time_max']                 = ( isset( $data['advance_setting']->time_max ) && '' !== $data['advance_setting']->time_max ) ? $data['advance_setting']->time_max : '';
+			$timemin                               = isset( $form_data['time_min'] ) ? strtolower( substr( $form_data['time_min'], -2 ) ) : '';
+			$timemax                               = isset( $form_data['time_max'] ) ? strtolower( substr( $form_data['time_max'], -2 ) ) : '';
+			$minampm                               = intval( $form_data['time_min'] ) <= 12 ? 'AM' : 'PM';
+			$maxampm                               = intval( $form_data['time_max'] ) <= 12 ? 'AM' : 'PM';
 
 			// Handles the time format.
 			if ( 'am' === $timemin || 'pm' === $timemin ) {
@@ -422,6 +424,10 @@ abstract class UR_Form_Field {
 			} else {
 				$form_data['time_max'] = $form_data['time_max'] . '' . $maxampm;
 			}
+		}
+
+		if ( 'date' == $field_key ) {
+			$form_data['enable_date_slot_booking'] = isset( $data['advance_setting']->enable_date_slot_booking ) ? $data['advance_setting']->enable_date_slot_booking : false;
 		}
 
 		/** Redundant Codes End. */

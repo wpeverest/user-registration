@@ -376,7 +376,9 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													$timemax                = isset( $field['time_max'] ) ? strtolower( substr( $field['time_max'], -2 ) ) : '';
 													$minampm                = intval( $field['time_min'] ) <= 12 ? 'AM' : 'PM';
 													$maxampm                = intval( $field['time_max'] ) <= 12 ? 'AM' : 'PM';
-
+													// For slot booking.
+													$field['enable_time_slot_booking'] = isset( $advance_data['advance_setting']->enable_time_slot_booking ) ? $advance_data['advance_setting']->enable_time_slot_booking : '';
+													$field['target_date_field']        = isset( $advance_data['advance_setting']->target_date_field ) ? $advance_data['advance_setting']->target_date_field : '';
 														// Handles the time format.
 													if ( 'am' === $timemin || 'pm' === $timemin ) {
 														$field['time_min'] = $field['time_min'];
@@ -389,6 +391,11 @@ $form_id = ur_get_form_id_by_userid( $user_id );
 													} else {
 														$field['time_max'] = $field['time_max'] . '' . $maxampm;
 													}
+												}
+
+												if ( 'date' === $single_item->field_key ) {
+													// For slot booking.
+													$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
 												}
 
 												$filter_data = array(
