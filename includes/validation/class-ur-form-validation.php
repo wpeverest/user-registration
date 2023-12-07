@@ -550,6 +550,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * and conditional logic.
 	 *
 	 * @param [object] $field Field object.
+	 * @param array    $form_data Form Data.
 	 * @return boolean
 	 */
 	public function is_field_required( $field, $form_data = array() ) {
@@ -574,15 +575,17 @@ class UR_Form_Validation extends UR_Validation {
 	 * Validate update profile data submitted.
 	 *
 	 * @param [array] $form_fields Form Fields.
+	 * @param array   $form_data Form Data.
 	 * @param [int]   $form_id Form Id.
 	 * @return void
 	 */
 	public function validate_update_profile( $form_fields, $form_data, $form_id ) {
+		$user_id = get_current_user_id();
 
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
-			function( $el ) {
+			function ( $el ) {
 				return $el->field_name;
 			},
 			$form_data
@@ -677,7 +680,6 @@ class UR_Form_Validation extends UR_Validation {
 							ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 						}
 					}
-
 				}
 
 				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
@@ -740,7 +742,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		$form_skippable_fields = array_filter(
 			$form_data,
-			function( $field ) use ( $skippable_field_types ) {
+			function ( $field ) use ( $skippable_field_types ) {
 				if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
 
 					if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
