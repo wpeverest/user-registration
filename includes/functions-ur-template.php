@@ -94,7 +94,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 				}
 
 				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
-					$redirect_url = ur_get_my_account_url();
+					$redirect_url = apply_filters( 'user_registration_auto_login_redirection', ur_get_my_account_url() );
 				}
 			}
 
