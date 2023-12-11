@@ -1027,7 +1027,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
  * @return string
  */
 function ur_logout_url( $redirect = '' ) {
-	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
+	$logout_endpoint = get_option( 'user_registration_logout_endpoint', 'user-logout' );
 
 	global $post;
 	$wp_version   = '5.0';
