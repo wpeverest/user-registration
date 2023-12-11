@@ -28,9 +28,9 @@ function ur_template_redirect() {
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
-		if ( isset( $_GET['redirect_to'] ) ) {
+		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
 			wp_logout();
-			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
+			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
 			exit;
 		}
 
@@ -1039,8 +1039,8 @@ function ur_logout_url( $redirect = '' ) {
 			$new_shortcode = '';
 
 			foreach ( $blocks as $block ) {
-				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
-					$new_shortcode = $block['innerHTML'];
+				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
+					$new_shortcode =  ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
 				}
@@ -1116,7 +1116,7 @@ function ur_check_external_url( $url ) {
 		$redirect_url = site_url( $url );
 	} else {
 		$redirect_url = ur_get_page_permalink( 'myaccount' );
-		$redirect_url = add_query_arg( 'redirect_to', $url, $redirect_url );
+		$redirect_url = add_query_arg( 'redirect_to_on_logout', $url, $redirect_url );
 	}
 	return $redirect_url;
 }
