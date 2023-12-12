@@ -135,7 +135,7 @@
 												"user_registration_frontend_multiple_choice_data_filter",
 												[field_value, field]
 											);
-											field.closest(".field-multiple_choice").data("payment-value", field_value);
+											field_value = field.closest(".field-multiple_choice").data("payment-value");
 
 											var field_value_json =
 												JSON.stringify(field_value);
