@@ -71,52 +71,40 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		// Custom Field Validation here..
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->field_name;
+		$label = esc_html__( $single_form_field->general_setting->label, 'user-registration' );
 
-		// Validate size.
-		if ( isset( $single_form_field->advance_setting->size ) ) {
-			$max_size = $single_form_field->advance_setting->size;
-			if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
-				$message = array(
-					/* translators: %s - validation message */
-					$label       => sprintf( __( 'Please enter a value of length less than %d.', 'user-registration' ), $max_size ),
-					'individual' => true,
-				);
-				add_filter(
-					$filter_hook,
-					function ( $msg ) use ( $label, $message ) {
-						if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-							return sprintf( $message[ $label ] );
-						} else {
-							wp_send_json_error(
-								array(
-									'message' => $message,
-								)
-							);
-						}
-					}
-				);
-			} elseif ( 'words' === $single_form_field->advance_setting->limit_length_limit_mode ) {
-				if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
-					$message = array(
-						/* translators: %d - validation message */
-						$label       => sprintf( esc_html__( 'Please enter number of words less than %d', 'user-registration' ), $max_size ),
-						'individual' => true,
-					);
-					add_filter(
-						$filter_hook,
-						function ( $msg ) use ( $label, $message ) {
-							if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-								return sprintf( $message[ $label ] );
-							} else {
-								wp_send_json_error(
-									array(
-										'message' => $message,
-									)
+		// Validate Limit Length.
+		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
+			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode ) ) {
+
+				$max_size = esc_html__( $single_form_field->advance_setting->limit_length_limit_count, 'user-registration' );
+
+				if ( 'characters' === $single_form_field->advance_setting->limit_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $max_size, $label ) {
+								return sprintf(
+									esc_html__( 'Please enter a value of length less than %d for %s', 'user-registration' ),
+									$max_size,
+									"<strong>$label</strong>."
 								);
 							}
-						}
-					);
+						);
+					}
+				} else if ( 'words' === $single_form_field->advance_setting->limit_length_limit_mode ) {
+					if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
+						add_filter(
+							$filter_hook,
+							function ( $msg ) use ( $max_size, $label ) {
+								return sprintf(
+									esc_html__( 'Please enter number of words less than %d for %s', 'user-registration' ),
+									$max_size,
+									"<strong>$label</strong>."
+								);
+							}
+						);
+					}
 				}
 			}
 		}
@@ -125,52 +113,33 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		if ( isset( $single_form_field->advance_setting->minimum_length ) && $single_form_field->advance_setting->minimum_length ) {
 			if ( isset( $single_form_field->advance_setting->minimum_length_limit_count ) && isset( $single_form_field->advance_setting->minimum_length_limit_mode ) ) {
 
-				$min_size = $single_form_field->advance_setting->minimum_length_limit_count;
+				$min_size = esc_html__( $single_form_field->advance_setting->minimum_length_limit_count, 'user-registration' );
 
 				if ( 'characters' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
-						$message = array(
-							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d', 'user-registration' ), $min_size ),
-							'individual' => true,
-						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $min_size, $label ) {
+								return sprintf(
+									esc_html__( 'Please enter a value of length at least %d for %s', 'user-registration' ),
+									$min_size,
+									"<strong>$label</strong>."
+								);
 							}
 						);
 					}
-				} elseif ( 'words' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
+				} else if ( 'words' === $single_form_field->advance_setting->minimum_length_limit_mode ) {
 					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
-						$message = array(
-							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words at least %d', 'user-registration' ), $min_size ),
-							'individual' => true,
-						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $min_size, $label ) {
+								return sprintf(
+									esc_html__( 'Please enter number of words at least %d for %s', 'user-registration' ),
+									$min_size,
+									"<strong>$label</strong>."
+								);
 							}
 						);
-
 					}
 				}
 			}

@@ -137,8 +137,7 @@ class UR_Validation {
 		if ( strlen( $value ) > $size ) {
 			return new WP_Error(
 				'user_registration_validation_max_size_exceeded',
-				/* translators: %d - Size */
-				sprintf( esc_html__( 'Please enter value of length less than %d', 'user-registration' ), $size )
+				esc_html__( 'Please enter value of length less than ' . $size, 'user-registration' )
 			);
 		}
 		return true;
@@ -155,8 +154,7 @@ class UR_Validation {
 		if ( strlen( $value ) < $size ) {
 			return new WP_Error(
 				'user_registration_validation_min_size_not_met',
-				/* translators: %d - Size */
-				sprintf( esc_html__( 'Please enter value of length at least %d', 'user-registration' ), $size )
+				esc_html__( 'Please enter value of length at least ' . $size, 'user-registration' )
 			);
 		}
 		return true;
@@ -170,11 +168,10 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function validate_max_words_length( $value, $size ) {
-		if ( count( preg_split( '/\s+/', rtrim( $value ) ) ) > $size ) {
+		if ( count(preg_split('/\s+/', rtrim( $value ))) > $size ) {
 			return new WP_Error(
 				'user_registration_validation_max_words_size_exceeded',
-				/* translators: %d - Size */
-				sprintf( esc_html__( 'Please enter number of words less than %d', 'user-registration' ), $size )
+				esc_html__( 'Please enter number of words less than ' . $size, 'user-registration' )
 			);
 		}
 		return true;
@@ -188,11 +185,10 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function validate_min_words_length( $value, $size ) {
-		if ( count( preg_split( '/\s+/', $value ) ) < $size ) {
+		if ( count(preg_split('/\s+/', $value)) < $size ) {
 			return new WP_Error(
 				'user_registration_validation_min_words_size_not_met',
-				/* translators: %d - Size */
-				sprintf( esc_html__( 'Please enter number of words at least %d', 'user-registration' ), $size )
+				esc_html__( 'Please enter number of words at least ' . $size, 'user-registration' )
 			);
 		}
 		return true;
