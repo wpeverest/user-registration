@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-12-07T12:37:16+00:00\n"
+"POT-Creation-Date: 2023-12-12T03:52:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: user-registration\n"
@@ -5087,28 +5087,28 @@ msgid "Input Field"
 msgstr ""
 
 #. translators: %s - validation message
-#: includes/form/class-ur-form-field-text.php:82
+#: includes/form/class-ur-form-field-text.php:86
 #: includes/form/class-ur-form-field-textarea.php:84
 msgid "Please enter a value of length less than %d."
 msgstr ""
 
 #. translators: %d - validation message
 #. translators: %d - Size
-#: includes/form/class-ur-form-field-text.php:103
+#: includes/form/class-ur-form-field-text.php:108
 #: includes/form/class-ur-form-field-textarea.php:106
 #: includes/validation/class-ur-validation.php:177
 msgid "Please enter number of words less than %d"
 msgstr ""
 
 #. translators: %d - validation message
-#: includes/form/class-ur-form-field-text.php:134
+#: includes/form/class-ur-form-field-text.php:140
 #: includes/form/class-ur-form-field-textarea.php:138
 msgid "Please enter a value of length at least %d"
 msgstr ""
 
 #. translators: %d - validation message
 #. translators: %d - Size
-#: includes/form/class-ur-form-field-text.php:156
+#: includes/form/class-ur-form-field-text.php:162
 #: includes/form/class-ur-form-field-textarea.php:160
 #: includes/validation/class-ur-validation.php:195
 msgid "Please enter number of words at least %d"
@@ -5192,8 +5192,8 @@ msgstr ""
 #: includes/form/settings/class-ur-setting-select.php:39
 #: includes/form/settings/class-ur-setting-text.php:130
 #: includes/form/settings/class-ur-setting-text.php:137
-#: includes/form/settings/class-ur-setting-textarea.php:132
-#: includes/form/settings/class-ur-setting-textarea.php:139
+#: includes/form/settings/class-ur-setting-textarea.php:119
+#: includes/form/settings/class-ur-setting-textarea.php:126
 #: includes/form/settings/class-ur-setting-user_confirm_email.php:35
 #: includes/form/settings/class-ur-setting-user_confirm_email.php:42
 #: includes/form/settings/class-ur-setting-user_confirm_password.php:34
@@ -5222,7 +5222,7 @@ msgstr ""
 #: includes/form/settings/class-ur-setting-radio.php:37
 #: includes/form/settings/class-ur-setting-select.php:40
 #: includes/form/settings/class-ur-setting-text.php:138
-#: includes/form/settings/class-ur-setting-textarea.php:140
+#: includes/form/settings/class-ur-setting-textarea.php:127
 #: includes/form/settings/class-ur-setting-user_confirm_email.php:43
 #: includes/form/settings/class-ur-setting-user_confirm_password.php:42
 #: includes/form/settings/class-ur-setting-user_email.php:42
@@ -5260,14 +5260,14 @@ msgstr ""
 #: includes/form/settings/class-ur-setting-country.php:71
 #: includes/form/settings/class-ur-setting-text.php:119
 #: includes/form/settings/class-ur-setting-text.php:126
-#: includes/form/settings/class-ur-setting-textarea.php:120
-#: includes/form/settings/class-ur-setting-textarea.php:127
+#: includes/form/settings/class-ur-setting-textarea.php:107
+#: includes/form/settings/class-ur-setting-textarea.php:114
 msgid "Default Value"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-country.php:79
 #: includes/form/settings/class-ur-setting-text.php:127
-#: includes/form/settings/class-ur-setting-textarea.php:128
+#: includes/form/settings/class-ur-setting-textarea.php:115
 msgid "Default value for this field."
 msgstr ""
 
@@ -5370,7 +5370,7 @@ msgid "Maximum allowed length of password."
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:45
-#: includes/form/settings/class-ur-setting-textarea.php:46
+#: includes/form/settings/class-ur-setting-textarea.php:33
 msgid "Limit Length"
 msgstr ""
 
@@ -5380,44 +5380,44 @@ msgstr ""
 #: includes/form/settings/class-ur-setting-text.php:90
 #: includes/form/settings/class-ur-setting-text.php:101
 #: includes/form/settings/class-ur-setting-text.php:116
-#: includes/form/settings/class-ur-setting-textarea.php:54
-#: includes/form/settings/class-ur-setting-textarea.php:65
-#: includes/form/settings/class-ur-setting-textarea.php:80
-#: includes/form/settings/class-ur-setting-textarea.php:91
-#: includes/form/settings/class-ur-setting-textarea.php:102
-#: includes/form/settings/class-ur-setting-textarea.php:117
+#: includes/form/settings/class-ur-setting-textarea.php:41
+#: includes/form/settings/class-ur-setting-textarea.php:52
+#: includes/form/settings/class-ur-setting-textarea.php:67
+#: includes/form/settings/class-ur-setting-textarea.php:78
+#: includes/form/settings/class-ur-setting-textarea.php:89
+#: includes/form/settings/class-ur-setting-textarea.php:104
 msgid "Allowed maximum number of characters / words."
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:56
-#: includes/form/settings/class-ur-setting-textarea.php:57
-#: includes/form/settings/class-ur-setting-textarea.php:94
+#: includes/form/settings/class-ur-setting-textarea.php:44
+#: includes/form/settings/class-ur-setting-textarea.php:81
 msgid "Limit Count"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:67
 #: includes/form/settings/class-ur-setting-text.php:104
-#: includes/form/settings/class-ur-setting-textarea.php:68
-#: includes/form/settings/class-ur-setting-textarea.php:105
+#: includes/form/settings/class-ur-setting-textarea.php:55
+#: includes/form/settings/class-ur-setting-textarea.php:92
 msgid "Limit Mode"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:73
 #: includes/form/settings/class-ur-setting-text.php:110
-#: includes/form/settings/class-ur-setting-textarea.php:74
-#: includes/form/settings/class-ur-setting-textarea.php:111
+#: includes/form/settings/class-ur-setting-textarea.php:61
+#: includes/form/settings/class-ur-setting-textarea.php:98
 msgid "Characters"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:74
 #: includes/form/settings/class-ur-setting-text.php:111
-#: includes/form/settings/class-ur-setting-textarea.php:75
-#: includes/form/settings/class-ur-setting-textarea.php:112
+#: includes/form/settings/class-ur-setting-textarea.php:62
+#: includes/form/settings/class-ur-setting-textarea.php:99
 msgid "Words Count"
 msgstr ""
 
 #: includes/form/settings/class-ur-setting-text.php:82
-#: includes/form/settings/class-ur-setting-textarea.php:83
+#: includes/form/settings/class-ur-setting-textarea.php:70
 msgid "Minimum Length"
 msgstr ""
 

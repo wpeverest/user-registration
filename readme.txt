@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.2    - 11/12/2023
+= 3.1.2    - 12/12/2023
 * Refactor - Timepicker library changed from timepicker to flatpickr.
 * Refactor - Size option in input field replaced bt limit by characters option.
 * Feature  - List pages where each form shortcode is used.
@@ -369,6 +369,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Enhance  - Redirection to external url through logout_redirect shortcode attribute.
 * Dev      - Compatibility for form restriction addon.
 * Dev      - Remove no priv ajax request for form save action.
+* Dev      - Added hook to handle redirect url after auto login.
 * Dev      - Introduced hook to modify parse value for form data.
 * Fix      - Critical error while exporting user.
 * Fix      - The all_fields smart tag parse to a table.
