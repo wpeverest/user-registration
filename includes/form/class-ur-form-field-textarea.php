@@ -70,7 +70,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {

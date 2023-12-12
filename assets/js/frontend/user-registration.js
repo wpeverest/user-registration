@@ -131,11 +131,15 @@
 									) {
 										var checkedValues = [];
 
-										field.each(function() {
+										field.each(function () {
 											if ($(this).is(":checked")) {
-												var label = $(this).siblings('label').text();
+												var label = $(this)
+													.siblings("label")
+													.text();
 												var value = $(this).val();
-												checkedValues.push(label + ':' + value);
+												checkedValues.push(
+													label + ":" + value
+												);
 											}
 										});
 										var field_value_json =
@@ -144,7 +148,6 @@
 										var field_value_json =
 											JSON.stringify(field_value);
 									}
-
 								} else if (field_type == "radio") {
 									var field_value_json = field_value[0];
 								} else {
@@ -776,6 +779,7 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -1068,6 +1072,7 @@
 																	'">' +
 																	value +
 																	"</label>";
+
 																var wrapper =
 																	$this
 																		.find(
@@ -1075,6 +1080,8 @@
 																		)
 																		.find(
 																			"input[id='" +
+																				index +
+																				"'], textarea[id='" +
 																				index +
 																				"']"
 																		);
@@ -1463,6 +1470,7 @@
 														$field_id.push($id);
 													}
 												);
+
 												$.each(
 													response.data.message,
 													function (index, value) {
@@ -1493,6 +1501,8 @@
 																)
 																.find(
 																	"input[id='" +
+																		index +
+																		"'], textarea[id='" +
 																		index +
 																		"']"
 																);

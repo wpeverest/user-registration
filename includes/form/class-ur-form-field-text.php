@@ -71,7 +71,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		// Custom Field Validation here..
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
