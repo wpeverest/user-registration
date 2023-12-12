@@ -1211,22 +1211,6 @@ function ur_login_option_with() {
 }
 
 /**
- * Time Format for advanced settings
- *
- * @return array
- */
-function ur_time_format_options() {
-
-	return apply_filters(
-		'user_registration_time_format_options',
-		array(
-			'h:i K' => __( '12 H ', 'user-registration' ),
-			'H:i'   => __( '24 H', 'user-registration' ),
-		)
-	);
-}
-
-/**
  * Get Default value for Enable Email Approval Checkbox
  *
  * @param int $form_id Form ID.
