@@ -405,7 +405,20 @@
       "name" : "User Registration Conversational Forms",
       "image": "extensions-json/sections/images/conversational-forms.png",
       "excerpt": "Build interactive registration forms without hassle and provide a better user experience during the signup process.",
-      "link": "https://wpuserregistration.com/features/conversational-forms/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=post-submission",
+      "link": "https://wpuserregistration.com/features/conversational-forms/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conversational-forms",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  },
+	  {
+      "title": "Form Restriction",
+      "slug" : "user-registration-form-restriction",
+      "name" : "User Registration Form Restriction",
+      "image": "extensions-json/sections/images/form-restriction.png",
+      "excerpt": "Smart control for smarter registrations - define your rules to control user access to your registration forms.",
+      "link": "https://wpuserregistration.com/features/form-restriction/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=form-restriction",
       "plan" : [
         "plus",
         "professional",

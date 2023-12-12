@@ -367,6 +367,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Enhance  - Improve success message after registration.
 * Enhance  - Server side validation message shown in respective fields.
 * Enhance  - Redirection to external url through logout_redirect shortcode attribute.
+* Tweak    - Form Restriction addon details added in extension page.
 * Dev      - Compatibility for form restriction addon.
 * Dev      - Remove no priv ajax request for form save action.
 * Dev      - Added hook to handle redirect url after auto login.
