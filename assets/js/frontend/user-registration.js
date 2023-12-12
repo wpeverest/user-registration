@@ -129,21 +129,15 @@
 										field.eq(0).attr("data-field") ==
 										"multiple_choice"
 									) {
-										var checkedValues = [];
 
-										field.each(function () {
-											if ($(this).is(":checked")) {
-												var label = $(this)
-													.siblings("label")
-													.text();
-												var value = $(this).val();
-												checkedValues.push(
-													label + ":" + value
-												);
-											}
-										});
+										$(document).trigger(
+											"user_registration_frontend_multiple_choice_data_filter",
+											[field_value, field]
+										);
+										field_value = field.closest(".field-multiple_choice").data("payment-value");
+
 										var field_value_json =
-											JSON.stringify(checkedValues);
+											JSON.stringify(field_value);
 									} else {
 										var field_value_json =
 											JSON.stringify(field_value);
