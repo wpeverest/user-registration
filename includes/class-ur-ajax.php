@@ -408,7 +408,7 @@ class UR_AJAX {
 			);
 
 			if ( $email_updated ) {
-				UR_Form_Handler::send_confirmation_email( $user, $pending_email );
+				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
 				$response['userEmailUpdateMessage'] = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
