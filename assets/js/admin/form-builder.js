@@ -861,14 +861,14 @@
 					function () {
 						var $size_field = $(this)
 							.closest(".ur-selected-item")
-							.find(".ur-advance-setting-block .ur-settings-size")
+							.find(".ur-advance-setting-block .ur-settings-step")
 							.val();
 						var label = $(this)
 							.closest(".ur-selected-item")
 							.find(".ur-label label")
 							.html();
 
-						if ($size_field < 1) {
+						if ($size_field < 0) {
 							response.validation_status = false;
 							response.message =
 								label +
@@ -3217,6 +3217,11 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
+						case "step" :
+							$this_node.on("keyup keydown", function() {
+								$this_node.attr("step", $this_node.val());
+							});
+							break;
 						case "limit_length":
 						case "minimum_length":
 							$this_node.on("change", function () {
