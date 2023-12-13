@@ -70,7 +70,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 
 		$value = isset( $form_data->value ) ? $form_data->value : '';
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
@@ -87,7 +87,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -109,7 +109,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -141,7 +141,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -163,7 +163,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(

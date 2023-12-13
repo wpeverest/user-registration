@@ -126,25 +126,49 @@
 
 								if (field_type == "checkbox") {
 									if (
-										field.eq(0).attr("data-field") ==
-										"multiple_choice"
+										"" !==
+										user_registration_params.is_payment_compatible
 									) {
-										var checkedValues = [];
+										if (
+											field.eq(0).attr("data-field") ==
+											"multiple_choice"
+										) {
+											$(document).trigger(
+												"user_registration_frontend_multiple_choice_data_filter",
+												[field_value, field]
+											);
+											field_value = field
+												.closest(
+													".field-multiple_choice"
+												)
+												.data("payment-value");
 
-										field.each(function() {
-											if ($(this).is(":checked")) {
-												var label = $(this).siblings('label').text();
-												var value = $(this).val();
-												checkedValues.push(label + ':' + value);
-											}
-										});
-										var field_value_json =
-											JSON.stringify(checkedValues);
+											var field_value_json =
+												JSON.stringify(field_value);
+										} else {
+											var field_value_json =
+												JSON.stringify(field_value);
+										}
 									} else {
-										var field_value_json =
-											JSON.stringify(field_value);
+										if (
+											field.eq(0).attr("data-field") ==
+											"multiple_choice"
+										) {
+											var multi_choice = field_value;
+											var field_value_json = 0;
+											for (
+												var i = 0;
+												i < multi_choice.length;
+												i++
+											) {
+												field_value_json +=
+													multi_choice[i] << 0;
+											}
+										} else {
+											var field_value_json =
+												JSON.stringify(field_value);
+										}
 									}
-
 								} else if (field_type == "radio") {
 									var field_value_json = field_value[0];
 								} else {
@@ -776,6 +800,7 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -1068,6 +1093,7 @@
 																	'">' +
 																	value +
 																	"</label>";
+
 																var wrapper =
 																	$this
 																		.find(
@@ -1075,6 +1101,8 @@
 																		)
 																		.find(
 																			"input[id='" +
+																				index +
+																				"'], textarea[id='" +
 																				index +
 																				"']"
 																		);
@@ -1463,6 +1491,7 @@
 														$field_id.push($id);
 													}
 												);
+
 												$.each(
 													response.data.message,
 													function (index, value) {
@@ -1493,6 +1522,8 @@
 																)
 																.find(
 																	"input[id='" +
+																		index +
+																		"'], textarea[id='" +
 																		index +
 																		"']"
 																);

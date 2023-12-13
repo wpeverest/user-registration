@@ -28,9 +28,9 @@ function ur_template_redirect() {
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
-		if ( isset( $_GET['redirect_to'] ) ) {
+		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
 			wp_logout();
-			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
+			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
 			exit;
 		}
 
@@ -94,7 +94,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 				}
 
 				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
-					$redirect_url = ur_get_my_account_url();
+					$redirect_url = apply_filters( 'user_registration_auto_login_redirection', ur_get_my_account_url() );
 				}
 			}
 
@@ -525,7 +525,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<div class = "ur-timepicker-range">';
 						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '" placeholder="Start Time "  value="' . esc_attr( $start_time ? $start_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="End Time"  value="' . esc_attr( $end_time ? $end_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . esc_attr( $timpicker_class ) . ' ' . $class . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . esc_attr( $timpicker_class ) . ' ' . $class . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
 						$field .= '</div>';
 					} else {
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
@@ -1027,7 +1027,7 @@ if ( ! function_exists( 'user_registration_account_edit_account' ) ) {
  * @return string
  */
 function ur_logout_url( $redirect = '' ) {
-	$logout_endpoint = get_option( 'user_registration_logout_endpoint' );
+	$logout_endpoint = get_option( 'user_registration_logout_endpoint', 'user-logout' );
 
 	global $post;
 	$wp_version   = '5.0';
@@ -1039,8 +1039,8 @@ function ur_logout_url( $redirect = '' ) {
 			$new_shortcode = '';
 
 			foreach ( $blocks as $block ) {
-				if ( 'core/shortcode' === $block['blockName'] && isset( $block['innerHTML'] ) ) {
-					$new_shortcode = $block['innerHTML'];
+				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
+					$new_shortcode = ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
 				}
@@ -1116,7 +1116,7 @@ function ur_check_external_url( $url ) {
 		$redirect_url = site_url( $url );
 	} else {
 		$redirect_url = ur_get_page_permalink( 'myaccount' );
-		$redirect_url = add_query_arg( 'redirect_to', $url, $redirect_url );
+		$redirect_url = add_query_arg( 'redirect_to_on_logout', $url, $redirect_url );
 	}
 	return $redirect_url;
 }

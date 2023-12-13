@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.4
-Stable tag: 3.1.1
+Tested up to: 6.4.2
+Stable tag: 3.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,27 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.2    - 13/12/2023
+* Refactor - Timepicker library changed from timepicker to flatpickr.
+* Refactor - Size option in input field replaced bt limit by characters option.
+* Feature  - List pages where each form shortcode is used.
+* Feature  - New email added for send user approval link admin email.
+* Feature  - Limit by characters or words in Inout and Textarea Field.
+* Enhance  - Improve success message after registration.
+* Enhance  - Server side validation message shown in respective fields.
+* Enhance  - Redirection to external url through logout_redirect shortcode attribute.
+* Tweak    - Form Restriction addon details added in extension page.
+* Dev      - Compatibility for form restriction addon.
+* Dev      - Remove no priv ajax request for form save action.
+* Dev      - Added hook to handle redirect url after auto login.
+* Dev      - Introduced hook to modify parse value for form data.
+* Fix      - Critical error while exporting user.
+* Fix      - The all_fields smart tag parse to a table.
+* Fix      - My account endpoint slug translation issue.
+* Fix      - Install user registration pages button not working.
+* Fix      - Assign role conditionally not working in multisite.
+* Fix      - Translation issue with successfull email verified message.
 
 = 3.1.1    - 10/11/2023
 * Tweak    - Dashboard content made accessible through action hook.

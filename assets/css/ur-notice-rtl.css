@@ -1,1 +1,82 @@
-#user-registration-review-notice,#user-registration-survey-notice{border-right-color:#475bb2}#user-registration-upgrade-notice strong{font-weight:700}.user-registration-notice{padding:15px 0 15px 15px;background-color:#fff}.user-registration-notice .notice-dismiss:before{display:none}.user-registration-notice .user-registration-notice-thumbnail{float:right;text-align:center;margin:5px 25px;width:80px}.user-registration-notice .user-registration-notice-thumbnail img{border-radius:5px;vertical-align:middle;width:100%}.user-registration-notice .user-registration-notice-text{overflow:hidden}.user-registration-notice .user-registration-notice-text .user-registration-notice-header{display:flex;justify-content:space-between}.user-registration-notice .user-registration-notice-text .user-registration-notice-header h3{font-size:18px;margin:0;line-height:1}.user-registration-notice .user-registration-notice-text .user-registration-notice-header .close-btn{font-size:30px;color:#a9a9a9;cursor:pointer;text-decoration:none;position:relative}.user-registration-notice .user-registration-notice-text .ur-error{color:#d63638}.user-registration-notice .user-registration-notice-text p{font-size:13px;margin:0;padding:0 0 10px 0}.user-registration-notice .extra-pad{padding-bottom:20px}.user-registration-notice .user-registration-notice-links{display:flex;justify-content:space-between}.user-registration-notice .user-registration-notice-links a{position:relative;text-decoration:none}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul{margin:0;padding:0}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul li{display:inline-block;margin-left:10px}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a{display:inline-block;text-decoration:none;position:relative}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a span{margin-left:5px;margin-top:4px}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary{background:#475bb2;border-color:#475bb2}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:focus,.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:hover{background:#2e44a1;border-color:#2e44a1}.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button.button-secondary{border-color:#475bb2;color:#475bb2;box-shadow:none}.user-registration-notice #user-registration-notice .user-registration-notice-ul li a span{padding:4px 0}.user-registration-notice .user-registration-notice-text span.dashicons.dashicons-smiley.smile-icon{background:#f7e143;border-radius:50%;font-size:15px;border:1px solid;width:17px;height:17px}
+#user-registration-review-notice, #user-registration-survey-notice {
+  border-right-color: #475bb2; }
+
+#user-registration-upgrade-notice strong {
+  font-weight: 700; }
+
+.user-registration-notice {
+  padding: 15px 0 15px 15px;
+  background-color: #fff; }
+  .user-registration-notice .notice-dismiss:before {
+    display: none; }
+  .user-registration-notice .user-registration-notice-thumbnail {
+    float: right;
+    text-align: center;
+    margin: 5px 25px;
+    width: 80px; }
+    .user-registration-notice .user-registration-notice-thumbnail img {
+      border-radius: 5px;
+      vertical-align: middle;
+      width: 100%; }
+  .user-registration-notice .user-registration-notice-text {
+    overflow: hidden; }
+    .user-registration-notice .user-registration-notice-text .user-registration-notice-header {
+      display: flex;
+      justify-content: space-between; }
+      .user-registration-notice .user-registration-notice-text .user-registration-notice-header h3 {
+        font-size: 18px;
+        margin: 0;
+        line-height: 1; }
+      .user-registration-notice .user-registration-notice-text .user-registration-notice-header .close-btn {
+        font-size: 30px;
+        color: darkgray;
+        cursor: pointer;
+        text-decoration: none;
+        position: relative; }
+    .user-registration-notice .user-registration-notice-text .ur-error {
+      color: #d63638; }
+    .user-registration-notice .user-registration-notice-text p {
+      font-size: 13px;
+      margin: 0;
+      padding: 0 0 10px 0; }
+  .user-registration-notice .extra-pad {
+    padding-bottom: 20px; }
+  .user-registration-notice .user-registration-notice-links {
+    display: flex;
+    justify-content: space-between; }
+    .user-registration-notice .user-registration-notice-links a {
+      position: relative;
+      text-decoration: none; }
+    .user-registration-notice .user-registration-notice-links .user-registration-notice-ul {
+      margin: 0;
+      padding: 0; }
+      .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li {
+        display: inline-block;
+        margin-left: 10px; }
+        .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a {
+          display: inline-block;
+          text-decoration: none;
+          position: relative; }
+          .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a span {
+            margin-left: 5px;
+            margin-top: 4px; }
+      .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary {
+        background: #475bb2;
+        border-color: #475bb2; }
+      .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:focus,
+      .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:hover {
+        background: #2e44a1;
+        border-color: #2e44a1; }
+      .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button.button-secondary {
+        border-color: #475bb2;
+        color: #475bb2;
+        box-shadow: none; }
+  .user-registration-notice #user-registration-notice .user-registration-notice-ul li a span {
+    padding: 4px 0px; }
+  .user-registration-notice .user-registration-notice-text span.dashicons.dashicons-smiley.smile-icon {
+    background: #f7e143;
+    border-radius: 50%;
+    font-size: 15px;
+    border: 1px solid;
+    width: 17px;
+    height: 17px; }
