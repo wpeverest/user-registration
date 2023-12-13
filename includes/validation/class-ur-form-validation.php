@@ -614,10 +614,12 @@ class UR_Form_Validation extends UR_Validation {
 			$form_data_index   = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field = $form_field_data[ $form_data_index ];
 
-			if ( in_array( $single_field_name, $form_key_list, true ) ) {
-				$field_setting      = $form_fields[ 'user_registration_' . $single_field_name ];
+			$field_setting = isset( $form_fields[ $single_field_name ] ) ? $form_fields[ $single_field_name ] : '';
+			$field_setting = empty( $field_setting ) && isset( $form_fields[ 'user_registration_' . $single_field_name ] ) ? $form_fields[ 'user_registration_' . $single_field_name ] : $field_setting;
+
+			if ( in_array( $single_field_name, $form_key_list, true ) && ! empty( $field_setting ) ) {
 				$single_field_label = isset( $field_setting['label'] ) ? $field_setting['label'] : '';
-				$single_field_key   = $field_setting['field_key'];
+				$single_field_key   = isset( $field_setting['field_key'] ) ? $field_setting['field_key'] : '';
 				$single_field_value = isset( $data->value ) ? $data->value : '';
 				$data->extra_params = array(
 					'field_key' => $single_field_key,
@@ -632,9 +634,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required = isset( $single_form_field->general_setting->required ) ?
-							$single_form_field->general_setting->required :
-							false;
+				$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
 
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
@@ -661,7 +661,7 @@ class UR_Form_Validation extends UR_Validation {
 				$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $single_field_name, wp_unslash( $single_field_value ) );
 
 				if ( 'email' === $field_setting['type'] ) {
-					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $field_setting, $form_id );
+					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $single_form_field, $form_id );
 				}
 				/**
 				 * Slot booking backend validation.
