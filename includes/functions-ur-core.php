@@ -335,7 +335,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			foreach ( $blocks as $block ) {
 
 				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
-					$new_shortcode =  ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
+					$new_shortcode = ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
 				}
@@ -1206,22 +1206,6 @@ function ur_login_option_with() {
 			'default'  => __( 'Username or Email', 'user-registration' ),
 			'username' => __( 'Username', 'user-registration' ),
 			'email'    => __( 'Email', 'user-registration' ),
-		)
-	);
-}
-
-/**
- * Time Format for advanced settings
- *
- * @return array
- */
-function ur_time_format_options() {
-
-	return apply_filters(
-		'user_registration_time_format_options',
-		array(
-			'h:i K' => __( '12 H ', 'user-registration' ),
-			'H:i'   => __( '24 H', 'user-registration' ),
 		)
 	);
 }
