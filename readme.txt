@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.2    - 12/12/2023
+= 3.1.2    - 13/12/2023
 * Refactor - Timepicker library changed from timepicker to flatpickr.
 * Refactor - Size option in input field replaced bt limit by characters option.
 * Feature  - List pages where each form shortcode is used.
