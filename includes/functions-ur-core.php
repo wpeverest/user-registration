@@ -2910,6 +2910,8 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 			);
 		}
+		$matched = apply_filters( 'user_registration_find_my_account_in_page', $matched, $login_page_id );
+
 		return $matched;
 	}
 }
