@@ -3040,8 +3040,7 @@
 									$this_obj
 										.siblings(
 											'input[data-field="default_value"]'
-										)
-										.is(":checked")
+										).length>0
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3826,15 +3825,28 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = this_node.val().trim();
+				var value = '';
+				if(this_node.is(":checked")) {
+					var value = this_node.val().trim();
+				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
+				if(this_node.hasClass('ur-type-radio-label')) {
+					value = select.val();
+				}
+
+				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
+					return $(this).val();
+				});
+
 				select.html("");
-				select.append(
-					"<option value='" + value + "'>" + value + "</option>"
-				);
+				$.each(options, function(key, option){
+					select.append(
+						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+					);
+				});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
