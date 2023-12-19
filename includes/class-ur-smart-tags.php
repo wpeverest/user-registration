@@ -343,7 +343,7 @@ class UR_Smart_Tags {
 							// If enabled approval via email setting.
 							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 								$approval_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">Approve Now</a><br />';
+								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
 								$content        = str_replace( '{{' . $tag . '}}', $approval_link, $content );
 							}
 						}
@@ -421,7 +421,7 @@ class UR_Smart_Tags {
 	/**
 	 * Smart tag list button in general setting and advanced settin of field.
 	 *
-	 * @param string $smart_tags list of smart tags.
+	 * @param string $pattern_lists Pattern Lists.
 	 */
 	public function select_pattern_validation( $pattern_lists ) {
 		$pattern_validation_list = self::ur_pattern_validation_lists();
