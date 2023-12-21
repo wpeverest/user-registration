@@ -55,6 +55,13 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		protected static $_instance = null;
 
 		/**
+		 * Instance of this form.
+		 *
+		 * @var object
+		 */
+		public $form = null;
+
+		/**
 		 * Return an instance of this class.
 		 *
 		 * @return object A single instance of this class.
