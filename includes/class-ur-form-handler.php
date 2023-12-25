@@ -243,6 +243,7 @@ class UR_Form_Handler {
 	 *
 	 * @param object $user User.
 	 * @param email  $new_email Email.
+	 * @param int    $form_id FormId.
 	 * @return void
 	 */
 	public static function send_confirmation_email( $user, $new_email, $form_id ) {
@@ -260,28 +261,27 @@ class UR_Form_Handler {
 			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
 			esc_html__(
 				'Dear %1$s,
-You recently requested to change your email address associated with your account to %2$s.
-To confirm this change, please click on the following link:
-%3$s
-This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
-Best regards,
-%4$s',
-'user-registration'
-),
+				You recently requested to change your email address associated with your account to %2$s.
+				To confirm this change, please click on the following link:
+				%3$s
+				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
+				Best regards,
+				%4$s',
+				'user-registration'
+			),
 			esc_html( $user->display_name ),
 			esc_html( $new_email ),
 			esc_url( $confirm_link ),
-			esc_html( get_bloginfo('name') )
+			esc_html( get_bloginfo( 'name' ) )
 		);
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message  = user_registration_process_email_content( $message, $template_id );
+		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message     = user_registration_process_email_content( $message, $template_id );
 
 		$headers = array(
-			'From' => get_bloginfo('name') . ' <' . get_option('admin_email') . '>',
+			'From' => get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
 			'Content-Type:text/html; charset=UTF-8',
 		);
-
 
 		wp_mail( $to, $subject, $message, $headers, $template_id );
 
