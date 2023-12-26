@@ -79,10 +79,10 @@ function ur_get_user_report( $form_id ) {
 
 	if ( $results ) {
 		$report = array(
-			'total_users'      => $results[0]->total_users,
-			'today_users'      => $results[0]->today_users,
-			'last_week_users'  => $results[0]->last_week_users,
-			'last_month_users' => $results[0]->last_month_users,
+			'total_users'      => empty( $results[0]->total_users ) ? 0 : $results[0]->total_users,
+			'today_users'      => empty( $results[0]->today_users ) ? 0 : $results[0]->today_users,
+			'last_week_users'  => empty( $results[0]->last_week_users ) ? 0 : $results[0]->last_week_users,
+			'last_month_users' => empty( $results[0]->last_month_users ) ? 0 : $results[0]->last_month_users,
 		);
 
 	}

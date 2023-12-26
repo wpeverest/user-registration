@@ -187,19 +187,19 @@ class UR_Admin_User_List_Manager {
 
 		$users = $wpdb->get_results(
 			"SELECT *
-			FROM wp_users AS users
-			JOIN wp_usermeta AS meta1 ON users.ID = meta1.user_id
+			FROM {$wpdb->prefix}users AS users
+			JOIN {$wpdb->prefix}usermeta AS meta1 ON users.ID = meta1.user_id
 			WHERE meta1.meta_key = 'ur_user_status' AND meta1.meta_value = '0'
 			AND (
 				((meta1.meta_key = 'ur_confirm_email' AND meta1.meta_value != '0')
 				OR NOT EXISTS (
-					SELECT 1 FROM wp_usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
+					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
 				))
 				OR
 				(
 				(meta1.meta_key = 'ur_admin_approval_after_email_confirmation' AND meta1.meta_value = 'false')
 				OR NOT EXISTS (
-					SELECT 1 FROM wp_usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
+					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
 				)
 			));"
 		);
