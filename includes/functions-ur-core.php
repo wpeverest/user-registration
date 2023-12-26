@@ -251,11 +251,15 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 		return;
 	}
 
+	ob_start();
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
 	include $located;
 
 	do_action( 'user_registration_after_template_part', $template_name, $template_path, $located, $args );
+	$template_content = ob_get_clean();
+	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
+	echo $template_content;  // phpcs:ignore
 }
 
 /**
