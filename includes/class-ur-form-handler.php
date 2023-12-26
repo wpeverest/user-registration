@@ -271,7 +271,7 @@ class UR_Form_Handler {
 			),
 			esc_html( $user->display_name ),
 			esc_html( $new_email ),
-			esc_url( $confirm_link ),
+			'<a href="' . esc_url( $confirm_link ) . '">Click here</a>',
 			esc_html( get_bloginfo( 'name' ) )
 		);
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
