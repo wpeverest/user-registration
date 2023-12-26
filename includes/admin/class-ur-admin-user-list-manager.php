@@ -632,6 +632,8 @@ class UR_Admin_User_List_Manager {
 			return false;
 		} elseif ( '' !== $user_email_status && $user_status == $_POST['ur_user_user_status'] && $user_email_status == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
+		} elseif ( $user_manager->is_approved() && '1' == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return false;
 		}
 
 		if ( isset( $_POST['ur_user_user_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
