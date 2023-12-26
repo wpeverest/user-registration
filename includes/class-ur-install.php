@@ -77,7 +77,7 @@ class UR_Install {
 	 * Init background updates.
 	 */
 	public static function init_background_updater() {
-		include_once dirname( __FILE__ ) . '/class-ur-background-updater.php';
+		include_once __DIR__ . '/class-ur-background-updater.php';
 		self::$background_updater = new UR_Background_Updater();
 	}
 
@@ -158,7 +158,7 @@ class UR_Install {
 	 * @since 1.2.0
 	 */
 	private static function remove_admin_notices() {
-		include_once dirname( __FILE__ ) . '/admin/class-ur-admin-notices.php';
+		include_once __DIR__ . '/admin/class-ur-admin-notices.php';
 		UR_Admin_Notices::remove_all_notices();
 	}
 
@@ -359,7 +359,7 @@ class UR_Install {
 	 * Create pages that the plugin relies on, storing page IDs in variables.
 	 */
 	public static function create_pages() {
-		include_once dirname( __FILE__ ) . '/admin/functions-ur-admin.php';
+		include_once __DIR__ . '/admin/functions-ur-admin.php';
 
 		$pages = apply_filters(
 			'user_registration_create_pages',
@@ -394,7 +394,7 @@ class UR_Install {
 	 */
 	private static function create_options() {
 		// Include settings so that we can run through defaults.
-		include_once dirname( __FILE__ ) . '/admin/class-ur-admin-settings.php';
+		include_once __DIR__ . '/admin/class-ur-admin-settings.php';
 
 		$settings = UR_Admin_Settings::get_settings_pages();
 
@@ -425,7 +425,7 @@ class UR_Install {
 
 		if ( 0 === count( $hasposts ) ) {
 			update_option( 'user_registration_first_time_activation_flag', true );
-			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
 
 			// Insert default form.
 			$default_post_id = wp_insert_post(
