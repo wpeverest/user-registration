@@ -39,7 +39,8 @@
 
 			// Prevent invalid key input in number fields.
 			$("[type='number']").keypress(function (event) {
-				var keyCode = event.keyCode;
+				var keyCode = event.keyCode || event.which;
+				var currentValue = $(this).val();
 				if (
 					( keyCode !== 46 || currentValue.indexOf('.') !== -1) &&
 					( keyCode < 48 || keyCode > 57)
