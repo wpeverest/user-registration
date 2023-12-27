@@ -38,8 +38,9 @@ function ur_template_redirect() {
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
 }
