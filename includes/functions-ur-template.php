@@ -637,7 +637,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
-						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
+						$disalbed = '';
+						if ( 'country' !== $args['field_key'] ) {
+							$disalbed = 'disabled';
+						}
+						$options .= '<option value="" selected ' . esc_attr( $disalbed ) . '>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';

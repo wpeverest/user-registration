@@ -1778,6 +1778,7 @@
 				});
 			}
 		});
+
 	};
 
 	/**
@@ -1829,6 +1830,7 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
+
 })(jQuery);
 
 function ur_includes(arr, item) {
