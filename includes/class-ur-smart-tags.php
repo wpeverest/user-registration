@@ -348,6 +348,45 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
+					case 'display_name':
+						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						$user_data = get_userdata( $user_id );
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
+						break;
+					case 'profile_pic_box':
+						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+
+						if ( is_numeric( $profile_picture_url ) ) {
+							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+						}
+
+						$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+						$profile_pic_box = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
+						$content         = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
+						break;
+					case 'full_name':
+						$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
+						$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
+						$full_name  = $first_name . ' ' . $last_name;
+						if ( empty( $first_name ) && empty( $last_name ) ) {
+							$full_name = get_userdata( get_current_user_id() )->display_name;
+						}
+						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
+						break;
+					case 'profile_details_link':
+						$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( 'edit-profile' ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
+						$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
+						break;
+					case 'edit_password_link':
+						$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( 'edit-password' ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
+						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
+						break;
+					case 'sign_out_link':
+						$sign_out_link = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '">' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
+						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
+						break;
+
 				}
 			}
 		}
