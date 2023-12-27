@@ -29,8 +29,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </h2>
 
-<div class="user-registration-profile-header">
-	<div class="user-registration-img-container">
+<div class='user-registration-profile-header'>
+	<div class='user-registration-img-container'>
 		<?php
 		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 
@@ -43,9 +43,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h3>
 		{{full_name}}
 			</h3>
-		<span class="user-registration-nick-name">
-			{{display_name}}
-		</span>
 	</header>
 </div>
 
