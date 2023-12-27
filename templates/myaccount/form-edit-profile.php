@@ -19,10 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-do_action( 'user_registration_before_edit_profile_form' );
-
 $user_id = get_current_user_id();
 $form_id = ur_get_form_id_by_userid( $user_id );
+
+do_action_deprecated( 'user_registration_before_edit_profile_form', array(), '3.1.3', 'user_registration_before_edit_profile_form_data' );
+do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id );
 ?>
 
 <div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
