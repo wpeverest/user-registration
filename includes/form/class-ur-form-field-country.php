@@ -301,12 +301,12 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 * @param [string] $field_name Field Name.
 	 */
 	public function get_selected_countries( $form_id, $field_name ) {
-		$countries = $this->get_country();
+		$countries          = $this->get_country();
 		$filtered_countries = array();
 		$selected_countries = array();
 
 		$form_data = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
-		$fields = self::get_form_field_data( $form_data );
+		$fields    = self::get_form_field_data( $form_data );
 
 		// Get selected_countries data of the field.
 		foreach ( $fields as $field ) {
@@ -391,8 +391,8 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$field_label     = $single_form_field->general_setting->field_name;
 		$value           = isset( $form_data->value ) ? $form_data->value : '';
 		$valid_countries = $single_form_field->advance_setting->selected_countries;
-		$required = $single_form_field->general_setting->required;
-		if( ! ur_string_to_bool( $required ) ) {
+		$required        = $single_form_field->general_setting->required;
+		if ( ! ur_string_to_bool( $required ) ) {
 			return;
 		}
 

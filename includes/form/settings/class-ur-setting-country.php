@@ -100,6 +100,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 			);
 			$value = array_merge( array( '' => apply_filters( 'user_registration_default_country_option', esc_html__( 'None', 'user-registration' ) ) ), $value );
 		}
+		$value = array_merge( array( '' => apply_filters( 'user_registration_default_country_option', esc_html__( 'None', 'user-registration' ) ) ), $value );
 
 		return $value;
 	}
