@@ -25,61 +25,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 <h2>
 	<?php
 	/* translators: %s - Users display name. */
-	echo sprintf( esc_html__( 'Welcome, %1$s', 'user-registration' ), esc_html( $current_user->display_name ) );
+	esc_html_e( 'Welcome, {{display_name}}', 'user-registration' );
 	?>
 </h2>
 
-<div class="user-registration-profile-header">
-	<div class="user-registration-img-container">
+<div class='user-registration-profile-header'>
+	<div class='user-registration-img-container'>
 		<?php
-			$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-			$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-
-		if ( is_numeric( $profile_picture_url ) ) {
-			$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
-		}
-			$image = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-
 		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 
 			?>
-					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>">
+					{{profile_pic_box}}
 				<?php } ?>
 
 	</div>
 	<header>
-		<?php
-		$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
-		$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
-		$full_name  = $first_name . ' ' . $last_name;
-		if ( empty( $first_name ) && empty( $last_name ) ) {
-			$full_name = $current_user->display_name;
-		}
-		?>
 		<h3>
-		<?php
-			echo esc_html( $full_name );
-		?>
+		{{full_name}}
 			</h3>
-		<span class="user-registration-nick-name">
-			<?php
-				echo esc_html( $current_user->display_name );
-			?>
-		</span>
 	</header>
 </div>
 
 <p>
 <?php
 	/* translators: 1 profile details url, 2: change password url */
-	echo wp_kses_post( sprintf( __( 'From your account dashboard you can edit your <a href="%1$s"> profile details</a> and <a href="%2$s">edit your password</a>.', 'user-registration' ), esc_url( ur_get_endpoint_url( 'edit-profile' ) ), esc_url( ur_get_endpoint_url( 'edit-password' ) ) ) );
+	echo wp_kses_post( __( 'From your account dashboard you can edit your {{profile_details_link}} and {{edit_password_link}}.', 'user-registration' ) );
 ?>
 </p>
 
 <p>
 	<?php
 		/* translators: 1: user display name 2: logout url */
-		echo wp_kses_post( sprintf( __( 'Not %1$s? <a href="%2$s">Sign out</a>', 'user-registration' ), '<strong>' . esc_html( $current_user->display_name ) . '</strong>', esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) ) );
+		echo wp_kses_post( __( 'Not {{display_name}}? <strong>{{sign_out_link}}</strong>', 'user-registration' ) );
 	?>
 </p>
 

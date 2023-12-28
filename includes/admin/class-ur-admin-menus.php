@@ -78,6 +78,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'slug'        => 'learndash',
 					'name'        => __( 'User Registration LearnDash', 'user-registration' ),
 				),
+				array(
+					'id'          => 'user_registration_stripe_gateway',
+					'label'       => 'Stripe Gateway',
+					'icon'        => 'ur-icon ur-icon-credit-card',
+					'field_class' => 'UR_Form_Field_Stripe_Gateway',
+					'plan'        => 'ThemeGrill Agency Plan or Professional Plan or Plus Plan',
+					'slug'        => array( 'stripe' ),
+					'name'        => array( __( 'User Registration Stripe', 'user-registration' ) ),
+				),
 			);
 
 			$is_compatibile = true;

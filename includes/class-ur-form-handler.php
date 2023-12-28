@@ -142,7 +142,7 @@ class UR_Form_Handler {
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 
 			if ( $email_updated ) {
-				self::send_confirmation_email( $user, $pending_email );
+				self::send_confirmation_email( $user, $pending_email, $form_id );
 				/* translators: user_email */
 				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
 				ur_add_notice( $user_email_update_message, 'notice' );
@@ -243,9 +243,10 @@ class UR_Form_Handler {
 	 *
 	 * @param object $user User.
 	 * @param email  $new_email Email.
+	 * @param int    $form_id FormId.
 	 * @return void
 	 */
-	public static function send_confirmation_email( $user, $new_email ) {
+	public static function send_confirmation_email( $user, $new_email, $form_id ) {
 		// Generate a confirmation key for the email change.
 		$confirm_key = wp_generate_password( 20, false );
 
@@ -258,26 +259,31 @@ class UR_Form_Handler {
 		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
 		$message      = sprintf(
 			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
-			__(
-				'Dear %1$s,<br /><br />
-		You recently requested to change your email address associated with your account to %2$s.<br /><br />
-		To confirm this change, please click on the following link:<br />
-		<a href="%3$s">%3$s</a><br /><br />
-		This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br /><br />
-		Best regards,<br />
-		%4$s',
+			esc_html__(
+				'Dear %1$s,
+				You recently requested to change your email address associated with your account to %2$s.
+				To confirm this change, please click on the following link:
+				%3$s
+				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
+				Best regards,
+				%4$s',
 				'user-registration'
 			),
-			$user->display_name,
-			$new_email,
-			$confirm_link,
-			get_bloginfo( 'name' )
+			esc_html( $user->display_name ),
+			esc_html( $new_email ),
+			'<a href="' . esc_url( $confirm_link ) . '">Click here</a>',
+			esc_html( get_bloginfo( 'name' ) )
 		);
-		$message  = apply_filters( 'user_registration_email_change_email_content', $message );
-		$headers  = 'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . ">\n";
-		$headers .= "Content-Type: text/html; charset=UTF-8\n";
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message     = user_registration_process_email_content( $message, $template_id );
 
-		wp_mail( $to, $subject, $message, $headers );
+		$headers = array(
+			'From' => get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+			'Content-Type:text/html; charset=UTF-8',
+		);
+
+		wp_mail( $to, $subject, $message, $headers, $template_id );
 
 		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
@@ -746,7 +752,7 @@ class UR_Form_Handler {
 		$form_content = (array) $form_data->form_post;
 
 		if ( empty( $form_content ) ) {
-			$post_content         = '[[[{"field_key":"user_login","general_setting":{"label":"Username","field_name":"user_login","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_pass","general_setting":{"label":"User Password","field_name":"user_pass","placeholder":"","required":"yes"},"advance_setting":{}}],[{"field_key":"user_email","general_setting":{"label":"User Email","field_name":"user_email","placeholder":"","required":"yes"},"advance_setting":{}},{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","field_name":"user_confirm_password","placeholder":"","required":"yes"},"advance_setting":{}}]]]';
+			$post_content         = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
 			$form_data->form_post = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => $title,

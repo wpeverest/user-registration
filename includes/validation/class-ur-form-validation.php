@@ -283,7 +283,7 @@ class UR_Form_Validation extends UR_Validation {
 					$form_data->value = sanitize_textarea_field( $form_data->value );
 					break;
 				case 'number':
-					$form_data->value = intval( $form_data->value );
+					$form_data->value = floatval( $form_data->value );
 					break;
 				case 'nickname':
 				case 'first_name':

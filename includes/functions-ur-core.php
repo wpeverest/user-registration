@@ -251,11 +251,15 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 		return;
 	}
 
+	ob_start();
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
 	include $located;
 
 	do_action( 'user_registration_after_template_part', $template_name, $template_path, $located, $args );
+	$template_content = ob_get_clean();
+	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
+	echo $template_content;  // phpcs:ignore
 }
 
 /**
@@ -335,7 +339,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 			foreach ( $blocks as $block ) {
 
 				if ( ( 'core/shortcode' === $block['blockName'] || 'core/paragraph' === $block['blockName'] ) && isset( $block['innerHTML'] ) ) {
-					$new_shortcode =  ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
+					$new_shortcode = ( 'core/shortcode' === $block['blockName'] ) ? $block['innerHTML'] : wp_strip_all_tags( $block['innerHTML'] );
 				} elseif ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['shortcode'] ) ) {
 					$new_shortcode = '[' . $block['attrs']['shortcode'] . ']';
 				}
@@ -1745,6 +1749,18 @@ function ur_is_json( $str ) {
 /**
  * Checks if the form contains a date field or not.
  *
+ * @deprecated 3.1.3
+ * @param  int $form_id     Form ID.
+ * @since  1.5.3
+ * @return void
+ */
+function ur_has_date_field( $form_id ) {
+	ur_deprecated_function( 'ur_has_date_field', '3.1.3', 'ur_has_flatpickr_field' );
+}
+
+/**
+ * Checks if the form contains a date and time field or not.
+ *
  * @param  int $form_id     Form ID.
  * @since  1.5.3
  * @return boolean
@@ -2910,6 +2926,8 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore
 			);
 		}
+		$matched = apply_filters( 'user_registration_find_my_account_in_page', $matched, $login_page_id );
+
 		return $matched;
 	}
 }

@@ -74,7 +74,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'class'    => $this->default_class . ' ur-settings-default-value',
 				'type'     => 'select',
 				'required' => false,
-				'default'  => 'AF',
+				'default'  => '',
 				'options'  => $this->get_default_value_options(),
 				'tip'      => __( 'Default value for this field.', 'user-registration' ),
 			),
@@ -98,7 +98,9 @@ class UR_Setting_Country extends UR_Field_Settings {
 				UR_Form_Field_Country::get_instance()->get_country(),
 				array_flip( $selected_countries )
 			);
+			$value = array_merge( array( '' => apply_filters( 'user_registration_default_country_option', esc_html__( 'None', 'user-registration' ) ) ), $value );
 		}
+		$value = array_merge( array( '' => apply_filters( 'user_registration_default_country_option', esc_html__( 'None', 'user-registration' ) ) ), $value );
 
 		return $value;
 	}

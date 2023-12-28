@@ -59,26 +59,26 @@ class UR_Smart_Tags {
 	 */
 	public static function ur_unauthenticated_parsable_smart_tags_list() {
 		$smart_tags = array(
-			'{{blog_info}}'       => esc_html__( 'Blog Info', 'user-registration' ),
-			'{{home_url}}'        => esc_html__( 'Home URL', 'user-registration' ),
-			'{{admin_email}}'     => esc_html__( 'Site Admin Email', 'user-registration' ),
-			'{{site_name}}'       => esc_html__( 'Site Name', 'user-registration' ),
-			'{{site_url}}'        => esc_html__( 'Site URL', 'user-registration' ),
-			'{{page_title}}'      => esc_html__( 'Page Title', 'user-registration' ),
-			'{{page_url}}'        => esc_html__( 'Page URL', 'user-registration' ),
-			'{{page_id}}'         => esc_html__( 'Page ID', 'user-registration' ),
-			'{{post_title}}'      => esc_html__( 'Post Title', 'user-registration' ),
-			'{{current_date}}'    => esc_html__( 'Current Date', 'user-registration' ),
-			'{{current_time}}'    => esc_html__( 'Current Time', 'user-registration' ),
-      '{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
-			'{{email_token}}'     => esc_html__( 'Email Token', 'user-registration' ),
-			'{{key}}'             => esc_html__( 'Key', 'user-registration' ),
-			'{{user_ip_address}}' => esc_html__( 'User IP Address', 'user-registration' ),
-			'{{referrer_url}}'    => esc_html__( 'Referrer URL', 'user-registration' ),
-			'{{form_id}}'         => esc_html__( 'Form ID', 'user-registration' ),
-			'{{author_email}}'    => esc_html__( 'Author Email', 'user-registration' ),
-			'{{author_name}}'     => esc_html__( 'Author Name', 'user-registration' ),
-			'{{unique_id}}'       => esc_html__( 'Unique ID', 'user-registration' ),
+			'{{blog_info}}'        => esc_html__( 'Blog Info', 'user-registration' ),
+			'{{home_url}}'         => esc_html__( 'Home URL', 'user-registration' ),
+			'{{admin_email}}'      => esc_html__( 'Site Admin Email', 'user-registration' ),
+			'{{site_name}}'        => esc_html__( 'Site Name', 'user-registration' ),
+			'{{site_url}}'         => esc_html__( 'Site URL', 'user-registration' ),
+			'{{page_title}}'       => esc_html__( 'Page Title', 'user-registration' ),
+			'{{page_url}}'         => esc_html__( 'Page URL', 'user-registration' ),
+			'{{page_id}}'          => esc_html__( 'Page ID', 'user-registration' ),
+			'{{post_title}}'       => esc_html__( 'Post Title', 'user-registration' ),
+			'{{current_date}}'     => esc_html__( 'Current Date', 'user-registration' ),
+			'{{current_time}}'     => esc_html__( 'Current Time', 'user-registration' ),
+			'{{current_language}}' => esc_html__( 'Current Language', 'user-registration' ),
+			'{{email_token}}'      => esc_html__( 'Email Token', 'user-registration' ),
+			'{{key}}'              => esc_html__( 'Key', 'user-registration' ),
+			'{{user_ip_address}}'  => esc_html__( 'User IP Address', 'user-registration' ),
+			'{{referrer_url}}'     => esc_html__( 'Referrer URL', 'user-registration' ),
+			'{{form_id}}'          => esc_html__( 'Form ID', 'user-registration' ),
+			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
+			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
+			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 		);
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
@@ -105,7 +105,7 @@ class UR_Smart_Tags {
 			$values = array_merge( $values, $user_data );
 			array_walk(
 				$values,
-				function( &$value, $key ) {
+				function ( &$value, $key ) {
 					if ( 'user_pass' === $key ) {
 						$value = esc_html__( 'Chosen Password', 'user-registration' );
 					}
@@ -115,7 +115,7 @@ class UR_Smart_Tags {
 			$user_smart_tags = array_keys( $user_data );
 			array_walk(
 				$user_smart_tags,
-				function( &$value ) {
+				function ( &$value ) {
 					$value = '{{' . trim( $value, '{}' ) . '}}';
 				}
 			);
@@ -298,8 +298,8 @@ class UR_Smart_Tags {
 						break;
 
 					case 'current_language':
-						$current_language =  ur_get_current_language();
-						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
+						$current_language = ur_get_current_language();
+						$content          = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
 						break;
 
 					case 'post_title':
@@ -333,6 +333,60 @@ class UR_Smart_Tags {
 						$unique_id   = uniqid( $prefix, $uni_entropy );
 						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
+					case 'approval_link':
+						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
+							$user    = get_user_by( 'email', $values['email'] );
+							$user_id = $user->ID;
+
+							$login_option = ur_get_user_login_option( $user_id );
+
+							// If enabled approval via email setting.
+							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+								$approval_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+								$content        = str_replace( '{{' . $tag . '}}', $approval_link, $content );
+							}
+						}
+						break;
+					case 'display_name':
+						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						$user_data = get_userdata( $user_id );
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
+						break;
+					case 'profile_pic_box':
+						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+
+						if ( is_numeric( $profile_picture_url ) ) {
+							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+						}
+
+						$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+						$profile_pic_box = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
+						$content         = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
+						break;
+					case 'full_name':
+						$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
+						$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
+						$full_name  = $first_name . ' ' . $last_name;
+						if ( empty( $first_name ) && empty( $last_name ) ) {
+							$full_name = get_userdata( get_current_user_id() )->display_name;
+						}
+						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
+						break;
+					case 'profile_details_link':
+						$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( 'edit-profile' ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
+						$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
+						break;
+					case 'edit_password_link':
+						$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( 'edit-password' ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
+						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
+						break;
+					case 'sign_out_link':
+						$sign_out_link = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '">' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
+						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
+						break;
+
 				}
 			}
 		}
@@ -367,37 +421,37 @@ class UR_Smart_Tags {
 		$pattern_lists = apply_filters(
 			'user_registration_pattern_validation_lists',
 			array(
-				'^[a-zA-Z]+$'                                 => __( 'Alpha', 'user-registration' ),
-				'^[a-zA-Z0-9]+$'                              => __( 'Alphanumeric', 'user-registration' ),
-				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'         => __( 'Color', 'user-registration' ),
-				'^[A-Za-z]{2}$'                               => __( 'Country Code (2 Character)', 'user-registration' ),
-				'^[A-Za-z]{3}$'                               => __( 'Country Code (3 Character)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$'   => __( 'Date (mm/dd)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$'   => __( 'Date (dd/mm)', 'user-registration' ),
+				'^[a-zA-Z]+$'                             => __( 'Alpha', 'user-registration' ),
+				'^[a-zA-Z0-9]+$'                          => __( 'Alphanumeric', 'user-registration' ),
+				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'     => __( 'Color', 'user-registration' ),
+				'^[A-Za-z]{2}$'                           => __( 'Country Code (2 Character)', 'user-registration' ),
+				'^[A-Za-z]{3}$'                           => __( 'Country Code (3 Character)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$' => __( 'Date (mm/dd)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$' => __( 'Date (dd/mm)', 'user-registration' ),
 				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$' => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
 				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$' => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
-				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$'   => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
+				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$' => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
 				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$' => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$' =>  __( 'Date (dd/mm/yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$' => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
 				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' => __( 'Email', 'user-registration' ),
 				'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$' => __( 'IP (Version 4)', 'user-registration' ),
-				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'                  => __( 'IP (Version 6)', 'user-registration' ),
-				'^978(?:-[\d]+){3}-[\d]$'                          => __( 'ISBN', 'user-registration' ),
-				'-?\d{1,3}\.\d+'                                   => __( 'Latitude or Longitude', 'user-registration' ),
-				'^[0-9]+$'                                         => __( 'Numeric', 'user-registration' ),
-				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$'       => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
-				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'              => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
-				'[0-9+()-. ]+'                                     => __( 'Phone - General', 'user-registration' ),
-				'^\+44\d{10}$'                                     => __( 'Phone - UK', 'user-registration' ),
-				'\d{3}[\-]\d{3}[\-]\d{4}'                          => __( 'Phone - US: 123-456-7890', 'user-registration' ),
-				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'                    => __( 'Phone - US: (123)456-7890', 'user-registration' ),
-				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}'          => __( 'Phone - US: Flexible', 'user-registration' ),
-				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$'  => __( 'Postal Code (UK)', 'user-registration' ),
-				'\d+(\.\d{2})?$'                                   => __( 'Price (1.23)', 'user-registration' ),
-				'^[a-zA-Z0-9-]+$'                                  => __( 'Slug', 'user-registration' ),
-				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'           => __( 'Time (hh:mm:ss)', 'user-registration' ),
-				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'            => __( 'URL', 'user-registration' ),
-				'(\d{5}([\-]\d{4})?)'                              => __( 'Zip Code', 'user-registration' ),
+				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'         => __( 'IP (Version 6)', 'user-registration' ),
+				'^978(?:-[\d]+){3}-[\d]$'                 => __( 'ISBN', 'user-registration' ),
+				'-?\d{1,3}\.\d+'                          => __( 'Latitude or Longitude', 'user-registration' ),
+				'^[0-9]+$'                                => __( 'Numeric', 'user-registration' ),
+				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$' => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
+				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'     => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
+				'[0-9+()-. ]+'                            => __( 'Phone - General', 'user-registration' ),
+				'^\+44\d{10}$'                            => __( 'Phone - UK', 'user-registration' ),
+				'\d{3}[\-]\d{3}[\-]\d{4}'                 => __( 'Phone - US: 123-456-7890', 'user-registration' ),
+				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'           => __( 'Phone - US: (123)456-7890', 'user-registration' ),
+				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}' => __( 'Phone - US: Flexible', 'user-registration' ),
+				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$' => __( 'Postal Code (UK)', 'user-registration' ),
+				'\d+(\.\d{2})?$'                          => __( 'Price (1.23)', 'user-registration' ),
+				'^[a-zA-Z0-9-]+$'                         => __( 'Slug', 'user-registration' ),
+				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'  => __( 'Time (hh:mm:ss)', 'user-registration' ),
+				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'   => __( 'URL', 'user-registration' ),
+				'(\d{5}([\-]\d{4})?)'                     => __( 'Zip Code', 'user-registration' ),
 			)
 		);
 		return $pattern_lists;
@@ -406,7 +460,7 @@ class UR_Smart_Tags {
 	/**
 	 * Smart tag list button in general setting and advanced settin of field.
 	 *
-	 * @param string $smart_tags list of smart tags.
+	 * @param string $pattern_lists Pattern Lists.
 	 */
 	public function select_pattern_validation( $pattern_lists ) {
 		$pattern_validation_list = self::ur_pattern_validation_lists();

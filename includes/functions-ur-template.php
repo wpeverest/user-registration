@@ -38,8 +38,9 @@ function ur_template_redirect() {
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
 }
@@ -636,7 +637,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
-						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
+						$disalbed = '';
+						if ( 'country' !== $args['field_key'] ) {
+							$disalbed = 'disabled';
+						}
+						$options .= '<option value="" selected ' . esc_attr( $disalbed ) . '>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';

@@ -861,14 +861,14 @@
 					function () {
 						var $size_field = $(this)
 							.closest(".ur-selected-item")
-							.find(".ur-advance-setting-block .ur-settings-size")
+							.find(".ur-advance-setting-block .ur-settings-step")
 							.val();
 						var label = $(this)
 							.closest(".ur-selected-item")
 							.find(".ur-label label")
 							.html();
 
-						if ($size_field < 1) {
+						if ($size_field < 0) {
 							response.validation_status = false;
 							response.message =
 								label +
@@ -2769,7 +2769,7 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "";
+							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
 							var self = this;
 
 							// Get html of selected countries
@@ -3040,8 +3040,7 @@
 									$this_obj
 										.siblings(
 											'input[data-field="default_value"]'
-										)
-										.is(":checked")
+										).length>0
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3217,6 +3216,11 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
+						case "step" :
+							$this_node.on("keyup keydown", function() {
+								$this_node.attr("step", $this_node.val());
+							});
+							break;
 						case "limit_length":
 						case "minimum_length":
 							$this_node.on("change", function () {
@@ -3826,15 +3830,28 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = this_node.val().trim();
+				var value = '';
+				if(this_node.is(":checked")) {
+					var value = this_node.val().trim();
+				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
+				if(this_node.hasClass('ur-type-radio-label')) {
+					value = select.val();
+				}
+
+				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
+					return $(this).val();
+				});
+
 				select.html("");
-				select.append(
-					"<option value='" + value + "'>" + value + "</option>"
-				);
+				$.each(options, function(key, option){
+					select.append(
+						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+					);
+				});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper

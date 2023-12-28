@@ -180,15 +180,31 @@ class UR_Admin_User_List_Manager {
 	 * Display a notice to admin notifying the pending users.
 	 */
 	public function user_registration_pending_users_notices() {
-
-		$args = $this->get_pending_users_meta_query();
+		global $wpdb;
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
-		$user_query = new WP_User_Query( $args );
+
+		$users = $wpdb->get_results(
+			"SELECT *
+			FROM {$wpdb->prefix}users AS users
+			JOIN {$wpdb->prefix}usermeta AS meta1 ON users.ID = meta1.user_id
+			WHERE meta1.meta_key = 'ur_user_status' AND meta1.meta_value = '0'
+			AND (
+				((meta1.meta_key = 'ur_confirm_email' AND meta1.meta_value != '0')
+				OR NOT EXISTS (
+					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
+				))
+				OR
+				(
+				(meta1.meta_key = 'ur_admin_approval_after_email_confirmation' AND meta1.meta_value = 'false')
+				OR NOT EXISTS (
+					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
+				)
+			));"
+		);
 
 		// Get the results from the query, returning the first user.
-		$users          = $user_query->get_results();
 		$current_screen = get_current_screen();
 		$ur_pages       = ur_get_screen_ids();
 		array_push( $ur_pages, 'users' );
@@ -403,7 +419,6 @@ class UR_Admin_User_List_Manager {
 		</select>
 		<?php
 		submit_button( esc_html__( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
-
 	}
 
 	/**
@@ -546,7 +561,7 @@ class UR_Admin_User_List_Manager {
 				continue;}
 
 			$user_manager->save_status( $status );
-			$c++;
+			++$c;
 		}
 
 		wp_safe_redirect( add_query_arg( $query_arg, $c, $redirect ) );
@@ -616,6 +631,8 @@ class UR_Admin_User_List_Manager {
 		if ( '' === $user_email_status && $user_status == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		} elseif ( '' !== $user_email_status && $user_status == $_POST['ur_user_user_status'] && $user_email_status == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return false;
+		} elseif ( $user_manager->is_approved() && '1' == $_POST['ur_user_user_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 

@@ -54,56 +54,38 @@ function ur_status_widget() {
  * @return array
  */
 function ur_get_user_report( $form_id ) {
-	$current_date     = current_time( 'Y-m-d' );
-	$users            = get_users(
-		array(
-			'meta_key' => 'ur_form_id',
+	global $wpdb;
+	$current_date = current_time( 'Y-m-d' );
+
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT
+				COUNT(*) AS total_users,
+				SUM(CASE WHEN DATE(user_registered) = %s THEN 1 ELSE 0 END) AS today_users,
+				SUM(CASE WHEN DATE(user_registered) > DATE_SUB(%s, INTERVAL 1 WEEK) THEN 1 ELSE 0 END) AS last_week_users,
+				SUM(CASE WHEN DATE(user_registered) > DATE_SUB(%s, INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS last_month_users
+			FROM {$wpdb->users} u
+			INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id
+			WHERE um.meta_key = 'ur_form_id' AND um.meta_value = %s
+			",
+			$current_date,
+			$current_date,
+			$current_date,
+			$form_id
 		)
 	);
-	$total_users      = 0;
-	$today_users      = 0;
-	$last_week_users  = 0;
-	$last_month_users = 0;
 
-	foreach ( $users as $user ) {
-		$user_registered = date_i18n( 'Y-m-d', strtotime( $user->data->user_registered ) );
-		$user_form       = get_user_meta( $user->ID, 'ur_form_id', true );
+	$report = array();
 
-		if ( (int) $form_id === (int) $user_form ) {
+	if ( $results ) {
+		$report = array(
+			'total_users'      => empty( $results[0]->total_users ) ? 0 : $results[0]->total_users,
+			'today_users'      => empty( $results[0]->today_users ) ? 0 : $results[0]->today_users,
+			'last_week_users'  => empty( $results[0]->last_week_users ) ? 0 : $results[0]->last_week_users,
+			'last_month_users' => empty( $results[0]->last_month_users ) ? 0 : $results[0]->last_month_users,
+		);
 
-			// Count today users.
-			if ( $user_registered === $current_date ) {
-				$today_users++;
-			}
-
-			// Get last week date.
-			$last_week = strtotime( 'now' ) - WEEK_IN_SECONDS;
-			$last_week = date_i18n( 'Y-m-d', $last_week );
-
-			// Get last month date.
-			$last_month = strtotime( 'now' ) - MONTH_IN_SECONDS;
-			$last_month = date_i18n( 'Y-m-d', $last_month );
-
-			// Get last week users count.
-			if ( $user_registered > $last_week ) {
-				$last_week_users++;
-			}
-
-			// Get last month users count.
-			if ( $user_registered > $last_month ) {
-				$last_month_users++;
-			}
-
-			$total_users++; // Total users of selected form.
-		}
 	}
-
-	$report = array(
-		'total_users'      => $total_users,
-		'today_users'      => $today_users,
-		'last_week_users'  => $last_week_users,
-		'last_month_users' => $last_month_users,
-	);
 
 	return $report;
 }
@@ -379,7 +361,7 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 function user_registration_admin_fields( $options ) {
 
 	if ( ! class_exists( 'UR_Admin_Settings', false ) ) {
-		include dirname( __FILE__ ) . '/class-ur-admin-settings.php';
+		include __DIR__ . '/class-ur-admin-settings.php';
 	}
 
 	UR_Admin_Settings::output_fields( $options );
@@ -394,7 +376,7 @@ function user_registration_admin_fields( $options ) {
 function user_registration_update_options( $options, $data = null ) {
 
 	if ( ! class_exists( 'UR_Admin_Settings', false ) ) {
-		include dirname( __FILE__ ) . '/class-ur-admin-settings.php';
+		include __DIR__ . '/class-ur-admin-settings.php';
 	}
 
 	UR_Admin_Settings::save_fields( $options, $data );
@@ -411,7 +393,7 @@ function user_registration_update_options( $options, $data = null ) {
 function user_registration_settings_get_option( $option_name, $default = '' ) {
 
 	if ( ! class_exists( 'UR_Admin_Settings', false ) ) {
-		include dirname( __FILE__ ) . '/class-ur-admin-settings.php';
+		include __DIR__ . '/class-ur-admin-settings.php';
 	}
 
 	return UR_Admin_Settings::get_option( $option_name, $default );
@@ -688,7 +670,6 @@ if ( ! function_exists( 'survey_notice_content' ) ) {
 				)
 			)
 		);
-
 	}
 }
 

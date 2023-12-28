@@ -125,17 +125,23 @@
 								});
 
 								if (field_type == "checkbox") {
-									if ('' !== user_registration_params.is_payment_compatible ){
+									if (
+										"" !==
+										user_registration_params.is_payment_compatible
+									) {
 										if (
 											field.eq(0).attr("data-field") ==
 											"multiple_choice"
 										) {
-
 											$(document).trigger(
 												"user_registration_frontend_multiple_choice_data_filter",
 												[field_value, field]
 											);
-											field_value = field.closest(".field-multiple_choice").data("payment-value");
+											field_value = field
+												.closest(
+													".field-multiple_choice"
+												)
+												.data("payment-value");
 
 											var field_value_json =
 												JSON.stringify(field_value);
@@ -143,7 +149,7 @@
 											var field_value_json =
 												JSON.stringify(field_value);
 										}
-									}else {
+									} else {
 										if (
 											field.eq(0).attr("data-field") ==
 											"multiple_choice"
@@ -1772,6 +1778,7 @@
 				});
 			}
 		});
+
 	};
 
 	/**
@@ -1823,6 +1830,7 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
+
 })(jQuery);
 
 function ur_includes(arr, item) {
