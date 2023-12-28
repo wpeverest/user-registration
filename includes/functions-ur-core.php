@@ -1749,6 +1749,18 @@ function ur_is_json( $str ) {
 /**
  * Checks if the form contains a date field or not.
  *
+ * @deprecated 3.1.3
+ * @param  int $form_id     Form ID.
+ * @since  1.5.3
+ * @return void
+ */
+function ur_has_date_field( $form_id ) {
+	ur_deprecated_function( 'ur_has_date_field', '3.1.3', 'ur_has_flatpickr_field' );
+}
+
+/**
+ * Checks if the form contains a date and time field or not.
+ *
  * @param  int $form_id     Form ID.
  * @since  1.5.3
  * @return boolean
