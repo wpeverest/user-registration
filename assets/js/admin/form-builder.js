@@ -861,14 +861,14 @@
 					function () {
 						var $size_field = $(this)
 							.closest(".ur-selected-item")
-							.find(".ur-advance-setting-block .ur-settings-step")
+							.find(".ur-advance-setting-block .ur-settings-size")
 							.val();
 						var label = $(this)
 							.closest(".ur-selected-item")
 							.find(".ur-label label")
 							.html();
 
-						if ($size_field < 0) {
+						if ($size_field < 1) {
 							response.validation_status = false;
 							response.message =
 								label +
@@ -1131,6 +1131,11 @@
 										"input.ur-checkbox-selling-price-input"
 									)
 									.val();
+								var image = $(element)
+									.find(
+										"input.ur-type-image-choice"
+									)
+									.val();
 								if (
 									array_value.every(function (each_value) {
 										return each_value.label !== label;
@@ -1141,11 +1146,47 @@
 											label: label,
 											value: value,
 											sell_value: sell_value,
+											image: image,
 										});
 								}
 								general_setting_data["options"] = array_value;
 							});
-						} else if (
+						} else if ("image-choice" === $(this).attr("data-field-name") ) {
+							var li_elements = $(this).closest("ul").find("li");
+							var array_value = [];
+
+							li_elements.each(function (index, element) {
+							  var label = $(element).find("input.ur-type-radio-label,input.ur-type-checkbox-label").val();
+							  var image = $(element).find("input.ur-type-image-choice").val();
+
+							  if (array_value.every(function (each_value) {
+								return each_value.label !== label;
+							  })) {
+								array_value.push({
+								  label: label,
+								  image: image,
+								});
+							  }
+							});
+
+							general_setting_data["image_options"] = array_value;
+
+							var choice_value = URFormBuilder.get_ur_data(
+								$(this)
+							).trim();
+
+							if (
+								option_values.every(function (each_value) {
+									return each_value !== choice_value;
+								})
+							) {
+								general_setting_data["options"] =
+								option_values.push(choice_value);
+							}
+							var filteredArray = option_values.filter(Boolean);
+							general_setting_data["options"] = filteredArray;
+
+						  } else if (
 							"captcha" === $(this).attr("data-field-name")
 						) {
 							var li_elements = $(this).closest("ul").find("li");
@@ -1264,7 +1305,13 @@
 								break;
 
 							default:
-								value = $this_node.val();
+								if (
+									!$this_node.hasClass(
+										"ur-type-image-choice"
+									)
+								) {
+									value = $this_node.val();
+								}
 								break;
 						}
 
@@ -2769,7 +2816,7 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
+							var html = "";
 							var self = this;
 
 							// Get html of selected countries
@@ -3040,7 +3087,8 @@
 									$this_obj
 										.siblings(
 											'input[data-field="default_value"]'
-										).length>0
+										)
+										.is(":checked")
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3216,11 +3264,6 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
-						case "step" :
-							$this_node.on("keyup keydown", function() {
-								$this_node.attr("step", $this_node.val());
-							});
-							break;
 						case "limit_length":
 						case "minimum_length":
 							$this_node.on("change", function () {
@@ -3830,28 +3873,15 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
-					var value = this_node.val().trim();
-				}
+				var value = this_node.val().trim();
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-radio-label')) {
-					value = select.val();
-				}
-
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
-					return $(this).val();
-				});
-
 				select.html("");
-				$.each(options, function(key, option){
-					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
-					);
-				});
+				select.append(
+					"<option value='" + value + "'>" + value + "</option>"
+				);
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
@@ -3877,6 +3907,7 @@
 			render_radio: function (this_node) {
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = undefined;
+				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
 				var array_value = [];
 
 				li_elements.each(function (index, element) {
@@ -3891,6 +3922,11 @@
 					radio = $(element)
 						.find("input.ur-type-radio-value")
 						.is(":checked");
+
+					var image = $(element)
+						.find("input.ur-type-image-choice")
+						.val();
+
 					// Set checked elements index value
 					if (radio === true) {
 						checked_index = index;
@@ -3901,7 +3937,7 @@
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, radio: radio });
+						array_value.push({ value: value, radio: radio, image:image });
 					}
 				});
 
@@ -3910,9 +3946,19 @@
 				radio.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
+					var imageHTML = '';
+					if ( image_image.is(":checked") ) {
+						if (array_value[i].image && array_value[i].image.trim() !== "") {
+							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+						} else {
+							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+						}
+					}
 					if (array_value[i] !== "") {
 						radio.append(
-							'<label><input value="' +
+							'<label><span class="user-registration-image-choice">' +
+							imageHTML +
+							'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="radio" ' +
 								(array_value[i].radio ? "checked" : "") +
@@ -3948,6 +3994,7 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
+				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
 				li_elements.each(function (index, element) {
 					var value = $(element)
 						.find("input.ur-type-checkbox-label")
@@ -3971,13 +4018,17 @@
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
 						.is(":checked");
+					var image = $(element)
+						.find("input.ur-type-image-choice")
+						.val();
+
 
 					if (
 						array_value.every(function (each_value) {
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, checkbox: checkbox });
+						array_value.push({ value: value, checkbox: checkbox, image:image });
 					}
 				});
 
@@ -3986,13 +4037,23 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
+					var imageHTML = '';
+					if ( image_image.is(":checked") ) {
+						if (array_value[i].image && array_value[i].image.trim() !== "") {
+							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+						} else {
+							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+						}
+					}
 					if (array_value[i] !== "") {
 						array_value[i].value = array_value[i].value.replaceAll(
 							'"',
 							"'"
 						);
 						checkbox.append(
-							'<label><input value="' +
+							'<label><span class="user-registration-image-choice">' +
+							imageHTML +
+							'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
@@ -4034,6 +4095,8 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
+				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+
 				li_elements.each(function (index, element) {
 					var label = $(element)
 						.find("input.ur-type-checkbox-label")
@@ -4044,6 +4107,9 @@
 					var sell_value = $(element)
 						.find("input.ur-checkbox-selling-price-input")
 						.val();
+					var image = $(element)
+						.find("input.ur-type-image-choice")
+						.val();
 					var currency = $(element)
 						.find("input.ur-type-checkbox-money-input")
 						.attr("data-currency");
@@ -4051,6 +4117,7 @@
 					label = label.trim();
 					value = value.trim();
 					sell_value = sell_value.trim();
+					image = image.trim();
 					currency = currency.trim();
 					checkbox = $(element)
 						.find("input.ur-type-checkbox-value")
@@ -4065,6 +4132,7 @@
 							label: label,
 							value: value,
 							sell_value: sell_value,
+							image: image,
 							currency: currency,
 							checkbox: checkbox,
 						});
@@ -4076,9 +4144,19 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
+					var imageHTML = '';
+					if ( image_image.is(":checked") ) {
+						if (array_value[i].image && array_value[i].image.trim() !== "") {
+							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+						} else {
+							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+						}
+					}
 					if (array_value[i] !== "") {
 						checkbox.append(
-							'<label><input value="' +
+							'<label><span class="user-registration-image-choice">' +
+							imageHTML +
+							'</span><input value="' +
 								array_value[i].label.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
