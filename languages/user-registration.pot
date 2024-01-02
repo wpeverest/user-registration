@@ -1,4 +1,4 @@
-# Copyright (C) 2023 WPEverest
+# Copyright (C) 2024 WPEverest
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-12-28T06:58:19+00:00\n"
+"POT-Creation-Date: 2024-01-02T03:50:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: user-registration\n"
