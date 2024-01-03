@@ -12,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Compatibility for older version. Get string value from options in advanced settings. Modified since @1.5.7 .
 $default_values = isset( $this->admin_data->general_setting->default_value ) ? $this->admin_data->general_setting->default_value : array();
 $placeholder    = UR()->plugin_url() . '/assets/images/UR-placeholder.png';
+$image_class    = '';
 if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_bool( $this->admin_data->general_setting->image_choice ) ) {
+	$image_class     = 'user-registration-image-options';
 	$default_options = isset( $this->field_defaults['default_image_options'] ) ? $this->field_defaults['default_image_options'] : array();
 	$options         = isset( $this->admin_data->general_setting->image_options ) ? $this->admin_data->general_setting->image_options : $default_options;
 	$options         = array_map(
@@ -37,7 +39,7 @@ if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_b
 	<div class="ur-label">
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
-	<div class="ur-field" data-field-key="checkbox">
+	<div class="ur-field <?php esc_attr_e( $image_class ); ?>" data-field-key="checkbox">
 		<?php
 		if ( count( $options ) < 1 ) {
 			echo "<label><input type = 'checkbox'  value='1' disabled/></label>";

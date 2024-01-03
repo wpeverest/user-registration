@@ -4501,9 +4501,8 @@
 			 */
 			add_choice_field_option: function ($this, value) {
 				var $wrapper = $(".ur-selected-item.ur-item-active"),
-					this_index = $this.parent("li").index(),
-					cloning_element = $this.parent("li").clone(true, true);
-
+					this_index = $this.closest("li").index(),
+					cloning_element = $this.closest("li").clone(true, true);
 				cloning_element
 					.find('input[data-field="options"]')
 					.val(typeof value !== "undefined" ? value : "");
@@ -4511,8 +4510,9 @@
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
 				cloning_element.find('select[data-field="options"]').val("");
+				cloning_element.find('.ur-thumbnail-image img').attr("src","");
 
-				$this.parent("li").after(cloning_element);
+				$this.closest("li").after(cloning_element);
 				$wrapper
 					.find(
 						".ur-general-setting-options .ur-options-list > li:nth( " +
@@ -4554,10 +4554,10 @@
 				var $parent_ul = $this.closest("ul"),
 					$any_siblings = $parent_ul.find("li"),
 					$wrapper = $(".ur-selected-item.ur-item-active"),
-					this_index = $this.parent("li").index();
+					this_index = $this.closest("li").index();
 
 				if ($parent_ul.find("li").length > 1) {
-					$this.parent("li").remove();
+					$this.closest("li").remove();
 					$wrapper
 						.find(
 							".ur-general-setting-options .ur-options-list > li:nth( " +

@@ -325,7 +325,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$checkbox_start = 0;
 
-						$field .= '<ul ' . $choice_limit_attr . '>';
+						$field .= '<ul ' . $choice_limit_attr . 'class="user-registration-image-options">';
 
 					if ( $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
@@ -741,7 +741,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) ) {
-					$field .= '<ul>';
+					$field .= '<ul class="user-registration-image-options">';
 					foreach ( $args['image_options'] as $option_index => $option_text ) {
 						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
 						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
