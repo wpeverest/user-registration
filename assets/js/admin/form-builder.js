@@ -289,6 +289,7 @@
 				}
 
 				var form_data = URFormBuilder.get_form_data();
+				var row_data = URFormBuilder.get_form_row_data();
 				var form_row_ids = URFormBuilder.get_form_row_ids();
 				var ur_form_id = $("#ur_form_id").val();
 				var ur_form_id_localization =
@@ -333,6 +334,7 @@
 					security: user_registration_form_builder_data.ur_form_save,
 					data: {
 						form_data: JSON.stringify(form_data),
+						row_data: JSON.stringify(row_data),
 						form_row_ids: JSON.stringify(form_row_ids),
 						form_name: $("#ur-form-name").val(),
 						form_id: ur_form_id,
@@ -1063,6 +1065,44 @@
 				return form_data;
 			},
 			/**
+			 * Get all the form row data form builder.
+			 */
+			get_form_row_data: function () {
+				var row_data = [];
+				var single_row = $(".ur-input-grids .ur-single-row");
+				$.each(single_row, function () {
+					var single_row_data = {};
+
+					if ($(this).attr("data-repeater-id")) {
+						single_row_data.row_id = $(this).attr("data-row-id");
+						single_row_data.repeater_id =
+							$(this).attr("data-repeater-id");
+						single_row_data.type = "repeater";
+
+						var repeater_row_setting = $(
+							"#ur-repeater-settings"
+						).serializeArray();
+
+						$.each(repeater_row_setting, function (key, value) {
+							single_row_data[
+								value.name
+									.replace(
+										"user_registration_repeater_row_",
+										""
+									)
+									.replace(
+										"_" + single_row_data.repeater_id,
+										""
+									)
+							] = value.value;
+						});
+						row_data.push(single_row_data);
+					}
+				});
+
+				return row_data;
+			},
+			/**
 			 * Get all the grid wise form data from form builder.
 			 *
 			 * @param Object $grid_item Contains information about grids in which the whole form has been divided into.
@@ -1570,7 +1610,7 @@
 
 								if ($this.find(".ur-add-new-row").length == 0) {
 									$this.append(
-										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0">' +
+										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle">' +
 											user_registration_form_builder_data.add_new +
 											"</button>"
 									);
@@ -1581,7 +1621,7 @@
 										.prev()
 										.attr("data-row-id");
 									$this
-										.find(".ur-add-new-row")
+										.find(".ur-row-buttons")
 										.attr("data-total-rows", total_rows);
 								}
 								events.render_draggable_sortable();
@@ -1964,14 +2004,17 @@
 								var $this_obj = this;
 								$("body").on(
 									"click",
-									".ur-add-new-row",
+									".ur-add-row",
 									function () {
-										var total_rows =
-											$(this).attr("data-total-rows");
-										$(this).attr(
-											"data-total-rows",
-											parseInt(total_rows) + 1
-										);
+										var total_rows = $(this)
+											.closest(".ur-row-buttons")
+											.attr("data-total-rows");
+										$(this)
+											.closest(".ur-row-buttons")
+											.attr(
+												"data-total-rows",
+												parseInt(total_rows) + 1
+											);
 
 										var single_row_clone = $(this)
 											.closest(".ur-input-grids")
@@ -2004,11 +2047,41 @@
 											.find(".ur-grid-lists")
 											.append(grid_list.html());
 										single_row_clone.insertBefore(
-											".ur-add-new-row"
+											".ur-row-buttons"
 										);
 										single_row_clone.show();
 										$this_obj.render_draggable_sortable();
 										builder.manage_empty_grid();
+
+										if (
+											$(this).hasClass(
+												"ur-add-repeater-row"
+											)
+										) {
+											single_row_clone.addClass(
+												"ur-repeater-row"
+											);
+
+											var repeater_count = $(this)
+													.closest(".ur-input-grids")
+													.find(
+														".ur-repeater-row"
+													).length,
+												repeater_div =
+													'<div class="ur-repeater-label"  id="user_registration_repeater_row_title_' +
+													repeater_count +
+													'"><label>Repeater Row</label></div>';
+											single_row_clone.attr(
+												"data-repeater-id",
+												repeater_count
+											);
+											$(repeater_div).insertBefore(
+												single_row_clone.find(
+													".ur-grid-lists"
+												)
+											);
+										}
+
 										$(document).trigger(
 											"user_registration_row_added",
 											[single_row_clone]
@@ -2769,7 +2842,10 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
+							var html =
+								"<option value=''>" +
+								user_registration_form_settings_params.ur_default_country_value_option +
+								"</option>";
 							var self = this;
 
 							// Get html of selected countries
@@ -3037,10 +3113,9 @@
 										.hasClass(
 											"ur-general-setting-select"
 										) &&
-									$this_obj
-										.siblings(
-											'input[data-field="default_value"]'
-										).length>0
+									$this_obj.siblings(
+										'input[data-field="default_value"]'
+									).length > 0
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3216,8 +3291,8 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
-						case "step" :
-							$this_node.on("keyup keydown", function() {
+						case "step":
+							$this_node.on("keyup keydown", function () {
 								$this_node.attr("step", $this_node.val());
 							});
 							break;
@@ -3553,50 +3628,56 @@
 									.toggle();
 							});
 							break;
-							case 'enable_time_slot_booking':
-
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-timepicker'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_time_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-timepicker"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-target_date_field")
 									.hide();
 							}
-							if($this_node.is(":checked")){
-
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 
-								if(!$(this)
-								.closest(".ur-advance-setting-block")
-								.find(".ur-settings-time_range").is(":checked")){
-
+								if (
+									!$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.is(":checked")
+								) {
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.trigger("click");
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.trigger("click");
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.attr("checked", true);
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.attr("checked", true);
 								}
 
-								$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-time_range")
+									.hide();
 							}
 
 							$this_node.on("change", function () {
-
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 
@@ -3605,49 +3686,65 @@
 									.find(".ur-advance-target_date_field")
 									.toggle();
 
-								if($(this).is(":checked")){
-
-									if(!$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range").is(":checked")){
-
+								if ($(this).is(":checked")) {
+									if (
+										!$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.is(":checked")
+									) {
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.trigger("click");
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.trigger("click");
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.attr("checked", true);
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.attr("checked", true);
 									}
 
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
-								}else{
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.hide();
+								} else {
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.show();
 								}
-
 							});
 							break;
-						case 'enable_date_slot_booking':
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-date'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_date_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-date"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 
-							if($this_node.is(":checked")){
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 							}
 
 							$this_node.on("change", function () {
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 							});
@@ -3830,26 +3927,35 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
+				var value = "";
+				if (this_node.is(":checked")) {
 					var value = this_node.val().trim();
 				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-radio-label')) {
+				if (this_node.hasClass("ur-type-radio-label")) {
 					value = select.val();
 				}
 
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
-					return $(this).val();
-				});
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find("input.ur-general-setting-field.ur-type-radio-label")
+					.map(function () {
+						return $(this).val();
+					});
 
 				select.html("");
-				$.each(options, function(key, option){
+				$.each(options, function (key, option) {
 					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
 					);
 				});
 

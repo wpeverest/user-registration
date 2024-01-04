@@ -650,11 +650,11 @@ class UR_AJAX {
 		global $wpdb;
 		try {
 			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
-			$id                     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+			$id                          = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
-			$form_id_shortcode      = '%{"formId":"' . $id . '"%';
-			$pages                  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$page_list              = array();
+			$form_id_shortcode           = '%{"formId":"' . $id . '"%';
+			$pages                       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$page_list                   = array();
 			foreach ( $pages as $page ) {
 				if ( '0' === $page->post_parent ) {
 					$page_title               = $page->post_title;
@@ -790,6 +790,7 @@ class UR_AJAX {
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
+			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -816,6 +817,9 @@ class UR_AJAX {
 
 				// Form row_id save.
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
+
+				// Form row_data save.
+				update_post_meta( $form_id, 'user_registration_form_row_data', $form_row_data );
 			}
 
          do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore

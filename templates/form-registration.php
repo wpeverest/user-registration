@@ -71,7 +71,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 			?>
 			<div class="user-registration-info">
 				<?php
-				echo sprintf(
+				printf(
 					/* translators: %s: Form Status. */
 					esc_html__( 'Form not Found. Please contact your site administrator.', 'user-registration' ),
 					esc_html( ucfirst( $form_status ) )
@@ -83,7 +83,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 			?>
 			<div class="user-registration-info">
 				<?php
-				echo sprintf(
+				printf(
 					/* translators: %s: Form Status. */
 					esc_html__( 'The form is in %s. Please contact your site administrator.', 'user-registration' ),
 					esc_html( ucfirst( $form_status ) )
@@ -102,56 +102,58 @@ do_action( 'user_registration_before_registration_form', $form_id );
 				foreach ( $form_data_array as $index => $data ) {
 					$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
 					do_action( 'user_registration_before_field_row', $row_id, $form_data_array, $form_id );
-					?>
-							<div class='ur-form-row'>
-							<?php
-								$width = floor( 100 / count( $data ) ) - count( $data );
+					$form_row_div = apply_filters( 'user_registration_frontend_form_row_start', '<div class="ur-form-row">', $form_id, $row_id );
+					echo wp_kses_post( $form_row_div );
 
-							foreach ( $data as $grid_key => $grid_data ) {
+					$width = floor( 100 / count( $data ) ) - count( $data );
+
+					foreach ( $data as $grid_key => $grid_data ) {
+						?>
+						<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
+							style="width:<?php echo esc_attr( $width ); ?>%">
+						<?php
+						$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
+						foreach ( $grid_data as $grid_data_key => $single_item ) {
+
+							if ( isset( $single_item->field_key ) ) {
+								$field_id = $single_item->general_setting->field_name;
+								$cl_props = '';
+
+								// If the conditional logic addon is installed.
+								if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+									// Migrate the conditional logic to logic_map schema.
+									$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item; //phpcs:ignore
+
+									$enabled_status = isset( $single_item->advance_setting->enable_conditional_logic ) ? $single_item->advance_setting->enable_conditional_logic : '';
+									$cl_enabled     = ur_string_to_bool( $enabled_status );
+									$cl_map         = '';
+									$cl_props       = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+									if ( $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+										$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
+										$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
+									}
+								}
 								?>
-											<div class="ur-form-grid ur-grid-<?php echo esc_attr( $grid_key + 1 ); ?>"
-												style="width:<?php echo esc_attr( $width ); ?>%">
+									<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
 										<?php
-											$grid_data = apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
-										foreach ( $grid_data as $grid_data_key => $single_item ) {
-
-											if ( isset( $single_item->field_key ) ) {
-												$field_id = $single_item->general_setting->field_name;
-												$cl_props = '';
-
-												// If the conditional logic addon is installed.
-												if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
-													// Migrate the conditional logic to logic_map schema.
-													$single_item = class_exists( 'URCL_Field_Settings' ) && method_exists( URCL_Field_Settings::class, 'migrate_to_logic_map_schema' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item; //phpcs:ignore
-
-													$enabled_status = isset( $single_item->advance_setting->enable_conditional_logic ) ? $single_item->advance_setting->enable_conditional_logic : '';
-													$cl_enabled     = ur_string_to_bool( $enabled_status );
-													$cl_map         = '';
-													$cl_props       = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
-
-													if ( $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
-														$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
-														$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
-													}
-												}
-												?>
-																<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
-														<?php
-														do_action( 'user_registration_before_frontend_form_field', $single_item, $form_id );
-														$frontend->user_registration_frontend_form( $single_item, $form_id );
-														do_action( 'user_registration_after_frontend_form_field', $single_item, $form_id );
-														$is_field_exists = true;
-														?>
-																</div>
-														<?php
-											}
-										}
+										do_action( 'user_registration_before_frontend_form_field', $single_item, $form_id );
+										$frontend->user_registration_frontend_form( $single_item, $form_id );
+										do_action( 'user_registration_after_frontend_form_field', $single_item, $form_id );
+										$is_field_exists = true;
 										?>
-											</div>
+									</div>
 										<?php
 							}
-							?>
-							</div>
+						}
+						?>
+						</div>
+						<?php
+					}
+					$form_row_end_div = apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $row_id );
+					echo $form_row_end_div;
+					?>
+					</div>
 					<?php
 					do_action( 'user_registration_after_field_row', $row_id, $form_data_array, $form_id );
 				}

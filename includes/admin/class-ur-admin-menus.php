@@ -825,9 +825,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( ! empty( $form_data ) ) {
 				$form_data_content = $form_data->post_content;
 				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
+				$form_row_data     = get_post_meta( $form_data->ID, 'user_registration_form_row_data', true );
 			} else {
 				$form_data_content = '';
 				$form_row_ids      = '';
+				$form_row_data     = '';
 			}
 
 			try {
@@ -849,6 +851,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				}
 			} catch ( Exception $e ) {
 				$form_row_ids_array = array();
+			}
+
+			try {
+				$form_row_data_array = json_decode( $form_row_data, true );
+
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					throw new Exception( '' );
+				}
+			} catch ( Exception $e ) {
+				$form_row_data_array = array();
 			}
 
 			echo '<div class="ur-selected-inputs">';
@@ -873,8 +885,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$last_id = 0;
 
 				foreach ( $form_data_array as $index => $rows ) {
-					$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
-					$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
+					$row_id        = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
+					$last_id       = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
+					$row_data      = array();
+					$row_class     = '';
+					$row_data_attr = '';
+					foreach ( $form_row_data_array as $single_row ) {
+						if ( $single_row['row_id'] === $row_id ) {
+							$repeater_id   = isset( $single_row['repeater_id'] ) ? $single_row['repeater_id'] : '';
+							$row_data_attr = 'data-repeater-id="' . $repeater_id . '"';
+							$row_class     = 'ur-repeater-row';
+							$row_data      = $single_row;
+						}
+					}
 
 					$grid_count = count( $rows );
 
@@ -900,7 +923,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'fill' => true,
 						),
 					);
-					echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
+					echo '<div class="ur-single-row ' . $row_class . '"  data-row-id="' . esc_attr( absint( $row_id ) ) . '" ' . $row_data_attr . '>';
 					?>
 
 				<div class="ur-grids">
@@ -934,6 +957,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				</div>
 
 					<?php
+					if ( ! empty( $row_data ) ) {
+						echo '<div class="ur-repeater-label" id="user_registration_repeater_row_title_' . esc_attr( $row_data['repeater_id'] ) . '"><label>' . esc_html( 'Repeater Row', 'user-registration' ) . '</label></div>';
+					}
+
 					echo '<div class="ur-grid-lists">';
 
 					$grid_id = 0;
@@ -972,7 +999,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					echo '</div>';
 
 				}
-				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				echo '<div class="ur-row-buttons" data-total-rows="' . esc_attr( $last_id ) . '">';
+				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-row ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				do_action( 'user_registration_form_builder_row_buttons', $last_id );
+				echo '</div>';
 				echo '</div>';
 				echo '</div>';
 				echo '</div>';
