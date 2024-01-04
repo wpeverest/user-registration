@@ -48,13 +48,15 @@ if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_b
 
 			if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_bool( $this->admin_data->general_setting->image_choice ) ) {
 				foreach ( $options as $option ) {
-					$checked = '';
+					$checked       = '';
+					$checked_class = '';
 
 					$label = is_array( $option ) ? $option['label'] : $option->label;
 					$image = is_array( $option ) ? $option['image'] : $option->image;
 
 					if ( ! empty( $option ) ) {
-						$checked = checked( $label, $default_value, false );
+						$checked       = checked( $label, $default_value, false );
+						$checked_class = ( $label === $default_value ) ? 'ur-image-choice-checked' : '';
 					}
 
 					echo "<label><span class='user-registration-image-choice'>";

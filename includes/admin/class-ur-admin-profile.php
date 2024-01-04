@@ -206,8 +206,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											foreach ( $field['image_options'] as $option_key => $option_value ) {
 												$label_option = is_array( $option_value ) ? $option_value['label'] : $option_value->label;
 												$image_option = is_array( $option_value ) ? $option_value['image'] : $option_value->image;
+												$checked      = ( $label_option === $db_value ) ? 'ur-image-choice-checked' : '';
 												?>
-												<label>
+												<label class="user-registation-image-options <?php esc_attr_e( $checked ); ?>">
 												<?php if ( ! empty( $image_option ) ) { ?>
 													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_option ); ?>" alt="<?php esc_attr_e( $label_option ); ?>" width="200px" height="200px"></span>
 													<?php
@@ -245,8 +246,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										foreach ( $field['image_options'] as $choice_key => $choice_value ) {
 											$label_choice = is_array( $choice_value ) ? ur_sanitize_tooltip( trim( $choice_value['label'] ) ) : ur_sanitize_tooltip( trim( $choice_value->label ) );
 											$image_choice = is_array( $choice_value ) ? $choice_value['image'] : $choice_value->image;
+											$checked      = in_array( $label_choice, $value ) ? 'ur-image-choice-checked' : '';
 											?>
-												<label>
+												<label class="user-registation-image-options <?php esc_attr_e( $checked ); ?>">
 												<?php if ( ! empty( $image_choice ) ) { ?>
 													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr_e( $label_choice ); ?>" width="200px" height="200px"></span>
 													<?php
