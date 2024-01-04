@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.4.2
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,26 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.3    - 02/01/2024
+* Enhance  - Smart tags parseable endpoint content.
+* Tweak    - Default form fields re arrangement.
+* Tweak    - Pending users meta query optimization.
+* Tweak    - Parse approval link smart tag properly.
+* Tweak    - Manual user counting replaced with SQL query.
+* Tweak    - Added New option None in the default of country field.
+* Tweak    - Escape and made the Approve now text translation ready.
+* Fix      - Support decimal value in number field.
+* Fix      - Select field option not changing instantly.
+* Fix      - Lost password page redirecting to login page.
+* Fix      - Send email change confirmation with templates.
+* Fix      - Placeholder is not working in the country field.
+* Fix      - Email not sent when stripe conditionally hidden.
+* Fix      - Welcome email sent when profile details updated by admin.
+* Dev      - Deprecated ur_has_date_field function.
+* Dev      - Trigger hook for redirect after logout.
+* Dev      - Added filter hook to modify find myaccount shortcode in page.
+* Dev      - Deprecated user_registration_before_edit_profile_form action hook.
 
 = 3.1.2    - 13/12/2023
 * Refactor - Timepicker library changed from timepicker to flatpickr.

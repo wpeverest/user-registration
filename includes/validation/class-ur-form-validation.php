@@ -671,14 +671,6 @@ class UR_Form_Validation extends UR_Validation {
 				if ( 'date' === $field_setting['field_key'] || 'timepicker' === $field_setting['field_key'] ) {
 					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
 				}
-				/**
-				 * Slot booking backend validation.
-				 *
-				 * @since 4.1.0
-				 */
-				if ( 'date' === $field_setting['field_key'] || 'timepicker' === $field_setting['field_key'] ) {
-					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
-				}
 
 				if ( 'user_email' === $field_setting['field_key'] ) {
 
