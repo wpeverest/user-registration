@@ -600,13 +600,13 @@ class UR_Form_Validation extends UR_Validation {
 		$filteredfields = array_filter(
 			$form_field_data,
 			function ( $fields ) {
-				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && $fields->advance_setting->field_visibility === 'reg_form';
+				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
 			}
 		);
 
-		$invisibleFieldNames = array_column( $filteredfields, 'general_setting' );
-		$invisibleFieldNames = array_column( $invisibleFieldNames, 'field_name' );
-		$required_fields     = array_diff( $required_fields, $invisibleFieldNames );
+		$invisible_field_names = array_column( $filteredfields, 'general_setting' );
+		$invisibleFieldNames   = array_column( $invisible_field_names, 'field_name' ); //phpcs:ignore;
+		$required_fields       = array_diff( $required_fields, $invisible_field_names );
 
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
