@@ -206,20 +206,22 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											foreach ( $field['image_options'] as $option_key => $option_value ) {
 												$label_option = is_array( $option_value ) ? $option_value['label'] : $option_value->label;
 												$image_option = is_array( $option_value ) ? $option_value['image'] : $option_value->image;
-												$checked      = ( $label_option === $db_value ) ? 'ur-image-choice-checked' : '';
 												?>
-												<label class="user-registation-image-options <?php esc_attr_e( $checked ); ?>">
+												<div class="user-registration-user-profile-info">
+												<input type="radio"
+																name="<?php echo esc_attr( $key ); ?>"
+																id="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_option ); ?>"
+																value="<?php echo esc_attr( trim( $label_option ) ); ?>"
+																class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $label_option ), true ) ); ?>  >
+																<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_option ); ?>">
 												<?php if ( ! empty( $image_option ) ) { ?>
 													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_option ); ?>" alt="<?php esc_attr_e( $label_option ); ?>" width="200px" height="200px"></span>
 													<?php
 												}
 												?>
-												<input type="radio"
-																name="<?php echo esc_attr( $key ); ?>"
-																id="<?php echo esc_attr( $key ); ?>"
-																value="<?php echo esc_attr( trim( $label_option ) ); ?>"
-																class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $label_option ), true ) ); ?>  ><?php echo esc_html( trim( $label_option ) ); ?>
+												<?php echo esc_html( trim( $label_option ) ); ?>
 												</label><br/>
+												</div>
 												<?php
 											}
 										}
@@ -246,17 +248,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										foreach ( $field['image_options'] as $choice_key => $choice_value ) {
 											$label_choice = is_array( $choice_value ) ? ur_sanitize_tooltip( trim( $choice_value['label'] ) ) : ur_sanitize_tooltip( trim( $choice_value->label ) );
 											$image_choice = is_array( $choice_value ) ? $choice_value['image'] : $choice_value->image;
-											$checked      = in_array( $label_choice, $value ) ? 'ur-image-choice-checked' : '';
 											?>
-												<label class="user-registation-image-options <?php esc_attr_e( $checked ); ?>">
-												<?php if ( ! empty( $image_choice ) ) { ?>
-													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr_e( $label_choice ); ?>" width="200px" height="200px"></span>
-													<?php
-												}
-												?>
-												<input type="checkbox"
+											<div class="user-registration-user-profile-info">
+											<input type="checkbox"
 																name="<?php echo esc_attr( $key ); ?>[]"
-																id="<?php echo esc_attr( $key ); ?>"
+																id="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_choice ); ?>"
 																value="<?php echo esc_attr( $label_choice ); ?>"
 																class="<?php echo esc_attr( $field['class'] ); ?>"
 																				<?php
@@ -266,7 +262,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																					echo 'checked="checked"';
 																				}
 																				?>
-												><?php echo wp_kses_post( trim( $label_choice ) ); ?></label><br/>
+												>
+												<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_choice ); ?>">
+												<?php if ( ! empty( $image_choice ) ) { ?>
+													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr_e( $label_choice ); ?>" width="200px" height="200px"></span>
+													<?php
+												}
+												?>
+											<?php echo wp_kses_post( trim( $label_choice ) ); ?></label><br/>
+											</div>
 												<?php
 										}
 									} elseif ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
