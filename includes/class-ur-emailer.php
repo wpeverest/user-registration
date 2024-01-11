@@ -50,9 +50,15 @@ class UR_Emailer {
 			2
 		);
 
-		add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
-		add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
-		add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
+		// to check the current page name.
+		global $pagenow;
+
+		// adds the hook if it is for reset password.
+		if ( ( is_admin() && $pagenow === 'users.php' ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) {
+			add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
+			add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
+			add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
+		}
 	}
 
 	/**
@@ -629,15 +635,15 @@ class UR_Emailer {
 		return false;
 	}
 
-		/**
-		 * Admin Area Reset Password Email Trigger
-		 *
-		 * @param  string $message Email message.
-		 * @param  string $key The activation key.
-		 * @param  string $user_login The username for the user.
-		 * @param string $user_data WP_User object.
-		 * @return string
-		 */
+	/**
+	 * Admin Area Reset Password Email Trigger
+	 *
+	 * @param  string $message Email message.
+	 * @param  string $key The activation key.
+	 * @param  string $user_login The username for the user.
+	 * @param string $user_data WP_User object.
+	 * @return string
+	 */
 	public static function ur_retrieve_password_message( $message, $key, $user_login, $user_data ) {
 		$user     = get_user_by( 'login', $user_login );
 		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
