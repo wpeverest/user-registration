@@ -47,19 +47,19 @@ if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_b
 
 		if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_bool( $this->admin_data->general_setting->image_choice ) ) {
 			foreach ( $options as $option ) {
-				$checked = '';
+				$checked       = '';
 				$checked_class = '';
 
 				$label = is_array( $option ) ? $option['label'] : $option->label;
 				$image = is_array( $option ) ? $option['image'] : $option->image;
 
 				if ( ! empty( $option ) ) {
-					$checked = in_array( $label, $default_values ) ? 'checked' : '';
+					$checked      = in_array( $label, $default_values ) ? 'checked' : '';
 					$checkedclass = in_array( $label, $default_values ) ? 'ur-image-choice-checked' : '';
 
 				}
 
-				echo "<label class='" . esc_attr( $checked ) . "'><span class='user-registration-image-choice'>";
+				echo "<label class='" . esc_attr( $checkedclass ) . "'><span class='user-registration-image-choice'>";
 				if ( ! empty( $image ) ) {
 					echo "<img src='" . esc_url( $image ) . "' alt='" . esc_attr( trim( $label ) ) . "' width='200px'>";
 				} else {

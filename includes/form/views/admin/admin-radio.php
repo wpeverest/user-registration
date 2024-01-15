@@ -59,7 +59,7 @@ if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_b
 						$checked_class = ( $label === $default_value ) ? 'ur-image-choice-checked' : '';
 					}
 
-					echo "<label><span class='user-registration-image-choice'>";
+					echo "<label class='" . esc_attr( $checked_class ) . "'><span class='user-registration-image-choice'>";
 					if ( ! empty( $image ) ) {
 						echo "<img src='" . esc_url( $image ) . "' alt='" . esc_attr( trim( $label ) ) . "' width='200px'>";
 					} else {

@@ -605,7 +605,7 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							if ( 'radio' === $strip_prefix ) {
 								$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-								$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="' . esc_attr( $image ) . '">';
+								$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="' . esc_url( $image ) . '">';
 								$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
 								$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
 								$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
@@ -706,7 +706,7 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $unique ) . '_image" value="">';
+							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $unique ) . '_image" value="'. esc_url( $image ) . '">';
 							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
 							$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
 							$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
@@ -738,10 +738,10 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="">';
+							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="'. esc_url( $image ) . '">';
 							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
 							$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
-							$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" style="display:none">Remove</button></div></div>';
+							$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
 							$general_setting_wrapper .= '</li>';
 
 						}
