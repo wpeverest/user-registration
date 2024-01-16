@@ -231,7 +231,7 @@ class UR_Emailer {
 				}
 
 				if ('password' === $form_data['type']){
-					$value = '';
+					$value = esc_html__('Chosen Password', 'user-registration');
 				}
 
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
