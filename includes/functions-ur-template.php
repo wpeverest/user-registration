@@ -91,7 +91,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 
 						break;
 					case 'previous-page':
-						$redirect_url = apply_filters( 'user_registration_redirection_back_to_previous_page_url', isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : $redirect_url, $form_id );
+						$redirect_url = apply_filters( 'user_registration_redirection_back_to_previous_page_url', isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : $redirect_url, $form_id );
 						break;
 
 					default:
