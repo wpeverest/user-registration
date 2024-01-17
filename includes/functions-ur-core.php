@@ -1129,6 +1129,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 						'no-redirection' => __( 'No Redirection', 'user-registration' ),
 						'internal-page'  => __( 'Internal Page', 'user-registration' ),
 						'external-url'   => __( 'External URL', 'user-registration' ),
+						'previous-page'  => __( 'Previous Page', 'user-registration' ),
 					)
 				),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
