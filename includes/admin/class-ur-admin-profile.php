@@ -38,6 +38,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			ur_deprecated_function( 'UR_Admin_Profile::get_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::get_user_meta_by_form_fields' );
 		}
 
+		/**
+		 * Excludes the fields for Admin Profile.
+		 *
+		 * @return array.
+		 */
 		public function get_exclude_fields_for_admin_profile() {
 			return apply_filters( 'user_registration_exclude_fields_for_admin_profile', array() );
 		}
