@@ -450,7 +450,7 @@ class UR_Admin_User_Manager {
 		$status_map = array(
 			'approved' => 1,
 			'pending' => 0,
-			'denied' => -1
+			'denied' => -1,
 		);
 
 		if ( isset( $status_map[ $status_label ] ) ) {
