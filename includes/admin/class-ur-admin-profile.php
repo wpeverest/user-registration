@@ -313,11 +313,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											if ( 'user_registration_learndash_course' === $key ) {
 												$enrolled_courses   = array();
 												$enrolled_course_id = $this->get_user_meta( $user->ID, $key );
-												foreach ( $enrolled_course_id as $enrolled_course ) {
-													$enrolled_course_title = get_post( $enrolled_course )->post_title;
-													array_push( $enrolled_courses, $enrolled_course_title );
+												if ( 'string' === gettype( $enrolled_course_id ) ) {
+													$courses_enrolled = get_post( $enrolled_course_id )->post_title;
+												} else {
+													foreach ( $enrolled_course_id as $enrolled_course ) {
+														$enrolled_course_title = get_post( $enrolled_course )->post_title;
+														array_push( $enrolled_courses, $enrolled_course_title );
+													}
+													$courses_enrolled = implode( ', ', $enrolled_courses );
 												}
-												$courses_enrolled = implode( ', ', $enrolled_courses );
 												?>
 												<input type="text" name="<?php echo esc_attr( $key ); ?>"
 													id="<?php echo esc_attr( $key ); ?>"
