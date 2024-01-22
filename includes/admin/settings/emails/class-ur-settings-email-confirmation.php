@@ -32,6 +32,11 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 		 */
 		public function get_settings() {
 
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_email_confirmation',
 				array(
@@ -72,14 +77,26 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
 		/**
 		 * Email Format.
+		 *
+		 * @return string $message Message content for email confirmation.
 		 */
 		public function ur_get_email_confirmation() {
 
+			/**
+			 * Filter to overwrite email confirmation message content.
+			 *
+			 * @param string Message content for email confirmation to be overwritten.
+			 */
 			$message = apply_filters(
 				'user_registration_get_email_confirmation',
 				sprintf(
