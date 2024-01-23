@@ -254,10 +254,12 @@ class UR_Form_Handler {
 		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 
 		// Send an email to the new address with confirmation link.
-		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
-		$to           = $new_email;
-		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
-		$message      = sprintf(
+		$confirm_link    = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$to              = $new_email;
+		$template_id     = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$settings        = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$subject         = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+		$default_message = sprintf(
 			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
 			esc_html__(
 				'Dear %1$s,
@@ -274,6 +276,8 @@ class UR_Form_Handler {
 			'<a href="' . esc_url( $confirm_link ) . '">Click here</a>',
 			esc_html( get_bloginfo( 'name' ) )
 		);
+		$message     = $settings->ur_get_confirm_email_address_change_email();
+		$message     = get_option( 'user_registration_confirm_email_address_change_email', $default_message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
 		$message     = user_registration_process_email_content( $message, $template_id );
