@@ -254,7 +254,10 @@ class UR_Form_Handler {
 		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 
 		// Send an email to the new address with confirmation link.
-		$confirm_link    = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+
+		$from_name       = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email    = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$to              = $new_email;
 		$template_id     = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$settings        = new UR_Settings_Confirm_Email_Address_Change_Email();
@@ -283,7 +286,7 @@ class UR_Form_Handler {
 		$message     = user_registration_process_email_content( $message, $template_id );
 
 		$headers = array(
-			'From' => get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Content-Type:text/html; charset=UTF-8',
 		);
 
