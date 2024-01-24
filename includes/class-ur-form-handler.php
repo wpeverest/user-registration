@@ -256,12 +256,13 @@ class UR_Form_Handler {
 		// Send an email to the new address with confirmation link.
 		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
 
-		$from_name       = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
-		$sender_email    = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
-		$to              = $new_email;
-		$template_id     = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-		$settings        = new UR_Settings_Confirm_Email_Address_Change_Email();
-		$subject         = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
+		$to           = $new_email;
+		$template_id  = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+
 		$default_message = sprintf(
 			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
 			esc_html__(
@@ -283,14 +284,26 @@ class UR_Form_Handler {
 		$message     = get_option( 'user_registration_confirm_email_address_change_email', $default_message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message     = user_registration_process_email_content( $message, $template_id );
+		// $message     = user_registration_process_email_content( $message, $template_id );
 
 		$headers = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Content-Type:text/html; charset=UTF-8',
 		);
 
-		wp_mail( $to, $subject, $message, $headers, $template_id );
+		$attachment = '';
+
+		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
+			$values                    = array();
+			$name_value                = array();
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		} else {
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $template_id );
+		}
 
 		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
