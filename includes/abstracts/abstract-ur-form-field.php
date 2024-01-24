@@ -102,7 +102,14 @@ abstract class UR_Form_Field {
 		$this->admin_data = $admin_data;
 
 		ob_start();
-		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
+		$template_path = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
+		/**
+		 * Filter the admin template path for a specific form element.
+		 *
+		 * The dynamic portion of the hook name, $this->id
+		 *
+		 * @param string $admin_template_path The default admin template path for the form element.
+		 */
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
 
 		if ( file_exists( $admin_template_path ) ) {
@@ -436,7 +443,13 @@ abstract class UR_Form_Field {
 			'form_data' => $form_data,
 			'data'      => $data,
 		);
-
+		/**
+		 * Filter the field key based frontend form data .
+		 *
+		 * The dynamic portion of the hook name, $field_key.
+		 *
+		 * @param string $filter_data The filtered field data.
+		 */
 		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
@@ -456,6 +469,14 @@ abstract class UR_Form_Field {
 		$class_name = 'UR_Setting_' . ucwords( $file_name );
 
 		if ( ! class_exists( $class_name ) ) {
+			/**
+			 * Filter the file name and path of advance class.
+			 *
+			 * The dynamic portion of the hook name, $file_name.
+			 *
+			 * @param string $file_name The file name.
+			 * @param string $file_path The file path.
+			 */
 			$file_path_array = apply_filters(
 				'user_registration_' . strtolower( $file_name ) . '_advance_class',
 				array(
@@ -504,6 +525,11 @@ abstract class UR_Form_Field {
 
 			$smart_tags = '';
 			if ( 'hidden_value' === $setting_key ) {
+				/**
+				 * Filter the smart tags list for general.
+				 *
+				 * @param array $smart_tags The smart tags list.
+				 */
 				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
 			}
 
@@ -731,6 +757,13 @@ abstract class UR_Form_Field {
 					break;
 
 				default:
+					/**
+					 * Filter the field general settings.
+					 *
+					 * The dynamic portion of the hook name, $setting_value['type'].
+					 *
+					 * @param string $this The current object.
+					 */
 					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
 			}// End switch().
 
@@ -773,9 +806,23 @@ abstract class UR_Form_Field {
 
 		// Redundent code start.
 		ob_start();
+		/**
+		 * Action to add settings after advance settings.
+		 *
+		 * @param array $settings The settings array.
+		 * @param array $this->id The field id.
+		 * @param array $this->admin_data The admin data.
+		 */
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
 		$settings .= ob_get_clean();
 		// Redundent code end.
+		/**
+		 * Filter to modify or add settings after advance settings.
+		 *
+		 * @param array $settings The settings array.
+		 * @param array $this->id The field id.
+		 * @param array $this->admin_data The admin data.
+		 */
 		$settings = apply_filters( 'user_registration_after_advance_settings_filter', $settings, $this->id, $this->admin_data );
 		return $settings;
 	}

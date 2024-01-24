@@ -38,7 +38,11 @@ abstract class UR_Log_Handler implements UR_Log_Handler_Interface {
 		$time_string  = self::format_time( $timestamp );
 		$level_string = strtoupper( $level );
 		$entry        = "{$time_string} {$level_string} {$message}";
-
+		/**
+		 * Filter the format log entry.
+		 *
+		 * @param array $entry The entry.
+		 */
 		return apply_filters(
 			'user_registration_format_log_entry',
 			$entry,
