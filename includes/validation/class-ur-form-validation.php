@@ -606,7 +606,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		$invisible_field_names = array_column( $filteredfields, 'general_setting' );
 		$invisibleFieldNames   = array_column( $invisible_field_names, 'field_name' ); //phpcs:ignore;
-		$required_fields       = array_diff( $required_fields, $invisible_field_names );
+		$required_fields       = array_diff( $required_fields, $invisibleFieldNames );
 
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
