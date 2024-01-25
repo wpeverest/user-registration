@@ -738,7 +738,7 @@ class UR_Emailer {
 
 		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
 		$subject    = get_option( 'user_registration_confirm_email_address_change_subject', esc_html__( 'Confirm Email Address Change Email: {{blog_info}}', 'user-registration' ) );
-		$settings   = new UR_Settings_Confirm_Email_Address_Chnage_Email();
+		$settings   = new UR_Settings_Confirm_Email_Address_Change_Email();
 		$message    = $settings->ur_get_confirm_email_address_change_email();
 		$message = get_option( 'user_registration_confirm_email_address_change_email', $message );
 		$form_id = ur_get_form_id_by_userid( $user_id );
