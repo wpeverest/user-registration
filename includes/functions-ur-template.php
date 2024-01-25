@@ -644,7 +644,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="" selected ' . esc_attr( $disalbed ) . '>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
-					if ( 'country' === $args['field_key'] && empty( $args['placeholder'] ) && empty( $value ) ) {
+					if ( isset( $args['field_key'] ) && 'country' === $args['field_key'] && empty( $args['placeholder'] ) && empty( $value ) ) {
 						$options .= '<option value="" selected >' . esc_html__( 'Select a country', 'user-registration' ) . '</option>';
 					}
 
