@@ -263,17 +263,33 @@ class UR_Form_Handler {
 		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
 		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
 
+		$username  = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$data_html = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+		$user_id   = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id   = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $new_email,
+			'all_fields' => $data_html,
+			'form_id'    => $form_id,
+		);
+
+		$name_value = array();
+
 		$default_message = sprintf(
-			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
-			esc_html__(
-				'Dear %1$s,
+			wp_kses_post(
+				/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
+				__(
+					'Dear %1$s,
 				You recently requested to change your email address associated with your account to %2$s.
 				To confirm this change, please click on the following link:
 				%3$s
-				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
-				Best regards,
+				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance. <br/>
+				Best regards, <br/>
 				%4$s',
-				'user-registration'
+					'user-registration'
+				)
 			),
 			esc_html( $user->display_name ),
 			esc_html( $new_email ),
@@ -285,6 +301,8 @@ class UR_Form_Handler {
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
 		// $message     = user_registration_process_email_content( $message, $template_id );
+		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
