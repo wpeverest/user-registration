@@ -419,9 +419,9 @@ class UR_Emailer {
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denail_token'] = get_user_meta( $user_id, 'ur_confirm_denail_token', true );
+			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denail_link']  = '<a href="' . admin_url( '/' ) . '?ur_denail_token=' . $values['denail_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -491,9 +491,9 @@ class UR_Emailer {
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denail_token'] = get_user_meta( $user_id, 'ur_confirm_denail_token', true );
+			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denail_link']  = '<a href="' . admin_url( '/' ) . '?ur_denail_token=' . $values['denail_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );

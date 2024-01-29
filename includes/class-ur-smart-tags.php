@@ -348,7 +348,7 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
-					case 'denail_link':
+					case 'denial_link':
 						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
 							$user    = get_user_by( 'email', $values['email'] );
 							$user_id = $user->ID;
@@ -357,9 +357,9 @@ class UR_Smart_Tags {
 
 							// If enabled approval via email setting.
 							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-								$denail_token = get_user_meta( $user_id, 'ur_confirm_denail_token', true );
-								$denail_link  = '<a href="' . admin_url( '/' ) . '?ur_denail_token=' . $denail_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
-								$content        = str_replace( '{{' . $tag . '}}', $denail_link, $content );
+								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+								$content        = str_replace( '{{' . $tag . '}}', $denial_link, $content );
 							}
 						}
 						break;
