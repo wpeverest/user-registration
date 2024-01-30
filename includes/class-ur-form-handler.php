@@ -311,6 +311,9 @@ class UR_Form_Handler {
 
 		$attachment = '';
 
+		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
 			$values                    = array();
 			$name_value                = array();
@@ -322,10 +325,6 @@ class UR_Form_Handler {
 		} else {
 			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $template_id );
 		}
-
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
-		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 	}
 
 	/**

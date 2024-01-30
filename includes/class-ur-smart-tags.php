@@ -91,6 +91,7 @@ class UR_Smart_Tags {
 	 * @param array  $name_value  Extra values.
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
+		$values = array();
 		if ( ! empty( $values['email'] ) ) {
 			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
@@ -140,7 +141,21 @@ class UR_Smart_Tags {
 		if ( ! empty( $other_tags[1] ) ) {
 			foreach ( $other_tags[1] as $key => $tag ) {
 				$other_tag = explode( ' ', $tag )[0];
+
 				switch ( $other_tag ) {
+					case 'new_email':
+						if ( ! empty( $values['email'] ) ) {
+							$new_email = $values['email'];
+						} elseif ( is_user_logged_in() && empty( $values['email'] ) ) {
+							$user      = wp_get_current_user();
+							$new_email = implode( '', get_user_meta( $user->ID, 'user_registration_pending_email' ) );
+						} else {
+							$new_email = '';
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', $new_email, $content );
+						break;
+
 					case 'user_id':
 						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$content = str_replace( '{{' . $other_tag . '}}', $user_id, $content );
@@ -233,6 +248,7 @@ class UR_Smart_Tags {
 						} else {
 							$all_fields = '';
 						}
+
 						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
 						break;
 
