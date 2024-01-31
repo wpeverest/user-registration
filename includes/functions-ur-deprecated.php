@@ -40,6 +40,18 @@ function ur_do_deprecated_action( $tag, $args, $version, $replacement = null, $m
 function ur_deprecated_function( $function, $version, $replacement = null ) {
 	// @codingStandardsIgnoreStart
 	if ( wp_doing_ajax() ) {
+		/**
+		 * Fires an action when a deprecated function is run.
+		 *
+		 * The 'deprecated_function_run' action allows developers to hook into the point
+		 * where a deprecated function is executed. It provides information about the
+		 * deprecated function, its recommended replacement, and the version at which it
+		 * was deprecated.
+		 *
+		 * @param string $function   The name of the deprecated function being executed.
+		 * @param string $replacement The recommended replacement for the deprecated function.
+		 * @param string $version     The version at which the function was deprecated.
+		 */
 		do_action( 'deprecated_function_run', $function, $replacement, $version );
 		$log_string  = "The {$function} function is deprecated since version {$version}.";
 		$log_string .= $replacement ? " Replace with {$replacement}." : '';
@@ -62,6 +74,19 @@ function ur_deprecated_function( $function, $version, $replacement = null ) {
 function ur_deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
 	// @codingStandardsIgnoreStart
 	if ( wp_doing_ajax() ) {
+		/**
+		 * Fires an action when a deprecated hook is run.
+		 *
+		 * The 'deprecated_hook_run' action allows developers to hook into the point
+		 * where a deprecated hook is executed. It provides information about the
+		 * deprecated hook, its recommended replacement, the version at which it was
+		 * deprecated, and an optional custom deprecation message.
+		 *
+		 * @param string $hook        The name of the deprecated hook being executed.
+		 * @param string $replacement The recommended replacement for the deprecated hook.
+		 * @param string $version     The version at which the hook was deprecated.
+		 * @param string $message     Optional. Custom deprecation message.
+		 */
 		do_action( 'deprecated_hook_run', $hook, $replacement, $version, $message );
 
 		$message    = empty( $message ) ? '' : ' ' . $message;
@@ -89,6 +114,18 @@ function ur_caught_exception( $exception_object, $function = '', $args = array()
 	$message .= '. Args: ' . print_r( $args, true ) . '.';
 
 	ur_do_deprecated_action( 'everest_forms_caught_exception', array(  $exception_object, $function, $args ), '1.8.6', 'user_registration_caught_exception' );
+	/**
+	 * Fires an action when an exception is caught.
+	 *
+	 * The 'user_registration_caught_exception' action allows developers to hook into the point
+	 * where an exception is caught in the User Registration plugin. It provides information about
+	 * the exception object, the function where the exception occurred, and the arguments passed to
+	 * that function.
+	 *
+	 * @param Exception $exception_object The caught exception object.
+	 * @param string    $function         The name of the function where the exception occurred.
+	 * @param array     $args             The arguments passed to the function.
+	 */
 	do_action( 'user_registration_caught_exception', $exception_object, $function, $args );
 	error_log( "Exception caught in {$function}. {$message}." );
 	// @codingStandardsIgnoreEnd
@@ -107,6 +144,18 @@ function ur_deprecated_doing_it_wrong( $function, $message, $version ) {
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
 
 	if ( wp_doing_ajax() ) {
+		/**
+		 * Fires an action when a deprecated function is used incorrectly.
+		 *
+		 * The 'doing_it_wrong_run' action allows developers to hook into the point where
+		 * a deprecated function is used incorrectly. It provides information about the
+		 * deprecated function, the associated error message, and the version at which it
+		 * was deprecated.
+		 *
+		 * @param string $function The name of the deprecated function used incorrectly.
+		 * @param string $message  The error message associated with using the function incorrectly.
+		 * @param string $version  The version at which the function was deprecated.
+		 */
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
 		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
 	} else {
@@ -126,6 +175,18 @@ function ur_deprecated_doing_it_wrong( $function, $message, $version ) {
 function ur_deprecated_argument( $argument, $version, $message = null ) {
 	// @codingStandardsIgnoreStart
 	if ( wp_doing_ajax() ) {
+		/**
+		 * Fires an action when a deprecated argument is encountered.
+		 *
+		 * The 'deprecated_argument_run' action allows developers to hook into the point
+		 * where a deprecated argument is encountered. It provides information about the
+		 * deprecated argument, the associated error message, and the version at which it
+		 * was deprecated.
+		 *
+		 * @param string $argument The name of the deprecated argument encountered.
+		 * @param string $message  The error message associated with the deprecated argument.
+		 * @param string $version  The version at which the argument was deprecated.
+		 */
 		do_action( 'deprecated_argument_run', $argument, $message, $version );
 		error_log( "The {$argument} argument is deprecated since version {$version}. {$message}" );
 	} else {

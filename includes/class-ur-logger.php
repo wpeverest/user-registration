@@ -41,6 +41,10 @@ class UR_Logger implements UR_Logger_Interface {
 	 */
 	public function __construct( $handlers = null, $threshold = null ) {
 		if ( null === $handlers ) {
+			/**
+			 * Filter to modify the log handlers.
+			 * Default value is empty array.
+			 */
 			$handlers = apply_filters( 'user_registration_register_log_handlers', array() );
 		}
 
@@ -104,6 +108,12 @@ class UR_Logger implements UR_Logger_Interface {
 	 * @return bool
 	 */
 	public function add( $handle, $message, $level = UR_Log_Levels::NOTICE ) {
+		/**
+		 * Filter to modify the logger message.
+		 *
+		 * @param string $message Logger message.
+		 * @param string $handle Logger handler.
+		 */
 		$message = apply_filters( 'user_registration_logger_add_message', $message, $handle );
 		$this->log(
 			$level,
@@ -139,7 +149,22 @@ class UR_Logger implements UR_Logger_Interface {
 
 		if ( $this->should_handle( $level ) ) {
 			$timestamp = current_time( 'timestamp' );
-			$message   = apply_filters( 'user_registration_logger_log_message', $message, $level, $context );
+			/**
+			 * Filter to modify the logger log messages.
+			 *
+			 * @param string $level   One of the following:
+			 *                        'emergency': System is unusable.
+			 *                        'alert': Action must be taken immediately.
+			 *                        'critical': Critical conditions.
+			 *                        'error': Error conditions.
+			 *                        'warning': Warning conditions.
+			 *                        'notice': Normal but significant condition.
+			 *                        'info': Informational messages.
+			 *                        'debug': Debug-level messages.
+			 * @param string $message Log message.
+			 * @param array  $context Optional. Additional information for log handlers.
+			 */
+			$message = apply_filters( 'user_registration_logger_log_message', $message, $level, $context );
 
 			foreach ( $this->handlers as $handler ) {
 				$handler->handle( $timestamp, $level, $message, $context );

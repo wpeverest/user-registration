@@ -35,7 +35,15 @@ class UR_Session_Handler extends UR_Session {
 	 */
 	public function __construct() {
 		global $wpdb;
-
+		/**
+		 * Applies a filter to customize the session cookie name for User Registration.
+		 *
+		 * The 'user_registration_cookie' filter allows developers to modify the default session cookie name
+		 * used by the User Registration class. By default, it appends 'wp_user_registration_session_' with COOKIEHASH.
+		 * Developers can use this filter to change the cookie name based on their specific requirements.
+		 *
+		 * @param string $default_cookie_name The default session cookie name.
+		 */
 		$this->_cookie = apply_filters( 'user_registrtaion_cookie', 'wp_user_registration_session_' . COOKIEHASH );
 		$this->_table  = $wpdb->prefix . 'user_registration_sessions';
 
@@ -83,6 +91,16 @@ class UR_Session_Handler extends UR_Session {
 			$this->_has_cookie = true;
 
 			// Set the cookie
+			/**
+			 * Applies a filter to determine whether to use a secure session cookie.
+			 *
+			 * The 'ur_session_use_secure_cookie' filter allows developers to customize the decision
+			 * on whether to use a secure cookie when setting/renewing the customer session cookie.
+			 * By default, it sets the cookie without using a secure connection. Developers can use
+			 * this filter to modify the behavior based on their security requirements or environment.
+			 *
+			 * @param bool $default_use_secure_cookie The default decision to use a secure cookie, initially set to false.
+			 */
 			ur_setcookie( $this->_cookie, $cookie_value, $this->_session_expiration, apply_filters( 'ur_session_use_secure_cookie', false ) );
 		}
 	}
@@ -100,7 +118,17 @@ class UR_Session_Handler extends UR_Session {
 	 * Set session expiration.
 	 */
 	public function set_session_expiration() {
-		$this->_session_expiring   = time() + intval( apply_filters( 'ur_session_expiring', 60 * 60 * 47 ) ); // 47 Hours.
+		/**
+		 * Applies a filter to customize the duration before User Registration session expiration.
+		 *
+		 * @param int $default_duration The default duration before session expiration in seconds.
+		 */
+		$this->_session_expiring = time() + intval( apply_filters( 'ur_session_expiring', 60 * 60 * 47 ) ); // 47 Hours.
+		/**
+		 * Applies a filter to customize the duration User Registration session expiration.
+		 *
+		 * @param int $default_duration The default duration session expiration in seconds.
+		 */
 		$this->_session_expiration = time() + intval( apply_filters( 'ur_session_expiration', 60 * 60 * 48 ) ); // 48 Hours.
 	}
 
@@ -216,6 +244,11 @@ class UR_Session_Handler extends UR_Session {
 	 */
 	public function destroy_session() {
 		// Clear cookie
+		/**
+		 * Applies a filter to determine whether to use a secure session cookie during User Registration session destruction.
+		 *
+		 * @param bool $default_use_secure_cookie The default decision to use a secure cookie, initially set to false.
+		 */
 		ur_setcookie( $this->_cookie, '', time() - YEAR_IN_SECONDS, apply_filters( 'ur_session_use_secure_cookie', false ) );
 
 		$this->delete_session( $this->_customer_id );

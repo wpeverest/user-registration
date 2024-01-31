@@ -34,11 +34,21 @@ class UR_Post_Types {
 		if ( ! is_blog_installed() || post_type_exists( 'user_registration' ) ) {
 			return;
 		}
-
+		/**
+		 * Fires an action hook to perform additional tasks after registering the custom post type in User Registration.
+		 *
+		 * The 'user_registration_register_post_type' action allows developers to hook into the registration process
+		 * and execute custom code or tasks after the custom post type is successfully registered.
+		 */
 		do_action( 'user_registration_register_post_type' );
 
 		register_post_type(
 			'user_registration',
+			/**
+			 * Applies a filter to customize the arguments for registering the 'user_registration' custom post type.
+			 *
+			 * @param array $default_args The default arguments for registering the 'user_registration' post type.
+			 */
 			apply_filters(
 				'user_registration_post_type',
 				array(
@@ -74,7 +84,12 @@ class UR_Post_Types {
 				)
 			)
 		);
-
+		/**
+		 * Fires an action hook after completing the registration process of the custom post type in User Registration.
+		 *
+		 * The 'user_registration_after_register_post_type' action allows developers to hook into the registration process
+		 * and execute custom code or tasks after all actions related to registering the custom post type are completed.
+		 */
 		do_action( 'user_registration_after_register_post_type' );
 	}
 

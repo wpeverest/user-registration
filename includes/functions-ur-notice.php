@@ -85,9 +85,28 @@ function ur_add_notice( $message, $notice_type = 'success' ) {
 
 	// Backward compatibility.
 	if ( 'success' === $notice_type ) {
+		/**
+		 * Filters the message added.
+		 *
+		 * The 'user_registration_add_message' filter allows developers to modify
+		 * the message added. It provides an opportunity
+		 * to customize the message based on the original message.
+		 *
+		 * @param string $message The original message added in User Registration.
+		 */
 		$message = apply_filters( 'user_registration_add_message', $message );
 	}
-
+	/**
+	 * Filters the message added based on notice type.
+	 *
+	 * The dynamic 'user_registration_add_{notice_type}' filter allows developers to modify
+	 * the message added in based on a specific notice type.
+	 * The {notice_type} placeholder is replaced with the actual notice type, providing a
+	 * flexible way to customize the message based on the original message and notice type.
+	 *
+	 * @param string $message     The original message added in User Registration.
+	 * @param string $notice_type The specific notice type.
+	 */
 	$notices[ $notice_type ][] = apply_filters( 'user_registration_add_' . $notice_type, $message );
 
 	UR()->session->set( 'ur_notices', $notices );
@@ -135,7 +154,16 @@ function ur_print_notices() {
 		return;
 	}
 
-	$all_notices  = UR()->session->get( 'ur_notices', array() );
+	$all_notices = UR()->session->get( 'ur_notices', array() );
+	/**
+	 * Filters the available types for messages.
+	 *
+	 * The 'user_registration_types' filter allows developers to modify the array of
+	 * available types for messages. It provides an
+	 * opportunity to customize the types based on the original array.
+	 *
+	 * @param array $types The original array of available message types.
+	 */
 	$notice_types = apply_filters( 'user_registration_types', array( 'notice', 'error', 'success' ) );
 
 	foreach ( $notice_types as $notice_type ) {
@@ -169,6 +197,17 @@ function ur_print_notice( $message, $notice_type = 'success' ) {
 	ur_get_template(
 		"notices/{$notice_type}.php",
 		array(
+			/**
+			 * Filters the message added based on notice type.
+			 *
+			 * The dynamic 'user_registration_add_{notice_type}' filter allows developers to modify
+			 * the message added in based on a specific notice type.
+			 * The {notice_type} placeholder is replaced with the actual notice type, providing a
+			 * flexible way to customize the message based on the original message and notice type.
+			 *
+			 * @param string $notice_type The specific notice type.
+			 * @param string $message     The original message added in User Registration.
+			 */
 			'messages' => array( apply_filters( 'user_registration_add_' . $notice_type, $message ) ),
 		)
 	);

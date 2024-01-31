@@ -214,7 +214,9 @@ class UR_Preview {
 		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( $_GET['ur_email_template'] ) : '';
 
 		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
-
+		/**
+		 * Applies a filter to modify the email classes.
+		 */
 		$emails = apply_filters( 'user_registration_email_classes', array() );
 
 		if ( isset( $emails[ $class_name ] ) && ! class_exists( $class_name ) ) {
@@ -233,6 +235,11 @@ class UR_Preview {
 			}
 
 			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			/**
+			 * Filter to process the smart tags.
+			 *
+			 * @param string $email_content The email message content.
+			 */
 			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
 
 			ur_get_template(
