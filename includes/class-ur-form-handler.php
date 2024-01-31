@@ -282,12 +282,11 @@ class UR_Form_Handler {
 				/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
 				__(
 					'Dear %1$s,
-				You recently requested to change your email address associated with your account to %2$s.
-				To confirm this change, please click on the following link:
-				%3$s
-				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance. <br/>
-				Best regards, <br/>
-				%4$s',
+				<p>You recently requested to change your email address associated with your account to %2$s. </p>
+				<p>To confirm this change, please click on the following link:
+				%3$s This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance. </p>
+				<p>Best regards, <br/>
+				%4$s</p>',
 					'user-registration'
 				)
 			),

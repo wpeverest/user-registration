@@ -91,12 +91,16 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 			$message = apply_filters(
 				'user_registration_get_confirm_email_address_email',
 				sprintf(
-					__(
-						'Dear {{display_name}}, You recently requested to change your email address associated with your account to {{new_email}} . To confirm this change, please click on the following link:
-						<a href="{{home_url}}">Click here </a> This link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.
-						 This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
-				Best regards, {{blog_info}}',
-						'user-registration'
+					wp_kses_post(
+						__(
+							'Dear {{display_name}},
+							<p>You recently requested to change your email address associated with your account to {{new_email}} . </p>
+							<p>To confirm this change, please click on the following link:
+						<a href="{{home_url}}">Click here </a> This link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.</p>
+				<p>Best regards,<br/>
+				 {{blog_info}}</p>',
+							'user-registration'
+						)
 					)
 				)
 			);
