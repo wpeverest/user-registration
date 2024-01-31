@@ -76,6 +76,7 @@ class UR_Smart_Tags {
 			'{{user_ip_address}}'  => esc_html__( 'User IP Address', 'user-registration' ),
 			'{{referrer_url}}'     => esc_html__( 'Referrer URL', 'user-registration' ),
 			'{{form_id}}'          => esc_html__( 'Form ID', 'user-registration' ),
+			'{{form_name}}'        => esc_html__( 'Form Name', 'user-registration' ),
 			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
@@ -275,6 +276,12 @@ class UR_Smart_Tags {
 						}
 
 						$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
+						break;
+
+					case 'form_name':
+						$current_form_id = $values['form_id'];
+						$form_name       = ucfirst( get_the_title( $current_form_id ) );
+						$content         = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
 
 					case 'user_ip_address':
