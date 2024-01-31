@@ -58,6 +58,7 @@ class UR_Email_Approval {
 						$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
 
 						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
 
 						add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
 
@@ -109,6 +110,7 @@ class UR_Email_Approval {
 						$user_manager->save_status( UR_Admin_User_Manager::DENIED, true );
 
 						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
+						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
 
 						add_action( 'admin_notices', array( __CLASS__, 'denied_success' ) );
 
