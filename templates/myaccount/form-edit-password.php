@@ -178,9 +178,6 @@ do_action( 'user_registration_before_change_password_form' );
 	ur_do_deprecated_action( 'user_registration_after_edit_account_form', array(), '1.4.1', 'user_registration_after_change_password_form' );
 
 	/**
-	 * Exceutes after the edit account form.
-	 */
-	/**
 	 * Fires after rendering the edit account form.
 	 *
 	 * The 'user_registration_after_edit_account_form' action allows developers to hook into the process
