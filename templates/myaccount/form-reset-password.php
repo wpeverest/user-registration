@@ -25,7 +25,19 @@ ur_print_notices(); ?>
 <form method="post" class="user-registration-ResetPassword ur_lost_reset_password" data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
-				<p><?php echo esc_html( apply_filters( 'user_registration_reset_password_message', esc_html__( 'Enter a new password below.', 'user-registration' ) ) ); ?></p>
+				<p>
+				<?php
+				echo esc_html(
+					/**
+					 * Filter to modify the user registration reset password message.
+					 *
+					 * @param string message content for user registration reset password message.
+					 * @return string message content of user registration reset password.
+					 */
+					apply_filters( 'user_registration_reset_password_message', esc_html__( 'Enter a new password below.', 'user-registration' ) )
+				);
+				?>
+					</p>
 
 				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 					<label for="password_1"><?php esc_html_e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
@@ -55,7 +67,12 @@ ur_print_notices(); ?>
 
 				<div class="clear"></div>
 
-				<?php do_action( 'user_registration_resetpassword_form' ); ?>
+				<?php
+				/**
+				 * Action to fire the rendering of user registration reset password form.
+				 */
+				do_action( 'user_registration_resetpassword_form' );
+				?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
