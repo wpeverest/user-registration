@@ -68,7 +68,6 @@ class UR_Shortcode_Login {
 			*
 			* @param mixed $ur_logout_url UR logout URL.
 			*/
-			
 			/* translators: %s - Link to logout. */
 			echo wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
 		}

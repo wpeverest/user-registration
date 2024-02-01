@@ -119,7 +119,7 @@ class UR_Shortcode_My_Account {
 					echo $login_form; // phpcs:ignore
 				}
 			} else {
-				//Action to handles custom rendering logic for User Registration my Account page.
+				// Action to handles custom rendering logic for User Registration my Account page.
 				do_action( 'user_registration_my_account_custom_render' );
 			}
 		} else {
@@ -401,7 +401,7 @@ class UR_Shortcode_My_Account {
 			return false;
 		}
 
-		//Filter to modify invalid username or email error message.
+		// Filter to modify invalid username or email error message.
 		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
