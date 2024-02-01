@@ -1,8 +1,8 @@
 <?php
 /**
- * Class
+ * UR_Stats Class for tracking non-sensitive information about the plugin and add-on usage.
  *
- * UR_Stats
+ * Explore more what information is shared https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title
  *
  * @package User_Registration_Pro
  * @since  1.0.0

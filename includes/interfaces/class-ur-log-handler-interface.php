@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Functions that must be defined to correctly fulfill log handler API.
  *
- * @since    1.0.5
+ * @since          1.0.5
  * @category       Interface
  * @author         WPEverest
  */
