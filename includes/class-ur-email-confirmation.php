@@ -181,7 +181,7 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( $_GET['ur_resend_token'] ) ) {
+		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( sanitize_text_field( wp_unslash( $_GET['ur_resend_token'] ) ) ) ) {
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_key( $_REQUEST['_wpnonce'] ) ), 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
