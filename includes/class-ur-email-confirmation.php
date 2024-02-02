@@ -290,6 +290,7 @@ class UR_Email_Confirmation {
 		// Verify the confirmation key.
 		$user_id     = absint( wp_unslash( $_GET['confirm_email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$confirm_key = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$form_id     = ur_get_form_id_by_userid( $user_id );
 		$stored_key  = get_user_meta( $user_id, 'user_registration_email_confirm_key', true );
 		$expiration  = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
 
@@ -305,8 +306,9 @@ class UR_Email_Confirmation {
 			)
 		);
 
+		do_action_deprecated( 'user_registration_email_change_success', array(), '3.1.4', 'user_registration_email_change_success_new' );
 		// Trigger an action hook after the email address is updated.
-		do_action( 'user_registration_email_change_success', $user_id );
+		do_action( 'user_registration_email_change_success_new', $user_id, $form_id );
 
 		// Remove the confirmation key, pending email and expiry date.
 		UR_Form_Handler::delete_pending_email_change( $user_id );
