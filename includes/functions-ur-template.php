@@ -1075,7 +1075,7 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 		}
 	} else {
-		$blocks = parse_blocks( $post->post_content );
+		$blocks = parse_blocks( $post_content );
 
 		foreach ( $blocks as $block ) {
 			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
