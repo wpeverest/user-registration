@@ -38,6 +38,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			ur_deprecated_function( 'UR_Admin_Profile::get_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::get_user_meta_by_form_fields' );
 		}
 
+		/**
+		 * Exclude fields from admin profile.
+		 */
 		public function get_exclude_fields_for_admin_profile() {
 			return apply_filters( 'user_registration_exclude_fields_for_admin_profile', array() );
 		}
@@ -215,7 +218,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $label_option ), true ) ); ?>  >
 																<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_option ); ?>">
 												<?php if ( ! empty( $image_option ) ) { ?>
-													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_option ); ?>" alt="<?php esc_attr_e( $label_option ); ?>" width="200px" height="200px"></span>
+													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_option ); ?>" alt="<?php esc_attr( $label_option ); ?>" width="200px" height="200px"></span>
 													<?php
 												}
 												?>
@@ -265,7 +268,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												>
 												<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_choice ); ?>">
 												<?php if ( ! empty( $image_choice ) ) { ?>
-													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr_e( $label_choice ); ?>" width="200px" height="200px"></span>
+													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr( $label_choice ); ?>" width="200px" height="200px"></span>
 													<?php
 												}
 												?>

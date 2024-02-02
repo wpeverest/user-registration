@@ -747,9 +747,7 @@ class UR_AJAX {
 			}
 
          $post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
-
-
-			self::sweep_array( $post_data );
+		 self::sweep_array( $post_data );
 
 			if ( isset( self::$failed_key_value['value'] ) && '' != self::$failed_key_value['value'] ) {
 				if ( in_array( self::$failed_key_value['value'], self::$field_key_aray ) ) {

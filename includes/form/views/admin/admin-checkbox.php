@@ -39,7 +39,7 @@ if ( isset( $this->admin_data->general_setting->image_choice ) && ur_string_to_b
 	<div class="ur-label">
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
-	<div class="ur-field <?php esc_attr_e( $image_class ); ?>" data-field-key="checkbox">
+	<div class="ur-field <?php esc_attr( $image_class ); ?>" data-field-key="checkbox">
 		<?php
 		if ( count( $options ) < 1 ) {
 			echo "<label><input type = 'checkbox'  value='1' disabled/></label>";
