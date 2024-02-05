@@ -249,6 +249,10 @@ class UR_Emailer {
 					$value = esc_html__( 'Accepted', 'user-registration' );
 				}
 
+				if ('password' === $form_data['type']){
+					$value = esc_html__('Chosen Password', 'user-registration');
+				}
+
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
 					$country_class = ur_load_form_field_class( $form_data['field_key'] );
 					$countries     = $country_class::get_instance()->get_country();
@@ -264,6 +268,7 @@ class UR_Emailer {
 				if ( 'user_email' === $field_name ) {
 					$email = $value;
 				}
+
 				$tmp_data['value']        = $value;
 				$tmp_data['field_type']   = $form_data['type'];
 				$tmp_data['label']        = $form_data['label'];
